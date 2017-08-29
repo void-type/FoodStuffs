@@ -1,0 +1,300 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
+
+$color-primary: rgba(148, 78, 142, 1);
+$color-primary-dark: rgba(100, 43, 97, 1);
+$color-secondary: rgba(164, 213, 85, 1);
+$color-secondary-dark: rgba(131, 170, 68, 1);
+$color-ternary: rgba(248, 238, 231, 1);
+$color-ternary-dark: rgba(244, 222, 203, 1);
+
+$color-background: rgba(255, 255, 255, 1);
+$color-text: rgba(0, 0, 0, 1);
+$color-border: rgba(37, 40, 53, 1);
+$color-focus: rgba($color-primary, .7);
+
+$color-nav-link: rgba(255, 255, 255, 1);
+$color-nav-background: $color-border;
+$color-nav-background-active: mix($color-nav-background, $color-ternary, 90%);
+
+$highlight-border: inset 0 0 2px white, inset 0 0 5px white, inset 0 0 5px white;
+$border: 2px solid mix($color-border, white, 70%);
+$shadow: 2px 3px 2px rgba($color-border, .5);
+$shadow-collapse: 1px 1px 2px rgba($color-border, .5);
+$color-error: rgba(220, 20, 60, 1);
+$font-family: "Source Sans Pro", sans-serif;
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: $font-family;
+    color: $color-text;
+    margin: 0;
+    /* Contain the page to the center of a widescreen */
+    header > .topbar, nav > div, main > div, footer > div {
+        margin: 0 auto;
+        max-width: 60em;
+    }
+}
+
+.topbar, main {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+section {
+    margin-bottom: 2em;
+}
+
+footer {
+    border-top: $border;
+    padding: 1em 0em;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+h1, h2, h3, h4 {
+    color: $color-primary-dark
+}
+
+a, a:link {
+    text-decoration: none;
+    color: $color-primary-dark;
+
+    &:hover, &:active {
+        color: $color-secondary-dark;
+    }
+}
+
+header {
+    background-color: $color-ternary;
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        height: 4em;
+
+        & > div {
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &.logo {
+                margin-right: 1em;
+                height: 100%;
+
+                img {
+                    width: auto;
+                    height: 70%;
+                }
+            }
+
+            &.title {
+                font-size: 150%;
+                font-weight: bold;
+            }
+        }
+    }
+
+    nav {
+        background-color: $color-nav-background;
+        box-shadow: $shadow;
+
+        ul {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background-color: $color-nav-background;
+            z-index: 1000;
+
+            li {
+                display: block;
+                position: relative;
+                text-align: center;
+                min-width: 25%;
+                text-align: center;
+
+                &:hover > ul {
+                    display: block;
+                    position: absolute;
+                }
+
+                a {
+                    display: block;
+                    padding: 1em .5em;
+                    white-space: nowrap;
+
+                    &:link, &:visited {
+                        color: $color-nav-link;
+                    }
+
+                    &:hover {
+                        background-color: $color-nav-background-active;
+                        color: $color-ternary-dark;
+                        box-shadow: $highlight-border;
+                    }
+
+                    &.current-page {
+                        color: $color-secondary;
+                    }
+                }
+            }
+
+            ul {
+                display: none;
+                width: 100%;
+                box-shadow: $shadow;
+
+                ul {
+                    left: 100%;
+                    top: 0;
+                    box-shadow: $shadow;
+                }
+            }
+        }
+    }
+}
+
+table {
+    width: 100%;
+    padding: 1em;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    thead > tr {
+        text-align: left;
+    }
+
+    tbody td {
+        border: $border;
+    }
+
+    th, td {
+        padding: .5em;
+    }
+}
+
+.form-group {
+    margin-bottom: 2em;
+
+    label {
+        float: left;
+        width: 11em;
+        margin-right: .5em;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: .5em;
+        font-weight: bold;
+    }
+
+    button {
+        margin-left: 15em;
+    }
+}
+
+input[type="password"], input[type="number"], input[type="text"], select, textarea {
+    width: 25em;
+    box-sizing: border-box;
+    padding: .3em .4em;
+    border: $border;
+    transition: all 0.30s ease-in-out;
+    font-family: $font-family;
+    font-size: 1em;
+
+    &:focus {
+        outline: none;
+        border: 2px solid $color-focus;
+        box-shadow: 0 0 6px $color-primary;
+    }
+}
+
+textarea {
+    height: 20em;
+}
+
+input[type="button"], input[type="submit"], button {
+    padding: .5em;
+    background-color: $color-secondary;
+    border: $border;
+    box-shadow: $shadow;
+    color: black;
+    font-weight: bold;
+    position: relative;
+    top: -2px;
+    min-width: 5em;
+    cursor: pointer;
+
+    &:active {
+        background-color: $color-secondary-dark;
+        box-shadow: $shadow-collapse;
+        top: 2px;
+    }
+}
+
+input.chk {
+    height: 1.5em;
+    width: 1.5em;
+    padding: .5em;
+    top: .4em;
+    position: relative;
+}
+
+ul.error {
+    max-width: 30em;
+    margin-bottom: 2em;
+    color: $color-error;
+}
+
+@media (min-width:1921px) {
+    body {
+        font-size: 130%;
+    }
+}
+
+@media (max-width:680px) {
+
+    .form-group {
+        label {
+            text-align: left;
+        }
+
+        input[type="button"], input[type="submit"], button {
+            margin: 0;
+        }
+    }
+}
+
+@media (max-width:420px) {
+    body {
+        font-size: 90%;
+    }
+
+    .topbar .title {
+        display: none;
+    }
+
+    input[type="password"], input[type="number"], input[type="text"], select, textarea {
+        width: 23em;
+    }
+}
