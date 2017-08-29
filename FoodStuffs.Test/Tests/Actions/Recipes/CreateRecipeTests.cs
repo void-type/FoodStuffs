@@ -15,7 +15,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void CreateRecipe()
         {
-            var newRecipeViewModel = new RecipeViewModel()
+            var newRecipeViewModel = new RecipeViewModel
             {
                 Name = "New Recipe",
                 CookTimeMinutes = 2,
@@ -37,7 +37,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Id = 2
             };
 
-            var data = TestDataFactory.FoodStuffsDb();
+            var data = new FoodStuffsMemoryData();
             var now = MockFactory.EarlyDateTimeService;
             var responder = MockFactory.Responder;
 
@@ -63,6 +63,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             Assert.Equal(2, data.Recipes.Stored.Count());
             Assert.Equal(2, data.Categories.Stored.Count());
             Assert.Equal(4, data.CategoryRecipes.Stored.Count());
+            Assert.False(responder.ResponseCreated);
         }
     }
 }

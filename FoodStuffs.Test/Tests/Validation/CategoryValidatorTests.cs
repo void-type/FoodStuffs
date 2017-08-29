@@ -10,7 +10,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void InvalidWhenCategoryNameEmpty(string categoryName)
+        public void InvalidWhenNameEmpty(string categoryName)
         {
             var category = new Category
             {
@@ -27,7 +27,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [Theory]
         [InlineData("1")]
         [InlineData("Really Long_Name! with special characters !@#$%^&*():.,")]
-        private void ValidWhenCategoryNameNotEmpty(string categoryName)
+        private void ValidWhenNameNotEmpty(string categoryName)
         {
             var category = new Category
             {

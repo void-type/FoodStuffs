@@ -1,4 +1,6 @@
-﻿using FoodStuffs.Model.Interfaces.Services.Logging;
+﻿using FoodStuffs.Data.FoodStuffsDb;
+using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Services.Logging;
 using FoodStuffs.Web.Actions;
 using FoodStuffs.Web.Logging;
 using Microsoft.AspNetCore.Builder;
@@ -28,14 +30,13 @@ namespace FoodStuffs.Web
         {
             // Add framework services.
             services.AddMvc();
+            services.AddSingleton<IConfiguration>(Configuration);
 
-            //services.AddDbContext<FoodStuffsContext>(options =>
-            //  options.UseSqlServer(Configuration.GetValue("FoodStuffsConnectionString", "")));
-
-            //services.AddTransient<IFoodStuffsData, FoodStuffsDbData>();
+            // Choose a db implementation
+            services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
+            //services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
 
             services.AddTransient<ILoggingService, LoggerAdapter>();
-
             services.AddTransient<ActionResultResponder>();
         }
 

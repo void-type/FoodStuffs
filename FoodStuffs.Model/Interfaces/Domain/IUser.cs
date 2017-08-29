@@ -12,6 +12,6 @@ namespace FoodStuffs.Model.Interfaces.Domain
         string FirstName { get; set; }
         string LastName { get; set; }
         ICollection<IRecipe> RecipeCreatedByUser { get; set; }
-        ICollection<IRecipe> RecipeModifiedByUser { get; set; }
+        ICollection<IRecipe> RecipesModifiedByUser { get; set; }
     }
 }

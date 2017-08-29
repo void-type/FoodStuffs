@@ -6,7 +6,7 @@ using FoodStuffs.Model.Interfaces.Services.Data.Core;
 
 namespace FoodStuffs.Data.FoodStuffsDb
 {
-    public class FoodStuffsDbData : EfDatabaseService, IFoodStuffsData
+    public abstract class AbstractFoodStuffsData : EfDatabaseService, IFoodStuffsData
     {
         public IRepository<ICategory> Categories { get; }
 
@@ -16,7 +16,7 @@ namespace FoodStuffs.Data.FoodStuffsDb
 
         public IRepository<IUser> Users { get; }
 
-        public FoodStuffsDbData(FoodStuffsContext context) : base(context)
+        protected AbstractFoodStuffsData(FoodStuffsContext context) : base(context)
         {
             Users = new EfRepository<IUser, User>(context);
             Categories = new EfRepository<ICategory, Category>(context);

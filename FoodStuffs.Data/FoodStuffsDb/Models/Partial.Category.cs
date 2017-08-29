@@ -8,7 +8,7 @@ namespace FoodStuffs.Data.FoodStuffsDb.Models
     {
         ICollection<ICategoryRecipe> ICategory.CategoryRecipe
         {
-            get => (ICollection<ICategoryRecipe>)CategoryRecipe;
+            get => CategoryRecipe.Select(x => (ICategoryRecipe)x).ToArray();
             set => CategoryRecipe = value.Select(x => (CategoryRecipe)x).ToArray();
         }
     }

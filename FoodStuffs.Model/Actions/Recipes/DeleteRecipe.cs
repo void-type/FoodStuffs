@@ -28,15 +28,15 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
 
             var recipeCategories = recipe.CategoryRecipe.ToList();
-            var categories = recipeCategories.Select(recCat => recCat.Category);
+            var categories = recipeCategories.Select(recCat => recCat.Category).ToList();
 
-            _data.CategoryRecipes.RemoveRange(recipe.CategoryRecipe);
+            _data.CategoryRecipes.RemoveRange(recipeCategories);
             _data.Recipes.Remove(recipe);
 
             // Cleanup unused categories
             foreach (var category in categories)
             {
-                if (!category.CategoryRecipe.Any())
+                if (category.CategoryRecipe.All(catRec => catRec.RecipeId == recipe.Id))
                 {
                     _data.Categories.Remove(category);
                 }

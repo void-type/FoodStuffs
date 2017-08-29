@@ -8,13 +8,13 @@ namespace FoodStuffs.Data.FoodStuffsDb.Models
     {
         ICollection<IRecipe> IUser.RecipeCreatedByUser
         {
-            get => (ICollection<IRecipe>)RecipeCreatedByUser;
+            get => RecipeCreatedByUser.Select(x => (IRecipe)x).ToArray();
             set => RecipeCreatedByUser = value.Select(x => (Recipe)x).ToArray();
         }
 
-        ICollection<IRecipe> IUser.RecipeModifiedByUser
+        ICollection<IRecipe> IUser.RecipesModifiedByUser
         {
-            get => (ICollection<IRecipe>)RecipeModifiedByUser;
+            get => RecipeModifiedByUser.Select(x => (IRecipe)x).ToArray();
             set => RecipeModifiedByUser = value.Select(x => (Recipe)x).ToArray();
         }
     }
