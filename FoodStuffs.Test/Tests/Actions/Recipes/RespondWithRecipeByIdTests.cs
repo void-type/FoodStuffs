@@ -12,9 +12,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithRecipeByIdFound()
         {
-            var responder = MockFactory.Responder;
-
-            using (var data = new FoodStuffsMemoryData("b"))
+            using (var data = new FoodStuffsMemoryData("RespondWithRecipeByIdFound"))
             {
                 data.Recipes.Add(new Recipe
                 {
@@ -37,27 +35,31 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
             }
 
-            using (var data = new FoodStuffsMemoryData("b"))
+            using (var data = new FoodStuffsMemoryData("RespondWithRecipeByIdFound"))
             {
+                var responder = MockFactory.Responder;
+
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipeById(data, 2));
-            }
 
-            Assert.NotNull(responder.Response.DataItem);
+                Assert.NotNull(responder.Response.DataItem);
+                Assert.True(responder.ResponseCreated);
+            }
         }
 
         [Fact]
         public void RespondWithRecipeByIdNotFound()
         {
-            var responder = MockFactory.Responder;
-
-            using (var data = new FoodStuffsMemoryData("b"))
+            using (var data = new FoodStuffsMemoryData("RespondWithRecipeByIdNotFound"))
             {
+                var responder = MockFactory.Responder;
+
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipeById(data, 5));
-            }
 
-            Assert.Null(responder.Response.DataItem);
+                Assert.Null(responder.Response.DataItem);
+                Assert.True(responder.ResponseCreated);
+            }
         }
     }
 }

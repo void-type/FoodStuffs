@@ -12,61 +12,65 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
     public class DeleteRecipeTests
     {
         [Fact]
-        public void Delete()
+        public void DeleteRecipe()
         {
-            var data = new FoodStuffsMemoryData();
+            using (var data = new FoodStuffsMemoryData("DeleteRecipe"))
+            {
+                data.Recipes.Add(new Recipe
+                {
+                    Id = 1,
+                    Name = "New Recipe1",
+                });
+
+                data.Recipes.Add(new Recipe
+                {
+                    Id = 2,
+                    Name = "New Recipe2",
+                });
+
+                data.Categories.Add(new Category
+                {
+                    Id = 1,
+                    Name = "New Category1"
+                });
+
+                data.Categories.Add(new Category
+                {
+                    Id = 2,
+                    Name = "New Category2"
+                });
+
+                data.CategoryRecipes.Add(new CategoryRecipe
+                {
+                    CategoryId = 1,
+                    RecipeId = 1
+                });
+
+                data.CategoryRecipes.Add(new CategoryRecipe
+                {
+                    CategoryId = 2,
+                    RecipeId = 2
+                });
+
+                data.SaveChanges();
+            }
+
             var responder = MockFactory.Responder;
 
-            data.Recipes.Add(new Recipe
+            using (var data = new FoodStuffsMemoryData("DeleteRecipe"))
             {
-                Id = 1,
-                Name = "New Recipe1",
-                CookTimeMinutes = 2,
-                PrepTimeMinutes = 2
-            });
+                new ActionChain(responder)
+                    .Execute(new DeleteRecipe(data, 1))
+                    .Execute(new SaveChangesToData(data));
+            }
 
-            data.Recipes.Add(new Recipe
+            using (var data = new FoodStuffsMemoryData("DeleteRecipe"))
             {
-                Id = 2,
-                Name = "New Recipe2",
-                CookTimeMinutes = 2,
-                PrepTimeMinutes = 2
-            });
-
-            data.Categories.Add(new Category
-            {
-                Id = 1,
-                Name = "New Category1"
-            });
-
-            data.Categories.Add(new Category
-            {
-                Id = 2,
-                Name = "New Category2"
-            });
-
-            data.CategoryRecipes.Add(new CategoryRecipe
-            {
-                CategoryId = 1,
-                RecipeId = 1
-            });
-
-            data.CategoryRecipes.Add(new CategoryRecipe
-            {
-                CategoryId = 2,
-                RecipeId = 2
-            });
-
-            data.SaveChanges();
-
-            new ActionChain(responder)
-                .Execute(new DeleteRecipe(data, 1))
-                .Execute(new SaveChangesToData(data));
-
-            Assert.Equal(1, data.Recipes.Stored.Count());
-            Assert.Equal(1, data.Categories.Stored.Count());
-            Assert.Equal(1, data.CategoryRecipes.Stored.Count());
-            Assert.False(responder.ResponseCreated);
+                Assert.Equal(1, data.Recipes.Stored.Count());
+                Assert.Equal(1, data.Categories.Stored.Count());
+                Assert.Equal(1, data.CategoryRecipes.Stored.Count());
+                Assert.False(responder.ResponseCreated);
+            }
         }
     }
 }

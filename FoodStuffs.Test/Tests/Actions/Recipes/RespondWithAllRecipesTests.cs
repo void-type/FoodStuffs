@@ -12,23 +12,22 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithAllRecipesEmpty()
         {
-            var responder = MockFactory.Responder;
-
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsMemoryData("RespondWithAllRecipesEmpty"))
             {
+                var responder = MockFactory.Responder;
+
                 new ActionChain(responder)
                     .Execute(new RespondWithAllRecipes(data));
-            }
 
-            Assert.Empty(responder.Response.DataList);
+                Assert.Empty(responder.Response.DataList);
+                Assert.True(responder.ResponseCreated);
+            }
         }
 
         [Fact]
         public void RespondWithAllRecipesNotEmpty()
         {
-            var responder = MockFactory.Responder;
-
-            using (var data = new FoodStuffsMemoryData("a"))
+            using (var data = new FoodStuffsMemoryData("RespondWithAllRecipesNotEmpty"))
             {
                 data.Recipes.Add(new Recipe
                 {
@@ -39,13 +38,16 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
             }
 
-            using (var data = new FoodStuffsMemoryData("a"))
+            using (var data = new FoodStuffsMemoryData("RespondWithAllRecipesNotEmpty"))
             {
+                var responder = MockFactory.Responder;
+
                 new ActionChain(responder)
                     .Execute(new RespondWithAllRecipes(data));
-            }
 
-            Assert.NotEmpty(responder.Response.DataList);
+                Assert.NotEmpty(responder.Response.DataList);
+                Assert.True(responder.ResponseCreated);
+            }
         }
     }
 }

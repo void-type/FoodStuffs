@@ -1,7 +1,10 @@
 ﻿using FoodStuffs.Model.Actions.Core.Responder;
 using FoodStuffs.Model.Actions.Core.Steps;
+using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.Validation.Core;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
@@ -19,7 +22,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         protected override void PerformStep(IActionResponder respond)
         {
-            var recipe = _data.Recipes.Stored.FirstOrDefault(rec => rec.Id == _id);
+            var recipe = _data.Recipes.Stored.GetById(_id);
 
             if (recipe == null)
             {
@@ -27,18 +30,24 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            var recipeCategories = recipe.CategoryRecipe.ToList();
-            var categories = recipeCategories.Select(recCat => recCat.Category).ToList();
-
+            var recipeCategories = recipe.CategoryRecipe;
             _data.CategoryRecipes.RemoveRange(recipeCategories);
-            _data.Recipes.Remove(recipe);
 
-            // Cleanup unused categories
+            var unusedCategories = FindUnusedCategories(recipe);
+            _data.Categories.RemoveRange(unusedCategories);
+
+            _data.Recipes.Remove(recipe);
+        }
+
+        private static IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
+        {
+            var categories = recipe.CategoryRecipe.Select(cr => cr.Category);
+
             foreach (var category in categories)
             {
-                if (category.CategoryRecipe.All(catRec => catRec.RecipeId == recipe.Id))
+                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
                 {
-                    _data.Categories.Remove(category);
+                    yield return category;
                 }
             }
         }

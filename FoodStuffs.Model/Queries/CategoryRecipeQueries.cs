@@ -1,0 +1,13 @@
+﻿using FoodStuffs.Model.Interfaces.Domain;
+using System.Linq;
+
+namespace FoodStuffs.Model.Queries
+{
+    public static class CategoryRecipeQueries
+    {
+        public static ICategoryRecipe GetById(this IQueryable<ICategoryRecipe> categoryRecipes, int recipeId, int categoryId)
+        {
+            return categoryRecipes.FirstOrDefault(cr => cr.RecipeId == recipeId && cr.CategoryId == categoryId);
+        }
+    }
+}
