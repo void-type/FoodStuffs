@@ -13,6 +13,8 @@ namespace FoodStuffs.Web
 {
     public class Startup
     {
+        public IConfigurationRoot Configuration { get; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -21,23 +23,6 @@ namespace FoodStuffs.Web
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-        }
-
-        public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // Add framework services.
-            services.AddMvc();
-            services.AddSingleton<IConfiguration>(Configuration);
-
-            // Choose a db implementation
-            services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
-            //services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
-
-            services.AddTransient<ILoggingService, LoggerAdapter>();
-            services.AddTransient<ActionResultResponder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +48,21 @@ namespace FoodStuffs.Web
             });
 
             loggerFactory.AddFile(Configuration.GetSection("Logging"));
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            services.AddMvc();
+            services.AddSingleton<IConfiguration>(Configuration);
+
+            // Choose a db implementation
+            //services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
+            services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
+
+            services.AddTransient<ILoggingService, LoggerAdapter>();
+            services.AddTransient<ActionResultResponder>();
         }
     }
 }

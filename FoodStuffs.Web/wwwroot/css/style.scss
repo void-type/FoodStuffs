@@ -16,8 +16,8 @@ $color-nav-link: rgba(255, 255, 255, 1);
 $color-nav-background: $color-border;
 $color-nav-background-active: mix($color-nav-background, $color-ternary, 90%);
 
-$highlight-border: inset 0 0 2px white, inset 0 0 5px white, inset 0 0 5px white;
-$border: 2px solid mix($color-border, white, 70%);
+$highlight-border: inset 0 0 1px white, inset 0 0 3px white, inset 0 0 5px white;
+$border: 1px solid mix($color-border, white, 70%);
 $shadow: 2px 3px 2px rgba($color-border, .5);
 $shadow-collapse: 1px 1px 2px rgba($color-border, .5);
 $color-error: rgba(220, 20, 60, 1);
@@ -73,7 +73,7 @@ a, a:link {
     color: $color-primary-dark;
 
     &:hover, &:active {
-        color: $color-secondary-dark;
+        color: $color-secondary;
     }
 }
 
@@ -138,7 +138,7 @@ header {
                     position: absolute;
                 }
 
-                a {
+                a, a:link {
                     display: block;
                     padding: 1em .5em;
                     white-space: nowrap;
@@ -147,14 +147,14 @@ header {
                         color: $color-nav-link;
                     }
 
-                    &:hover {
-                        background-color: $color-nav-background-active;
-                        color: $color-ternary-dark;
-                        box-shadow: $highlight-border;
+                    &.current-page {
+                        color: $color-primary;
                     }
 
-                    &.current-page {
+                    &:hover, &:active {
+                        background-color: $color-nav-background-active;
                         color: $color-secondary;
+                        box-shadow: $highlight-border;
                     }
                 }
             }
@@ -180,12 +180,16 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 
-    thead > tr {
+    tr {
         text-align: left;
     }
 
-    tbody td {
-        border: $border;
+    th:first-child, td:first-child {
+        padding-left: 0;
+    }
+
+    th, td {
+        border-bottom: $border;
     }
 
     th, td {
@@ -273,7 +277,6 @@ ul.error {
 }
 
 @media (max-width:680px) {
-
     .form-group {
         label {
             text-align: left;
