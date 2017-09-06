@@ -3,21 +3,6 @@ A web application for managing recipes.
 
 ## Setup
 
-### Need
-- .Net Core SDK
-- Bower
-
-### Build
-```
-git clone https://github.com/void-type/foodstuffs.git
-cd foodstuffs
-dotnet restore
-cd FoodStuffs.Web
-bower install
-cd ../
-dotnet build FoodStuffs.sln
-```
-
 ### Database
 Within Web/Startup.cs, you can either... 
 - Use a real database:
@@ -25,8 +10,17 @@ Within Web/Startup.cs, you can either...
     2. set a connection string in configuration
 - Use a volitile in-memory database
 
-### Run
+### Need
+- .Net Core SDK
+- Bower
+
+### Build And Run
 ```
+git clone https://github.com/void-type/foodstuffs.git
+cd foodstuffs
+dotnet restore
+dotnet build FoodStuffs.sln
 cd FoodStuffs.Web
+bower install
 dotnet run
 ```
