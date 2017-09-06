@@ -7,7 +7,7 @@ namespace FoodStuffs.Model.Queries
     {
         public static IRecipe GetById(this IQueryable<IRecipe> recipes, int id)
         {
-            return recipes.FirstOrDefault(r => r.Id == id);
+            return recipes.SingleOrDefault(r => r.Id == id);
         }
     }
 }

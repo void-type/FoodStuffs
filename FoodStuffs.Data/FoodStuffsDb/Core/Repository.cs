@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace FoodStuffs.Data.FoodStuffsDb.Core
 {
-    public class EfRepository<TInterface, TDbEntity> : EfReadOnlyRepository<TInterface, TDbEntity>, IRepository<TInterface> where TDbEntity : class, TInterface, new() where TInterface : class
+    public class Repository<TInterface, TDbEntity> : ReadOnlyRepository<TInterface, TDbEntity>, IRepository<TInterface> where TDbEntity : class, TInterface, new() where TInterface : class
     {
         public TInterface New => new TDbEntity();
 
-        public EfRepository(DbContext context) : base(context)
+        public Repository(DbContext context) : base(context)
         {
         }
 

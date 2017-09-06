@@ -6,16 +6,16 @@ using System.Linq;
 
 namespace FoodStuffs.Data.FoodStuffsDb.Repositories
 {
-    public class RecipeRepository : EfRepository<IRecipe, Recipe>
+    public class RecipeRepository : Repository<IRecipe, Recipe>
     {
         public RecipeRepository(DbContext context) : base(context)
         {
         }
 
-        public new IQueryable<IRecipe> Stored => Context.Set<Recipe>()
+        public override IQueryable<IRecipe> Stored => Context.Set<Recipe>()
             .Include(r => r.CategoryRecipe)
+            .ThenInclude(cr => cr.Category)
             .Include(r => r.CreatedByUser)
-            .Include(r => r.ModifiedByUser)
-            .AsQueryable();
+            .Include(r => r.ModifiedByUser);
     }
 }

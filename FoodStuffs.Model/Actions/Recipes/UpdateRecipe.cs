@@ -4,6 +4,7 @@ using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Validation.Core;
 using FoodStuffs.Model.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,20 +30,21 @@ namespace FoodStuffs.Model.Actions.Recipes
         {
             var savedRecipe = _data.Recipes.Stored.GetById(_viewModel.Id);
 
-            UpdateProperties(savedRecipe);
+            if (savedRecipe == null)
+            {
+                respond.WithValidationErrors($"RecipeId: {_viewModel.Id}", new ValidationError("Recipe does not exist."));
+                return;
+            }
+
+            savedRecipe.ModifiedOn = _now.Now;
+            savedRecipe.ModifiedByUserId = _user.Id;
+            savedRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
+            savedRecipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;
+            savedRecipe.Directions = _viewModel.Directions;
+            savedRecipe.Ingredients = _viewModel.Ingredients;
+            savedRecipe.Name = _viewModel.Name;
 
             UpdateCategories(savedRecipe);
-        }
-
-        private void UpdateProperties(IRecipe recipe)
-        {
-            recipe.ModifiedOn = _now.Now;
-            recipe.ModifiedByUserId = _user.Id;
-            recipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
-            recipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;
-            recipe.Directions = _viewModel.Directions;
-            recipe.Ingredients = _viewModel.Ingredients;
-            recipe.Name = _viewModel.Name;
         }
 
         private void UpdateCategories(IRecipe recipe)
@@ -55,7 +57,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 .ToList();
             _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
 
-            var unusedCategoriesToRemove = FindUnusedCategories(recipe, categoryRecipesToRemove);
+            var unusedCategoriesToRemove = FindUnusedCategories(recipe, categoryRecipesToRemove).ToList();
             _data.Categories.RemoveRange(unusedCategoriesToRemove);
 
             // Add all missing Categories and CategoryRecipes from view model

@@ -9,5 +9,10 @@ namespace FoodStuffs.Model.Queries
         {
             return categories.FirstOrDefault(c => c.Name.ToUpper().Trim() == categoryName.ToUpper().Trim());
         }
+
+        public static ICategory GetById(this IQueryable<ICategory> categories, int id)
+        {
+            return categories.SingleOrDefault(r => r.Id == id);
+        }
     }
 }

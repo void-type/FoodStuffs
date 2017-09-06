@@ -7,7 +7,7 @@ using FoodStuffs.Model.Interfaces.Services.Data.Core;
 
 namespace FoodStuffs.Data.FoodStuffsDb
 {
-    public abstract class AbstractFoodStuffsData : EfDatabaseService, IFoodStuffsData
+    public abstract class AbstractFoodStuffsData : DatabaseService, IFoodStuffsData
     {
         public IRepository<ICategory> Categories { get; }
 

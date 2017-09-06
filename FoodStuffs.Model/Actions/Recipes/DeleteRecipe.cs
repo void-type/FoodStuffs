@@ -39,15 +39,17 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.Recipes.Remove(recipe);
         }
 
-        private static IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
+        private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
         {
-            var categories = recipe.CategoryRecipe.Select(cr => cr.Category);
+            var categoryIdsToCheck = recipe.CategoryRecipe.Select(cr => cr.CategoryId);
 
-            foreach (var category in categories)
+            var categoriesToCheck = _data.Categories.Stored.Where(c => categoryIdsToCheck.Contains(c.Id));
+
+            foreach (var categoryToCheck in categoriesToCheck)
             {
-                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
+                if (_data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == categoryToCheck.Id).All(cr => cr.RecipeId == recipe.Id))
                 {
-                    yield return category;
+                    yield return categoryToCheck;
                 }
             }
         }

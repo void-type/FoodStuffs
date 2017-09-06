@@ -5,7 +5,7 @@ using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
@@ -27,52 +27,39 @@ namespace FoodStuffs.Model.Actions.Recipes
         protected override void PerformStep(IActionResponder respond)
         {
             var newRecipe = _data.Recipes.New;
-            TransferProperties(newRecipe);
+            newRecipe.CreatedOn = _now.Now;
+            newRecipe.ModifiedOn = _now.Now;
+            newRecipe.CreatedByUserId = _user.Id;
+            newRecipe.ModifiedByUserId = _user.Id;
+            newRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
+            newRecipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;
+            newRecipe.Directions = _viewModel.Directions;
+            newRecipe.Ingredients = _viewModel.Ingredients;
+            newRecipe.Name = _viewModel.Name;
+
             _data.Recipes.Add(newRecipe);
 
-            var newCategoryRecipes = GetCategoryRecipes(newRecipe);
-            _data.CategoryRecipes.AddRange(newCategoryRecipes);
+            AddCategoriesAndCategoryRecipes(newRecipe.Id);
         }
 
-        private void TransferProperties(IRecipe recipe)
+        private void AddCategoriesAndCategoryRecipes(int recipeId)
         {
-            recipe.CreatedOn = _now.Now;
-            recipe.ModifiedOn = _now.Now;
-            recipe.CreatedByUserId = _user.Id;
-            recipe.ModifiedByUserId = _user.Id;
-            recipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
-            recipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;
-            recipe.Directions = _viewModel.Directions;
-            recipe.Ingredients = _viewModel.Ingredients;
-            recipe.Name = _viewModel.Name;
-        }
-
-        private IEnumerable<ICategoryRecipe> GetCategoryRecipes(IRecipe recipe)
-        {
-            foreach (var viewModelCategory in _viewModel.Categories)
+            foreach (var categoryName in _viewModel.Categories.Select(c => c.Name))
             {
-                var category = GetOrCreateCategory(viewModelCategory);
+                var category = _data.Categories.Stored.GetByName(categoryName);
+
+                if (category == null)
+                {
+                    category = _data.Categories.New;
+                    category.Name = categoryName;
+                    _data.Categories.Add(category);
+                }
 
                 var categoryRecipe = _data.CategoryRecipes.New;
-                categoryRecipe.RecipeId = recipe.Id;
+                categoryRecipe.RecipeId = recipeId;
                 categoryRecipe.CategoryId = category.Id;
-                yield return categoryRecipe;
+                _data.CategoryRecipes.Add(categoryRecipe);
             }
-        }
-
-        private ICategory GetOrCreateCategory(ICategory viewModelCategory)
-        {
-            var category = _data.Categories.Stored
-                .GetByName(viewModelCategory.Name);
-
-            if (category == null)
-            {
-                category = _data.Categories.New;
-                category.Name = viewModelCategory.Name;
-                _data.Categories.Add(category);
-            }
-
-            return category;
         }
     }
 }
