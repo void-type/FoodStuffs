@@ -6,15 +6,18 @@ A web application for managing recipes.
 ### Database
 Within Web/Startup.cs, you can either... 
 - Use a real database:
-    1. build a database using the scripts in FoodStuffs.Data/Sql 
+    1. build a database using the scripts in Data/Sql 
     2. set a connection string in configuration
-- Use a volitile in-memory database
+    3. Within Web/Startup.cs, uncomment the FoodStuffsSqlData dependency.
 
-### Need
+- Use a volatile in-memory database
+    1. Within Web/Startup.cs, uncomment the MemoryFoodStuffsData dependency.
+
+### Tools
 - .Net Core SDK
 - Bower
 
-### Build And Run
+### Clone, Build, And Run
 ```
 git clone https://github.com/void-type/foodstuffs.git
 cd foodstuffs
