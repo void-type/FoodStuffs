@@ -7,9 +7,9 @@ namespace FoodStuffs.Test.Mocks.Services
     {
         public DiscreteDateTimeService(DateTime moment)
         {
-            Now = moment;
+            Moment = moment;
         }
 
-        public DateTime Now { get; }
+        public DateTime Moment { get; }
     }
 }

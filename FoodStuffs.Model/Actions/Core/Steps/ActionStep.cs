@@ -16,7 +16,7 @@ namespace FoodStuffs.Model.Actions.Core.Steps
             }
             catch (Exception ex)
             {
-                respond.WithError("There was a problem processing your request. Contact Application Services for further assistance.", null, ex);
+                respond.WithError("There was a problem processing your request.", null, ex);
             }
         }
 

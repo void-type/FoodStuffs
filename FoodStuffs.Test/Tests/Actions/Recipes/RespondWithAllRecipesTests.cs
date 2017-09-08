@@ -12,7 +12,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithAllRecipesEmpty()
         {
-            using (var data = new FoodStuffsMemoryData("RespondWithAllRecipesEmpty"))
+            using (var data = new FoodStuffsMemoryData())
             {
                 var responder = MockFactory.Responder;
 
@@ -27,7 +27,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithAllRecipesNotEmpty()
         {
-            using (var data = new FoodStuffsMemoryData("RespondWithAllRecipesNotEmpty"))
+            using (var data = new FoodStuffsMemoryData())
             {
                 data.Recipes.Add(new Recipe
                 {
@@ -36,10 +36,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 });
 
                 data.SaveChanges();
-            }
 
-            using (var data = new FoodStuffsMemoryData("RespondWithAllRecipesNotEmpty"))
-            {
                 var responder = MockFactory.Responder;
 
                 new ActionChain(responder)

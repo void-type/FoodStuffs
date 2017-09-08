@@ -2,6 +2,6 @@
 {
     public interface IDateTimeService
     {
-        System.DateTime Now { get; }
+        System.DateTime Moment { get; }
     }
 }

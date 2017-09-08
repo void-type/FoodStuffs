@@ -4,6 +4,6 @@ namespace FoodStuffs.Web.Services.DateTime
 {
     public class NowDateTimeService : IDateTimeService
     {
-        public System.DateTime Now => System.DateTime.Now;
+        public System.DateTime Moment => System.DateTime.Now;
     }
 }

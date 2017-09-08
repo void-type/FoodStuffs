@@ -15,14 +15,14 @@ namespace FoodStuffs.Model.Actions.Recipes
     {
         private readonly IFoodStuffsData _data;
         private readonly IDateTimeService _now;
-        private readonly IUser _user;
+        private readonly int _userId;
         private readonly RecipeViewModel _viewModel;
 
-        public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, IUser user, RecipeViewModel viewModel)
+        public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userIdId)
         {
             _data = data;
             _now = now;
-            _user = user;
+            _userId = userIdId;
             _viewModel = viewModel;
         }
 
@@ -36,61 +36,64 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            savedRecipe.ModifiedOn = _now.Now;
-            savedRecipe.ModifiedByUserId = _user.Id;
+            savedRecipe.ModifiedOn = _now.Moment;
+            savedRecipe.ModifiedByUserId = _userId;
             savedRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
             savedRecipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;
             savedRecipe.Directions = _viewModel.Directions;
             savedRecipe.Ingredients = _viewModel.Ingredients;
             savedRecipe.Name = _viewModel.Name;
 
-            UpdateCategories(savedRecipe);
+            CleanupCategories(savedRecipe);
+
+            AddCategories(savedRecipe);
+
+            _data.SaveChanges();
         }
 
-        private void UpdateCategories(IRecipe recipe)
+        private void CleanupCategories(IRecipe recipe)
         {
-            // Remove all extra CategoryRecipes and unused Categories from recipe
-            var categoryRecipesToRemove = recipe.CategoryRecipe
-                .Where(cr => !_viewModel.Categories
-                    .Select(c => c.Name.ToUpper().Trim())
-                    .Contains(cr.Category.Name.ToUpper().Trim()))
-                .ToList();
-            _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
-
+            var categoryRecipesToRemove = FindUnusedCategoryRecipes(recipe);
             var unusedCategoriesToRemove = FindUnusedCategories(recipe, categoryRecipesToRemove).ToList();
-            _data.Categories.RemoveRange(unusedCategoriesToRemove);
 
-            // Add all missing Categories and CategoryRecipes from view model
+            _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
+            _data.Categories.RemoveRange(unusedCategoriesToRemove);
+        }
+
+        private void AddCategories(IRecipe recipe)
+        {
             foreach (var viewModelCategory in _viewModel.Categories)
             {
-                var category = GetOrCreateCategory(viewModelCategory);
+                var existingCategory = _data.Categories.Stored.GetByName(viewModelCategory.Name);
 
-                var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipe.Id, category.Id);
+                if (existingCategory == null)
+                {
+                    existingCategory = _data.Categories.New;
+                    existingCategory.Name = viewModelCategory.Name;
+
+                    _data.Categories.Add(existingCategory);
+                }
+
+                var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipe.Id, existingCategory.Id);
 
                 if (existingCategoryRecipe == null)
                 {
                     var categoryRecipe = _data.CategoryRecipes.New;
                     categoryRecipe.RecipeId = recipe.Id;
-                    categoryRecipe.CategoryId = category.Id;
+                    categoryRecipe.CategoryId = existingCategory.Id;
 
                     _data.CategoryRecipes.Add(categoryRecipe);
                 }
             }
         }
 
-        private ICategory GetOrCreateCategory(ICategory viewModelCategory)
+        private List<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe)
         {
-            var category = _data.Categories.Stored
-                .GetByName(viewModelCategory.Name);
-
-            if (category == null)
-            {
-                category = _data.Categories.New;
-                category.Name = viewModelCategory.Name;
-                _data.Categories.Add(category);
-            }
-
-            return category;
+            return recipe.CategoryRecipe
+                .Where(cr => !_viewModel.Categories
+                    .Select(c => c.Name.ToUpper().Trim())
+                    .Contains(cr.Category.Name.ToUpper().Trim()))
+                .ToList();
         }
 
         private static IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe, IEnumerable<ICategoryRecipe> categoryRecipesToBeRemoved)

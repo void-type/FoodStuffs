@@ -16,7 +16,11 @@ namespace FoodStuffs.Data.FoodStuffsDb
                 .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
                 .Options;
 
-            return new FoodStuffsContext(options);
+            var context = new FoodStuffsContext(options);
+
+            context.Database.EnsureDeleted();
+
+            return context;
         }
     }
 }

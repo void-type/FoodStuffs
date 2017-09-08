@@ -27,8 +27,8 @@ namespace FoodStuffs.Model.Actions.Recipes
         protected override void PerformStep(IActionResponder respond)
         {
             var newRecipe = _data.Recipes.New;
-            newRecipe.CreatedOn = _now.Now;
-            newRecipe.ModifiedOn = _now.Now;
+            newRecipe.CreatedOn = _now.Moment;
+            newRecipe.ModifiedOn = _now.Moment;
             newRecipe.CreatedByUserId = _user.Id;
             newRecipe.ModifiedByUserId = _user.Id;
             newRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
@@ -40,6 +40,8 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.Recipes.Add(newRecipe);
 
             AddCategoriesAndCategoryRecipes(newRecipe.Id);
+
+            _data.SaveChanges();
         }
 
         private void AddCategoriesAndCategoryRecipes(int recipeId)

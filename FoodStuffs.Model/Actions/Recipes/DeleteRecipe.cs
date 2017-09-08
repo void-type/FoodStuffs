@@ -37,6 +37,8 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.Categories.RemoveRange(unusedCategories);
 
             _data.Recipes.Remove(recipe);
+
+            _data.SaveChanges();
         }
 
         private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)

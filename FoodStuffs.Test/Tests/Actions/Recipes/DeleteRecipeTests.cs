@@ -1,7 +1,6 @@
 ﻿using FoodStuffs.Data.FoodStuffsDb;
 using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Model.Actions.Core.Chain;
-using FoodStuffs.Model.Actions.Core.Steps;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Test.Mocks;
@@ -15,7 +14,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void DeleteRecipeAndRelations()
         {
-            using (var data = new FoodStuffsMemoryData("DeleteRecipeAndRelations"))
+            using (var data = new FoodStuffsMemoryData())
             {
                 data.Recipes.Add(new Recipe
                 {
@@ -72,19 +71,13 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 });
 
                 data.SaveChanges();
-            }
 
-            var responder = MockFactory.Responder;
+                var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData("DeleteRecipeAndRelations"))
-            {
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 2))
-                    .Execute(new SaveChangesToData(data));
-            }
+                    .Execute(new DeleteRecipe(data, 2));
+                Assert.False(responder.ResponseCreated);
 
-            using (var data = new FoodStuffsMemoryData("DeleteRecipeAndRelations"))
-            {
                 Assert.Equal(1, data.Recipes.Stored.Count());
                 Assert.Equal(2, data.Categories.Stored.Count());
                 Assert.Equal(2, data.CategoryRecipes.Stored.Count());
@@ -99,15 +92,13 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.Null(data.Categories.Stored.GetById(3));
                 Assert.Null(data.CategoryRecipes.Stored.GetById(2, 2));
                 Assert.Null(data.CategoryRecipes.Stored.GetById(2, 3));
-
-                Assert.False(responder.ResponseCreated);
             }
         }
 
         [Fact]
         public void DeleteRecipe()
         {
-            using (var data = new FoodStuffsMemoryData("DeleteRecipe"))
+            using (var data = new FoodStuffsMemoryData())
             {
                 data.Recipes.Add(new Recipe
                 {
@@ -116,24 +107,16 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 });
 
                 data.SaveChanges();
-            }
 
-            var responder = MockFactory.Responder;
+                var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData("DeleteRecipe"))
-            {
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 1))
-                    .Execute(new SaveChangesToData(data));
-            }
+                    .Execute(new DeleteRecipe(data, 1));
+                Assert.False(responder.ResponseCreated);
 
-            using (var data = new FoodStuffsMemoryData("DeleteRecipe"))
-            {
                 Assert.Equal(0, data.Recipes.Stored.Count());
                 Assert.Equal(0, data.Categories.Stored.Count());
                 Assert.Equal(0, data.CategoryRecipes.Stored.Count());
-
-                Assert.False(responder.ResponseCreated);
             }
         }
 
@@ -142,11 +125,10 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData("DeleteRecipeNotFound"))
+            using (var data = new FoodStuffsMemoryData())
             {
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 2))
-                    .Execute(new SaveChangesToData(data));
+                    .Execute(new DeleteRecipe(data, 2));
             }
 
             Assert.True(responder.ResponseCreated);
