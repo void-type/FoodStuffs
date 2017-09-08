@@ -45,9 +45,9 @@ namespace FoodStuffs.Model.Actions.Recipes
             savedRecipe.Name = _viewModel.Name;
 
             CleanupCategories(savedRecipe);
+            _data.SaveChanges();
 
             AddCategories(savedRecipe);
-
             _data.SaveChanges();
         }
 

@@ -105,7 +105,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 var recipeId = recipe.Id;
-                //}
 
                 var responder = MockFactory.Responder;
 
@@ -132,14 +131,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     CreatedByUserId = 53
                 };
 
-                //using (var data = new FoodStuffsMemoryData(dbName))
-                //{
                 new ActionChain(responder)
                     .Execute(new UpdateRecipe(data, now, newRecipeViewModel, 2));
-                //}
 
-                //using (var data = new FoodStuffsMemoryData(dbName))
-                //{
                 var changedRecipe = data.Recipes.Stored.GetById(recipeId);
 
                 Assert.False(responder.ResponseCreated);
@@ -151,7 +145,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.Equal(1, changedRecipe.CreatedByUserId);
                 Assert.Equal(2, changedRecipe.ModifiedByUserId);
 
-                var newCategory4 = data.Categories.Stored.Where(c => c.Name == "New Category4");
+                var newCategory4 = data.Categories.Stored.Where(c => c.Name == "Category4");
                 Assert.NotNull(newCategory4);
 
                 Assert.Equal(2, data.Recipes.Stored.Count());
