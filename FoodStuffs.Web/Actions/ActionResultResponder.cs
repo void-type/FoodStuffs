@@ -28,17 +28,14 @@ namespace FoodStuffs.Web.Actions
             var set = new CountedItemSet<TItemType> { Items = items.ToList() };
 
             _logger.Info(logExtra, $"Count: {set.Count}");
-            Response = new ObjectResult(set);
+            Response = new ObjectResult(set) { StatusCode = 200 };
         }
 
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
         {
             _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
 
-            Response = new ObjectResult(new ErrorMessage(userMessage))
-            {
-                StatusCode = 500
-            };
+            Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
         }
 
         public override void WithSuccess(string userMessage, string logExtra = null)

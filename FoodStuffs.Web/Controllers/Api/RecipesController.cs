@@ -44,8 +44,7 @@ namespace FoodStuffs.Web.Controllers.Api
             return _responder.Response;
         }
 
-        [Route("create")]
-        [HttpPost]
+        [HttpPut]
         public IActionResult Create(RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
@@ -55,8 +54,17 @@ namespace FoodStuffs.Web.Controllers.Api
             return _responder.Response;
         }
 
-        [Route("delete")]
-        [HttpPost]
+        //[HttpPost]
+        //public IActionResult Update(RecipeViewModel viewModel)
+        //{
+        //    new ActionChain(_responder)
+        //        .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
+        //        .Execute(new UpdateRecipe(_data, _now, 1, viewModel));
+
+        //    return _responder.Response;
+        //}
+
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
             new ActionChain(_responder)

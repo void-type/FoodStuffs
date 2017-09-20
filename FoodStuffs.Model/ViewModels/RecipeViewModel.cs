@@ -1,12 +1,11 @@
-﻿using FoodStuffs.Model.Interfaces.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FoodStuffs.Model.ViewModels
 {
     public class RecipeViewModel
     {
-        public List<ICategory> Categories { get; set; } = new List<ICategory>();
+        public IEnumerable<CategoryViewModel> Categories { get; set; } = new List<CategoryViewModel>();
         public int? CookTimeMinutes { get; set; }
         public int CreatedByUserId { get; set; }
         public DateTime CreatedOn { get; set; }

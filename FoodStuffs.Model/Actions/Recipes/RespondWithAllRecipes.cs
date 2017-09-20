@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Actions.Core.Responder;
 using FoodStuffs.Model.Actions.Core.Steps;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Queries;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
@@ -15,7 +16,8 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         protected override void PerformStep(IActionResponder respond)
         {
-            respond.WithDataList(_data.Recipes.Stored);
+            // make a viewModel to prevent circular reference exceptions
+            respond.WithDataList(_data.Recipes.Stored.ToViewModel());
         }
     }
 }

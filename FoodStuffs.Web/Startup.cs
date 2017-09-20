@@ -60,8 +60,8 @@ namespace FoodStuffs.Web
             services.AddSingleton<IConfiguration>(Configuration);
 
             // Choose a db implementation
-            //services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
-            services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
+            services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
+            //services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
 
             services.AddTransient<ILoggingService, LoggerAdapter>();
             services.AddTransient<IDateTimeService, NowDateTimeService>();
