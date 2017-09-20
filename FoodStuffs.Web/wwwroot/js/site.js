@@ -1,19 +1,33 @@
-﻿// Write your Javascript code.
-var app = new Vue({
-    el: '#recipe-table',
-    data: {
-        recipes: []
-    },
-    created: function() {
-        this.loadRecipes();
-    },
+﻿let appState = {
+    recipes: null,
+    currentRecipe: null,
+
+    refresh: function () {
+        axios.get("api/recipes/list")
+            .then(function (response) {
+                appState.recipes = response.data.items;
+            });
+    }
+};
+
+appState.refresh();
+
+let recipeTable = new Vue({
+    el: "#recipe-table",
+    data: appState,
     methods: {
-        loadRecipes: function () {
-            var vm = this;
-            axios.get('api/recipes/list')
-                .then(function(response) {
-                    vm.recipes = response.data.items;
-                });
+        selectRecipe: function (recipe) {
+            appState.currentRecipe = recipe;
+        }
+    }
+});
+
+let recipeEditor = new Vue({
+    el: "#recipe-form",
+    data: appState,
+    methods: {
+        clearCurrent: function() {
+            appState.currentRecipe = null;
         }
     }
 });

@@ -17,51 +17,36 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="recipe in recipes">
+            <tr v-for="recipe in recipes" v-on:click="selectRecipe(recipe)">
                 <td>{{recipe.name}}</td>
                 <td>{{recipe.ingredients}}</td>
-            </tr>
-            <tr>
-                <td>Test Recipe</td>
-                <td>Imagination</td>
-            </tr>
-            <tr>
-                <td>Test Recipe</td>
-                <td>Imagination</td>
-            </tr>
-            <tr>
-                <td>Test Recipe</td>
-                <td>Imagination</td>
-            </tr>
-            <tr>
-                <td>Test Recipe</td>
-                <td>Imagination</td>
-            </tr>
-            <tr>
-                <td>Test Recipe</td>
-                <td>Imagination</td>
-            </tr>
-            <tr>
-                <td>Test Recipe</td>
-                <td>Imagination</td>
             </tr>
         </tbody>
     </table>
 </section>
 <section>
 
-    <form>
+    <form id="recipe-form" v-if="currentRecipe !== null">
+        
         <div class="form-group">
             <label>Name</label>
-            <input type="text" name="name" value="" />
+            <input type="text" name="name" v-model="currentRecipe.name"/>
         </div>
         <div class="form-group">
             <label>Ingredient</label>
-            <input type="text" name="name" value="type here" />
+            <input type="text" name="name" v-model="currentRecipe.ingredients"/>
         </div>
         <div class="form-group">
             <label>Directions</label>
-            <textarea name="stuff"></textarea>
+            <textarea name="stuff" v-model="currentRecipe.directions"></textarea>
+        </div>
+        <div class="form-group">
+            <button>
+                Save
+            </button>
+            <button v-on:click="clearCurrent()">
+                Cancel
+            </button>
         </div>
     </form>
 </section>
