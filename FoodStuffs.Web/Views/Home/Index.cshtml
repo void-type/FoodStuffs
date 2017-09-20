@@ -27,18 +27,32 @@
 <section>
 
     <form id="recipe-form" v-if="currentRecipe !== null">
-        
+
         <div class="form-group">
             <label>Name</label>
-            <input type="text" name="name" v-model="currentRecipe.name"/>
+            <input type="text" name="name" v-model="currentRecipe.name" />
         </div>
         <div class="form-group">
             <label>Ingredient</label>
-            <input type="text" name="name" v-model="currentRecipe.ingredients"/>
+            <input type="text" name="ingredients" v-model="currentRecipe.ingredients" />
         </div>
         <div class="form-group">
             <label>Directions</label>
             <textarea name="stuff" v-model="currentRecipe.directions"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Prep Time (minutes)</label>
+            <input type="number" name="prepTimeMinutes" v-model="currentRecipe.prepTimeMinutes" />
+        </div>
+        <div class="form-group">
+            <label>Cook Time (minutes)</label>
+            <input type="number" name="cookTimeMinutes" v-model="currentRecipe.cookTimeMinutes" />
+        </div>
+        <div class="form-group">
+            <label>Categories</label>
+            <div>
+                <span v-for="category in currentRecipe.categories">{{category.name}}&nbsp;</span>
+            </div>
         </div>
         <div class="form-group">
             <button>

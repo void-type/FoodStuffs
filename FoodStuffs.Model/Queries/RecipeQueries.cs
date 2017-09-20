@@ -14,8 +14,11 @@ namespace FoodStuffs.Model.Queries
 
         public static IEnumerable<RecipeViewModel> ToViewModel(this IQueryable<IRecipe> recipes)
         {
+            // TODO: make sure all properties are here.
+            // TODO: make a version for a single recipe.
             return recipes.Select(r => new RecipeViewModel
             {
+                Id = r.Id,
                 Name = r.Name,
                 Directions = r.Directions,
                 Ingredients = r.Ingredients,
