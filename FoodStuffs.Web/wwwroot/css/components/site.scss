@@ -1,0 +1,108 @@
+﻿@import '../base/variables.scss';
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: $font-family;
+    color: $color-text;
+    margin: 0;
+    /* Contain the page to the center of a widescreen */
+    header > .topbar, nav > div, main > div, footer > div {
+        margin: 0 auto;
+        max-width: 60em;
+    }
+}
+
+.topbar, main {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+section {
+    margin-bottom: 2em;
+}
+
+footer {
+    border-top: $border;
+    padding: 1em 0em;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+h1, h2, h3, h4 {
+    color: $color-primary-dark
+}
+
+a, a:link {
+    text-decoration: none;
+    color: $color-primary-dark;
+
+    &:hover, &:active {
+        color: $color-secondary;
+    }
+}
+
+header {
+    background-color: $color-ternary;
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        height: 4em;
+
+        & > div {
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &.logo {
+                margin-right: 1em;
+                height: 100%;
+
+                img {
+                    width: auto;
+                    height: 70%;
+                }
+            }
+
+            &.title {
+                font-size: 150%;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+@media (min-width:1921px) {
+    body {
+        font-size: 130%;
+    }
+}
+
+@media (max-width:420px) {
+    body {
+        font-size: 90%;
+    }
+
+    .topbar .title {
+        display: none;
+    }
+}
