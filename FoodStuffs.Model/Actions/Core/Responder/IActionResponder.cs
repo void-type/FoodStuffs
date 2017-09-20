@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Actions.Core.Responder
         /// <summary>
         /// A list of validation errors that can be appended between steps.
         /// </summary>
-        List<ValidationError> ValidationErrors { get; }
+        List<IValidationError> ValidationErrors { get; }
 
         /// <summary>
         /// Try to send a response from validation errors. If no errors are stored, no response will be made and the method will return false.
@@ -62,6 +62,6 @@ namespace FoodStuffs.Model.Actions.Core.Responder
         /// </summary>
         /// <param name="newValidationErrors"></param>
         /// <param name="logExtra"></param>
-        void WithValidationErrors(string logExtra, params ValidationError[] newValidationErrors);
+        void WithValidationErrors(string logExtra, params IValidationError[] newValidationErrors);
     }
 }

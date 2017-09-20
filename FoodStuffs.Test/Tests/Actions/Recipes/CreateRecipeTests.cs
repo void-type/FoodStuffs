@@ -53,7 +53,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new CreateRecipe(data, now, user, newRecipeViewModel));
+                    .Execute(new CreateRecipe(data, now, user.Id, newRecipeViewModel));
 
                 Assert.False(responder.ResponseCreated);
 

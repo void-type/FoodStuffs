@@ -1,11 +1,11 @@
-﻿using FoodStuffs.Model.Interfaces.Domain;
-using FoodStuffs.Model.Validation.Core;
+﻿using FoodStuffs.Model.Validation.Core;
+using FoodStuffs.Model.ViewModels;
 
 namespace FoodStuffs.Model.Validation
 {
-    public class RecipeValidator : AbstractSimpleValidator<IRecipe>
+    public class RecipeValidator : AbstractSimpleValidator<RecipeViewModel>
     {
-        protected override void SetRules(IRecipe entity)
+        protected override void SetRules(RecipeViewModel entity)
         {
             Valid("Name", "Please enter a name.")
                 .When(() => !string.IsNullOrWhiteSpace(entity.Name));

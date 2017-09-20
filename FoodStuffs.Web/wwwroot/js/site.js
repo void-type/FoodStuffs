@@ -10,7 +10,7 @@ var app = new Vue({
     methods: {
         loadRecipes: function () {
             var vm = this;
-            axios.get('api/recipes')
+            axios.get('api/recipes/list')
                 .then(function(response) {
                     vm.recipes = response.data.items;
                 });

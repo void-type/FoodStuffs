@@ -1,6 +1,5 @@
 ﻿using FoodStuffs.Model.Actions.Core.Responder;
 using FoodStuffs.Model.Actions.Core.Steps;
-using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Queries;
@@ -13,14 +12,14 @@ namespace FoodStuffs.Model.Actions.Recipes
     {
         private readonly IFoodStuffsData _data;
         private readonly IDateTimeService _now;
-        private readonly IUser _user;
+        private readonly int _userId;
         private readonly RecipeViewModel _viewModel;
 
-        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, IUser user, RecipeViewModel viewModel)
+        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, int userId, RecipeViewModel viewModel)
         {
             _data = data;
             _now = now;
-            _user = user;
+            _userId = userId;
             _viewModel = viewModel;
         }
 
@@ -29,8 +28,8 @@ namespace FoodStuffs.Model.Actions.Recipes
             var newRecipe = _data.Recipes.New;
             newRecipe.CreatedOn = _now.Moment;
             newRecipe.ModifiedOn = _now.Moment;
-            newRecipe.CreatedByUserId = _user.Id;
-            newRecipe.ModifiedByUserId = _user.Id;
+            newRecipe.CreatedByUserId = _userId;
+            newRecipe.ModifiedByUserId = _userId;
             newRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
             newRecipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;
             newRecipe.Directions = _viewModel.Directions;

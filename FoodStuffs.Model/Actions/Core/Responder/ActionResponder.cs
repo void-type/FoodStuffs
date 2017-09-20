@@ -14,7 +14,7 @@ namespace FoodStuffs.Model.Actions.Core.Responder
 
         public bool ResponseCreated => Response != default(TResponse);
 
-        public List<ValidationError> ValidationErrors { get; protected set; } = new List<ValidationError>();
+        public List<IValidationError> ValidationErrors { get; protected set; } = new List<IValidationError>();
 
         public bool TryWithValidationError(string logExtra = null)
         {
@@ -37,7 +37,7 @@ namespace FoodStuffs.Model.Actions.Core.Responder
 
         public abstract void WithSuccess(string userMessage, string logExtra = null);
 
-        public void WithValidationErrors(string logExtra, params ValidationError[] newValidationErrors)
+        public void WithValidationErrors(string logExtra, params IValidationError[] newValidationErrors)
         {
             ValidationErrors.AddRange(newValidationErrors);
             CreateValidationErrorResponse(logExtra);

@@ -61,7 +61,7 @@ namespace FoodStuffs.Web.Actions
 
             _logger.Warn(logParams);
 
-            var set = new CountedItemSet<ValidationError>
+            var set = new CountedItemSet<IValidationError>
             {
                 Items = ValidationErrors
             };

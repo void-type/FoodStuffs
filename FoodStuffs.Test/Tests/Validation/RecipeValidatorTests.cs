@@ -1,5 +1,5 @@
-using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Model.Validation;
+using FoodStuffs.Model.ViewModels;
 using System.Linq;
 using Xunit;
 
@@ -12,7 +12,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [InlineData("")]
         public void InvalidWhenDirectionsEmpty(string directions)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeViewModel
             {
                 Directions = directions
             };
@@ -29,7 +29,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [InlineData("")]
         public void InvalidWhenIngredientsEmpty(string ingredients)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeViewModel
             {
                 Ingredients = ingredients
             };
@@ -46,7 +46,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [InlineData("")]
         public void InvalidWhenRecipeNameEmpty(string recipeName)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeViewModel
             {
                 Name = recipeName
             };
@@ -63,7 +63,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [InlineData("Really Lon_Nam! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWhenDirectionsNotEmpty(string directions)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeViewModel
             {
                 Directions = directions
             };
@@ -80,7 +80,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [InlineData("Really Lon_Nam! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWhenIngredientsNotEmpty(string ingredients)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeViewModel
             {
                 Ingredients = ingredients
             };
@@ -97,7 +97,7 @@ namespace FoodStuffs.Test.Tests.Validation
         [InlineData("Really Lon_Nam! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWhenRecipeNameNotEmpty(string recipeName)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeViewModel
             {
                 Name = recipeName
             };

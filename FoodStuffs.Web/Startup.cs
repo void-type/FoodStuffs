@@ -1,8 +1,10 @@
 ﻿using FoodStuffs.Data.FoodStuffsDb;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Interfaces.Services.Logging;
 using FoodStuffs.Web.Actions;
 using FoodStuffs.Web.Logging;
+using FoodStuffs.Web.Services.DateTime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -62,6 +64,7 @@ namespace FoodStuffs.Web
             services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
 
             services.AddTransient<ILoggingService, LoggerAdapter>();
+            services.AddTransient<IDateTimeService, NowDateTimeService>();
             services.AddTransient<ActionResultResponder>();
         }
     }

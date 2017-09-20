@@ -1,7 +1,11 @@
 ﻿using FoodStuffs.Model.Actions.Core.Chain;
+using FoodStuffs.Model.Actions.Core.Steps;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Interfaces.Services.Logging;
+using FoodStuffs.Model.Validation;
+using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Web.Actions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +16,16 @@ namespace FoodStuffs.Web.Controllers.Api
     {
         private readonly ActionResultResponder _responder;
         private readonly IFoodStuffsData _data;
+        private readonly IDateTimeService _now;
 
-        public RecipesController(ActionResultResponder responder, ILoggingService logger, IFoodStuffsData data)
+        public RecipesController(ActionResultResponder responder, ILoggingService logger, IFoodStuffsData data, IDateTimeService now)
         {
             _responder = responder;
             _data = data;
+            _now = now;
         }
 
+        [Route("list")]
         [HttpGet]
         public IActionResult List()
         {
@@ -33,6 +40,27 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             new ActionChain(_responder)
                 .Execute(new RespondWithRecipeById(_data, id));
+
+            return _responder.Response;
+        }
+
+        [Route("create")]
+        [HttpPost]
+        public IActionResult Create(RecipeViewModel viewModel)
+        {
+            new ActionChain(_responder)
+                .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
+                .Execute(new CreateRecipe(_data, _now, 1, viewModel));
+
+            return _responder.Response;
+        }
+
+        [Route("delete")]
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            new ActionChain(_responder)
+                .Execute(new DeleteRecipe(_data, id));
 
             return _responder.Response;
         }
