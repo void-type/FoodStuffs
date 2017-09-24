@@ -6,7 +6,8 @@ html {
 
 body {
     font-family: $font-family;
-    color: $color-text;
+    color: $contrast2;
+    background-color: $color-background;
     margin: 0;
     /* Contain the page to the center of a widescreen */
     header > .topbar, nav > div, main > div, footer > div {
@@ -21,7 +22,8 @@ body {
 }
 
 section {
-    margin-bottom: 2em;
+    margin-top: 3em;
+    margin-bottom: 3em;
 }
 
 footer {
@@ -48,14 +50,15 @@ h1, h2, h3, h4 {
 a, a:link {
     text-decoration: none;
     color: $color-primary-dark;
+    cursor: pointer;
 
     &:hover, &:active {
-        color: $color-secondary;
+        color: $color-secondary-dark;
     }
 }
 
 header {
-    background-color: $color-ternary;
+    background-color: $color-ternary-dark;
 
     .topbar {
         display: flex;

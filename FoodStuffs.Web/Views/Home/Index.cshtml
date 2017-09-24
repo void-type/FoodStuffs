@@ -3,29 +3,32 @@
 }
 
 <section>
-    <h1>Heading</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-
-    <input type="button" name="name" value="Press Me" />
+    <ul id="message-center" class="message-center">
+        <li v-for="message in messages">{{message.errorMessage}}</li>
+    </ul>
+    <div id="recipe-table">
+        <h1>Recipes</h1>
+        <div class="text-right">
+            <a v-on:click="newRecipe()">New</a>
+        </div>
+        <table class="hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Ingredients</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="recipe in recipes" v-on:click="select(recipe)">
+                    <td>{{recipe.name}}</td>
+                    <td>{{recipe.ingredients}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 <section>
-    <table id="recipe-table" class="hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Ingredients</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="recipe in recipes" v-on:click="selectRecipe(recipe)">
-                <td>{{recipe.name}}</td>
-                <td>{{recipe.ingredients}}</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-<section>
-
+    <h1>Edit Recipe</h1>
     <form id="recipe-form" v-if="currentRecipe !== null">
 
         <div class="form-group">
@@ -51,14 +54,14 @@
         <div class="form-group">
             <label>Categories</label>
             <div>
-                <span v-for="category in currentRecipe.categories">{{category.name}}&nbsp;</span>
+                <span v-for="category in currentRecipe.categories">{{category.name}}</span>
             </div>
         </div>
         <div class="form-group">
             <button>
                 Save
             </button>
-            <button v-on:click="clearCurrent()">
+            <button v-on:click="cancel()">
                 Cancel
             </button>
         </div>

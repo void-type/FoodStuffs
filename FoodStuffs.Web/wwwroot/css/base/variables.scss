@@ -1,24 +1,22 @@
 ﻿@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 
-$color-primary: rgba(148, 78, 142, 1);
 $color-primary-dark: rgba(100, 43, 97, 1);
-$color-secondary: rgba(164, 213, 85, 1);
-$color-secondary-dark: rgba(131, 170, 68, 1);
-$color-ternary: rgba(248, 238, 231, 1);
+$color-primary: lighten($color-primary-dark, 8%);
+$color-secondary-dark: rgba(114, 196, 203, 1);
+$color-secondary: lighten($color-secondary-dark, 8%);
 $color-ternary-dark: rgba(244, 222, 203, 1);
+$color-ternary: lighten($color-ternary-dark, 8%);
+$color-error: rgba(220, 20, 60, 1);
 
-$color-background: rgba(255, 255, 255, 1);
-$color-text: rgba(0, 0, 0, 1);
+$contrast1: white;
+$contrast2: black;
+
+$color-background: $color-ternary;
 $color-border: rgba(37, 40, 53, 1);
-$color-focus: rgba($color-primary, .7);
+$color-focus: rgba($color-primary, .5);
 
-$color-nav-link: rgba(255, 255, 255, 1);
-$color-nav-background: $color-border;
-$color-nav-background-active: mix($color-nav-background, $color-ternary, 90%);
-
-$highlight-border: inset 0 0 1px white, inset 0 0 3px white, inset 0 0 5px white;
-$border: 1px solid mix($color-border, white, 70%);
+$highlight-border: inset 0 0 1px $contrast1, inset 0 0 3px $contrast1, inset 0 0 5px $contrast1;
+$border: 1px solid mix($color-border, $contrast1, 70%);
 $shadow: 2px 3px 2px rgba($color-border, .5);
 $shadow-collapse: 1px 1px 2px rgba($color-border, .5);
-$color-error: rgba(220, 20, 60, 1);
 $font-family: "Source Sans Pro", sans-serif;

@@ -1,7 +1,7 @@
 ﻿@import '../base/variables.scss';
 
 nav {
-    background-color: $color-nav-background;
+    background-color: $color-primary-dark;
     box-shadow: $shadow;
 
     ul {
@@ -10,7 +10,7 @@ nav {
         list-style: none;
         padding: 0;
         margin: 0;
-        background-color: $color-nav-background;
+        background-color: $color-primary-dark;
         z-index: 1000;
 
         li {
@@ -18,7 +18,6 @@ nav {
             position: relative;
             text-align: center;
             min-width: 25%;
-            text-align: center;
 
             &:hover > ul {
                 display: block;
@@ -31,15 +30,15 @@ nav {
                 white-space: nowrap;
 
                 &:link, &:visited {
-                    color: $color-nav-link;
+                    color: $contrast1;
                 }
 
                 &.current-page {
-                    color: $color-primary;
+                    color: $color-secondary-dark;
                 }
 
                 &:hover, &:active {
-                    background-color: $color-nav-background-active;
+                    background-color: mix($color-primary-dark, $color-ternary, 90%);
                     color: $color-secondary;
                     box-shadow: $highlight-border;
                 }

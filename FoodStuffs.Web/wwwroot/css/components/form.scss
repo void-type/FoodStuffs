@@ -2,9 +2,11 @@
 
 .form-group {
     margin-bottom: 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
 
     label {
-        float: left;
         width: 11em;
         margin-right: .5em;
         text-align: right;
@@ -17,9 +19,20 @@
 
     button {
         margin-right: .5em;
-        
+
         &:first-child {
             margin-left: 15em;
+        }
+    }
+
+    div {
+        padding: .5em 0;
+        width: 25em;
+        box-sizing: border-box;
+
+        span:not(:last-child):after {
+
+                content: ", ";
         }
     }
 }

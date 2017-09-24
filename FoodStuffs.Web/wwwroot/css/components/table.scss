@@ -10,15 +10,16 @@ table {
         text-align: left;
     }
 
-    th:first-child, td:first-child {
-        padding-left: 0;
-    }
-
     th, td {
         border-bottom: $border;
     }
 
     th, td {
-        padding: .5em;
+        padding: .5em 1em;
+    }
+
+    &.hover tbody tr:hover {
+        cursor: pointer;
+        background-color: $color-focus;
     }
 }
