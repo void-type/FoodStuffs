@@ -31,7 +31,6 @@
         box-sizing: border-box;
 
         span:not(:last-child):after {
-
                 content: ", ";
         }
     }

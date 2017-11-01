@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FoodStuffs.Data.FoodStuffsDb.Core
+namespace FoodStuffs.Data.EntityFramework.Repositories
 {
     public class Repository<TInterface, TDbEntity> : ReadOnlyRepository<TInterface, TDbEntity>, IRepository<TInterface> where TDbEntity : class, TInterface, new() where TInterface : class
     {

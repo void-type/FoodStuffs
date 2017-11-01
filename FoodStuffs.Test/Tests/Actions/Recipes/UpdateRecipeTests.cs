@@ -1,8 +1,7 @@
-﻿using FoodStuffs.Data.FoodStuffsDb;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+using FoodStuffs.Data.Test;
 using FoodStuffs.Model.Actions.Core.Chain;
 using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
@@ -21,7 +20,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             var then = MockFactory.EarlyDateTimeService;
             var now = MockFactory.LateDateTimeService;
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsListData())
             {
                 data.Users.Add(new User
                 {
@@ -114,17 +113,17 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     Name = "ChangedRecipeName 1",
                     CookTimeMinutes = 3,
                     PrepTimeMinutes = 4,
-                    Categories = new List<ICategory>
-                {
-                    new Category
+                    Categories = new List<CategoryViewModel>
                     {
-                        Name = "Category3"
+                        new CategoryViewModel
+                        {
+                            Name = "Category3"
+                        },
+                        new CategoryViewModel
+                        {
+                            Name = "Category4"
+                        }
                     },
-                    new Category
-                    {
-                        Name = "Category4"
-                    }
-                },
                     ModifiedOn = new DateTime(2222, 12, 12),
                     CreatedOn = new DateTime(1903, 12, 12),
                     ModifiedByUserId = 52,
@@ -163,9 +162,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             var recipeViewModel = new RecipeViewModel
             {
                 Id = 2,
-                Categories = new List<ICategory>
+                Categories = new List<CategoryViewModel>
                 {
-                    new Category
+                    new CategoryViewModel
                     {
                         Name = "Category1"
                     }

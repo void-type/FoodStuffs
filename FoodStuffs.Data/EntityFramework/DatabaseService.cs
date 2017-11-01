@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace FoodStuffs.Data.FoodStuffsDb.Core
+namespace FoodStuffs.Data.EntityFramework
 {
     /// <summary>
     /// A Database service wraps a dbcontext, allows it be disposed of, and can be extended to match any model interface needed to provide data or services.

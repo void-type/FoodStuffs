@@ -1,8 +1,7 @@
-﻿using FoodStuffs.Data.FoodStuffsDb;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+using FoodStuffs.Data.Test;
 using FoodStuffs.Model.Actions.Core.Chain;
 using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
@@ -17,34 +16,34 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void CreateRecipe()
         {
-            using (var data = new FoodStuffsMemoryData())
+            var now = MockFactory.EarlyDateTimeService;
+            var responder = MockFactory.Responder;
+
+            var user = new User
             {
-                var now = MockFactory.EarlyDateTimeService;
-                var responder = MockFactory.Responder;
+                Id = 2
+            };
 
-                var user = new User
+            var newRecipeViewModel = new RecipeViewModel
+            {
+                Name = "Recipe1",
+                CookTimeMinutes = 2,
+                PrepTimeMinutes = 2,
+                Categories = new List<CategoryViewModel>
                 {
-                    Id = 2
-                };
-
-                var newRecipeViewModel = new RecipeViewModel
-                {
-                    Name = "Recipe1",
-                    CookTimeMinutes = 2,
-                    PrepTimeMinutes = 2,
-                    Categories = new List<ICategory>
+                    new CategoryViewModel
                     {
-                        new Category
-                        {
-                            Name = "Category1"
-                        },
-                        new Category
-                        {
-                            Name = "Category2"
-                        }
+                        Name = "Category1"
+                    },
+                    new CategoryViewModel
+                    {
+                        Name = "Category2"
                     }
-                };
+                }
+            };
 
+            using (var data = new FoodStuffsMemoryData("CreateRecipe"))
+            {
                 data.Categories.Add(new Category
                 {
                     Name = "Category1"
@@ -55,8 +54,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 new ActionChain(responder)
                     .Execute(new CreateRecipe(data, now, user.Id, newRecipeViewModel));
 
-                Assert.False(responder.ResponseCreated);
-
                 Assert.Equal(1, data.Recipes.Stored.Count());
                 Assert.Equal(2, data.Categories.Stored.Count());
                 Assert.Equal(2, data.CategoryRecipes.Stored.Count());
@@ -65,6 +62,8 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.NotNull(data.Categories.Stored.GetByName("Category2"));
                 Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 1));
                 Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 2));
+
+                Assert.False(responder.ResponseCreated);
             }
         }
     }

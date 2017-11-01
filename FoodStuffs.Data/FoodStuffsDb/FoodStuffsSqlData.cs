@@ -1,4 +1,5 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.FoodStuffsDb.Core;
+using FoodStuffs.Data.FoodStuffsDb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

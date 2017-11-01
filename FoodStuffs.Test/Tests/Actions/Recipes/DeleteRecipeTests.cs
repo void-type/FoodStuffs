@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Data.FoodStuffsDb;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+using FoodStuffs.Data.Test;
 using FoodStuffs.Model.Actions.Core.Chain;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
@@ -11,6 +11,31 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 {
     public class DeleteRecipeTests
     {
+        [Fact]
+        public void DeleteRecipe()
+        {
+            using (var data = new FoodStuffsMemoryData())
+            {
+                data.Recipes.Add(new Recipe
+                {
+                    Id = 1,
+                    Name = "Recipe1",
+                });
+
+                data.SaveChanges();
+
+                var responder = MockFactory.Responder;
+
+                new ActionChain(responder)
+                    .Execute(new DeleteRecipe(data, 1));
+                Assert.False(responder.ResponseCreated);
+
+                Assert.Equal(0, data.Recipes.Stored.Count());
+                Assert.Equal(0, data.Categories.Stored.Count());
+                Assert.Equal(0, data.CategoryRecipes.Stored.Count());
+            }
+        }
+
         [Fact]
         public void DeleteRecipeAndRelations()
         {
@@ -92,31 +117,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.Null(data.Categories.Stored.GetById(3));
                 Assert.Null(data.CategoryRecipes.Stored.GetById(2, 2));
                 Assert.Null(data.CategoryRecipes.Stored.GetById(2, 3));
-            }
-        }
-
-        [Fact]
-        public void DeleteRecipe()
-        {
-            using (var data = new FoodStuffsMemoryData())
-            {
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 1,
-                    Name = "Recipe1",
-                });
-
-                data.SaveChanges();
-
-                var responder = MockFactory.Responder;
-
-                new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 1));
-                Assert.False(responder.ResponseCreated);
-
-                Assert.Equal(0, data.Recipes.Stored.Count());
-                Assert.Equal(0, data.Categories.Stored.Count());
-                Assert.Equal(0, data.CategoryRecipes.Stored.Count());
             }
         }
 

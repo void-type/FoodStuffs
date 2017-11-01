@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.FoodStuffsDb.Core
+namespace FoodStuffs.Data.EntityFramework.Repositories
 {
     public class ReadOnlyRepository<TInterface, TDbEntity> : DatabaseService, IReadOnlyRepository<TInterface> where TDbEntity : class, TInterface, new() where TInterface : class
 

@@ -1,8 +1,9 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.FoodStuffsDb.Core;
+using FoodStuffs.Data.FoodStuffsDb.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace FoodStuffs.Data.FoodStuffsDb
+namespace FoodStuffs.Data.Test
 {
     public class FoodStuffsMemoryData : AbstractFoodStuffsData
     {
