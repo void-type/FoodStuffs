@@ -5,11 +5,11 @@ namespace FoodStuffs.Test.Mocks.Services
 {
     public class DiscreteDateTimeService : IDateTimeService
     {
+        public DateTime Moment { get; }
+
         public DiscreteDateTimeService(DateTime moment)
         {
             Moment = moment;
         }
-
-        public DateTime Moment { get; }
     }
 }

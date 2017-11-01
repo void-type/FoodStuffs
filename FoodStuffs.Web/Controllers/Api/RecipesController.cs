@@ -14,34 +14,12 @@ namespace FoodStuffs.Web.Controllers.Api
     [Route("api/recipes")]
     public class RecipesController : Controller
     {
-        private readonly ActionResultResponder _responder;
-        private readonly IFoodStuffsData _data;
-        private readonly IDateTimeService _now;
-
-        public RecipesController(ActionResultResponder responder, ILoggingService logger, IFoodStuffsData data, IDateTimeService now)
+        public RecipesController(ActionResultResponder responder, ILoggingService logger, IFoodStuffsData data,
+            IDateTimeService now)
         {
             _responder = responder;
             _data = data;
             _now = now;
-        }
-
-        [Route("list")]
-        [HttpGet]
-        public IActionResult List()
-        {
-            new ActionChain(_responder)
-                .Execute(new RespondWithAllRecipes(_data));
-
-            return _responder.Response;
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
-            new ActionChain(_responder)
-                .Execute(new RespondWithRecipeById(_data, id));
-
-            return _responder.Response;
         }
 
         [HttpPut]
@@ -54,16 +32,6 @@ namespace FoodStuffs.Web.Controllers.Api
             return _responder.Response;
         }
 
-        //[HttpPost]
-        //public IActionResult Update(RecipeViewModel viewModel)
-        //{
-        //    new ActionChain(_responder)
-        //        .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
-        //        .Execute(new UpdateRecipe(_data, _now, 1, viewModel));
-
-        //    return _responder.Response;
-        //}
-
         [HttpDelete]
         public IActionResult Delete(int id)
         {
@@ -72,5 +40,36 @@ namespace FoodStuffs.Web.Controllers.Api
 
             return _responder.Response;
         }
+
+        //    return _responder.Response;
+        //}
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            new ActionChain(_responder)
+                .Execute(new RespondWithRecipeById(_data, id));
+
+            return _responder.Response;
+        }
+
+        //[HttpPost]
+        //public IActionResult Update(RecipeViewModel viewModel)
+        //{
+        //    new ActionChain(_responder)
+        //        .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
+        //        .Execute(new UpdateRecipe(_data, _now, 1, viewModel));
+        [Route("list")]
+        [HttpGet]
+        public IActionResult List()
+        {
+            new ActionChain(_responder)
+                .Execute(new RespondWithAllRecipes(_data));
+
+            return _responder.Response;
+        }
+
+        private readonly IFoodStuffsData _data;
+        private readonly IDateTimeService _now;
+        private readonly ActionResultResponder _responder;
     }
 }

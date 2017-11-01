@@ -44,8 +44,6 @@ namespace FoodStuffs.Web.Actions
             Response = new ObjectResult(new SuccessMessage(userMessage));
         }
 
-        private readonly ILoggingService _logger;
-
         protected override void CreateValidationErrorResponse(string logExtra)
         {
             var logParams = new List<string>
@@ -68,5 +66,7 @@ namespace FoodStuffs.Web.Actions
                 StatusCode = 400
             };
         }
+
+        private readonly ILoggingService _logger;
     }
 }

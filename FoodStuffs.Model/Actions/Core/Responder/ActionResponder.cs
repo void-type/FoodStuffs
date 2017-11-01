@@ -27,8 +27,6 @@ namespace FoodStuffs.Model.Actions.Core.Responder
             return true;
         }
 
-        protected abstract void CreateValidationErrorResponse(string logExtra);
-
         public abstract void WithData<T>(T item, string logExtra = null);
 
         public abstract void WithDataList<T>(IEnumerable<T> items, string logExtra = null);
@@ -42,5 +40,7 @@ namespace FoodStuffs.Model.Actions.Core.Responder
             ValidationErrors.AddRange(newValidationErrors);
             CreateValidationErrorResponse(logExtra);
         }
+
+        protected abstract void CreateValidationErrorResponse(string logExtra);
     }
 }

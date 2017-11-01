@@ -5,9 +5,6 @@ namespace FoodStuffs.Model.Actions.Core.Steps
 {
     public class Validate<TValidatable> : IActionStep
     {
-        private readonly AbstractSimpleValidator<TValidatable> _validator;
-        private readonly TValidatable _viewModel;
-
         public Validate(AbstractSimpleValidator<TValidatable> validator, TValidatable viewModel)
         {
             _validator = validator;
@@ -20,5 +17,8 @@ namespace FoodStuffs.Model.Actions.Core.Steps
 
             respond.TryWithValidationError();
         }
+
+        private readonly AbstractSimpleValidator<TValidatable> _validator;
+        private readonly TValidatable _viewModel;
     }
 }

@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace FoodStuffs.Data.EntityFramework.Repositories
 {
-    public class Repository<TInterface, TDbEntity> : ReadOnlyRepository<TInterface, TDbEntity>, IRepository<TInterface> where TDbEntity : class, TInterface, new() where TInterface : class
+    public class Repository<TInterface, TDbEntity> : ReadOnlyRepository<TInterface, TDbEntity>, IRepository<TInterface>
+        where TDbEntity : class, TInterface, new() where TInterface : class
     {
         public TInterface New => new TDbEntity();
 

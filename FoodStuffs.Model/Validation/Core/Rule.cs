@@ -4,9 +4,9 @@ namespace FoodStuffs.Model.Validation.Core
 {
     public class Rule : IRule
     {
-        public IValidationError ValidationError { get; }
-
         public bool IsValid { get; private set; } = true;
+
+        public IValidationError ValidationError { get; }
 
         public Rule(string fieldName, string errorMessage)
         {

@@ -12,10 +12,7 @@ namespace FoodStuffs.Data.FoodStuffsDb.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category>(entity =>
-            {
-                entity.Property(e => e.Name).IsRequired();
-            });
+            modelBuilder.Entity<Category>(entity => { entity.Property(e => e.Name).IsRequired(); });
 
             modelBuilder.Entity<CategoryRecipe>(entity =>
             {

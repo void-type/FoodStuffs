@@ -8,9 +8,6 @@ namespace FoodStuffs.Model.Actions.Recipes
     public class RespondWithRecipeById : ActionStep
 
     {
-        private readonly IFoodStuffsData _data;
-        private readonly int _id;
-
         public RespondWithRecipeById(IFoodStuffsData data, int id)
         {
             _data = data;
@@ -21,5 +18,8 @@ namespace FoodStuffs.Model.Actions.Recipes
         {
             respond.WithData(_data.Recipes.Stored.FirstOrDefault(recipe => recipe.Id == _id));
         }
+
+        private readonly IFoodStuffsData _data;
+        private readonly int _id;
     }
 }

@@ -13,11 +13,6 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class UpdateRecipe : ActionStep
     {
-        private readonly IFoodStuffsData _data;
-        private readonly IDateTimeService _now;
-        private readonly int _userId;
-        private readonly RecipeViewModel _viewModel;
-
         public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userIdId)
         {
             _data = data;
@@ -32,7 +27,8 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             if (savedRecipe == null)
             {
-                respond.WithValidationErrors($"RecipeId: {_viewModel.Id}", new ValidationError("Recipe does not exist."));
+                respond.WithValidationErrors($"RecipeId: {_viewModel.Id}",
+                    new ValidationError("Recipe does not exist."));
                 return;
             }
 
@@ -51,13 +47,23 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.SaveChanges();
         }
 
-        private void CleanupCategories(IRecipe recipe)
-        {
-            var categoryRecipesToRemove = FindUnusedCategoryRecipes(recipe);
-            var unusedCategoriesToRemove = FindUnusedCategories(recipe, categoryRecipesToRemove).ToList();
+        private readonly IFoodStuffsData _data;
+        private readonly IDateTimeService _now;
+        private readonly int _userId;
+        private readonly RecipeViewModel _viewModel;
 
-            _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
-            _data.Categories.RemoveRange(unusedCategoriesToRemove);
+        private static IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe,
+            IEnumerable<ICategoryRecipe> categoryRecipesToBeRemoved)
+        {
+            var categories = categoryRecipesToBeRemoved.Select(cr => cr.Category);
+
+            foreach (var category in categories)
+            {
+                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
+                {
+                    yield return category;
+                }
+            }
         }
 
         private void AddCategories(IRecipe recipe)
@@ -87,6 +93,15 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
         }
 
+        private void CleanupCategories(IRecipe recipe)
+        {
+            var categoryRecipesToRemove = FindUnusedCategoryRecipes(recipe);
+            var unusedCategoriesToRemove = FindUnusedCategories(recipe, categoryRecipesToRemove).ToList();
+
+            _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
+            _data.Categories.RemoveRange(unusedCategoriesToRemove);
+        }
+
         private List<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe)
         {
             return recipe.CategoryRecipe
@@ -94,19 +109,6 @@ namespace FoodStuffs.Model.Actions.Recipes
                     .Select(c => c.Name.ToUpper().Trim())
                     .Contains(cr.Category.Name.ToUpper().Trim()))
                 .ToList();
-        }
-
-        private static IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe, IEnumerable<ICategoryRecipe> categoryRecipesToBeRemoved)
-        {
-            var categories = categoryRecipesToBeRemoved.Select(cr => cr.Category);
-
-            foreach (var category in categories)
-            {
-                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
-                {
-                    yield return category;
-                }
-            }
         }
     }
 }

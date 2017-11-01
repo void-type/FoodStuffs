@@ -11,9 +11,6 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class DeleteRecipe : ActionStep
     {
-        private readonly IFoodStuffsData _data;
-        private readonly int _id;
-
         public DeleteRecipe(IFoodStuffsData data, int id)
         {
             _data = data;
@@ -41,6 +38,9 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.SaveChanges();
         }
 
+        private readonly IFoodStuffsData _data;
+        private readonly int _id;
+
         private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
         {
             var categoryIdsToCheck = recipe.CategoryRecipe.Select(cr => cr.CategoryId);
@@ -49,7 +49,8 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             foreach (var categoryToCheck in categoriesToCheck)
             {
-                if (_data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == categoryToCheck.Id).All(cr => cr.RecipeId == recipe.Id))
+                if (_data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == categoryToCheck.Id)
+                    .All(cr => cr.RecipeId == recipe.Id))
                 {
                     yield return categoryToCheck;
                 }

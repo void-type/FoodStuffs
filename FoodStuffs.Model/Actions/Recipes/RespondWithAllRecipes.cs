@@ -7,8 +7,6 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class RespondWithAllRecipes : ActionStep
     {
-        private readonly IFoodStuffsData _data;
-
         public RespondWithAllRecipes(IFoodStuffsData data)
         {
             _data = data;
@@ -19,5 +17,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             // make a viewModel to prevent circular reference exceptions
             respond.WithDataList(_data.Recipes.Stored.ToViewModel());
         }
+
+        private readonly IFoodStuffsData _data;
     }
 }

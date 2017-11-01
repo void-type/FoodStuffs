@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FoodStuffs.Data.FoodStuffsDb.Models
 {
@@ -12,7 +13,7 @@ namespace FoodStuffs.Data.FoodStuffsDb.Models
 
         public int CreatedByUserId { get; set; }
 
-        public System.DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public string Directions { get; set; }
 
@@ -24,7 +25,7 @@ namespace FoodStuffs.Data.FoodStuffsDb.Models
 
         public int ModifiedByUserId { get; set; }
 
-        public System.DateTime ModifiedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
 
         public string Name { get; set; }
 

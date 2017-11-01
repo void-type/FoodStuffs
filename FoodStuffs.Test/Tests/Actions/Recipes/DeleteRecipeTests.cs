@@ -19,7 +19,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.Recipes.Add(new Recipe
                 {
                     Id = 1,
-                    Name = "Recipe1",
+                    Name = "Recipe1"
                 });
 
                 data.SaveChanges();
@@ -44,7 +44,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.Recipes.Add(new Recipe
                 {
                     Id = 1,
-                    Name = "Recipe1",
+                    Name = "Recipe1"
                 });
 
                 data.Categories.Add(new Category
@@ -74,7 +74,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.Recipes.Add(new Recipe
                 {
                     Id = 2,
-                    Name = "Recipe2",
+                    Name = "Recipe2"
                 });
 
                 data.Categories.Add(new Category

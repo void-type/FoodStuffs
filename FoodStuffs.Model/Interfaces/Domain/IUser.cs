@@ -4,14 +4,14 @@ namespace FoodStuffs.Model.Interfaces.Domain
 {
     public interface IUser
     {
-        int Id { get; set; }
-        string UserName { get; set; }
-        string Password { get; set; }
-        bool IsAdmin { get; set; }
-        string Salt { get; set; }
         string FirstName { get; set; }
+        int Id { get; set; }
+        bool IsAdmin { get; set; }
         string LastName { get; set; }
+        string Password { get; set; }
         ICollection<IRecipe> RecipeCreatedByUser { get; set; }
         ICollection<IRecipe> RecipesModifiedByUser { get; set; }
+        string Salt { get; set; }
+        string UserName { get; set; }
     }
 }

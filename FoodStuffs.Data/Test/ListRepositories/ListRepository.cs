@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace FoodStuffs.Data.Test.ListRepositories
 {
-    public class ListRepository<TInterface, TDbEntity> : ReadOnlyListRepository<TInterface>, IRepository<TInterface> where TDbEntity : class, TInterface, new() where TInterface : class
+    public class ListRepository<TInterface, TDbEntity> : ReadOnlyListRepository<TInterface>, IRepository<TInterface>
+        where TDbEntity : class, TInterface, new() where TInterface : class
     {
         public TInterface New => new TDbEntity();
 

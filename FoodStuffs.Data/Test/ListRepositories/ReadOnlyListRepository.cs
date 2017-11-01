@@ -8,7 +8,6 @@ namespace FoodStuffs.Data.Test.ListRepositories
 
     {
         public virtual IQueryable<TInterface> Stored => _stored.AsQueryable();
-
         protected readonly List<TInterface> _stored = new List<TInterface>();
     }
 }

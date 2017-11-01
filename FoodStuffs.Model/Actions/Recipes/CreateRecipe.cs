@@ -10,11 +10,6 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class CreateRecipe : ActionStep
     {
-        private readonly IFoodStuffsData _data;
-        private readonly IDateTimeService _now;
-        private readonly int _userId;
-        private readonly RecipeViewModel _viewModel;
-
         public CreateRecipe(IFoodStuffsData data, IDateTimeService now, int userId, RecipeViewModel viewModel)
         {
             _data = data;
@@ -42,6 +37,11 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             _data.SaveChanges();
         }
+
+        private readonly IFoodStuffsData _data;
+        private readonly IDateTimeService _now;
+        private readonly int _userId;
+        private readonly RecipeViewModel _viewModel;
 
         private void AddCategoriesAndCategoryRecipes(int recipeId)
         {
