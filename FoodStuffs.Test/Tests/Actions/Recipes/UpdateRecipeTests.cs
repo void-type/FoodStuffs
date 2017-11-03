@@ -50,7 +50,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     Name = "Category3"
                 });
 
-                var recipe = new Recipe
+                var recipeToUpdate = new Recipe
                 {
                     Id = 1,
                     Name = "Recipe1",
@@ -61,7 +61,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     CreatedByUserId = 1
                 };
 
-                data.Recipes.Add(recipe);
+                data.Recipes.Add(recipeToUpdate);
 
                 data.Recipes.Add(new Recipe
                 {
@@ -101,28 +101,37 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     CategoryId = 3
                 });
 
-                data.SaveChanges();
+                // Force relations in list database
+                foreach (var category in data.Categories.Stored)
+                {
+                    category.CategoryRecipe = data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == category.Id).ToList();
+                }
 
-                var recipeId = recipe.Id;
+                foreach (var categoryRecipe in data.CategoryRecipes.Stored)
+                {
+                    categoryRecipe.Category = data.Categories.Stored.FirstOrDefault(c => c.Id == categoryRecipe.CategoryId);
+
+                    categoryRecipe.Recipe = data.Recipes.Stored.FirstOrDefault(r => r.Id == categoryRecipe.RecipeId);
+                }
+
+                foreach (var recipe in data.Recipes.Stored)
+                {
+                    recipe.CategoryRecipe = data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id).ToList();
+                }
+
+                data.SaveChanges();
 
                 var responder = MockFactory.Responder;
 
                 var newRecipeViewModel = new RecipeViewModel
                 {
-                    Id = recipeId,
+                    Id = recipeToUpdate.Id,
                     Name = "ChangedRecipeName 1",
                     CookTimeMinutes = 3,
                     PrepTimeMinutes = 4,
-                    Categories = new List<CategoryViewModel>
+                    Categories = new List<string>
                     {
-                        new CategoryViewModel
-                        {
-                            Name = "Category3"
-                        },
-                        new CategoryViewModel
-                        {
-                            Name = "Category4"
-                        }
+                        "Category3","Category4"
                     },
                     ModifiedOn = new DateTime(2222, 12, 12),
                     CreatedOn = new DateTime(1903, 12, 12),
@@ -133,7 +142,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 new ActionChain(responder)
                     .Execute(new UpdateRecipe(data, now, newRecipeViewModel, 2));
 
-                var changedRecipe = data.Recipes.Stored.GetById(recipeId);
+                var changedRecipe = data.Recipes.Stored.GetById(recipeToUpdate.Id);
 
                 Assert.False(responder.ResponseCreated);
 
@@ -144,7 +153,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.Equal(1, changedRecipe.CreatedByUserId);
                 Assert.Equal(2, changedRecipe.ModifiedByUserId);
 
-                var newCategory4 = data.Categories.Stored.Where(c => c.Name == "Category4");
+                var newCategory4 = data.Categories.Stored.Single(c => c.Name == "Category4");
                 Assert.NotNull(newCategory4);
 
                 Assert.Equal(2, data.Recipes.Stored.Count());
@@ -162,12 +171,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             var recipeViewModel = new RecipeViewModel
             {
                 Id = 2,
-                Categories = new List<CategoryViewModel>
+                Categories = new List<string>
                 {
-                    new CategoryViewModel
-                    {
-                        Name = "Category1"
-                    }
+                    "Category1"
                 }
             };
 

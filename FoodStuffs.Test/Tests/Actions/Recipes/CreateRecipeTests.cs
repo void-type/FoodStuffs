@@ -29,16 +29,10 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Name = "Recipe1",
                 CookTimeMinutes = 2,
                 PrepTimeMinutes = 2,
-                Categories = new List<CategoryViewModel>
+                Categories = new List<string>
                 {
-                    new CategoryViewModel
-                    {
-                        Name = "Category1"
-                    },
-                    new CategoryViewModel
-                    {
-                        Name = "Category2"
-                    }
+                    "Category1",
+                    "Category2"
                 }
             };
 

@@ -41,7 +41,6 @@ namespace FoodStuffs.Model.Actions.Recipes
             savedRecipe.Name = _viewModel.Name;
 
             CleanupCategories(savedRecipe);
-            _data.SaveChanges();
 
             AddCategoriesAndCategoryRecipes(savedRecipe);
             _data.SaveChanges();
@@ -56,7 +55,7 @@ namespace FoodStuffs.Model.Actions.Recipes
         {
             foreach (var viewModelCategory in _viewModel.Categories)
             {
-                var existingCategory = _data.Categories.Stored.GetByName(viewModelCategory.Name) ?? CreateCategory(viewModelCategory);
+                var existingCategory = _data.Categories.Stored.GetByName(viewModelCategory) ?? CreateCategory(viewModelCategory);
 
                 var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipe.Id, existingCategory.Id);
 
@@ -76,10 +75,10 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.Categories.RemoveRange(unusedCategories);
         }
 
-        private ICategory CreateCategory(CategoryViewModel viewModelCategory)
+        private ICategory CreateCategory(string viewModelCategory)
         {
             var existingCategory = _data.Categories.New;
-            existingCategory.Name = viewModelCategory.Name;
+            existingCategory.Name = viewModelCategory;
             _data.Categories.Add(existingCategory);
             return existingCategory;
         }
@@ -107,20 +106,10 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         private IEnumerable<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe, RecipeViewModel viewModel)
         {
-            var newCategoryNames = viewModel.Categories
-                .Select(c => c.Name.ToUpper().Trim());
+            var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
 
-            var currentCategoryRecipeIds = _data.CategoryRecipes.Stored
-                .Where(cr => cr.RecipeId == recipe.Id)
-                .Select(cr => cr.CategoryId);
-
-            var unusedCategoryIds = _data.Categories.Stored
-                .Where(c => currentCategoryRecipeIds.Contains(c.Id))
-                .Where(current => !newCategoryNames.Contains(current.Name.ToUpper().Trim()))
-                .Select(c => c.Id);
-
-            var unusedCategoryRecipes = _data.CategoryRecipes.Stored
-                .Where(cr => cr.RecipeId == recipe.Id && unusedCategoryIds.Contains(cr.CategoryId));
+            var unusedCategoryRecipes =
+                recipe.CategoryRecipe.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
 
             return unusedCategoryRecipes;
         }

@@ -4,7 +4,6 @@ using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
-using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
@@ -45,7 +44,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         private void AddCategoriesAndCategoryRecipes(int recipeId)
         {
-            foreach (var categoryName in _viewModel.Categories.Select(c => c.Name))
+            foreach (var categoryName in _viewModel.Categories)
             {
                 var category = _data.Categories.Stored.GetByName(categoryName);
 

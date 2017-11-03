@@ -28,13 +28,7 @@ namespace FoodStuffs.Model.Queries
                 CreatedOn = r.CreatedOn,
                 ModifiedByUserId = r.ModifiedByUserId,
                 ModifiedOn = r.ModifiedOn,
-                Categories = r.CategoryRecipe
-                    .Select(cr => cr.Category)
-                    .Select(c => new CategoryViewModel
-                    {
-                        Id = c.Id,
-                        Name = c.Name
-                    })
+                Categories = r.CategoryRecipe.Select(cr => cr.Category.Name)
             });
         }
     }

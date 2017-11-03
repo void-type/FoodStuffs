@@ -5,7 +5,7 @@ namespace FoodStuffs.Model.ViewModels
 {
     public class RecipeViewModel
     {
-        public IEnumerable<CategoryViewModel> Categories { get; set; } = new List<CategoryViewModel>();
+        public IEnumerable<string> Categories { get; set; } = new List<string>();
         public int? CookTimeMinutes { get; set; }
         public int CreatedByUserId { get; set; }
         public DateTime CreatedOn { get; set; }

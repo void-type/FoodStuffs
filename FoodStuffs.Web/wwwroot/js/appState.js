@@ -33,6 +33,20 @@
         axios.put("api/recipes", recipe)
             .then(function (response) {
                 appState.success(response.data.items);
+                appState.list();
+            })
+            .catch(function (response) {
+                appState.error(response.data.items);
+            });
+    },
+
+    update: function (recipe) {
+        appState.clearMessages();
+
+        axios.post("api/recipes", recipe)
+            .then(function (response) {
+                appState.success(response.data.items);
+                appState.list();
             })
             .catch(function (response) {
                 appState.error(response.data.items);
@@ -45,6 +59,7 @@
         axios.delete("api/recipes", recipeId)
             .then(function (response) {
                 appState.success(response.data.items);
+                appState.list();
             })
             .catch(function (response) {
                 appState.error(response.data.items);

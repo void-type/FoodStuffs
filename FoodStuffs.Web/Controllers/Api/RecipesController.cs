@@ -41,8 +41,6 @@ namespace FoodStuffs.Web.Controllers.Api
             return _responder.Response;
         }
 
-        //    return _responder.Response;
-        //}
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -52,12 +50,6 @@ namespace FoodStuffs.Web.Controllers.Api
             return _responder.Response;
         }
 
-        //[HttpPost]
-        //public IActionResult Update(RecipeViewModel viewModel)
-        //{
-        //    new ActionChain(_responder)
-        //        .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
-        //        .Execute(new UpdateRecipe(_data, _now, 1, viewModel));
         [Route("list")]
         [HttpGet]
         public IActionResult List()
@@ -65,6 +57,15 @@ namespace FoodStuffs.Web.Controllers.Api
             new ActionChain(_responder)
                 .Execute(new RespondWithAllRecipes(_data));
 
+            return _responder.Response;
+        }
+
+        [HttpPost]
+        public IActionResult Update([FromBody]RecipeViewModel viewModel)
+        {
+            new ActionChain(_responder)
+                .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
+                .Execute(new UpdateRecipe(_data, _now, viewModel, 1));
             return _responder.Response;
         }
 
