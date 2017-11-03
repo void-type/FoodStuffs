@@ -2,6 +2,7 @@
 using FoodStuffs.Data.Test;
 using FoodStuffs.Model.Actions.Core.Chain;
 using FoodStuffs.Model.Actions.Recipes;
+using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
@@ -22,33 +23,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
             using (var data = new FoodStuffsListData())
             {
-                data.Users.Add(new User
-                {
-                    Id = 1
-                });
+                data.Users.AddRange(_testUsers);
 
-                data.Users.Add(new User
-                {
-                    Id = 2
-                });
-
-                data.Categories.Add(new Category
-                {
-                    Id = 1,
-                    Name = "Category1"
-                });
-
-                data.Categories.Add(new Category
-                {
-                    Id = 2,
-                    Name = "Category2"
-                });
-
-                data.Categories.Add(new Category
-                {
-                    Id = 3,
-                    Name = "Category3"
-                });
+                data.Categories.AddRange(_testCategories);
 
                 var recipeToUpdate = new Recipe
                 {
@@ -63,60 +40,33 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.Recipes.Add(recipeToUpdate);
 
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 2,
-                    Name = "Recipe2",
-                    CookTimeMinutes = 2,
-                    PrepTimeMinutes = 2
-                });
+                data.Recipes.Add(_testRecipe2);
 
-                data.CategoryRecipes.Add(new CategoryRecipe
-                {
-                    RecipeId = 1,
-                    CategoryId = 1
-                });
-
-                data.CategoryRecipes.Add(new CategoryRecipe
-                {
-                    RecipeId = 1,
-                    CategoryId = 2
-                });
-
-                data.CategoryRecipes.Add(new CategoryRecipe
-                {
-                    RecipeId = 1,
-                    CategoryId = 3
-                });
-
-                data.CategoryRecipes.Add(new CategoryRecipe
-                {
-                    RecipeId = 2,
-                    CategoryId = 2
-                });
-
-                data.CategoryRecipes.Add(new CategoryRecipe
-                {
-                    RecipeId = 2,
-                    CategoryId = 3
-                });
+                data.CategoryRecipes.AddRange(_testCategoryRecipes);
 
                 // Force relations in list database
-                foreach (var category in data.Categories.Stored)
+                if (data.GetType() == typeof(FoodStuffsListData))
                 {
-                    category.CategoryRecipe = data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == category.Id).ToList();
-                }
+                    foreach (var category in data.Categories.Stored)
+                    {
+                        category.CategoryRecipe = data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == category.Id)
+                            .ToList();
+                    }
 
-                foreach (var categoryRecipe in data.CategoryRecipes.Stored)
-                {
-                    categoryRecipe.Category = data.Categories.Stored.FirstOrDefault(c => c.Id == categoryRecipe.CategoryId);
+                    foreach (var categoryRecipe in data.CategoryRecipes.Stored)
+                    {
+                        categoryRecipe.Category =
+                            data.Categories.Stored.FirstOrDefault(c => c.Id == categoryRecipe.CategoryId);
 
-                    categoryRecipe.Recipe = data.Recipes.Stored.FirstOrDefault(r => r.Id == categoryRecipe.RecipeId);
-                }
+                        categoryRecipe.Recipe =
+                            data.Recipes.Stored.FirstOrDefault(r => r.Id == categoryRecipe.RecipeId);
+                    }
 
-                foreach (var recipe in data.Recipes.Stored)
-                {
-                    recipe.CategoryRecipe = data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id).ToList();
+                    foreach (var recipe in data.Recipes.Stored)
+                    {
+                        recipe.CategoryRecipe =
+                            data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id).ToList();
+                    }
                 }
 
                 data.SaveChanges();
@@ -186,5 +136,73 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             Assert.True(responder.ResponseCreated);
             Assert.Equal(1, responder.ValidationErrors.Count);
         }
+
+        private readonly List<ICategory> _testCategories = new List<ICategory> {
+            new Category
+            {
+                Id = 1,
+                Name = "Category1"
+            },new Category
+            {
+                Id = 2,
+                Name = "Category2"
+            },new Category
+            {
+                Id = 3,
+                Name = "Category3"
+            }};
+
+        private readonly List<ICategoryRecipe> _testCategoryRecipes = new List<ICategoryRecipe>
+        {
+            new CategoryRecipe
+            {
+                RecipeId = 1,
+                CategoryId = 1
+            },
+
+            new CategoryRecipe
+            {
+                RecipeId = 1,
+                CategoryId = 2
+            },
+
+            new CategoryRecipe
+            {
+                RecipeId = 1,
+                CategoryId = 3
+            },
+
+            new CategoryRecipe
+            {
+                RecipeId = 2,
+                CategoryId = 2
+            },
+
+            new CategoryRecipe
+            {
+                RecipeId = 2,
+                CategoryId = 3
+            }
+        };
+
+        private readonly Recipe _testRecipe2 = new Recipe
+        {
+            Id = 2,
+            Name = "Recipe2",
+            CookTimeMinutes = 2,
+            PrepTimeMinutes = 2
+        };
+
+        private readonly List<IUser> _testUsers = new List<IUser>
+        {
+            new User
+            {
+                Id = 1
+            },
+            new User
+            {
+                Id = 2
+            }
+        };
     }
 }
