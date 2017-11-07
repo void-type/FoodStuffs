@@ -66,6 +66,7 @@ namespace FoodStuffs.Web.Controllers.Api
             new ActionChain(_responder)
                 .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
                 .Execute(new UpdateRecipe(_data, _now, viewModel, 1));
+
             return _responder.Response;
         }
 

@@ -132,7 +132,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             }
 
             Assert.True(responder.ResponseCreated);
-            Assert.Equal(1, responder.ValidationErrors.Count);
+            Assert.Single(responder.ValidationErrors);
         }
     }
 }

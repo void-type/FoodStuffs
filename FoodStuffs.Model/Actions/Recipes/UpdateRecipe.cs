@@ -51,6 +51,29 @@ namespace FoodStuffs.Model.Actions.Recipes
         private readonly int _userId;
         private readonly RecipeViewModel _viewModel;
 
+        private static IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe, IEnumerable<ICategoryRecipe> unusedCategoryRecipes)
+        {
+            var categories = unusedCategoryRecipes.Select(cr => cr.Category);
+
+            foreach (var category in categories)
+            {
+                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
+                {
+                    yield return category;
+                }
+            }
+        }
+
+        private static IEnumerable<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe, RecipeViewModel viewModel)
+        {
+            var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
+
+            var unusedCategoryRecipes =
+                recipe.CategoryRecipe.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
+
+            return unusedCategoryRecipes;
+        }
+
         private void AddCategoriesAndCategoryRecipes(IRecipe recipe)
         {
             foreach (var viewModelCategory in _viewModel.Categories)
@@ -89,29 +112,6 @@ namespace FoodStuffs.Model.Actions.Recipes
             categoryRecipe.RecipeId = recipe.Id;
             categoryRecipe.CategoryId = existingCategory.Id;
             _data.CategoryRecipes.Add(categoryRecipe);
-        }
-
-        private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe, IEnumerable<ICategoryRecipe> unusedCategoryRecipes)
-        {
-            var categories = unusedCategoryRecipes.Select(cr => cr.Category);
-
-            foreach (var category in categories)
-            {
-                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
-                {
-                    yield return category;
-                }
-            }
-        }
-
-        private IEnumerable<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe, RecipeViewModel viewModel)
-        {
-            var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
-
-            var unusedCategoryRecipes =
-                recipe.CategoryRecipe.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
-
-            return unusedCategoryRecipes;
         }
     }
 }
