@@ -58,7 +58,8 @@ a, a:link {
 }
 
 header {
-    background-color: $color-ternary-dark;
+    background-color: $color-primary-dark;
+    box-shadow: $shadow;
 
     .topbar {
         display: flex;
@@ -71,10 +72,16 @@ header {
             height: 100%;
         }
 
-        a {
+        a, a-link {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: $color-ternary;
+
+
+            &:hover, &:active {
+                color: $color-secondary-dark;
+            }
 
             &.logo {
                 margin-right: 1em;
@@ -89,6 +96,11 @@ header {
             &.title {
                 font-size: 150%;
                 font-weight: bold;
+                color: $color-secondary-dark;
+
+                &:hover, &:active {
+                    color: $color-secondary;
+                }
             }
         }
     }

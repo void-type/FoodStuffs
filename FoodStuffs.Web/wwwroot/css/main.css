@@ -48,7 +48,8 @@ a, a:link {
     color: #72c4cb; }
 
 header {
-  background-color: #f4decb; }
+  background-color: #642b61;
+  box-shadow: 2px 3px 2px rgba(37, 40, 53, 0.5); }
   header .topbar {
     display: flex;
     justify-content: space-between;
@@ -57,19 +58,25 @@ header {
       display: flex;
       justify-content: space-between;
       height: 100%; }
-    header .topbar a {
+    header .topbar a, header .topbar a-link {
       display: flex;
       justify-content: space-between;
-      align-items: center; }
-      header .topbar a.logo {
+      align-items: center;
+      color: #fbf3ed; }
+      header .topbar a:hover, header .topbar a:active, header .topbar a-link:hover, header .topbar a-link:active {
+        color: #72c4cb; }
+      header .topbar a.logo, header .topbar a-link.logo {
         margin-right: 1em;
         height: 100%; }
-        header .topbar a.logo img {
+        header .topbar a.logo img, header .topbar a-link.logo img {
           width: auto;
           height: 70%; }
-      header .topbar a.title {
+      header .topbar a.title, header .topbar a-link.title {
         font-size: 150%;
-        font-weight: bold; }
+        font-weight: bold;
+        color: #72c4cb; }
+        header .topbar a.title:hover, header .topbar a.title:active, header .topbar a-link.title:hover, header .topbar a-link.title:active {
+          color: #90d0d6; }
 
 @media (min-width: 1921px) {
   body {
@@ -82,8 +89,7 @@ header {
     display: none; } }
 
 nav {
-  background-color: #642b61;
-  box-shadow: 2px 3px 2px rgba(37, 40, 53, 0.5); }
+  background-color: #642b61; }
   nav ul {
     display: flex;
     justify-content: space-between;
@@ -218,3 +224,4 @@ ul.error {
     display: none; }
   input[type="password"], input[type="number"], input[type="text"], select, textarea {
     width: 23em; } }
+
