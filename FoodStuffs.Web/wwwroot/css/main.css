@@ -2,7 +2,6 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 html {
   height: 100%; }
 
@@ -10,15 +9,23 @@ body {
   font-family: "Source Sans Pro", sans-serif;
   color: black;
   background-color: #fbf3ed;
-  margin: 0;
-  /* Contain the page to the center of a widescreen */ }
-  body header > .topbar, body nav > div, body main > div, body footer > div {
-    margin: 0 auto;
-    max-width: 60em; }
+  margin: 0; }
+
+main > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%; }
+  main > div > section:not(:first-child) {
+    margin-left: 1em; }
 
 .topbar, main {
   padding-left: 1em;
   padding-right: 1em; }
+
+header > .topbar, nav > div, main > div, footer > div {
+  margin: 0 auto;
+  max-width: 70em; }
 
 section {
   margin-top: 3em;
@@ -78,16 +85,6 @@ header {
         header .topbar a.title:hover, header .topbar a.title:active, header .topbar a-link.title:hover, header .topbar a-link.title:active {
           color: #90d0d6; }
 
-@media (min-width: 1921px) {
-  body {
-    font-size: 130%; } }
-
-@media (max-width: 420px) {
-  body {
-    font-size: 90%; }
-  .topbar .title {
-    display: none; } }
-
 nav {
   background-color: #642b61; }
   nav ul {
@@ -127,27 +124,45 @@ nav {
         top: 0;
         box-shadow: 2px 3px 2px rgba(37, 40, 53, 0.5); }
 
-table {
-  width: 100%;
+@media (min-width: 1921px) {
+  body {
+    font-size: 130%; } }
+
+@media (max-width: 420px) {
+  body {
+    font-size: 90%; }
+  .topbar .title {
+    display: none; } }
+
+ul.error {
+  max-width: 30em;
+  margin-bottom: 2em;
+  color: crimson; }
+
+#recipe-table table {
+  width: 20em;
   padding: 1em;
   border-collapse: collapse;
   border-spacing: 0; }
-  table tr {
+  #recipe-table table tr {
     text-align: left; }
-  table th, table td {
+  #recipe-table table th, #recipe-table table td {
     border-bottom: 1px solid #666972; }
-  table th, table td {
+  #recipe-table table th, #recipe-table table td {
     padding: .5em 1em; }
-  table.hover tbody tr:hover {
+  #recipe-table table.hover tbody tr:hover {
     cursor: pointer;
     background-color: rgba(129, 55, 125, 0.5); }
 
-.form-group {
+#recipe-table button {
+  margin-bottom: 1em; }
+
+#recipe-form .form-group {
   margin-bottom: 2em;
   display: flex;
   flex-direction: row;
   align-items: flex-start; }
-  .form-group label {
+  #recipe-form .form-group label {
     width: 11em;
     margin-right: .5em;
     text-align: right;
@@ -156,16 +171,26 @@ table {
     text-overflow: ellipsis;
     padding: .5em;
     font-weight: bold; }
-  .form-group button {
+  #recipe-form .form-group button {
     margin-right: .5em; }
-    .form-group button:first-child {
+    #recipe-form .form-group button:first-child {
       margin-left: 15em; }
-  .form-group div {
+  #recipe-form .form-group div {
     padding: .5em 0;
     width: 25em;
     box-sizing: border-box; }
-    .form-group div span:not(:last-child):after {
+    #recipe-form .form-group div span:not(:last-child):after {
       content: ", "; }
+
+@media (max-width: 680px) {
+  #recipe-form .form-group label {
+    text-align: left; }
+  #recipe-form input[type="button"], #recipe-form input[type="submit"], #recipe-form button {
+    margin: 0; } }
+
+@media (max-width: 420px) {
+  #recipe-form .form-group input[type="password"], #recipe-form .form-group input[type="number"], #recipe-form .form-group input[type="text"], #recipe-form .form-group select, #recipe-form .form-group textarea {
+    width: 23em; } }
 
 input[type="password"], input[type="number"], input[type="text"], select, textarea {
   width: 25em;
@@ -205,23 +230,4 @@ input.chk {
   padding: .5em;
   top: .4em;
   position: relative; }
-
-ul.error {
-  max-width: 30em;
-  margin-bottom: 2em;
-  color: crimson; }
-
-@media (max-width: 680px) {
-  .form-group label {
-    text-align: left; }
-  .form-group input[type="button"], .form-group input[type="submit"], .form-group button {
-    margin: 0; } }
-
-@media (max-width: 420px) {
-  body {
-    font-size: 90%; }
-  .topbar .title {
-    display: none; }
-  input[type="password"], input[type="number"], input[type="text"], select, textarea {
-    width: 23em; } }
 

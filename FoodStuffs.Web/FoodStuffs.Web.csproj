@@ -16,4 +16,7 @@
     <ProjectReference Include="..\FoodStuffs.Data\FoodStuffs.Data.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
 </Project>

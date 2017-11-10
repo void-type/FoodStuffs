@@ -1,0 +1,31 @@
+﻿@import '../base/variables.scss';
+
+#recipe-table {
+    table {
+        width: 20em;
+        padding: 1em;
+        border-collapse: collapse;
+        border-spacing: 0;
+
+        tr {
+            text-align: left;
+        }
+
+        th, td {
+            border-bottom: $border;
+        }
+
+        th, td {
+            padding: .5em 1em;
+        }
+
+        &.hover tbody tr:hover {
+            cursor: pointer;
+            background-color: $color-focus;
+        }
+    }
+
+    button {
+        margin-bottom: 1em;
+    }
+}

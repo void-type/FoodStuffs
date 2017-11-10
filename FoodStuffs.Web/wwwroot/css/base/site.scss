@@ -9,16 +9,27 @@ body {
     color: $contrast2;
     background-color: $color-background;
     margin: 0;
-    /* Contain the page to the center of a widescreen */
-    header > .topbar, nav > div, main > div, footer > div {
-        margin: 0 auto;
-        max-width: 60em;
+}
+
+main > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+
+    & > section:not(:first-child) {
+        margin-left:1em;
     }
 }
 
 .topbar, main {
     padding-left: 1em;
     padding-right: 1em;
+}
+
+header > .topbar, nav > div, main > div, footer > div {
+    margin: 0 auto;
+    max-width: 70em;
 }
 
 section {
@@ -78,7 +89,6 @@ header {
             align-items: center;
             color: $color-ternary;
 
-
             &:hover, &:active {
                 color: $color-secondary-dark;
             }
@@ -106,6 +116,64 @@ header {
     }
 }
 
+nav {
+    background-color: $color-primary-dark;
+
+    ul {
+        display: flex;
+        justify-content: space-between;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        background-color: $color-primary-dark;
+        z-index: 1000;
+
+        li {
+            display: block;
+            position: relative;
+            text-align: center;
+            min-width: 25%;
+
+            &:hover > ul {
+                display: block;
+                position: absolute;
+            }
+
+            a, a:link {
+                display: block;
+                padding: 1em .5em;
+                white-space: nowrap;
+
+                &:link, &:visited {
+                    color: $contrast1;
+                }
+
+                &.current-page {
+                    color: $color-secondary-dark;
+                }
+
+                &:hover, &:active {
+                    background-color: mix($color-primary-dark, $color-ternary, 90%);
+                    color: $color-secondary;
+                    box-shadow: $highlight-border;
+                }
+            }
+        }
+
+        ul {
+            display: none;
+            width: 100%;
+            box-shadow: $shadow;
+
+            ul {
+                left: 100%;
+                top: 0;
+                box-shadow: $shadow;
+            }
+        }
+    }
+}
+
 @media (min-width:1921px) {
     body {
         font-size: 130%;
@@ -120,4 +188,10 @@ header {
     .topbar .title {
         display: none;
     }
+}
+
+ul.error {
+    max-width: 30em;
+    margin-bottom: 2em;
+    color: $color-error;
 }
