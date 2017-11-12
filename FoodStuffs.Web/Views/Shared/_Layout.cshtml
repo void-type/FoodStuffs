@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FoodStuffs</title>
 
-    <link rel="stylesheet" href="~/css/main.min.css" />
+    <link href="~/app/root/main.min.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -33,15 +33,14 @@
     <environment names="Development">
         <script src="~/lib/axios/dist/axios.js"></script>
         <script src="~/lib/vue/dist/vue.js"></script>
-        <script src="~/js/appState.js" asp-append-version="true"></script>
-        <script src="~/js/messageCenter.js" asp-append-version="true"></script>
-        <script src="~/js/recipeEditor.js" asp-append-version="true"></script>
-        <script src="~/js/recipeTable.js" asp-append-version="true"></script>
+        <script src="~/app/root/appState.js"></script>
+        <script src="~/app/recipe-table/recipe-table.js"></script>
+        <script src="~/app/recipe-form/recipe-form.js"></script>
+        <script src="~/app/message-center/message-center.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/axios/dist/axios.min.js"></script>
         <script src="~/lib/vue/dist/vue.min.js"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", false)
