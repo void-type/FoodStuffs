@@ -20,3 +20,7 @@ $border: 1px solid mix($color-border, $contrast1, 70%);
 $shadow: 2px 3px 2px rgba($color-border, .5);
 $shadow-collapse: 1px 1px 2px rgba($color-border, .5);
 $font-family: "Source Sans Pro", sans-serif;
+
+$extra-large-screen: "(min-width:1921px)";
+$medium-screen: "(max-width:880px)";
+$small-screen: "(max-width:420px)";

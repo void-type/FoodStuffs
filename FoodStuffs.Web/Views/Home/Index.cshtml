@@ -6,6 +6,8 @@
     <ul id="message-center" class="error">
         <li v-for="message in messages">{{message.errorMessage}}</li>
     </ul>
+</section>
+<section>
     <div id="recipe-table">
         <button v-on:click="newRecipe()">New</button>
         <table class="hover">
@@ -17,8 +19,6 @@
             </tbody>
         </table>
     </div>
-</section>
-<section>
     <form id="recipe-form" v-if="currentRecipe !== null">
         <h1>Edit Recipe</h1>
         <div class="form-group">
@@ -48,6 +48,7 @@
             </div>
         </div>
         <div class="form-group">
+            <label></label>
             <button v-on:click.prevent="update(currentRecipe)">
                 Update
             </button>

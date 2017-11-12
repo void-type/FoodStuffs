@@ -1,8 +1,9 @@
 ﻿@import '../base/variables.scss';
 
 #recipe-table {
+
     table {
-        width: 20em;
+        width: 15em;
         padding: 1em;
         border-collapse: collapse;
         border-spacing: 0;
@@ -13,9 +14,6 @@
 
         th, td {
             border-bottom: $border;
-        }
-
-        th, td {
             padding: .5em 1em;
         }
 

@@ -1,14 +1,18 @@
 ﻿@import '../base/variables.scss';
 
 #recipe-form {
+    flex-grow: 1;
+
+    h1 {
+        margin-top: 0;
+    }
+
     .form-group {
         margin-bottom: 2em;
         display: flex;
-        flex-direction: row;
-        align-items: flex-start;
 
         label {
-            width: 11em;
+            width: 8em;
             margin-right: .5em;
             text-align: right;
             white-space: nowrap;
@@ -16,56 +20,55 @@
             text-overflow: ellipsis;
             padding: .5em;
             font-weight: bold;
+            min-height: 1em;
         }
 
-        button {
+        button:not(:last-child) {
             margin-right: .5em;
-
-            &:first-child {
-                margin-left: 15em;
-            }
         }
-
+        /*TODO: make category selector*/
         div {
             padding: .5em 0;
-            width: 25em;
             box-sizing: border-box;
 
             span:not(:last-child):after {
                 content: ", ";
             }
         }
-    }
 
-    @media (max-width:680px) {
+        input [type="password"], input[type="number"], input[type="text"], select, textarea {
+            flex-grow: 1;
+            width: auto;
+        }
+    }
+}
+
+@media #{$medium-screen} {
+    #recipe-form {
+
+        h1 {
+            display: none;
+        }
+
         .form-group {
+
             label {
-                text-align: left;
-            }
-        }
-
-        input[type="button"], input[type="submit"], button {
-            margin: 0;
-        }
-    }
-
-    @media (max-width:420px) {
-        .form-group {
-            input[type="password"], input[type="number"], input[type="text"], select, textarea {
-                width: 23em;
+                width: 4em;
             }
         }
     }
 }
 
+
+
 input[type="password"], input[type="number"], input[type="text"], select, textarea {
-    width: 25em;
     box-sizing: border-box;
     padding: .3em .4em;
     border: $border;
     transition: all 0.30s ease-in-out;
     font-family: $font-family;
     font-size: 1em;
+    width: 25em;
 
     &:focus {
         outline: none;
@@ -86,14 +89,13 @@ input[type="button"], input[type="submit"], button {
     color: black;
     font-weight: bold;
     position: relative;
-    top: -2px;
     min-width: 5em;
     cursor: pointer;
 
     &:active {
         background-color: $color-secondary-dark;
         box-shadow: $shadow-collapse;
-        top: 2px;
+        top: 4px;
     }
 }
 
@@ -103,4 +105,10 @@ input.chk {
     padding: .5em;
     top: .4em;
     position: relative;
+}
+
+ul.error {
+    max-width: 30em;
+    margin-bottom: 2em;
+    color: $color-error;
 }

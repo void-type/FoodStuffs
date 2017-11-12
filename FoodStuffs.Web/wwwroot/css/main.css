@@ -11,25 +11,20 @@ body {
   background-color: #fbf3ed;
   margin: 0; }
 
-main > div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%; }
-  main > div > section:not(:first-child) {
-    margin-left: 1em; }
-
-.topbar, main {
+header, main {
   padding-left: 1em;
   padding-right: 1em; }
 
-header > .topbar, nav > div, main > div, footer > div {
+header > .topbar, nav > div, main, footer > div {
   margin: 0 auto;
   max-width: 70em; }
 
-section {
+main > section {
+  display: flex;
   margin-top: 3em;
   margin-bottom: 3em; }
+  main > section > *:not(:first-child) {
+    margin-left: 2em; }
 
 footer {
   border-top: 1px solid #666972;
@@ -128,27 +123,25 @@ nav {
   body {
     font-size: 130%; } }
 
+@media (max-width: 880px) {
+  main > section {
+    flex-direction: column; } }
+
 @media (max-width: 420px) {
   body {
     font-size: 90%; }
   .topbar .title {
     display: none; } }
 
-ul.error {
-  max-width: 30em;
-  margin-bottom: 2em;
-  color: crimson; }
-
 #recipe-table table {
-  width: 20em;
+  width: 15em;
   padding: 1em;
   border-collapse: collapse;
   border-spacing: 0; }
   #recipe-table table tr {
     text-align: left; }
   #recipe-table table th, #recipe-table table td {
-    border-bottom: 1px solid #666972; }
-  #recipe-table table th, #recipe-table table td {
+    border-bottom: 1px solid #666972;
     padding: .5em 1em; }
   #recipe-table table.hover tbody tr:hover {
     cursor: pointer;
@@ -157,49 +150,49 @@ ul.error {
 #recipe-table button {
   margin-bottom: 1em; }
 
-#recipe-form .form-group {
-  margin-bottom: 2em;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start; }
-  #recipe-form .form-group label {
-    width: 11em;
-    margin-right: .5em;
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: .5em;
-    font-weight: bold; }
-  #recipe-form .form-group button {
-    margin-right: .5em; }
-    #recipe-form .form-group button:first-child {
-      margin-left: 15em; }
-  #recipe-form .form-group div {
-    padding: .5em 0;
-    width: 25em;
-    box-sizing: border-box; }
-    #recipe-form .form-group div span:not(:last-child):after {
-      content: ", "; }
+#recipe-form {
+  flex-grow: 1; }
+  #recipe-form h1 {
+    margin-top: 0; }
+  #recipe-form .form-group {
+    margin-bottom: 2em;
+    display: flex;
+    /*TODO: make category selector*/ }
+    #recipe-form .form-group label {
+      width: 8em;
+      margin-right: .5em;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: .5em;
+      font-weight: bold;
+      min-height: 1em; }
+    #recipe-form .form-group button:not(:last-child) {
+      margin-right: .5em; }
+    #recipe-form .form-group div {
+      padding: .5em 0;
+      box-sizing: border-box; }
+      #recipe-form .form-group div span:not(:last-child):after {
+        content: ", "; }
+    #recipe-form .form-group input [type="password"], #recipe-form .form-group input[type="number"], #recipe-form .form-group input[type="text"], #recipe-form .form-group select, #recipe-form .form-group textarea {
+      flex-grow: 1;
+      width: auto; }
 
-@media (max-width: 680px) {
+@media (max-width: 880px) {
+  #recipe-form h1 {
+    display: none; }
   #recipe-form .form-group label {
-    text-align: left; }
-  #recipe-form input[type="button"], #recipe-form input[type="submit"], #recipe-form button {
-    margin: 0; } }
-
-@media (max-width: 420px) {
-  #recipe-form .form-group input[type="password"], #recipe-form .form-group input[type="number"], #recipe-form .form-group input[type="text"], #recipe-form .form-group select, #recipe-form .form-group textarea {
-    width: 23em; } }
+    width: 4em; } }
 
 input[type="password"], input[type="number"], input[type="text"], select, textarea {
-  width: 25em;
   box-sizing: border-box;
   padding: .3em .4em;
   border: 1px solid #666972;
   transition: all 0.30s ease-in-out;
   font-family: "Source Sans Pro", sans-serif;
-  font-size: 1em; }
+  font-size: 1em;
+  width: 25em; }
   input[type="password"]:focus, input[type="number"]:focus, input[type="text"]:focus, select:focus, textarea:focus {
     outline: none;
     border: 2px solid rgba(129, 55, 125, 0.5);
@@ -216,13 +209,12 @@ input[type="button"], input[type="submit"], button {
   color: black;
   font-weight: bold;
   position: relative;
-  top: -2px;
   min-width: 5em;
   cursor: pointer; }
   input[type="button"]:active, input[type="submit"]:active, button:active {
     background-color: #72c4cb;
     box-shadow: 1px 1px 2px rgba(37, 40, 53, 0.5);
-    top: 2px; }
+    top: 4px; }
 
 input.chk {
   height: 1.5em;
@@ -230,4 +222,9 @@ input.chk {
   padding: .5em;
   top: .4em;
   position: relative; }
+
+ul.error {
+  max-width: 30em;
+  margin-bottom: 2em;
+  color: crimson; }
 
