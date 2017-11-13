@@ -1,60 +1,76 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<section>
-    <ul id="message-center" class="error">
-        <li v-for="message in messages">{{message.errorMessage}}</li>
-    </ul>
-</section>
-<section>
-    <div id="recipe-table">
-        <button v-on:click="newRecipe()">New</button>
-        <table class="hover">
-
-            <tbody>
-                <tr v-for="recipe in recipes" v-on:click="select(recipe)">
-                    <td>{{recipe.name}}</td>
-                </tr>
-            </tbody>
-        </table>
+﻿<header>
+    <div class="topbar">
+        <div>
+            <a class="logo" href="#">
+                <img src="~/img/logo.png" alt="FoodStuffs" />
+            </a>
+            <a class="title" href="#">
+                FoodStuffs
+            </a>
+        </div>
+        <a href="#">Login</a>
     </div>
-    <form id="recipe-form" v-if="currentRecipe !== null">
-        <h1>Edit Recipe</h1>
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" name="name" v-model="currentRecipe.name" />
+</header>
+
+<main>
+    <section>
+        <ul id="message-center" class="error">
+            <li v-for="message in messages">{{message.errorMessage}}</li>
+        </ul>
+    </section>
+    <section>
+        <div id="recipe-table">
+            <button v-on:click="newRecipe()">New</button>
+            <table class="hover">
+
+                <tbody>
+                    <tr v-for="recipe in recipes" v-on:click="select(recipe)">
+                        <td>{{recipe.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="form-group">
-            <label>Ingredient</label>
-            <textarea name="ingredients" v-model="currentRecipe.ingredients"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Directions</label>
-            <textarea name="stuff" v-model="currentRecipe.directions"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Prep Time (minutes)</label>
-            <input type="number" name="prepTimeMinutes" v-model="currentRecipe.prepTimeMinutes" />
-        </div>
-        <div class="form-group">
-            <label>Cook Time (minutes)</label>
-            <input type="number" name="cookTimeMinutes" v-model="currentRecipe.cookTimeMinutes" />
-        </div>
-        <div class="form-group">
-            <label>Categories</label>
-            <div>
-                <span v-for="category in currentRecipe.categories">{{category}}</span>
+        <form id="recipe-form" v-if="currentRecipe !== null">
+            <h1>Edit Recipe</h1>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" v-model="currentRecipe.name" />
             </div>
-        </div>
-        <div class="form-group">
-            <label></label>
-            <button v-on:click.prevent="update(currentRecipe)">
-                Update
-            </button>
-            <button v-on:click.prevent="cancel()">
-                Cancel
-            </button>
-        </div>
-    </form>
-</section>
+            <div class="form-group">
+                <label>Ingredient</label>
+                <textarea name="ingredients" v-model="currentRecipe.ingredients"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Directions</label>
+                <textarea name="stuff" v-model="currentRecipe.directions"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Prep Time (minutes)</label>
+                <input type="number" name="prepTimeMinutes" v-model="currentRecipe.prepTimeMinutes" />
+            </div>
+            <div class="form-group">
+                <label>Cook Time (minutes)</label>
+                <input type="number" name="cookTimeMinutes" v-model="currentRecipe.cookTimeMinutes" />
+            </div>
+            <div class="form-group">
+                <label>Categories</label>
+                <div>
+                    <span v-for="category in currentRecipe.categories">{{category}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label></label>
+                <button v-on:click.prevent="update(currentRecipe)">
+                    Update
+                </button>
+                <button v-on:click.prevent="cancel()">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <div class="text-center">&copy; FoodStuffs</div>
+</footer>

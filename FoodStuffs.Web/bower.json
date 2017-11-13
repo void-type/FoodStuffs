@@ -1,8 +1,0 @@
-{
-  "name": "asp.net",
-  "private": true,
-  "dependencies": {
-    "vue": "v2.4.2",
-    "axios": "v0.16.2"
-  }
-}

@@ -3,46 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FoodStuffs</title>
+    <title>FoodStuffs</title>
+    <base href="~/" />
 
-    <link href="~/app/root/main.min.css" rel="stylesheet" />
+    <link href="~/wwwroot/app.min.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <div class="topbar">
-            <div>
-                <a class="logo" href="#">
-                    <img src="~/img/logo.png" alt="FoodStuffs" />
-                </a>
-                <a class="title" href="#">
-                    FoodStuffs
-                </a>
-            </div>
-            <a href="#">Login</a>
-        </div>
-    </header>
-
-    <main>
-        @RenderBody()
-    </main>
-
-    <footer>
-        <div class="text-center">&copy; FoodStuffs</div>
-    </footer>
-
-    <environment names="Development">
-        <script src="~/lib/axios/dist/axios.js"></script>
-        <script src="~/lib/vue/dist/vue.js"></script>
-        <script src="~/app/root/appState.js"></script>
-        <script src="~/app/recipe-table/recipe-table.js"></script>
-        <script src="~/app/recipe-form/recipe-form.js"></script>
-        <script src="~/app/message-center/message-center.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="~/lib/axios/dist/axios.min.js"></script>
-        <script src="~/lib/vue/dist/vue.min.js"></script>
-    </environment>
-
+    @RenderBody()
     @RenderSection("Scripts", false)
 </body>
 </html>

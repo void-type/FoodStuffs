@@ -5,6 +5,17 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="ClientApp\message-center\message-center.js" />
+    <Content Include="ClientApp\recipe-form\recipe-form.js" />
+    <Content Include="ClientApp\recipe-form\recipe-form.scss" />
+    <Content Include="ClientApp\recipe-table\recipe-table.js" />
+    <Content Include="ClientApp\recipe-table\recipe-table.scss" />
+    <Content Include="ClientApp\app\state.js" />
+    <Content Include="ClientApp\app\site.scss" />
+    <Content Include="ClientApp\app\variables.scss" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
