@@ -15,7 +15,7 @@
 <main>
     <section>
         <ul id="message-center" class="error">
-            <li v-for="message in messages">{{message.errorMessage}}</li>
+            <li v-if="messages.length > 0" v-for="message in messages">{{message.errorMessage}}</li>
         </ul>
     </section>
     <section>

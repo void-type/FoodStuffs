@@ -1,15 +1,11 @@
-﻿const path = require("path");
-const webpack = require("webpack");
+﻿/// <binding BeforeBuild='Watch - Development' />
+var path = require("path");
 
 module.exports = {
-    context: path.resolve(__dirname, "ClientApp"),
-    entry: {
-        app: "./app.js"
-    },
+    context: path.resolve(__dirname, "ClientApp/"),
+    entry: "./app.js",
     output: {
-        path: path.resolve(__dirname, "wwwroot/dist"),
-        filename: "[name].bundle.js"
+        filename: "app.js",
+        path: path.resolve(__dirname, "wwwroot/dist")
     }
 };
-
-// Setup webpack to compile js and scss into wwwroot/dist

@@ -7,14 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\node_modules\**" />
+    <Content Remove="wwwroot\node_modules\**" />
+    <EmbeddedResource Remove="wwwroot\node_modules\**" />
+    <None Remove="wwwroot\node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="ClientApp\message-center\message-center.js" />
     <Content Include="ClientApp\recipe-form\recipe-form.js" />
     <Content Include="ClientApp\recipe-form\recipe-form.scss" />
     <Content Include="ClientApp\recipe-table\recipe-table.js" />
     <Content Include="ClientApp\recipe-table\recipe-table.scss" />
-    <Content Include="ClientApp\app\state.js" />
-    <Content Include="ClientApp\app\site.scss" />
-    <Content Include="ClientApp\app\variables.scss" />
+    <Content Include="ClientApp\site\state.js" />
+    <Content Include="ClientApp\site\site.scss" />
+    <Content Include="ClientApp\site\variables.scss" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
@@ -29,5 +36,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\vendor\axios.js" />
+    <None Include="wwwroot\vendor\axios.map" />
+    <None Include="wwwroot\vendor\axios.min.js" />
+    <None Include="wwwroot\vendor\axios.min.map" />
+    <None Include="wwwroot\vendor\vue-router.js" />
+    <None Include="wwwroot\vendor\vue-router.min.js" />
+    <None Include="wwwroot\vendor\vue.min.js" />
   </ItemGroup>
 </Project>

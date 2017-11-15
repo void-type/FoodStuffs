@@ -1,4 +1,6 @@
-﻿let recipeEditor = new Vue({
+﻿var appState = require("../site/state.js");
+
+const component = new Vue({
     el: "#recipe-form",
     data: appState,
     methods: {
@@ -7,3 +9,5 @@
         }
     }
 });
+
+module.exports = component;

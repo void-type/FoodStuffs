@@ -1,21 +1,20 @@
 {
   "name": "foodstuffs",
   "version": "1.0.0",
+  "license": "MIT",
   "devDependencies": {
-    "@types/webpack-env": "1.13.2",
-    "axios": "0.17.1",
-    "css-loader": "0.19.0",
-    "file-loader": "1.1.5",
-    "sass-loader": "2.0.1",
-    "style-loader": "0.19.0",
-    "typescript": "2.5.3",
-    "url-loader": "0.6.2",
-    "vue": "2.5.3",
-    "vue-loader": "6.0.0",
-    "vue-property-decorator": "6.0.0",
-    "vue-router": "2.5.3",
-    "vue-template-compiler": "2.5.3",
-    "webpack": "3.8.1",
-    "webpack-hot-middleware": "2.20.0"
+    "axios": "^0.17.1",
+    "vue": "^2.5.3",
+    "vue-router": "^3.0.1",
+    "webpack": "3.8.1"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "vue": "^2.5.3",
+    "vue-router": "^3.0.1"
+  },
+  "scripts": {
+    "build": " ./node_modules/.bin/webpack -p",
+    "watch": "./node_modules/.bin/webpack --watch"
   }
 }

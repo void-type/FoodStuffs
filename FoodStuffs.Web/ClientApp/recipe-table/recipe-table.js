@@ -1,4 +1,6 @@
-﻿let recipeTable = new Vue({
+﻿var appState = require("../site/state.js");
+
+const component = new Vue({
     el: "#recipe-table",
     data: appState,
     methods: {
@@ -10,3 +12,5 @@
         }
     }
 });
+
+module.exports = component;

@@ -1,7 +1,7 @@
-﻿let appState = {
+﻿var appState = {
     recipes: null,
     currentRecipe: null,
-    messages: null,
+    messages: [],
     isError: false,
 
     clearMessages: function () {
@@ -68,3 +68,5 @@
 };
 
 appState.list();
+
+module.exports = appState;

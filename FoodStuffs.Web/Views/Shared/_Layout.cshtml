@@ -6,10 +6,26 @@
     <title>FoodStuffs</title>
     <base href="~/" />
 
-    <link href="~/wwwroot/app.min.css" rel="stylesheet" />
+    <link href="~/dist/app.min.css" rel="stylesheet" />
 </head>
 <body>
     @RenderBody()
+
+    <environment names="Development">
+        <script src="~/vendor/axios.js"></script>
+        <script src="~/vendor/vue.js"></script>
+        <script src="~/vendor/vue-router.js"></script>
+
+        <script src="~/dist/app.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/vendor/axios.min.js"></script>
+        <script src="~/vendor/vue.min.js"></script>
+        <script src="~/vendor/vue-router.min.js"></script>
+
+        <script src="~/dist/app.js"></script>
+    </environment>
+
     @RenderSection("Scripts", false)
 </body>
 </html>

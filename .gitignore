@@ -263,3 +263,4 @@ __pycache__/
 # Logs
 /FoodStuffs.Web/Logs/*
 /FoodStuffs.Web/wwwroot/lib
+/FoodStuffs.Web/App_Data/Logs
