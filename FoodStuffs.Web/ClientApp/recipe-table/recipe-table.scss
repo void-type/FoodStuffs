@@ -1,0 +1,28 @@
+﻿@import '../site/variables';
+
+#recipe-table {
+    table {
+        width: 15em;
+        padding: 1em;
+        border-collapse: collapse;
+        border-spacing: 0;
+
+        tr {
+            text-align: left;
+        }
+
+        th, td {
+            border-bottom: $border;
+            padding: .5em 1em;
+        }
+
+        &.hover tbody tr:hover {
+            cursor: pointer;
+            background-color: $color-focus;
+        }
+    }
+
+    button {
+        margin-bottom: 1em;
+    }
+}
