@@ -1,10 +1,9 @@
-﻿using FoodStuffs.Data.FoodStuffsDb;
+﻿using Core.Model.Services.DateTime;
+using Core.Model.Services.Logging;
+using FoodStuffs.Data.FoodStuffsDb;
 using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.DateTime;
-using FoodStuffs.Model.Interfaces.Services.Logging;
-using FoodStuffs.Web.Actions;
-using FoodStuffs.Web.Logging;
-using FoodStuffs.Web.Services.DateTime;
+using FoodStuffs.Web.Services.Actions;
+using FoodStuffs.Web.Services.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

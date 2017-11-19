@@ -3,4 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Model\Core.Model.csproj" />
+  </ItemGroup>
 </Project>

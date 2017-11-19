@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Validation.Core;
+﻿using Core.Model.Validation;
 using FoodStuffs.Model.ViewModels;
 
 namespace FoodStuffs.Model.Validation

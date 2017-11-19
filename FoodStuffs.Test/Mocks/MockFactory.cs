@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Interfaces.Services.DateTime;
+﻿using Core.Model.Services.DateTime;
 using FoodStuffs.Test.Mocks.Action;
 using FoodStuffs.Test.Mocks.Services;
 using System;

@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Data.EntityFramework.Repositories;
+﻿using Core.Data.EntityFramework.Repositories;
 using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using Microsoft.EntityFrameworkCore;

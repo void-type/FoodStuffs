@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Interfaces.Domain;
-using FoodStuffs.Model.Validation.Core;
+﻿using Core.Model.Validation;
+using FoodStuffs.Model.Interfaces.Domain;
 
 namespace FoodStuffs.Model.Validation
 {

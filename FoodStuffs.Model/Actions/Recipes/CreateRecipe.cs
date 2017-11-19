@@ -1,7 +1,7 @@
-﻿using FoodStuffs.Model.Actions.Core.Responder;
-using FoodStuffs.Model.Actions.Core.Steps;
+﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Steps;
+using Core.Model.Services.DateTime;
 using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.DateTime;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 

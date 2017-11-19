@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Actions.Core.Responder;
-using FoodStuffs.Model.Actions.Core.Responses.MessageString;
+﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Responses.MessageString;
 using System;
 using System.Collections.Generic;
 using System.Linq;

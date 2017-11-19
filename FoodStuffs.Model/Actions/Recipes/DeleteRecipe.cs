@@ -1,9 +1,9 @@
-﻿using FoodStuffs.Model.Actions.Core.Responder;
-using FoodStuffs.Model.Actions.Core.Steps;
+﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Steps;
+using Core.Model.Validation;
 using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Queries;
-using FoodStuffs.Model.Validation.Core;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Interfaces.Domain;
-using FoodStuffs.Model.Interfaces.Services.Data.Core;
+﻿using Core.Model.Services.Data;
+using FoodStuffs.Model.Interfaces.Domain;
 
 namespace FoodStuffs.Model.Interfaces.Services.Data
 {

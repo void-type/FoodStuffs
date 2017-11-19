@@ -1,9 +1,9 @@
-﻿using FoodStuffs.Data.EntityFramework;
+﻿using Core.Data.EntityFramework;
+using Core.Model.Services.Data;
 using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Data.FoodStuffsDb.Repositories;
 using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.Data.Core;
 
 namespace FoodStuffs.Data.FoodStuffsDb.Core
 {

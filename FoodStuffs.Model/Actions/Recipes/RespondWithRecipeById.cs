@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Actions.Core.Responder;
-using FoodStuffs.Model.Actions.Core.Steps;
+﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Steps;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using System.Linq;
 

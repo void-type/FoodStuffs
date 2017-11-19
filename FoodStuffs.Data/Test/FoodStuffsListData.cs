@@ -1,8 +1,8 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Models;
-using FoodStuffs.Data.Test.ListRepositories;
+﻿using Core.Data.Test.ListRepositories;
+using Core.Model.Services.Data;
+using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.Data.Core;
 
 namespace FoodStuffs.Data.Test
 {

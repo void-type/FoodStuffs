@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Actions.Core.Responses.MessageString;
-using FoodStuffs.Model.Validation.Core;
+﻿using Core.Model.Actions.Responses.MessageString;
+using Core.Model.Validation;
 using System.Collections.Generic;
 
 namespace FoodStuffs.Test.Mocks.Action

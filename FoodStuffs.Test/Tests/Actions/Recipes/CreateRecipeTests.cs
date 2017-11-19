@@ -1,6 +1,6 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using Core.Model.Actions.Chain;
+using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Data.Test;
-using FoodStuffs.Model.Actions.Core.Chain;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
