@@ -261,6 +261,7 @@ __pycache__/
 *.pyc
 
 # Logs
-/FoodStuffs.Web/Logs/*
-/FoodStuffs.Web/wwwroot/lib
 /FoodStuffs.Web/App_Data/Logs
+
+# Compiled client app
+/FoodStuffs.Web/wwwroot/dist
