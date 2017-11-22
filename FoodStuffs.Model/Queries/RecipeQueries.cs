@@ -16,7 +16,7 @@ namespace FoodStuffs.Model.Queries
         {
             // TODO: make sure all properties are here.
             // TODO: make a version for a single recipe.
-            return recipes.Select(r => new RecipeViewModel
+            return recipes.AsEnumerable().Select(r => new RecipeViewModel
             {
                 Id = r.Id,
                 Name = r.Name,
