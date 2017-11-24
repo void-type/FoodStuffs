@@ -1,7 +1,9 @@
 ﻿using Core.Model.Services.DateTime;
 using FoodStuffs.Test.Mocks.Action;
 using FoodStuffs.Test.Mocks.Services;
+using FoodStuffs.Test.Mocks.Services.Logging;
 using System;
+using FoodStuffs.Test.Mocks.Services.DateTime;
 
 namespace FoodStuffs.Test.Mocks
 {
@@ -13,6 +15,6 @@ namespace FoodStuffs.Test.Mocks
         public static IDateTimeService LateDateTimeService => new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22,
             22, 22));
 
-        public static TestActionResponder Responder => new TestActionResponder();
+        public static TestActionResponder Responder => new TestActionResponder(new NullLoggingService());
     }
 }

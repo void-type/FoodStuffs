@@ -9,12 +9,12 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class CreateRecipe : ActionStep
     {
-        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, int userId, RecipeViewModel viewModel)
+        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userId)
         {
             _data = data;
             _now = now;
-            _userId = userId;
             _viewModel = viewModel;
+            _userId = userId;
         }
 
         protected override void PerformStep(IActionResponder respond)

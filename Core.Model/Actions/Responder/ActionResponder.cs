@@ -1,4 +1,5 @@
-﻿using Core.Model.Validation;
+﻿using Core.Model.Services.Logging;
+using Core.Model.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,11 @@ namespace Core.Model.Actions.Responder
     /// </summary>
     public abstract class ActionResponder<TResponse> : IActionResponder where TResponse : class
     {
+        protected ActionResponder(ILoggingService logger)
+        {
+            Log = logger;
+        }
+
         public TResponse Response { get; set; }
 
         public bool ResponseCreated => Response != default(TResponse);
@@ -40,6 +46,8 @@ namespace Core.Model.Actions.Responder
             ValidationErrors.AddRange(newValidationErrors);
             CreateValidationErrorResponse(logExtra);
         }
+
+        public ILoggingService Log { get; }
 
         protected abstract void CreateValidationErrorResponse(string logExtra);
     }

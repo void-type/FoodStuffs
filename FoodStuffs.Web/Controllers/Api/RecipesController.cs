@@ -1,7 +1,6 @@
 ﻿using Core.Model.Actions.Chain;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
-using Core.Model.Services.Logging;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Validation;
@@ -14,8 +13,7 @@ namespace FoodStuffs.Web.Controllers.Api
     [Route("api/recipes")]
     public class RecipesController : Controller
     {
-        public RecipesController(ActionResultResponder responder, ILoggingService logger, IFoodStuffsData data,
-            IDateTimeService now)
+        public RecipesController(ActionResultResponder responder, IFoodStuffsData data, IDateTimeService now)
         {
             _responder = responder;
             _data = data;
@@ -26,8 +24,8 @@ namespace FoodStuffs.Web.Controllers.Api
         public IActionResult Create(RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
-                .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
-                .Execute(new CreateRecipe(_data, _now, 1, viewModel));
+                .Execute(new ValidateViewModel<RecipeViewModel>(new RecipeValidator(), viewModel))
+                .Execute(new CreateRecipe(_data, _now, viewModel, 1));
 
             return _responder.Response;
         }
@@ -64,7 +62,7 @@ namespace FoodStuffs.Web.Controllers.Api
         public IActionResult Update([FromBody]RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
-                .Execute(new Validate<RecipeViewModel>(new RecipeValidator(), viewModel))
+                .Execute(new ValidateViewModel<RecipeViewModel>(new RecipeValidator(), viewModel))
                 .Execute(new UpdateRecipe(_data, _now, viewModel, 1));
 
             return _responder.Response;

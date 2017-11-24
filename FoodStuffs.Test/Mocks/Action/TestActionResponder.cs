@@ -3,6 +3,8 @@ using Core.Model.Actions.Responses.MessageString;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Model.Services.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodStuffs.Test.Mocks.Action
 {
@@ -39,5 +41,9 @@ namespace FoodStuffs.Test.Mocks.Action
         }
 
         private readonly SimpleResponse _simpleResponse = new SimpleResponse();
+
+        public TestActionResponder(ILoggingService logger) : base(logger)
+        {
+        }
     }
 }

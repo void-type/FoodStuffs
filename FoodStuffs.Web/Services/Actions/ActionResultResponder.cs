@@ -12,14 +12,13 @@ namespace FoodStuffs.Web.Services.Actions
 {
     public class ActionResultResponder : ActionResponder<IActionResult>
     {
-        public ActionResultResponder(ILoggingService logger)
+        public ActionResultResponder(ILoggingService logger) : base(logger)
         {
-            _logger = logger;
         }
 
         public override void WithData<TItemType>(TItemType item, string logExtra = null)
         {
-            _logger.Info(logExtra);
+            Log.Info(logExtra);
             Response = new ObjectResult(item);
         }
 
@@ -27,20 +26,20 @@ namespace FoodStuffs.Web.Services.Actions
         {
             var set = new CountedItemSet<TItemType> { Items = items.ToList() };
 
-            _logger.Info(logExtra, $"Count: {set.Count}");
+            Log.Info(logExtra, $"Count: {set.Count}");
             Response = new ObjectResult(set) { StatusCode = 200 };
         }
 
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
         {
-            _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
+            Log.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
 
             Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
         }
 
         public override void WithSuccess(string userMessage, string logExtra = null)
         {
-            _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}");
+            Log.Info(logExtra, $"SuccessUserMessage: {userMessage}");
             Response = new ObjectResult(new SuccessMessage(userMessage));
         }
 
@@ -54,7 +53,7 @@ namespace FoodStuffs.Web.Services.Actions
                 .Concat(ValidationErrors.Select(error => error.ErrorMessage))
                 .ToArray();
 
-            _logger.Warn(logParams);
+            Log.Warn(logParams);
 
             var set = new CountedItemSet<IValidationError>
             {
@@ -66,7 +65,5 @@ namespace FoodStuffs.Web.Services.Actions
                 StatusCode = 400
             };
         }
-
-        private readonly ILoggingService _logger;
     }
 }

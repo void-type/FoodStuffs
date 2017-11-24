@@ -2,7 +2,7 @@
 
 namespace Core.Model.Validation
 {
-    public interface IModelValidator<in TValidatable>
+    public interface IViewModelValidator<in TValidatable>
     {
         IEnumerable<IValidationError> Validate(TValidatable validatableEntity);
     }

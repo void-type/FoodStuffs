@@ -3,9 +3,9 @@ using Core.Model.Validation;
 
 namespace Core.Model.Actions.Steps
 {
-    public class Validate<TValidatable> : IActionStep
+    public class ValidateViewModel<TValidatable> : IActionStep
     {
-        public Validate(AbstractSimpleValidator<TValidatable> validator, TValidatable viewModel)
+        public ValidateViewModel(AbstractSimpleValidator<TValidatable> validator, TValidatable viewModel)
         {
             _validator = validator;
             _viewModel = viewModel;

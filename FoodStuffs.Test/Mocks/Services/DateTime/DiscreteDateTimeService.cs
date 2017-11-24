@@ -1,13 +1,12 @@
 ﻿using Core.Model.Services.DateTime;
-using System;
 
-namespace FoodStuffs.Test.Mocks.Services
+namespace FoodStuffs.Test.Mocks.Services.DateTime
 {
     public class DiscreteDateTimeService : IDateTimeService
     {
-        public DateTime Moment { get; }
+        public System.DateTime Moment { get; }
 
-        public DiscreteDateTimeService(DateTime moment)
+        public DiscreteDateTimeService(System.DateTime moment)
         {
             Moment = moment;
         }
