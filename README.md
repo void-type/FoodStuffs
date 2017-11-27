@@ -13,9 +13,10 @@ Within Web/Startup.cs, you can either...
 - Use a volatile in-memory database
     1. Within Web/Startup.cs, uncomment the MemoryFoodStuffsData dependency.
 
-### Tools
+### Tools needed to build
 - .Net Core SDK
-- Bower
+- Yarn
+- Webpack
 
 ### Clone, Build, And Run
 ```
@@ -24,6 +25,9 @@ cd foodstuffs
 dotnet restore
 dotnet build FoodStuffs.sln
 cd FoodStuffs.Web
-bower install
+yarn install
+./node_modules/.bin/webpack -p
 dotnet run
 ```
+
+Note: currently SCSS files are not compiled by webpack. Compile app.scss to wwwroot/dist/app.css and app.min.css manually. 

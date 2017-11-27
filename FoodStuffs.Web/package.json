@@ -6,7 +6,8 @@
     "axios": "^0.17.1",
     "vue": "^2.5.3",
     "vue-router": "^3.0.1",
-    "webpack": "3.8.1"
+    "webpack": "^3.8.1",
+    "copy-webpack-plugin": "^4.2.3"
   },
   "dependencies": {
     "axios": "^0.17.1",

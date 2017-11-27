@@ -265,3 +265,4 @@ __pycache__/
 
 # Compiled client app
 /FoodStuffs.Web/wwwroot/dist
+/FoodStuffs.Web/wwwroot/vendor
