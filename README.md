@@ -16,7 +16,6 @@ Within Web/Startup.cs, you can either...
 ### Tools needed to build
 - .Net Core SDK
 - Yarn
-- Webpack
 
 ### Clone, Build, And Run
 ```
@@ -26,8 +25,6 @@ dotnet restore
 dotnet build FoodStuffs.sln
 cd FoodStuffs.Web
 yarn install
-./node_modules/.bin/webpack -p
+npm run build
 dotnet run
 ```
-
-Note: currently SCSS files are not compiled by webpack. Compile app.scss to wwwroot/dist/app.css and app.min.css manually. 

@@ -20,7 +20,7 @@
     "vue-router": "^3.0.1"
   },
   "scripts": {
-    "build": " ./node_modules/.bin/webpack -p",
+    "build": "./node_modules/.bin/webpack",
     "watch": "./node_modules/.bin/webpack --watch"
   }
 }
