@@ -14,16 +14,11 @@ namespace FoodStuffs.Web
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,8 +42,6 @@ namespace FoodStuffs.Web
                     "default",
                     "{controller=Home}/{action=Index}");
             });
-
-            loggerFactory.AddFile(Configuration.GetSection("Logging"));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
