@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Model.Services.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Core.Model.Services.Data;
 
 namespace Core.Data.EntityFramework.Repositories
 {
@@ -8,7 +8,7 @@ namespace Core.Data.EntityFramework.Repositories
         where TDbEntity : class, TInterface, new() where TInterface : class
 
     {
-        public virtual IQueryable<TInterface> Stored => Context.Set<TDbEntity>().AsQueryable();
+        public virtual IQueryable<TInterface> Stored => Context.Set<TDbEntity>();
 
         public ReadOnlyRepository(DbContext context) : base(context)
         {

@@ -1,4 +1,5 @@
-﻿using Core.Model.Actions.Responder;
+﻿using System.Linq;
+using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Queries;
@@ -14,8 +15,8 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         protected override void PerformStep(IActionResponder respond)
         {
-            // make a viewModel to prevent circular reference exceptions
-            respond.WithDataList(_data.Recipes.Stored.ToViewModel());
+            // TODO: paging or client lazy loading.
+            respond.WithDataList(_data.Recipes.Stored.AsEnumerable().ToViewModel());
         }
 
         private readonly IFoodStuffsData _data;

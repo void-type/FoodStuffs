@@ -12,11 +12,9 @@ namespace FoodStuffs.Model.Queries
             return recipes.SingleOrDefault(r => r.Id == id);
         }
 
-        public static IEnumerable<RecipeViewModel> ToViewModel(this IQueryable<IRecipe> recipes)
+        public static IEnumerable<RecipeViewModel> ToViewModel(this IEnumerable<IRecipe> recipes)
         {
-            // TODO: make sure all properties are here.
-            // TODO: make a version for a single recipe.
-            return recipes.AsEnumerable().Select(r => new RecipeViewModel
+            return recipes.Select(r => new RecipeViewModel
             {
                 Id = r.Id,
                 Name = r.Name,

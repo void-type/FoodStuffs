@@ -14,20 +14,21 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void DeleteRecipe()
         {
+            var responder = MockFactory.Responder;
+
             using (var data = new FoodStuffsMemoryData())
             {
                 data.Recipes.Add(new Recipe
                 {
                     Id = 1,
-                    Name = "Recipe1"
+                    Name = "Alfredo"
                 });
 
                 data.SaveChanges();
 
-                var responder = MockFactory.Responder;
-
                 new ActionChain(responder)
                     .Execute(new DeleteRecipe(data, 1));
+
                 Assert.False(responder.ResponseCreated);
 
                 Assert.Equal(0, data.Recipes.Stored.Count());
