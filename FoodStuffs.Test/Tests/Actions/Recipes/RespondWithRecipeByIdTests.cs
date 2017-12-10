@@ -14,22 +14,35 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             using (var data = new FoodStuffsMemoryData())
             {
+                data.Users.Add(new User
+                {
+                    Id = 1,
+                    FirstName = "First",
+                    LastName = "Last",
+                });
+
                 data.Recipes.Add(new Recipe
                 {
                     Id = 1,
-                    Name = "Alfredo"
+                    Name = "Alfredo",
+                    CreatedByUserId = 1,
+                    ModifiedByUserId = 1
                 });
 
                 data.Recipes.Add(new Recipe
                 {
                     Id = 2,
-                    Name = "Alfredo"
+                    Name = "Alfredo",
+                    CreatedByUserId = 1,
+                    ModifiedByUserId = 1
                 });
 
                 data.Recipes.Add(new Recipe
                 {
                     Id = 3,
-                    Name = "Alfredo"
+                    Name = "Alfredo",
+                    CreatedByUserId = 1,
+                    ModifiedByUserId = 1
                 });
 
                 data.SaveChanges();
