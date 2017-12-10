@@ -18,31 +18,56 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void UpdateRecipeAndRelations()
         {
+            var responder = MockFactory.Responder;
             var then = MockFactory.EarlyDateTimeService;
             var now = MockFactory.LateDateTimeService;
 
             using (var data = new FoodStuffsListData())
             {
-                data.Users.AddRange(_testUsers);
+                data.Users.Add(MockFactory.User1);
+                data.Users.Add(MockFactory.User2);
 
-                data.Categories.AddRange(_testCategories);
+                data.Categories.Add(MockFactory.Category1);
+                data.Categories.Add(MockFactory.Category2);
+                data.Categories.Add(MockFactory.Category3);
 
-                var recipeToUpdate = new Recipe
-                {
-                    Id = 1,
-                    Name = "Recipe1",
-                    CookTimeMinutes = 2,
-                    PrepTimeMinutes = 2,
-                    CreatedOn = then.Moment,
-                    ModifiedOn = then.Moment,
-                    CreatedByUserId = 1
-                };
+                var recipeToUpdate = MockFactory.Recipe1;
 
                 data.Recipes.Add(recipeToUpdate);
 
-                data.Recipes.Add(_testRecipe2);
+                data.Recipes.Add(MockFactory.Recipe2);
 
-                data.CategoryRecipes.AddRange(_testCategoryRecipes);
+                data.CategoryRecipes.AddRange(new List<ICategoryRecipe> {
+                    new CategoryRecipe
+                    {
+                        RecipeId = 1,
+                        CategoryId = 1
+                    },
+
+                    new CategoryRecipe
+                    {
+                        RecipeId = 1,
+                        CategoryId = 2
+                    },
+
+                    new CategoryRecipe
+                    {
+                        RecipeId = 1,
+                        CategoryId = 3
+                    },
+
+                    new CategoryRecipe
+                    {
+                        RecipeId = 2,
+                        CategoryId = 2
+                    },
+
+                    new CategoryRecipe
+                    {
+                        RecipeId = 2,
+                        CategoryId = 3
+                    }
+                });
 
                 // Force relations in list database
                 if (data.GetType() == typeof(FoodStuffsListData))
@@ -70,8 +95,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
 
                 data.SaveChanges();
-
-                var responder = MockFactory.Responder;
 
                 var newRecipeViewModel = new RecipeViewModel
                 {
@@ -136,73 +159,5 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             Assert.True(responder.ResponseCreated);
             Assert.Single(responder.ValidationErrors);
         }
-
-        private readonly List<ICategory> _testCategories = new List<ICategory> {
-            new Category
-            {
-                Id = 1,
-                Name = "Category1"
-            },new Category
-            {
-                Id = 2,
-                Name = "Category2"
-            },new Category
-            {
-                Id = 3,
-                Name = "Category3"
-            }};
-
-        private readonly List<ICategoryRecipe> _testCategoryRecipes = new List<ICategoryRecipe>
-        {
-            new CategoryRecipe
-            {
-                RecipeId = 1,
-                CategoryId = 1
-            },
-
-            new CategoryRecipe
-            {
-                RecipeId = 1,
-                CategoryId = 2
-            },
-
-            new CategoryRecipe
-            {
-                RecipeId = 1,
-                CategoryId = 3
-            },
-
-            new CategoryRecipe
-            {
-                RecipeId = 2,
-                CategoryId = 2
-            },
-
-            new CategoryRecipe
-            {
-                RecipeId = 2,
-                CategoryId = 3
-            }
-        };
-
-        private readonly Recipe _testRecipe2 = new Recipe
-        {
-            Id = 2,
-            Name = "Recipe2",
-            CookTimeMinutes = 2,
-            PrepTimeMinutes = 2
-        };
-
-        private readonly List<IUser> _testUsers = new List<IUser>
-        {
-            new User
-            {
-                Id = 1
-            },
-            new User
-            {
-                Id = 2
-            }
-        };
     }
 }

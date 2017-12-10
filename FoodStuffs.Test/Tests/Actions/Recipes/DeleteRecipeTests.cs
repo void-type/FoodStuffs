@@ -18,20 +18,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
             using (var data = new FoodStuffsMemoryData())
             {
-                data.Users.Add(new User
-                {
-                    Id = 1,
-                    FirstName = "First",
-                    LastName = "Last",
-                });
+                data.Users.Add(MockFactory.User1);
 
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 1,
-                    Name = "Alfredo",
-                    CreatedByUserId = 1,
-                    ModifiedByUserId = 1
-                });
+                data.Recipes.Add(MockFactory.Recipe1);
 
                 data.SaveChanges();
 
@@ -49,34 +38,17 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void DeleteRecipeAndRelations()
         {
+            var responder = MockFactory.Responder;
+
             using (var data = new FoodStuffsMemoryData())
             {
-                data.Users.Add(new User
-                {
-                    Id = 1,
-                    FirstName = "First",
-                    LastName = "Last",
-                });
+                data.Users.Add(MockFactory.User1);
 
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 1,
-                    Name = "Recipe1",
-                    CreatedByUserId = 1,
-                    ModifiedByUserId = 1
-                });
+                data.Recipes.Add(MockFactory.Recipe1);
 
-                data.Categories.Add(new Category
-                {
-                    Id = 1,
-                    Name = "Category1"
-                });
+                data.Categories.Add(MockFactory.Category1);
 
-                data.Categories.Add(new Category
-                {
-                    Id = 2,
-                    Name = "Category2"
-                });
+                data.Categories.Add(MockFactory.Category2);
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
@@ -90,19 +62,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     CategoryId = 2
                 });
 
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 2,
-                    Name = "Recipe2",
-                    CreatedByUserId = 1,
-                    ModifiedByUserId = 1
-                });
+                data.Recipes.Add(MockFactory.Recipe2);
 
-                data.Categories.Add(new Category
-                {
-                    Id = 3,
-                    Name = "Category3"
-                });
+                data.Categories.Add(MockFactory.Category3);
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
@@ -118,10 +80,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.SaveChanges();
 
-                var responder = MockFactory.Responder;
-
                 new ActionChain(responder)
                     .Execute(new DeleteRecipe(data, 2));
+
                 Assert.False(responder.ResponseCreated);
 
                 Assert.Equal(1, data.Recipes.Stored.Count());

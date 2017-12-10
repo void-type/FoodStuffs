@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Data.Test;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Test.Mocks;
@@ -12,48 +11,23 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithRecipeByIdFound()
         {
+            var responder = MockFactory.Responder;
+
             using (var data = new FoodStuffsMemoryData())
             {
-                data.Users.Add(new User
-                {
-                    Id = 1,
-                    FirstName = "First",
-                    LastName = "Last",
-                });
+                data.Users.Add(MockFactory.User1);
 
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 1,
-                    Name = "Alfredo",
-                    CreatedByUserId = 1,
-                    ModifiedByUserId = 1
-                });
-
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 2,
-                    Name = "Alfredo",
-                    CreatedByUserId = 1,
-                    ModifiedByUserId = 1
-                });
-
-                data.Recipes.Add(new Recipe
-                {
-                    Id = 3,
-                    Name = "Alfredo",
-                    CreatedByUserId = 1,
-                    ModifiedByUserId = 1
-                });
+                data.Recipes.Add(MockFactory.Recipe1);
+                data.Recipes.Add(MockFactory.Recipe2);
+                data.Recipes.Add(MockFactory.Recipe3);
 
                 data.SaveChanges();
-
-                var responder = MockFactory.Responder;
 
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipeById(data, 2));
 
-                Assert.NotNull(responder.Response.DataItem);
                 Assert.True(responder.ResponseCreated);
+                Assert.NotNull(responder.Response.DataItem);
             }
         }
 
@@ -67,8 +41,8 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipeById(data, 5));
 
-                Assert.Null(responder.Response.DataItem);
                 Assert.True(responder.ResponseCreated);
+                Assert.Null(responder.Response.DataItem);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Data.Test;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
@@ -19,11 +18,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             var now = MockFactory.EarlyDateTimeService;
             var responder = MockFactory.Responder;
 
-            var user = new User
-            {
-                Id = 2
-            };
-
             var newRecipeViewModel = new RecipeViewModel
             {
                 Name = "Recipe1",
@@ -36,17 +30,21 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
             };
 
-            using (var data = new FoodStuffsMemoryData("CreateRecipe"))
+            using (var data = new FoodStuffsMemoryData())
             {
-                data.Categories.Add(new Category
-                {
-                    Name = "Category1"
-                });
+                data.Users.Add(MockFactory.User1);
+
+                var categoryToAdd = MockFactory.Category2;
+                categoryToAdd.Id = 2;
+
+                data.Categories.Add(categoryToAdd);
 
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new CreateRecipe(data, now, newRecipeViewModel, user.Id));
+                    .Execute(new CreateRecipe(data, now, newRecipeViewModel, 1));
+
+                Assert.False(responder.ResponseCreated);
 
                 Assert.Equal(1, data.Recipes.Stored.Count());
                 Assert.Equal(2, data.Categories.Stored.Count());
@@ -56,8 +54,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.NotNull(data.Categories.Stored.GetByName("Category2"));
                 Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 1));
                 Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 2));
-
-                Assert.False(responder.ResponseCreated);
             }
         }
     }
