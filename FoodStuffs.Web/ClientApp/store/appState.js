@@ -1,16 +1,16 @@
 ﻿var appState = {
-    recipes: null,
-    currentRecipe: null,
-    messages: [],
+    recipes: new Array(),
+    currentRecipe: {},
+    messages: new Array(),
     isError: false,
 
     clearMessages: function () {
-        appState.messages = null;
+        appState.messages = new Array();
     },
 
-    success: function (messages) {
+    success: function (message) {
         appState.isError = false;
-        appState.messages = messages;
+        appState.messages = appState.messages.push(message);
     },
 
     error: function (messages) {
@@ -24,7 +24,10 @@
         axios.get("api/recipes/list")
             .then(function (response) {
                 appState.recipes = response.data.items;
-            });
+            })
+            .catch(function (error) {
+                appState.error(error.response.data.items);
+            });;
     },
 
     create: function (recipe) {
@@ -32,11 +35,11 @@
 
         axios.put("api/recipes", recipe)
             .then(function (response) {
-                appState.success(response.data.items);
+                appState.success(response.data.message);
                 appState.list();
             })
-            .catch(function (response) {
-                appState.error(response.data.items);
+            .catch(function (error) {
+                appState.error(error.response.data.items);
             });
     },
 
@@ -45,11 +48,11 @@
 
         axios.post("api/recipes", recipe)
             .then(function (response) {
-                appState.success(response.data.items);
+                appState.success(response.data.message);
                 appState.list();
             })
-            .catch(function (response) {
-                appState.error(response.data.items);
+            .catch(function (error) {
+                appState.error(error.response.data.items);
             });
     },
 
@@ -58,11 +61,11 @@
 
         axios.delete("api/recipes", recipeId)
             .then(function (response) {
-                appState.success(response.data.items);
+                appState.success(response.data.message);
                 appState.list();
             })
-            .catch(function (response) {
-                appState.error(response.data.items);
+            .catch(function (error) {
+                appState.error(error.response.data.items);
             });
     }
 };

@@ -22,13 +22,33 @@ module.exports = {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: [{
-                        loader: "css-loader", options: { minimize: true }
-                    }, {
-                        loader: "sass-loader"
-                    }]
+                    use: [
+                        {
+                            loader: "css-loader",
+                            options: { minimize: true }
+                        }, {
+                            loader: "sass-loader"
+                        }
+                    ]
                 })
-            }
+            },
+            {
+                test: /\.html$/,
+                use: {
+                    loader: "html-loader",
+                    options: {
+                        attrs: [":data-src"]
+                    }
+                }
+            },
+            {
+                test: /\.(jpg|png)$/,
+                use: {
+                    loader: "file-loader",
+                    //loader: 'file-loader?name=images/[name].[ext]'
+                }
+            },
+
         ]
     },
     plugins: [

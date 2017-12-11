@@ -25,7 +25,8 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             new ActionChain(_responder)
                 .Execute(new ValidateViewModel<RecipeViewModel>(new RecipeValidator(), viewModel))
-                .Execute(new CreateRecipe(_data, _now, viewModel, 1));
+                .Execute(new CreateRecipe(_data, _now, viewModel, 1))
+                .Execute(new RespondWithSuccess("Recipe created."));
 
             return _responder.Response;
         }
@@ -63,7 +64,8 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             new ActionChain(_responder)
                 .Execute(new ValidateViewModel<RecipeViewModel>(new RecipeValidator(), viewModel))
-                .Execute(new UpdateRecipe(_data, _now, viewModel, 1));
+                .Execute(new UpdateRecipe(_data, _now, viewModel, 1))
+                .Execute(new RespondWithSuccess("Recipe saved."));
 
             return _responder.Response;
         }

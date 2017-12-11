@@ -1,6 +1,6 @@
 ﻿@import '../site/variables';
 
-#recipe-form {
+.recipe-form {
     flex-grow: 1;
 
     h1 {
@@ -44,7 +44,7 @@
 }
 
 @media #{$medium-screen} {
-    #recipe-form {
+    .recipe-form {
         h1 {
             display: none;
         }
@@ -101,10 +101,4 @@ input.chk {
     padding: .5em;
     top: .4em;
     position: relative;
-}
-
-ul.error {
-    max-width: 30em;
-    margin-bottom: 2em;
-    color: $color-error;
 }

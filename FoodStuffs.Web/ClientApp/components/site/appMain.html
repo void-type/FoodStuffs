@@ -1,0 +1,29 @@
+﻿<div>
+    <header>
+        <div class="topbar">
+            <div>
+                <a class="logo" href="#">
+                    <img src="../img/logo.png" alt="FoodStuffs" />
+                </a>
+                <a class="title" href="#">
+                    FoodStuffs
+                </a>
+            </div>
+            <a href="#">Login</a>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <message-center></message-center>
+        </section>
+        <section>
+            <recipe-table></recipe-table>
+            <recipe-form v-if="currentRecipe !== null"> </recipe-form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="text-center">&copy; FoodStuffs</div>
+    </footer>
+</div>
