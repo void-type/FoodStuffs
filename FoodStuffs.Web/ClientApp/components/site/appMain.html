@@ -15,11 +15,21 @@
 
     <main>
         <section>
-            <message-center></message-center>
+            <message-center :messages="messages"
+                            :isError="isError">
+            </message-center>
         </section>
         <section>
-            <recipe-table></recipe-table>
-            <recipe-form v-if="currentRecipe !== null"> </recipe-form>
+            <recipe-table :recipes="recipes"
+                          @recipe-selected="recipeSelected">
+            </recipe-table>
+            <recipe-form v-if="currentRecipe !== null"
+                         :current-recipe="currentRecipe"
+                         :fields-in-error="fieldsInError"
+                         @create-recipe="createRecipe"
+                         @update-recipe="updateRecipe"
+                         @delete-recipe="deleteRecipe">
+            </recipe-form>
         </section>
     </main>
 

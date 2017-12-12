@@ -1,22 +1,23 @@
-﻿var appState = require("../../store/appState.js");
-require("./recipe-form.scss");
+﻿require("./recipe-form.scss");
 
 Vue.component("recipe-form", {
     template: require("./recipe-form.html"),
-    data: function () {
-        return appState;
-    },
+    props: ["currentRecipe", "fieldsInError"],
     methods: {
-        save: function (recipe) {
-            if (appState.currentRecipe.id === undefined || appState.currentRecipe.id < 1) {
-                appState.create(recipe);
+        save: function () {
+            if (currentRecipe.id === undefined || currentRecipe.id < 1) {
+                this.$emit("createRecipe", currentRecipe);
             } else {
-                appState.update(recipe);
+                this.$emit("updateRecipe", currentRecipe);
             }
         },
 
+        delete: function () {
+            this.$emit("deleteRecipe", currentRecipe);
+        },
+
         cancel: function () {
-            appState.currentRecipe = null;
+            this.currentRecipe = null;
         }
     }
 });

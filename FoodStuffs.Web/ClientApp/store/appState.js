@@ -1,72 +1,61 @@
 ﻿var appState = {
     recipes: new Array(),
-    currentRecipe: {},
     messages: new Array(),
+    fieldsInError: new Array(),
+    currentRecipe: {},
     isError: false,
 
-    clearMessages: function () {
-        appState.messages = new Array();
-    },
-
-    success: function (message) {
-        appState.isError = false;
-        appState.messages = appState.messages.push(message);
-    },
-
-    error: function (messages) {
-        appState.isError = true;
-        appState.messages = messages;
-    },
-
     list: function () {
-        appState.clearMessages();
+        appState.messages = new Array();
 
         axios.get("api/recipes/list")
             .then(function (response) {
                 appState.recipes = response.data.items;
             })
-            .catch(function (error) {
-                appState.error(error.response.data.items);
-            });;
+            .catch(function () {
+                appState.isError = true;
+                appState.messages = error.response.data.items;
+            });
     },
 
-    create: function (recipe) {
-        appState.clearMessages();
+    createRecipe: function (recipe) {
+        appState.messages = new Array();
 
         axios.put("api/recipes", recipe)
-            .then(function (response) {
-                appState.success(response.data.message);
-                appState.list();
-            })
-            .catch(function (error) {
-                appState.error(error.response.data.items);
-            });
+            .then(appState.success)
+            .catch(appState.failure);
     },
 
-    update: function (recipe) {
-        appState.clearMessages();
+    updateRecipe: function (recipe) {
+        appState.messages = new Array();
 
         axios.post("api/recipes", recipe)
-            .then(function (response) {
-                appState.success(response.data.message);
-                appState.list();
-            })
-            .catch(function (error) {
-                appState.error(error.response.data.items);
-            });
+            .then(appState.success)
+            .catch(appState.failure);
     },
 
-    delete: function (recipeId) {
-        appState.clearMessages();
+    deleteRecipe: function (recipe) {
+        appState.messages = new Array();
 
-        axios.delete("api/recipes", recipeId)
-            .then(function (response) {
-                appState.success(response.data.message);
-                appState.list();
-            })
-            .catch(function (error) {
-                appState.error(error.response.data.items);
-            });
+        axios.delete("api/recipes", recipe.id)
+            .then(appState.success)
+            .catch(appState.failure);
+    },
+
+    success: function (response) {
+        appState.isError = false;
+        appState.messages = [response.data.message];
+        appState.list();
+    },
+
+    failure: function (error) {
+        appState.isError = true;
+        appState.messages = error.response.data.items;
+        appState.list();
+    },
+
+    recipeSelected: function(recipe) {
+        appState.currentRecipe = recipe;
     }
 };
 
