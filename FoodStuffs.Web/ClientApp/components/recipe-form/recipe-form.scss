@@ -23,10 +23,17 @@
             min-height: 1em;
         }
 
-        button:not(:last-child) {
-            margin-right: .5em;
+        button {
+            &.pull-right {
+                margin-left: auto;
+                background: $color-error;
+            }
+
+            &:not(:last-child) {
+                margin-right: .5em;
+            }
         }
-        /*TODO: make category selector*/
+
         div {
             padding: .5em 0;
             box-sizing: border-box;

@@ -1,23 +1,24 @@
 ﻿require("./recipe-form.scss");
+var Recipe = require("../../store/recipe.js");
 
 Vue.component("recipe-form", {
     template: require("./recipe-form.html"),
-    props: ["currentRecipe", "fieldsInError"],
+    props: ["current-recipe", "fields-in-error"],
     methods: {
-        save: function () {
-            if (currentRecipe.id === undefined || currentRecipe.id < 1) {
-                this.$emit("createRecipe", currentRecipe);
+        saveClick: function () {
+            if (this.currentRecipe.id === undefined || this.currentRecipe.id < 1) {
+                this.$emit("create-recipe", this.currentRecipe);
             } else {
-                this.$emit("updateRecipe", currentRecipe);
+                this.$emit("update-recipe", this.currentRecipe);
             }
         },
 
-        delete: function () {
-            this.$emit("deleteRecipe", currentRecipe);
+        deleteClick: function () {
+            this.$emit("delete-recipe", this.currentRecipe);
         },
 
-        cancel: function () {
-            this.currentRecipe = null;
+        cancelClick: function () {
+            this.currentRecipe = new Recipe();
         }
     }
 });

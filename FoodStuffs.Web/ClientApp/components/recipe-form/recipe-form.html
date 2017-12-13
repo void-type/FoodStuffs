@@ -28,11 +28,14 @@
     </div>
     <div class="form-group">
         <label></label>
-        <button v-on:click.prevent="save()">
+        <button v-on:click.prevent="saveClick()">
             Save
         </button>
-        <button v-on:click.prevent="cancel()">
+        <button v-on:click.prevent="cancelClick()">
             Cancel
+        </button>
+        <button class="pull-right" v-on:click.prevent="deleteClick()">
+            Delete
         </button>
     </div>
 </form>
