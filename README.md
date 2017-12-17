@@ -12,8 +12,8 @@ Within Web/Startup.cs, you can either...
     1. Within Web/Startup.cs, ensure the MemoryFoodStuffsData dependency is the only database uncommented.
 
 ## Get some tools
-- [.Net Core SDK]: https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.2-windows-x64-installer
-- [Yarn]: https://yarnpkg.com/lang/en/docs/install/ 
+- [.Net Core SDK 2.1.2](https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.2-windows-x64-installer)
+- [Yarn](https://yarnpkg.com/lang/en/docs/install/)
 
 ## Clone, Build, And Run
 
