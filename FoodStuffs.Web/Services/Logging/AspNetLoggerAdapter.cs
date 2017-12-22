@@ -6,10 +6,11 @@ using System.Linq;
 
 namespace FoodStuffs.Web.Services.Logging
 {
-    public class LoggerAdapter : ILoggingService
+    public class AspNetLoggerAdapter : ILoggingService
     {
-        public LoggerAdapter(ILoggerFactory loggerFactory)
+        public AspNetLoggerAdapter(ILoggerFactory loggerFactory)
         {
+            //TODO: Inject this name
             _logger = loggerFactory.CreateLogger("FoodStuffs");
         }
 
@@ -77,7 +78,7 @@ namespace FoodStuffs.Web.Services.Logging
                 return new List<string>();
             }
 
-            var exceptionMessages = new List<string> { "Threw Exception:" };
+            var exceptionMessages = new List<string> { "Threw Exception: " };
 
             do
             {

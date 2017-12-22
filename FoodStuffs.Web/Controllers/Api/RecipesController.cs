@@ -13,7 +13,7 @@ namespace FoodStuffs.Web.Controllers.Api
     [Route("api/recipes")]
     public class RecipesController : Controller
     {
-        public RecipesController(ActionResultResponder responder, IFoodStuffsData data, IDateTimeService now)
+        public RecipesController(HttpActionResultResponder responder, IFoodStuffsData data, IDateTimeService now)
         {
             _responder = responder;
             _data = data;
@@ -72,6 +72,6 @@ namespace FoodStuffs.Web.Controllers.Api
 
         private readonly IFoodStuffsData _data;
         private readonly IDateTimeService _now;
-        private readonly ActionResultResponder _responder;
+        private readonly HttpActionResultResponder _responder;
     }
 }

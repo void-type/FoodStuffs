@@ -10,9 +10,9 @@ using System.Linq;
 
 namespace FoodStuffs.Web.Services.Actions
 {
-    public class ActionResultResponder : ActionResponder<IActionResult>
+    public class HttpActionResultResponder : ActionResponder<IActionResult>
     {
-        public ActionResultResponder(ILoggingService logger) : base(logger)
+        public HttpActionResultResponder(ILoggingService logger) : base(logger)
         {
         }
 

@@ -55,9 +55,9 @@ namespace FoodStuffs.Web
             services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
             //services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
 
-            services.AddTransient<ILoggingService, LoggerAdapter>();
+            services.AddTransient<ILoggingService, AspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, NowDateTimeService>();
-            services.AddTransient<ActionResultResponder>();
+            services.AddTransient<HttpActionResultResponder>();
         }
     }
 }
