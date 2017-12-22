@@ -2,8 +2,11 @@
 using Core.Model.Validation;
 using System.Collections.Generic;
 
-namespace FoodStuffs.Test.Mocks.Action
+namespace Core.Model.Actions.Responses
 {
+    /// <summary>
+    /// Used with the SimpleActionResponder to capture action outputs in testing.
+    /// </summary>
     public class SimpleResponse
     {
         public object DataItem = null;

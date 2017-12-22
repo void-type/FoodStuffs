@@ -1,8 +1,10 @@
-﻿using Core.Model.Services.Logging;
-using System;
+﻿using System;
 
-namespace FoodStuffs.Test.Mocks.Services.Logging
+namespace Core.Model.Services.Logging
 {
+    /// <summary>
+    /// Can be used for testing or to disable logging.
+    /// </summary>
     public class NullLoggingService : ILoggingService
     {
         public void Debug(params string[] messages)

@@ -1,9 +1,8 @@
-﻿using Core.Model.Services.DateTime;
+﻿using Core.Model.Actions.Responder;
+using Core.Model.Services.DateTime;
+using Core.Model.Services.Logging;
 using FoodStuffs.Data.FoodStuffsDb.Models;
 using FoodStuffs.Model.Interfaces.Domain;
-using FoodStuffs.Test.Mocks.Action;
-using FoodStuffs.Test.Mocks.Services.DateTime;
-using FoodStuffs.Test.Mocks.Services.Logging;
 using System;
 
 namespace FoodStuffs.Test.Mocks
@@ -70,8 +69,8 @@ namespace FoodStuffs.Test.Mocks
             ModifiedByUserId = 1
         };
 
-        public static TestActionResponder Responder =>
-            new TestActionResponder(new NullLoggingService());
+        public static SimpleActionResponder Responder =>
+            new SimpleActionResponder(new NullLoggingService());
 
         public static IUser User1 => new User
         {

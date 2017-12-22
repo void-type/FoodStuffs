@@ -1,14 +1,16 @@
-﻿using Core.Model.Actions.Responder;
+﻿using Core.Model.Actions.Responses;
 using Core.Model.Actions.Responses.MessageString;
+using Core.Model.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Model.Services.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodStuffs.Test.Mocks.Action
+namespace Core.Model.Actions.Responder
 {
-    public class TestActionResponder : ActionResponder<SimpleResponse>
+    /// <summary>
+    /// Used for testing. Holds a simple response that can be watched for any action outputs.
+    /// </summary>
+    public class SimpleActionResponder : ActionResponder<SimpleResponse>
     {
         public override void WithData<T>(T item, string logExtra = null)
         {
@@ -42,7 +44,7 @@ namespace FoodStuffs.Test.Mocks.Action
 
         private readonly SimpleResponse _simpleResponse = new SimpleResponse();
 
-        public TestActionResponder(ILoggingService logger) : base(logger)
+        public SimpleActionResponder(ILoggingService logger) : base(logger)
         {
         }
     }
