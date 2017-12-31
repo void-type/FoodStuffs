@@ -1,5 +1,5 @@
 ﻿require("./recipe-form.scss");
-var Recipe = require("../../store/recipe.js");
+var Recipe = require("../../store/createdRecipeModel.js");
 
 Vue.component("recipe-form", {
     template: require("./recipe-form.html"),

@@ -46,7 +46,7 @@ var appRoot = new Vue({
         deleteRecipe: function (recipe) {
             appState.messages = new Array();
 
-            axios.delete("api/recipes", recipe.id)
+            axios.delete("api/recipes", { params: { id: recipe.id } })
                 .then(this.success)
                 .catch(this.failure);
         },
@@ -57,6 +57,8 @@ var appRoot = new Vue({
             appState.messages = [response.data.message];
 
             appState.fieldsInError = new Array();
+
+            appRoot.currentRecipe = new Recipe();
 
             this.list();
         },

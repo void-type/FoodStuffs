@@ -1,5 +1,5 @@
 ﻿require("./recipe-table.scss");
-var Recipe = require("../../store/recipe.js");
+var Recipe = require("../../store/createdRecipeModel.js");
 
 Vue.component("recipe-table", {
     template: require("./recipe-table.html"),

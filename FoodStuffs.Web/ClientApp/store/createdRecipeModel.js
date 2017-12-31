@@ -1,9 +1,9 @@
 ﻿// New recipe class structure
 module.exports = function () {
     this.categories = [];
-    this.cookTimeMinutes = 0;
+    this.cookTimeMinutes = null;
     this.directions = "";
     this.ingredients = "";
     this.name = "";
-    this.prepTimeMinutes = 0;
+    this.prepTimeMinutes = null;
 };
