@@ -18,7 +18,7 @@ header, main {
 
 header > .topbar, nav > div, main, footer > div {
     margin: 0 auto;
-    max-width: 70em;
+    max-width: $contained-width;
 }
 
 main > section {
@@ -65,6 +65,8 @@ a, a:link {
 header {
     background-color: $color-primary-dark;
     box-shadow: $shadow;
+    z-index: 1000;
+    position: relative;
 
     .topbar {
         display: flex;
