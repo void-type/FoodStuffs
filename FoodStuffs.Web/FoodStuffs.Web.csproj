@@ -13,17 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ClientApp\components\message-center\message-center.js" />
-    <Content Include="ClientApp\components\recipe-form\recipe-form.js" />
-    <Content Include="ClientApp\components\recipe-form\recipe-form.scss" />
-    <Content Include="ClientApp\components\recipe-table\recipe-table.js" />
-    <Content Include="ClientApp\components\recipe-table\recipe-table.scss" />
-    <Content Include="ClientApp\store\appState.js" />
-    <Content Include="ClientApp\components\site\site.scss" />
-    <Content Include="ClientApp\components\site\variables.scss" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\img\logo.png" />
   </ItemGroup>
   <ItemGroup>

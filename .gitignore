@@ -267,3 +267,6 @@ __pycache__/
 # Compiled client app
 /FoodStuffs.Web/wwwroot/dist
 /FoodStuffs.Web/wwwroot/vendor
+*.pubxml
+/FoodStuffs.Web/appSecrets.development.json
+/FoodStuffs.Web/appSecrets.production.json

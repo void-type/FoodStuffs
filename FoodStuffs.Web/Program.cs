@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -10,6 +11,11 @@ namespace FoodStuffs.Web
     {
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    var env = builderContext.HostingEnvironment;
+                    config.AddJsonFile($"appSecrets.{env.EnvironmentName}.json", true, true);
+                })
                 .UseStartup<Startup>()
                 .UseSerilog()
                 .Build();
