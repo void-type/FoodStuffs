@@ -1,13 +1,12 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Core;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace FoodStuffs.Data.FoodStuffsDb
+namespace FoodStuffs.Data.Services
 {
-    public class FoodStuffsSqlData : AbstractFoodStuffsData
+    public class FoodStuffsEfSqlData : AbstractFoodStuffsEfData
     {
-        public FoodStuffsSqlData(IConfiguration configuration) : base(BuildContext(configuration))
+        public FoodStuffsEfSqlData(IConfiguration configuration) : base(BuildContext(configuration))
         {
         }
 

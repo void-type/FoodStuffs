@@ -35,6 +35,8 @@ namespace FoodStuffs.Model.Actions.Recipes
             AddCategoriesAndCategoryRecipes(newRecipe.Id);
 
             _data.SaveChanges();
+
+            respond.WithSuccess("Recipe created.", $"UserId: {_userId}");
         }
 
         private readonly IFoodStuffsData _data;

@@ -1,12 +1,12 @@
 ﻿using Core.Data.EntityFramework.Repositories;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.FoodStuffsDb.Repositories
+namespace FoodStuffs.Data.CustomRepositories
 {
-    public class UserRepository : Repository<IUser, User>
+    public class UserRepository : EfWritableRepository<IUser, User>
     {
         public override IQueryable<IUser> Stored => Context.Set<User>()
             .Include(u => u.RecipeModifiedByUser)

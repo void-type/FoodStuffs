@@ -1,6 +1,6 @@
 ﻿using Core.Model.Services.DateTime;
 using Core.Model.Services.Logging;
-using FoodStuffs.Data.FoodStuffsDb;
+using FoodStuffs.Data.Services;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Web.Services.Actions;
 using FoodStuffs.Web.Services.Logging;
@@ -52,8 +52,8 @@ namespace FoodStuffs.Web
             services.AddSingleton(Configuration);
 
             // Choose a db implementation
-            services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
-            //services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
+            services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
+            //services.AddTransient<IFoodStuffsData, FoodStuffsEfMemoryData>();
 
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, NowDateTimeService>();

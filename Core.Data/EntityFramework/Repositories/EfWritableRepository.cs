@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Core.Data.EntityFramework.Repositories
 {
-    public class Repository<TInterface, TDbEntity> : ReadOnlyRepository<TInterface, TDbEntity>, IRepository<TInterface>
+    public class EfWritableRepository<TInterface, TDbEntity> : EfReadOnlyRepository<TInterface, TDbEntity>, IWritableRepository<TInterface>
         where TDbEntity : class, TInterface, new() where TInterface : class
     {
         public TInterface New => new TDbEntity();
 
-        public Repository(DbContext context) : base(context)
+        public EfWritableRepository(DbContext context) : base(context)
         {
         }
 

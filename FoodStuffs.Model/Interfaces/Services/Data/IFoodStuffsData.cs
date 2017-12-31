@@ -8,9 +8,9 @@ namespace FoodStuffs.Model.Interfaces.Services.Data
     /// </summary>
     public interface IFoodStuffsData : IDataService
     {
-        IRepository<ICategory> Categories { get; }
-        IRepository<ICategoryRecipe> CategoryRecipes { get; }
-        IRepository<IRecipe> Recipes { get; }
-        IRepository<IUser> Users { get; }
+        IWritableRepository<ICategory> Categories { get; }
+        IWritableRepository<ICategoryRecipe> CategoryRecipes { get; }
+        IWritableRepository<IRecipe> Recipes { get; }
+        IWritableRepository<IUser> Users { get; }
     }
 }

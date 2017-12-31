@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Core.Model.Services.Data
 {
-    public interface IRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class
+    public interface IWritableRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class
     {
         TEntity New { get; }
 

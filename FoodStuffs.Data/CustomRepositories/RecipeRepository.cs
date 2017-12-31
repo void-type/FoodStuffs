@@ -1,12 +1,12 @@
 ﻿using Core.Data.EntityFramework.Repositories;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.FoodStuffsDb.Repositories
+namespace FoodStuffs.Data.CustomRepositories
 {
-    public class RecipeRepository : Repository<IRecipe, Recipe>
+    public class RecipeRepository : EfWritableRepository<IRecipe, Recipe>
     {
         public override IQueryable<IRecipe> Stored => Context.Set<Recipe>()
             .Include(r => r.CategoryRecipe)

@@ -1,6 +1,6 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.FoodStuffsDb.Models;
-using FoodStuffs.Data.Test;
+using FoodStuffs.Data.Models;
+using FoodStuffs.Data.Services;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Test.Mocks;
@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -40,7 +40,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -107,7 +107,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
                     .Execute(new DeleteRecipe(data, 2));

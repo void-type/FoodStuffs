@@ -1,5 +1,5 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Test;
+using FoodStuffs.Data.Services;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Test.Mocks;
 using Xunit;
@@ -13,7 +13,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
                     .Execute(new RespondWithAllRecipes(data));
@@ -28,7 +28,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 data.Users.Add(MockFactory.User1);
 

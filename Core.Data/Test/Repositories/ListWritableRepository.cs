@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Core.Model.Services.Data;
+﻿using Core.Model.Services.Data;
+using System.Collections.Generic;
 
-namespace Core.Data.Test.ListRepositories
+namespace Core.Data.Test.Repositories
 {
-    public class ListRepository<TInterface, TDbEntity> : ReadOnlyListRepository<TInterface>, IRepository<TInterface>
+    public class ListWritableRepository<TInterface, TDbEntity> : ListReadOnlyRepository<TInterface>, IWritableRepository<TInterface>
         where TDbEntity : class, TInterface, new() where TInterface : class
     {
         public TInterface New => new TDbEntity();

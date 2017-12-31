@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Validation;
 using System.Linq;
 using Xunit;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FoodStuffs.Data.FoodStuffsDb.Models
+namespace FoodStuffs.Data.Models
 {
     public partial class User
     {

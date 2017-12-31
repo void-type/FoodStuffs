@@ -44,6 +44,8 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             AddCategoriesAndCategoryRecipes(savedRecipe);
             _data.SaveChanges();
+
+            respond.WithSuccess("Recipe saved.", $"RecipeId: {_viewModel.Id}");
         }
 
         private readonly IFoodStuffsData _data;

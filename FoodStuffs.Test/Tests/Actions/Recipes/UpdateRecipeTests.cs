@@ -1,6 +1,6 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.FoodStuffsDb.Models;
-using FoodStuffs.Data.Test;
+using FoodStuffs.Data.Models;
+using FoodStuffs.Data.Services;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Queries;
@@ -150,7 +150,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
             };
 
-            using (var data = new FoodStuffsMemoryData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
                     .Execute(new UpdateRecipe(data, now, recipeViewModel, 1));

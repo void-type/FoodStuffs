@@ -1,13 +1,12 @@
-﻿using FoodStuffs.Data.FoodStuffsDb.Core;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+﻿using FoodStuffs.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace FoodStuffs.Data.Test
+namespace FoodStuffs.Data.Services
 {
-    public class FoodStuffsMemoryData : AbstractFoodStuffsData
+    public class FoodStuffsEfMemoryData : AbstractFoodStuffsEfData
     {
-        public FoodStuffsMemoryData(string dbName = null) : base(BuildContext(dbName))
+        public FoodStuffsEfMemoryData(string dbName = null) : base(BuildContext(dbName))
         {
         }
 

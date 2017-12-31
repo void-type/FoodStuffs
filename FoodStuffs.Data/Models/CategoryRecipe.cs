@@ -1,4 +1,4 @@
-﻿namespace FoodStuffs.Data.FoodStuffsDb.Models
+﻿namespace FoodStuffs.Data.Models
 {
     public partial class CategoryRecipe
     {

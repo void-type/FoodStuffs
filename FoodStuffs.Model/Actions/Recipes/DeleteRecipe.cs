@@ -36,6 +36,8 @@ namespace FoodStuffs.Model.Actions.Recipes
             _data.Recipes.Remove(recipe);
 
             _data.SaveChanges();
+
+            respond.WithSuccess("Recipe deleted.", $"RecipeId: {_id}");
         }
 
         private readonly IFoodStuffsData _data;

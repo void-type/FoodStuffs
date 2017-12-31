@@ -1,7 +1,7 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Services.DateTime;
 using Core.Model.Services.Logging;
-using FoodStuffs.Data.FoodStuffsDb.Models;
+using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using System;
 
