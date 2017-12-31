@@ -117,7 +117,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 var changedRecipe = data.Recipes.Stored.GetById(recipeToUpdate.Id);
 
-                Assert.False(responder.ResponseCreated);
+                Assert.True(responder.ResponseCreated);
 
                 Assert.Equal("ChangedRecipeName 1", changedRecipe.Name);
                 Assert.Equal(4, changedRecipe.PrepTimeMinutes);

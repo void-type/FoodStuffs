@@ -16,7 +16,15 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         protected override void PerformStep(IActionResponder respond)
         {
-            respond.WithData(_data.Recipes.Stored.FirstOrDefault(recipe => recipe.Id == _id));
+            var savedRecipe = _data.Recipes.Stored.FirstOrDefault(recipe => recipe.Id == _id);
+
+            if (savedRecipe == null)
+            {
+                respond.WithError("Recipe not found.", $"RecipeId: {_id}");
+                return;
+            }
+
+            respond.WithData(savedRecipe);
         }
 
         private readonly IFoodStuffsData _data;

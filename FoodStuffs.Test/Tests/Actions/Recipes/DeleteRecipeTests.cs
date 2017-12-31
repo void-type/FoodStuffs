@@ -27,7 +27,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 new ActionChain(responder)
                     .Execute(new DeleteRecipe(data, 1));
 
-                Assert.False(responder.ResponseCreated);
+                Assert.True(responder.ResponseCreated);
 
                 Assert.Equal(0, data.Recipes.Stored.Count());
                 Assert.Equal(0, data.Categories.Stored.Count());
@@ -83,7 +83,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 new ActionChain(responder)
                     .Execute(new DeleteRecipe(data, 2));
 
-                Assert.False(responder.ResponseCreated);
+                Assert.True(responder.ResponseCreated);
 
                 Assert.Equal(1, data.Recipes.Stored.Count());
                 Assert.Equal(2, data.Categories.Stored.Count());

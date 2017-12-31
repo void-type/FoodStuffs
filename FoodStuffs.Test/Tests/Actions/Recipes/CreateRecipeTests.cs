@@ -44,7 +44,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 new ActionChain(responder)
                     .Execute(new CreateRecipe(data, now, newRecipeViewModel, 1));
 
-                Assert.False(responder.ResponseCreated);
+                Assert.True(responder.ResponseCreated);
 
                 Assert.Equal(1, data.Recipes.Stored.Count());
                 Assert.Equal(2, data.Categories.Stored.Count());

@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Core.Model.Actions.Responder;
+﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Queries;
+using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
@@ -15,7 +15,6 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         protected override void PerformStep(IActionResponder respond)
         {
-            // TODO: paging or client lazy loading.
             respond.WithDataList(_data.Recipes.Stored.AsEnumerable().ToViewModel());
         }
 
