@@ -6,7 +6,7 @@ require("./components/recipe-table/recipe-table.js");
 
 var appState = require("./store/appState.js");
 
-var Recipe = require("./store/recipe.js");
+var Recipe = require("./store/createdRecipeModel.js");
 
 var appRoot = new Vue({
     el: "#app-main",

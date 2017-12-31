@@ -9,7 +9,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class CreateRecipe : ActionStep
     {
-        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userId)
+        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, CreateRecipeViewModel viewModel, int userId)
         {
             _data = data;
             _now = now;
@@ -42,7 +42,7 @@ namespace FoodStuffs.Model.Actions.Recipes
         private readonly IFoodStuffsData _data;
         private readonly IDateTimeService _now;
         private readonly int _userId;
-        private readonly RecipeViewModel _viewModel;
+        private readonly CreateRecipeViewModel _viewModel;
 
         private void AddCategoriesAndCategoryRecipes(int recipeId)
         {
