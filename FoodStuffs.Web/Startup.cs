@@ -49,13 +49,13 @@ namespace FoodStuffs.Web
         {
             // Add framework services.
             services.AddMvc();
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton(Configuration);
 
             // Choose a db implementation
             services.AddTransient<IFoodStuffsData, FoodStuffsSqlData>();
             //services.AddTransient<IFoodStuffsData, FoodStuffsMemoryData>();
 
-            services.AddTransient<ILoggingService, AspNetLoggerAdapter>();
+            services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, NowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
         }

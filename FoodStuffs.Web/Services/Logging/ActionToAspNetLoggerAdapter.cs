@@ -6,12 +6,11 @@ using System.Linq;
 
 namespace FoodStuffs.Web.Services.Logging
 {
-    public class AspNetLoggerAdapter : ILoggingService
+    public class ActionToAspNetLoggerAdapter : ILoggingService
     {
-        public AspNetLoggerAdapter(ILoggerFactory loggerFactory)
+        public ActionToAspNetLoggerAdapter(ILoggerFactory loggerFactory)
         {
-            //TODO: Inject this name
-            _logger = loggerFactory.CreateLogger("FoodStuffs");
+            _logger = loggerFactory.CreateLogger("Application");
         }
 
         public void Debug(Exception ex, params string[] messages)
