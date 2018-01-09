@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\old\**" />
     <Compile Remove="wwwroot\node_modules\**" />
+    <Content Remove="ClientApp\old\**" />
+    <EmbeddedResource Remove="ClientApp\old\**" />
     <EmbeddedResource Remove="wwwroot\node_modules\**" />
+    <None Remove="ClientApp\old\**" />
     <None Remove="wwwroot\node_modules\**" />
   </ItemGroup>
 
