@@ -1,3 +1,8 @@
-﻿<div id="app">
-    <!-- built files will be auto injected -->
-</div>
+@if (ViewBag.IsDevelopment)
+{
+  @Html.Partial("~/ClientApp/index.dev.html")
+}
+else
+{
+  @Html.Partial("~/wwwroot/dist/index.html")
+}

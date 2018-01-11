@@ -86,4 +86,5 @@
     "last 2 versions",
     "not ie <= 8"
   ]
+, "-vs-binding":{"BeforeBuild":["build"]}
 }

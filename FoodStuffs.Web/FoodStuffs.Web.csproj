@@ -17,7 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\img\logo.png" />
+    <Content Include="ClientApp\static\favicon.ico" />
+    <Content Include="ClientApp\_old\img\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />

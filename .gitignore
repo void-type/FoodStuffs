@@ -265,8 +265,7 @@ __pycache__/
 /FoodStuffs.Web/App_Data/Logs
 
 # Compiled client app
-/*/wwwroot/dist
-/*/wwwroot/vendor
+/*/wwwroot
 
 # Secrets
 *.pubxml

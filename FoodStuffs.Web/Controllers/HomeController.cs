@@ -1,12 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FoodStuffs.Web.Controllers
 {
-    public class HomeController : Controller
+  public class HomeController : Controller
+  {
+    private readonly IHostingEnvironment _env;
+
+    public HomeController(IHostingEnvironment env)
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+      _env = env;
     }
+
+    public IActionResult Index()
+    {
+      ViewBag.IsDevelopment = _env.IsDevelopment();
+
+      return View();
+    }
+  }
 }
