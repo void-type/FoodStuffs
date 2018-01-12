@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <Content Include="ClientApp\static\favicon.ico" />
-    <Content Include="ClientApp\_old\img\logo.png" />
+    <Content Include="ClientApp\src\assets\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
@@ -28,5 +28,11 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodStuffs.Data\FoodStuffs.Data.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ClientApp\src\components\" />
+    <Folder Include="ClientApp\src\store\" />
+    <Folder Include="ClientApp\_example_src\router\" />
+    <Folder Include="ClientApp\src\router\" />
   </ItemGroup>
 </Project>
