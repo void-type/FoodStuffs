@@ -12,21 +12,14 @@
 </template>
 
 <script>
-  var Recipe = require("../models/createdRecipeViewModel.js");
-
-  Vue.component("recipe-table", {
-    template: require("./recipe-table.html"),
-    props: ["recipes"],
-    methods: {
-      selectRecipe: function (recipe) {
-        this.$emit("recipe-selected", recipe);
-      },
-
-      newRecipe: function () {
-        this.$emit("recipe-selected", new Recipe());
+  export default {
+    computed:
+    {
+      recipes() {
+        return this.$store.state.recipes;
       }
     }
-  });
+  }
 </script>
 
 <style lang="scss">

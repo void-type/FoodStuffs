@@ -4,7 +4,7 @@
       <div class="topbar">
         <div>
           <a class="logo" href="#">
-            <img src="./assets/logo.png" alt="FoodStuffs" />
+            <img src="../../assets/logo.png" alt="FoodStuffs" />
           </a>
           <a class="title" href="#">
             FoodStuffs
@@ -13,10 +13,7 @@
         <a href="#">Login</a>
       </div>
     </header>
-    <message-center :class="{error : isError}"
-                    :messages="messages"
-                    :is-error="isError">
-    </message-center>
+    <MessageCenter></MessageCenter>
     <main>
       <router-view></router-view>
     </main>
@@ -27,8 +24,14 @@
 </template>
 
 <script>
+  import MessageCenter from "../components/MessageCenter";
+  import store from "../store";
+
   export default {
-    name: "app"
+    store,
+    components: {
+      MessageCenter
+    }
   };
 </script>
 
