@@ -29,10 +29,4 @@
     <ProjectReference Include="..\FoodStuffs.Data\FoodStuffs.Data.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ClientApp\src\components\" />
-    <Folder Include="ClientApp\src\store\" />
-    <Folder Include="ClientApp\_example_src\router\" />
-    <Folder Include="ClientApp\src\router\" />
-  </ItemGroup>
 </Project>

@@ -1,0 +1,21 @@
+﻿@import '../variables';
+
+ul.message-center {
+    margin: 0;
+    background-color: $color-secondary;
+    padding: 1em 1em 1em 2.5em;
+    list-style: none;
+    margin-bottom: 2em;
+    width: 100%;
+    text-align: center;
+    box-shadow: $shadow;
+}
+
+ul.message-center.error {
+    background-color: $color-error-background;
+}
+
+ul.message-center > li {
+    margin: 0 auto;
+    max-width: ($contained-width * 0.80);
+}

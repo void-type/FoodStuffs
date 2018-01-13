@@ -1,8 +1,1 @@
-@if (ViewBag.IsDevelopment)
-{
-  @Html.Partial("~/ClientApp/index.dev.html")
-}
-else
-{
-  @Html.Partial("~/wwwroot/dist/index.html")
-}
+@(ViewBag.IsDevelopment ? Html.Partial("~/ClientApp/index.dev.html") : Html.Partial("~/wwwroot/dist/index.html"))
