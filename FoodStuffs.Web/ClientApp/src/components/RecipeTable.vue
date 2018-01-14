@@ -23,9 +23,7 @@
     },
     methods: {
       ...mapActions({
-        refresh: "fetchRecipes"
-      }),
-      ...mapMutations({
+        refresh: "fetchRecipes",
         newRecipe: "selectNewRecipe",
         selectRecipe: "selectRecipe"
       })

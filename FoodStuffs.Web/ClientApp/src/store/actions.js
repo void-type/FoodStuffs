@@ -1,4 +1,5 @@
 import webApi from "./webApi"
+import Recipe from "../models/recipe"
 
 const defaultCallbacks = {
   onSuccess(context, data) {
@@ -7,7 +8,7 @@ const defaultCallbacks = {
 
   onSuccessWithRefresh(context, data) {
     context.dispatch("fetchRecipes");
-    context.commit("selectNewRecipe");
+    context.dispatch("selectNewRecipe");
     this.onSuccess(context, data);
   },
 
@@ -28,10 +29,9 @@ const defaultCallbacks = {
 export default {
   // Api Calls
   fetchRecipes(context) {
-    context.commit("clearErrors");
     webApi.listRecipes(
-      (data) => context.commit("setRecipesList", data.items),
-      (response) => defaultCallbacks.onFailure(context, response));
+      data => context.commit("setRecipesList", data.items),
+      response => defaultCallbacks.onFailure(context, response));
   },
 
   saveRecipe(context, recipe) {
@@ -41,21 +41,35 @@ export default {
     if (recipe.id === undefined || recipe.id < 1) {
       webApi.createRecipe(
         recipe,
-        (data) => defaultCallbacks.onSuccessWithRefresh(context, data),
-        (response) => defaultCallbacks.onFailure(context, response));
+        data => defaultCallbacks.onSuccessWithRefresh(context, data),
+        response => defaultCallbacks.onFailure(context, response));
     } else {
       webApi.updateRecipe(
         recipe,
-        (data) => defaultCallbacks.onSuccessWithRefresh(context, data),
-        (response) => defaultCallbacks.onFailure(context, response));
+        data => defaultCallbacks.onSuccessWithRefresh(context, data),
+        response => defaultCallbacks.onFailure(context, response));
     }
   },
 
   deleteRecipe(context, recipe) {
     context.commit("clearErrors");
-    webApi.deleteRecipe(
-      recipe,
-      (data) => defaultCallbacks.onSuccessWithRefresh(context, data),
-      (response) => defaultCallbacks.onFailure(context, response));
-  }
+    if (confirm("Are you sure you want to delete this recipe?")) {
+      webApi.deleteRecipe(
+        recipe,
+        data => defaultCallbacks.onSuccessWithRefresh(context, data),
+        response => defaultCallbacks.onFailure(context, response));
+    }
+  },
+
+
+  selectRecipe(context, recipe) {
+    context.commit("clearErrors");
+    context.commit("selectRecipe", recipe);
+  },
+
+  selectNewRecipe(context) {
+    context.commit("clearErrors");
+    context.commit("selectRecipe", new Recipe());
+  },
+
 }

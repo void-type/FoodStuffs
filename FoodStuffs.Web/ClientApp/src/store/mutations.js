@@ -1,27 +1,12 @@
-import Recipe from "../models/recipe.js"
-
-const commonFunctions =
-  {
-    clearErrors(state) {
-      state.isError = false;
-      state.fieldsInError = [];
-      state.messages = [];
-    }
-  }
-
 export default {
   clearErrors(state) {
-    commonFunctions.clearErrors(state);
+    state.isError = false;
+    state.fieldsInError = [];
+    state.messages = [];
   },
 
   selectRecipe(state, recipe) {
-    commonFunctions.clearErrors(state);
     state.currentRecipe = recipe;
-  },
-
-  selectNewRecipe(state) {
-    commonFunctions.clearErrors(state);
-    state.currentRecipe = new Recipe();
   },
 
   setRecipesList(state, recipes) {

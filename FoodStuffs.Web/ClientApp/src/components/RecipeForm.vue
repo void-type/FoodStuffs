@@ -56,10 +56,7 @@
     {
       ...mapActions({
         saveClick: "saveRecipe",
-        deleteClick: "deleteRecipe"
-      }),
-
-      ...mapMutations({
+        deleteClick: "deleteRecipe",
         cancelClick: "selectNewRecipe",
       })
     }
