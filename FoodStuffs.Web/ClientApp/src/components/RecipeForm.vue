@@ -29,13 +29,13 @@
     </div>
     <div class="form-group">
       <label></label>
-      <button v-on:click.prevent="saveClick()">
+      <button v-on:click.prevent="saveClick(currentRecipe)">
         Save
       </button>
       <button v-on:click.prevent="cancelClick()">
         Cancel
       </button>
-      <button class="pull-right error" v-on:click.prevent="deleteClick()">
+      <button class="pull-right error" v-on:click.prevent="deleteClick(currentRecipe)">
         Delete
       </button>
     </div>
@@ -43,12 +43,25 @@
 </template>
 
 <script>
+  import { mapActions, mapMutations } from "vuex"
+
   export default {
     computed:
     {
       currentRecipe() {
         return this.$store.state.currentRecipe;
       }
+    },
+    methods:
+    {
+      ...mapActions({
+        saveClick: "saveRecipe",
+        deleteClick: "deleteRecipe"
+      }),
+
+      ...mapMutations({
+        cancelClick: "selectNewRecipe",
+      })
     }
   }
 </script>

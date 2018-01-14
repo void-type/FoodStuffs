@@ -12,12 +12,26 @@
 </template>
 
 <script>
+  import { mapActions, mapMutations } from "vuex"
+
   export default {
     computed:
     {
       recipes() {
         return this.$store.state.recipes;
       }
+    },
+    methods: {
+      ...mapActions({
+        refresh: "fetchRecipes"
+      }),
+      ...mapMutations({
+        newRecipe: "selectNewRecipe",
+        selectRecipe: "selectRecipe"
+      })
+    },
+    beforeMount() {
+      this.refresh();
     }
   }
 </script>

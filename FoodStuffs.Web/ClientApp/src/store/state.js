@@ -1,7 +1,9 @@
+import Recipe from "../models/recipe.js"
+
 export default {
-  recipes: new Array(),
-  messages: new Array(),
-  fieldsInError: new Array(),
-  currentRecipe: {},
+  messages: [],
+  recipes: [],
+  fieldsInError: [],
+  currentRecipe: new Recipe(),
   isError: false
 }

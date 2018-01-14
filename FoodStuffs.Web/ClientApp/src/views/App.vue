@@ -18,7 +18,8 @@
       <router-view></router-view>
     </main>
     <footer>
-      <div class="text-center">&copy; FoodStuffs</div>
+      <div class="text-center"><a href="https://github.com/void-type/foodstuffs">FoodStuffs is open source!</a></div>
+     
     </footer>
   </div>
 </template>
