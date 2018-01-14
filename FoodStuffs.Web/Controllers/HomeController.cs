@@ -15,7 +15,12 @@ namespace FoodStuffs.Web.Controllers
     public IActionResult Index()
     {
       ViewBag.IsDevelopment = _env.IsDevelopment();
+      return View();
+    }
 
+    [Route("/Error")]
+    public IActionResult Error()
+    {
       return View();
     }
   }
