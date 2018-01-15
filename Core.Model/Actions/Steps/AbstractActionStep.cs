@@ -16,7 +16,7 @@ namespace Core.Model.Actions.Steps
             }
             catch (Exception ex)
             {
-                respond.WithError("There was a problem processing your request.", null, ex);
+                respond.WithError("There was a problem processing your request.", $"StepName: {GetType()}", ex);
             }
         }
 
