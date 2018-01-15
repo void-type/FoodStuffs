@@ -1,8 +1,8 @@
-﻿using Core.Data.EntityFramework.Repositories;
-using FoodStuffs.Data.Models;
+﻿using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Core.Data.EntityFramework;
 
 namespace FoodStuffs.Data.CustomRepositories
 {
