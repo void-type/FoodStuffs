@@ -1,1 +1,3 @@
-@(ViewBag.IsDevelopment ? Html.Partial("~/ClientApp/index.dev.html") : Html.Partial("~/wwwroot/dist/index.html"))
+@(ViewBag.UseWebpackDevServer
+      ? Html.Partial("~/ClientApp/index.dev.html")
+      : Html.Partial("~/wwwroot/dist/index.html"))

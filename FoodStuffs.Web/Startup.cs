@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace FoodStuffs.Web
 {
@@ -22,15 +21,15 @@ namespace FoodStuffs.Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-      if (env.IsDevelopment())
+      if (env.IsEnvironment("Production"))
       {
-        app.UseDeveloperExceptionPage();
+        app.UseExceptionHandler("/Error");
       }
       else
       {
-        app.UseExceptionHandler("/Error");
+        app.UseDeveloperExceptionPage();
       }
 
       app.UseStaticFiles();
