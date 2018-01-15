@@ -6,7 +6,7 @@ namespace Core.Model.Actions.Steps
     /// <summary>
     /// A single step in an action chain.
     /// </summary>
-    public abstract class ActionStep : IActionStep
+    public abstract class AbstractActionStep : IActionStep
     {
         public void Execute(IActionResponder respond)
         {

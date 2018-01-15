@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class RespondWithRecipeById : ActionStep
+    public class RespondWithRecipeById : AbstractActionStep
 
     {
         public RespondWithRecipeById(IFoodStuffsData data, int id)

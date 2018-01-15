@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class UpdateRecipe : ActionStep
+    public class UpdateRecipe : AbstractActionStep
     {
         public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userIdId)
         {

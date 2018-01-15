@@ -1,9 +1,9 @@
-﻿using Core.Model.Services.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Core.Model.Services.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace Core.Data.EntityFramework.Repositories
+namespace Core.Data.EntityFramework
 {
     public class EfWritableRepository<TInterface, TDbEntity> : EfReadOnlyRepository<TInterface, TDbEntity>, IWritableRepository<TInterface>
         where TDbEntity : class, TInterface, new() where TInterface : class

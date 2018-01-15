@@ -6,7 +6,7 @@ namespace Core.Model.Actions.Steps
     /// <summary>
     /// Save all changes to data provider.
     /// </summary>
-    public class SaveChangesToData : ActionStep
+    public class SaveChangesToData : AbstractActionStep
     {
         public SaveChangesToData(IDataService data)
         {

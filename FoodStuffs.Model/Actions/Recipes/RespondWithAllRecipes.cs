@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class RespondWithAllRecipes : ActionStep
+    public class RespondWithAllRecipes : AbstractActionStep
     {
         public RespondWithAllRecipes(IFoodStuffsData data)
         {

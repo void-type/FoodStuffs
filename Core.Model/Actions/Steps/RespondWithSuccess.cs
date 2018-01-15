@@ -5,7 +5,7 @@ namespace Core.Model.Actions.Steps
     /// <summary>
     /// Respond with a success message.
     /// </summary>
-    public class RespondWithSuccess : ActionStep
+    public class RespondWithSuccess : AbstractActionStep
     {
         public RespondWithSuccess(string message, string logExtra = null)
         {

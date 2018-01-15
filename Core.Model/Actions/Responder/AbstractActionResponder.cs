@@ -9,12 +9,9 @@ namespace Core.Model.Actions.Responder
     /// <summary>
     /// Adapter for ActionSteps to use any response implementation. Retains validation errors and final response.
     /// </summary>
-    public abstract class ActionResponder<TResponse> : IActionResponder where TResponse : class
+    public abstract class AbstractActionResponder<TResponse> : IActionResponder where TResponse : class
     {
-        protected ActionResponder(ILoggingService logger)
-        {
-            Log = logger;
-        }
+        public ILoggingService Log { get; }
 
         public TResponse Response { get; set; }
 
@@ -47,7 +44,10 @@ namespace Core.Model.Actions.Responder
             CreateValidationErrorResponse(logExtra);
         }
 
-        public ILoggingService Log { get; }
+        protected AbstractActionResponder(ILoggingService logger)
+        {
+            Log = logger;
+        }
 
         protected abstract void CreateValidationErrorResponse(string logExtra);
     }

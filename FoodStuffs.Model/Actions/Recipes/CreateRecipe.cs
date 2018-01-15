@@ -7,7 +7,7 @@ using FoodStuffs.Model.ViewModels;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class CreateRecipe : ActionStep
+    public class CreateRecipe : AbstractActionStep
     {
         public CreateRecipe(IFoodStuffsData data, IDateTimeService now, CreateRecipeViewModel viewModel, int userId)
         {

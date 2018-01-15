@@ -6,7 +6,7 @@ namespace Core.Model.Actions.Steps
     /// Response with Api data.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RespondWithData<T> : ActionStep
+    public class RespondWithData<T> : AbstractActionStep
     {
         public RespondWithData(T data, string logExtra = null)
         {

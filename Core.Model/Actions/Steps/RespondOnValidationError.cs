@@ -2,7 +2,7 @@
 
 namespace Core.Model.Actions.Steps
 {
-    public class RespondOnValidationError : ActionStep
+    public class RespondOnValidationError : AbstractActionStep
     {
         public RespondOnValidationError(string logExtra = null)
         {

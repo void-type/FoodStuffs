@@ -1,8 +1,8 @@
-﻿using Core.Model.Services.Data;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Core.Model.Services.Data;
 
-namespace Core.Data.Test.Repositories
+namespace Core.Data.Test
 {
     public class ListReadOnlyRepository<TInterface> : IReadOnlyRepository<TInterface> where TInterface : class
 

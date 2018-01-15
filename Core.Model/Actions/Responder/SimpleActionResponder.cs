@@ -10,8 +10,12 @@ namespace Core.Model.Actions.Responder
     /// <summary>
     /// Used for testing. Holds a simple response that can be watched for any action outputs.
     /// </summary>
-    public class SimpleActionResponder : ActionResponder<SimpleResponse>
+    public class SimpleActionResponder : AbstractActionResponder<SimpleResponse>
     {
+        public SimpleActionResponder(ILoggingService logger) : base(logger)
+        {
+        }
+
         public override void WithData<T>(T item, string logExtra = null)
         {
             _simpleResponse.DataItem = item;
@@ -43,9 +47,5 @@ namespace Core.Model.Actions.Responder
         }
 
         private readonly SimpleResponse _simpleResponse = new SimpleResponse();
-
-        public SimpleActionResponder(ILoggingService logger) : base(logger)
-        {
-        }
     }
 }

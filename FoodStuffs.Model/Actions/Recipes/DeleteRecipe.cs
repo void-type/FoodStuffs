@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class DeleteRecipe : ActionStep
+    public class DeleteRecipe : AbstractActionStep
     {
         public DeleteRecipe(IFoodStuffsData data, int id)
         {
