@@ -24,7 +24,8 @@
 </template>
 
 <script>
-  import MessageCenter from "../components/MessageCenter";
+  import MessageCenter from "./components/MessageCenter";
+  import router from "../router"
   import store from "../store";
 
   export default {
@@ -33,6 +34,7 @@
         applicationName: document.getElementById("applicationName") !== null ? document.getElementById("applicationName").value : "FoodStuffs"
       }
     },
+    router,
     store,
     components: {
       MessageCenter
