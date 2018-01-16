@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         public void CreateRecipe()
         {
             var now = MockFactory.EarlyDateTimeService;
-            var responder = MockFactory.Responder;
+            var responder = MockFactory.GetResponder;
 
             var newRecipeViewModel = new RecipeViewModel
             {

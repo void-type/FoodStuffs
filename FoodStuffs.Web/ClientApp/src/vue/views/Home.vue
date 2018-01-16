@@ -18,5 +18,4 @@
 </script>
 
 <style lang="scss">
-  @import '../variables';
 </style>

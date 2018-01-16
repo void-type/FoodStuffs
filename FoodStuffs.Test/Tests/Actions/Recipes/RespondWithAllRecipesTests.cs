@@ -11,7 +11,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithAllRecipesEmpty()
         {
-            var responder = MockFactory.Responder;
+            var responder = MockFactory.GetResponder;
 
             using (var data = new FoodStuffsEfMemoryData())
             {
@@ -26,7 +26,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithAllRecipesNotEmpty()
         {
-            var responder = MockFactory.Responder;
+            var responder = MockFactory.GetResponder;
 
             using (var data = new FoodStuffsEfMemoryData())
             {

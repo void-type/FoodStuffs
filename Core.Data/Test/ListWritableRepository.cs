@@ -10,24 +10,24 @@ namespace Core.Data.Test
 
         public void Add(TInterface entity)
         {
-            _stored.Add(entity);
+            ListStore.Add(entity);
         }
 
         public void AddRange(IEnumerable<TInterface> entities)
         {
-            _stored.AddRange(entities);
+            ListStore.AddRange(entities);
         }
 
         public void Remove(TInterface entity)
         {
-            _stored.Remove(entity);
+            ListStore.Remove(entity);
         }
 
         public void RemoveRange(IEnumerable<TInterface> entities)
         {
             foreach (var entity in entities)
             {
-                _stored.Remove(entity);
+                ListStore.Remove(entity);
             }
         }
     }

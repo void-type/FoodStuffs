@@ -1,6 +1,5 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Services.DateTime;
-using Core.Model.Services.Logging;
 using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using System;
@@ -69,8 +68,7 @@ namespace FoodStuffs.Test.Mocks
             ModifiedByUserId = 1
         };
 
-        public static SimpleActionResponder Responder =>
-            new SimpleActionResponder(new NullLoggingService());
+        public static SimpleActionResponder GetResponder => new SimpleActionResponder();
 
         public static IUser User1 => new User
         {

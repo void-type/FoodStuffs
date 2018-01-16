@@ -7,7 +7,7 @@ module.exports = {
     sourceType: "module"
   },
   env: {
-    browser: true,
+    browser: true
   },
   // required to lint *.vue files
   plugins: [
@@ -16,6 +16,6 @@ module.exports = {
   // add your custom rules here
   rules: {
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === "production" ? "error" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
   }
 }

@@ -1,6 +1,5 @@
 ﻿using Core.Model.Actions.Responses;
 using Core.Model.Actions.Responses.MessageString;
-using Core.Model.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +7,10 @@ using System.Linq;
 namespace Core.Model.Actions.Responder
 {
     /// <summary>
-    /// Used for testing. Holds a simple response that can be watched for any action outputs.
+    /// A responder that sets a simple response for testing.
     /// </summary>
     public class SimpleActionResponder : AbstractActionResponder<SimpleResponse>
     {
-        public SimpleActionResponder(ILoggingService logger) : base(logger)
-        {
-        }
-
         public override void WithData<T>(T item, string logExtra = null)
         {
             _simpleResponse.DataItem = item;

@@ -9,7 +9,7 @@
     "start": "npm run dev",
     "unit": "cross-env BABEL_ENV=test karma start ClientApp/test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src ClientApp/test/unit/specs",
+    "lint": "eslint --ext .js,.vue ClientApp/src ClientApp/test/unit/specs",
     "build": "node ClientApp/build/build.js"
   },
   "dependencies": {

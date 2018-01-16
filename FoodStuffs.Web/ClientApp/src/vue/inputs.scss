@@ -1,0 +1,47 @@
+@import 'variables';
+
+input[type="password"], input[type="number"], input[type="text"], select, textarea {
+  box-sizing: border-box;
+  padding: .3em .4em;
+  border: $border;
+  transition: all 0.30s ease-in-out;
+  font-family: $font-family;
+  font-size: 1em;
+  width: 25em;
+
+  &:focus {
+    outline: none;
+    border: 2px solid $color-focus;
+    box-shadow: 0 0 6px $color-primary;
+  }
+}
+
+textarea {
+  height: 10em;
+}
+
+input[type="button"], input[type="submit"], button {
+  padding: .5em;
+  background-color: $color-secondary;
+  border: $border;
+  box-shadow: $shadow;
+  color: black;
+  font-weight: bold;
+  position: relative;
+  min-width: 5em;
+  cursor: pointer;
+
+  &:active {
+    background-color: $color-secondary-dark;
+    box-shadow: $shadow-collapse;
+    top: 4px;
+  }
+}
+
+input.chk {
+  height: 1.5em;
+  width: 1.5em;
+  padding: .5em;
+  top: .4em;
+  position: relative;
+}

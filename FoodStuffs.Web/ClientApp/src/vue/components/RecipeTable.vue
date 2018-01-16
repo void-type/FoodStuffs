@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-table">
+  <div>
     <button v-on:click="newRecipe()">New</button>
     <table class="hover">
       <tbody>
@@ -34,6 +34,6 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import 'RecipeTable';
 </style>

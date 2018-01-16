@@ -61,7 +61,6 @@ export default {
     }
   },
 
-
   selectRecipe(context, recipe) {
     context.commit("clearErrors");
     context.commit("selectRecipe", recipe);
@@ -70,6 +69,5 @@ export default {
   selectNewRecipe(context) {
     context.commit("clearErrors");
     context.commit("selectRecipe", new Recipe());
-  },
-
+  }
 }

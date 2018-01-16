@@ -18,7 +18,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void UpdateRecipeAndRelations()
         {
-            var responder = MockFactory.Responder;
+            var responder = MockFactory.GetResponder;
             var then = MockFactory.EarlyDateTimeService;
             var now = MockFactory.LateDateTimeService;
 
@@ -138,7 +138,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void UpdateRecipeNotFound()
         {
-            var responder = MockFactory.Responder;
+            var responder = MockFactory.GetResponder;
             var now = MockFactory.LateDateTimeService;
 
             var recipeViewModel = new RecipeViewModel

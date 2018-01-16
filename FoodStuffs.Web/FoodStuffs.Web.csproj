@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ClientApp\assets\logo.png" />
+    <Content Include="ClientApp\src\assets\logo.png" />
     <Content Include="ClientApp\static\favicon.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
       <div class="topbar">
         <div>
           <a class="logo" href="#">
-            <img src="../../assets/logo.png" alt="FoodStuffs logo" />
+            <img src="../assets/logo.png" alt="FoodStuffs logo" />
           </a>
           <a class="title" href="#">
             {{applicationName}}

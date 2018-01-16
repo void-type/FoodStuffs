@@ -20,7 +20,7 @@ namespace Core.Model.Validation
         /// <summary>
         /// The list of violations against the validation rules.
         /// </summary>
-        protected IEnumerable<IValidationError> Errors => _rules.Where(rule => !rule.IsValid)
+        private IEnumerable<IValidationError> Errors => _rules.Where(rule => !rule.IsValid)
             .Select(rule => rule.ValidationError);
 
         /// <summary>

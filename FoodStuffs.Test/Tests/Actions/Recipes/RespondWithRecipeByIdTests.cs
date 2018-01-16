@@ -11,7 +11,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithRecipeByIdFound()
         {
-            var responder = MockFactory.Responder;
+            var responder = MockFactory.GetResponder;
 
             using (var data = new FoodStuffsEfMemoryData())
             {
@@ -36,7 +36,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             using (var data = new FoodStuffsEfMemoryData())
             {
-                var responder = MockFactory.Responder;
+                var responder = MockFactory.GetResponder;
 
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipeById(data, 5));

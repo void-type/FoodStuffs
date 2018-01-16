@@ -1,5 +1,5 @@
 <template>
-  <form class="recipe-form" v-if="currentRecipe !== undefined">
+  <form v-if="currentRecipe !== undefined">
     <h1>Edit Recipe</h1>
     <div class="form-group">
       <label title="Name">Name</label>
@@ -63,6 +63,6 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import 'RecipeForm';
 </style>

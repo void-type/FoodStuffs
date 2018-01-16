@@ -1,5 +1,4 @@
-﻿using Core.Model.Services.Logging;
-using Core.Model.Validation;
+﻿using Core.Model.Validation;
 using System;
 using System.Collections.Generic;
 
@@ -64,10 +63,5 @@ namespace Core.Model.Actions.Responder
         /// <param name="newValidationErrors"></param>
         /// <param name="logExtra"></param>
         void WithValidationErrors(string logExtra, params IValidationError[] newValidationErrors);
-
-        /// <summary>
-        /// A reference to the preferred logging service.
-        /// </summary>
-        ILoggingService Log { get; }
     }
 }

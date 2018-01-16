@@ -35,18 +35,6 @@ footer {
   padding: 1em 0em;
 }
 
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left;
-}
-
 h1, h2, h3, h4 {
   color: $color-primary-dark
 }
@@ -167,6 +155,18 @@ nav {
       }
     }
   }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
 }
 
 @media #{$extra-large-screen} {

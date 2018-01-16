@@ -4,7 +4,7 @@ using Core.Model.Actions.Steps;
 namespace Core.Model.Actions.Chain
 {
     /// <summary>
-    /// ActionChain is a tool to build a series of ActionSteps.
+    /// ActionChain injects the responder into each action step and stops execution when a response is set.
     /// </summary>
     public class ActionChain : IActionChain
     {
@@ -14,8 +14,7 @@ namespace Core.Model.Actions.Chain
         }
 
         /// <summary>
-        /// Execute the chain of ActionSteps against a response. The response contains the action state and response so the chain can be rerun against
-        /// a new response without needing to clear state.
+        /// If the response is not already created, perform the next step.
         /// </summary>
         /// <param name="step"></param>
         public IActionChain Execute(IActionStep step)
