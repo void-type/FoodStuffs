@@ -1,6 +1,6 @@
 <template>
-  <ul v-if="messages.length > 0" :class="{error : $store.state.isError}">
-    <li v-for="message in $store.state.messages" v-bind:key="message">{{message}}</li>
+  <ul v-if="messages.length > 0" :class="{error : isError}">
+    <li v-for="message in messages" v-bind:key="message">{{message}}</li>
   </ul>
 </template>
 
