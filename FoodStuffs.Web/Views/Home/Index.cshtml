@@ -1,3 +1,4 @@
+@Html.Hidden("applicationName", (string)ViewBag.ApplicationName)
 @(ViewBag.UseWebpackDevServer
-      ? Html.Partial("~/ClientApp/index.dev.html")
-      : Html.Partial("~/wwwroot/dist/index.html"))
+          ? Html.Partial("~/ClientApp/index.dev.html")
+          : Html.Partial("~/wwwroot/dist/index.html"))

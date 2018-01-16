@@ -1,20 +1,24 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodStuffs.Web.Controllers
 {
   public class HomeController : Controller
   {
-    private readonly IHostingEnvironment _env;
+    private readonly IHostingEnvironment _environment;
+    private readonly IConfiguration _configuration;
 
-    public HomeController(IHostingEnvironment env)
+    public HomeController(IHostingEnvironment environment, IConfiguration configuration)
     {
-      _env = env;
+      _environment = environment;
+      _configuration = configuration;
     }
 
     public IActionResult Index()
     {
-      ViewBag.UseWebpackDevServer = _env.IsEnvironment("Development");
+      ViewBag.UseWebpackDevServer = _environment.IsEnvironment("Development");
+      ViewBag.ApplicationName = _configuration["ApplicationName"];
 
       return View();
     }
