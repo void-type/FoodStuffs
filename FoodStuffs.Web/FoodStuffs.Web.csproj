@@ -6,21 +6,6 @@
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="ClientApp\old\**" />
-    <Compile Remove="wwwroot\node_modules\**" />
-    <Content Remove="ClientApp\old\**" />
-    <EmbeddedResource Remove="ClientApp\old\**" />
-    <EmbeddedResource Remove="wwwroot\node_modules\**" />
-    <None Remove="ClientApp\old\**" />
-    <None Remove="wwwroot\node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="ClientApp\src\assets\logo.png" />
-    <Content Include="ClientApp\static\favicon.ico" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.0" />
