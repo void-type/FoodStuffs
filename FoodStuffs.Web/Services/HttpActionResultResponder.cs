@@ -10,57 +10,57 @@ using System.Linq;
 
 namespace FoodStuffs.Web.Services
 {
-  public class HttpActionResultResponder : AbstractActionResponder<IActionResult>
-  {
-    private readonly ILoggingService _logger;
-
-    public HttpActionResultResponder(ILoggingService logger)
+    public class HttpActionResultResponder : AbstractActionResponder<IActionResult>
     {
-      _logger = logger;
-    }
+        private readonly ILoggingService _logger;
 
-    public override void WithData<TItemType>(TItemType item, string logExtra = null)
-    {
-      _logger.Info(logExtra);
-      Response = new ObjectResult(item);
-    }
+        public HttpActionResultResponder(ILoggingService logger)
+        {
+            _logger = logger;
+        }
 
-    public override void WithDataList<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
-    {
-      var set = new CountedItemSet<TItemType> { Items = items.ToList() };
+        public override void WithData<TItemType>(TItemType item, string logExtra = null)
+        {
+            _logger.Info(logExtra);
+            Response = new ObjectResult(item);
+        }
 
-      _logger.Info($"Count: {set.Count}", logExtra);
-      Response = new ObjectResult(set) { StatusCode = 200 };
-    }
+        public override void WithDataList<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
+        {
+            var set = new CountedItemSet<TItemType> { Items = items.ToList() };
 
-    public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
-    {
-      _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
+            _logger.Info($"Count: {set.Count}", logExtra);
+            Response = new ObjectResult(set) { StatusCode = 200 };
+        }
 
-      Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
-    }
+        public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
+        {
+            _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
 
-    public override void WithSuccess(string userMessage, string logExtra = null)
-    {
-      _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}");
-      Response = new ObjectResult(new SuccessMessage(userMessage));
-    }
+            Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
+        }
 
-    protected override void CreateValidationErrorResponse(string logExtra)
-    {
-      var logParams = new List<string>()
+        public override void WithSuccess(string userMessage, string logExtra = null)
+        {
+            _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}");
+            Response = new ObjectResult(new SuccessMessage(userMessage));
+        }
+
+        protected override void CreateValidationErrorResponse(string logExtra)
+        {
+            var logParams = new List<string>()
       {
         logExtra,
         "ValidationErrors: "
       }
-      .Concat(ValidationErrors.Select(error => error.ErrorMessage))
-      .ToArray();
+            .Concat(ValidationErrors.Select(error => error.ErrorMessage))
+            .ToArray();
 
-      _logger.Warn(logParams);
+            _logger.Warn(logParams);
 
-      var set = new CountedItemSet<IValidationError>(ValidationErrors);
+            var set = new CountedItemSet<IValidationError>(ValidationErrors);
 
-      Response = new ObjectResult(set) { StatusCode = 400 };
+            Response = new ObjectResult(set) { StatusCode = 400 };
+        }
     }
-  }
 }

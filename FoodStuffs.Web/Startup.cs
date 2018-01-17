@@ -11,47 +11,47 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodStuffs.Web
 {
-  public class Startup
-  {
-    private readonly IConfiguration _configuration;
-
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
-      _configuration = configuration;
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsEnvironment("Production"))
+            {
+                app.UseExceptionHandler("/Error");
+            }
+            else
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseStaticFiles();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("default", "{controller=Home}/{action=Index}");
+            });
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            services.AddMvc();
+            services.AddSingleton(_configuration);
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
+            services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
+            services.AddTransient<IDateTimeService, NowDateTimeService>();
+            services.AddTransient<HttpActionResultResponder>();
+        }
     }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-    {
-      if (env.IsEnvironment("Production"))
-      {
-        app.UseExceptionHandler("/Error");
-      }
-      else
-      {
-        app.UseDeveloperExceptionPage();
-      }
-
-      app.UseStaticFiles();
-
-      app.UseMvc(routes =>
-      {
-        routes.MapRoute("default", "{controller=Home}/{action=Index}");
-      });
-    }
-
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-      // Add framework services.
-      services.AddMvc();
-      services.AddSingleton(_configuration);
-
-      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
-      services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
-      services.AddTransient<IDateTimeService, NowDateTimeService>();
-      services.AddTransient<HttpActionResultResponder>();
-    }
-  }
 }

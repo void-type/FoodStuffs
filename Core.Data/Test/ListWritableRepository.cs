@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Core.Model.Services.Data;
+﻿using Core.Model.Services.Data;
+using System.Collections.Generic;
 
 namespace Core.Data.Test
 {

@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Core.Model.Services.Data;
+﻿using Core.Model.Services.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Core.Data.EntityFramework
 {
