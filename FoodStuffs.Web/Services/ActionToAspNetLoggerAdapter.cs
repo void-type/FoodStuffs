@@ -1,4 +1,5 @@
 using Core.Model.Services.Logging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,12 @@ namespace FoodStuffs.Web.Services
 {
   public class ActionToAspNetLoggerAdapter : ILoggingService
   {
-    public ActionToAspNetLoggerAdapter(ILoggerFactory loggerFactory)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ILogger _logger;
+
+    public ActionToAspNetLoggerAdapter(ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
     {
+      _httpContextAccessor = httpContextAccessor;
       _logger = loggerFactory.CreateLogger("Application");
     }
 
@@ -68,8 +73,6 @@ namespace FoodStuffs.Web.Services
       _logger.LogWarning(MakeLogString(messages));
     }
 
-    private readonly ILogger _logger;
-
     private static IEnumerable<string> MakeExceptionMessage(Exception ex)
     {
       if (ex == null)
@@ -88,9 +91,13 @@ namespace FoodStuffs.Web.Services
       return exceptionMessages;
     }
 
-    private static string MakeLogString(params string[] messages)
+    private string MakeLogString(params string[] messages)
     {
-      return string.Join(" ", messages.Where(message => !string.IsNullOrWhiteSpace(message)));
+      var request = _httpContextAccessor.HttpContext.Request;
+
+      var payload = string.Join(" ", messages.Where(message => !string.IsNullOrWhiteSpace(message)));
+
+      return $"{request.Method.PadRight(8)} {request.Path.Value.PadRight(40)} {payload}";
     }
   }
 }

@@ -5,6 +5,7 @@ using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,10 +47,8 @@ namespace FoodStuffs.Web
       services.AddMvc();
       services.AddSingleton(_configuration);
 
-      // Choose a db implementation
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
       services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
-
-      // Add other dependencies
       services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
       services.AddTransient<IDateTimeService, NowDateTimeService>();
       services.AddTransient<HttpActionResultResponder>();
