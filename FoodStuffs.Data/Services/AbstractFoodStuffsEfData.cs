@@ -3,6 +3,7 @@ using FoodStuffs.Data.CustomRepositories;
 using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using System;
 
 namespace FoodStuffs.Data.Services
 {
@@ -34,7 +35,16 @@ namespace FoodStuffs.Data.Services
 
         public void Dispose()
         {
-            _context?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context?.Dispose();
+            }
         }
     }
 }

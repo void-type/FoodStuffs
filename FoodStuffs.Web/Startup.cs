@@ -48,7 +48,6 @@ namespace FoodStuffs.Web
 
       // Choose a db implementation
       services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
-      //services.AddTransient<IFoodStuffsData, FoodStuffsEfMemoryData>();
 
       // Add other dependencies
       services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
