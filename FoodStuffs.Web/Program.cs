@@ -25,6 +25,7 @@ namespace FoodStuffs.Web
       Log.Logger = new LoggerConfiguration()
           .MinimumLevel.Debug()
           .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+          .MinimumLevel.Override("System", LogEventLevel.Warning)
           .Enrich.FromLogContext()
           .WriteTo.File("App_Data/Logs/log.txt", rollingInterval: RollingInterval.Day)
           .CreateLogger();
