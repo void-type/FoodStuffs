@@ -27,5 +27,27 @@ export default {
 
   setIsError(state, status) {
     state.isError = status || true;
+  },
+
+  addCategoryToCurrentRecipe(state, newCategoryName) {
+    const categories = state.currentRecipe.categories;
+    const trimmedName = newCategoryName.trim();
+    const categoryDoesNotExist = categories.indexOf(trimmedName) < 0;
+
+
+    if (categoryDoesNotExist && trimmedName !== "") {
+      categories.push(trimmedName);
+    }
+  },
+
+  removeCategoryFromCurrentRecipe(state, categoryToRemove) {
+    const categories = state.currentRecipe.categories;
+    const index = categories.indexOf(categoryToRemove);
+
+    if (index > -1) {
+      categories.splice(index, 1);
+    }
   }
+
+
 }

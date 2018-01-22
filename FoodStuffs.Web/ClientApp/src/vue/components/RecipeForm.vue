@@ -1,5 +1,5 @@
 <template>
-    <form v-if="currentRecipe !== undefined">
+    <form v-on:keyup.ctrl.enter="saveClick(currentRecipe)" >
         <h1>Edit Recipe</h1>
         <div class="form-group">
             <label title="Name">Name</label>
@@ -11,7 +11,7 @@
         </div>
         <div class="form-group">
             <label title="Directions">Directions</label>
-            <textarea name="stuff" v-model="currentRecipe.directions"></textarea>
+            <textarea name="directions" v-model="currentRecipe.directions"></textarea>
         </div>
         <div class="form-group">
             <label title="Prep Time (minutes)">Prep Time (minutes)</label>
@@ -23,9 +23,7 @@
         </div>
         <div class="form-group">
             <label title="Categories">Categories</label>
-            <div>
-                <span v-for="category in currentRecipe.categories" v-bind:key="category">{{category}}</span>
-            </div>
+            <CategoryEditor :categories="currentRecipe.categories"></CategoryEditor>
         </div>
         <div class="form-group">
             <label></label>
@@ -44,6 +42,7 @@
 
 <script>
     import { mapActions, mapMutations } from "vuex"
+    import CategoryEditor from "./CategoryEditor"
 
     export default {
         computed:
@@ -59,6 +58,10 @@
                 deleteClick: "deleteRecipe",
                 cancelClick: "selectNewRecipe",
             })
+        },
+        components:
+        {
+            CategoryEditor
         }
     }
 </script>

@@ -1,0 +1,35 @@
+﻿@import "../variables";
+@import "../inputs";
+
+div {
+    display: flex;
+    flex-flow: wrap;
+
+    input[type="text"] {
+        width: 15em;
+    }
+
+    & > * {
+        margin-bottom: .2em;
+
+        & :not(:last-child) {
+            margin-right: .2em;
+        }
+    }
+
+    .tag {
+        background-color: lightgray;
+        box-sizing: border-box;
+        padding: .3em .6em;
+        border: $border;
+    }
+
+    .tag-remove-button:after {
+        content: "\2716";
+    }
+
+    .tag-remove-button:hover:after {
+        cursor: pointer;
+        color: $color-error;
+    }
+}

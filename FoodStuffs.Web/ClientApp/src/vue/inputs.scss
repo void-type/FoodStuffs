@@ -1,5 +1,64 @@
 @import 'variables';
 
+form {
+    flex-grow: 1;
+
+    h1 {
+        margin-top: 0;
+    }
+
+    .form-group {
+        margin-bottom: 2em;
+        display: flex;
+
+        label {
+            width: 8em;
+            min-width: 8em;
+            margin-right: .5em;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: .5em;
+            font-weight: bold;
+            min-height: 1em;
+        }
+
+        button {
+            &.pull-right {
+                margin-left: auto;
+            }
+
+            &.error {
+                background: $color-error-background;
+            }
+
+            &:not(:last-child) {
+                margin-right: .5em;
+            }
+        }
+
+        input [type="password"], input[type="number"], input[type="text"], select, textarea {
+            flex-grow: 1;
+            width: auto;
+        }
+    }
+}
+
+@media #{$medium-screen} {
+    form {
+        h1 {
+            display: none;
+        }
+
+        .form-group {
+            label {
+                width: 4em;
+            }
+        }
+    }
+}
+
 input[type="password"], input[type="number"], input[type="text"], select, textarea {
     box-sizing: border-box;
     padding: .3em .4em;
