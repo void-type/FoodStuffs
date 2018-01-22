@@ -1,27 +1,27 @@
 <template>
-    <form v-on:keyup.ctrl.enter="saveClick(currentRecipe)" >
+    <form v-on:keyup.ctrl.enter="saveClick(currentRecipe)">
         <h1>Edit Recipe</h1>
-        <div class="form-group">
+        <div class="form-group" v-bind:class="{error: errorFields.indexOf('Name') > -1}">
             <label title="Name">Name</label>
             <input type="text" name="name" v-model="currentRecipe.name" />
         </div>
-        <div class="form-group">
+        <div class="form-group" v-bind:class="{error: errorFields.indexOf('Ingredients') > -1}">
             <label title="Ingredients">Ingredients</label>
             <textarea name="ingredients" v-model="currentRecipe.ingredients"></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group" v-bind:class="{error: errorFields.indexOf('Directions') > -1}">
             <label title="Directions">Directions</label>
             <textarea name="directions" v-model="currentRecipe.directions"></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group" v-bind:class="{error: errorFields.indexOf('PrepTimeMinutes') > -1}">
             <label title="Prep Time (minutes)">Prep Time (minutes)</label>
             <input type="number" name="prepTimeMinutes" v-model="currentRecipe.prepTimeMinutes" />
         </div>
-        <div class="form-group">
+        <div class="form-group" v-bind:class="{error: errorFields.indexOf('CookTimeMinutes') > -1}">
             <label title="Cook Time (minutes)">Cook Time (minutes)</label>
             <input type="number" name="cookTimeMinutes" v-model="currentRecipe.cookTimeMinutes" />
         </div>
-        <div class="form-group">
+        <div class="form-group" v-bind:class="{error: errorFields.indexOf('Categories') > -1}">
             <label title="Categories">Categories</label>
             <CategoryEditor :categories="currentRecipe.categories"></CategoryEditor>
         </div>
@@ -49,6 +49,9 @@
         {
             currentRecipe() {
                 return this.$store.state.currentRecipe;
+            },
+            errorFields() {
+                return this.$store.state.fieldsInError;
             }
         },
         methods:

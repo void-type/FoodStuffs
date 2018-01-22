@@ -11,6 +11,16 @@ form {
         margin-bottom: 2em;
         display: flex;
 
+        &.error {
+            label {
+                color: $color-error;
+            }
+
+            input [type="password"], input[type="number"], input[type="text"], select, textarea {
+                border-color: $color-error;
+            }
+        }
+
         label {
             width: 8em;
             min-width: 8em;
