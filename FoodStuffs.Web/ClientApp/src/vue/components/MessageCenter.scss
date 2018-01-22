@@ -10,8 +10,8 @@ ul {
     box-shadow: $shadow;
 }
 
-ul.error {
-    background-color: $color-error-background;
+ul.danger {
+    background-color: $color-danger-background;
 }
 
 ul > li {

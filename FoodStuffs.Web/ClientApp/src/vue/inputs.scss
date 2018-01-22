@@ -11,13 +11,13 @@ form {
         margin-bottom: 2em;
         display: flex;
 
-        &.error {
+        &.danger {
             label {
-                color: $color-error;
+                color: $color-danger;
             }
 
             input [type="password"], input[type="number"], input[type="text"], select, textarea {
-                border-color: $color-error;
+                border-color: $color-danger;
             }
         }
 
@@ -37,10 +37,6 @@ form {
         button {
             &.pull-right {
                 margin-left: auto;
-            }
-
-            &.error {
-                background: $color-error-background;
             }
 
             &:not(:last-child) {
@@ -73,6 +69,7 @@ input[type="password"], input[type="number"], input[type="text"], select, textar
     box-sizing: border-box;
     padding: .3em .4em;
     border: $border;
+    box-shadow: $shadow;
     transition: all 0.30s ease-in-out;
     font-family: $font-family;
     font-size: 1em;
@@ -80,8 +77,8 @@ input[type="password"], input[type="number"], input[type="text"], select, textar
 
     &:focus {
         outline: none;
-        border: 2px solid $color-focus;
-        box-shadow: 0 0 6px $color-primary;
+        border-color: $color-focus;
+        box-shadow: $input-focus;
     }
 }
 
@@ -104,6 +101,19 @@ input[type="button"], input[type="submit"], button {
         background-color: $color-secondary-dark;
         box-shadow: $shadow-collapse;
         top: 4px;
+    }
+
+    &.danger {
+        background: $color-danger-background;
+
+        &:focus {
+            outline: none;
+            border-color: $color-danger;
+        }
+
+        &:active {
+            background-color: $color-danger-background-dark;
+        }
     }
 }
 

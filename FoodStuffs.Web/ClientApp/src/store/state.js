@@ -5,5 +5,6 @@ export default {
   recipes: [],
   fieldsInError: [],
   currentRecipe: new Recipe(),
-  isError: false
+  isError: false,
+  recentRecipes: []
 }

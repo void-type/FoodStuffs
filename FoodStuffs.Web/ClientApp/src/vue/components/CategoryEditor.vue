@@ -1,9 +1,10 @@
 ﻿<template>
     <div>
-        <input type="text" name="newCategoryName" v-model="newCategoryName"/><button v-on:keyup.tab="addCategory()" v-on:click.prevent="addCategory()">Add</button>
+        <input type="text" v-bind:id="name" v-bind:name="name" v-model="newCategoryName" /><button v-on:keyup.tab="addCategory()" v-on:click.prevent="addCategory()">Add</button>
         <span class="tag" v-for="category in categories" v-bind:key="category">
             {{category}} &nbsp;
             <span class="tag-remove-button" v-on:click="removeCategory(category)">
+                &#x2716
             </span>
         </span>
     </div>
@@ -13,7 +14,7 @@
     import { mapMutations } from "vuex"
 
     export default {
-        props: ["categories"],
+        props: ["name", "categories"],
         data: function () {
             return {
                 newCategoryName: ""

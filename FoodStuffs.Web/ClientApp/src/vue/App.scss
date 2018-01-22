@@ -178,6 +178,10 @@ nav {
 @media #{$medium-screen} {
     main > section {
         flex-direction: column;
+
+        & > *:not(:first-child) {
+            margin-left: 0;
+        }
     }
 }
 

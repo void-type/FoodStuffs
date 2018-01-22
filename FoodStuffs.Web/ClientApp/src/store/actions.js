@@ -61,6 +61,7 @@ export default {
     }
   },
 
+  // complex mutations
   selectRecipe(context, recipe) {
     context.commit("clearErrors");
     context.commit("selectRecipe", recipe);

@@ -6,7 +6,21 @@ export default {
   },
 
   selectRecipe(state, recipe) {
-    state.currentRecipe = recipe;
+    const recipeIsRecent = state.recentRecipes.indexOf(state.currentRecipe);
+
+    if (recipeIsRecent > -1) {
+      state.recentRecipes.splice(recipeIsRecent, 1);
+    }
+
+    if (state.currentRecipe.id > 0) {
+      state.recentRecipes.unshift(state.currentRecipe);
+    }
+
+    if (state.recentRecipes.length > 3) {
+      state.recentRecipes.pop();
+    }
+
+      state.currentRecipe = recipe;
   },
 
   setRecipesList(state, recipes) {

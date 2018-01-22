@@ -18,18 +18,15 @@ div {
     }
 
     .tag {
-        background-color: lightgray;
+        background-color: $color-neutral-aux;
         box-sizing: border-box;
         padding: .3em .6em;
         border: $border;
+        box-shadow: $shadow;
     }
 
-    .tag-remove-button:after {
-        content: "\2716";
-    }
-
-    .tag-remove-button:hover:after {
+    .tag-remove-button:hover {
         cursor: pointer;
-        color: $color-error;
+        color: $color-danger;
     }
 }
