@@ -3,9 +3,9 @@ using FoodStuffs.Model.ViewModels;
 
 namespace FoodStuffs.Model.Validation
 {
-    public class RecipeValidator : AbstractSimpleValidator<ICreateRecipeViewModel>
+    public class RecipeValidator : AbstractSimpleValidator<IRecipeViewModel>
     {
-        protected override void SetRules(ICreateRecipeViewModel entity)
+        protected override void SetRules(IRecipeViewModel entity)
         {
             Valid("Name", "Please enter a name.")
                 .When(() => !string.IsNullOrWhiteSpace(entity.Name));

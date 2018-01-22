@@ -42,7 +42,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             CleanupCategories(savedRecipe);
 
-            AddCategoriesAndCategoryRecipes(savedRecipe);
+            AddCategoriesAndCategoryRecipes(savedRecipe.Id);
             _data.SaveChanges();
 
             respond.WithSuccess("Recipe saved.", $"RecipeId: {_viewModel.Id}");
@@ -66,7 +66,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
         }
 
-        private static IEnumerable<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe, RecipeViewModel viewModel)
+        private static IEnumerable<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe, IRecipeViewModel viewModel)
         {
             var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
 
@@ -76,17 +76,17 @@ namespace FoodStuffs.Model.Actions.Recipes
             return unusedCategoryRecipes;
         }
 
-        private void AddCategoriesAndCategoryRecipes(IRecipe recipe)
+        private void AddCategoriesAndCategoryRecipes(int recipeId)
         {
-            foreach (var viewModelCategory in _viewModel.Categories)
+            foreach (var viewModelCategoryName in _viewModel.Categories)
             {
-                var existingCategory = _data.Categories.Stored.GetByName(viewModelCategory) ?? CreateCategory(viewModelCategory);
+                var category = _data.Categories.Stored.GetByName(viewModelCategoryName) ?? CreateCategory(viewModelCategoryName);
 
-                var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipe.Id, existingCategory.Id);
+                var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipeId, category.Id);
 
                 if (existingCategoryRecipe == null)
                 {
-                    CreateCategoryRecipe(recipe, existingCategory);
+                    CreateCategoryRecipe(recipeId, category);
                 }
             }
         }
@@ -108,10 +108,10 @@ namespace FoodStuffs.Model.Actions.Recipes
             return existingCategory;
         }
 
-        private void CreateCategoryRecipe(IRecipe recipe, ICategory existingCategory)
+        private void CreateCategoryRecipe(int recipeId, ICategory existingCategory)
         {
             var categoryRecipe = _data.CategoryRecipes.New;
-            categoryRecipe.RecipeId = recipe.Id;
+            categoryRecipe.RecipeId = recipeId;
             categoryRecipe.CategoryId = existingCategory.Id;
             _data.CategoryRecipes.Add(categoryRecipe);
         }

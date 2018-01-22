@@ -1,6 +1,7 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
+using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
@@ -9,7 +10,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class CreateRecipe : AbstractActionStep
     {
-        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, CreateRecipeViewModel viewModel, int userId)
+        public CreateRecipe(IFoodStuffsData data, IDateTimeService now, IRecipeViewModel viewModel, int userId)
         {
             _data = data;
             _now = now;
@@ -42,26 +43,37 @@ namespace FoodStuffs.Model.Actions.Recipes
         private readonly IFoodStuffsData _data;
         private readonly IDateTimeService _now;
         private readonly int _userId;
-        private readonly CreateRecipeViewModel _viewModel;
+        private readonly IRecipeViewModel _viewModel;
 
         private void AddCategoriesAndCategoryRecipes(int recipeId)
         {
-            foreach (var categoryName in _viewModel.Categories)
+            foreach (var viewModelCategoryName in _viewModel.Categories)
             {
-                var category = _data.Categories.Stored.GetByName(categoryName);
+                var category = _data.Categories.Stored.GetByName(viewModelCategoryName) ?? CreateCategory(viewModelCategoryName);
 
-                if (category == null)
+                var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipeId, category.Id);
+
+                if (existingCategoryRecipe == null)
                 {
-                    category = _data.Categories.New;
-                    category.Name = categoryName;
-                    _data.Categories.Add(category);
+                    CreateCategoryRecipe(recipeId, category);
                 }
-
-                var categoryRecipe = _data.CategoryRecipes.New;
-                categoryRecipe.RecipeId = recipeId;
-                categoryRecipe.CategoryId = category.Id;
-                _data.CategoryRecipes.Add(categoryRecipe);
             }
+        }
+
+        private ICategory CreateCategory(string viewModelCategory)
+        {
+            var existingCategory = _data.Categories.New;
+            existingCategory.Name = viewModelCategory;
+            _data.Categories.Add(existingCategory);
+            return existingCategory;
+        }
+
+        private void CreateCategoryRecipe(int recipeId, ICategory existingCategory)
+        {
+            var categoryRecipe = _data.CategoryRecipes.New;
+            categoryRecipe.RecipeId = recipeId;
+            categoryRecipe.CategoryId = existingCategory.Id;
+            _data.CategoryRecipes.Add(categoryRecipe);
         }
     }
 }

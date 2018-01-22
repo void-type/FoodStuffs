@@ -21,10 +21,10 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpPut]
-        public IActionResult Create([FromBody]CreateRecipeViewModel viewModel)
+        public IActionResult Create([FromBody]IRecipeViewModel viewModel)
         {
             new ActionChain(_responder)
-                .Execute(new ValidateViewModel<ICreateRecipeViewModel>(new RecipeValidator(), viewModel))
+                .Execute(new ValidateViewModel<IRecipeViewModel>(new RecipeValidator(), viewModel))
                 .Execute(new CreateRecipe(_data, _now, viewModel, 1));
 
             return _responder.Response;
@@ -62,7 +62,7 @@ namespace FoodStuffs.Web.Controllers.Api
         public IActionResult Update([FromBody]RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
-                .Execute(new ValidateViewModel<ICreateRecipeViewModel>(new RecipeValidator(), viewModel))
+                .Execute(new ValidateViewModel<IRecipeViewModel>(new RecipeValidator(), viewModel))
                 .Execute(new UpdateRecipe(_data, _now, viewModel, 1));
 
             return _responder.Response;
