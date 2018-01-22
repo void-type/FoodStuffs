@@ -18,13 +18,8 @@ namespace Core.Model.Validation
         }
 
         /// <summary>
-        /// The list of violations against the validation rules.
-        /// </summary>
-        private IEnumerable<IValidationError> Errors => _rules.Where(rule => !rule.IsValid)
-            .Select(rule => rule.ValidationError);
-
-        /// <summary>
-        /// The implementation will override this method to build the validtion ruleset. This will be called each time the entity is validated, thus the validator can be used on multiple entites.
+        /// The implementation will override this method to build the validtion ruleset. This will be called each time the entity is validated, thus
+        /// the validator can be used on multiple entites.
         /// </summary>
         /// <param name="validatable"></param>
         protected abstract void SetRules(TValidatable validatable);
@@ -48,5 +43,11 @@ namespace Core.Model.Validation
         /// A collection of rules used to validate the entity.
         /// </summary>
         private List<IRule> _rules;
+
+        /// <summary>
+        /// The list of violations against the validation rules.
+        /// </summary>
+        private IEnumerable<IValidationError> Errors => _rules.Where(rule => !rule.IsValid)
+            .Select(rule => rule.ValidationError);
     }
 }

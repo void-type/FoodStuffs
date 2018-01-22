@@ -9,15 +9,16 @@ namespace FoodStuffs.Data.Services
 {
     public abstract class AbstractFoodStuffsEfData : IFoodStuffsData
     {
-        private readonly FoodStuffsContext _context;
-
         public IWritableRepository<ICategory> Categories { get; }
-
         public IWritableRepository<ICategoryRecipe> CategoryRecipes { get; }
-
         public IWritableRepository<IRecipe> Recipes { get; }
-
         public IWritableRepository<IUser> Users { get; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         public void SaveChanges()
         {
@@ -33,12 +34,6 @@ namespace FoodStuffs.Data.Services
             CategoryRecipes = new CategoryRecipeRepository(context);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -46,5 +41,7 @@ namespace FoodStuffs.Data.Services
                 _context?.Dispose();
             }
         }
+
+        private readonly FoodStuffsContext _context;
     }
 }

@@ -29,8 +29,10 @@ namespace FoodStuffs.Test.Mocks
         public static IDateTimeService EarlyDateTimeService =>
                                             new DiscreteDateTimeService(new DateTime(2001, 1, 1, 11, 11, 11));
 
+        public static SimpleActionResponder GetResponder => new SimpleActionResponder();
+
         public static IDateTimeService LateDateTimeService =>
-            new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22));
+                    new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22));
 
         public static IRecipe Recipe1 => new Recipe
         {
@@ -67,8 +69,6 @@ namespace FoodStuffs.Test.Mocks
             CreatedByUserId = 1,
             ModifiedByUserId = 1
         };
-
-        public static SimpleActionResponder GetResponder => new SimpleActionResponder();
 
         public static IUser User1 => new User
         {

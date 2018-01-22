@@ -13,8 +13,6 @@ namespace FoodStuffs.Web
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
-
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -53,5 +51,7 @@ namespace FoodStuffs.Web
             services.AddTransient<IDateTimeService, NowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
         }
+
+        private readonly IConfiguration _configuration;
     }
 }

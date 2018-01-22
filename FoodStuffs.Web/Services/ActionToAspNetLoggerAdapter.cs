@@ -9,9 +9,6 @@ namespace FoodStuffs.Web.Services
 {
     public class ActionToAspNetLoggerAdapter : ILoggingService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
-
         public ActionToAspNetLoggerAdapter(ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -72,6 +69,9 @@ namespace FoodStuffs.Web.Services
         {
             _logger.LogWarning(MakeLogString(messages));
         }
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _logger;
 
         private static IEnumerable<string> MakeExceptionMessage(Exception ex)
         {

@@ -1,9 +1,9 @@
 import Recipe from "../models/recipe.js"
 
 export default {
-    messages: [],
-    recipes: [],
-    fieldsInError: [],
-    currentRecipe: new Recipe(),
-    isError: false
+  messages: [],
+  recipes: [],
+  fieldsInError: [],
+  currentRecipe: new Recipe(),
+  isError: false
 }

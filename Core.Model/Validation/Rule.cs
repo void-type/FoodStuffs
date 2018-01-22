@@ -25,7 +25,8 @@ namespace Core.Model.Validation
         }
 
         /// <summary>
-        /// Build a boolean-returning expression to invoke as a rule against the model. Multiple "when" statements can be chained together to make a more complex rule.
+        /// Build a boolean-returning expression to invoke as a rule against the model. Multiple "when" statements can be chained together to make a
+        /// more complex rule.
         /// </summary>
         /// <param name="conditionExpression"></param>
         /// <returns></returns>

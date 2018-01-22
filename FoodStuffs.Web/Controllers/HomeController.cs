@@ -7,15 +7,17 @@ namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IHostingEnvironment _environment;
-        private readonly IConfiguration _configuration;
-        private readonly ILoggingService _logger;
-
         public HomeController(IHostingEnvironment environment, IConfiguration configuration, ILoggingService logger)
         {
             _environment = environment;
             _configuration = configuration;
             _logger = logger;
+        }
+
+        [Route("/Error")]
+        public IActionResult Error()
+        {
+            return View();
         }
 
         public IActionResult Index()
@@ -28,10 +30,8 @@ namespace FoodStuffs.Web.Controllers
             return View();
         }
 
-        [Route("/Error")]
-        public IActionResult Error()
-        {
-            return View();
-        }
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _environment;
+        private readonly ILoggingService _logger;
     }
 }

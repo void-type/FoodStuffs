@@ -12,8 +12,6 @@ namespace FoodStuffs.Web.Services
 {
     public class HttpActionResultResponder : AbstractActionResponder<IActionResult>
     {
-        private readonly ILoggingService _logger;
-
         public HttpActionResultResponder(ILoggingService logger)
         {
             _logger = logger;
@@ -62,5 +60,7 @@ namespace FoodStuffs.Web.Services
 
             Response = new ObjectResult(set) { StatusCode = 400 };
         }
+
+        private readonly ILoggingService _logger;
     }
 }

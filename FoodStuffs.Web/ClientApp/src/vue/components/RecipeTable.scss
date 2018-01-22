@@ -2,34 +2,34 @@
 @import '../inputs';
 
 table {
-  width: 15em;
-  padding: 1em;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-bottom: 2em;
+    width: 15em;
+    padding: 1em;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 2em;
 
-  tr {
-    text-align: left;
-  }
+    tr {
+        text-align: left;
+    }
 
-  th, td {
-    border-bottom: $border;
-    border-top: $border;
-    padding: .5em 1em;
-  }
+    th, td {
+        border-bottom: $border;
+        border-top: $border;
+        padding: .5em 1em;
+    }
 
-  &.hover tbody tr:hover {
-    cursor: pointer;
-    background-color: $color-focus;
-  }
+    &.hover tbody tr:hover {
+        cursor: pointer;
+        background-color: $color-focus;
+    }
 }
 
 button {
-  margin-bottom: 1em;
+    margin-bottom: 1em;
 }
 
 @media #{$medium-screen} {
-  table {
-    width: 100%;
-  }
+    table {
+        width: 100%;
+    }
 }

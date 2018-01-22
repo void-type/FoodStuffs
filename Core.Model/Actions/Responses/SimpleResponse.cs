@@ -9,10 +9,10 @@ namespace Core.Model.Actions.Responses
     /// </summary>
     public class SimpleResponse
     {
+        public readonly List<IValidationError> ValidationErrors = new List<IValidationError>();
         public object DataItem = null;
         public List<object> DataList = null;
         public ErrorMessage Error = null;
         public SuccessMessage Success = null;
-        public readonly List<IValidationError> ValidationErrors = new List<IValidationError>();
     }
 }
