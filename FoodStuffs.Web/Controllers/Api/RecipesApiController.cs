@@ -21,7 +21,7 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpPut]
-        public IActionResult Create([FromBody]IRecipeViewModel viewModel)
+        public IActionResult Create([FromBody]RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
                 .Execute(new ValidateViewModel<IRecipeViewModel>(new RecipeValidator(), viewModel))
