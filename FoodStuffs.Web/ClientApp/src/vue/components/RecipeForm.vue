@@ -13,18 +13,17 @@
             <label title="Directions" for="directions">Directions</label>
             <textarea id="directions" name="directions" v-model="currentRecipe.directions"></textarea>
         </div>
-        <div class="form-group" v-bind:class="{danger: errorFields.indexOf('PrepTimeMinutes') > -1}">
-            <label title="Prep Time Minutes" for="prepTimeMinutes">Prep Time Minutes</label>
-            <input type="number"  id="prepTimeMinutes" name="prepTimeMinutes" v-model="currentRecipe.prepTimeMinutes" />
+        <div class="form-row">
+            <div class="form-group" v-bind:class="{danger: errorFields.indexOf('PrepTimeMinutes') > -1}">
+                <label title="Prep Time Minutes" for="prepTimeMinutes">Prep Time Minutes</label>
+                <input type="number" id="prepTimeMinutes" name="prepTimeMinutes" v-model="currentRecipe.prepTimeMinutes" />
+            </div>
+            <div class="form-group" v-bind:class="{danger: errorFields.indexOf('CookTimeMinutes') > -1}">
+                <label title="Cook Time Minutes" for="cookTimeMinutes">Cook Time Minutes</label>
+                <input type="number" id="cookTimeMinutes" name="cookTimeMinutes" v-model="currentRecipe.cookTimeMinutes" />
+            </div>
         </div>
-        <div class="form-group" v-bind:class="{danger: errorFields.indexOf('CookTimeMinutes') > -1}">
-            <label title="Cook Time Minutes" for="cookTimeMinutes">Prep Time Minutes</label>
-            <input type="number" id="cookTimeMinutes" name="cookTimeMinutes" v-model="currentRecipe.cookTimeMinutes" />
-        </div>
-        <div class="form-group" v-bind:class="{danger: errorFields.indexOf('Categories') > -1}">
-            <label title="Categories" for="categories">Categories</label>
-            <CategoryEditor v-bind:name="'categories'" v-bind:categories="currentRecipe.categories"></CategoryEditor>
-        </div>
+        <CategoryEditor v-bind:fieldName="'categories'" v-bind:fieldTitle="'Categories'" v-bind:categories="currentRecipe.categories" v-bind:class="{danger: errorFields.indexOf('Categories') > -1}"></CategoryEditor>
         <div class="form-group">
             <label></label>
             <button v-on:click.prevent="saveClick(currentRecipe)">
@@ -41,7 +40,7 @@
 </template>
 
 <script>
-    import { mapActions, mapMutations } from "vuex"
+    import { mapActions } from "vuex"
     import CategoryEditor from "./CategoryEditor"
 
     export default {
@@ -57,14 +56,13 @@
         methods:
         {
             cancelClick() {
-                this.selectNewRecipe();
+                this.selectRecipe();
                 this.refresh();
             },
             ...mapActions({
                 deleteClick: "deleteRecipe",
                 refresh: "fetchRecipes",
                 saveClick: "saveRecipe",
-                selectNewRecipe: "selectNewRecipe",
             })
         },
         components:

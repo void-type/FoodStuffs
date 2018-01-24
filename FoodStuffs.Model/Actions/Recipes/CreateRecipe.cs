@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             _data.Recipes.Add(newRecipe);
 
-            AddCategoriesAndCategoryRecipes(newRecipe.Id);
+            AddCategoriesAndCategoryRecipes(newRecipe.Id, _viewModel);
 
             _data.SaveChanges();
 
@@ -45,9 +45,9 @@ namespace FoodStuffs.Model.Actions.Recipes
         private readonly int _userId;
         private readonly IRecipeViewModel _viewModel;
 
-        private void AddCategoriesAndCategoryRecipes(int recipeId)
+        private void AddCategoriesAndCategoryRecipes(int recipeId, IRecipeViewModel viewModel)
         {
-            foreach (var viewModelCategoryName in _viewModel.Categories)
+            foreach (var viewModelCategoryName in viewModel.Categories)
             {
                 var category = _data.Categories.Stored.GetByName(viewModelCategoryName) ?? CreateCategory(viewModelCategoryName);
 

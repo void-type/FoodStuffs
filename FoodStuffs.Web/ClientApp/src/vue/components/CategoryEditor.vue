@@ -1,20 +1,28 @@
 ﻿<template>
-    <div>
-        <input type="text" v-bind:id="name" v-bind:name="name" v-model="newCategoryName" /><button v-on:keyup.tab="addCategory()" v-on:click.prevent="addCategory()">Add</button>
-        <span class="tag" v-for="category in categories" v-bind:key="category">
-            {{category}} &nbsp;
-            <span class="tag-remove-button" v-on:click="removeCategory(category)">
-                &#x2716
-            </span>
-        </span>
+    <div class="form-group">
+        <label v-bind:title="fieldTitle" v-bind:for="fieldName">{{fieldTitle}}</label>
+        <div>
+            <div>
+                <input type="text" v-bind:id="fieldName" v-bind:name="fieldName" v-model="newCategoryName" />
+                <button v-on:keyup.tab="addCategory()" v-on:click.prevent="addCategory()">Add</button>
+            </div>
+            <div class="tags">
+                <span v-for="category in categories" v-bind:key="category">
+                    {{category}} &nbsp;
+                    <span v-on:click="removeCategory(category)">
+                        &#x2716
+                    </span>
+                </span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import { mapMutations } from "vuex"
+    import { mapActions } from "vuex"
 
     export default {
-        props: ["name", "categories"],
+        props: ["fieldName", "fieldTitle", "categories"],
         data: function () {
             return {
                 newCategoryName: ""
@@ -30,7 +38,7 @@
                 this.removeCategoryFromCurrentRecipe(categoryToRemove);
             },
 
-            ...mapMutations({
+            ...mapActions({
                 addCategoryToCurrentRecipe: "addCategoryToCurrentRecipe",
                 removeCategoryFromCurrentRecipe: "removeCategoryFromCurrentRecipe"
             })

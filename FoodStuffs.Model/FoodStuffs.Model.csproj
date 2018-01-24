@@ -13,4 +13,8 @@
       <HintPath>..\..\..\.nuget\packages\system.linq.queryable\4.3.0\ref\netstandard1.0\System.Linq.Queryable.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>

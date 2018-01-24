@@ -7,9 +7,17 @@ form {
         margin-top: 0;
     }
 
-    .form-group {
-        margin-bottom: 2em;
+    .form-row {
         display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .form-group {
+        margin-bottom: 1.5em;
+        margin-right: 2em;
+        display: flex;
+        flex-grow: 1;
 
         &.danger {
             label {
@@ -34,10 +42,15 @@ form {
             min-height: 1em;
         }
 
-        button {
+        input[type="button"], input[type="submit"], button {
             &.pull-right {
                 margin-left: auto;
             }
+        }
+
+
+        input [type="password"], input[type="number"], input[type="text"], select, textarea, input[type="button"], input[type="submit"], button, span {
+            margin-bottom: .5em;
 
             &:not(:last-child) {
                 margin-right: .5em;
@@ -70,7 +83,6 @@ input[type="password"], input[type="number"], input[type="text"], select, textar
     padding: .3em .4em;
     border: $border;
     box-shadow: $shadow;
-    transition: all 0.30s ease-in-out;
     font-family: $font-family;
     font-size: 1em;
     width: 25em;
