@@ -3,32 +3,41 @@ import Recipe from "../models/recipe"
 
 const defaultCallbacks = {
     onSuccess(context, data) {
-        context.dispatch("fetchRecipes");
-        context.commit("selectRecipe", new Recipe());
+        context.dispatch("fetchRecipes", data.id);
+
+        context.commit("setIsError", false);
         context.commit("setMessage", data.message);
     },
 
     onFailure(context, response) {
-        context.commit("setIsError");
+        context.commit("setIsError", true);
 
         if (response.status >= 500) {
             context.commit("setMessage", response.data.message);
         } else {
-            context.commit("setFieldsInError", response.data.items.map((item) => item.fieldName));
             context.commit("setMessages", response.data.items.map((item) => item.errorMessage));
+            context.commit("setFieldsInError", response.data.items.map((item) => item.fieldName));
         }
     }
 }
 
 export default {
-    fetchRecipes(context) {
+    fetchRecipes(context, postbackId) {
         webApi.listRecipes(
-            data => context.commit("setRecipesList", data.items),
+            function (data) {
+                context.commit("setRecipesList", data.items);
+
+                const selectedRecipe = context.state.recipes
+                    .filter(recipe => recipe.id.toString() === postbackId)[0]
+                   || new Recipe();
+
+                context.commit("selectRecipe", selectedRecipe);
+            },
             response => defaultCallbacks.onFailure(context, response));
     },
 
     saveRecipe(context, recipe) {
-        context.commit("clearErrors");
+        context.dispatch("clearErrors");
 
         if (recipe.id === undefined || recipe.id < 1) {
             webApi.createRecipe(
@@ -44,7 +53,7 @@ export default {
     },
 
     deleteRecipe(context, recipe) {
-        context.commit("clearErrors");
+        context.dispatch("clearErrors");
         if (confirm("Are you sure you want to delete this recipe?")) {
             webApi.deleteRecipe(
                 recipe,
@@ -54,13 +63,12 @@ export default {
     },
 
     selectRecipe(context, recipe) {
-        context.commit("clearErrors");
+        context.dispatch("clearErrors");
         context.commit("addCurrentRecipeToRecents");
         context.commit("selectRecipe", recipe || new Recipe());
     },
 
     addCategoryToCurrentRecipe(context, newCategoryName) {
-
         newCategoryName = newCategoryName
             .trim()
             .split(" ")
@@ -83,5 +91,11 @@ export default {
         if (index > -1) {
             context.commit("removeCategoryFromCurrentRecipe", index);
         }
+    },
+
+    clearErrors(context) {
+        context.commit("setIsError", false);
+        context.commit("setFieldsInError", []);
+        context.commit("setMessages", []);
     }
 }

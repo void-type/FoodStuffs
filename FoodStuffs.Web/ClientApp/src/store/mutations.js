@@ -1,9 +1,4 @@
 export default {
-    clearErrors(state) {
-        state.isError = false;
-        state.fieldsInError = [];
-        state.messages = [];
-    },
 
     selectRecipe(state, recipe) {
         state.currentRecipe = recipe;
@@ -26,7 +21,7 @@ export default {
     },
 
     setIsError(state, status) {
-        state.isError = status || true;
+        state.isError = status;
     },
 
     addCategoryToCurrentRecipe(state, newCategoryName) {
@@ -38,14 +33,22 @@ export default {
     },
 
     addCurrentRecipeToRecents(state) {
-        const recipeIsRecent = state.recentRecipes.indexOf(state.currentRecipe);
+        if (state.recipes.indexOf(state.currentRecipe) < 0) {
+            return;
+        }
 
-        if (recipeIsRecent > -1) {
-            state.recentRecipes.splice(recipeIsRecent, 1);
+        const recentRecipeIndex = state.recentRecipes
+            .indexOf(state.recentRecipes
+                .filter(listItem => listItem.id === state.currentRecipe.id)[0]);
+
+        if (recentRecipeIndex > -1) {
+            state.recentRecipes.splice(recentRecipeIndex, 1);
         }
 
         if (state.currentRecipe.id > 0) {
-            state.recentRecipes.unshift(state.currentRecipe);
+            const recentRecipeListItem = Object.assign({}, state.currentRecipe);
+
+            state.recentRecipes.unshift(recentRecipeListItem);
         }
 
         if (state.recentRecipes.length > 3) {
