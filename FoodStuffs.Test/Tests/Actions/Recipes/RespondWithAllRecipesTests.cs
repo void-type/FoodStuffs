@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
-                    .Execute(new RespondWithAllRecipes(data));
+                    .Execute(new RespondWithRecipes(data));
 
                 Assert.True(responder.ResponseCreated);
                 Assert.Empty(responder.Response.DataList);
@@ -38,7 +38,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new RespondWithAllRecipes(data));
+                    .Execute(new RespondWithRecipes(data));
 
                 Assert.True(responder.ResponseCreated);
                 Assert.Equal(2, responder.Response.DataList.Count);

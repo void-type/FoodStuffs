@@ -25,7 +25,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 1));
+                    .Execute(new DeleteRecipe(data, 1, 1));
 
                 Assert.True(responder.ResponseCreated);
 
@@ -81,7 +81,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 2));
+                    .Execute(new DeleteRecipe(data, 2, 1));
 
                 Assert.True(responder.ResponseCreated);
 
@@ -110,7 +110,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 2));
+                    .Execute(new DeleteRecipe(data, 2, 1));
             }
 
             Assert.True(responder.ResponseCreated);

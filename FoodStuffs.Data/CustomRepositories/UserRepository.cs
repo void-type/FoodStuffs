@@ -1,6 +1,6 @@
 ﻿using Core.Data.EntityFramework;
 using FoodStuffs.Data.Models;
-using FoodStuffs.Model.Interfaces.Domain;
+using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 

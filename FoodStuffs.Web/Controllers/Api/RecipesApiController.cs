@@ -34,7 +34,7 @@ namespace FoodStuffs.Web.Controllers.Api
         public IActionResult Delete(int id)
         {
             new ActionChain(_responder)
-                .Execute(new DeleteRecipe(_data, id));
+                .Execute(new DeleteRecipe(_data, id, 1));
 
             return _responder.Response;
         }
@@ -50,10 +50,10 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List()
+        public IActionResult List(string nameSearch = null, int? categorySearch = null)
         {
             new ActionChain(_responder)
-                .Execute(new RespondWithAllRecipes(_data));
+                .Execute(new RespondWithRecipes(_data, nameSearch, categorySearch));
 
             return _responder.Response;
         }

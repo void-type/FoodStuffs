@@ -1,7 +1,7 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Services.DateTime;
 using FoodStuffs.Data.Models;
-using FoodStuffs.Model.Interfaces.Domain;
+using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using System;
 
 namespace FoodStuffs.Test.Mocks

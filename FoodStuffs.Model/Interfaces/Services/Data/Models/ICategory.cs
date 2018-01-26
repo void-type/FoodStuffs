@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FoodStuffs.Model.Interfaces.Domain
+namespace FoodStuffs.Model.Interfaces.Services.Data.Models
 {
     public interface ICategory
     {

@@ -2,7 +2,7 @@
 using FoodStuffs.Data.Models;
 using FoodStuffs.Data.Services;
 using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Interfaces.Domain;
+using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;

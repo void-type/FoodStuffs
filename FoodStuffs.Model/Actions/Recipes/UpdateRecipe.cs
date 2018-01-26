@@ -1,9 +1,10 @@
 ﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Responses.MessageString;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
 using Core.Model.Validation;
-using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using System.Collections.Generic;
@@ -13,11 +14,11 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class UpdateRecipe : AbstractActionStep
     {
-        public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userIdId)
+        public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userId)
         {
             _data = data;
             _now = now;
-            _userId = userIdId;
+            _userId = userId;
             _viewModel = viewModel;
         }
 
@@ -48,7 +49,13 @@ namespace FoodStuffs.Model.Actions.Recipes
             AddCategoriesAndCategoryRecipes(savedRecipe.Id, _viewModel);
             _data.SaveChanges();
 
-            respond.WithSuccess("Recipe saved.", $"RecipeId: {_viewModel.Id}");
+            var response = new PostSuccessMessage
+            {
+                Id = _viewModel.Id.ToString(),
+                Message = "Recipe saved."
+            };
+
+            respond.WithData(response, $"UserId: {_userId} RecipeId: {_viewModel.Id}");
         }
 
         private readonly IFoodStuffsData _data;

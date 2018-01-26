@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Interfaces.Domain;
+﻿using FoodStuffs.Model.Interfaces.Services.Data.Models;
 
 namespace FoodStuffs.Data.Models
 {

@@ -1,8 +1,8 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using Core.Model.Validation;
-using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using FoodStuffs.Model.Queries;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +11,20 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class DeleteRecipe : AbstractActionStep
     {
-        public DeleteRecipe(IFoodStuffsData data, int id)
+        public DeleteRecipe(IFoodStuffsData data, int recipeId, int userId)
         {
             _data = data;
-            _id = id;
+            _recipeId = recipeId;
+            _userId = userId;
         }
 
         protected override void PerformStep(IActionResponder respond)
         {
-            var recipe = _data.Recipes.Stored.GetById(_id);
+            var recipe = _data.Recipes.Stored.GetById(_recipeId);
 
             if (recipe == null)
             {
-                respond.WithValidationErrors($"RecipeId: {_id}", new ValidationError("Recipe does not exist."));
+                respond.WithValidationErrors($"RecipeId: {_recipeId}", new ValidationError("Recipe does not exist."));
                 return;
             }
 
@@ -37,11 +38,12 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             _data.SaveChanges();
 
-            respond.WithSuccess("Recipe deleted.", $"RecipeId: {_id}");
+            respond.WithSuccess("Recipe deleted.", $"UserId: {_userId} RecipeId: {_recipeId}");
         }
 
         private readonly IFoodStuffsData _data;
-        private readonly int _id;
+        private readonly int _recipeId;
+        private readonly int _userId;
 
         private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
         {

@@ -1,8 +1,9 @@
 ﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Responses.MessageString;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
-using FoodStuffs.Model.Interfaces.Domain;
 using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 
@@ -37,7 +38,13 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             _data.SaveChanges();
 
-            respond.WithSuccess("Recipe created.", $"UserId: {_userId}");
+            var response = new PostSuccessMessage
+            {
+                Id = newRecipe.Id.ToString(),
+                Message = "Recipe created."
+            };
+
+            respond.WithData(response, $"UserId: {_userId} RecipeId: {_viewModel.Id}");
         }
 
         private readonly IFoodStuffsData _data;
