@@ -41,12 +41,9 @@ namespace FoodStuffs.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: server is still running upon deployment
-
             // Add framework services.
             services.AddMvc();
             services.AddSingleton(_configuration);
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();

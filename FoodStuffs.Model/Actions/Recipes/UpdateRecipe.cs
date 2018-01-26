@@ -89,7 +89,9 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe, IEnumerable<ICategoryRecipe> unusedCategoryRecipes)
         {
-            var categories = unusedCategoryRecipes.Select(cr => cr.Category);
+            var categoryIds = unusedCategoryRecipes.Select(cr => cr.CategoryId);
+
+            var categories = _data.Categories.Stored.Where(category => categoryIds.Contains(category.Id));
 
             foreach (var category in categories)
             {
