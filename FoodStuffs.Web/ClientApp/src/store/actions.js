@@ -12,7 +12,9 @@ const defaultCallbacks = {
     onFailure(context, response) {
         context.commit("setIsError", true);
 
-        if (response.status >= 500) {
+        if (response === undefined || response === null) {
+            context.commit("setMessage", "Cannot connect to server.");
+        } else if (response.status >= 500) {
             context.commit("setMessage", response.data.message);
         } else {
             context.commit("setMessages", response.data.items.map((item) => item.errorMessage));
@@ -29,7 +31,7 @@ export default {
 
                 const selectedRecipe = context.state.recipes
                     .filter(recipe => recipe.id.toString() === postbackId)[0]
-                   || new Recipe();
+                    || new Recipe();
 
                 context.commit("selectRecipe", selectedRecipe);
             },
