@@ -1,8 +1,8 @@
 @import './variables';
 
 form {
-    flex-grow: 1;
     margin-bottom: 0;
+    width: 100%;
 
     .form-row {
         display: flex;
@@ -15,7 +15,7 @@ form {
     }
 
     .form-group {
-        display: flex;
+        display: block;
         flex-grow: 1;
 
         &.danger {
@@ -28,62 +28,51 @@ form {
             }
         }
 
+        &:not(:last-child) {
+            margin-right: 2em;
+        }
+
         label {
-            width: 8em;
-            min-width: 8em;
-            margin-right: .5em;
-            text-align: right;
+            display: block;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            padding: .5em;
             font-weight: bold;
-            min-height: 1em;
+            margin-bottom: .2em;
         }
 
         input[type="button"], input[type="submit"], button {
             &.pull-right {
-                margin-left: auto;
+                align-self: flex-end;
             }
         }
 
-        input [type="password"], input[type="number"], input[type="text"], select, textarea, input[type="button"], input[type="submit"], button, span {
+        input[type="password"], input[type="number"], input[type="text"], select, textarea, input[type="button"], input[type="submit"], button, span {
             margin-bottom: .5em;
 
             &:not(:last-child) {
                 margin-right: .5em;
             }
         }
-
-        input [type="password"], input[type="number"], input[type="text"], select, textarea {
-            flex-grow: 1;
-            width: auto;
-        }
     }
 }
 
 @media #{$medium-screen} {
-    form {
-        h1 {
-            display: none;
-        }
-
-        .form-group {
-            label {
-                width: 4em;
-            }
-        }
+    .form-group:not(:last-child) {
+        margin-right: 0 !important;
+    }
+    .form-row {
+        flex-direction: column;
     }
 }
 
 input[type="password"], input[type="number"], input[type="text"], select, textarea {
-    box-sizing: border-box;
     padding: .3em .4em;
     border: $border;
     box-shadow: $shadow;
     font-family: $font-family;
     font-size: 1em;
-    width: 25em;
+    width: 100%;
 
     &:focus {
         outline: none;

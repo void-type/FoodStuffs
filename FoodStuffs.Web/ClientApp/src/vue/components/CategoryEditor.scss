@@ -3,11 +3,10 @@
 
 .form-group > div {
     display: inline-block;
-    flex-grow: 1;
+    width: 100%;
 
     & > div {
         display: flex;
-        flex-grow: 1;
     }
 
     .tags {
