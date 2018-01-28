@@ -32,18 +32,15 @@
             <CategoryEditor v-bind:fieldName="'categories'" v-bind:fieldTitle="'Categories'" v-bind:categories="currentRecipe.categories" v-bind:class="{danger: errorFields.indexOf('Categories') > -1}"></CategoryEditor>
         </div>
         <div class="form-row">
-            <div class="form-group">
-                <label></label>
-                <button v-on:click.prevent="saveClick(currentRecipe)">
-                    Save
-                </button>
-                <button v-on:click.prevent="cancelClick()">
-                    Cancel
-                </button>
-                <button class="pull-right danger" v-on:click.prevent="deleteClick(currentRecipe)">
-                    Delete
-                </button>
-            </div>
+            <button v-on:click.prevent="saveClick(currentRecipe)">
+                Save
+            </button>
+            <button v-on:click.prevent="cancelClick()">
+                Cancel
+            </button>
+            <button class="pull-right danger" v-on:click.prevent="deleteClick(currentRecipe)">
+                Delete
+            </button>
         </div>
     </form>
 </template>
