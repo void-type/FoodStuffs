@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <button v-on:click="selectRecipe()">New</button>
+            <button v-on:click="newRecipe()">New</button>
             <table class="hover">
                 <tbody>
                     <tr v-for="recipe in recipes" v-bind:key="recipe.id" v-on:click="selectRecipe(recipe)">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import { mapActions } from "vuex"
+    import { mapActions } from "vuex";
 
     export default {
         computed:
@@ -39,16 +39,16 @@
         },
         methods: {
             ...mapActions({
-                refresh: "fetchRecipes",
                 selectRecipe: "selectRecipe"
-            })
-        },
-        beforeMount() {
-            this.refresh();
+            }),
+            newRecipe() {
+                this.selectRecipe();
+                this.$router.push({ name: "edit" });
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    @import 'RecipeTable';
+    @import "./RecipeTable";
 </style>

@@ -1,5 +1,5 @@
-@import '../variables';
-@import '../inputs';
+@import "../variables";
+@import "../inputs";
 
 table {
     width: 15em;
@@ -25,7 +25,7 @@ table {
 }
 
 button {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 }
 
 @media #{$medium-screen} {

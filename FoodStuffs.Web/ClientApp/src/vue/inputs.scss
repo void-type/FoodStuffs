@@ -1,21 +1,20 @@
-@import 'variables';
+@import './variables';
 
 form {
     flex-grow: 1;
-
-    h1 {
-        margin-top: 0;
-    }
+    margin-bottom: 0;
 
     .form-row {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
+
+        &:not(:last-child) {
+            margin-bottom: 1.5em;
+        }
     }
 
     .form-group {
-        margin-bottom: 1.5em;
-        margin-right: 2em;
         display: flex;
         flex-grow: 1;
 
@@ -40,6 +39,10 @@ form {
             padding: .5em;
             font-weight: bold;
             min-height: 1em;
+
+            &:focus {
+                color: $color-primary;
+            }
         }
 
         input[type="button"], input[type="submit"], button {
@@ -47,7 +50,6 @@ form {
                 margin-left: auto;
             }
         }
-
 
         input [type="password"], input[type="number"], input[type="text"], select, textarea, input[type="button"], input[type="submit"], button, span {
             margin-bottom: .5em;

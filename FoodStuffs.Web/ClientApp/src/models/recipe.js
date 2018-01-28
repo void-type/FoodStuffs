@@ -6,10 +6,10 @@ export default class {
         this.ingredients = "";
         this.name = "";
         this.prepTimeMinutes = null;
-        this.createdByUserid = 0;
+        this.createdBy = "";
         this.createdOn = new Date();
         this.id = 0;
-        this.modifiedByUserId = 0;
+        this.modifiedBy = "";
         this.modifiedOn = new Date();
     }
 }

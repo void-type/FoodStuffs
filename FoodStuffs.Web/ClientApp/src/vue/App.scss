@@ -1,19 +1,22 @@
-@import './variables';
+@import "./variables";
 
 html {
     height: 100%;
 }
 
-body {
+body, pre {
     font-family: $font-family;
     color: $contrast2;
-    background-color: $color-background;
     margin: 0;
 }
 
+main, footer {
+    background-color: $color-background;
+}
+
 header, main {
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
 }
 
 header > .topbar, nav > div, main, footer > div {
@@ -23,16 +26,21 @@ header > .topbar, nav > div, main, footer > div {
 
 main > section {
     display: flex;
-    margin-top: 1.5em;
+    padding-top: 2em;
+    padding-bottom: 2em;
 
-    & > *:not(:first-child) {
-        margin-left: 2em;
+    & > *:not(:last-child) {
+        margin-right: 2em;
     }
 }
 
 footer {
     border-top: $border;
     padding: 1em 0em;
+}
+
+h1 {
+    font-size: 2em;
 }
 
 h1, h2, h3, h4 {
@@ -52,7 +60,6 @@ a, a:link {
 header {
     background-color: $color-primary-dark;
     box-shadow: $shadow;
-    z-index: 1000;
     position: relative;
 
     .topbar {
@@ -169,6 +176,30 @@ nav {
     text-align: left;
 }
 
+@media screen {
+    body {
+        background-color: $color-background;
+    }
+
+    #print-only, .print-only {
+        display: none;
+    }
+}
+
+@media print {
+    #no-print, .no-print {
+        display: none;
+    }
+
+    div {
+        background-color: $contrast1;
+    }
+
+    p, pre, h1, h2, h3, h4 {
+        color: $contrast2;
+    }
+}
+
 @media #{$extra-large-screen} {
     body {
         font-size: 130%;
@@ -179,9 +210,14 @@ nav {
     main > section {
         flex-direction: column;
 
-        & > *:not(:first-child) {
-            margin-left: 0;
+        & > *:not(:last-child) {
+            margin-right: 0;
         }
+    }
+
+    header, main {
+        padding-left: 1em;
+        padding-right: 1em;
     }
 }
 

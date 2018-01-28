@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import { mapActions } from "vuex"
+    import { mapActions } from "vuex";
 
     export default {
         props: ["fieldName", "fieldTitle", "categories"],
@@ -47,5 +47,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import 'CategoryEditor';
+    @import "./CategoryEditor";
 </style>

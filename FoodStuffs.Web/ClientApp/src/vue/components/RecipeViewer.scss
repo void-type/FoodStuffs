@@ -1,0 +1,16 @@
+﻿@import "../variables";
+@import "../inputs";
+
+.category:not(:last-child):after {
+    content: ", ";
+}
+
+hr {
+    margin-top: 2em;
+}
+
+@media screen {
+    h1 {
+        margin-top: 0;
+    }
+}

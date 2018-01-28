@@ -6,7 +6,6 @@ using FoodStuffs.Model.Interfaces.Services.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -106,10 +105,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     {
                         "Category3","Category4"
                     },
-                    ModifiedOn = new DateTime(2222, 12, 12),
-                    CreatedOn = new DateTime(1903, 12, 12),
-                    ModifiedByUserId = 52,
-                    CreatedByUserId = 53
                 };
 
                 new ActionChain(responder)

@@ -4,7 +4,6 @@ import Recipe from "../models/recipe"
 const defaultCallbacks = {
     onSuccess(context, data) {
         context.dispatch("fetchRecipes", data.id);
-
         context.commit("setIsError", false);
         context.commit("setMessage", data.message);
     },
@@ -29,8 +28,10 @@ export default {
             function (data) {
                 context.commit("setRecipesList", data.items);
 
+                const id = (postbackId) ? postbackId.toString() : null;
+
                 const selectedRecipe = context.state.recipes
-                    .filter(recipe => recipe.id.toString() === postbackId)[0]
+                    .filter(recipe => recipe.id.toString() === id)[0]
                     || new Recipe();
 
                 context.commit("selectRecipe", selectedRecipe);

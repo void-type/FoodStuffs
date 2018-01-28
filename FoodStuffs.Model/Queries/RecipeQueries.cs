@@ -24,7 +24,7 @@ namespace FoodStuffs.Model.Queries
             return recipes.Where(recipe => recipe.Name.ToUpper().Contains(nameSearch.ToUpper().Trim()));
         }
 
-        public static IEnumerable<RecipeViewModel> ToViewModel(this IEnumerable<IRecipe> recipes)
+        public static IEnumerable<IRecipeViewModel> ToViewModel(this IEnumerable<IRecipe> recipes)
         {
             return recipes.Select(r => new RecipeViewModel
             {
@@ -34,9 +34,9 @@ namespace FoodStuffs.Model.Queries
                 Ingredients = r.Ingredients,
                 CookTimeMinutes = r.CookTimeMinutes,
                 PrepTimeMinutes = r.PrepTimeMinutes,
-                CreatedByUserId = r.CreatedByUserId,
+                CreatedBy = $"{r.CreatedByUser.FirstName} {r.CreatedByUser.LastName}",
                 CreatedOn = r.CreatedOn,
-                ModifiedByUserId = r.ModifiedByUserId,
+                ModifiedBy = $"{r.ModifiedByUser.FirstName} {r.ModifiedByUser.LastName}",
                 ModifiedOn = r.ModifiedOn,
                 Categories = r.CategoryRecipe.Select(cr => cr.Category.Name)
             });
