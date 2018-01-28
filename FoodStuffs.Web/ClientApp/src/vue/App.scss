@@ -58,6 +58,8 @@ a, a:link {
 }
 
 header {
+    position: relative;
+    z-index: 2000;
     background-color: $color-primary-dark;
     box-shadow: $shadow;
     position: relative;

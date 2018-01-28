@@ -39,10 +39,6 @@ form {
             padding: .5em;
             font-weight: bold;
             min-height: 1em;
-
-            &:focus {
-                color: $color-primary;
-            }
         }
 
         input[type="button"], input[type="submit"], button {

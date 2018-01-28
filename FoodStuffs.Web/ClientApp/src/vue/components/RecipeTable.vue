@@ -11,7 +11,7 @@
             </table>
         </div>
         <div v-if="recentRecipes.length > 0">
-            <h3>Recent</h3>
+            <h3 class="text-center">Recent</h3>
             <table class="hover">
                 <tbody>
                     <tr v-for="recipe in recentRecipes" v-bind:key="recipe.id" v-on:click="selectRecipe(recipe)">
@@ -33,7 +33,6 @@
                 return this.$store.state.recipes;
             },
             recentRecipes() {
-                // TODO: Recents should store by Id. Use PostFeedback to reselect recipe.
                 return this.$store.state.recentRecipes;
             }
         },

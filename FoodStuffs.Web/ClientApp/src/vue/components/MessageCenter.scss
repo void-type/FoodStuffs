@@ -1,13 +1,14 @@
 @import "../variables";
 
 .messages {
-    position: absolute;
+    position: relative;
     z-index: 1000;
     margin: 0;
     padding: 0;
     width: 100%;
     background-color: $color-secondary;
     box-shadow: $shadow;
+    cursor: pointer;
 
     &.danger {
         background-color: $color-danger-background;
@@ -22,24 +23,6 @@
         & > li {
             margin: 0 auto;
             max-width: ($contained-width * 0.80);
-        }
-    }
-
-    & > div {
-        position: absolute;
-        right: 1em;
-        top: .5em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 1.2em;
-        width: 1.2em;
-        cursor: pointer;
-        background-color: $color-neutral-aux;
-        border: $border;
-
-        &:hover span {
-            color: $color-danger;
         }
     }
 }
