@@ -1,5 +1,6 @@
 <template>
     <form v-on:keyup.ctrl.enter="saveClick(currentRecipe)">
+        <h1>Edit Recipe</h1>
         <div class="form-row">
             <div class="form-group" v-bind:class="{danger: errorFields.indexOf('Name') > -1}">
                 <input type="text" id="name" name="name" v-model="currentRecipe.name" />

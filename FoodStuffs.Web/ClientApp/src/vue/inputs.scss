@@ -4,6 +4,10 @@ form {
     margin-bottom: 0;
     width: 100%;
 
+    h1 {
+        margin-top: 0;
+    }
+
     .form-row {
         display: flex;
         flex-wrap: wrap;
@@ -13,7 +17,6 @@ form {
         }
 
         input[type="button"], input[type="submit"], button {
-
             &.pull-right {
                 margin-left: auto;
             }
