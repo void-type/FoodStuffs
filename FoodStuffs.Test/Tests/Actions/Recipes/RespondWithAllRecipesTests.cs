@@ -15,6 +15,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
             using (var data = new FoodStuffsEfMemoryData())
             {
+                data.Users.Add(MockFactory.User1);
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipes(data));
 
@@ -31,7 +32,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             using (var data = new FoodStuffsEfMemoryData())
             {
                 data.Users.Add(MockFactory.User1);
-
                 data.Recipes.Add(MockFactory.Recipe1);
                 data.Recipes.Add(MockFactory.Recipe2);
 
@@ -42,6 +42,55 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 Assert.True(responder.ResponseCreated);
                 Assert.Equal(2, responder.Response.DataList.Count);
+            }
+        }
+
+        [Theory]
+        [InlineData("recipe", 3)]
+        [InlineData("cipe", 3)]
+        [InlineData("", 3)]
+        [InlineData(null, 3)]
+        [InlineData("1", 1)]
+        public void RespondWithNameSearchRecipes(string nameSearch, int expectedFound)
+        {
+            var responder = MockFactory.GetResponder;
+
+            using (var data = new FoodStuffsEfMemoryData())
+            {
+                data.Users.Add(MockFactory.User1);
+                data.Recipes.Add(MockFactory.Recipe1);
+                data.Recipes.Add(MockFactory.Recipe2);
+                data.Recipes.Add(MockFactory.Recipe3);
+
+                data.SaveChanges();
+
+                new ActionChain(responder)
+                    .Execute(new RespondWithRecipes(data, nameSearch));
+
+                Assert.True(responder.ResponseCreated);
+                Assert.Equal(expectedFound, responder.Response.DataList.Count);
+            }
+        }
+
+        [Fact]
+        public void RespondWithPaginatedRecipes()
+        {
+            var responder = MockFactory.GetResponder;
+
+            using (var data = new FoodStuffsEfMemoryData())
+            {
+                data.Users.Add(MockFactory.User1);
+                data.Recipes.Add(MockFactory.Recipe1);
+                data.Recipes.Add(MockFactory.Recipe2);
+                data.Recipes.Add(MockFactory.Recipe3);
+
+                data.SaveChanges();
+
+                new ActionChain(responder)
+                    .Execute(new RespondWithRecipes(data, null, null, 2, 2));
+
+                Assert.True(responder.ResponseCreated);
+                Assert.Single(responder.Response.DataList);
             }
         }
     }
