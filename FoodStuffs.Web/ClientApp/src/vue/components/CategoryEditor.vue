@@ -7,7 +7,7 @@
             </div>
             <div class="tags">
                 <span v-for="category in categories" v-bind:key="category">
-                    {{category}} &nbsp;
+                    {{category}}&nbsp;&nbsp;
                     <span v-on:click="removeCategory(category)">
                         &#x2716
                     </span>
