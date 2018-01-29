@@ -1,6 +1,5 @@
 ﻿<template>
     <div class="form-group">
-        <label v-bind:title="fieldTitle" v-bind:for="fieldName">{{fieldTitle}}</label>
         <div>
             <div>
                 <input type="text" v-bind:id="fieldName" v-bind:name="fieldName" v-model="newCategoryName" />
@@ -15,6 +14,7 @@
                 </span>
             </div>
         </div>
+        <label v-bind:title="fieldTitle" v-bind:for="fieldName">{{fieldTitle}}</label>
     </div>
 </template>
 

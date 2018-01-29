@@ -49,5 +49,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./RecipeTable";
+    @import "./RecipeList";
 </style>

@@ -1,17 +1,17 @@
 <template>
     <section>
-        <RecipeTable></RecipeTable>
+        <RecipeList></RecipeList>
         <RecipeViewer></RecipeViewer>
     </section>
 </template>
 
 <script>
-    import RecipeTable from "../components/RecipeTable";
+    import RecipeList from "../components/RecipeList";
     import RecipeViewer from "../components/RecipeViewer";
 
     export default {
         components: {
-            RecipeTable,
+            RecipeList,
             RecipeViewer
         }
     };

@@ -4,14 +4,18 @@
             <header>
                 <div class="topbar">
                     <div>
-                        <a class="logo" href="#">
+                        <router-link v-bind:to="{name: 'home'}" class="logo">
                             <img src="../assets/logo.png" alt="FoodStuffs logo" />
-                        </a>
-                        <a class="title" href="#">
-                            {{applicationName}}
-                        </a>
+                            <a class="title">{{applicationName}}</a>
+                        </router-link>
                     </div>
-                    <a href="#">Login</a>
+                    <nav>
+                        <ul>
+                            <li><router-link v-bind:to="{name: 'home'}">Home</router-link></li>
+                            <li><router-link v-bind:to="{name: 'search'}">Search</router-link></li>
+                        </ul>
+                    </nav>
+                    <router-link v-bind:to="{name: 'home'}" class="pull-right">Login</router-link>
                 </div>
             </header>
             <MessageCenter></MessageCenter>

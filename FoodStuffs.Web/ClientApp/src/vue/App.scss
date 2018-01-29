@@ -1,5 +1,7 @@
 @import "./variables";
 
+$topbar-height: 4em;
+
 html {
     height: 100%;
 }
@@ -62,12 +64,10 @@ header {
     z-index: 2000;
     background-color: $color-primary-dark;
     box-shadow: $shadow;
-    position: relative;
 
     .topbar {
         display: flex;
-        justify-content: space-between;
-        height: 4em;
+        height: $topbar-height;
 
         & > div {
             display: flex;
@@ -77,8 +77,8 @@ header {
 
         a, a-link {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            padding: 0em 1em;
             color: $color-ternary;
 
             &:hover, &:active {
@@ -86,7 +86,6 @@ header {
             }
 
             &.logo {
-                margin-right: 1em;
                 height: 100%;
 
                 img {
@@ -104,12 +103,17 @@ header {
                     color: $color-secondary;
                 }
             }
+
+            &.pull-right {
+                margin-left: auto;
+            }
         }
     }
 }
 
 nav {
     background-color: $color-primary-dark;
+    height: $topbar-height;
 
     ul {
         display: flex;
@@ -118,13 +122,11 @@ nav {
         padding: 0;
         margin: 0;
         background-color: $color-primary-dark;
-        z-index: 1000;
 
         li {
             display: block;
             position: relative;
             text-align: center;
-            min-width: 25%;
 
             &:hover > ul {
                 display: block;
@@ -132,9 +134,14 @@ nav {
             }
 
             a, a:link {
-                display: block;
-                padding: 1em .5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: $topbar-height;
+                padding: 0em 1em;
                 white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
 
                 &:link, &:visited {
                     color: $contrast1;

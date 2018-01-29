@@ -12,7 +12,9 @@
             <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}<br />
             <strong>Created On: </strong>{{currentRecipe.createdOn | dateString}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOn | dateString}}
         </p>
-        <router-link v-bind:to="{name: 'edit'}" tag="button" class="no-print">Edit</router-link>
+        <div class="button-row">
+            <router-link v-bind:to="{name: 'edit'}" tag="button" class="no-print">Edit</router-link>
+        </div>
     </div>
 </template>
 
