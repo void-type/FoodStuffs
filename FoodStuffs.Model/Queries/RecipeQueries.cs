@@ -7,16 +7,17 @@ namespace FoodStuffs.Model.Queries
 {
     public static class RecipeQueries
     {
-        public static IQueryable<IRecipe> ForCategory(this IQueryable<IRecipe> recipes, int categoryId)
-        {
-            return recipes.Where(recipe => recipe.CategoryRecipes
-                .Select(cr => cr.CategoryId)
-                .Contains(categoryId));
-        }
-
         public static IRecipe GetById(this IQueryable<IRecipe> recipes, int id)
         {
             return recipes.SingleOrDefault(r => r.Id == id);
+        }
+
+        public static IQueryable<IRecipe> SearchCategory(this IQueryable<IRecipe> recipes, string categorySearch)
+        {
+            return recipes
+                .Where(recipe => recipe.CategoryRecipes
+                    .Select(cr => cr.Category.Name)
+                    .Contains(categorySearch));
         }
 
         public static IQueryable<IRecipe> SearchNames(this IQueryable<IRecipe> recipes, string nameSearch)

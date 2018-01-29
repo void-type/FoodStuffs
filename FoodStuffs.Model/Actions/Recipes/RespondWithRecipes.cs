@@ -28,10 +28,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             if (!string.IsNullOrWhiteSpace(_categorySearch))
             {
-                list = list
-                    .Where(recipe => recipe.CategoryRecipes
-                        .Select(cr => cr.Category.Name)
-                        .Contains(_categorySearch));
+                list = list.SearchCategory(_categorySearch);
             }
 
             list = list.Skip((_page - 1) * _take).Take(_take);
