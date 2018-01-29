@@ -1,6 +1,6 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
-using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Data;
 using FoodStuffs.Model.Queries;
 using System.Linq;
 
@@ -8,11 +8,13 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class RespondWithRecipes : AbstractActionStep
     {
-        public RespondWithRecipes(IFoodStuffsData data, string nameSearch = null, int? categoryId = null)
+        public RespondWithRecipes(IFoodStuffsData data, string nameSearch = null, string categorySearch = null, int take = int.MaxValue, int page = 1)
         {
             _data = data;
             _nameSearch = nameSearch;
-            _categoryId = categoryId;
+            _categorySearch = categorySearch;
+            _take = take;
+            _page = page;
         }
 
         protected override void PerformStep(IActionResponder respond)
@@ -24,16 +26,23 @@ namespace FoodStuffs.Model.Actions.Recipes
                 list = list.SearchNames(_nameSearch);
             }
 
-            if (_categoryId != null)
+            if (!string.IsNullOrWhiteSpace(_categorySearch))
             {
-                list = list.ForCategory(_categoryId.Value);
+                list = list
+                    .Where(recipe => recipe.CategoryRecipes
+                        .Select(cr => cr.Category.Name)
+                        .Contains(_categorySearch));
             }
+
+            list = list.Skip((_page - 1) * _take).Take(_take);
 
             respond.WithDataList(list.AsEnumerable().ToViewModel());
         }
 
-        private readonly int? _categoryId;
+        private readonly string _categorySearch;
         private readonly IFoodStuffsData _data;
         private readonly string _nameSearch;
+        private readonly int _page;
+        private readonly int _take;
     }
 }

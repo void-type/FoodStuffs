@@ -2,7 +2,7 @@
 using FoodStuffs.Data.Models;
 using FoodStuffs.Data.Services;
 using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Interfaces.Services.Data.Models;
+using FoodStuffs.Model.Interfaces.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
@@ -73,7 +73,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 {
                     foreach (var category in data.Categories.Stored)
                     {
-                        category.CategoryRecipe = data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == category.Id)
+                        category.CategoryRecipes = data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == category.Id)
                             .ToList();
                     }
 
@@ -88,7 +88,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                     foreach (var recipe in data.Recipes.Stored)
                     {
-                        recipe.CategoryRecipe =
+                        recipe.CategoryRecipes =
                             data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id).ToList();
                     }
                 }

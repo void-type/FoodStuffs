@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Interfaces.Services.Data.Models;
+﻿using FoodStuffs.Model.Interfaces.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +6,7 @@ namespace FoodStuffs.Data.Models
 {
     public partial class Recipe : IRecipe
     {
-        ICollection<ICategoryRecipe> IRecipe.CategoryRecipe
+        ICollection<ICategoryRecipe> IRecipe.CategoryRecipes
         {
             get => CategoryRecipe.Select(x => (ICategoryRecipe)x).ToArray();
             set => CategoryRecipe = value.Select(x => (CategoryRecipe)x).ToArray();

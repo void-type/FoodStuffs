@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Interfaces.Services.Data.Models;
+﻿using FoodStuffs.Model.Interfaces.Data.Models;
 using FoodStuffs.Model.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace FoodStuffs.Model.Queries
     {
         public static IQueryable<IRecipe> ForCategory(this IQueryable<IRecipe> recipes, int categoryId)
         {
-            return recipes.Where(recipe => recipe.CategoryRecipe
+            return recipes.Where(recipe => recipe.CategoryRecipes
                 .Select(cr => cr.CategoryId)
                 .Contains(categoryId));
         }
@@ -38,7 +38,7 @@ namespace FoodStuffs.Model.Queries
                 CreatedOn = r.CreatedOn,
                 ModifiedBy = $"{r.ModifiedByUser.FirstName} {r.ModifiedByUser.LastName}",
                 ModifiedOn = r.ModifiedOn,
-                Categories = r.CategoryRecipe.Select(cr => cr.Category.Name)
+                Categories = r.CategoryRecipes.Select(cr => cr.Category.Name)
             });
         }
     }

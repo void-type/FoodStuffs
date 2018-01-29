@@ -1,8 +1,8 @@
 ﻿using Core.Data.Test;
 using Core.Model.Services.Data;
 using FoodStuffs.Data.Models;
-using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.Data.Models;
+using FoodStuffs.Model.Interfaces.Data;
+using FoodStuffs.Model.Interfaces.Data.Models;
 
 namespace FoodStuffs.Data.Services
 {

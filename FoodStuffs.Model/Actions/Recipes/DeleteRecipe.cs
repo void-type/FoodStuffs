@@ -1,8 +1,8 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using Core.Model.Validation;
-using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.Data.Models;
+using FoodStuffs.Model.Interfaces.Data;
+using FoodStuffs.Model.Interfaces.Data.Models;
 using FoodStuffs.Model.Queries;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            var recipeCategories = recipe.CategoryRecipe;
+            var recipeCategories = recipe.CategoryRecipes;
             _data.CategoryRecipes.RemoveRange(recipeCategories);
 
             var unusedCategories = FindUnusedCategories(recipe);
@@ -47,7 +47,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
         {
-            var categoryIdsToCheck = recipe.CategoryRecipe.Select(cr => cr.CategoryId);
+            var categoryIdsToCheck = recipe.CategoryRecipes.Select(cr => cr.CategoryId);
 
             var categoriesToCheck = _data.Categories.Stored.Where(c => categoryIdsToCheck.Contains(c.Id));
 

@@ -2,7 +2,7 @@ using Core.Model.Actions.Chain;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
 using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Data;
 using FoodStuffs.Model.Validation;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Web.Services;
@@ -50,10 +50,10 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List(string nameSearch = null, int? categorySearch = null)
+        public IActionResult List(string nameSearch = null, string categorySearch = null, int take = int.MaxValue, int page = 1)
         {
             new ActionChain(_responder)
-                .Execute(new RespondWithRecipes(_data, nameSearch, categorySearch));
+                .Execute(new RespondWithRecipes(_data, nameSearch, categorySearch, take, page));
 
             return _responder.Response;
         }

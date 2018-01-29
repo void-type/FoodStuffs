@@ -1,7 +1,7 @@
 using Core.Model.Services.DateTime;
 using Core.Model.Services.Logging;
 using FoodStuffs.Data.Services;
-using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Data;
 using FoodStuffs.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

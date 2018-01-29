@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Interfaces.Services.Data.Models;
+﻿using FoodStuffs.Model.Interfaces.Data.Models;
 using System.Linq;
 
 namespace FoodStuffs.Model.Queries

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FoodStuffs.Model.Interfaces.Services.Data.Models
+namespace FoodStuffs.Model.Interfaces.Data.Models
 {
     public interface IRecipe
     {
-        ICollection<ICategoryRecipe> CategoryRecipe { get; set; }
+        ICollection<ICategoryRecipe> CategoryRecipes { get; set; }
         int? CookTimeMinutes { get; set; }
         IUser CreatedByUser { get; set; }
         int CreatedByUserId { get; set; }

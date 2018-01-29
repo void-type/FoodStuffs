@@ -3,8 +3,8 @@ using Core.Model.Actions.Responses.MessageString;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
 using Core.Model.Validation;
-using FoodStuffs.Model.Interfaces.Services.Data;
-using FoodStuffs.Model.Interfaces.Services.Data.Models;
+using FoodStuffs.Model.Interfaces.Data;
+using FoodStuffs.Model.Interfaces.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using System.Collections.Generic;
@@ -102,7 +102,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             foreach (var category in categories)
             {
-                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
+                if (category.CategoryRecipes.All(cr => cr.RecipeId == recipe.Id))
                 {
                     yield return category;
                 }
@@ -114,7 +114,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
 
             var unusedCategoryRecipes =
-                recipe.CategoryRecipe.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
+                recipe.CategoryRecipes.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
 
             return unusedCategoryRecipes;
         }

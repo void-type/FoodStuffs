@@ -1,6 +1,6 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
-using FoodStuffs.Model.Interfaces.Services.Data;
+using FoodStuffs.Model.Interfaces.Data;
 using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes

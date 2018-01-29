@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FoodStuffs.Model.Interfaces.Services.Data.Models
+namespace FoodStuffs.Model.Interfaces.Data.Models
 {
     public interface IUser
     {
@@ -9,7 +9,7 @@ namespace FoodStuffs.Model.Interfaces.Services.Data.Models
         bool IsAdmin { get; set; }
         string LastName { get; set; }
         string Password { get; set; }
-        ICollection<IRecipe> RecipeCreatedByUser { get; set; }
+        ICollection<IRecipe> RecipesCreatedByUser { get; set; }
         ICollection<IRecipe> RecipesModifiedByUser { get; set; }
         string Salt { get; set; }
         string UserName { get; set; }
