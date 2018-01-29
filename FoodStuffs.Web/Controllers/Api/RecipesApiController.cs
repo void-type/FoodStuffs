@@ -2,7 +2,7 @@ using Core.Model.Actions.Chain;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
 using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Interfaces.Data;
+using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Validation;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Web.Services;

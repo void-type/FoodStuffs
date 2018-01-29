@@ -1,7 +1,7 @@
 ﻿using Core.Model.Services.Data;
-using FoodStuffs.Model.Interfaces.Data.Models;
+using FoodStuffs.Model.Data.Models;
 
-namespace FoodStuffs.Model.Interfaces.Data
+namespace FoodStuffs.Model.Data
 {
     /// <summary>
     /// Represents all the tables, views and functions of the database.

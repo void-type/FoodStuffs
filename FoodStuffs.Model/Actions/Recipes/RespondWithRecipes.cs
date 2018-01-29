@@ -1,6 +1,6 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
-using FoodStuffs.Model.Interfaces.Data;
+using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
 using System.Linq;
 

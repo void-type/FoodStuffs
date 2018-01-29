@@ -1,8 +1,8 @@
 ﻿using Core.Model.Services.Data;
-using FoodStuffs.Data.CustomRepositories;
 using FoodStuffs.Data.Models;
-using FoodStuffs.Model.Interfaces.Data;
-using FoodStuffs.Model.Interfaces.Data.Models;
+using FoodStuffs.Data.Services.CustomRepositories;
+using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
 using System;
 
 namespace FoodStuffs.Data.Services

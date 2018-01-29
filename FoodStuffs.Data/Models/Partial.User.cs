@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Interfaces.Data.Models;
+﻿using FoodStuffs.Model.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,10 +1,10 @@
 ﻿using Core.Data.EntityFramework;
 using FoodStuffs.Data.Models;
-using FoodStuffs.Model.Interfaces.Data.Models;
+using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.CustomRepositories
+namespace FoodStuffs.Data.Services.CustomRepositories
 {
     public class UserRepository : EfWritableRepository<IUser, User>
     {

@@ -1,4 +1,4 @@
-﻿namespace FoodStuffs.Model.Interfaces.Data.Models
+﻿namespace FoodStuffs.Model.Data.Models
 {
     public interface ICategoryRecipe
     {
