@@ -5,6 +5,11 @@ namespace Core.Model.Validation
     public class Rule : IRule
     {
         /// <summary>
+        /// If true, the validator will not return this error.
+        /// </summary>
+        public bool IsSuppressed { get; private set; }
+
+        /// <summary>
         /// Returns false if the rule was violated.
         /// </summary>
         public bool IsValid { get; private set; } = true;
@@ -24,6 +29,16 @@ namespace Core.Model.Validation
             ValidationError = new ValidationError(errorMessage, fieldName);
         }
 
+        public IRule Suppress(Func<bool> conditionExpression)
+        {
+            if (IsSuppressed == false && conditionExpression.Invoke())
+            {
+                IsSuppressed = true;
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// Build a boolean-returning expression to invoke as a rule against the model. Multiple "when" statements can be chained together to make a
         /// more complex rule.
@@ -35,7 +50,7 @@ namespace Core.Model.Validation
             // If this rule is already violated, don't reevaluate it.
             if (IsValid)
             {
-                IsValid = conditionExpression.Invoke();
+                IsValid = !conditionExpression.Invoke();
             }
 
             return this;
