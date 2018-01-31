@@ -46,11 +46,10 @@ namespace FoodStuffs.Web.Services
 
         protected override void CreateValidationErrorResponse(string logExtra)
         {
-            var logParams = new List<string>()
-      {
-        logExtra,
-        "ValidationErrors: "
-      }
+            var logParams = new List<string> {
+                logExtra,
+                "ValidationErrors: "
+            }
             .Concat(ValidationErrors.Select(error => error.ErrorMessage))
             .ToArray();
 

@@ -6,26 +6,26 @@ namespace FoodStuffs.Model.Validation
 {
     public class RecipeViewModelValidator : AbstractSimpleValidator<IRecipeViewModel>
     {
-        protected override void SetRules(IRecipeViewModel entity)
+        protected override void RunRules(IRecipeViewModel entity)
         {
-            InValid("Name", "Please enter a name.")
+            Invalid("Name", "Please enter a name.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Name));
 
-            InValid("Ingredients", "Please enter ingredients.")
+            Invalid("Ingredients", "Please enter ingredients.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Ingredients));
 
-            InValid("Directions", "Please enter directions.")
+            Invalid("Directions", "Please enter directions.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Directions));
 
-            InValid("CookTimeMinutes", "Cook time must be positive.")
+            Invalid("CookTimeMinutes", "Cook time must be positive.")
                 .When(() => entity.CookTimeMinutes < 0)
                 .Suppress(() => entity.CookTimeMinutes == null);
 
-            InValid("PrepTimeMinutes", "Prep time must be positive.")
+            Invalid("PrepTimeMinutes", "Prep time must be positive.")
                 .When(() => entity.PrepTimeMinutes < 0)
                 .Suppress(() => entity.PrepTimeMinutes == null);
 
-            InValid("Categories", "One or more categories is invalid.")
+            Invalid("Categories", "One or more categories is invalid.")
                 .When(() => entity.Categories.Any(string.IsNullOrWhiteSpace));
         }
     }

@@ -2,6 +2,9 @@
 
 namespace Core.Model.Validation
 {
+    /// <summary>
+    /// A rule for validating an entity.
+    /// </summary>
     public class Rule : IRule
     {
         /// <summary>

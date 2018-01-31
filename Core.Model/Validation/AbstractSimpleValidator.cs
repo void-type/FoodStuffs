@@ -3,27 +3,31 @@ using System.Linq;
 
 namespace Core.Model.Validation
 {
+    /// <summary>
+    /// The base for a custom entity validator.
+    /// </summary>
+    /// <typeparam name="TValidatableEntity"></typeparam>
     public abstract class AbstractSimpleValidator<TValidatableEntity> : IValidator<TValidatableEntity>
     {
         /// <summary>
-        /// Check if the entity is valid following the rules created by the implementation.
+        /// Validate the entity against the rules set during implmentation of this base class.
         /// </summary>
         /// <param name="validatable"></param>
         /// <returns></returns>
         public IEnumerable<IValidationError> Validate(TValidatableEntity validatable)
         {
             _rules = new List<IRule>();
-            SetRules(validatable);
+            RunRules(validatable);
             return Errors;
         }
 
         /// <summary>
-        /// A method used during implementation to begin creating a rule. Rule creation starts with field name and error message strings.
+        /// A method used during implementation to begin creating a rule.
         /// </summary>
         /// <param name="fieldName"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        protected IRule InValid(string fieldName, string errorMessage)
+        protected IRule Invalid(string fieldName, string errorMessage)
         {
             var rule = new Rule(fieldName, errorMessage);
 
@@ -33,11 +37,10 @@ namespace Core.Model.Validation
         }
 
         /// <summary>
-        /// The implementation will override this method to build the validtion ruleset. This will be called each time the entity is validated, thus
-        /// the validator can be used on multiple entites.
+        /// The implementation will override this method to build the validation ruleset.
         /// </summary>
         /// <param name="validatable"></param>
-        protected abstract void SetRules(TValidatableEntity validatable);
+        protected abstract void RunRules(TValidatableEntity validatable);
 
         /// <summary>
         /// A collection of rules used to validate the entity.

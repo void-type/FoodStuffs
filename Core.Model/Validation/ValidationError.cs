@@ -1,8 +1,7 @@
 ﻿namespace Core.Model.Validation
 {
     /// <summary>
-    /// A dto for sending form validation errors to the UI. This can be used in a M:N configuration where the error message and the field name can be
-    /// reused in the error set.
+    /// A UI-friendly error message with optional field name.
     /// </summary>
     public class ValidationError : IValidationError
     {
@@ -12,7 +11,7 @@
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        /// The entity property name that is in error.
+        /// The entity property name that is in error. Can be mapped to a field on the view.
         /// </summary>
         public string FieldName { get; set; }
 
