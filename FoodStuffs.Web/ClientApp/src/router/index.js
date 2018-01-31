@@ -7,21 +7,21 @@ import Search from "../vue/views/Search"
 Vue.use(Router);
 
 export default new Router({
-    routes: [
-        {
-            path: "/",
-            name: "home",
-            component: Home
-        },
-        {
-            path: "/edit",
-            name: "edit",
-            component: Edit
-        },
-        {
-            path: "/search",
-            name: "search",
-            component: Search
-        }
-    ]
+  routes: [
+    {
+      path: "/",
+      name: "home",
+      component: Home
+    },
+    {
+      path: "/edit",
+      name: "edit",
+      component: Edit
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: Search
+    }
+  ]
 });

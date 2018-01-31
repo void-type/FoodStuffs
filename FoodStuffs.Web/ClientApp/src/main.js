@@ -5,6 +5,6 @@ Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 const mainApp = new Vue({
-    el: "#app",
-    render: h => h(App)
+  el: "#app",
+  render: h => h(App)
 });

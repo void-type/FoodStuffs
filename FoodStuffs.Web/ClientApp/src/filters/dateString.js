@@ -1,3 +1,3 @@
 ﻿export default function (value) {
-    return new Date(value).toDateString();
+  return new Date(value).toDateString();
 }
