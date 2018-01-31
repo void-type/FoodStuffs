@@ -6,7 +6,7 @@ using System.Linq;
 namespace Core.Model.Actions.Responder
 {
     /// <summary>
-    /// Adapter for ActionSteps to use any response implementation. Retains validation errors and final response.
+    /// Adapter for ActionSteps to use any response implementation.
     /// </summary>
     public abstract class AbstractActionResponder<TResponse> : IActionResponder where TResponse : class
     {
@@ -27,11 +27,11 @@ namespace Core.Model.Actions.Responder
             return true;
         }
 
-        public abstract void WithData<T>(T item, string logExtra = null);
-
-        public abstract void WithDataList<T>(IEnumerable<T> items, string logExtra = null);
-
         public abstract void WithError(string userMessage, string logExtra = null, Exception ex = null);
+
+        public abstract void WithItem<T>(T item, string logExtra = null);
+
+        public abstract void WithList<T>(IEnumerable<T> items, string logExtra = null);
 
         public abstract void WithSuccess(string userMessage, string logExtra = null);
 

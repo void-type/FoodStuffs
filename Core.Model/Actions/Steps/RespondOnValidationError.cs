@@ -2,6 +2,9 @@
 
 namespace Core.Model.Actions.Steps
 {
+    /// <summary>
+    /// Will respond if there are any validation errors set in the responder.
+    /// </summary>
     public class RespondOnValidationError : AbstractActionStep
     {
         public RespondOnValidationError(string logExtra = null)

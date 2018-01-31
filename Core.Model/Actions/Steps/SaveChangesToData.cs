@@ -4,11 +4,11 @@ using Core.Model.Services.Data;
 namespace Core.Model.Actions.Steps
 {
     /// <summary>
-    /// Save all changes to data provider.
+    /// Save all changes to persistence.
     /// </summary>
     public class SaveChangesToData : AbstractActionStep
     {
-        public SaveChangesToData(IDataService data)
+        public SaveChangesToData(IPersistable data)
         {
             _data = data;
         }
@@ -18,6 +18,6 @@ namespace Core.Model.Actions.Steps
             _data.SaveChanges();
         }
 
-        private readonly IDataService _data;
+        private readonly IPersistable _data;
     }
 }

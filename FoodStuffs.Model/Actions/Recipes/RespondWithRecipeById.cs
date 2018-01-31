@@ -24,7 +24,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            respond.WithData(savedRecipe);
+            respond.WithItem(savedRecipe);
         }
 
         private readonly IFoodStuffsData _data;

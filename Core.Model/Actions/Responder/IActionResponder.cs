@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Core.Model.Actions.Responder
 {
     /// <summary>
-    /// Adapter for ActionSteps to use any response implementation. Retains validation errors and final response.
+    /// ActionResponder retains validation errors between steps and sets the final response.
     /// </summary>
     public interface IActionResponder
     {
@@ -27,12 +27,20 @@ namespace Core.Model.Actions.Responder
         bool TryWithValidationError(string logExtra = null);
 
         /// <summary>
+        /// Create a response with a fatal error message.
+        /// </summary>
+        /// <param name="userMessage"></param>
+        /// <param name="logExtra"></param>
+        /// <param name="ex"></param>
+        void WithError(string userMessage, string logExtra = null, Exception ex = null);
+
+        /// <summary>
         /// Create a response with an object.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
         /// <param name="logExtra"></param>
-        void WithData<T>(T item, string logExtra = null);
+        void WithItem<T>(T item, string logExtra = null);
 
         /// <summary>
         /// Create a response with a set of objects.
@@ -40,15 +48,7 @@ namespace Core.Model.Actions.Responder
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <param name="logExtra"></param>
-        void WithDataList<T>(IEnumerable<T> items, string logExtra = null);
-
-        /// <summary>
-        /// Create a response with a fatal error message.
-        /// </summary>
-        /// <param name="userMessage"></param>
-        /// <param name="logExtra"></param>
-        /// <param name="ex"></param>
-        void WithError(string userMessage, string logExtra = null, Exception ex = null);
+        void WithList<T>(IEnumerable<T> items, string logExtra = null);
 
         /// <summary>
         /// Create a response with a success message.

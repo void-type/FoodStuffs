@@ -4,7 +4,7 @@ using System;
 namespace Core.Model.Actions.Steps
 {
     /// <summary>
-    /// A single step in an action chain.
+    /// A single step in an action chain. Encapsulates some model action.
     /// </summary>
     public abstract class AbstractActionStep : IActionStep
     {

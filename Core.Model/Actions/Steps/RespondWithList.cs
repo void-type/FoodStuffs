@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace Core.Model.Actions.Steps
 {
     /// <summary>
-    /// Response with Api data.
+    /// Response with a collection of items.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RespondWithDataList<T> : AbstractActionStep
+    public class RespondWithList<T> : AbstractActionStep
     {
-        public RespondWithDataList(IEnumerable<T> data, string logExtra = null)
+        public RespondWithList(IEnumerable<T> data, string logExtra = null)
         {
             _data = data;
             _logExtra = logExtra;
@@ -17,7 +17,7 @@ namespace Core.Model.Actions.Steps
 
         protected override void PerformStep(IActionResponder respond)
         {
-            respond.WithDataList(_data, _logExtra);
+            respond.WithList(_data, _logExtra);
         }
 
         private readonly IEnumerable<T> _data;

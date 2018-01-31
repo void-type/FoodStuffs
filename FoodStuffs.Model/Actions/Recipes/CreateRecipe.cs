@@ -44,7 +44,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 Message = "Recipe created."
             };
 
-            respond.WithData(response, $"UserId: {_userId} RecipeId: {_viewModel.Id}");
+            respond.WithItem(response, $"UserId: {_userId} RecipeId: {_viewModel.Id}");
         }
 
         private readonly IFoodStuffsData _data;

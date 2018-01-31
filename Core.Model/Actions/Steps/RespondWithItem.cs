@@ -3,12 +3,12 @@
 namespace Core.Model.Actions.Steps
 {
     /// <summary>
-    /// Response with Api data.
+    /// Response with an item.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RespondWithData<T> : AbstractActionStep
+    public class RespondWithItem<T> : AbstractActionStep
     {
-        public RespondWithData(T data, string logExtra = null)
+        public RespondWithItem(T data, string logExtra = null)
         {
             _data = data;
             _logExtra = logExtra;
@@ -16,7 +16,7 @@ namespace Core.Model.Actions.Steps
 
         protected override void PerformStep(IActionResponder respond)
         {
-            respond.WithData(_data, _logExtra);
+            respond.WithItem(_data, _logExtra);
         }
 
         private readonly T _data;

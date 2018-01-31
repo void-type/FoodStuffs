@@ -11,21 +11,21 @@ namespace Core.Model.Actions.Responder
     /// </summary>
     public class SimpleActionResponder : AbstractActionResponder<SimpleResponse>
     {
-        public override void WithData<T>(T item, string logExtra = null)
+        public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
+        {
+            _simpleResponse.Error = new ErrorMessage(userMessage);
+            Response = _simpleResponse;
+        }
+
+        public override void WithItem<T>(T item, string logExtra = null)
         {
             _simpleResponse.DataItem = item;
             Response = _simpleResponse;
         }
 
-        public override void WithDataList<T>(IEnumerable<T> items, string logExtra = null)
+        public override void WithList<T>(IEnumerable<T> items, string logExtra = null)
         {
             _simpleResponse.DataList = items.Select(item => (object)item).ToList();
-            Response = _simpleResponse;
-        }
-
-        public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
-        {
-            _simpleResponse.Error = new ErrorMessage(userMessage);
             Response = _simpleResponse;
         }
 

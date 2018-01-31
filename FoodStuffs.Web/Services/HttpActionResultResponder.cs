@@ -17,25 +17,25 @@ namespace FoodStuffs.Web.Services
             _logger = logger;
         }
 
-        public override void WithData<TItemType>(TItemType item, string logExtra = null)
-        {
-            _logger.Info(logExtra);
-            Response = new ObjectResult(item);
-        }
-
-        public override void WithDataList<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
-        {
-            var set = new CountedItemSet<TItemType> { Items = items.ToList() };
-
-            _logger.Info($"Count: {set.Count}", logExtra);
-            Response = new ObjectResult(set) { StatusCode = 200 };
-        }
-
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
         {
             _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
 
             Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
+        }
+
+        public override void WithItem<TItemType>(TItemType item, string logExtra = null)
+        {
+            _logger.Info(logExtra);
+            Response = new ObjectResult(item);
+        }
+
+        public override void WithList<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
+        {
+            var set = new CountedItemSet<TItemType> { Items = items.ToList() };
+
+            _logger.Info($"Count: {set.Count}", logExtra);
+            Response = new ObjectResult(set) { StatusCode = 200 };
         }
 
         public override void WithSuccess(string userMessage, string logExtra = null)

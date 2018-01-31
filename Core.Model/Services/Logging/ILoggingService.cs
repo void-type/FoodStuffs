@@ -2,6 +2,9 @@
 
 namespace Core.Model.Services.Logging
 {
+    /// <summary>
+    /// Common interface for logging within the model.
+    /// </summary>
     public interface ILoggingService
     {
         void Debug(params string[] messages);
