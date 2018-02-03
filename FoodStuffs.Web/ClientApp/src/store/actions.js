@@ -34,7 +34,7 @@ export default {
           .filter(recipe => recipe.id.toString() === id)[0]
           || new Recipe();
 
-        context.commit("selectRecipe", selectedRecipe);
+        context.commit("setCurrentRecipe", selectedRecipe);
       },
       response => defaultCallbacks.onFailure(context, response));
   },
@@ -68,7 +68,7 @@ export default {
   selectRecipe(context, recipe) {
     context.dispatch("clearErrors");
     context.commit("addCurrentRecipeToRecents");
-    context.commit("selectRecipe", recipe || new Recipe());
+    context.commit("setCurrentRecipe", recipe || new Recipe());
   },
 
   addCategoryToCurrentRecipe(context, newCategoryName) {

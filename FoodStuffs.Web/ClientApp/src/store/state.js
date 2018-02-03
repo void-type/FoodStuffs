@@ -1,4 +1,4 @@
-import Recipe from "../models/recipe.js"
+import Recipe from "../models/recipe"
 
 export default {
   messages: [],

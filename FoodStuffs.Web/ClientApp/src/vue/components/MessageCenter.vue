@@ -7,17 +7,15 @@
 </template>
 
 <script>
-    import { mapActions } from "vuex";
+    import { mapActions, mapGetters } from "vuex";
 
     export default {
         computed:
         {
-            messages() {
-                return this.$store.state.messages;
-            },
-            isError() {
-                return this.$store.state.isError;
-            }
+            ...mapGetters([
+                "messages",
+                "isError"
+            ])
         },
         methods:
         {

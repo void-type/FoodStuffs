@@ -20,13 +20,14 @@
 
 <script>
     import dateString from "../../filters/dateString";
+    import { mapGetters } from "vuex";
 
     export default {
         computed:
         {
-            currentRecipe() {
-                return this.$store.state.currentRecipe;
-            }
+            ...mapGetters([
+                "currentRecipe"
+            ])
         },
         filters: {
             dateString: dateString

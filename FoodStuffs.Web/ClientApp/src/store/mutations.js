@@ -1,5 +1,5 @@
 export default {
-  selectRecipe(state, recipe) {
+  setCurrentRecipe(state, recipe) {
     state.currentRecipe = recipe;
   },
 
