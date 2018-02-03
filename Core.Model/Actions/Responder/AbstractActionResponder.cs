@@ -33,6 +33,8 @@ namespace Core.Model.Actions.Responder
 
         public abstract void WithList<T>(IEnumerable<T> items, string logExtra = null);
 
+        public abstract void WithPostSuccess(string userMessage, string id, string logExtra = null);
+
         public abstract void WithSuccess(string userMessage, string logExtra = null);
 
         public void WithValidationErrors(string logExtra, params IValidationError[] newValidationErrors)

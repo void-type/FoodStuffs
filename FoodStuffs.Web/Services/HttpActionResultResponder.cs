@@ -1,6 +1,6 @@
 using Core.Model.Actions.Responder;
 using Core.Model.Actions.Responses.CountedItemSet;
-using Core.Model.Actions.Responses.MessageString;
+using Core.Model.Actions.Responses.Message;
 using Core.Model.Services.Logging;
 using Core.Model.Validation;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +36,12 @@ namespace FoodStuffs.Web.Services
 
             _logger.Info($"Count: {set.Count}", logExtra);
             Response = new ObjectResult(set) { StatusCode = 200 };
+        }
+
+        public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
+        {
+            _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}, EntityId: {id}");
+            Response = new ObjectResult(new PostSuccessMessage(userMessage, id));
         }
 
         public override void WithSuccess(string userMessage, string logExtra = null)

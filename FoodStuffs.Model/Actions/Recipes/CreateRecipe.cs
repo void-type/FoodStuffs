@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Responder;
-using Core.Model.Actions.Responses.MessageString;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
 using FoodStuffs.Model.Data;
@@ -33,18 +32,11 @@ namespace FoodStuffs.Model.Actions.Recipes
             newRecipe.Name = _viewModel.Name;
 
             _data.Recipes.Add(newRecipe);
-
             AddCategoriesAndCategoryRecipes(newRecipe.Id, _viewModel);
 
             _data.SaveChanges();
 
-            var response = new PostSuccessMessage
-            {
-                Id = newRecipe.Id.ToString(),
-                Message = "Recipe created."
-            };
-
-            respond.WithItem(response, $"UserId: {_userId} RecipeId: {_viewModel.Id}");
+            respond.WithPostSuccess("Recipe created.", newRecipe.Id.ToString());
         }
 
         private readonly IFoodStuffsData _data;

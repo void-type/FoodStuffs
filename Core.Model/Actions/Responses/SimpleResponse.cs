@@ -1,4 +1,4 @@
-﻿using Core.Model.Actions.Responses.MessageString;
+﻿using Core.Model.Actions.Responses.Message;
 using Core.Model.Validation;
 using System.Collections.Generic;
 
@@ -13,6 +13,7 @@ namespace Core.Model.Actions.Responses
         public object DataItem = null;
         public List<object> DataList = null;
         public ErrorMessage Error = null;
+        public PostSuccessMessage PostSuccess = null;
         public SuccessMessage Success = null;
     }
 }

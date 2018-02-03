@@ -51,6 +51,14 @@ namespace Core.Model.Actions.Responder
         void WithList<T>(IEnumerable<T> items, string logExtra = null);
 
         /// <summary>
+        /// Create a response with success message and the id of the created/modified entity.
+        /// </summary>
+        /// <param name="userMessage"></param>
+        /// <param name="id"></param>
+        /// <param name="logExtra"></param>
+        void WithPostSuccess(string userMessage, string id, string logExtra = null);
+
+        /// <summary>
         /// Create a response with a success message.
         /// </summary>
         /// <param name="userMessage"></param>

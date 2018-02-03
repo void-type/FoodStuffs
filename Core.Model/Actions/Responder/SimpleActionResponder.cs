@@ -1,5 +1,5 @@
 ﻿using Core.Model.Actions.Responses;
-using Core.Model.Actions.Responses.MessageString;
+using Core.Model.Actions.Responses.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +26,12 @@ namespace Core.Model.Actions.Responder
         public override void WithList<T>(IEnumerable<T> items, string logExtra = null)
         {
             _simpleResponse.DataList = items.Select(item => (object)item).ToList();
+            Response = _simpleResponse;
+        }
+
+        public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
+        {
+            _simpleResponse.PostSuccess = new PostSuccessMessage(userMessage, id);
             Response = _simpleResponse;
         }
 

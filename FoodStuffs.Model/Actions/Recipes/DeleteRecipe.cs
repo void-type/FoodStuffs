@@ -11,11 +11,10 @@ namespace FoodStuffs.Model.Actions.Recipes
 {
     public class DeleteRecipe : AbstractActionStep
     {
-        public DeleteRecipe(IFoodStuffsData data, int recipeId, int userId)
+        public DeleteRecipe(IFoodStuffsData data, int recipeId)
         {
             _data = data;
             _recipeId = recipeId;
-            _userId = userId;
         }
 
         protected override void PerformStep(IActionResponder respond)
@@ -38,12 +37,11 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             _data.SaveChanges();
 
-            respond.WithSuccess("Recipe deleted.", $"UserId: {_userId} RecipeId: {_recipeId}");
+            respond.WithPostSuccess("Recipe deleted.", _recipeId.ToString());
         }
 
         private readonly IFoodStuffsData _data;
         private readonly int _recipeId;
-        private readonly int _userId;
 
         private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
         {

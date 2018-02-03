@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Responder;
-using Core.Model.Actions.Responses.MessageString;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
 using Core.Model.Validation;
@@ -49,13 +48,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             AddCategoriesAndCategoryRecipes(savedRecipe.Id, _viewModel);
             _data.SaveChanges();
 
-            var response = new PostSuccessMessage
-            {
-                Id = _viewModel.Id.ToString(),
-                Message = "Recipe saved."
-            };
-
-            respond.WithItem(response, $"UserId: {_userId} RecipeId: {_viewModel.Id}");
+            respond.WithPostSuccess("Recipe saved.", _viewModel.Id.ToString());
         }
 
         private readonly IFoodStuffsData _data;

@@ -34,7 +34,7 @@ namespace FoodStuffs.Web.Controllers.Api
         public IActionResult Delete(int id)
         {
             new ActionChain(_responder)
-                .Execute(new DeleteRecipe(_data, id, 1));
+                .Execute(new DeleteRecipe(_data, id));
 
             return _responder.Response;
         }
