@@ -8,24 +8,24 @@ namespace FoodStuffs.Model.Validation
     {
         protected override void RunRules(IRecipeViewModel entity)
         {
-            Invalid("Name", "Please enter a name.")
+            Invalid("name", "Please enter a name.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Name));
 
-            Invalid("Ingredients", "Please enter ingredients.")
+            Invalid("ingredients", "Please enter ingredients.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Ingredients));
 
-            Invalid("Directions", "Please enter directions.")
+            Invalid("directions", "Please enter directions.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Directions));
 
-            Invalid("CookTimeMinutes", "Cook time must be positive.")
+            Invalid("cookTimeMinutes", "Cook time must be positive.")
                 .When(() => entity.CookTimeMinutes < 0)
                 .Suppress(() => entity.CookTimeMinutes == null);
 
-            Invalid("PrepTimeMinutes", "Prep time must be positive.")
+            Invalid("prepTimeMinutes", "Prep time must be positive.")
                 .When(() => entity.PrepTimeMinutes < 0)
                 .Suppress(() => entity.PrepTimeMinutes == null);
 
-            Invalid("Categories", "One or more categories is invalid.")
+            Invalid("categories", "One or more categories is invalid.")
                 .When(() => entity.Categories.Any(string.IsNullOrWhiteSpace));
         }
     }

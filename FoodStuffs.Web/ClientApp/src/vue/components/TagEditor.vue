@@ -14,13 +14,13 @@
                 </span>
             </div>
         </div>
-        <label v-bind:title="fieldTitle" v-bind:for="fieldName">{{fieldTitle}}</label>
+        <label v-bind:for="fieldName">{{label}}</label>
     </div>
 </template>
 
 <script>
     export default {
-        props: ["fieldName", "fieldTitle", "tags", "addTag", "removeTag"],
+        props: ["fieldName", "label", "tags", "addTag", "removeTag"],
         data: function () {
             return {
                 newTagName: ""
