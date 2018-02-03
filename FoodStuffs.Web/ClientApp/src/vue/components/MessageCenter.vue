@@ -19,9 +19,9 @@
         },
         methods:
         {
-            ...mapActions({
-                clearMessages: "clearErrors"
-            })
+            ...mapActions([
+                "clearMessages"
+            ])
         }
     }
 </script>

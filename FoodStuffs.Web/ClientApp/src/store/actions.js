@@ -40,7 +40,7 @@ export default {
   },
 
   saveRecipe(context, recipe) {
-    context.dispatch("clearErrors");
+    context.dispatch("clearMessages");
 
     if (recipe.id === undefined || recipe.id < 1) {
       webApi.createRecipe(
@@ -56,7 +56,7 @@ export default {
   },
 
   deleteRecipe(context, recipe) {
-    context.dispatch("clearErrors");
+    context.dispatch("clearMessages");
     if (confirm("Are you sure you want to delete this recipe?")) {
       webApi.deleteRecipe(
         recipe,
@@ -66,7 +66,7 @@ export default {
   },
 
   selectRecipe(context, recipe) {
-    context.dispatch("clearErrors");
+    context.dispatch("clearMessages");
     context.commit("addCurrentRecipeToRecents");
     context.commit("setCurrentRecipe", recipe || new Recipe());
   },
@@ -96,7 +96,7 @@ export default {
     }
   },
 
-  clearErrors(context) {
+  clearMessages(context) {
     context.commit("setIsError", false);
     context.commit("setFieldsInError", []);
     context.commit("setMessages", []);

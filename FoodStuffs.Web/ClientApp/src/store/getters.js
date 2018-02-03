@@ -8,6 +8,9 @@
   fieldsInError(state) {
     return state.fieldsInError;
   },
+  isFieldInError: (state) => (fieldName) => {
+    return state.fieldsInError.indexOf(fieldName) > -1;
+  },
   currentRecipe(state) {
     return state.currentRecipe;
   },
