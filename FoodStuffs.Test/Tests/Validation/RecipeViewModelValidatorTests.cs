@@ -22,7 +22,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "Directions"));
+            Assert.NotEmpty(errors.Where(x => x.FieldName == "directions"));
         }
 
         [Theory]
@@ -40,7 +40,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "Ingredients"));
+            Assert.NotEmpty(errors.Where(x => x.FieldName == "ingredients"));
         }
 
         [Theory]
@@ -58,7 +58,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "Name"));
+            Assert.NotEmpty(errors.Where(x => x.FieldName == "name"));
         }
 
         [Theory]
@@ -75,7 +75,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "CookTimeMinutes"));
+            Assert.NotEmpty(errors.Where(x => x.FieldName == "cookTimeMinutes"));
         }
 
         [Theory]
@@ -92,7 +92,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "PrepTimeMinutes"));
+            Assert.NotEmpty(errors.Where(x => x.FieldName == "prepTimeMinutes"));
         }
 
         [Theory]
@@ -111,7 +111,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "CookTimeMinutes"));
+            Assert.Empty(errors.Where(x => x.FieldName == "cookTimeMinutes"));
         }
 
         [Theory]
@@ -128,7 +128,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "Directions"));
+            Assert.Empty(errors.Where(x => x.FieldName == "directions"));
         }
 
         [Theory]
@@ -145,7 +145,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "Ingredients"));
+            Assert.Empty(errors.Where(x => x.FieldName == "ingredients"));
         }
 
         [Theory]
@@ -164,7 +164,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "PrepTimeMinutes"));
+            Assert.Empty(errors.Where(x => x.FieldName == "prepTimeMinutes"));
         }
 
         [Theory]
@@ -181,7 +181,7 @@ namespace FoodStuffs.Test.Tests.Validation
 
             var errors = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "Name"));
+            Assert.Empty(errors.Where(x => x.FieldName == "name"));
         }
     }
 }
