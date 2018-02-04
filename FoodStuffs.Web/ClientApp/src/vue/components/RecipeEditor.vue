@@ -54,15 +54,10 @@
     import TagEditor from "./TagEditor";
 
     export default {
-        computed:
-        {
-            ...mapGetters([
-                "currentRecipe",
-                "isFieldInError"
-            ])
+        computed: {
+            ...mapGetters(["currentRecipe", "isFieldInError"])
         },
-        methods:
-        {
+        methods: {
             cancelClick() {
                 this.fetchRecipes(this.currentRecipe.id);
                 this.$router.push({ name: "home" });
@@ -75,11 +70,10 @@
                 "removeCategoryFromCurrentRecipe"
             ])
         },
-        components:
-        {
+        components: {
             TagEditor
         }
-    }
+    };
 </script>
 
 <style lang="scss" scoped>

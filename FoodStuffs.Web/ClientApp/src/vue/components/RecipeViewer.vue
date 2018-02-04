@@ -23,16 +23,13 @@
     import { mapGetters } from "vuex";
 
     export default {
-        computed:
-        {
-            ...mapGetters([
-                "currentRecipe"
-            ])
+        computed: {
+            ...mapGetters(["currentRecipe"])
         },
         filters: {
             dateString: dateString
         }
-    }
+    };
 </script>
 
 <style lang="scss" scoped>

@@ -3,14 +3,13 @@ import Recipe from "../models/recipe"
 
 const defaultCallbacks = {
   onSuccess(context, data) {
-    context.dispatch("fetchRecipes", data.id);
+    context.dispatch("fetchRecipes", null, data.id);
     context.commit("setIsError", false);
     context.commit("setMessage", data.message);
   },
 
   onFailure(context, response) {
     context.commit("setIsError", true);
-
     if (response === undefined || response === null) {
       context.commit("setMessage", "Cannot connect to server.");
     } else if (response.status >= 500) {
@@ -19,23 +18,24 @@ const defaultCallbacks = {
       context.commit("setMessages", response.data.items.map((item) => item.errorMessage));
       context.commit("setFieldsInError", response.data.items.map((item) => item.fieldName));
     }
+  }, 
+
+  onFetchListSuccess(context, data, postbackId) {
+    context.commit("setRecipesList", data.items);
+    const id = (postbackId) ? postbackId.toString() : null;
+    const selectedRecipe = context.state.recipes
+      .filter(recipe => recipe.id.toString() === id)[0]
+      || new Recipe();
+
+    context.commit("setCurrentRecipe", selectedRecipe);
   }
 }
 
 export default {
-  fetchRecipes(context, postbackId) {
+  fetchRecipes(context, params, postbackId) {
     webApi.listRecipes(
-      function (data) {
-        context.commit("setRecipesList", data.items);
-
-        const id = (postbackId) ? postbackId.toString() : null;
-
-        const selectedRecipe = context.state.recipes
-          .filter(recipe => recipe.id.toString() === id)[0]
-          || new Recipe();
-
-        context.commit("setCurrentRecipe", selectedRecipe);
-      },
+      params,
+      data => defaultCallbacks.onFetchListSuccess(context, data, postbackId),
       response => defaultCallbacks.onFailure(context, response));
   },
 

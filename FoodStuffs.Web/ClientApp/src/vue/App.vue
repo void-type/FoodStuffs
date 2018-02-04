@@ -34,7 +34,7 @@
 
 <script>
     import { mapActions } from "vuex";
-    import router from "../router"
+    import router from "../router";
     import store from "../store";
     import MessageCenter from "./components/MessageCenter";
     import RecipeViewer from "./components/RecipeViewer";
@@ -42,8 +42,11 @@
     export default {
         data: function () {
             return {
-                applicationName: document.getElementById("applicationName") !== null ? document.getElementById("applicationName").value : "FoodStuffs"
-            }
+                applicationName:
+                document.getElementById("applicationName") !== null
+                    ? document.getElementById("applicationName").value
+                    : "FoodStuffs"
+            };
         },
         methods: {
             ...mapActions({

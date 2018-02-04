@@ -10,20 +10,13 @@
     import { mapActions, mapGetters } from "vuex";
 
     export default {
-        computed:
-        {
-            ...mapGetters([
-                "messages",
-                "isError"
-            ])
+        computed: {
+            ...mapGetters(["messages", "isError"])
         },
-        methods:
-        {
-            ...mapActions([
-                "clearMessages"
-            ])
+        methods: {
+            ...mapActions(["clearMessages"])
         }
-    }
+    };
 </script>
 
 <style lang="scss" scoped>

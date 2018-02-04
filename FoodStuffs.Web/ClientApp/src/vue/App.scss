@@ -8,7 +8,7 @@ html {
 
 body, pre {
     font-family: $font-family;
-    color: $contrast2;
+    color: $color-neutral;
     margin: 0;
 }
 
@@ -144,7 +144,7 @@ nav {
                 text-overflow: ellipsis;
 
                 &:link, &:visited {
-                    color: $contrast1;
+                    color: $color-neutral-inverse;
                 }
 
                 &.current-page {
@@ -201,11 +201,11 @@ nav {
     }
 
     div {
-        background-color: $contrast1;
+        background-color: $color-neutral-inverse;
     }
 
     p, pre, h1, h2, h3, h4 {
-        color: $contrast2;
+        color: $color-neutral;
     }
 }
 

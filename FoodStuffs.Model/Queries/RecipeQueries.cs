@@ -14,15 +14,19 @@ namespace FoodStuffs.Model.Queries
 
         public static IQueryable<IRecipe> SearchCategory(this IQueryable<IRecipe> recipes, string categorySearch)
         {
-            return recipes
-                .Where(recipe => recipe.CategoryRecipes
-                    .Select(cr => cr.Category.Name)
-                    .Contains(categorySearch));
+            categorySearch = categorySearch.ToUpper().Trim();
+
+            // TODO: This makes the search work for EF. Find out why.
+            var contains = recipes.ToList();
+
+            return recipes.Where(recipe => recipe.CategoryRecipes
+                    .Any(cr => cr.Category.Name.ToUpper().Contains(categorySearch)));
         }
 
         public static IQueryable<IRecipe> SearchNames(this IQueryable<IRecipe> recipes, string nameSearch)
         {
-            return recipes.Where(recipe => recipe.Name.ToUpper().Contains(nameSearch.ToUpper().Trim()));
+            return recipes.Where(recipe => recipe.Name.ToUpper()
+                .Contains(nameSearch.ToUpper().Trim()));
         }
 
         public static IEnumerable<IRecipeViewModel> ToViewModel(this IEnumerable<IRecipe> recipes)

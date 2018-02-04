@@ -50,10 +50,10 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List(string nameSearch = null, string categorySearch = null, int take = int.MaxValue, int page = 1)
+        public IActionResult List(string name = null, string category = null, int take = int.MaxValue, int page = 1)
         {
             new ActionChain(_responder)
-                .Execute(new RespondWithRecipes(_data, nameSearch, categorySearch, take, page));
+                .Execute(new RespondWithRecipes(_data, name, category, take, page));
 
             return _responder.Response;
         }

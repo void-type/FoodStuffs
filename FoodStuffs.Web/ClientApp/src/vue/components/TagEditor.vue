@@ -9,7 +9,7 @@
                 <span v-for="tag in tags" v-bind:key="tag">
                     {{tag}}&nbsp;&nbsp;
                     <span v-on:click="removeTagClick(tag)">
-                        &#x2716
+                        &#x2716;
                     </span>
                 </span>
             </div>
@@ -24,7 +24,7 @@
         data: function () {
             return {
                 newTagName: ""
-            }
+            };
         },
         methods: {
             addTagClick() {
@@ -34,9 +34,9 @@
 
             removeTagClick(tagToRemove) {
                 this.removeTag(tagToRemove);
-            },
+            }
         }
-    }
+    };
 </script>
 
 <style lang="scss" scoped>

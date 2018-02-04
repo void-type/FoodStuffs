@@ -1,18 +1,15 @@
 ﻿<template>
     <section>
-        <RecipeList></RecipeList>
-        <RecipeEditor></RecipeEditor>
+        <RecipeSearch></RecipeSearch>
     </section>
 </template>
 
 <script>
-    import RecipeList from "../components/RecipeList";
-    import RecipeEditor from "../components/RecipeEditor";
+    import RecipeSearch from "../components/RecipeSearch";
 
     export default {
         components: {
-            RecipeList,
-            RecipeEditor
+            RecipeSearch
         }
     };
 </script>

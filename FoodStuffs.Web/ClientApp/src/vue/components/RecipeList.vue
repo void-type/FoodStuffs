@@ -27,23 +27,17 @@
     import { mapActions, mapGetters } from "vuex";
 
     export default {
-        computed:
-        {
-            ...mapGetters([
-                "recipes",
-                "recentRecipes"
-            ])
+        computed: {
+            ...mapGetters(["recipes", "recentRecipes"])
         },
         methods: {
-            ...mapActions({
-                selectRecipe: "selectRecipe"
-            }),
+            ...mapActions(["selectRecipe"]),
             newRecipe() {
                 this.selectRecipe();
                 this.$router.push({ name: "edit" });
             }
         }
-    }
+    };
 </script>
 
 <style lang="scss" scoped>
