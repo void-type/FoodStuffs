@@ -1,5 +1,5 @@
 ﻿<template>
-    <div>
+    <div class="recipe-search">
         <form v-on:keyup.enter.prevent="fetchRecipes(search)">
             <div class="form-row">
                 <div class="form-group">
@@ -7,15 +7,17 @@
                     <label for="searchName">Name Contains</label>
                 </div>
                 <div class="form-group">
-                    <input type="text" id="searchCategory" name="searchCategory" v-model="search.category" />
+                        <input type="text" id="searchCategory" name="searchCategory" v-model="search.category" />
                     <label for="searchCategory">Categories Contain</label>
                 </div>
-
-                <div class="form-group">
-                    <button v-on:click.prevent="fetchRecipes(search)">
-                        Search
-                    </button>
-                </div>
+            </div>
+            <div class="form-row button-row">
+                <button v-on:click.prevent="fetchRecipes(search)">
+                    Search
+                </button>
+                <button v-on:click.prevent="clearSearch(search)">
+                    Clear All
+                </button>
             </div>
         </form>
 
@@ -33,15 +35,19 @@
 <script>
     import { mapActions, mapGetters } from "vuex";
 
+    class SearchParameters {
+        constructor() {
+            this.name = "";
+            this.category = "";
+            this.take = null;
+            this.page = null;
+        }
+    }
+
     export default {
         data: function () {
             return {
-                search: {
-                    name: "",
-                    category: "",
-                    take: null,
-                    page: null
-                }
+                search: new SearchParameters()
             }
         },
         computed: {
@@ -52,6 +58,9 @@
             selectClick(recipe) {
                 this.selectRecipe(recipe);
                 this.$router.push({ name: "home" });
+            },
+            clearSearch() {
+                this.search = new SearchParameters();
             }
         }
     };

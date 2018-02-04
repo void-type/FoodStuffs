@@ -3,7 +3,7 @@
         <div>
             <div>
                 <input type="text" v-bind:id="fieldName" v-bind:name="fieldName" v-model="newTagName" />
-                <button v-on:keyup.tab="addTagClick()" v-on:click.prevent="addTagClick()">Add</button>
+                <button v-on:click.prevent="addTagClick()">Add</button>
             </div>
             <div class="tags">
                 <span v-for="tag in tags" v-bind:key="tag">
