@@ -18,7 +18,7 @@ const defaultCallbacks = {
       context.commit("setMessages", response.data.items.map((item) => item.errorMessage));
       context.commit("setFieldsInError", response.data.items.map((item) => item.fieldName));
     }
-  }, 
+  },
 
   onFetchListSuccess(context, data, postbackId) {
     context.commit("setRecipesList", data.items);

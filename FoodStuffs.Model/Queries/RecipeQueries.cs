@@ -20,7 +20,7 @@ namespace FoodStuffs.Model.Queries
             var contains = recipes.ToList();
 
             return recipes.Where(recipe => recipe.CategoryRecipes
-                    .Any(cr => cr.Category.Name.ToUpper().Contains(categorySearch)));
+                .Any(cr => cr.Category.Name.ToUpper().Contains(categorySearch)));
         }
 
         public static IQueryable<IRecipe> SearchNames(this IQueryable<IRecipe> recipes, string nameSearch)
