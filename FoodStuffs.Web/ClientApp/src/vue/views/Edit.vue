@@ -1,18 +1,18 @@
 ﻿<template>
     <section>
-        <RecipeList></RecipeList>
-        <RecipeEditor></RecipeEditor>
+        <SelectSidebar />
+        <EditorForm />
     </section>
 </template>
 
 <script>
-    import RecipeList from "../components/RecipeList";
-    import RecipeEditor from "../components/RecipeEditor";
+    import SelectSidebar from "../components/SelectSidebar";
+    import EditorForm from "../components/EditorForm";
 
     export default {
         components: {
-            RecipeList,
-            RecipeEditor
+            SelectSidebar,
+            EditorForm
         }
     };
 </script>

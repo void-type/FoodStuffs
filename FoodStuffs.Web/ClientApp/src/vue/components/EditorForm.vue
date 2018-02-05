@@ -30,10 +30,12 @@
             </div>
         </div>
         <div class="form-row">
-            <TagEditor v-bind:fieldName="'categories'" v-bind:label="'Categories'" v-bind:tags="categories"
-                       v-bind:addTag="addCategoryToCurrentRecipe" v-bind:removeTag="removeCategoryFromCurrentRecipe"
-                       v-bind:class="{danger: isFieldInError('categories')}">
-            </TagEditor>
+            <TagEditor v-bind:fieldName="'categories'"
+                       v-bind:label="'Categories'"
+                       v-bind:tags="categories"
+                       v-bind:addTag="addCategoryToCurrentRecipe"
+                       v-bind:removeTag="removeCategoryFromCurrentRecipe"
+                       v-bind:class="{danger: isFieldInError('categories')}" />
         </div>
         <div class="form-row button-row">
             <button v-on:click.prevent="saveRecipe(currentRecipe)">
@@ -122,5 +124,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./RecipeEditor";
+    @import "./EditorForm";
 </style>

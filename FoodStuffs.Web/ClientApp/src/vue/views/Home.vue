@@ -1,17 +1,17 @@
 <template>
     <section>
-        <RecipeList></RecipeList>
-        <RecipeViewer></RecipeViewer>
+        <SelectSidebar />
+        <RecipeViewer />
     </section>
 </template>
 
 <script>
-    import RecipeList from "../components/RecipeList";
+    import SelectSidebar from "../components/SelectSidebar";
     import RecipeViewer from "../components/RecipeViewer";
 
     export default {
         components: {
-            RecipeList,
+            SelectSidebar,
             RecipeViewer
         }
     };

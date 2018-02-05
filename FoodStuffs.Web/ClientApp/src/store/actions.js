@@ -3,7 +3,7 @@ import Recipe from "../models/recipe"
 
 const defaultCallbacks = {
   onSuccess(context, data) {
-    context.dispatch("fetchRecipes", null, data.id);
+    context.dispatch("fetchRecipes", null, data.id || null);
     context.commit("setIsError", false);
     context.commit("setMessage", data.message);
   },

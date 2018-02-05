@@ -1,8 +1,8 @@
 import Vue from "vue"
 import Router from "vue-router"
-import Home from "../vue/views/Home"
-import Edit from "../vue/views/Edit"
-import Search from "../vue/views/Search"
+import HomeView from "../vue/views/Home"
+import EditView from "../vue/views/Edit"
+import SearchView from "../vue/views/Search"
 
 Vue.use(Router);
 
@@ -11,17 +11,17 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Home
+      component: HomeView
     },
     {
       path: "/edit",
       name: "edit",
-      component: Edit
+      component: EditView
     },
     {
       path: "/search",
       name: "search",
-      component: Search
+      component: SearchView
     }
   ]
 });

@@ -58,16 +58,14 @@ export default {
 
     const recentRecipeIndex = state.recentRecipes
       .indexOf(state.recentRecipes
-        .filter(listItem => listItem.id === state.currentRecipe.id)[0]);
+        .filter(recentRecipeId => recentRecipeId === state.currentRecipe.id)[0]);
 
     if (recentRecipeIndex > -1) {
       state.recentRecipes.splice(recentRecipeIndex, 1);
     }
 
     if (state.currentRecipe.id > 0) {
-      const recentRecipeListItem = Object.assign({}, state.currentRecipe);
-
-      state.recentRecipes.unshift(recentRecipeListItem);
+      state.recentRecipes.unshift(state.currentRecipe.id);
     }
 
     if (state.recentRecipes.length > 3) {

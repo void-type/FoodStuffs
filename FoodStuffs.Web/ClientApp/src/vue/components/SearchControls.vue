@@ -20,21 +20,14 @@
                 </button>
             </div>
         </form>
-
-        <table class="hover">
-            <tbody>
-                <tr v-for="recipe in recipes" v-bind:key="recipe.id" v-on:click="selectClick(recipe)">
-                    <td>{{recipe.name}}</td>
-                    <td>{{recipe.categories.join(", ")}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <SearchTable v-bind:recipes="recipes" />
     </div>
 </template>
 
 <script>
     import { mapActions, mapGetters } from "vuex";
     import ListSearch from "../../models/recipeListSearch";
+    import SearchTable from "./SearchTable";
 
     export default {
         data: function () {
@@ -46,18 +39,17 @@
             ...mapGetters(["recipes"])
         },
         methods: {
-            ...mapActions(["selectRecipe", "fetchRecipes"]),
-            selectClick(recipe) {
-                this.selectRecipe(recipe);
-                this.$router.push({ name: "home" });
-            },
+            ...mapActions(["fetchRecipes"]),
             clearSearch() {
                 this.search = new ListSearch();
             }
+        },
+        components: {
+            SearchTable
         }
     };
 </script>
 
 <style lang="scss" scoped>
-    @import "./RecipeSearch";
+    @import "./SearchControls";
 </style>

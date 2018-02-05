@@ -2,7 +2,10 @@
     <div class="form-group">
         <div>
             <div>
-                <input type="text" v-bind:id="fieldName" v-bind:name="fieldName" v-model="newTagName" />
+                <input type="text"
+                       v-model="newTagName"
+                       v-bind:id="fieldName"
+                       v-bind:name="fieldName" />
                 <button v-on:click.prevent="addTagClick()">Add</button>
             </div>
             <div class="tags">
@@ -20,7 +23,28 @@
 
 <script>
     export default {
-        props: ["fieldName", "label", "tags", "addTag", "removeTag"],
+        props: {
+            fieldName: {
+                type: String,
+                required: true
+            },
+            label: {
+                type: String,
+                required: true
+            },
+            tags: {
+                type: Array,
+                required: true
+            },
+            addTag: {
+                type: Function,
+                required: true
+            },
+            removeTag: {
+                type: Function,
+                required: true
+            }
+        },
         data: function () {
             return {
                 newTagName: ""

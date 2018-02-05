@@ -1,15 +1,15 @@
 ﻿<template>
     <section>
-        <RecipeSearch></RecipeSearch>
+        <SearchControls />
     </section>
 </template>
 
 <script>
-    import RecipeSearch from "../components/RecipeSearch";
+    import SearchControls from "../components/SearchControls";
 
     export default {
         components: {
-            RecipeSearch
+            SearchControls
         }
     };
 </script>
