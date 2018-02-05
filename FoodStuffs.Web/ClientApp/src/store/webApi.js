@@ -2,8 +2,6 @@ import axios from "axios";
 
 export default {
   listRecipes(params, success, failure) {
-    console.log(params);
-
     axios.get("api/recipes/list", { params: params })
       .then(response => success(response.data))
       .catch(error => failure(error.response));

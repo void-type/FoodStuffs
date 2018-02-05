@@ -3,6 +3,26 @@ export default {
     state.currentRecipe = recipe;
   },
 
+  setCurrentRecipeName(state, value) {
+    state.currentRecipe.name = value;
+  },
+
+  setCurrentRecipeIngredients(state, value) {
+    state.currentRecipe.ingredients = value;
+  },
+
+  setCurrentRecipeDirections(state, value) {
+    state.currentRecipe.directions = value;
+  },
+
+  setCurrentRecipePrepTimeMinutes(state, value) {
+    state.currentRecipe.prepTimeMinutes = value;
+  },
+
+  setCurrentRecipeCookTimeMinutes(state, value) {
+    state.currentRecipe.cookTimeMinutes = value;
+  },
+
   setRecipesList(state, recipes) {
     state.recipes = recipes;
   },

@@ -7,7 +7,7 @@
                     <label for="searchName">Name Contains</label>
                 </div>
                 <div class="form-group">
-                        <input type="text" id="searchCategory" name="searchCategory" v-model="search.category" />
+                    <input type="text" id="searchCategory" name="searchCategory" v-model="search.category" />
                     <label for="searchCategory">Categories Contain</label>
                 </div>
             </div>
@@ -34,20 +34,12 @@
 
 <script>
     import { mapActions, mapGetters } from "vuex";
-
-    class SearchParameters {
-        constructor() {
-            this.name = "";
-            this.category = "";
-            this.take = null;
-            this.page = null;
-        }
-    }
+    import ListSearch from "../../models/recipeListSearch";
 
     export default {
         data: function () {
             return {
-                search: new SearchParameters()
+                search: new ListSearch()
             }
         },
         computed: {
@@ -60,7 +52,7 @@
                 this.$router.push({ name: "home" });
             },
             clearSearch() {
-                this.search = new SearchParameters();
+                this.search = new ListSearch();
             }
         }
     };
