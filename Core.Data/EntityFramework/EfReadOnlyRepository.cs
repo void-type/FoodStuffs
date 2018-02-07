@@ -4,20 +4,14 @@ using System.Linq;
 
 namespace Core.Data.EntityFramework
 {
-    public class EfReadOnlyRepository<TInterface, TDbEntity> : IReadOnlyRepository<TInterface>
-        where TDbEntity : class, TInterface, new() where TInterface : class
+    public class EfReadOnlyRepository<TDbEntity> : IReadOnlyRepository<TDbEntity> where TDbEntity : class, new()
 
     {
-        public virtual IQueryable<TInterface> Stored => Context.Set<TDbEntity>();
+        public virtual IQueryable<TDbEntity> Stored => Context.Set<TDbEntity>();
 
         public EfReadOnlyRepository(DbContext context)
         {
             Context = context;
-        }
-
-        public void Dispose()
-        {
-            Context.Dispose();
         }
 
         protected readonly DbContext Context;

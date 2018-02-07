@@ -1,5 +1,5 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Services;
+using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Test.Mocks;
 using Xunit;
@@ -24,7 +24,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new RespondWithRecipeById(data, 2));
+                    .Execute(new RespondWithRecipeById(data, 12));
 
                 Assert.True(responder.ResponseCreated);
                 Assert.NotNull(responder.Response.DataItem);
@@ -39,7 +39,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 var responder = MockFactory.GetResponder;
 
                 new ActionChain(responder)
-                    .Execute(new RespondWithRecipeById(data, 5));
+                    .Execute(new RespondWithRecipeById(data, 15));
 
                 Assert.True(responder.ResponseCreated);
                 Assert.Null(responder.Response.DataItem);

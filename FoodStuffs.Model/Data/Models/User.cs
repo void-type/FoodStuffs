@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FoodStuffs.Data.Models
+namespace FoodStuffs.Model.Data.Models
 {
     public partial class User
     {
@@ -14,9 +14,9 @@ namespace FoodStuffs.Data.Models
 
         public string Password { get; set; }
 
-        public virtual ICollection<Recipe> RecipeCreatedByUser { get; set; }
+        public virtual ICollection<Recipe> RecipesCreatedByUser { get; set; }
 
-        public virtual ICollection<Recipe> RecipeModifiedByUser { get; set; }
+        public virtual ICollection<Recipe> RecipesModifiedByUser { get; set; }
 
         public string Salt { get; set; }
 
@@ -24,8 +24,8 @@ namespace FoodStuffs.Data.Models
 
         public User()
         {
-            RecipeCreatedByUser = new HashSet<Recipe>();
-            RecipeModifiedByUser = new HashSet<Recipe>();
+            RecipesCreatedByUser = new HashSet<Recipe>();
+            RecipesModifiedByUser = new HashSet<Recipe>();
         }
     }
 }

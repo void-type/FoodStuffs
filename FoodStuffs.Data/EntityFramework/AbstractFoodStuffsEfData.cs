@@ -1,18 +1,17 @@
 ﻿using Core.Model.Services.Data;
-using FoodStuffs.Data.Models;
-using FoodStuffs.Data.Services.CustomRepositories;
+using FoodStuffs.Data.EntityFramework.CustomRepositories;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using System;
 
-namespace FoodStuffs.Data.Services
+namespace FoodStuffs.Data.EntityFramework
 {
     public abstract class AbstractFoodStuffsEfData : IFoodStuffsData
     {
-        public IWritableRepository<ICategory> Categories { get; }
-        public IWritableRepository<ICategoryRecipe> CategoryRecipes { get; }
-        public IWritableRepository<IRecipe> Recipes { get; }
-        public IWritableRepository<IUser> Users { get; }
+        public IWritableRepository<Category> Categories { get; }
+        public IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
+        public IWritableRepository<Recipe> Recipes { get; }
+        public IWritableRepository<User> Users { get; }
 
         public void Dispose()
         {
@@ -28,10 +27,10 @@ namespace FoodStuffs.Data.Services
         protected AbstractFoodStuffsEfData(FoodStuffsContext context)
         {
             _context = context;
-            Users = new UserRepository(context);
             Categories = new CategoryRepository(context);
-            Recipes = new RecipeRepository(context);
             CategoryRecipes = new CategoryRecipeRepository(context);
+            Recipes = new RecipeRepository(context);
+            Users = new UserRepository(context);
         }
 
         protected virtual void Dispose(bool disposing)

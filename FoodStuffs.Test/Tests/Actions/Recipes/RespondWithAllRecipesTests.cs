@@ -1,6 +1,5 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Models;
-using FoodStuffs.Data.Services;
+using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Test.Mocks;
@@ -48,11 +47,11 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         }
 
         [Theory]
+        [InlineData(null, 3)]
         [InlineData("cat", 3)]
         [InlineData("1", 1)]
-        [InlineData("1 2", 2)]
-        [InlineData(null, 3)]
-        [InlineData("cat 1 3", 2)]
+        [InlineData("cat 1 3", 1)]
+        [InlineData("1 2", 0)]
         public void RespondWithNameSearchRecipesByCategory(string categorySearch, int expectedFound)
         {
             var responder = MockFactory.GetResponder;
@@ -69,35 +68,42 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.Users.Add(MockFactory.User1);
 
-                data.Recipes.Add(MockFactory.Recipe1);
-                data.Recipes.Add(MockFactory.Recipe2);
-                data.Recipes.Add(MockFactory.Recipe3);
+                data.Recipes.Add(recipe1);
+                data.Recipes.Add(recipe2);
+                data.Recipes.Add(recipe3);
 
-                data.Categories.Add(MockFactory.Category1);
-                data.Categories.Add(MockFactory.Category2);
-                data.Categories.Add(MockFactory.Category3);
+                data.Categories.Add(category1);
+                data.Categories.Add(category2);
+                data.Categories.Add(category3);
 
-                ICategoryRecipe categoryRecipe1 = new CategoryRecipe();
-                categoryRecipe1.CategoryId = 1;
-                categoryRecipe1.RecipeId = 1;
-                categoryRecipe1.Recipe = recipe1;
-                categoryRecipe1.Category = category1;
+                var categoryRecipe1 = new CategoryRecipe
+                {
+                    CategoryId = 11,
+                    RecipeId = 11,
+                };
 
-                ICategoryRecipe categoryRecipe2 = new CategoryRecipe();
-                categoryRecipe2.CategoryId = 2;
-                categoryRecipe2.RecipeId = 2;
-                categoryRecipe2.Recipe = recipe2;
-                categoryRecipe2.Category = category2;
+                var categoryRecipe2 = new CategoryRecipe
+                {
+                    CategoryId = 12,
+                    RecipeId = 12,
+                };
 
-                ICategoryRecipe categoryRecipe3 = new CategoryRecipe();
-                categoryRecipe3.CategoryId = 3;
-                categoryRecipe3.RecipeId = 3;
-                categoryRecipe3.Recipe = recipe3;
-                categoryRecipe3.Category = category3;
+                var categoryRecipe3 = new CategoryRecipe
+                {
+                    CategoryId = 13,
+                    RecipeId = 13,
+                };
 
-                recipe1.CategoryRecipes.Add(categoryRecipe1);
-                recipe2.CategoryRecipes.Add(categoryRecipe2);
-                recipe3.CategoryRecipes.Add(categoryRecipe3);
+                var categoryRecipe4 = new CategoryRecipe
+                {
+                    CategoryId = 13,
+                    RecipeId = 11,
+                };
+
+                data.CategoryRecipes.Add(categoryRecipe1);
+                data.CategoryRecipes.Add(categoryRecipe2);
+                data.CategoryRecipes.Add(categoryRecipe3);
+                data.CategoryRecipes.Add(categoryRecipe4);
 
                 data.SaveChanges();
 

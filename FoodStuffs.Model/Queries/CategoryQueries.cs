@@ -5,12 +5,12 @@ namespace FoodStuffs.Model.Queries
 {
     public static class CategoryQueries
     {
-        public static ICategory GetById(this IQueryable<ICategory> categories, int id)
+        public static Category GetById(this IQueryable<Category> categories, int id)
         {
             return categories.SingleOrDefault(r => r.Id == id);
         }
 
-        public static ICategory GetByName(this IQueryable<ICategory> categories, string categoryName)
+        public static Category GetByName(this IQueryable<Category> categories, string categoryName)
         {
             return categories.FirstOrDefault(c => c.Name.ToUpper().Trim() == categoryName.ToUpper().Trim());
         }

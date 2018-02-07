@@ -1,6 +1,5 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Services.DateTime;
-using FoodStuffs.Data.Models;
 using FoodStuffs.Model.Data.Models;
 using System;
 
@@ -8,21 +7,21 @@ namespace FoodStuffs.Test.Mocks
 {
     public static class MockFactory
     {
-        public static ICategory Category1 => new Category
+        public static Category Category1 => new Category
         {
-            Id = 1,
+            Id = 11,
             Name = "Category1"
         };
 
-        public static ICategory Category2 => new Category
+        public static Category Category2 => new Category
         {
-            Id = 2,
+            Id = 12,
             Name = "Category2"
         };
 
-        public static ICategory Category3 => new Category
+        public static Category Category3 => new Category
         {
-            Id = 3,
+            Id = 13,
             Name = "Category3"
         };
 
@@ -34,52 +33,52 @@ namespace FoodStuffs.Test.Mocks
         public static IDateTimeService LateDateTimeService =>
                     new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22));
 
-        public static IRecipe Recipe1 => new Recipe
+        public static Recipe Recipe1 => new Recipe
         {
-            Id = 1,
+            Id = 11,
             Name = "Recipe1",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             CreatedOn = EarlyDateTimeService.Moment,
             ModifiedOn = EarlyDateTimeService.Moment,
-            CreatedByUserId = 1,
-            ModifiedByUserId = 1
+            CreatedByUserId = 11,
+            ModifiedByUserId = 11
         };
 
-        public static IRecipe Recipe2 => new Recipe
+        public static Recipe Recipe2 => new Recipe
         {
-            Id = 2,
+            Id = 12,
             Name = "Recipe2",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             CreatedOn = EarlyDateTimeService.Moment,
             ModifiedOn = EarlyDateTimeService.Moment,
-            CreatedByUserId = 1,
-            ModifiedByUserId = 1
+            CreatedByUserId = 11,
+            ModifiedByUserId = 11
         };
 
-        public static IRecipe Recipe3 => new Recipe
+        public static Recipe Recipe3 => new Recipe
         {
-            Id = 3,
+            Id = 13,
             Name = "Recipe3",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             CreatedOn = EarlyDateTimeService.Moment,
             ModifiedOn = EarlyDateTimeService.Moment,
-            CreatedByUserId = 1,
-            ModifiedByUserId = 1
+            CreatedByUserId = 11,
+            ModifiedByUserId = 11
         };
 
-        public static IUser User1 => new User
+        public static User User1 => new User
         {
-            Id = 1,
+            Id = 11,
             FirstName = "First",
             LastName = "Last",
         };
 
-        public static IUser User2 => new User
+        public static User User2 => new User
         {
-            Id = 2,
+            Id = 12,
             FirstName = "First",
             LastName = "Last",
         };

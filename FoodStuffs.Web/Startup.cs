@@ -1,6 +1,6 @@
 using Core.Model.Services.DateTime;
 using Core.Model.Services.Logging;
-using FoodStuffs.Data.Services;
+using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Services;
 using Microsoft.AspNetCore.Builder;

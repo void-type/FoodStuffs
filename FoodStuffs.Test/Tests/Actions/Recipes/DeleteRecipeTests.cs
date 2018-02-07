@@ -1,7 +1,7 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Models;
-using FoodStuffs.Data.Services;
+using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Actions.Recipes;
+using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Test.Mocks;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 1));
+                    .Execute(new DeleteRecipe(data, 11));
 
                 Assert.True(responder.ResponseCreated);
 
@@ -52,14 +52,14 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
-                    RecipeId = 1,
-                    CategoryId = 1
+                    RecipeId = 11,
+                    CategoryId = 11
                 });
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
-                    RecipeId = 1,
-                    CategoryId = 2
+                    RecipeId = 11,
+                    CategoryId = 12
                 });
 
                 data.Recipes.Add(MockFactory.Recipe2);
@@ -68,20 +68,20 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
-                    RecipeId = 2,
-                    CategoryId = 2
+                    RecipeId = 12,
+                    CategoryId = 12
                 });
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
-                    RecipeId = 2,
-                    CategoryId = 3
+                    RecipeId = 12,
+                    CategoryId = 13
                 });
 
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 2));
+                    .Execute(new DeleteRecipe(data, 12));
 
                 Assert.True(responder.ResponseCreated);
 
@@ -89,16 +89,16 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.Equal(2, data.Categories.Stored.Count());
                 Assert.Equal(2, data.CategoryRecipes.Stored.Count());
 
-                Assert.NotNull(data.Recipes.Stored.GetById(1));
-                Assert.NotNull(data.Categories.Stored.GetById(1));
-                Assert.NotNull(data.Categories.Stored.GetById(2));
-                Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 1));
-                Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 2));
+                Assert.NotNull(data.Recipes.Stored.GetById(11));
+                Assert.NotNull(data.Categories.Stored.GetById(11));
+                Assert.NotNull(data.Categories.Stored.GetById(12));
+                Assert.NotNull(data.CategoryRecipes.Stored.GetById(11, 11));
+                Assert.NotNull(data.CategoryRecipes.Stored.GetById(11, 12));
 
-                Assert.Null(data.Recipes.Stored.GetById(2));
-                Assert.Null(data.Categories.Stored.GetById(3));
-                Assert.Null(data.CategoryRecipes.Stored.GetById(2, 2));
-                Assert.Null(data.CategoryRecipes.Stored.GetById(2, 3));
+                Assert.Null(data.Recipes.Stored.GetById(12));
+                Assert.Null(data.Categories.Stored.GetById(13));
+                Assert.Null(data.CategoryRecipes.Stored.GetById(12, 12));
+                Assert.Null(data.CategoryRecipes.Stored.GetById(12, 13));
             }
         }
 
@@ -110,7 +110,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
-                    .Execute(new DeleteRecipe(data, 2));
+                    .Execute(new DeleteRecipe(data, 12));
             }
 
             Assert.True(responder.ResponseCreated);

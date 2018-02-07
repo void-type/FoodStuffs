@@ -1,37 +1,35 @@
 ﻿using Core.Model.Services.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Core.Data.EntityFramework
 {
-    public class EfWritableRepository<TInterface, TDbEntity> : EfReadOnlyRepository<TInterface, TDbEntity>, IWritableRepository<TInterface>
-        where TDbEntity : class, TInterface, new() where TInterface : class
+    public class EfWritableRepository<TDbEntity> : EfReadOnlyRepository<TDbEntity>, IWritableRepository<TDbEntity> where TDbEntity : class, new()
     {
-        public TInterface New => new TDbEntity();
+        public TDbEntity New => new TDbEntity();
 
         public EfWritableRepository(DbContext context) : base(context)
         {
         }
 
-        public void Add(TInterface entity)
+        public void Add(TDbEntity entity)
         {
-            Context.Set<TDbEntity>().Add((TDbEntity)entity);
+            Context.Set<TDbEntity>().Add(entity);
         }
 
-        public void AddRange(IEnumerable<TInterface> entities)
+        public void AddRange(IEnumerable<TDbEntity> entities)
         {
-            Context.Set<TDbEntity>().AddRange(entities.Select(entity => (TDbEntity)entity));
+            Context.Set<TDbEntity>().AddRange(entities);
         }
 
-        public void Remove(TInterface entity)
+        public void Remove(TDbEntity entity)
         {
-            Context.Set<TDbEntity>().Remove((TDbEntity)entity);
+            Context.Set<TDbEntity>().Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<TInterface> entities)
+        public void RemoveRange(IEnumerable<TDbEntity> entities)
         {
-            Context.Set<TDbEntity>().RemoveRange(entities.Select(entity => (TDbEntity)entity));
+            Context.Set<TDbEntity>().RemoveRange(entities);
         }
     }
 }

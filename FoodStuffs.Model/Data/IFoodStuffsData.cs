@@ -8,9 +8,9 @@ namespace FoodStuffs.Model.Data
     /// </summary>
     public interface IFoodStuffsData : IPersistable
     {
-        IWritableRepository<ICategory> Categories { get; }
-        IWritableRepository<ICategoryRecipe> CategoryRecipes { get; }
-        IWritableRepository<IRecipe> Recipes { get; }
-        IWritableRepository<IUser> Users { get; }
+        IWritableRepository<Category> Categories { get; }
+        IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
+        IWritableRepository<Recipe> Recipes { get; }
+        IWritableRepository<User> Users { get; }
     }
 }

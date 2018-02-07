@@ -59,19 +59,19 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
         }
 
-        private ICategory CreateCategory(string viewModelCategory)
+        private Category CreateCategory(string viewModelCategory)
         {
-            var existingCategory = _data.Categories.New;
-            existingCategory.Name = viewModelCategory;
-            _data.Categories.Add(existingCategory);
-            return existingCategory;
+            var newCategory = _data.Categories.New;
+            newCategory.Name = viewModelCategory;
+            _data.Categories.Add(newCategory);
+            return newCategory;
         }
 
-        private void CreateCategoryRecipe(int recipeId, ICategory existingCategory)
+        private void CreateCategoryRecipe(int recipeId, Category category)
         {
             var categoryRecipe = _data.CategoryRecipes.New;
             categoryRecipe.RecipeId = recipeId;
-            categoryRecipe.CategoryId = existingCategory.Id;
+            categoryRecipe.CategoryId = category.Id;
             _data.CategoryRecipes.Add(categoryRecipe);
         }
     }

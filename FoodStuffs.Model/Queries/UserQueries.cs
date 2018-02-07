@@ -5,7 +5,7 @@ namespace FoodStuffs.Model.Queries
 {
     public static class UserQueries
     {
-        public static IUser GetById(this IQueryable<IUser> users, int id)
+        public static User GetById(this IQueryable<User> users, int id)
         {
             return users.SingleOrDefault(u => u.Id == id);
         }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FoodStuffs.Data.Models
+namespace FoodStuffs.Model.Data.Models
 {
     public partial class Recipe
     {
-        public virtual ICollection<CategoryRecipe> CategoryRecipe { get; set; }
+        public virtual ICollection<CategoryRecipe> CategoryRecipes { get; set; }
 
         public int? CookTimeMinutes { get; set; }
 
@@ -33,7 +33,7 @@ namespace FoodStuffs.Data.Models
 
         public Recipe()
         {
-            CategoryRecipe = new HashSet<CategoryRecipe>();
+            CategoryRecipes = new HashSet<CategoryRecipe>();
         }
     }
 }

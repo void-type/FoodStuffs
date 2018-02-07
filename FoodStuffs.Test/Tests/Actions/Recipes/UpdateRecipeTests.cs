@@ -1,6 +1,5 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Models;
-using FoodStuffs.Data.Services;
+using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
@@ -21,7 +20,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             var then = MockFactory.EarlyDateTimeService;
             var now = MockFactory.LateDateTimeService;
 
-            using (var data = new FoodStuffsListData())
+            using (var data = new FoodStuffsEfMemoryData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Users.Add(MockFactory.User2);
@@ -36,62 +35,37 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.Recipes.Add(MockFactory.Recipe2);
 
-                data.CategoryRecipes.AddRange(new List<ICategoryRecipe> {
+                data.CategoryRecipes.AddRange(new List<CategoryRecipe> {
                     new CategoryRecipe
                     {
-                        RecipeId = 1,
-                        CategoryId = 1
+                        RecipeId = 11,
+                        CategoryId = 11
                     },
 
                     new CategoryRecipe
                     {
-                        RecipeId = 1,
-                        CategoryId = 2
+                        RecipeId = 11,
+                        CategoryId = 12
                     },
 
                     new CategoryRecipe
                     {
-                        RecipeId = 1,
-                        CategoryId = 3
+                        RecipeId = 11,
+                        CategoryId = 13
                     },
 
                     new CategoryRecipe
                     {
-                        RecipeId = 2,
-                        CategoryId = 2
+                        RecipeId = 12,
+                        CategoryId = 12
                     },
 
                     new CategoryRecipe
                     {
-                        RecipeId = 2,
-                        CategoryId = 3
+                        RecipeId = 12,
+                        CategoryId = 13
                     }
                 });
-
-                // Force relations in list database
-                if (data.GetType() == typeof(FoodStuffsListData))
-                {
-                    foreach (var category in data.Categories.Stored)
-                    {
-                        category.CategoryRecipes = data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == category.Id)
-                            .ToList();
-                    }
-
-                    foreach (var categoryRecipe in data.CategoryRecipes.Stored)
-                    {
-                        categoryRecipe.Category =
-                            data.Categories.Stored.FirstOrDefault(c => c.Id == categoryRecipe.CategoryId);
-
-                        categoryRecipe.Recipe =
-                            data.Recipes.Stored.FirstOrDefault(r => r.Id == categoryRecipe.RecipeId);
-                    }
-
-                    foreach (var recipe in data.Recipes.Stored)
-                    {
-                        recipe.CategoryRecipes =
-                            data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id).ToList();
-                    }
-                }
 
                 data.SaveChanges();
 
@@ -108,7 +82,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 };
 
                 new ActionChain(responder)
-                    .Execute(new UpdateRecipe(data, now, newRecipeViewModel, 2));
+                    .Execute(new UpdateRecipe(data, now, newRecipeViewModel, 12));
 
                 var changedRecipe = data.Recipes.Stored.GetById(recipeToUpdate.Id);
 
@@ -118,8 +92,8 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 Assert.Equal(4, changedRecipe.PrepTimeMinutes);
                 Assert.Equal(then.Moment, changedRecipe.CreatedOn);
                 Assert.Equal(now.Moment, changedRecipe.ModifiedOn);
-                Assert.Equal(1, changedRecipe.CreatedByUserId);
-                Assert.Equal(2, changedRecipe.ModifiedByUserId);
+                Assert.Equal(11, changedRecipe.CreatedByUserId);
+                Assert.Equal(12, changedRecipe.ModifiedByUserId);
 
                 var newCategory4 = data.Categories.Stored.Single(c => c.Name == "Category4");
                 Assert.NotNull(newCategory4);
@@ -138,7 +112,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
             var recipeViewModel = new RecipeViewModel
             {
-                Id = 2,
+                Id = 12,
                 Categories = new List<string>
                 {
                     "Category1"
@@ -148,7 +122,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             using (var data = new FoodStuffsEfMemoryData())
             {
                 new ActionChain(responder)
-                    .Execute(new UpdateRecipe(data, now, recipeViewModel, 1));
+                    .Execute(new UpdateRecipe(data, now, recipeViewModel, 11));
             }
 
             Assert.True(responder.ResponseCreated);

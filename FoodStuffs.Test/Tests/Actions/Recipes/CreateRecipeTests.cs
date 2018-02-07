@@ -1,5 +1,5 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Services;
+using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
@@ -35,14 +35,13 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.Users.Add(MockFactory.User1);
 
                 var categoryToAdd = MockFactory.Category2;
-                categoryToAdd.Id = 2;
 
                 data.Categories.Add(categoryToAdd);
 
                 data.SaveChanges();
 
                 new ActionChain(responder)
-                    .Execute(new CreateRecipe(data, now, newRecipeViewModel, 1));
+                    .Execute(new CreateRecipe(data, now, newRecipeViewModel, 11));
 
                 Assert.True(responder.ResponseCreated);
 
@@ -52,8 +51,6 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 Assert.NotNull(data.Categories.Stored.GetByName("Category1"));
                 Assert.NotNull(data.Categories.Stored.GetByName("Category2"));
-                Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 1));
-                Assert.NotNull(data.CategoryRecipes.Stored.GetById(1, 2));
             }
         }
     }

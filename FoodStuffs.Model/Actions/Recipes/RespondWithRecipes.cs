@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             list = list.Skip((_page - 1) * _take).Take(_take);
 
-            respond.WithList(list.AsEnumerable().ToViewModel());
+            respond.WithList(list.ToList().ToViewModel());
         }
 
         private readonly string _categorySearch;

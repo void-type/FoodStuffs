@@ -56,7 +56,7 @@ namespace FoodStuffs.Model.Actions.Recipes
         private readonly int _userId;
         private readonly RecipeViewModel _viewModel;
 
-        private void AddCategoriesAndCategoryRecipes(int recipeId, IRecipeViewModel viewModel)
+        private void AddCategoriesAndCategoryRecipes(int recipeId, RecipeViewModel viewModel)
         {
             foreach (var viewModelCategoryName in viewModel.Categories)
             {
@@ -71,23 +71,23 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
         }
 
-        private ICategory CreateCategory(string viewModelCategory)
+        private Category CreateCategory(string viewModelCategory)
         {
-            var existingCategory = _data.Categories.New;
-            existingCategory.Name = viewModelCategory;
-            _data.Categories.Add(existingCategory);
-            return existingCategory;
+            var newCategory = _data.Categories.New;
+            newCategory.Name = viewModelCategory;
+            _data.Categories.Add(newCategory);
+            return newCategory;
         }
 
-        private void CreateCategoryRecipe(int recipeId, ICategory existingCategory)
+        private void CreateCategoryRecipe(int recipeId, Category category)
         {
             var categoryRecipe = _data.CategoryRecipes.New;
             categoryRecipe.RecipeId = recipeId;
-            categoryRecipe.CategoryId = existingCategory.Id;
+            categoryRecipe.CategoryId = category.Id;
             _data.CategoryRecipes.Add(categoryRecipe);
         }
 
-        private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe, IEnumerable<ICategoryRecipe> unusedCategoryRecipes)
+        private IEnumerable<Category> FindUnusedCategories(Recipe recipe, IEnumerable<CategoryRecipe> unusedCategoryRecipes)
         {
             var categoryIds = unusedCategoryRecipes.Select(cr => cr.CategoryId);
 
@@ -102,7 +102,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
         }
 
-        private IEnumerable<ICategoryRecipe> FindUnusedCategoryRecipes(IRecipe recipe, IRecipeViewModel viewModel)
+        private IEnumerable<CategoryRecipe> FindUnusedCategoryRecipes(Recipe recipe, RecipeViewModel viewModel)
         {
             var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
 

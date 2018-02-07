@@ -43,7 +43,7 @@ namespace FoodStuffs.Model.Actions.Recipes
         private readonly IFoodStuffsData _data;
         private readonly int _recipeId;
 
-        private IEnumerable<ICategory> FindUnusedCategories(IRecipe recipe)
+        private IEnumerable<Category> FindUnusedCategories(Recipe recipe)
         {
             var categoryIdsToCheck = recipe.CategoryRecipes.Select(cr => cr.CategoryId);
 
