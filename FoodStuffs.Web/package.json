@@ -89,7 +89,7 @@
     "not ie <= 8"
   ],
   "-vs-binding": {
-    "Clean": [ "build" ],
+    "BeforeBuild": [ "build" ],
     "ProjectOpened": [ "dev" ]
   }
 }
