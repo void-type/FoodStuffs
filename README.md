@@ -12,7 +12,7 @@ Within Web/Startup.cs, you can either...
     1. Within FoodStuffs.Web/Startup.cs, ensure the MemoryFoodStuffsData dependency is the only database uncommented.
 
 ## Get some tools
-- [.Net Core SDK 2.1.2](https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.2-windows-x64-installer)
+- [.Net Core SDK 2.1.4](https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-windows-x64-installer)
 - [Yarn](https://yarnpkg.com/lang/en/docs/install/)
 
 ## Clone, Build, And Run
@@ -38,7 +38,8 @@ dotnet restore
 dotnet build FoodStuffs.sln
 cd FoodStuffs.Web
 yarn install
+yarn run build
 yarn run dev
 dotnet run --launch-profile "Kestrel (Development)"
 ```
-Note: This sets ASPNETCORE_ENVIRONMENT to "Development" and serves client assets from webpack-dev-server. This is a trade off of stability since not all assets are fetched from that server, versus rapid development since webpack gives us hot reloading. The other envrionment profiles will run a production build of the SPA from wwwroot.
+Note: This sets ASPNETCORE_ENVIRONMENT to "Development" and serves client assets from webpack-dev-server. This is a trade off of stability since not all assets are fetched from that server, versus rapid development since webpack gives us hot reloading. The other environment profiles will run a production build of the SPA from wwwroot.
