@@ -1,5 +1,5 @@
 <template>
-    <table class="hover">
+    <table>
         <tbody>
             <tr v-for="recipe in recipes"
                 v-bind:key="recipe.id"

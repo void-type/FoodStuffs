@@ -26,13 +26,13 @@
 
 <script>
     import { mapActions, mapGetters } from "vuex";
-    import ListSearch from "../../models/recipeListSearch";
+    import RecipeSearchParameters from "../../models/recipeSearchParameters";
     import SearchTable from "./SearchTable";
 
     export default {
         data: function () {
             return {
-                search: new ListSearch()
+                search: new RecipeSearchParameters(),
             }
         },
         computed: {
@@ -41,7 +41,8 @@
         methods: {
             ...mapActions(["fetchRecipes"]),
             clearSearch() {
-                this.search = new ListSearch();
+                this.search = new RecipeSearchParameters();
+                this.fetchRecipes(this.search);
             }
         },
         components: {

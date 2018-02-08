@@ -1,5 +1,6 @@
-import webApi from "./webApi"
-import Recipe from "../models/recipe"
+import webApi from "./webApi";
+import Recipe from "../models/recipe";
+import RecipeSearchParameters from "../models/recipeSearchParameters";
 
 const defaultCallbacks = {
   onSuccess(context, data) {
@@ -34,7 +35,7 @@ const defaultCallbacks = {
 export default {
   fetchRecipes(context, params, postbackId) {
     webApi.listRecipes(
-      params,
+      params || new RecipeSearchParameters(),
       data => defaultCallbacks.onFetchListSuccess(context, data, postbackId),
       response => defaultCallbacks.onFailure(context, response));
   },

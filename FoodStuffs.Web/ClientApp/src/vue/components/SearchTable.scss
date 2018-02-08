@@ -1,1 +1,37 @@
-﻿
+﻿@import "../variables";
+@import "../inputs";
+
+table {
+    width: 100%;
+    padding: 1em;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    tr {
+        text-align: left;
+    }
+
+    th, td {
+        padding: .5em 1em;
+    }
+
+    td {
+        border-bottom: $border;
+        border-top: $border;
+    }
+
+    tbody tr:hover {
+        cursor: pointer;
+        background-color: $color-focus;
+    }
+}
+
+.ptr {
+    cursor: pointer;
+}
+
+@media #{$medium-screen} {
+    table {
+        width: 100%;
+    }
+}
