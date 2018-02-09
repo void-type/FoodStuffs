@@ -6,21 +6,27 @@ table {
     padding: 1em;
     border-collapse: collapse;
     border-spacing: 0;
-    margin-bottom: 2em;
 
     tr {
         text-align: left;
     }
 
-    th, td {
+    th {
         border-bottom: $border;
-        border-top: $border;
+    }
+
+    td {
+        border-bottom: $border-light;
+    }
+
+    th, td {
         padding: .5em 1em;
     }
 
     tbody tr:hover {
         cursor: pointer;
-        background-color: $color-focus;
+        background-color: mix($color-ternary, $color-secondary, 60%);
+        box-shadow: $highlight-border;
     }
 }
 

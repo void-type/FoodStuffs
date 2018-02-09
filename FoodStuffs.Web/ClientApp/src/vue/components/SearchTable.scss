@@ -11,18 +11,23 @@ table {
         text-align: left;
     }
 
+    th {
+        border-bottom: $border;
+    }
+
+    td {
+        border-bottom: $border-light;
+    }
+
     th, td {
         padding: .5em 1em;
     }
 
-    td {
-        border-bottom: $border;
-        border-top: $border;
-    }
-
     tbody tr:hover {
         cursor: pointer;
-        background-color: $color-focus;
+        cursor: pointer;
+        background-color: mix($color-ternary, $color-secondary, 60%);
+        box-shadow: $highlight-border;
     }
 }
 

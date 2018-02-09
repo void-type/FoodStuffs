@@ -21,8 +21,9 @@ $color-background: $color-ternary;
 $color-border: rgba(37, 40, 53, 1);
 $color-focus: rgba($color-primary, .9);
 
-$highlight-border: inset 0 0 1px $color-neutral-inverse, inset 0 0 3px $color-neutral-inverse, inset 0 0 5px $color-neutral-inverse;
+$highlight-border: inset 0 0 1px $color-secondary, inset 0 0 3px $color-secondary, inset 0 0 5px $color-secondary;
 $border: 1px solid mix($color-border, $color-neutral-inverse, 70%);
+$border-light: 1px solid mix($color-border, $color-neutral-inverse, 20%);
 $shadow: 2px 3px 2px rgba($color-border, .5);
 $input-focus: 2px 3px 2px rgba($color-focus, .5);
 $shadow-collapse: 1px 1px 2px rgba($color-border, .5);

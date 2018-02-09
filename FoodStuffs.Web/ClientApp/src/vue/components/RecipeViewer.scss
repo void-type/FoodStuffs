@@ -1,16 +1,16 @@
 ﻿@import "../variables";
 @import "../inputs";
 
-.category:not(:last-child):after {
+.categories > span:not(:last-child):after {
     content: ", ";
 }
 
-.button-row {
-    margin-top: 1.5em;
+p {
+    margin-bottom: 1.5em;
 }
 
 hr {
-    margin: 1.5em 0em;
+    margin: 1em 0em;
 }
 
 @media screen {

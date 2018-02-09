@@ -1,13 +1,6 @@
 ﻿<template>
     <div class="form-group">
         <div>
-            <div>
-                <input type="text"
-                       v-model="newTagName"
-                       v-bind:id="fieldName"
-                       v-bind:name="fieldName" />
-                <button v-on:click.prevent="addTagClick()">Add</button>
-            </div>
             <div class="tags">
                 <span v-for="tag in tags" v-bind:key="tag">
                     {{tag}}&nbsp;&nbsp;
@@ -17,6 +10,15 @@
                 </span>
             </div>
         </div>
+
+        <div>
+            <input type="text"
+                   v-model="newTagName"
+                   v-bind:id="fieldName"
+                   v-bind:name="fieldName" />
+            <button v-on:click.prevent="addTagClick()">Add</button>
+        </div>
+
         <label v-bind:for="fieldName">{{label}}</label>
     </div>
 </template>

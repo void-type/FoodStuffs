@@ -3,12 +3,10 @@
         <div id="no-print">
             <header>
                 <div class="topbar">
-                    <div>
-                        <router-link v-bind:to="{name: 'home'}" class="logo">
-                            <img src="../assets/logo.png" alt="FoodStuffs logo" />
-                            <a class="title">{{applicationName}}</a>
-                        </router-link>
-                    </div>
+                    <router-link v-bind:to="{name: 'home'}" class="logo">
+                        <img src="../assets/logo.png" alt="FoodStuffs logo" />
+                        <span>{{applicationName}}</span>
+                    </router-link>
                     <nav>
                         <ul>
                             <li><router-link v-bind:to="{name: 'home'}">Home</router-link></li>

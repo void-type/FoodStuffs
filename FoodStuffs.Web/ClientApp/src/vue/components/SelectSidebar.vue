@@ -1,13 +1,8 @@
 ﻿<template>
     <div>
-        <div v-if="recentRecipes.length > 0">
-            <h3 class="text-center">Recent</h3>
-            <SelectSidebarList v-bind:recipes="recentRecipes" />
-        </div>
-        <div>
-            <button v-on:click="newRecipe()">New</button>
-            <SelectSidebarList v-bind:recipes="recipes" />
-        </div>
+        <button v-on:click="newRecipe()">New</button>
+        <SelectSidebarList v-bind:recipes="recentRecipes" v-bind:title="'Recent'" v-if="recentRecipes.length > 0" />
+        <SelectSidebarList v-bind:recipes="recipes" v-bind:title="'Recipes'" />
     </div>
 </template>
 

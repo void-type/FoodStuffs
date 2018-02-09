@@ -2,28 +2,23 @@
 @import "../inputs";
 
 .form-group > div {
-    display: inline-block;
-    width: 100%;
+    display: flex;
+}
 
-    & > div {
-        display: flex;
-    }
+.tags {
+    display: flex;
+    flex-flow: wrap;
 
-    .tags {
-        display: flex;
-        flex-flow: wrap;
+    & > span {
+        background-color: $color-neutral-medium;
+        box-sizing: border-box;
+        padding: .3em .6em;
+        border: $border;
+        box-shadow: $shadow;
 
-        & > span {
-            background-color: $color-neutral-medium;
-            box-sizing: border-box;
-            padding: .3em .6em;
-            border: $border;
-            box-shadow: $shadow;
-
-            & > span:hover {
-                cursor: pointer;
-                color: $color-danger;
-            }
+        & > span:hover {
+            cursor: pointer;
+            color: $color-danger;
         }
     }
 }

@@ -1,5 +1,10 @@
 <template>
     <table>
+        <thead v-if="title !== null">
+            <tr>
+                <th>{{title}}</th>
+            </tr>
+        </thead>
         <tbody>
             <tr v-for="recipe in recipes"
                 v-bind:key="recipe.id"
@@ -19,6 +24,10 @@
             recipes: {
                 type: Array,
                 required: true
+            },
+            title: {
+                type: String,
+                required: false
             }
         },
         methods: {

@@ -13,18 +13,11 @@ form {
         flex-wrap: wrap;
 
         &:not(:last-child) {
-            margin-bottom: 1.5em;
-        }
-
-        input[type="button"], input[type="submit"], button {
-            &.pull-right {
-                margin-left: auto;
-            }
+            margin-bottom: 1em;
         }
 
         .form-group {
             display: flex;
-            flex-direction: column-reverse;
             flex-grow: 1;
 
             &.danger {
@@ -41,6 +34,10 @@ form {
                 margin-right: 2em;
             }
 
+            &:not(.button-row) {
+                flex-direction: column-reverse;
+            }
+
             label {
                 display: block;
                 white-space: nowrap;
@@ -48,6 +45,10 @@ form {
                 text-overflow: ellipsis;
                 font-weight: bold;
                 margin-bottom: .2em;
+            }
+
+            &:focus-within label {
+                color: $color-focus;
             }
         }
     }
