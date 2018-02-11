@@ -3,6 +3,7 @@
     public class PagedItemSet<TEntity> : CountedItemSet<TEntity>, IPagedItemSet
     {
         public int Page { get; set; }
+        public int Take { get; set; }
         public int TotalCount { get; set; }
     }
 }

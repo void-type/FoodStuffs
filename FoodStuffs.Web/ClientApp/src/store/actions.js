@@ -23,6 +23,10 @@ const defaultCallbacks = {
 
   onFetchListSuccess(context, data, postbackId) {
     context.commit("setRecipesList", data.items);
+    context.commit("setRecipesTotalCount", data.totalCount);
+    context.commit("setRecipesPage", data.page);
+    context.commit("setRecipesTake", data.take);
+
     const id = (postbackId) ? postbackId.toString() : null;
     const selectedRecipe = context.state.recipes
       .filter(recipe => recipe.id.toString() === id)[0]

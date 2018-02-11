@@ -1,5 +1,6 @@
 export default class {
   constructor() {
+    this.id = 0;
     this.categories = [];
     this.cookTimeMinutes = null;
     this.directions = "";
@@ -8,7 +9,6 @@ export default class {
     this.prepTimeMinutes = null;
     this.createdBy = "";
     this.createdOn = new Date();
-    this.id = 0;
     this.modifiedBy = "";
     this.modifiedOn = new Date();
   }

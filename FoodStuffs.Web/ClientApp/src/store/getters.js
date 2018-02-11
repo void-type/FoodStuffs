@@ -7,6 +7,18 @@
     return state.recipes;
   },
 
+  recipesPage(state) {
+    return state.recipesPage;
+  },
+
+  recipesTake(state) {
+    return state.recipesTake;
+  },
+
+  recipesTotalCount(state) {
+    return state.recipesTotalCount;
+  },
+
   fieldsInError(state) {
     return state.fieldsInError;
   },

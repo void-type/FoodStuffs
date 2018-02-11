@@ -27,6 +27,18 @@ export default {
     state.recipes = recipes;
   },
 
+  setRecipesTotalCount(state, totalCount) {
+    state.recipesTotalCount = totalCount;
+  },
+
+  setRecipesPage(state, page) {
+    state.recipesPage = page;
+  },
+
+  setRecipesTake(state, take) {
+    state.recipesTake = take;
+  },
+
   setMessage(state, message) {
     state.messages = [message];
   },

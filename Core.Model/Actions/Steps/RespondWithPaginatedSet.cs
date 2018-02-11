@@ -22,6 +22,7 @@ namespace Core.Model.Actions.Steps
             {
                 Items = set,
                 Page = _page,
+                Take = _take,
                 TotalCount = _set.Count()
             };
 
