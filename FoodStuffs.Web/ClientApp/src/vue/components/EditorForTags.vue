@@ -66,5 +66,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./TagEditor";
+    @import "./EditorForTags";
 </style>

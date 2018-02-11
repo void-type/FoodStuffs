@@ -1,18 +1,18 @@
 <template>
     <section>
         <SelectSidebar />
-        <RecipeViewer />
+        <HomeViewer />
     </section>
 </template>
 
 <script>
     import SelectSidebar from "../components/SelectSidebar";
-    import RecipeViewer from "../components/RecipeViewer";
+    import HomeViewer from "../components/HomeViewer";
 
     export default {
         components: {
             SelectSidebar,
-            RecipeViewer
+            HomeViewer
         }
     };
 </script>

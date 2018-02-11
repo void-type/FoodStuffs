@@ -25,7 +25,7 @@
             </footer>
         </div>
         <div id="print-only">
-            <RecipeViewer></RecipeViewer>
+            <HomeViewer></HomeViewer>
         </div>
     </div>
 </template>
@@ -35,7 +35,7 @@
     import router from "../router";
     import store from "../store";
     import MessageCenter from "./components/MessageCenter";
-    import RecipeViewer from "./components/RecipeViewer";
+    import HomeViewer from "./components/HomeViewer";
 
     export default {
         data: function () {
@@ -55,7 +55,7 @@
         store,
         components: {
             MessageCenter,
-            RecipeViewer
+            HomeViewer
         },
         beforeMount() {
             this.refresh();

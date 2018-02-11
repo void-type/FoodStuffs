@@ -53,7 +53,7 @@
 
 <script>
     import { mapActions, mapGetters } from "vuex";
-    import TagEditor from "./TagEditor";
+    import TagEditor from "./EditorForTags";
 
     export default {
         computed: {
