@@ -28,5 +28,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./SelectSidebar";
+    @import "./SelectSidebar.vue";
 </style>

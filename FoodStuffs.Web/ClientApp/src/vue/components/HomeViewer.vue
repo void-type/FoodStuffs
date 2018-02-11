@@ -31,5 +31,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./HomeViewer";
+    @import "./HomeViewer.vue";
 </style>

@@ -25,5 +25,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./MessageCenter";
+    @import "./MessageCenter.vue";
 </style>

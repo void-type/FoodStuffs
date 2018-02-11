@@ -66,5 +66,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./EditorForTags";
+    @import "./EditorForTags.vue";
 </style>

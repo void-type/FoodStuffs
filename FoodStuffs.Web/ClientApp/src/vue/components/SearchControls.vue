@@ -51,5 +51,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./SearchControls";
+    @import "./SearchControls.vue";
 </style>

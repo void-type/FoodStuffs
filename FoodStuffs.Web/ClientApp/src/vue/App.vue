@@ -64,5 +64,5 @@
 </script>
 
 <style lang="scss">
-    @import "./App";
+    @import "./App.vue";
 </style>

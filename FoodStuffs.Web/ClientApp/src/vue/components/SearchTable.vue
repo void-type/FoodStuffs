@@ -69,5 +69,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./SearchTable";
+    @import "./SearchTable.vue";
 </style>

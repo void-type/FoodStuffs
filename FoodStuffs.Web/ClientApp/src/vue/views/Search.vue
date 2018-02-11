@@ -23,5 +23,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./Search.scss";
+    @import "./Search.vue";
 </style>

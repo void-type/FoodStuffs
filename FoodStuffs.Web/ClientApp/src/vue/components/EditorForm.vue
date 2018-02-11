@@ -124,5 +124,5 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "./EditorForm";
+    @import "./EditorForm.vue";
 </style>
