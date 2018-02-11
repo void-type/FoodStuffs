@@ -1,5 +1,5 @@
 using Core.Model.Actions.Responder;
-using Core.Model.Actions.Responses.CountedItemSet;
+using Core.Model.Actions.Responses.ItemSet;
 using Core.Model.Actions.Responses.Message;
 using Core.Model.Services.Logging;
 using Core.Model.Validation;

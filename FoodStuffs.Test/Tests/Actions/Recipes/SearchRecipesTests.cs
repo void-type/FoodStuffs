@@ -2,47 +2,31 @@
 using FoodStuffs.Data.EntityFramework;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
+using System.Collections.Generic;
 using Xunit;
 
 namespace FoodStuffs.Test.Tests.Actions.Recipes
 {
-    public class RespondWithAllRecipesTests
+    public class SearchRecipesTests
     {
         [Fact]
-        public void RespondWithAllRecipesEmpty()
+        public void SearchAllRecipesEmpty()
         {
             var responder = MockFactory.GetResponder;
 
             using (var data = new FoodStuffsEfMemoryData())
             {
                 data.Users.Add(MockFactory.User1);
-                new ActionChain(responder)
-                    .Execute(new RespondWithRecipes(data));
 
-                Assert.True(responder.ResponseCreated);
-                Assert.Empty(responder.Response.DataList);
-            }
-        }
-
-        [Fact]
-        public void RespondWithAllRecipesNotEmpty()
-        {
-            var responder = MockFactory.GetResponder;
-
-            using (var data = new FoodStuffsEfMemoryData())
-            {
-                data.Users.Add(MockFactory.User1);
-                data.Recipes.Add(MockFactory.Recipe1);
-                data.Recipes.Add(MockFactory.Recipe2);
-
-                data.SaveChanges();
+                var context = new List<IRecipeViewModel>();
 
                 new ActionChain(responder)
-                    .Execute(new RespondWithRecipes(data));
+                    .Execute(new SearchRecipes(data, null, null, context));
 
-                Assert.True(responder.ResponseCreated);
-                Assert.Equal(2, responder.Response.DataList.Count);
+                Assert.False(responder.ResponseCreated);
+                Assert.Empty(context);
             }
         }
 
@@ -52,7 +36,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [InlineData("1", 1)]
         [InlineData("cat 1 3", 1)]
         [InlineData("1 2", 0)]
-        public void RespondWithNameSearchRecipesByCategory(string categorySearch, int expectedFound)
+        public void SearchRecipesByCategory(string categorySearch, int expectedFound)
         {
             var responder = MockFactory.GetResponder;
 
@@ -107,11 +91,13 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.SaveChanges();
 
-                new ActionChain(responder)
-                    .Execute(new RespondWithRecipes(data, null, categorySearch));
+                var context = new List<IRecipeViewModel>();
 
-                Assert.True(responder.ResponseCreated);
-                Assert.Equal(expectedFound, responder.Response.DataList.Count);
+                new ActionChain(responder)
+                    .Execute(new SearchRecipes(data, null, categorySearch, context));
+
+                Assert.False(responder.ResponseCreated);
+                Assert.Equal(expectedFound, context.Count);
             }
         }
 
@@ -121,7 +107,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [InlineData("", 3)]
         [InlineData(null, 3)]
         [InlineData("1", 1)]
-        public void RespondWithNameSearchRecipesByName(string nameSearch, int expectedFound)
+        public void SearchRecipesByName(string nameSearch, int expectedFound)
         {
             var responder = MockFactory.GetResponder;
 
@@ -134,16 +120,18 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 data.SaveChanges();
 
-                new ActionChain(responder)
-                    .Execute(new RespondWithRecipes(data, nameSearch));
+                var context = new List<IRecipeViewModel>();
 
-                Assert.True(responder.ResponseCreated);
-                Assert.Equal(expectedFound, responder.Response.DataList.Count);
+                new ActionChain(responder)
+                    .Execute(new SearchRecipes(data, nameSearch, null, context));
+
+                Assert.False(responder.ResponseCreated);
+                Assert.Equal(expectedFound, context.Count);
             }
         }
 
         [Fact]
-        public void RespondWithPaginatedRecipes()
+        public void SearchRecipesNotEmpty()
         {
             var responder = MockFactory.GetResponder;
 
@@ -152,15 +140,16 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);
                 data.Recipes.Add(MockFactory.Recipe2);
-                data.Recipes.Add(MockFactory.Recipe3);
 
                 data.SaveChanges();
 
-                new ActionChain(responder)
-                    .Execute(new RespondWithRecipes(data, null, null, 2, 2));
+                var context = new List<IRecipeViewModel>();
 
-                Assert.True(responder.ResponseCreated);
-                Assert.Single(responder.Response.DataList);
+                new ActionChain(responder)
+                    .Execute(new SearchRecipes(data, null, null, context));
+
+                Assert.False(responder.ResponseCreated);
+                Assert.Equal(2, context.Count);
             }
         }
     }

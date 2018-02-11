@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Model.Actions.Responses.CountedItemSet
+namespace Core.Model.Actions.Responses.ItemSet
 {
     public interface ICountedItemSet<TEntity>
     {

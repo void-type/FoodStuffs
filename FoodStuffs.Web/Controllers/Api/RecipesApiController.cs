@@ -1,12 +1,14 @@
 using Core.Model.Actions.Chain;
 using Core.Model.Actions.Steps;
 using Core.Model.Services.DateTime;
+using FoodStuffs.Model.Actions;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Validation;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
@@ -52,8 +54,11 @@ namespace FoodStuffs.Web.Controllers.Api
         [HttpGet]
         public IActionResult List(string name = null, string category = null, int take = int.MaxValue, int page = 1)
         {
+            var context = new List<IRecipeViewModel>();
+
             new ActionChain(_responder)
-                .Execute(new RespondWithRecipes(_data, name, category, take, page));
+                .Execute(new SearchRecipes(_data, name, category, context))
+                .Execute(new RespondWithPaginatedSet<IRecipeViewModel>(context, take, page));
 
             return _responder.Response;
         }

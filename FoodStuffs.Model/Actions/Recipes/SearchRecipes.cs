@@ -2,19 +2,20 @@
 using Core.Model.Actions.Steps;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class RespondWithRecipes : AbstractActionStep
+    public class SearchRecipes : AbstractActionStep
     {
-        public RespondWithRecipes(IFoodStuffsData data, string nameSearch = null, string categorySearch = null, int take = int.MaxValue, int page = 1)
+        public SearchRecipes(IFoodStuffsData data, string nameSearch, string categorySearch, List<IRecipeViewModel> recipeViewModelsContext)
         {
             _data = data;
             _nameSearch = nameSearch;
             _categorySearch = categorySearch;
-            _take = take;
-            _page = page;
+            _recipeViewModelsContext = recipeViewModelsContext;
         }
 
         protected override void PerformStep(IActionResponder respond)
@@ -31,15 +32,13 @@ namespace FoodStuffs.Model.Actions.Recipes
                 list = list.SearchCategory(_categorySearch);
             }
 
-            list = list.Skip((_page - 1) * _take).Take(_take);
-
-            respond.WithList(list.ToList().ToViewModel());
+            _recipeViewModelsContext.Clear();
+            _recipeViewModelsContext.AddRange(list.ToList().ToViewModel());
         }
 
         private readonly string _categorySearch;
         private readonly IFoodStuffsData _data;
         private readonly string _nameSearch;
-        private readonly int _page;
-        private readonly int _take;
+        private readonly List<IRecipeViewModel> _recipeViewModelsContext;
     }
 }

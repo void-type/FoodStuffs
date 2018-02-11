@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Core.Model.Actions.Responses.CountedItemSet
+namespace Core.Model.Actions.Responses.ItemSet
 {
     /// <summary>
     /// A DTO for sending a collection to the UI. Predictably brings items into memory from the database and counts them before sending them to the UI.
