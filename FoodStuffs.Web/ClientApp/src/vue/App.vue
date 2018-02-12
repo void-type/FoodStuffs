@@ -11,12 +11,22 @@
                     </router-link>
                     <nav>
                         <ul>
-                            <li><router-link :to="{name: 'home'}">Home</router-link></li>
-                            <li><router-link :to="{name: 'search'}">Search</router-link></li>
+                            <li>
+                                <router-link :to="{name: 'home'}"
+                                             :class="{'current-page': $route.name === 'home'}">
+                                    Home
+                                </router-link>
+                            </li>
+                            <li>
+                            <router-link :to="{name: 'search'}"
+                                         :class="{'current-page': $route.name === 'search'}">
+                                Search
+                            </router-link>
+                            </li>
                         </ul>
                     </nav>
                     <router-link :to="{name: 'home'}"
-                                 class="pull-right">
+                                 :class="{'pull-right': true, 'current-page': $route.name === 'login'}">
                         Login
                     </router-link>
                 </div>

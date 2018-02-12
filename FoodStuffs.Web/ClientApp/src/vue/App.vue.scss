@@ -124,6 +124,7 @@ header {
 
                 &.current-page {
                     color: $color-secondary-dark;
+                    font-weight: bold;
                 }
 
                 &:hover, &:active {
