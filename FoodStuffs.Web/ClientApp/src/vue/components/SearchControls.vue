@@ -1,20 +1,28 @@
 ﻿<template>
-    <form v-on:keyup.enter.prevent="fetchRecipes(search)">
+    <form>
         <div class="form-row">
             <div class="form-group">
-                <input type="text" id="searchName" name="searchName" v-model="search.name" />
-                <label for="searchName">Name Contains</label>
+                <input type="text"
+                       id="nameSearch"
+                       name="nameSearch"
+                       :value="nameSearch"
+                       @input="updateNameSearch($event.target.value)" />
+                <label for="nameSearch">Name Contains</label>
             </div>
             <div class="form-group">
-                <input type="text" id="searchCategory" name="searchCategory" v-model="search.category" />
-                <label for="searchCategory">Categories Contain</label>
+                <input type="text"
+                       id="categorySearch"
+                       name="categorySearch"
+                       :value="categorySearch"
+                       @input="updateCategorySearch($event.target.value)" />
+                <label for="categorySearch">Categories Contain</label>
             </div>
             <div class="form-group button-group">
                 <div>
-                    <button v-on:click.prevent="fetchRecipes(search)">
+                    <button @click.prevent="search(nameSearch, categorySearch)">
                         Search
                     </button>
-                    <button v-on:click.prevent="clearSearch(search)">
+                    <button @click.prevent="clear()">
                         Clear All
                     </button>
                 </div>
@@ -24,28 +32,30 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from "vuex";
-    import RecipeSearchParameters from "../../models/recipeSearchParameters";
-    import SearchTable from "./SearchTable";
-
     export default {
-        data: function () {
-            return {
-                search: new RecipeSearchParameters(),
+        props: {
+            nameSearch: {
+                type: String,
+                required: true
+            },
+            categorySearch: {
+                type: String,
+                required: true
             }
-        },
-        computed: {
-            ...mapGetters(["recipes"])
         },
         methods: {
-            ...mapActions(["fetchRecipes"]),
-            clearSearch() {
-                this.search = new RecipeSearchParameters();
-                this.fetchRecipes(this.search);
+            search(nameSearch, categorySearch) {
+                this.$emit("search", nameSearch, categorySearch);
+            },
+            clear(nameSearch, categorySearch) {
+                this.$emit("clear");
+            },
+            updateNameSearch(value) {
+                this.$emit("updateNameSearch", value)
+            },
+            updateCategorySearch(value) {
+                this.$emit("updateCategorySearch", value);
             }
-        },
-        components: {
-            SearchTable
         }
     };
 </script>

@@ -7,8 +7,8 @@
         </thead>
         <tbody>
             <tr v-for="recipe in recipes"
-                v-bind:key="recipe.id"
-                v-on:click="selectRecipe(recipe)">
+                :key="recipe.id"
+                @click="selectRecipe(recipe)">
 
                 <td>{{recipe.name}}</td>
             </tr>

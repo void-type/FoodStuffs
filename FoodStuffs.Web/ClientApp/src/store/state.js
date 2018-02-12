@@ -1,13 +1,15 @@
 import Recipe from "../models/recipe";
+import RecipesSearchParameters from "../models/recipesSearchParameters";
 
 export default {
-  messages: [],
-  recipes: [],
-  recipesTotalCount: 0,
-  recipesPage: 0,
-  recipesTake: 0,
-  fieldsInError: [],
   currentRecipe: new Recipe(),
+  messages: [],
+  fieldsInError: [],
   isError: false,
-  recentRecipes: []
+  recipesList: [],
+  recipesListPage: 0,
+  recipesListTake: 0,
+  recipesListTotalCount: 0,
+  recentRecipes: [],
+  recipesSearchParameters: new RecipesSearchParameters()
 }

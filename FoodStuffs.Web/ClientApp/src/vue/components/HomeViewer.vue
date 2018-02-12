@@ -8,11 +8,21 @@
         <hr />
         <p>
             <strong>Prep Time: </strong>{{currentRecipe.prepTimeMinutes}} minutes. <strong>Cook Time: </strong>{{currentRecipe.cookTimeMinutes}} minutes.<br />
-            <strong>Categories: </strong><span class="categories"><span v-for="category in currentRecipe.categories" v-bind:key="category">{{category}}</span></span><br />
+            <strong>Categories: </strong>
+            <span class="categories">
+                <span v-for="category in currentRecipe.categories"
+                      :key="category">
+                    {{category}}
+                </span>
+            </span><br />
             <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}<br />
             <strong>Created On: </strong>{{currentRecipe.createdOn | dateString}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOn | dateString}}
         </p>
-        <router-link v-bind:to="{name: 'edit'}" tag="button" class="no-print">Edit</router-link>
+        <router-link class="no-print"
+                     :to="{name: 'edit'}"
+                     tag="button">
+            Edit
+        </router-link>
     </div>
 </template>
 

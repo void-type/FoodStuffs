@@ -25,7 +25,6 @@ table {
 
     tbody tr:hover {
         cursor: pointer;
-        cursor: pointer;
         background-color: mix($color-ternary, $color-secondary, 60%);
         box-shadow: $highlight-border;
     }

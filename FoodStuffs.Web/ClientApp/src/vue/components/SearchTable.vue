@@ -2,15 +2,18 @@
     <table>
         <thead>
             <tr>
-                <th class="ptr" v-on:click="sortByNameClick()">Name &nbsp;<span v-html="sortSymbols[sortByNameDirection]"></span></th>
+                <th class="ptr"
+                    @click="sortByNameClick()">
+                    Name &nbsp;
+                    <span v-html="sortSymbols[sortByNameDirection]"></span>
+                </th>
                 <th>Category</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="recipe in filteredRecipes"
-                v-bind:key="recipe.id"
-                v-on:click="selectClick(recipe)">
-
+                :key="recipe.id"
+                @click="selectClick(recipe)">
                 <td>{{recipe.name}}</td>
                 <td>{{recipe.categories.join(", ")}}</td>
             </tr>

@@ -1,10 +1,10 @@
 <template>
     <div v-if="messages.length > 0"
-         v-bind:class="{messages: true, danger: isError}"
-         v-on:click="clearMessages()">
+         :class="{messages: true, danger: isError}"
+         @click="clearMessages()">
         <ul>
             <li v-for="message in messages"
-                v-bind:key="message">
+                :key="message">
                 {{message}}
             </li>
         </ul>

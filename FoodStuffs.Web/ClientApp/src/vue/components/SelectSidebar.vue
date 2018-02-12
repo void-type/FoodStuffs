@@ -1,8 +1,13 @@
 ﻿<template>
     <div>
-        <button v-on:click="newRecipe()">New</button>
-        <SelectSidebarList v-bind:recipes="recentRecipes" v-bind:title="'Recent'" v-if="recentRecipes.length > 0" />
-        <SelectSidebarList v-bind:recipes="recipes" v-bind:title="'Recipes'" />
+        <button @click="newRecipe()">New</button>
+
+        <SelectSidebarList :recipes="recentRecipes"
+                           :title="'Recent'"
+                           v-if="recentRecipes.length > 0" />
+
+        <SelectSidebarList :recipes="recipesList"
+                           :title="'Recipes'" />
     </div>
 </template>
 
@@ -12,7 +17,7 @@
 
     export default {
         computed: {
-            ...mapGetters(["recipes", "recentRecipes"])
+            ...mapGetters(["recipesList", "recentRecipes"])
         },
         methods: {
             ...mapActions(["selectRecipe"]),

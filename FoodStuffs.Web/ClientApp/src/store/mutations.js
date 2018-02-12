@@ -23,20 +23,40 @@ export default {
     state.currentRecipe.cookTimeMinutes = value;
   },
 
+  addCategoryToCurrentRecipe(state, newCategoryName) {
+    state.currentRecipe.categories.push(newCategoryName);
+  },
+
+  removeCategoryFromCurrentRecipe(state, indexOfCategoryToRemove) {
+    state.currentRecipe.categories.splice(indexOfCategoryToRemove, 1);
+  },
+
   setRecipesList(state, recipes) {
-    state.recipes = recipes;
+    state.recipesList = recipes;
   },
 
-  setRecipesTotalCount(state, totalCount) {
-    state.recipesTotalCount = totalCount;
+  setRecipesListPage(state, page) {
+    state.recipesListPage = page;
   },
 
-  setRecipesPage(state, page) {
-    state.recipesPage = page;
+  setRecipesListTake(state, take) {
+    state.recipesListTake = take;
   },
 
-  setRecipesTake(state, take) {
-    state.recipesTake = take;
+  setRecipesListTotalCount(state, totalCount) {
+    state.recipesListTotalCount = totalCount;
+  },
+
+  setRecipesSearchParametersNameSearch(state, nameSearch) {
+    state.recipesSearchParameters.nameSearch = nameSearch;
+  },
+
+  setRecipesSearchParametersCategorySearch(state, categorySearch) {
+    state.recipesSearchParameters.categorySearch = categorySearch;
+  },
+
+  setRecipesSearchParametersPage(state, page) {
+    state.recipesSearchParameters.page = page;
   },
 
   setMessage(state, message) {
@@ -55,16 +75,8 @@ export default {
     state.isError = status;
   },
 
-  addCategoryToCurrentRecipe(state, newCategoryName) {
-    state.currentRecipe.categories.push(newCategoryName);
-  },
-
-  removeCategoryFromCurrentRecipe(state, indexOfCategoryToRemove) {
-    state.currentRecipe.categories.splice(indexOfCategoryToRemove, 1);
-  },
-
   addCurrentRecipeToRecents(state) {
-    if (state.recipes.indexOf(state.currentRecipe) < 0) {
+    if (state.recipesList.indexOf(state.currentRecipe) < 0) {
       return;
     }
 

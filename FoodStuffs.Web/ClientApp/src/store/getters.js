@@ -1,22 +1,10 @@
 ﻿export default {
+  currentRecipe(state) {
+    return state.currentRecipe;
+  },
+
   messages(state) {
     return state.messages;
-  },
-
-  recipes(state) {
-    return state.recipes;
-  },
-
-  recipesPage(state) {
-    return state.recipesPage;
-  },
-
-  recipesTake(state) {
-    return state.recipesTake;
-  },
-
-  recipesTotalCount(state) {
-    return state.recipesTotalCount;
   },
 
   fieldsInError(state) {
@@ -27,18 +15,34 @@
     return state.fieldsInError.indexOf(fieldName) > -1;
   },
 
-  currentRecipe(state) {
-    return state.currentRecipe;
-  },
-
   isError(state) {
     return state.isError;
   },
 
+  recipesList(state) {
+    return state.recipesList;
+  },
+
+  recipesListPage(state) {
+    return state.recipesListPage;
+  },
+
+  recipesListTake(state) {
+    return state.recipesListTake;
+  },
+
+  recipesListTotalCount(state) {
+    return state.recipesListTotalCount;
+  },
+
   recentRecipes(state) {
     return state.recentRecipes
-      .map(id => state.recipes
+      .map(id => state.recipesList
         .filter(recipe => recipe.id === id)[0])
       .filter(recipe => recipe !== undefined);
+  },
+
+  recipesSearchParameters(state) {
+    return state.recipesSearchParameters;
   }
 }

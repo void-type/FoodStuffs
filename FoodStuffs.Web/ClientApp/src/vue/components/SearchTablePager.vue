@@ -1,6 +1,10 @@
 ﻿<template>
     <div>
-        <span v-for="pageNumber in pageNumbers" v-bind:class="{currentPage: pageNumber === page}">{{pageNumber}}</span>
+        <span v-for="pageNumber in pageNumbers"
+              :class="{currentPage: pageNumber === page}"
+              @click="requestPage(pageNumber)">
+            {{pageNumber}}
+        </span>
     </div>
 </template>
 
@@ -32,6 +36,11 @@
                 }
                 return pageNumbers;
             },
+        },
+        methods: {
+            requestPage(pageNumber) {
+                this.$emit("requestPage", pageNumber);
+            }
         }
     };
 </script>

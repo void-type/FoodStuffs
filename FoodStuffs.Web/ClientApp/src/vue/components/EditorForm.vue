@@ -1,50 +1,64 @@
 <template>
-    <form v-on:keyup.ctrl.enter="saveRecipe(currentRecipe)">
+    <form @keydown.ctrl.enter.prevent="saveRecipe(currentRecipe)">
         <h1>Edit Recipe</h1>
         <div class="form-row">
-            <div class="form-group" v-bind:class="{danger: isFieldInError('name')}">
-                <input type="text" id="name" name="name" v-model="name" />
+            <div :class="{'form-group': true, danger: isFieldInError('name')}">
+                <input type="text"
+                       id="name"
+                       name="name"
+                       v-model="name" />
                 <label for="name">Name</label>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group" v-bind:class="{danger: isFieldInError('ingredients')}">
-                <textarea id="ingredients" name="ingredients" v-model="ingredients"></textarea>
+            <div :class="{'form-group': true, danger: isFieldInError('ingredients')}">
+                <textarea id="ingredients"
+                          name="ingredients"
+                          v-model="ingredients"></textarea>
                 <label for="ingredients">Ingredients</label>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group" v-bind:class="{danger: isFieldInError('directions')}">
-                <textarea id="directions" name="directions" v-model="directions"></textarea>
+            <div :class="{'form-group': true, danger: isFieldInError('directions')}">
+                <textarea id="directions"
+                          name="directions"
+                          v-model="directions"></textarea>
                 <label for="directions">Directions</label>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group" v-bind:class="{danger: isFieldInError('prepTimeMinutes')}">
-                <input type="number" id="prepTimeMinutes" name="prepTimeMinutes" v-model="prepTimeMinutes" />
+            <div :class="{'form-group': true, danger: isFieldInError('prepTimeMinutes')}">
+                <input type="number"
+                       id="prepTimeMinutes"
+                       name="prepTimeMinutes"
+                       v-model="prepTimeMinutes" />
                 <label for="prepTimeMinutes">Prep Time Minutes</label>
             </div>
-            <div class="form-group" v-bind:class="{danger: isFieldInError('cookTimeMinutes')}">
-                <input type="number" id="cookTimeMinutes" name="cookTimeMinutes" v-model="cookTimeMinutes" />
+            <div :class="{'form-group': true, danger: isFieldInError('cookTimeMinutes')}">
+                <input type="number"
+                       id="cookTimeMinutes"
+                       name="cookTimeMinutes"
+                       v-model="cookTimeMinutes" />
                 <label for="cookTimeMinutes">Cook Time Minutes</label>
             </div>
         </div>
         <div class="form-row">
-            <TagEditor v-bind:fieldName="'categories'"
-                       v-bind:label="'Categories'"
-                       v-bind:tags="categories"
-                       v-bind:addTag="addCategoryToCurrentRecipe"
-                       v-bind:removeTag="removeCategoryFromCurrentRecipe"
-                       v-bind:class="{danger: isFieldInError('categories')}" />
+            <TagEditor :class="{'form-group': true, danger: isFieldInError('categories')}"
+                       fieldName="categories"
+                       label="Categories"
+                       :tags="categories"
+                       @addTag="addCategoryToCurrentRecipe"
+                       @removeTag="removeCategoryFromCurrentRecipe" />
         </div>
         <div class="form-row button-row">
-            <button v-on:click.prevent="saveRecipe(currentRecipe)">
+            <button @click.prevent="saveRecipe(currentRecipe)">
                 Save
             </button>
-            <button v-on:click.prevent="cancelClick()">
+            <button @click.prevent="cancelClick()">
                 Cancel
             </button>
-            <button class="pull-right danger" v-on:click.prevent="deleteRecipe(currentRecipe)">
+            <button class="pull-right danger"
+                    @click.prevent="deleteRecipe(currentRecipe)">
                 Delete
             </button>
         </div>

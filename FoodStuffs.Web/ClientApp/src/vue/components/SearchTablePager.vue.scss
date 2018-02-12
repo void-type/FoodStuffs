@@ -1,3 +1,19 @@
-﻿.currentPage {
+﻿@import "../variables";
+
+.currentPage {
+    background-color: $color-focus;
+    background-color: mix($color-ternary, $color-secondary, 60%);
+    box-shadow: $highlight-border;
+}
+
+div {
+    display: flex;
+    justify-content: center;
+}
+
+span {
+    padding: .5em 1em;
+    border: $border;
+    cursor: pointer;
     font-weight: bold;
 }

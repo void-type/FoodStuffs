@@ -1,10 +1,9 @@
 import webApi from "./webApi";
 import Recipe from "../models/recipe";
-import RecipeSearchParameters from "../models/recipeSearchParameters";
 
 const defaultCallbacks = {
   onSuccess(context, data) {
-    context.dispatch("fetchRecipes", null, data.id || null);
+    context.dispatch("fetchRecipes", data.id || null);
     context.commit("setIsError", false);
     context.commit("setMessage", data.message);
   },
@@ -23,12 +22,13 @@ const defaultCallbacks = {
 
   onFetchListSuccess(context, data, postbackId) {
     context.commit("setRecipesList", data.items);
-    context.commit("setRecipesTotalCount", data.totalCount);
-    context.commit("setRecipesPage", data.page);
-    context.commit("setRecipesTake", data.take);
+    context.commit("setRecipesListTotalCount", data.totalCount);
+    context.commit("setRecipesListPage", data.page);
+    context.commit("setRecipesListTake", data.take);
 
     const id = (postbackId) ? postbackId.toString() : null;
-    const selectedRecipe = context.state.recipes
+
+    const selectedRecipe = context.state.recipesList
       .filter(recipe => recipe.id.toString() === id)[0]
       || new Recipe();
 
@@ -37,9 +37,9 @@ const defaultCallbacks = {
 }
 
 export default {
-  fetchRecipes(context, params, postbackId) {
+  fetchRecipes(context, postbackId) {
     webApi.listRecipes(
-      params || new RecipeSearchParameters(),
+      context.state.recipesSearchParameters,
       data => defaultCallbacks.onFetchListSuccess(context, data, postbackId),
       response => defaultCallbacks.onFailure(context, response));
   },
