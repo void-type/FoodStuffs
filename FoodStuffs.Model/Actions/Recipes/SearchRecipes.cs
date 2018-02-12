@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             }
 
             _recipeViewModelsContext.Clear();
-            _recipeViewModelsContext.AddRange(list.ToList().ToViewModel());
+            _recipeViewModelsContext.AddRange(list.ToList().ToViewModels());
         }
 
         private readonly string _categorySearch;
