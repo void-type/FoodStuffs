@@ -51,12 +51,12 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List(string nameSearch = null, string categorySearch = null, int take = int.MaxValue, int page = 1)
+        public IActionResult List(string nameSearch = null, string categorySearch = null, int take = int.MaxValue, int page = 1, string sort = null)
         {
             var context = new List<IRecipeViewModel>();
 
             new ActionChain(_responder)
-                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, context))
+                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, sort, context))
                 .Execute(new RespondWithPaginatedSet<IRecipeViewModel>(context, take, page));
 
             return _responder.Response;

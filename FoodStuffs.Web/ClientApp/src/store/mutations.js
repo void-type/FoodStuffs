@@ -59,6 +59,10 @@ export default {
     state.recipesSearchParameters.page = page;
   },
 
+  setRecipesSearchParametersSort(state, sort) {
+    state.recipesSearchParameters.sort = sort;
+  },
+
   setMessage(state, message) {
     state.messages = [message];
   },

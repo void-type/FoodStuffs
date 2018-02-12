@@ -5,13 +5,13 @@
                 <th class="ptr"
                     @click="sortByNameClick()">
                     Name &nbsp;
-                    <span v-html="sortSymbols[sortByNameDirection]"></span>
+                    <span v-html="selectedSortSymbol"></span>
                 </th>
                 <th>Category</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="recipe in filteredRecipes"
+            <tr v-for="recipe in recipes"
                 :key="recipe.id"
                 @click="selectClick(recipe)">
                 <td>{{recipe.name}}</td>
@@ -23,39 +23,27 @@
 
 <script>
     import { mapActions } from "vuex";
+    import sortTypes from "../../models/recipeSearchSortTypes";
 
     export default {
         data: function () {
             return {
-                sortByNameDirection: 1,
-                sortSymbols: ["&#x1F552;", "&#9660;", "&#9650;"]
+                sortTypes: sortTypes
             }
         },
         props: {
             recipes: {
                 type: Array,
                 required: true
+            },
+            selectedSort: {
+                type: String,
+                required: true
             }
         },
         computed: {
-            filteredRecipes() {
-                let recipes = this.recipes.slice();
-
-                if (this.sortByNameDirection > 0) {
-                    recipes.sort(function (a, b) {
-                        let x = a.name.toLowerCase();
-                        let y = b.name.toLowerCase();
-                        if (x < y) { return -1; }
-                        if (x > y) { return 1; }
-                        return 0;
-                    });
-                }
-
-                if (this.sortByNameDirection > 1) {
-                    recipes.reverse();
-                }
-
-                return recipes;
+            selectedSortSymbol() {
+                return this.sortTypes.filter(type => type.name === this.selectedSort)[0].symbol;
             }
         },
         methods: {
@@ -65,7 +53,11 @@
                 this.$router.push({ name: "home" });
             },
             sortByNameClick() {
-                this.sortByNameDirection = (this.sortByNameDirection + 1) % 3;
+                const currentSortId = this.sortTypes.filter(type => type.name === this.selectedSort)[0].id;
+                const newSortId = (currentSortId + 1) % this.sortTypes.length;
+                const newSortName = this.sortTypes.filter(type => type.id === newSortId)[0].name
+
+                this.$emit("updateSelectedSort", newSortName);
             }
         }
     };

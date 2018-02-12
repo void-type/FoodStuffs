@@ -7,7 +7,9 @@
                         @search="requestSearch"
                         @clear="clearSearch" />
 
-        <SearchTable :recipes="recipesList" />
+        <SearchTable :recipes="recipesList"
+                     :selectedSort="sort"
+                     @updateSelectedSort="updateSelectedSort" />
 
         <SearchTablePager :page="recipesListPage"
                           :take="recipesListTake"
@@ -48,6 +50,14 @@
                 set(value) {
                     this.$store.commit('setRecipesSearchParametersPage', value)
                 }
+            },
+            sort: {
+                get() {
+                    return this.$store.state.recipesSearchParameters.sort
+                },
+                set(value) {
+                    this.$store.commit('setRecipesSearchParametersSort', value)
+                }
             }
         },
         components: {
@@ -77,6 +87,10 @@
             },
             updateCategorySearch(value) {
                 this.categorySearch = value;
+            },
+            updateSelectedSort(value) {
+                this.sort = value;
+                this.fetchRecipes();
             }
         }
     };
