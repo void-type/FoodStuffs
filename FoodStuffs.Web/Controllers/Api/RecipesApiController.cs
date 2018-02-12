@@ -56,7 +56,8 @@ namespace FoodStuffs.Web.Controllers.Api
             var context = new List<IRecipeViewModel>();
 
             new ActionChain(_responder)
-                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, sort, context))
+                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, context))
+                .Execute(new SortRecipes(sort, context))
                 .Execute(new RespondWithPaginatedSet<IRecipeViewModel>(context, take, page));
 
             return _responder.Response;

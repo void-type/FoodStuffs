@@ -23,7 +23,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 var context = new List<IRecipeViewModel>();
 
                 new ActionChain(responder)
-                    .Execute(new SearchRecipes(data, null, null, null, context));
+                    .Execute(new SearchRecipes(data, null, null, context));
 
                 Assert.False(responder.ResponseCreated);
                 Assert.Empty(context);
@@ -94,7 +94,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 var context = new List<IRecipeViewModel>();
 
                 new ActionChain(responder)
-                    .Execute(new SearchRecipes(data, null, categorySearch, null, context));
+                    .Execute(new SearchRecipes(data, null, categorySearch, context));
 
                 Assert.False(responder.ResponseCreated);
                 Assert.Equal(expectedFound, context.Count);
@@ -123,7 +123,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 var context = new List<IRecipeViewModel>();
 
                 new ActionChain(responder)
-                    .Execute(new SearchRecipes(data, nameSearch, null, null, context));
+                    .Execute(new SearchRecipes(data, nameSearch, null, context));
 
                 Assert.False(responder.ResponseCreated);
                 Assert.Equal(expectedFound, context.Count);
@@ -146,7 +146,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 var context = new List<IRecipeViewModel>();
 
                 new ActionChain(responder)
-                    .Execute(new SearchRecipes(data, null, null, null, context));
+                    .Execute(new SearchRecipes(data, null, null, context));
 
                 Assert.False(responder.ResponseCreated);
                 Assert.Equal(2, context.Count);

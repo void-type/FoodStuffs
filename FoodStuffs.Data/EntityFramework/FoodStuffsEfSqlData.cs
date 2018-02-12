@@ -11,7 +11,6 @@ namespace FoodStuffs.Data.EntityFramework
 
         private static FoodStuffsContext BuildContext(IConfiguration configuration)
         {
-            // Typcially we pull this from user envrionment variables.
             var connectionString = configuration["FoodStuffsConnectionString"];
 
             var options = new DbContextOptionsBuilder<FoodStuffsContext>()
