@@ -269,4 +269,5 @@ __pycache__/
 
 # Secrets
 *.pubxml
-appSecrets*.json
+appSecrets.*.json
+!appSecrets.Sample.json
