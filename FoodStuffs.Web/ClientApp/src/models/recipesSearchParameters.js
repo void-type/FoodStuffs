@@ -4,6 +4,6 @@
     this.categorySearch = "";
     this.sort = "ascending";
     this.page = 1;
-    this.take = 2;
+    this.take = 30;
   }
 }
