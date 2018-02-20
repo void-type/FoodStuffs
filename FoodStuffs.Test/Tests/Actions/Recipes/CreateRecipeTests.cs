@@ -1,5 +1,5 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.EntityFramework;
+using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;

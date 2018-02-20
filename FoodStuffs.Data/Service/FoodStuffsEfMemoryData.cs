@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FoodStuffs.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace FoodStuffs.Data.EntityFramework
+namespace FoodStuffs.Data.Service
 {
     public class FoodStuffsEfMemoryData : AbstractFoodStuffsEfData
     {
@@ -16,8 +17,6 @@ namespace FoodStuffs.Data.EntityFramework
                 .Options;
 
             var context = new FoodStuffsContext(options);
-
-            context.Database.EnsureDeleted();
 
             return context;
         }

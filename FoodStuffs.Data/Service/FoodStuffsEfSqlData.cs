@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FoodStuffs.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace FoodStuffs.Data.EntityFramework
+namespace FoodStuffs.Data.Service
 {
     public class FoodStuffsEfSqlData : AbstractFoodStuffsEfData
     {

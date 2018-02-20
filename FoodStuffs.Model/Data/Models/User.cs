@@ -14,9 +14,9 @@ namespace FoodStuffs.Model.Data.Models
 
         public string Password { get; set; }
 
-        public virtual ICollection<Recipe> RecipesCreatedByUser { get; set; }
+        public ICollection<Recipe> RecipeCreatedByUser { get; set; }
 
-        public virtual ICollection<Recipe> RecipesModifiedByUser { get; set; }
+        public ICollection<Recipe> RecipeModifiedByUser { get; set; }
 
         public string Salt { get; set; }
 
@@ -24,8 +24,8 @@ namespace FoodStuffs.Model.Data.Models
 
         public User()
         {
-            RecipesCreatedByUser = new HashSet<Recipe>();
-            RecipesModifiedByUser = new HashSet<Recipe>();
+            RecipeCreatedByUser = new HashSet<Recipe>();
+            RecipeModifiedByUser = new HashSet<Recipe>();
         }
     }
 }

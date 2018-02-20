@@ -27,7 +27,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            var recipeCategories = recipe.CategoryRecipes;
+            var recipeCategories = recipe.CategoryRecipe;
             _data.CategoryRecipes.RemoveRange(recipeCategories);
 
             var unusedCategories = FindUnusedCategories(recipe);
@@ -45,7 +45,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
         private IEnumerable<Category> FindUnusedCategories(Recipe recipe)
         {
-            var categoryIdsToCheck = recipe.CategoryRecipes.Select(cr => cr.CategoryId);
+            var categoryIdsToCheck = recipe.CategoryRecipe.Select(cr => cr.CategoryId);
 
             var categoriesToCheck = _data.Categories.Stored.Where(c => categoryIdsToCheck.Contains(c.Id));
 

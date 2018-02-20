@@ -1,6 +1,6 @@
 using Core.Model.Services.DateTime;
 using Core.Model.Services.Logging;
-using FoodStuffs.Data.EntityFramework;
+using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Services;
 using Microsoft.AspNetCore.Builder;
@@ -45,7 +45,16 @@ namespace FoodStuffs.Web
             services.AddMvc();
             services.AddSingleton(_configuration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
+
+            if (_configuration["FoodStuffsConnectionString"] == "In-Memory")
+            {
+                services.AddTransient<IFoodStuffsData, FoodStuffsEfMemoryData>(data => new FoodStuffsEfMemoryData("developmentDb"));
+            }
+            else
+            {
+                services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
+            }
+
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, NowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();

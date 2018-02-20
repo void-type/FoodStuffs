@@ -95,7 +95,7 @@ namespace FoodStuffs.Model.Actions.Recipes
 
             foreach (var category in categories)
             {
-                if (category.CategoryRecipes.All(cr => cr.RecipeId == recipe.Id))
+                if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
                 {
                     yield return category;
                 }
@@ -107,7 +107,7 @@ namespace FoodStuffs.Model.Actions.Recipes
             var newCategoryNames = viewModel.Categories.Select(c => c.ToUpper().Trim()).ToList();
 
             var unusedCategoryRecipes =
-                recipe.CategoryRecipes.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
+                recipe.CategoryRecipe.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
 
             return unusedCategoryRecipes;
         }

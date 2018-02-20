@@ -3,12 +3,12 @@ using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.EntityFramework.CustomRepositories
+namespace FoodStuffs.Data.Service.CustomRepositories
 {
     public class RecipeRepository : EfWritableRepository<Recipe>
     {
         public override IQueryable<Recipe> Stored => Context.Set<Recipe>()
-            .Include(r => r.CategoryRecipes)
+            .Include(r => r.CategoryRecipe)
             .ThenInclude(cr => cr.Category)
             .Include(r => r.CreatedByUser)
             .Include(r => r.ModifiedByUser);

@@ -5,11 +5,11 @@ namespace FoodStuffs.Model.Data.Models
 {
     public partial class Recipe
     {
-        public virtual ICollection<CategoryRecipe> CategoryRecipes { get; set; }
+        public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
 
         public int? CookTimeMinutes { get; set; }
 
-        public virtual User CreatedByUser { get; set; }
+        public User CreatedByUser { get; set; }
 
         public int CreatedByUserId { get; set; }
 
@@ -21,7 +21,7 @@ namespace FoodStuffs.Model.Data.Models
 
         public string Ingredients { get; set; }
 
-        public virtual User ModifiedByUser { get; set; }
+        public User ModifiedByUser { get; set; }
 
         public int ModifiedByUserId { get; set; }
 
@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Data.Models
 
         public Recipe()
         {
-            CategoryRecipes = new HashSet<CategoryRecipe>();
+            CategoryRecipe = new HashSet<CategoryRecipe>();
         }
     }
 }

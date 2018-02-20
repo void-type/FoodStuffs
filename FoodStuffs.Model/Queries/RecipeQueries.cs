@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Queries
             var categorySearches = categorySearch.ToUpper().Trim().Split(' ');
 
             return recipes.Where(recipe => categorySearches.All(searchTerm =>
-                recipe.CategoryRecipes.Any(cr => cr.Category.Name.ToUpper().Contains(searchTerm))));
+                recipe.CategoryRecipe.Any(cr => cr.Category.Name.ToUpper().Contains(searchTerm))));
         }
 
         public static IQueryable<Recipe> SearchNames(this IQueryable<Recipe> recipes, string nameSearch)
@@ -40,7 +40,7 @@ namespace FoodStuffs.Model.Queries
                 CreatedOn = r.CreatedOn,
                 ModifiedBy = $"{r.ModifiedByUser?.FirstName} {r.ModifiedByUser?.LastName}",
                 ModifiedOn = r.ModifiedOn,
-                Categories = r.CategoryRecipes.Select(cr => cr.Category.Name)
+                Categories = r.CategoryRecipe.Select(cr => cr.Category.Name)
             });
         }
     }

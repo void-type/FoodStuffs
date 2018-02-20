@@ -4,7 +4,7 @@ namespace FoodStuffs.Model.Data.Models
 {
     public partial class Category
     {
-        public virtual ICollection<CategoryRecipe> CategoryRecipes { get; set; }
+        public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
 
         public int Id { get; set; }
 
@@ -12,7 +12,7 @@ namespace FoodStuffs.Model.Data.Models
 
         public Category()
         {
-            CategoryRecipes = new HashSet<CategoryRecipe>();
+            CategoryRecipe = new HashSet<CategoryRecipe>();
         }
     }
 }

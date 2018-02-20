@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodStuffs.Data.EntityFramework
+namespace FoodStuffs.Data.Models
 {
     public partial class FoodStuffsContext : DbContext
     {
@@ -10,29 +10,27 @@ namespace FoodStuffs.Data.EntityFramework
         public virtual DbSet<Recipe> Recipe { get; set; }
         public virtual DbSet<User> User { get; set; }
 
-        public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options) : base(options)
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category>(entity => { entity.Property(e => e.Name).IsRequired(); });
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.Property(e => e.Name).IsRequired();
+            });
 
             modelBuilder.Entity<CategoryRecipe>(entity =>
             {
-                entity.HasKey(e => new { e.RecipeId, e.CategoryId })
-                    .HasName("PK_CategoryRecipe");
+                entity.HasKey(e => new { e.RecipeId, e.CategoryId });
 
                 entity.HasOne(d => d.Category)
-                    .WithMany(p => p.CategoryRecipes)
+                    .WithMany(p => p.CategoryRecipe)
                     .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CategoryRecipe_Category");
 
                 entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.CategoryRecipes)
+                    .WithMany(p => p.CategoryRecipe)
                     .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CategoryRecipe_Recipe");
             });
 
@@ -49,15 +47,15 @@ namespace FoodStuffs.Data.EntityFramework
                 entity.Property(e => e.Name).IsRequired();
 
                 entity.HasOne(d => d.CreatedByUser)
-                    .WithMany(p => p.RecipesCreatedByUser)
+                    .WithMany(p => p.RecipeCreatedByUser)
                     .HasForeignKey(d => d.CreatedByUserId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Recipe_UserCreated");
 
                 entity.HasOne(d => d.ModifiedByUser)
-                    .WithMany(p => p.RecipesModifiedByUser)
+                    .WithMany(p => p.RecipeModifiedByUser)
                     .HasForeignKey(d => d.ModifiedByUserId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Recipe_UserModified");
             });
 

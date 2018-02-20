@@ -3,7 +3,7 @@ using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.EntityFramework.CustomRepositories
+namespace FoodStuffs.Data.Service.CustomRepositories
 {
     public class CategoryRecipeRepository : EfWritableRepository<CategoryRecipe>
     {

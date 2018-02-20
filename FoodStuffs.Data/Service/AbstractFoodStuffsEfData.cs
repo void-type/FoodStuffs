@@ -1,10 +1,11 @@
 ﻿using Core.Model.Services.Data;
-using FoodStuffs.Data.EntityFramework.CustomRepositories;
+using FoodStuffs.Data.Models;
+using FoodStuffs.Data.Service.CustomRepositories;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using System;
 
-namespace FoodStuffs.Data.EntityFramework
+namespace FoodStuffs.Data.Service
 {
     public abstract class AbstractFoodStuffsEfData : IFoodStuffsData
     {
