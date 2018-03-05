@@ -7,7 +7,9 @@
         <pre>{{currentRecipe.directions}}</pre>
         <hr />
         <p>
-            <strong>Prep Time: </strong>{{currentRecipe.prepTimeMinutes}} minutes. <strong>Cook Time: </strong>{{currentRecipe.cookTimeMinutes}} minutes.<br />
+            <span v-if="currentRecipe.prepTimeMinutes !== null"><strong>Prep Time: </strong>{{currentRecipe.prepTimeMinutes}} minutes. </span>
+            <span v-if="currentRecipe.cookTimeMinutes !== null"><strong>Cook Time: </strong>{{currentRecipe.cookTimeMinutes}} minutes.</span>
+            <br v-if="currentRecipe.prepTimeMinutes !== null || currentRecipe.cookTimeMinutes !== null"/>
             <strong>Categories: </strong>
             <span class="categories">
                 <span v-for="category in currentRecipe.categories"
@@ -15,8 +17,8 @@
                     {{category}}
                 </span>
             </span><br />
-            <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}<br />
-            <strong>Created On: </strong>{{currentRecipe.createdOn | dateString}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOn | dateString}}
+            <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Created On: </strong>{{currentRecipe.createdOn | dateString}}<br />
+            <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOn | dateString}}
         </p>
         <router-link class="no-print"
                      :to="{name: 'edit'}"
