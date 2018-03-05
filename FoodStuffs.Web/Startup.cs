@@ -1,11 +1,13 @@
 using Core.Model.Services.DateTime;
 using Core.Model.Services.Logging;
+using FoodStuffs.Data.Models;
 using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,9 +31,7 @@ namespace FoodStuffs.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseStaticFiles();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller=Home}/{action=Index}");
@@ -41,23 +41,24 @@ namespace FoodStuffs.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
             services.AddMvc();
             services.AddSingleton(_configuration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            if (_configuration["FoodStuffsConnectionString"] == "In-Memory")
-            {
-                services.AddTransient<IFoodStuffsData, FoodStuffsEfMemoryData>(data => new FoodStuffsEfMemoryData("developmentDb"));
-            }
-            else
-            {
-                services.AddTransient<IFoodStuffsData, FoodStuffsEfSqlData>();
-            }
-
+            services.AddTransient<IFoodStuffsData, FoodStuffsEfData>();
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, NowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
+
+            if (_configuration["FoodStuffsConnectionString"] == "In-Memory")
+            {
+                services.AddDbContext<FoodStuffsContext>(options =>
+                    options.UseInMemoryDatabase("FoodStuffsTest"));
+            }
+            else
+            {
+                services.AddDbContext<FoodStuffsContext>(options =>
+                    options.UseSqlServer(_configuration["FoodStuffsConnectionString"]));
+            }
         }
 
         private readonly IConfiguration _configuration;

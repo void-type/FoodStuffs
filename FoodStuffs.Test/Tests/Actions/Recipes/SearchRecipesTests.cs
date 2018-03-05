@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.GetResponder;
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -40,7 +40,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.GetResponder;
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 var recipe1 = MockFactory.Recipe1;
                 var recipe2 = MockFactory.Recipe2;
@@ -111,7 +111,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.GetResponder;
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);
@@ -135,7 +135,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         {
             var responder = MockFactory.GetResponder;
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);

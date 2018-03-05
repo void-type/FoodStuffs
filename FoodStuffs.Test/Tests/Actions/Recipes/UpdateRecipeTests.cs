@@ -20,7 +20,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
             var then = MockFactory.EarlyDateTimeService;
             var now = MockFactory.LateDateTimeService;
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Users.Add(MockFactory.User2);
@@ -119,7 +119,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
             };
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 new ActionChain(responder)
                     .Execute(new UpdateRecipe(data, now, recipeViewModel, 11));

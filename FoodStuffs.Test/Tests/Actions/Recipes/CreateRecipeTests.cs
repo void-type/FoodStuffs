@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
@@ -30,7 +29,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
             };
 
-            using (var data = new FoodStuffsEfMemoryData())
+            using (var data = MockFactory.MemoryData())
             {
                 data.Users.Add(MockFactory.User1);
 

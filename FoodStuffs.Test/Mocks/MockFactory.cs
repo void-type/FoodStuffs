@@ -1,6 +1,9 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Services.DateTime;
+using FoodStuffs.Data.Models;
+using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace FoodStuffs.Test.Mocks
@@ -82,5 +85,12 @@ namespace FoodStuffs.Test.Mocks
             FirstName = "First",
             LastName = "Last",
         };
+
+        public static FoodStuffsEfData MemoryData(string dbName = null)
+        {
+            return new FoodStuffsEfData(new FoodStuffsContext(new DbContextOptionsBuilder<FoodStuffsContext>()
+                .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
+                .Options));
+        }
     }
 }

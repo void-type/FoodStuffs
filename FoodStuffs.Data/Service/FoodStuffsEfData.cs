@@ -7,12 +7,21 @@ using System;
 
 namespace FoodStuffs.Data.Service
 {
-    public abstract class AbstractFoodStuffsEfData : IFoodStuffsData
+    public class FoodStuffsEfData : IFoodStuffsData
     {
         public IWritableRepository<Category> Categories { get; }
         public IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
         public IWritableRepository<Recipe> Recipes { get; }
         public IWritableRepository<User> Users { get; }
+
+        public FoodStuffsEfData(FoodStuffsContext context)
+        {
+            _context = context;
+            Categories = new CategoryRepository(context);
+            CategoryRecipes = new CategoryRecipeRepository(context);
+            Recipes = new RecipeRepository(context);
+            Users = new UserRepository(context);
+        }
 
         public void Dispose()
         {
@@ -23,15 +32,6 @@ namespace FoodStuffs.Data.Service
         public void SaveChanges()
         {
             _context.SaveChanges();
-        }
-
-        protected AbstractFoodStuffsEfData(FoodStuffsContext context)
-        {
-            _context = context;
-            Categories = new CategoryRepository(context);
-            CategoryRecipes = new CategoryRecipeRepository(context);
-            Recipes = new RecipeRepository(context);
-            Users = new UserRepository(context);
         }
 
         protected virtual void Dispose(bool disposing)
