@@ -27,39 +27,62 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            fieldName: {
-                type: String,
-                required: true
-            },
-            label: {
-                type: String,
-                required: true
-            },
-            tags: {
-                type: Array,
-                required: true
-            }
-        },
-        data: function () {
-            return {
-                newTagName: ""
-            };
-        },
-        methods: {
-            addTagClick() {
-                this.$emit("addTag", this.newTagName);
-                this.newTagName = "";
-            },
-
-            removeTagClick(tagToRemove) {
-                this.$emit("removeTag", tagToRemove);
-            }
-        }
+export default {
+  props: {
+    fieldName: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    tags: {
+      type: Array,
+      required: true
+    }
+  },
+  data: function() {
+    return {
+      newTagName: ""
     };
+  },
+  methods: {
+    addTagClick() {
+      this.$emit("addTag", this.newTagName);
+      this.newTagName = "";
+    },
+
+    removeTagClick(tagToRemove) {
+      this.$emit("removeTag", tagToRemove);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./EditorForTags.vue";
+@import "../variables";
+@import "../inputs";
+
+.form-group > div {
+  display: flex;
+}
+
+.tags {
+  display: flex;
+  flex-flow: wrap;
+
+  & > span {
+    background-color: $color-neutral-medium;
+    box-sizing: border-box;
+    padding: 0.3em 0.6em;
+    border: $border;
+    box-shadow: $shadow;
+
+    & > span:hover {
+      cursor: pointer;
+      color: $color-danger;
+    }
+  }
+}
 </style>

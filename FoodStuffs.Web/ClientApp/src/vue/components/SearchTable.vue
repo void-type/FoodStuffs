@@ -22,47 +22,93 @@
 </template>
 
 <script>
-    import { mapActions } from "vuex";
-    import sortTypes from "../../models/recipeSearchSortTypes";
+import { mapActions } from "vuex";
+import sortTypes from "../../models/recipeSearchSortTypes";
 
-    export default {
-        data: function () {
-            return {
-                sortTypes: sortTypes
-            }
-        },
-        props: {
-            recipes: {
-                type: Array,
-                required: true
-            },
-            selectedSort: {
-                type: String,
-                required: true
-            }
-        },
-        computed: {
-            selectedSortSymbol() {
-                return this.sortTypes.filter(type => type.name === this.selectedSort)[0].symbol;
-            }
-        },
-        methods: {
-            ...mapActions(["selectRecipe"]),
-            selectClick(recipe) {
-                this.selectRecipe(recipe);
-                this.$router.push({ name: "home" });
-            },
-            sortByNameClick() {
-                const currentSortId = this.sortTypes.filter(type => type.name === this.selectedSort)[0].id;
-                const newSortId = (currentSortId + 1) % this.sortTypes.length;
-                const newSortName = this.sortTypes.filter(type => type.id === newSortId)[0].name
-
-                this.$emit("updateSelectedSort", newSortName);
-            }
-        }
+export default {
+  data: function() {
+    return {
+      sortTypes: sortTypes
     };
+  },
+  props: {
+    recipes: {
+      type: Array,
+      required: true
+    },
+    selectedSort: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    selectedSortSymbol() {
+      return this.sortTypes.filter(type => type.name === this.selectedSort)[0]
+        .symbol;
+    }
+  },
+  methods: {
+    ...mapActions(["selectRecipe"]),
+    selectClick(recipe) {
+      this.selectRecipe(recipe);
+      this.$router.push({ name: "home" });
+    },
+    sortByNameClick() {
+      const currentSortId = this.sortTypes.filter(
+        type => type.name === this.selectedSort
+      )[0].id;
+      const newSortId = (currentSortId + 1) % this.sortTypes.length;
+      const newSortName = this.sortTypes.filter(
+        type => type.id === newSortId
+      )[0].name;
+
+      this.$emit("updateSelectedSort", newSortName);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./SearchTable.vue";
+@import "../variables";
+@import "../inputs";
+
+table {
+  width: 100%;
+  padding: 1em;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  tr {
+    text-align: left;
+  }
+
+  th {
+    border-bottom: $border;
+  }
+
+  td {
+    border-bottom: $border-light;
+  }
+
+  th,
+  td {
+    padding: 0.5em 1em;
+  }
+
+  tbody tr:hover {
+    cursor: pointer;
+    background-color: mix($color-ternary, $color-secondary, 60%);
+    box-shadow: $highlight-border;
+  }
+}
+
+.ptr {
+  cursor: pointer;
+}
+
+@media #{$medium-screen} {
+  table {
+    width: 100%;
+  }
+}
 </style>

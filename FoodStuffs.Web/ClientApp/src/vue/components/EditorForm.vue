@@ -66,77 +66,78 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from "vuex";
-    import TagEditor from "./EditorForTags";
+import { mapActions, mapGetters } from "vuex";
+import TagEditor from "./EditorForTags";
 
-    export default {
-        computed: {
-            ...mapGetters(["currentRecipe", "isFieldInError"]),
-            name: {
-                get() {
-                    return this.$store.state.currentRecipe.name
-                },
-                set(value) {
-                    this.$store.commit('setCurrentRecipeName', value)
-                }
-            },
-            ingredients: {
-                get() {
-                    return this.$store.state.currentRecipe.ingredients
-                },
-                set(value) {
-                    this.$store.commit('setCurrentRecipeIngredients', value)
-                }
-            },
-            directions: {
-                get() {
-                    return this.$store.state.currentRecipe.directions
-                },
-                set(value) {
-                    this.$store.commit('setCurrentRecipeDirections', value)
-                }
-            },
-            prepTimeMinutes: {
-                get() {
-                    return this.$store.state.currentRecipe.prepTimeMinutes
-                },
-                set(value) {
-                    this.$store.commit('setCurrentRecipePrepTimeMinutes', value)
-                }
-            },
-            cookTimeMinutes: {
-                get() {
-                    return this.$store.state.currentRecipe.cookTimeMinutes
-                },
-                set(value) {
-                    this.$store.commit('setCurrentRecipeCookTimeMinutes', value)
-                }
-            },
-            categories: {
-                get() {
-                    return this.$store.state.currentRecipe.categories
-                }
-            }
-        },
-        methods: {
-            cancelClick() {
-                this.fetchRecipes(this.currentRecipe.id);
-                this.$router.push({ name: "home" });
-            },
-            ...mapActions([
-                "deleteRecipe",
-                "fetchRecipes",
-                "saveRecipe",
-                "addCategoryToCurrentRecipe",
-                "removeCategoryFromCurrentRecipe"
-            ])
-        },
-        components: {
-            TagEditor
-        }
-    };
+export default {
+  computed: {
+    ...mapGetters(["currentRecipe", "isFieldInError"]),
+    name: {
+      get() {
+        return this.$store.state.currentRecipe.name;
+      },
+      set(value) {
+        this.$store.commit("setCurrentRecipeName", value);
+      }
+    },
+    ingredients: {
+      get() {
+        return this.$store.state.currentRecipe.ingredients;
+      },
+      set(value) {
+        this.$store.commit("setCurrentRecipeIngredients", value);
+      }
+    },
+    directions: {
+      get() {
+        return this.$store.state.currentRecipe.directions;
+      },
+      set(value) {
+        this.$store.commit("setCurrentRecipeDirections", value);
+      }
+    },
+    prepTimeMinutes: {
+      get() {
+        return this.$store.state.currentRecipe.prepTimeMinutes;
+      },
+      set(value) {
+        this.$store.commit("setCurrentRecipePrepTimeMinutes", value);
+      }
+    },
+    cookTimeMinutes: {
+      get() {
+        return this.$store.state.currentRecipe.cookTimeMinutes;
+      },
+      set(value) {
+        this.$store.commit("setCurrentRecipeCookTimeMinutes", value);
+      }
+    },
+    categories: {
+      get() {
+        return this.$store.state.currentRecipe.categories;
+      }
+    }
+  },
+  methods: {
+    cancelClick() {
+      this.fetchRecipes(this.currentRecipe.id);
+      this.$router.push({ name: "home" });
+    },
+    ...mapActions([
+      "deleteRecipe",
+      "fetchRecipes",
+      "saveRecipe",
+      "addCategoryToCurrentRecipe",
+      "removeCategoryFromCurrentRecipe"
+    ])
+  },
+  components: {
+    TagEditor
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./EditorForm.vue";
+@import "../variables";
+@import "../inputs";
 </style>

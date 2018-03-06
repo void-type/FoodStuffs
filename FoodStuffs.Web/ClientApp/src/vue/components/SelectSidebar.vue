@@ -12,26 +12,31 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from "vuex";
-    import SelectSidebarList from "./SelectSidebarList";
+import { mapActions, mapGetters } from "vuex";
+import SelectSidebarList from "./SelectSidebarList";
 
-    export default {
-        computed: {
-            ...mapGetters(["recipesList", "recentRecipes"])
-        },
-        methods: {
-            ...mapActions(["selectRecipe"]),
-            newRecipe() {
-                this.selectRecipe();
-                this.$router.push({ name: "edit" });
-            }
-        },
-        components: {
-            SelectSidebarList
-        }
-    };
+export default {
+  computed: {
+    ...mapGetters(["recipesList", "recentRecipes"])
+  },
+  methods: {
+    ...mapActions(["selectRecipe"]),
+    newRecipe() {
+      this.selectRecipe();
+      this.$router.push({ name: "edit" });
+    }
+  },
+  components: {
+    SelectSidebarList
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./SelectSidebar.vue";
+@import "../variables";
+@import "../inputs";
+
+div > * {
+  margin-bottom: 1em;
+}
 </style>

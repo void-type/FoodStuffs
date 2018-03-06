@@ -32,34 +32,40 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            nameSearch: {
-                type: String,
-                required: true
-            },
-            categorySearch: {
-                type: String,
-                required: true
-            }
-        },
-        methods: {
-            search(nameSearch, categorySearch) {
-                this.$emit("search", nameSearch, categorySearch);
-            },
-            clear(nameSearch, categorySearch) {
-                this.$emit("clear");
-            },
-            updateNameSearch(value) {
-                this.$emit("updateNameSearch", value)
-            },
-            updateCategorySearch(value) {
-                this.$emit("updateCategorySearch", value);
-            }
-        }
-    };
+export default {
+  props: {
+    nameSearch: {
+      type: String,
+      required: true
+    },
+    categorySearch: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    search(nameSearch, categorySearch) {
+      this.$emit("search", nameSearch, categorySearch);
+    },
+    clear(nameSearch, categorySearch) {
+      this.$emit("clear");
+    },
+    updateNameSearch(value) {
+      this.$emit("updateNameSearch", value);
+    },
+    updateCategorySearch(value) {
+      this.$emit("updateCategorySearch", value);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./SearchControls.vue";
+@import "../variables";
+@import "../inputs";
+
+form .form-group.button-group {
+  margin-top: 1em;
+  flex-grow: 0;
+}
 </style>

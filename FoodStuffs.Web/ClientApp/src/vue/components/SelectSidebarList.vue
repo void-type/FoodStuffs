@@ -17,25 +17,62 @@
 </template>
 
 <script>
-    import { mapActions } from "vuex";
+import { mapActions } from "vuex";
 
-    export default {
-        props: {
-            recipes: {
-                type: Array,
-                required: true
-            },
-            title: {
-                type: String,
-                required: false
-            }
-        },
-        methods: {
-            ...mapActions(["selectRecipe"])
-        }
-    };
+export default {
+  props: {
+    recipes: {
+      type: Array,
+      required: true
+    },
+    title: {
+      type: String,
+      required: false
+    }
+  },
+  methods: {
+    ...mapActions(["selectRecipe"])
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./SelectSidebarList.vue";
+@import "../variables";
+@import "../inputs";
+
+table {
+  width: 15em;
+  padding: 1em;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  tr {
+    text-align: left;
+  }
+
+  th {
+    border-bottom: $border;
+  }
+
+  td {
+    border-bottom: $border-light;
+  }
+
+  th,
+  td {
+    padding: 0.5em 1em;
+  }
+
+  tbody tr:hover {
+    cursor: pointer;
+    background-color: mix($color-ternary, $color-secondary, 60%);
+    box-shadow: $highlight-border;
+  }
+}
+
+@media #{$medium-screen} {
+  table {
+    width: 100%;
+  }
+}
 </style>

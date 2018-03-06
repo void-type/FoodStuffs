@@ -29,19 +29,38 @@
 </template>
 
 <script>
-    import dateString from "../../filters/dateString";
-    import { mapGetters } from "vuex";
+import dateString from "../../filters/dateString";
+import { mapGetters } from "vuex";
 
-    export default {
-        computed: {
-            ...mapGetters(["currentRecipe"])
-        },
-        filters: {
-            dateString: dateString
-        }
-    };
+export default {
+  computed: {
+    ...mapGetters(["currentRecipe"])
+  },
+  filters: {
+    dateString: dateString
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    @import "./HomeViewer.vue";
+@import "../variables";
+@import "../inputs";
+
+.categories > span:not(:last-child):after {
+  content: ", ";
+}
+
+p {
+  margin-bottom: 1.5em;
+}
+
+hr {
+  margin: 1em 0em;
+}
+
+@media screen {
+  h1 {
+    margin-top: 0;
+  }
+}
 </style>
