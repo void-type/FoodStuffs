@@ -18,7 +18,6 @@ namespace Core.Model.Actions.Steps
         public void Execute(IActionResponder respond)
         {
             respond.ValidationErrors.AddRange(_validator.Validate(_validatableEntity));
-
             respond.TryWithValidationError();
         }
 

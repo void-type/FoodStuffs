@@ -11,9 +11,7 @@ namespace Core.Model.Actions.Responder
     public abstract class AbstractActionResponder<TResponse> : IActionResponder where TResponse : class
     {
         public TResponse Response { get; protected set; }
-
         public bool ResponseCreated => Response != default(TResponse);
-
         public List<IValidationError> ValidationErrors { get; } = new List<IValidationError>();
 
         public bool TryWithValidationError(string logExtra = null)
@@ -28,13 +26,9 @@ namespace Core.Model.Actions.Responder
         }
 
         public abstract void WithError(string userMessage, string logExtra = null, Exception ex = null);
-
         public abstract void WithItem<T>(T item, string logExtra = null);
-
         public abstract void WithList<T>(IEnumerable<T> items, string logExtra = null);
-
         public abstract void WithPostSuccess(string userMessage, string id, string logExtra = null);
-
         public abstract void WithSuccess(string userMessage, string logExtra = null);
 
         public void WithValidationErrors(string logExtra, params IValidationError[] newValidationErrors)

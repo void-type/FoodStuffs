@@ -17,7 +17,6 @@ namespace FoodStuffs.Model.Actions.Recipes
         protected override void PerformStep(IActionResponder respond)
         {
             var temp = _context.ToArray();
-
             _context.Clear();
 
             switch (_sort)
