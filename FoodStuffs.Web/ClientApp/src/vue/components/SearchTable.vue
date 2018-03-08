@@ -26,11 +26,6 @@ import { mapActions } from "vuex";
 import sortTypes from "../../models/recipeSearchSortTypes";
 
 export default {
-  data: function() {
-    return {
-      sortTypes: sortTypes
-    };
-  },
   props: {
     recipes: {
       type: Array,
@@ -43,7 +38,7 @@ export default {
   },
   computed: {
     selectedSortSymbol() {
-      return this.sortTypes.filter(type => type.name === this.selectedSort)[0]
+      return sortTypes.filter(type => type.name === this.selectedSort)[0]
         .symbol;
     }
   },
@@ -54,13 +49,12 @@ export default {
       this.$router.push({ name: "home" });
     },
     sortByNameClick() {
-      const currentSortId = this.sortTypes.filter(
+      const currentSortId = sortTypes.filter(
         type => type.name === this.selectedSort
       )[0].id;
-      const newSortId = (currentSortId + 1) % this.sortTypes.length;
-      const newSortName = this.sortTypes.filter(
-        type => type.id === newSortId
-      )[0].name;
+      const newSortId = (currentSortId + 1) % sortTypes.length;
+      const newSortName = sortTypes.filter(type => type.id === newSortId)[0]
+        .name;
 
       this.$emit("updateSelectedSort", newSortName);
     }
