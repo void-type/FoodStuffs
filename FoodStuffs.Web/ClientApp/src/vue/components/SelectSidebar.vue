@@ -16,6 +16,9 @@ import { mapActions, mapGetters } from "vuex";
 import SelectSidebarList from "./SelectSidebarList";
 
 export default {
+  components: {
+    SelectSidebarList
+  },
   computed: {
     ...mapGetters(["recipesList", "recentRecipes"])
   },
@@ -25,9 +28,6 @@ export default {
       this.selectRecipe();
       this.$router.push({ name: "edit" });
     }
-  },
-  components: {
-    SelectSidebarList
   }
 };
 </script>

@@ -70,6 +70,9 @@ import { mapActions, mapGetters } from "vuex";
 import TagEditor from "./EditorForTags";
 
 export default {
+  components: {
+    TagEditor
+  },
   computed: {
     ...mapGetters(["currentRecipe", "isFieldInError"]),
     name: {
@@ -130,9 +133,6 @@ export default {
       "addCategoryToCurrentRecipe",
       "removeCategoryFromCurrentRecipe"
     ])
-  },
-  components: {
-    TagEditor
   }
 };
 </script>

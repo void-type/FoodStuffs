@@ -25,6 +25,11 @@ import SearchTable from "../components/SearchTable";
 import SearchTablePager from "../components/SearchTablePager";
 
 export default {
+  components: {
+    SearchControls,
+    SearchTable,
+    SearchTablePager
+  },
   computed: {
     ...mapGetters([
       "recipesList",
@@ -64,11 +69,6 @@ export default {
         this.$store.commit("setRecipesSearchParametersSort", value);
       }
     }
-  },
-  components: {
-    SearchControls,
-    SearchTable,
-    SearchTablePager
   },
   methods: {
     ...mapActions(["fetchRecipes"]),
