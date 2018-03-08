@@ -1,4 +1,8 @@
 ﻿export default {
+  applicationName(state) {
+    return state.applicationName;
+  },
+
   currentRecipe(state) {
     return state.currentRecipe;
   },

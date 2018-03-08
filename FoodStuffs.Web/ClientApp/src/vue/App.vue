@@ -50,29 +50,24 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import router from "../router";
 import store from "../store";
 import MessageCenter from "./components/MessageCenter";
 import HomeViewer from "./components/HomeViewer";
 
 export default {
-  data: function() {
-    return {
-      applicationName:
-        document.getElementById("applicationName") !== null
-          ? document.getElementById("applicationName").value
-          : "FoodStuffs"
-    };
-  },
-  methods: {
-    ...mapActions(["fetchRecipes"])
-  },
-  router,
-  store,
   components: {
     MessageCenter,
     HomeViewer
+  },
+  router,
+  store,
+  computed: {
+    ...mapGetters(["applicationName"])
+  },
+  methods: {
+    ...mapActions(["fetchRecipes"])
   },
   beforeMount() {
     this.fetchRecipes();
