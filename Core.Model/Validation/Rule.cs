@@ -23,7 +23,7 @@ namespace Core.Model.Validation
         public IValidationError ValidationError { get; }
 
         /// <summary>
-        /// Construct a new rule by creating it's matching validation error.
+        /// Construct a new rule and underlying validation error to throw when violations are detected.
         /// </summary>
         /// <param name="fieldName"></param>
         /// <param name="errorMessage"></param>
@@ -32,6 +32,10 @@ namespace Core.Model.Validation
             ValidationError = new ValidationError(errorMessage, fieldName);
         }
 
+        /// <summary>
+        /// Ignore violations when the condition expression is true.
+        /// </summary>
+        /// <param name="conditionExpression"></param>
         public IRule Suppress(Func<bool> conditionExpression)
         {
             if (IsSuppressed == false && conditionExpression.Invoke())

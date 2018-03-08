@@ -10,7 +10,7 @@ namespace Core.Model.Validation
     public abstract class AbstractSimpleValidator<TValidatableEntity> : IValidator<TValidatableEntity>
     {
         /// <summary>
-        /// Validate the entity against the rules set during implmentation of this base class.
+        /// Validate the entity against the ruleset.
         /// </summary>
         /// <param name="validatable"></param>
         /// <returns></returns>
@@ -22,7 +22,7 @@ namespace Core.Model.Validation
         }
 
         /// <summary>
-        /// A method used during implementation to begin creating a rule.
+        /// Create a new rule for this entity.
         /// </summary>
         /// <param name="fieldName"></param>
         /// <param name="errorMessage"></param>
@@ -37,7 +37,7 @@ namespace Core.Model.Validation
         }
 
         /// <summary>
-        /// The implementation will override this method to build the validation ruleset.
+        /// Override this method to build the validation ruleset.
         /// </summary>
         /// <param name="validatable"></param>
         protected abstract void RunRules(TValidatableEntity validatable);
