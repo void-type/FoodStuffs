@@ -1,3 +1,15 @@
+function limitIntegers(value) {
+  value = parseInt(value);
+
+    if (value > 2147483647) {
+      value = 2147483647;
+    } else if (value < 0) {
+      value = 0;
+    }
+
+    return value;
+}
+
 export default {
   setCurrentRecipe(state, recipe) {
     state.currentRecipe = recipe;
@@ -16,11 +28,11 @@ export default {
   },
 
   setCurrentRecipePrepTimeMinutes(state, value) {
-    state.currentRecipe.prepTimeMinutes = value;
+    state.currentRecipe.prepTimeMinutes = limitIntegers(value);
   },
 
   setCurrentRecipeCookTimeMinutes(state, value) {
-    state.currentRecipe.cookTimeMinutes = value;
+    state.currentRecipe.cookTimeMinutes = limitIntegers(value);
   },
 
   addCategoryToCurrentRecipe(state, newCategoryName) {
