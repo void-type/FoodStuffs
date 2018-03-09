@@ -7,7 +7,7 @@ namespace Core.Model.Actions.Steps
     /// Validate an entity.
     /// </summary>
     /// <typeparam name="TValidatable"></typeparam>
-    public class Validate<TValidatable> : IActionStep
+    public class Validate<TValidatable> : AbstractActionStep
     {
         public Validate(AbstractSimpleValidator<TValidatable> validator, TValidatable validatableEntity)
         {
@@ -15,7 +15,7 @@ namespace Core.Model.Actions.Steps
             _validatableEntity = validatableEntity;
         }
 
-        public void Execute(IActionResponder respond)
+        protected override void PerformStep(IActionResponder respond)
         {
             respond.ValidationErrors.AddRange(_validator.Validate(_validatableEntity));
             respond.TryWithValidationError();
