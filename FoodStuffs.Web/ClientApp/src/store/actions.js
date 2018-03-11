@@ -1,37 +1,38 @@
-import { methods, callbacks } from "../models/webApi";
+import { webApiCallbacks } from "./actions.helpers"
+import webApi from "../models/webApi";
 import Recipe from "../models/recipe";
 
 export default {
   fetchRecipes(context, postbackId) {
-    methods.listRecipes(
+    webApi.listRecipes(
       context.state.recipesSearchParameters,
-      data => callbacks.onFetchListSuccess(context, data, postbackId),
-      response => callbacks.onFailure(context, response));
+      data => webApiCallbacks.onFetchListSuccess(context, data, postbackId),
+      response => webApiCallbacks.onFailure(context, response));
   },
 
   saveRecipe(context, recipe) {
     context.dispatch("clearMessages");
 
     if (recipe.id === undefined || recipe.id < 1) {
-      methods.createRecipe(
+      webApi.createRecipe(
         recipe,
-        data => callbacks.onSuccess(context, data),
-        response => callbacks.onFailure(context, response));
+        data => webApiCallbacks.onSuccess(context, data),
+        response => webApiCallbacks.onFailure(context, response));
     } else {
-      methods.updateRecipe(
+      webApi.updateRecipe(
         recipe,
-        data => callbacks.onSuccess(context, data),
-        response => callbacks.onFailure(context, response));
+        data => webApiCallbacks.onSuccess(context, data),
+        response => webApiCallbacks.onFailure(context, response));
     }
   },
 
   deleteRecipe(context, recipe) {
     context.dispatch("clearMessages");
     if (confirm("Are you sure you want to delete this recipe?")) {
-      methods.deleteRecipe(
+      webApi.deleteRecipe(
         recipe,
-        data => callbacks.onSuccess(context, data),
-        response => callbacks.onFailure(context, response));
+        data => webApiCallbacks.onSuccess(context, data),
+        response => webApiCallbacks.onFailure(context, response));
     }
   },
 
