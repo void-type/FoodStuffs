@@ -19,7 +19,7 @@
             </div>
             <div class="form-group button-group">
                 <div>
-                    <button @click.prevent="search(nameSearch, categorySearch)">
+                    <button @click.prevent="search()">
                         Search
                     </button>
                     <button @click.prevent="clear()">
@@ -44,10 +44,10 @@ export default {
     }
   },
   methods: {
-    search(nameSearch, categorySearch) {
-      this.$emit("search", nameSearch, categorySearch);
+    search() {
+      this.$emit("search");
     },
-    clear(nameSearch, categorySearch) {
+    clear() {
       this.$emit("clear");
     },
     updateNameSearch(value) {

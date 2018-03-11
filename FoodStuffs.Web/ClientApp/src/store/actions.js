@@ -1,72 +1,37 @@
-import webApi from "./webApi";
+import { methods, callbacks } from "../models/webApi";
 import Recipe from "../models/recipe";
-
-const defaultCallbacks = {
-  onSuccess(context, data) {
-    context.dispatch("fetchRecipes", data.id || null);
-    context.commit("setIsError", false);
-    context.commit("setMessage", data.message);
-  },
-
-  onFailure(context, response) {
-    context.commit("setIsError", true);
-    if (response === undefined || response === null) {
-      context.commit("setMessage", "Cannot connect to server.");
-    } else if (response.status >= 500) {
-      context.commit("setMessage", response.data.message);
-    } else {
-      context.commit("setMessages", response.data.items.map((item) => item.errorMessage));
-      context.commit("setFieldsInError", response.data.items.map((item) => item.fieldName));
-    }
-  },
-
-  onFetchListSuccess(context, data, postbackId) {
-    context.commit("setRecipesList", data.items);
-    context.commit("setRecipesListTotalCount", data.totalCount);
-    context.commit("setRecipesListPage", data.page);
-    context.commit("setRecipesListTake", data.take);
-
-    const id = (postbackId) ? postbackId.toString() : null;
-
-    const selectedRecipe = context.state.recipesList
-      .filter(recipe => recipe.id.toString() === id)[0]
-      || new Recipe();
-
-    context.commit("setCurrentRecipe", selectedRecipe);
-  }
-}
 
 export default {
   fetchRecipes(context, postbackId) {
-    webApi.listRecipes(
+    methods.listRecipes(
       context.state.recipesSearchParameters,
-      data => defaultCallbacks.onFetchListSuccess(context, data, postbackId),
-      response => defaultCallbacks.onFailure(context, response));
+      data => callbacks.onFetchListSuccess(context, data, postbackId),
+      response => callbacks.onFailure(context, response));
   },
 
   saveRecipe(context, recipe) {
     context.dispatch("clearMessages");
 
     if (recipe.id === undefined || recipe.id < 1) {
-      webApi.createRecipe(
+      methods.createRecipe(
         recipe,
-        data => defaultCallbacks.onSuccess(context, data),
-        response => defaultCallbacks.onFailure(context, response));
+        data => callbacks.onSuccess(context, data),
+        response => callbacks.onFailure(context, response));
     } else {
-      webApi.updateRecipe(
+      methods.updateRecipe(
         recipe,
-        data => defaultCallbacks.onSuccess(context, data),
-        response => defaultCallbacks.onFailure(context, response));
+        data => callbacks.onSuccess(context, data),
+        response => callbacks.onFailure(context, response));
     }
   },
 
   deleteRecipe(context, recipe) {
     context.dispatch("clearMessages");
     if (confirm("Are you sure you want to delete this recipe?")) {
-      webApi.deleteRecipe(
+      methods.deleteRecipe(
         recipe,
-        data => defaultCallbacks.onSuccess(context, data),
-        response => defaultCallbacks.onFailure(context, response));
+        data => callbacks.onSuccess(context, data),
+        response => callbacks.onFailure(context, response));
     }
   },
 

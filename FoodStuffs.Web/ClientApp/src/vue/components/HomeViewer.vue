@@ -20,11 +20,6 @@
             <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Created On: </strong>{{currentRecipe.createdOn | dateString}}<br />
             <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOn | dateString}}
         </p>
-        <router-link class="no-print"
-                     :to="{name: 'edit'}"
-                     tag="button">
-            Edit
-        </router-link>
     </div>
 </template>
 
@@ -33,6 +28,7 @@ import dateString from "../../filters/dateString";
 import { mapGetters } from "vuex";
 
 export default {
+  // TODO: pass currentrecipe as a prop for viewing 2 recipes side-by-side.
   computed: {
     ...mapGetters(["currentRecipe"])
   },

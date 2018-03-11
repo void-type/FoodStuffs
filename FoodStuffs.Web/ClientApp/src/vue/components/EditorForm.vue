@@ -74,6 +74,7 @@ export default {
     TagEditor
   },
   computed: {
+    // TODO: Denormalize currentrecipe update methods (pass recipeid)
     ...mapGetters(["currentRecipe", "isFieldInError"]),
     name: {
       get() {

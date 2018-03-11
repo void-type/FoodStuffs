@@ -8,7 +8,7 @@
         <tbody>
             <tr v-for="recipe in recipes"
                 :key="recipe.id"
-                @click="selectRecipe(recipe)">
+                @click="selectClick(recipe)">
 
                 <td>{{recipe.name}}</td>
             </tr>
@@ -31,7 +31,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["selectRecipe"])
+    selectClick(recipe) {
+      this.$emit("selectRecipe", recipe);
+    }
   }
 };
 </script>

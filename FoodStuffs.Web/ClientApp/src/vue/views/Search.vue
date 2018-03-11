@@ -9,6 +9,7 @@
 
         <SearchTable :recipes="recipesList"
                      :selectedSort="sort"
+                     @selectRecipe="selectRecipe"
                      @updateSelectedSort="updateSelectedSort" />
 
         <SearchTablePager :page="recipesListPage"
@@ -71,14 +72,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchRecipes"]),
+    ...mapActions(["selectRecipe", "fetchRecipes"]),
     requestPage(pageNumber) {
       this.page = pageNumber;
       this.fetchRecipes();
     },
-    requestSearch(nameSearch, categorySearch) {
-      this.nameSearch = nameSearch;
-      this.categorySearch = categorySearch;
+    requestSearch() {
       this.fetchRecipes();
     },
     clearSearch() {

@@ -43,9 +43,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["selectRecipe"]),
     selectClick(recipe) {
-      this.selectRecipe(recipe);
+      this.$emit("selectRecipe", recipe);
       this.$router.push({ name: "home" });
     },
     sortByNameClick() {

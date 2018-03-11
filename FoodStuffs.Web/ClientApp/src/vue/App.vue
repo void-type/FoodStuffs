@@ -18,6 +18,12 @@
                                 </router-link>
                             </li>
                             <li>
+                                <router-link :to="{name: 'edit'}"
+                                             :class="{'current-page': $route.name === 'edit'}">
+                                    Edit
+                                </router-link>
+                            </li>
+                            <li>
                                 <router-link :to="{name: 'search'}"
                                              :class="{'current-page': $route.name === 'search'}">
                                     Search
