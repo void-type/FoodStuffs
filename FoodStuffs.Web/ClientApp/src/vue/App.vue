@@ -75,7 +75,7 @@ export default {
   methods: {
     ...mapActions(["fetchRecipes"])
   },
-  beforeMount() {
+  mounted() {
     this.fetchRecipes();
   }
 };
