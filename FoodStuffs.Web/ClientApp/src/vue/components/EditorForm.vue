@@ -74,14 +74,14 @@ export default {
     TagEditor
   },
   computed: {
-    // TODO: Denormalize currentrecipe update methods (pass recipeid)
     ...mapGetters(["currentRecipe", "isFieldInError"]),
     name: {
       get() {
         return this.$store.state.currentRecipe.name;
       },
       set(value) {
-        this.$store.commit("setCurrentRecipeName", value);
+        const recipe = this.currentRecipe;
+        this.$store.commit("setRecipeName", { recipe, value });
       }
     },
     ingredients: {
@@ -89,7 +89,8 @@ export default {
         return this.$store.state.currentRecipe.ingredients;
       },
       set(value) {
-        this.$store.commit("setCurrentRecipeIngredients", value);
+        const recipe = this.currentRecipe;
+        this.$store.commit("setRecipeIngredients", { recipe, value });
       }
     },
     directions: {
@@ -97,7 +98,8 @@ export default {
         return this.$store.state.currentRecipe.directions;
       },
       set(value) {
-        this.$store.commit("setCurrentRecipeDirections", value);
+        const recipe = this.currentRecipe;
+        this.$store.commit("setRecipeDirections", { recipe, value });
       }
     },
     prepTimeMinutes: {
@@ -105,7 +107,8 @@ export default {
         return this.$store.state.currentRecipe.prepTimeMinutes;
       },
       set(value) {
-        this.$store.commit("setCurrentRecipePrepTimeMinutes", value);
+        const recipe = this.currentRecipe;
+        this.$store.commit("setRecipePrepTimeMinutes", { recipe, value });
       }
     },
     cookTimeMinutes: {
@@ -113,7 +116,8 @@ export default {
         return this.$store.state.currentRecipe.cookTimeMinutes;
       },
       set(value) {
-        this.$store.commit("setCurrentRecipeCookTimeMinutes", value);
+        const recipe = this.currentRecipe;
+        this.$store.commit("setRecipeCookTimeMinutes", { recipe, value });
       }
     },
     categories: {
@@ -131,9 +135,17 @@ export default {
       "deleteRecipe",
       "fetchRecipes",
       "saveRecipe",
-      "addCategoryToCurrentRecipe",
-      "removeCategoryFromCurrentRecipe"
-    ])
+      "addCategoryToRecipe",
+      "removeCategoryFromRecipe"
+    ]),
+    addCategoryToCurrentRecipe(categoryName) {
+      const recipe = this.currentRecipe;
+      this.addCategoryToRecipe({ recipe, categoryName });
+    },
+    removeCategoryFromCurrentRecipe(categoryName) {
+      const recipe = this.currentRecipe;
+      this.removeCategoryFromRecipe({ recipe, categoryName });
+    }
   }
 };
 </script>

@@ -1,4 +1,5 @@
-import { webApiCallbacks } from "./actions.helpers"
+import { webApiCallbacks } from "./actions.helpers";
+import valueFilters from "../models/valueFilters";
 import webApi from "../models/webApi";
 import Recipe from "../models/recipe";
 
@@ -38,32 +39,27 @@ export default {
 
   selectRecipe(context, recipe) {
     context.dispatch("clearMessages");
-    context.commit("addCurrentRecipeToRecents");
+    context.commit("addRecipeToRecents", recipe);
     context.commit("setCurrentRecipe", recipe || new Recipe());
   },
 
-  addCategoryToCurrentRecipe(context, newCategoryName) {
-    newCategoryName = newCategoryName
-      .trim()
-      .split(" ")
-      .filter(word => word.length > 0)
-      .map(word => word[0].toUpperCase() + word.substring(1))
-      .join(" ");
+  addCategoryToRecipe(context, { recipe, categoryName }) {
+    categoryName = valueFilters.trimAndCapitalize(categoryName);
 
-    const categoryDoesNotExist = context.state.currentRecipe.categories
+    const categoryDoesNotExist = recipe.categories
       .map((value) => value.toUpperCase())
-      .indexOf(newCategoryName.toUpperCase()) < 0;
+      .indexOf(categoryName.toUpperCase()) < 0;
 
-    if (categoryDoesNotExist && newCategoryName.length > 0) {
-      context.commit("addCategoryToCurrentRecipe", newCategoryName);
+    if (categoryDoesNotExist && categoryName.length > 0) {
+      context.commit("addCategoryToRecipe", {recipe, categoryName});
     }
   },
 
-  removeCategoryFromCurrentRecipe(context, categoryToRemove) {
-    const index = context.state.currentRecipe.categories.indexOf(categoryToRemove);
+  removeCategoryFromRecipe(context, { recipe, categoryName }) {
+    const categoryIndex = recipe.categories.indexOf(categoryName);
 
-    if (index > -1) {
-      context.commit("removeCategoryFromCurrentRecipe", index);
+    if (categoryIndex > -1) {
+      context.commit("removeCategoryFromRecipe", {recipe, categoryIndex});
     }
   },
 

@@ -24,6 +24,7 @@ import { mapActions, mapGetters } from "vuex";
 import SearchControls from "../components/SearchControls";
 import SearchTable from "../components/SearchTable";
 import SearchTablePager from "../components/SearchTablePager";
+import sortTypes from "../../models/recipeSearchSortTypes";
 
 export default {
   components: {
@@ -92,8 +93,18 @@ export default {
     updateCategorySearch(value) {
       this.categorySearch = value;
     },
-    updateSelectedSort(value) {
-      this.sort = value;
+    updateSelectedSort() {
+      // TODO: move this logic out?
+      const currentSortId = sortTypes.indexOf(
+        sortTypes.filter(type => type.name === this.sort)[0]
+      );
+
+      const newSortId = (currentSortId + 1) % sortTypes.length;
+
+      const newSortName = sortTypes[newSortId].name;
+
+      this.sort = newSortName;
+
       this.fetchRecipes();
     }
   }

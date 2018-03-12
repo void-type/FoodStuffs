@@ -1,46 +1,36 @@
-function limitIntegers(value) {
-  value = parseInt(value);
-
-    if (value > 2147483647) {
-      value = 2147483647;
-    } else if (value < 0) {
-      value = 0;
-    }
-
-    return value;
-}
+import valueFilters from "../models/valueFilters";
 
 export default {
   setCurrentRecipe(state, recipe) {
     state.currentRecipe = recipe;
   },
 
-  setCurrentRecipeName(state, value) {
-    state.currentRecipe.name = value;
+  setRecipeName(state, { recipe, value }) {
+    recipe.name = value;
   },
 
-  setCurrentRecipeIngredients(state, value) {
-    state.currentRecipe.ingredients = value;
+  setRecipeIngredients(state, { recipe, value }) {
+    recipe.ingredients = value;
   },
 
-  setCurrentRecipeDirections(state, value) {
-    state.currentRecipe.directions = value;
+  setRecipeDirections(state, { recipe, value }) {
+    recipe.directions = value;
   },
 
-  setCurrentRecipePrepTimeMinutes(state, value) {
-    state.currentRecipe.prepTimeMinutes = limitIntegers(value);
+  setRecipePrepTimeMinutes(state, { recipe, value }) {
+    recipe.prepTimeMinutes = valueFilters.limitIntegers(value);
   },
 
-  setCurrentRecipeCookTimeMinutes(state, value) {
-    state.currentRecipe.cookTimeMinutes = limitIntegers(value);
+  setRecipeCookTimeMinutes(state, { recipe, value }) {
+    recipe.cookTimeMinutes = valueFilters.limitIntegers(value);
   },
 
-  addCategoryToCurrentRecipe(state, newCategoryName) {
-    state.currentRecipe.categories.push(newCategoryName);
+  addCategoryToRecipe(state, { recipe, categoryName }) {
+    recipe.categories.push(categoryName);
   },
 
-  removeCategoryFromCurrentRecipe(state, indexOfCategoryToRemove) {
-    state.currentRecipe.categories.splice(indexOfCategoryToRemove, 1);
+  removeCategoryFromRecipe(state, { recipe, categoryIndex }) {
+    recipe.categories.splice(categoryIndex, 1);
   },
 
   setRecipesList(state, recipes) {
@@ -91,21 +81,20 @@ export default {
     state.isError = status;
   },
 
-  addCurrentRecipeToRecents(state) {
-    if (state.recipesList.indexOf(state.currentRecipe) < 0) {
+  addRecipeToRecents(state, recipe) {
+    // TODO: too much logic here?
+    if (!state.recipesList.includes(recipe)) {
       return;
     }
 
-    const recentRecipeIndex = state.recentRecipes
-      .indexOf(state.recentRecipes
-        .filter(recentRecipeId => recentRecipeId === state.currentRecipe.id)[0]);
+    const recentRecipeIndex = state.recentRecipes.indexOf(recipe.id);
 
     if (recentRecipeIndex > -1) {
       state.recentRecipes.splice(recentRecipeIndex, 1);
     }
 
-    if (state.currentRecipe.id > 0) {
-      state.recentRecipes.unshift(state.currentRecipe.id);
+    if (recipe.id > 0) {
+      state.recentRecipes.unshift(recipe.id);
     }
 
     if (state.recentRecipes.length > 3) {

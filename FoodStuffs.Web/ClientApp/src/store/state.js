@@ -1,9 +1,9 @@
+import clientSettings from "../models/clientSettings"
 import Recipe from "../models/recipe";
 import RecipesSearchParameters from "../models/recipesSearchParameters";
-import { applicationName } from "../models/clientSettings"
 
 export default {
-  applicationName: applicationName,
+  applicationName: clientSettings.applicationName,
   currentRecipe: new Recipe(),
   messages: [],
   fieldsInError: [],

@@ -23,12 +23,8 @@ const webApiCallbacks = {
     context.commit("setRecipesListPage", data.page);
     context.commit("setRecipesListTake", data.take);
 
-    if (postbackId) {
-      const id = postbackId.toString();
-
-      const selectedRecipe = context.state.recipesList
-        .filter(recipe => recipe.id.toString() === id)[0];
-
+    if (postbackId > 0) {
+      const selectedRecipe = context.getters.findRecipeById(recipe.id);
       context.commit("setCurrentRecipe", selectedRecipe);
     }
   }

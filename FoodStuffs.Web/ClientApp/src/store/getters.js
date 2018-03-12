@@ -26,6 +26,10 @@
   recipesList(state) {
     return state.recipesList;
   },
+  
+  findRecipeById: (state) => (idToFind) => {
+    return state.recipesList.filter(item => item.id === idToFind)[0];
+  },
 
   recipesListPage(state) {
     return state.recipesListPage;
@@ -40,10 +44,7 @@
   },
 
   recentRecipes(state) {
-    return state.recentRecipes
-      .map(id => state.recipesList
-        .filter(recipe => recipe.id === id)[0])
-      .filter(recipe => recipe !== undefined);
+    return state.recipesList.filter(recipe => state.recentRecipes.includes(recipe.id));
   },
 
   recipesSearchParameters(state) {

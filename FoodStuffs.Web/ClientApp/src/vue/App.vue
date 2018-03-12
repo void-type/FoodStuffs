@@ -50,7 +50,7 @@
             </footer>
         </div>
         <div id="print-only">
-            <HomeViewer></HomeViewer>
+            <HomeViewer :currentRecipe="currentRecipe" />
         </div>
     </div>
 </template>
@@ -70,12 +70,12 @@ export default {
   router,
   store,
   computed: {
-    ...mapGetters(["applicationName"])
+    ...mapGetters(["applicationName", "currentRecipe"])
   },
   methods: {
     ...mapActions(["fetchRecipes"])
   },
-  mounted() {
+  beforeMount() {
     this.fetchRecipes();
   }
 };

@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import sortTypes from "../../models/recipeSearchSortTypes";
 
 export default {
@@ -37,6 +36,7 @@ export default {
     }
   },
   computed: {
+    // TODO: pass this as a prop?
     selectedSortSymbol() {
       return sortTypes.filter(type => type.name === this.selectedSort)[0]
         .symbol;
@@ -47,15 +47,9 @@ export default {
       this.$emit("selectRecipe", recipe);
       this.$router.push({ name: "home" });
     },
-    sortByNameClick() {
-      const currentSortId = sortTypes.filter(
-        type => type.name === this.selectedSort
-      )[0].id;
-      const newSortId = (currentSortId + 1) % sortTypes.length;
-      const newSortName = sortTypes.filter(type => type.id === newSortId)[0]
-        .name;
 
-      this.$emit("updateSelectedSort", newSortName);
+    sortByNameClick() {
+      this.$emit("updateSelectedSort");
     }
   }
 };

@@ -25,12 +25,13 @@
 
 <script>
 import dateString from "../../filters/dateString";
-import { mapGetters } from "vuex";
 
 export default {
-  // TODO: pass currentrecipe as a prop for viewing 2 recipes side-by-side.
-  computed: {
-    ...mapGetters(["currentRecipe"])
+  props: {
+    currentRecipe: {
+      type: Object,
+      required: true
+    }
   },
   filters: {
     dateString: dateString
