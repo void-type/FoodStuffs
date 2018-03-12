@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "dev server",
+            "command": "dotnet watch run",
+            "options": {
+                "cwd": "./FoodStuffs.Web"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test server",
+            "command": "dotnet watch test",
+            "options": {
+                "cwd": "./FoodStuffs.Test"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "dev client",
+            "command": "yarn dev",
+            "options": {
+                "cwd": "./FoodStuffs.Web"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+        },
+        {
+            "label": "build server",
+            "command": "dotnet build",
+            "options": {
+                "cwd": "./FoodStuffs.Web"
+            },
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build client",
+            "command": "yarn build",
+            "options": {
+                "cwd": "./FoodStuffs.Web"
+            },
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+        }
+        
+    ]
+}
