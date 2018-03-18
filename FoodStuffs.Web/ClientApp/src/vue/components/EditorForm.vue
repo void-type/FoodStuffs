@@ -127,10 +127,6 @@ export default {
     }
   },
   methods: {
-    cancelClick() {
-      this.fetchRecipes(this.currentRecipe.id);
-      this.$router.push({ name: "home" });
-    },
     ...mapActions([
       "deleteRecipe",
       "fetchRecipes",
@@ -138,6 +134,10 @@ export default {
       "addCategoryToRecipe",
       "removeCategoryFromRecipe"
     ]),
+    cancelClick() {
+      this.fetchRecipes(this.currentRecipe.id);
+      this.$router.push({ name: "home" });
+    },
     addCategoryToCurrentRecipe(categoryName) {
       const recipe = this.currentRecipe;
       this.addCategoryToRecipe({ recipe, categoryName });
