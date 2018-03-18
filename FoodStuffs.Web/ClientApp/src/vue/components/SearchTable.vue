@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import sortTypes from "../../models/recipeSearchSortTypes";
-
 export default {
   props: {
     recipes: {
