@@ -45,8 +45,8 @@ export default {
     return state.recipesListTotalCount;
   },
 
-  recentRecipes(state) {
-    return state.recipesList.filter(recipe => state.recentRecipeIds.includes(recipe.id));
+  recentRecipes(state, getters) {
+    return state.recentRecipeIds.map(id => getters.findRecipeById(id));
   },
 
   recipesSearchParameters(state) {
