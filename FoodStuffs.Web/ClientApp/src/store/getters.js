@@ -30,7 +30,7 @@ export default {
   },
 
   findRecipeById: (state) => (idToFind) => {
-    return state.recipesList.filter(item => item.id === idToFind)[0] || null;
+    return state.recipesList.filter(item => item.id === parseInt(idToFind))[0] || null;
   },
 
   recipesListPage(state) {

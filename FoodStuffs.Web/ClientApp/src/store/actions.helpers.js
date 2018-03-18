@@ -19,7 +19,6 @@ const webApiCallbacks = {
 
   onFetchListSuccess(context, data, postbackId) {
     context.dispatch("setRecipesList", data);
-
     if (postbackId > 0) {
       const selectedRecipe = context.getters.findRecipeById(postbackId);
       context.dispatch("setCurrentRecipe", selectedRecipe);

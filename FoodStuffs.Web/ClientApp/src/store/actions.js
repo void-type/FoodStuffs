@@ -47,11 +47,11 @@ export default {
 
   selectRecipe(context, recipe) {
     context.dispatch("clearMessages");
-    context.dispatch("addRecipeToRecents", context.getters.currentRecipe);
     context.dispatch("setCurrentRecipe", recipe);
   },
 
   setCurrentRecipe(context, recipe) {
+    context.dispatch("addRecipeToRecents", context.getters.currentRecipe);
     context.commit("setCurrentRecipe", recipe || new Recipe());
   },
 
