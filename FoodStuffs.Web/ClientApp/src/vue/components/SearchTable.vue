@@ -2,10 +2,10 @@
     <table>
         <thead>
             <tr>
-                <th class="ptr"
+                <th class="sortable-header"
                     @click="sortByNameClick()">
                     Name &nbsp;
-                    <span v-html="selectedSortSymbol"></span>
+                    <span v-html="selectedNameSortType.symbol"></span>
                 </th>
                 <th>Category</th>
             </tr>
@@ -30,16 +30,9 @@ export default {
       type: Array,
       required: true
     },
-    selectedSort: {
-      type: String,
+    selectedNameSortType: {
+      type: Object,
       required: true
-    }
-  },
-  computed: {
-    // TODO: pass this as a prop?
-    selectedSortSymbol() {
-      return sortTypes.filter(type => type.name === this.selectedSort)[0]
-        .symbol;
     }
   },
   methods: {
@@ -49,7 +42,7 @@ export default {
     },
 
     sortByNameClick() {
-      this.$emit("updateSelectedSort");
+      this.$emit("cycleSelectedNameSortType");
     }
   }
 };
@@ -89,7 +82,7 @@ table {
   }
 }
 
-.ptr {
+.sortable-header {
   cursor: pointer;
 }
 

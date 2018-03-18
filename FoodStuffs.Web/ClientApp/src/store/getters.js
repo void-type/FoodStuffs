@@ -1,4 +1,6 @@
-﻿export default {
+﻿import sortTypes from "../models/recipeSearchSortTypes";
+
+export default {
   applicationName(state) {
     return state.applicationName;
   },
@@ -26,7 +28,7 @@
   recipesList(state) {
     return state.recipesList;
   },
-  
+
   findRecipeById: (state) => (idToFind) => {
     return state.recipesList.filter(item => item.id === idToFind)[0];
   },
@@ -44,10 +46,14 @@
   },
 
   recentRecipes(state) {
-    return state.recipesList.filter(recipe => state.recentRecipes.includes(recipe.id));
+    return state.recipesList.filter(recipe => state.recentRecipeIds.includes(recipe.id));
   },
 
   recipesSearchParameters(state) {
     return state.recipesSearchParameters;
+  },
+
+  recipesSearchParametersSortType(state) {
+    return sortTypes.filter(type => type.name === state.recipesSearchParameters.sort)[0];
   }
 }

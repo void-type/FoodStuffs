@@ -8,9 +8,9 @@
                         @clear="clearSearch" />
 
         <SearchTable :recipes="recipesList"
-                     :selectedSort="sort"
+                     :selectedNameSortType="recipesSearchParametersSortType"
                      @selectRecipe="selectRecipe"
-                     @updateSelectedSort="updateSelectedSort" />
+                     @cycleSelectedNameSortType="cycleSelectedNameSortType" />
 
         <SearchTablePager :page="recipesListPage"
                           :take="recipesListTake"
@@ -24,7 +24,6 @@ import { mapActions, mapGetters } from "vuex";
 import SearchControls from "../components/SearchControls";
 import SearchTable from "../components/SearchTable";
 import SearchTablePager from "../components/SearchTablePager";
-import sortTypes from "../../models/recipeSearchSortTypes";
 
 export default {
   components: {
@@ -37,7 +36,8 @@ export default {
       "recipesList",
       "recipesListPage",
       "recipesListTake",
-      "recipesListTotalCount"
+      "recipesListTotalCount",
+      "recipesSearchParametersSortType"
     ]),
     nameSearch: {
       get() {
@@ -62,18 +62,14 @@ export default {
       set(value) {
         this.$store.commit("setRecipesSearchParametersPage", value);
       }
-    },
-    sort: {
-      get() {
-        return this.$store.state.recipesSearchParameters.sort;
-      },
-      set(value) {
-        this.$store.commit("setRecipesSearchParametersSort", value);
-      }
     }
   },
   methods: {
-    ...mapActions(["selectRecipe", "fetchRecipes"]),
+    ...mapActions([
+      "selectRecipe",
+      "fetchRecipes",
+      "cycleSelectedNameSortType"
+    ]),
     requestPage(pageNumber) {
       this.page = pageNumber;
       this.fetchRecipes();
@@ -92,20 +88,6 @@ export default {
     },
     updateCategorySearch(value) {
       this.categorySearch = value;
-    },
-    updateSelectedSort() {
-      // TODO: move this logic out?
-      const currentSortId = sortTypes.indexOf(
-        sortTypes.filter(type => type.name === this.sort)[0]
-      );
-
-      const newSortId = (currentSortId + 1) % sortTypes.length;
-
-      const newSortName = sortTypes[newSortId].name;
-
-      this.sort = newSortName;
-
-      this.fetchRecipes();
     }
   }
 };

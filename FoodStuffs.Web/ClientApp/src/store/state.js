@@ -12,6 +12,6 @@ export default {
   recipesListPage: 0,
   recipesListTake: 0,
   recipesListTotalCount: 0,
-  recentRecipes: [],
+  recentRecipeIds: [],
   recipesSearchParameters: new RecipesSearchParameters()
 }

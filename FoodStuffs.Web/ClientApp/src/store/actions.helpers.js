@@ -1,6 +1,6 @@
 const webApiCallbacks = {
   onSuccess(context, data) {
-    context.dispatch("fetchRecipes", data.id || null);
+    context.dispatch("fetchRecipes", (data.id || null));
     context.commit("setIsError", false);
     context.commit("setMessage", data.message);
   },
@@ -18,14 +18,11 @@ const webApiCallbacks = {
   },
 
   onFetchListSuccess(context, data, postbackId) {
-    context.commit("setRecipesList", data.items);
-    context.commit("setRecipesListTotalCount", data.totalCount);
-    context.commit("setRecipesListPage", data.page);
-    context.commit("setRecipesListTake", data.take);
+    context.dispatch("setRecipesList", data);
 
     if (postbackId > 0) {
-      const selectedRecipe = context.getters.findRecipeById(recipe.id);
-      context.commit("setCurrentRecipe", selectedRecipe);
+      const selectedRecipe = context.getters.findRecipeById(postbackId);
+      context.dispatch("setCurrentRecipe", selectedRecipe);
     }
   }
 }

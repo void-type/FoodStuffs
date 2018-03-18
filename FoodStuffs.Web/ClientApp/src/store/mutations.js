@@ -81,24 +81,7 @@ export default {
     state.isError = status;
   },
 
-  addRecipeToRecents(state, recipe) {
-    // TODO: too much logic here?
-    if (!state.recipesList.includes(recipe)) {
-      return;
-    }
-
-    const recentRecipeIndex = state.recentRecipes.indexOf(recipe.id);
-
-    if (recentRecipeIndex > -1) {
-      state.recentRecipes.splice(recentRecipeIndex, 1);
-    }
-
-    if (recipe.id > 0) {
-      state.recentRecipes.unshift(recipe.id);
-    }
-
-    if (state.recentRecipes.length > 3) {
-      state.recentRecipes.pop();
-    }
+  setRecentRecipeIds(state, recipeIds) {
+    state.recentRecipeIds = recipeIds;
   }
 }
