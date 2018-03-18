@@ -1,6 +1,6 @@
 const webApiCallbacks = {
   onSuccess(context, data) {
-    context.dispatch("fetchRecipes", (data.id || null));
+    context.dispatch("fetchRecipes", data.id);
     context.commit("setIsError", false);
     context.commit("setMessage", data.message);
   },

@@ -30,7 +30,7 @@ export default {
   },
 
   findRecipeById: (state) => (idToFind) => {
-    return state.recipesList.filter(item => item.id === idToFind)[0];
+    return state.recipesList.filter(item => item.id === idToFind)[0] || null;
   },
 
   recipesListPage(state) {
@@ -46,7 +46,10 @@ export default {
   },
 
   recentRecipes(state, getters) {
-    return state.recentRecipeIds.map(id => getters.findRecipeById(id));
+    let recents = state.recentRecipeIds
+      .map(id => getters.findRecipeById(id))
+      .filter(recipe => recipe != null);
+    return recents;
   },
 
   recipesSearchParameters(state) {
