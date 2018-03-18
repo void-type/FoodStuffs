@@ -77,52 +77,52 @@ export default {
     ...mapGetters(["currentRecipe", "isFieldInError"]),
     name: {
       get() {
-        return this.$store.state.currentRecipe.name;
+        return this.currentRecipe.name;
       },
       set(value) {
         const recipe = this.currentRecipe;
-        this.$store.commit("setRecipeName", { recipe, value });
+        this.$store.dispatch("setRecipeName", { recipe, value });
       }
     },
     ingredients: {
       get() {
-        return this.$store.state.currentRecipe.ingredients;
+        return this.currentRecipe.ingredients;
       },
       set(value) {
         const recipe = this.currentRecipe;
-        this.$store.commit("setRecipeIngredients", { recipe, value });
+        this.$store.dispatch("setRecipeIngredients", { recipe, value });
       }
     },
     directions: {
       get() {
-        return this.$store.state.currentRecipe.directions;
+        return this.currentRecipe.directions;
       },
       set(value) {
         const recipe = this.currentRecipe;
-        this.$store.commit("setRecipeDirections", { recipe, value });
+        this.$store.dispatch("setRecipeDirections", { recipe, value });
       }
     },
     prepTimeMinutes: {
       get() {
-        return this.$store.state.currentRecipe.prepTimeMinutes;
+        return this.currentRecipe.prepTimeMinutes;
       },
       set(value) {
         const recipe = this.currentRecipe;
-        this.$store.commit("setRecipePrepTimeMinutes", { recipe, value });
+        this.$store.dispatch("setRecipePrepTimeMinutes", { recipe, value });
       }
     },
     cookTimeMinutes: {
       get() {
-        return this.$store.state.currentRecipe.cookTimeMinutes;
+        return this.currentRecipe.cookTimeMinutes;
       },
       set(value) {
         const recipe = this.currentRecipe;
-        this.$store.commit("setRecipeCookTimeMinutes", { recipe, value });
+        this.$store.dispatch("setRecipeCookTimeMinutes", { recipe, value });
       }
     },
     categories: {
       get() {
-        return this.$store.state.currentRecipe.categories;
+        return this.currentRecipe.categories;
       }
     }
   },

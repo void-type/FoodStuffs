@@ -47,12 +47,34 @@ export default {
 
   selectRecipe(context, recipe) {
     context.dispatch("clearMessages");
-    context.dispatch("addRecipeToRecents", recipe);
+    context.dispatch("addRecipeToRecents", context.getters.currentRecipe);
     context.dispatch("setCurrentRecipe", recipe);
   },
 
   setCurrentRecipe(context, recipe) {
     context.commit("setCurrentRecipe", recipe || new Recipe());
+  },
+
+  setRecipeName(context, { recipe, value }) {
+    context.commit("setRecipeName", { recipe, value });
+  },
+
+  setRecipeIngredients(context, { recipe, value }) {
+    context.commit("setRecipeIngredients", { recipe, value });
+  },
+
+  setRecipeDirections(context, { recipe, value }) {
+    context.commit("setRecipeDirections", { recipe, value });
+  },
+
+  setRecipePrepTimeMinutes(context, { recipe, value }) {
+    value = valueFilters.limitIntegers(value);
+    context.commit("setRecipePrepTimeMinutes", { recipe, value });
+  },
+
+  setRecipeCookTimeMinutes(context, { recipe, value }) {
+    value = valueFilters.limitIntegers(value);
+    context.commit("setRecipeCookTimeMinutes", { recipe, value });
   },
 
   addCategoryToRecipe(context, { recipe, categoryName }) {
@@ -79,6 +101,18 @@ export default {
     context.commit("setIsError", false);
     context.commit("setFieldsInError", []);
     context.commit("setMessages", []);
+  },
+
+  setRecipesSearchParametersNameSearch(context, nameSearch) {
+    context.commit("setRecipesSearchParametersNameSearch", nameSearch);
+  },
+
+  setRecipesSearchParametersCategorySearch(context, categorySearch) {
+    context.commit("setRecipesSearchParametersCategorySearch", categorySearch);
+  },
+
+  setRecipesSearchParametersPage(context, page) {
+    context.commit("setRecipesSearchParametersPage", page);
   },
 
   cycleSelectedNameSortType(context) {

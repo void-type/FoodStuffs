@@ -37,30 +37,31 @@ export default {
       "recipesListPage",
       "recipesListTake",
       "recipesListTotalCount",
+      "recipesSearchParameters",
       "recipesSearchParametersSortType"
     ]),
     nameSearch: {
       get() {
-        return this.$store.state.recipesSearchParameters.nameSearch;
+        return this.recipesSearchParameters.nameSearch;
       },
       set(value) {
-        this.$store.commit("setRecipesSearchParametersNameSearch", value);
+        this.$store.dispatch("setRecipesSearchParametersNameSearch", value);
       }
     },
     categorySearch: {
       get() {
-        return this.$store.state.recipesSearchParameters.categorySearch;
+        return this.recipesSearchParameters.categorySearch;
       },
       set(value) {
-        this.$store.commit("setRecipesSearchParametersCategorySearch", value);
+        this.$store.dispatch("setRecipesSearchParametersCategorySearch", value);
       }
     },
     page: {
       get() {
-        return this.$store.state.recipesSearchParameters.page;
+        return this.recipesSearchParameters.page;
       },
       set(value) {
-        this.$store.commit("setRecipesSearchParametersPage", value);
+        this.$store.dispatch("setRecipesSearchParametersPage", value);
       }
     }
   },
