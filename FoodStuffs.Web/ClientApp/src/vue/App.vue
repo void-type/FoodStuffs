@@ -289,6 +289,10 @@ nav {
   .no-print {
     display: none;
   }
+  
+  body {
+    font-size: 90% !important;
+  }
 
   div {
     background-color: $color-neutral-inverse;
