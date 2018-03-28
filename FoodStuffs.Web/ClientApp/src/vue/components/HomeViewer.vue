@@ -1,25 +1,30 @@
 ﻿<template>
-    <div v-if="currentRecipe.name">
+    <div class="viewer" v-if="currentRecipe.name">
         <h1>{{currentRecipe.name}}</h1>
         <h3>Ingredients</h3>
         <pre>{{currentRecipe.ingredients}}</pre>
         <h3>Directions</h3>
         <pre>{{currentRecipe.directions}}</pre>
-        <hr />
-        <p>
-            <span v-if="currentRecipe.prepTimeMinutes !== null"><strong>Prep Time: </strong>{{currentRecipe.prepTimeMinutes}} minutes. </span>
-            <span v-if="currentRecipe.cookTimeMinutes !== null"><strong>Cook Time: </strong>{{currentRecipe.cookTimeMinutes}} minutes.</span>
-            <br v-if="currentRecipe.prepTimeMinutes !== null || currentRecipe.cookTimeMinutes !== null"/>
-            <strong>Categories: </strong>
+
+        <h3>Stats</h3>
+
+        <div v-if="currentRecipe.prepTimeMinutes !== null"><span>Prep Time: {{currentRecipe.prepTimeMinutes}} minutes</span><br /></div>
+        <div v-if="currentRecipe.cookTimeMinutes !== null"><span>Cook Time: {{currentRecipe.cookTimeMinutes}} minutes<br /></span></div>
+        <br v-if="currentRecipe.prepTimeMinutes !== null || currentRecipe.cookTimeMinutes !== null"/>
+        Created By: {{currentRecipe.createdBy}}<br />
+        Created On: {{currentRecipe.createdOnUtc | localDateString}}<br />
+        Modified By: {{currentRecipe.modifiedBy}}<br />
+        Modified On: {{currentRecipe.modifiedOnUtc | localDateString}}
+        <br /><br />
+        <div class="no-print">
+            Categories:
             <span class="categories">
                 <span v-for="category in currentRecipe.categories"
                       :key="category">
                     {{category}}
                 </span>
-            </span><br />
-            <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Created On: </strong>{{currentRecipe.createdOnUtc | localDateString}}<br />
-            <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOnUtc | localDateString}}
-        </p>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -43,16 +48,17 @@ export default {
 @import "../variables";
 @import "../inputs";
 
+div.viewer {
+  width: 100%;
+}
+
 .categories > span:not(:last-child):after {
   content: ", ";
 }
 
-p {
-  margin-bottom: 1.5em;
-}
-
 hr {
-  margin: 1em 0em;
+  clear: both;
+  visibility: hidden;
 }
 
 @media screen {
