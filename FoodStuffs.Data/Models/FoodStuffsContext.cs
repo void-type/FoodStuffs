@@ -14,12 +14,16 @@ namespace FoodStuffs.Data.Models
         {
             modelBuilder.Entity<Category>(entity =>
             {
+                entity.ToTable("Category", "dbo");
+
                 entity.Property(e => e.Name).IsRequired();
             });
 
             modelBuilder.Entity<CategoryRecipe>(entity =>
             {
                 entity.HasKey(e => new { e.RecipeId, e.CategoryId });
+
+                entity.ToTable("CategoryRecipe", "dbo");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.CategoryRecipe)
@@ -36,13 +40,15 @@ namespace FoodStuffs.Data.Models
 
             modelBuilder.Entity<Recipe>(entity =>
             {
-                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+                entity.ToTable("Recipe", "dbo");
+
+                entity.Property(e => e.CreatedOnUtc).HasColumnType("datetime");
 
                 entity.Property(e => e.Directions).IsRequired();
 
                 entity.Property(e => e.Ingredients).IsRequired();
 
-                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+                entity.Property(e => e.ModifiedOnUtc).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsRequired();
 
@@ -61,6 +67,8 @@ namespace FoodStuffs.Data.Models
 
             modelBuilder.Entity<User>(entity =>
             {
+                entity.ToTable("User", "dbo");
+
                 entity.Property(e => e.FirstName).IsRequired();
 
                 entity.Property(e => e.LastName).IsRequired();

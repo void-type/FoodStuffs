@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
@@ -90,8 +89,8 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
 
                 Assert.Equal("ChangedRecipeName 1", changedRecipe.Name);
                 Assert.Equal(4, changedRecipe.PrepTimeMinutes);
-                Assert.Equal(then.Moment, changedRecipe.CreatedOn);
-                Assert.Equal(now.Moment, changedRecipe.ModifiedOn);
+                Assert.Equal(then.Moment, changedRecipe.CreatedOnUtc);
+                Assert.Equal(now.Moment, changedRecipe.ModifiedOnUtc);
                 Assert.Equal(11, changedRecipe.CreatedByUserId);
                 Assert.Equal(12, changedRecipe.ModifiedByUserId);
 

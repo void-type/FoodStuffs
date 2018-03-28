@@ -21,8 +21,8 @@ namespace FoodStuffs.Model.Actions.Recipes
         protected override void PerformStep(IActionResponder respond)
         {
             var newRecipe = _data.Recipes.New;
-            newRecipe.CreatedOn = _now.Moment;
-            newRecipe.ModifiedOn = _now.Moment;
+            newRecipe.CreatedOnUtc = _now.Moment;
+            newRecipe.ModifiedOnUtc = _now.Moment;
             newRecipe.CreatedByUserId = _userId;
             newRecipe.ModifiedByUserId = _userId;
             newRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;

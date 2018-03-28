@@ -37,9 +37,9 @@ namespace FoodStuffs.Model.Queries
                 CookTimeMinutes = r.CookTimeMinutes,
                 PrepTimeMinutes = r.PrepTimeMinutes,
                 CreatedBy = $"{r.CreatedByUser?.FirstName} {r.CreatedByUser?.LastName}",
-                CreatedOn = r.CreatedOn,
+                CreatedOnUtc = r.CreatedOnUtc,
                 ModifiedBy = $"{r.ModifiedByUser?.FirstName} {r.ModifiedByUser?.LastName}",
-                ModifiedOn = r.ModifiedOn,
+                ModifiedOnUtc = r.ModifiedOnUtc,
                 Categories = r.CategoryRecipe.Select(cr => cr.Category.Name)
             });
         }

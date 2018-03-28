@@ -32,7 +32,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            savedRecipe.ModifiedOn = _now.Moment;
+            savedRecipe.ModifiedOnUtc = _now.Moment;
             savedRecipe.ModifiedByUserId = _userId;
             savedRecipe.CookTimeMinutes = _viewModel.CookTimeMinutes;
             savedRecipe.PrepTimeMinutes = _viewModel.PrepTimeMinutes;

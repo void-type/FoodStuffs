@@ -17,14 +17,14 @@
                     {{category}}
                 </span>
             </span><br />
-            <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Created On: </strong>{{currentRecipe.createdOn | dateString}}<br />
-            <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOn | dateString}}
+            <strong>Created By: </strong>{{currentRecipe.createdBy}}. <strong>Created On: </strong>{{currentRecipe.createdOnUtc | localDateString}}<br />
+            <strong>Modified By: </strong>{{currentRecipe.modifiedBy}}. <strong>Modified On: </strong>{{currentRecipe.modifiedOnUtc | localDateString}}
         </p>
     </div>
 </template>
 
 <script>
-import dateString from "../../filters/dateString";
+import localDateString from "../../filters/localDateString";
 
 export default {
   props: {
@@ -34,7 +34,7 @@ export default {
     }
   },
   filters: {
-    dateString: dateString
+    localDateString: localDateString
   }
 };
 </script>

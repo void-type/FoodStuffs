@@ -29,12 +29,12 @@ namespace FoodStuffs.Test.Mocks
         };
 
         public static IDateTimeService EarlyDateTimeService =>
-                                            new DiscreteDateTimeService(new DateTime(2001, 1, 1, 11, 11, 11));
+                                            new DiscreteDateTimeService(new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc));
 
         public static SimpleActionResponder GetResponder => new SimpleActionResponder();
 
         public static IDateTimeService LateDateTimeService =>
-                    new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22));
+                    new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc));
 
         public static Recipe Recipe1 => new Recipe
         {
@@ -42,8 +42,8 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe1",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOn = EarlyDateTimeService.Moment,
-            ModifiedOn = EarlyDateTimeService.Moment,
+            CreatedOnUtc = EarlyDateTimeService.Moment,
+            ModifiedOnUtc = EarlyDateTimeService.Moment,
             CreatedByUserId = 11,
             ModifiedByUserId = 11
         };
@@ -54,8 +54,8 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe2",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOn = EarlyDateTimeService.Moment,
-            ModifiedOn = EarlyDateTimeService.Moment,
+            CreatedOnUtc = EarlyDateTimeService.Moment,
+            ModifiedOnUtc = EarlyDateTimeService.Moment,
             CreatedByUserId = 11,
             ModifiedByUserId = 11
         };
@@ -66,8 +66,8 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe3",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOn = EarlyDateTimeService.Moment,
-            ModifiedOn = EarlyDateTimeService.Moment,
+            CreatedOnUtc = EarlyDateTimeService.Moment,
+            ModifiedOnUtc = EarlyDateTimeService.Moment,
             CreatedByUserId = 11,
             ModifiedByUserId = 11
         };

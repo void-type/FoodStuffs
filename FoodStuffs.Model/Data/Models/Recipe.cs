@@ -13,7 +13,7 @@ namespace FoodStuffs.Model.Data.Models
 
         public int CreatedByUserId { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         public string Directions { get; set; }
 
@@ -25,7 +25,7 @@ namespace FoodStuffs.Model.Data.Models
 
         public int ModifiedByUserId { get; set; }
 
-        public DateTime ModifiedOn { get; set; }
+        public DateTime ModifiedOnUtc { get; set; }
 
         public string Name { get; set; }
 

@@ -46,7 +46,7 @@ namespace FoodStuffs.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IFoodStuffsData, FoodStuffsEfData>();
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
-            services.AddTransient<IDateTimeService, NowDateTimeService>();
+            services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
 
             if (_configuration["FoodStuffsConnectionString"] == "In-Memory")

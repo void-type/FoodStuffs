@@ -3,11 +3,11 @@
     /// <summary>
     /// A service for getting the current DateTime.
     /// </summary>
-    public class NowDateTimeService : IDateTimeService
+    public class UtcNowDateTimeService : IDateTimeService
     {
         /// <summary>
         /// Returns the current DateTime.
         /// </summary>
-        public System.DateTime Moment => System.DateTime.Now;
+        public System.DateTime Moment => System.DateTime.UtcNow;
     }
 }

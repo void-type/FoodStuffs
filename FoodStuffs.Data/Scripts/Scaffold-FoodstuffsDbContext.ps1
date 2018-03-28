@@ -6,7 +6,7 @@
 	)
 
 	# Build the models and context
-	Scaffold-DbContext "Server=SERVER;Database=FoodStuffsTest;User Id=FoodStuffsTestUser;Password=$Password;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir "Models" -Force
+	Scaffold-DbContext "Server=SERVER;Database=FoodStuffs;User Id=FoodStuffsUser;Password=$Password;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir "$PSScriptRoot\..\Models" -Force
 
 	# Move models to FoodStuffs.Model\Data\Models
 	Move-Item -Path "$PSScriptRoot\..\Models\*" -Exclude "*Context.cs" -Destination "$PSScriptRoot\..\..\FoodStuffs.Model\Data\Models\" -Force
