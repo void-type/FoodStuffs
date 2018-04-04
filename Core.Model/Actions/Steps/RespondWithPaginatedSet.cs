@@ -7,11 +7,12 @@ namespace Core.Model.Actions.Steps
 {
     public class RespondWithPaginatedSet<TEntity> : AbstractActionStep
     {
-        public RespondWithPaginatedSet(IEnumerable<TEntity> set, int take, int page)
+        public RespondWithPaginatedSet(IEnumerable<TEntity> set, int take, int page, string logExtra = null)
         {
             _set = set;
             _take = take;
             _page = page;
+            _logExtra = logExtra;
         }
 
         protected override void PerformStep(IActionResponder respond)
@@ -26,10 +27,11 @@ namespace Core.Model.Actions.Steps
                 TotalCount = _set.Count()
             };
 
-            respond.WithItem(pagedSet);
+            respond.WithItem(pagedSet, $"Page: {_page}, Take: {_take}, TotalCount: {pagedSet.TotalCount}, {_logExtra}");
         }
 
         private readonly int _page;
+        private readonly string _logExtra;
         private readonly IEnumerable<TEntity> _set;
         private readonly int _take;
     }
