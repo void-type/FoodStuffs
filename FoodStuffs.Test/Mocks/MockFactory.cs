@@ -28,13 +28,23 @@ namespace FoodStuffs.Test.Mocks
             Name = "Category3"
         };
 
-        public static IDateTimeService EarlyDateTimeService =>
-                                            new DiscreteDateTimeService(new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc));
+        public static IDateTimeService DateTimeServiceEarly
+        {
+            get
+            {
+                var when = new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc);
+                return new DiscreteDateTimeService(when);
+            }
+        }
 
-        public static SimpleActionResponder GetResponder => new SimpleActionResponder();
-
-        public static IDateTimeService LateDateTimeService =>
-                    new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc));
+        public static IDateTimeService DateTimeServiceLate
+        {
+            get
+            {
+                var when = new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc);
+                return new DiscreteDateTimeService(when);
+            }
+        }
 
         public static Recipe Recipe1 => new Recipe
         {
@@ -42,8 +52,8 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe1",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOnUtc = EarlyDateTimeService.Moment,
-            ModifiedOnUtc = EarlyDateTimeService.Moment,
+            CreatedOnUtc = DateTimeServiceEarly.Moment,
+            ModifiedOnUtc = DateTimeServiceEarly.Moment,
             CreatedByUserId = 11,
             ModifiedByUserId = 11
         };
@@ -54,8 +64,8 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe2",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOnUtc = EarlyDateTimeService.Moment,
-            ModifiedOnUtc = EarlyDateTimeService.Moment,
+            CreatedOnUtc = DateTimeServiceEarly.Moment,
+            ModifiedOnUtc = DateTimeServiceEarly.Moment,
             CreatedByUserId = 11,
             ModifiedByUserId = 11
         };
@@ -66,11 +76,13 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe3",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOnUtc = EarlyDateTimeService.Moment,
-            ModifiedOnUtc = EarlyDateTimeService.Moment,
+            CreatedOnUtc = DateTimeServiceEarly.Moment,
+            ModifiedOnUtc = DateTimeServiceEarly.Moment,
             CreatedByUserId = 11,
             ModifiedByUserId = 11
         };
+
+        public static SimpleActionResponder Responder => new SimpleActionResponder();
 
         public static User User1 => new User
         {
@@ -86,7 +98,7 @@ namespace FoodStuffs.Test.Mocks
             LastName = "Last",
         };
 
-        public static FoodStuffsEfData MemoryData(string dbName = null)
+        public static FoodStuffsEfData FoodStuffsData(string dbName = null)
         {
             return new FoodStuffsEfData(new FoodStuffsContext(new DbContextOptionsBuilder<FoodStuffsContext>()
                 .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())

@@ -14,8 +14,8 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void CreateRecipe()
         {
-            var now = MockFactory.EarlyDateTimeService;
-            var responder = MockFactory.GetResponder;
+            var now = MockFactory.DateTimeServiceEarly;
+            var responder = MockFactory.Responder;
 
             var newRecipeViewModel = new RecipeViewModel
             {
@@ -29,7 +29,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
             };
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 

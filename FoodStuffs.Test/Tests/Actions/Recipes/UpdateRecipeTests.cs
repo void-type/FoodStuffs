@@ -15,11 +15,11 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void UpdateRecipeAndRelations()
         {
-            var responder = MockFactory.GetResponder;
-            var then = MockFactory.EarlyDateTimeService;
-            var now = MockFactory.LateDateTimeService;
+            var responder = MockFactory.Responder;
+            var then = MockFactory.DateTimeServiceEarly;
+            var now = MockFactory.DateTimeServiceLate;
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Users.Add(MockFactory.User2);
@@ -106,8 +106,8 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void UpdateRecipeNotFound()
         {
-            var responder = MockFactory.GetResponder;
-            var now = MockFactory.LateDateTimeService;
+            var responder = MockFactory.Responder;
+            var now = MockFactory.DateTimeServiceLate;
 
             var recipeViewModel = new RecipeViewModel
             {
@@ -118,7 +118,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                 }
             };
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 new ActionChain(responder)
                     .Execute(new UpdateRecipe(data, now, recipeViewModel, 11));

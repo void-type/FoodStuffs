@@ -17,7 +17,7 @@ namespace FoodStuffs.Test.Tests.Actions
         [InlineData(105, 10, 11, 5)]
         public void RespondWithPaginatedRecipes(int totalCount, int take, int page, int expectedCount)
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
             var set = new List<string>();
 

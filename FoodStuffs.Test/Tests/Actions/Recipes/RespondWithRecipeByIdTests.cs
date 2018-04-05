@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Test.Mocks;
 using Xunit;
@@ -11,9 +10,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithRecipeByIdFound()
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -34,9 +33,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void RespondWithRecipeByIdNotFound()
         {
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
-                var responder = MockFactory.GetResponder;
+                var responder = MockFactory.Responder;
 
                 new ActionChain(responder)
                     .Execute(new RespondWithRecipeById(data, 15));

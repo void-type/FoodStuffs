@@ -1,5 +1,4 @@
 ﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Data.Service;
 using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.ViewModels;
@@ -14,9 +13,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void SearchAllRecipesEmpty()
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -38,9 +37,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [InlineData("1 2", 0)]
         public void SearchRecipesByCategory(string categorySearch, int expectedFound)
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 var recipe1 = MockFactory.Recipe1;
                 var recipe2 = MockFactory.Recipe2;
@@ -109,9 +108,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [InlineData("1", 1)]
         public void SearchRecipesByName(string nameSearch, int expectedFound)
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);
@@ -133,9 +132,9 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [Fact]
         public void SearchRecipesNotEmpty()
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.MemoryData())
+            using (var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);

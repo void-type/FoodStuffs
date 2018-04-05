@@ -19,7 +19,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
         [InlineData(null, "Recipe2")]
         public void SortAscending(string sortType, string expectedName)
         {
-            var responder = MockFactory.GetResponder;
+            var responder = MockFactory.Responder;
 
             var recipe2 = MockFactory.Recipe2;
             recipe2.Id = 1;
