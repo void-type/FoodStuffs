@@ -30,9 +30,7 @@ namespace Core.Model.Validation
         protected IRule Invalid(string fieldName, string errorMessage)
         {
             var rule = new Rule(fieldName, errorMessage);
-
             _rules.Add(rule);
-
             return rule;
         }
 

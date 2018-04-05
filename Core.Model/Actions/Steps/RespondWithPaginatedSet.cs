@@ -30,8 +30,8 @@ namespace Core.Model.Actions.Steps
             respond.WithItem(pagedSet, $"Page: {_page}, Take: {_take}, TotalCount: {pagedSet.TotalCount}, {_logExtra}");
         }
 
-        private readonly int _page;
         private readonly string _logExtra;
+        private readonly int _page;
         private readonly IEnumerable<TEntity> _set;
         private readonly int _take;
     }

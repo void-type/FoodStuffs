@@ -42,7 +42,6 @@ namespace Core.Model.Validation
             {
                 IsSuppressed = true;
             }
-
             return this;
         }
 
@@ -59,7 +58,6 @@ namespace Core.Model.Validation
             {
                 IsValid = !conditionExpression.Invoke();
             }
-
             return this;
         }
     }

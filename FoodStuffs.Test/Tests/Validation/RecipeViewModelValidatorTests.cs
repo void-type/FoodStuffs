@@ -17,9 +17,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 Directions = directions
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.NotEmpty(errors.Where(x => x.FieldName == "directions"));
@@ -35,9 +33,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 Ingredients = ingredients
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.NotEmpty(errors.Where(x => x.FieldName == "ingredients"));
@@ -53,9 +49,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 Name = recipeName
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.NotEmpty(errors.Where(x => x.FieldName == "name"));
@@ -70,9 +64,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 CookTimeMinutes = time
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.NotEmpty(errors.Where(x => x.FieldName == "cookTimeMinutes"));
@@ -87,9 +79,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 PrepTimeMinutes = time
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.NotEmpty(errors.Where(x => x.FieldName == "prepTimeMinutes"));
@@ -106,9 +96,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 CookTimeMinutes = time
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.Empty(errors.Where(x => x.FieldName == "cookTimeMinutes"));
@@ -123,9 +111,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 Directions = directions
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.Empty(errors.Where(x => x.FieldName == "directions"));
@@ -140,9 +126,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 Ingredients = ingredients
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.Empty(errors.Where(x => x.FieldName == "ingredients"));
@@ -159,9 +143,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 PrepTimeMinutes = time
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.Empty(errors.Where(x => x.FieldName == "prepTimeMinutes"));
@@ -176,9 +158,7 @@ namespace FoodStuffs.Test.Tests.Validation
             {
                 Name = recipeName
             };
-
             var validator = new RecipeViewModelValidator();
-
             var errors = validator.Validate(recipe);
 
             Assert.Empty(errors.Where(x => x.FieldName == "name"));

@@ -20,15 +20,18 @@ namespace Core.Model.Actions.Responder
             {
                 return false;
             }
-
             CreateValidationErrorResponse(logExtra);
             return true;
         }
 
         public abstract void WithError(string userMessage, string logExtra = null, Exception ex = null);
+
         public abstract void WithItem<T>(T item, string logExtra = null);
+
         public abstract void WithList<T>(IEnumerable<T> items, string logExtra = null);
+
         public abstract void WithPostSuccess(string userMessage, string id, string logExtra = null);
+
         public abstract void WithSuccess(string userMessage, string logExtra = null);
 
         public void WithValidationErrors(string logExtra, params IValidationError[] newValidationErrors)
