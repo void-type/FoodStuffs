@@ -1,6 +1,6 @@
 ﻿namespace Core.Model.Actions.Responses.ItemSet
 {
-    public class PagedItemSet<TEntity> : CountedItemSet<TEntity>, IPagedItemSet
+    public class ItemSetPage<TEntity> : CountedItemSet<TEntity>, IItemSetPage
     {
         public int Page { get; set; }
         public int Take { get; set; }

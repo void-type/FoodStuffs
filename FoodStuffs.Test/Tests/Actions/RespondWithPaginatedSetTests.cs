@@ -29,7 +29,7 @@ namespace FoodStuffs.Test.Tests.Actions
             new ActionChain(responder)
                 .Execute(new RespondWithPaginatedSet<string>(set, take, page));
 
-            var response = responder.Response.DataItem as PagedItemSet<string>;
+            var response = responder.Response.DataItem as ItemSetPage<string>;
 
             Assert.NotNull(response);
             Assert.True(responder.ResponseCreated);

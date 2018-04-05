@@ -19,7 +19,7 @@ namespace Core.Model.Actions.Steps
         {
             var set = _set.Skip((_page - 1) * _take).Take(_take);
 
-            var pagedSet = new PagedItemSet<TEntity>
+            var pagedSet = new ItemSetPage<TEntity>
             {
                 Items = set,
                 Page = _page,
