@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Runtime.InteropServices;
 
 namespace FoodStuffs.Web
 {
@@ -20,12 +21,17 @@ namespace FoodStuffs.Web
 
         public static int Main(string[] args)
         {
+            var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+            var logPath = isWindows ? "C:/WebAppLogs/" : "/var/WebAppLogs/";
+            var logFile = $"{logPath}FoodStuffs-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}_.log";
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .WriteTo.File($"C:/WebAppLogs/FoodStuffs-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}_.log",
+                .WriteTo.File(logFile,
                     rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 15,
                     fileSizeLimitBytes: 10000000,

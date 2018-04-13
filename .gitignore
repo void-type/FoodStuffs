@@ -263,4 +263,4 @@ __pycache__/
 /*/wwwroot
 
 # AppSecrets
-appSettings.*.json
+appsettings.*.json

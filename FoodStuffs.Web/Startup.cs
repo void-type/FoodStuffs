@@ -52,7 +52,7 @@ namespace FoodStuffs.Web
             if (_configuration["FoodStuffsConnectionString"] == "In-Memory")
             {
                 services.AddDbContext<FoodStuffsContext>(options =>
-                    options.UseInMemoryDatabase("FoodStuffsTest"));
+                    options.UseInMemoryDatabase("FoodStuffsDev"));
             }
             else
             {
