@@ -163,5 +163,22 @@ namespace FoodStuffs.Test.Tests.Validation
 
             Assert.Empty(errors.Where(x => x.FieldName == "name"));
         }
+
+        [Theory]
+        [InlineData("1")]
+        [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
+        private void ValidWithMinimumInfo(string testString)
+        {
+            var recipe = new RecipeViewModel
+            {
+                Name = testString,
+                Directions = testString,
+                Ingredients = testString
+            };
+            var validator = new RecipeViewModelValidator();
+            var errors = validator.Validate(recipe);
+
+            Assert.Empty(errors);
+        }
     }
 }
