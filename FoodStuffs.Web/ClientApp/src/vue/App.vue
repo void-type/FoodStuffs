@@ -77,8 +77,10 @@ export default {
   },
   beforeMount() {
     this.fetchRecipes();
+    document.title = this.applicationName;
   }
 };
+
 </script>
 
 <style lang="scss">
