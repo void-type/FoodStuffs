@@ -20,7 +20,6 @@ namespace FoodStuffs.Web.Services
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
         {
             _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
-
             Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
         }
 
@@ -62,7 +61,6 @@ namespace FoodStuffs.Web.Services
             _logger.Warn(logParams);
 
             var set = new CountedItemSet<IValidationError>(ValidationErrors);
-
             Response = new ObjectResult(set) { StatusCode = 400 };
         }
 
