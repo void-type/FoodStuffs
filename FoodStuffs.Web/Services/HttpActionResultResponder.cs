@@ -30,7 +30,7 @@ namespace FoodStuffs.Web.Services
             Response = new ObjectResult(item);
         }
 
-        public override void WithList<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
+        public override void WithSet<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
         {
             var set = new CountedItemSet<TItemType> { Items = items.ToList() };
 

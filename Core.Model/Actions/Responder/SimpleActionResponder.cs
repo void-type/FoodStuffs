@@ -19,13 +19,13 @@ namespace Core.Model.Actions.Responder
 
         public override void WithItem<T>(T item, string logExtra = null)
         {
-            _simpleResponse.DataItem = item;
+            _simpleResponse.Item = item;
             Response = _simpleResponse;
         }
 
-        public override void WithList<T>(IEnumerable<T> items, string logExtra = null)
+        public override void WithSet<T>(IEnumerable<T> items, string logExtra = null)
         {
-            _simpleResponse.DataList = items.Select(item => (object)item).ToList();
+            _simpleResponse.Set = items.Select(item => (object)item).ToList();
             Response = _simpleResponse;
         }
 

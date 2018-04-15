@@ -48,7 +48,7 @@ namespace Core.Model.Actions.Responder
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <param name="logExtra"></param>
-        void WithList<T>(IEnumerable<T> items, string logExtra = null);
+        void WithSet<T>(IEnumerable<T> items, string logExtra = null);
 
         /// <summary>
         /// Create a response with success message and the id of the created/modified entity.

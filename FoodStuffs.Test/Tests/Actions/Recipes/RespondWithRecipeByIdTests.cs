@@ -26,7 +26,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     .Execute(new RespondWithRecipeById(data, 12));
 
                 Assert.True(responder.ResponseCreated);
-                Assert.NotNull(responder.Response.DataItem);
+                Assert.NotNull(responder.Response.Item);
             }
         }
 
@@ -41,7 +41,7 @@ namespace FoodStuffs.Test.Tests.Actions.Recipes
                     .Execute(new RespondWithRecipeById(data, 15));
 
                 Assert.True(responder.ResponseCreated);
-                Assert.Null(responder.Response.DataItem);
+                Assert.Null(responder.Response.Item);
             }
         }
     }

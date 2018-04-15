@@ -7,20 +7,20 @@ namespace Core.Model.Actions.Steps
     /// Response with a collection of items.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RespondWithList<T> : AbstractActionStep
+    public class RespondWithSet<T> : AbstractActionStep
     {
-        public RespondWithList(IEnumerable<T> data, string logExtra = null)
+        public RespondWithSet(IEnumerable<T> set, string logExtra = null)
         {
-            _data = data;
+            _set = set;
             _logExtra = logExtra;
         }
 
         protected override void PerformStep(IActionResponder respond)
         {
-            respond.WithList(_data, _logExtra);
+            respond.WithSet(_set, _logExtra);
         }
 
-        private readonly IEnumerable<T> _data;
+        private readonly IEnumerable<T> _set;
         private readonly string _logExtra;
     }
 }

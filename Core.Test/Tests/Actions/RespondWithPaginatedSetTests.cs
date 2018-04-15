@@ -1,11 +1,11 @@
 ﻿using Core.Model.Actions.Chain;
+using Core.Model.Actions.Responder;
 using Core.Model.Actions.Responses.ItemSet;
 using Core.Model.Actions.Steps;
-using FoodStuffs.Test.Mocks;
 using System.Collections.Generic;
 using Xunit;
 
-namespace FoodStuffs.Test.Tests.Actions
+namespace Core.Test.Tests.Actions
 {
     public class RespondWithPaginatedSetTests
     {
@@ -17,7 +17,7 @@ namespace FoodStuffs.Test.Tests.Actions
         [InlineData(105, 10, 11, 5)]
         public void RespondWithPaginatedRecipes(int totalCount, int take, int page, int expectedCount)
         {
-            var responder = MockFactory.Responder;
+            var responder = new SimpleActionResponder();
 
             var set = new List<string>();
 
@@ -29,7 +29,7 @@ namespace FoodStuffs.Test.Tests.Actions
             new ActionChain(responder)
                 .Execute(new RespondWithPaginatedSet<string>(set, take, page));
 
-            var response = responder.Response.DataItem as ItemSetPage<string>;
+            var response = responder.Response.Item as ItemSetPage<string>;
 
             Assert.NotNull(response);
             Assert.True(responder.ResponseCreated);

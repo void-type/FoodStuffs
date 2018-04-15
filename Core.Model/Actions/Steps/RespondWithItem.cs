@@ -8,18 +8,18 @@ namespace Core.Model.Actions.Steps
     /// <typeparam name="T"></typeparam>
     public class RespondWithItem<T> : AbstractActionStep
     {
-        public RespondWithItem(T data, string logExtra = null)
+        public RespondWithItem(T item, string logExtra = null)
         {
-            _data = data;
+            _item = item;
             _logExtra = logExtra;
         }
 
         protected override void PerformStep(IActionResponder respond)
         {
-            respond.WithItem(_data, _logExtra);
+            respond.WithItem(_item, _logExtra);
         }
 
-        private readonly T _data;
+        private readonly T _item;
         private readonly string _logExtra;
     }
 }

@@ -30,6 +30,19 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "watch core tests",
+            "command": "dotnet watch test",
+            "options": {
+                "cwd": "./Core.Test"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "watch client",
             "command": "yarn dev",
             "options": {

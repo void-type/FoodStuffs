@@ -9,7 +9,7 @@ namespace Core.Model.Actions.Steps
     /// <typeparam name="TValidatable"></typeparam>
     public class Validate<TValidatable> : AbstractActionStep
     {
-        public Validate(AbstractSimpleValidator<TValidatable> validator, TValidatable validatableEntity)
+        public Validate(IValidator<TValidatable> validator, TValidatable validatableEntity)
         {
             _validator = validator;
             _validatableEntity = validatableEntity;
@@ -22,6 +22,6 @@ namespace Core.Model.Actions.Steps
         }
 
         private readonly TValidatable _validatableEntity;
-        private readonly AbstractSimpleValidator<TValidatable> _validator;
+        private readonly IValidator<TValidatable> _validator;
     }
 }
