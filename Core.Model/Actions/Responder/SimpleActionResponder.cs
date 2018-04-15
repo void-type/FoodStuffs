@@ -23,15 +23,15 @@ namespace Core.Model.Actions.Responder
             Response = _simpleResponse;
         }
 
-        public override void WithSet<T>(IEnumerable<T> items, string logExtra = null)
-        {
-            _simpleResponse.Set = items.Select(item => (object)item).ToList();
-            Response = _simpleResponse;
-        }
-
         public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
         {
             _simpleResponse.PostSuccess = new PostSuccessMessage(userMessage, id);
+            Response = _simpleResponse;
+        }
+
+        public override void WithSet<T>(IEnumerable<T> items, string logExtra = null)
+        {
+            _simpleResponse.Set = items.Select(item => (object)item).ToList();
             Response = _simpleResponse;
         }
 

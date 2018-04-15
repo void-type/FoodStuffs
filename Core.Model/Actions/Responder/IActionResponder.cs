@@ -43,20 +43,20 @@ namespace Core.Model.Actions.Responder
         void WithItem<T>(T item, string logExtra = null);
 
         /// <summary>
-        /// Create a response with a set of objects.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="items"></param>
-        /// <param name="logExtra"></param>
-        void WithSet<T>(IEnumerable<T> items, string logExtra = null);
-
-        /// <summary>
         /// Create a response with success message and the id of the created/modified entity.
         /// </summary>
         /// <param name="userMessage"></param>
         /// <param name="id"></param>
         /// <param name="logExtra"></param>
         void WithPostSuccess(string userMessage, string id, string logExtra = null);
+
+        /// <summary>
+        /// Create a response with a set of objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="logExtra"></param>
+        void WithSet<T>(IEnumerable<T> items, string logExtra = null);
 
         /// <summary>
         /// Create a response with a success message.

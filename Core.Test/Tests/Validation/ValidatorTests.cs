@@ -1,19 +1,17 @@
 using Core.Model.Validation;
-using Moq;
-using Xunit;
-using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
-namespace Core.Test.Tests.Validations 
+namespace Core.Test.Tests.Validation
 {
-    public class ValidatorTests 
+    public class ValidatorTests
     {
         [Theory]
-        [InlineData(true, true, false)]
-        [InlineData(true, false, false)]
-        [InlineData(false, true, false)]
-        [InlineData(false, false, true)]
-        public void Validator(bool isValid, bool isSuppressed, bool errorsExpectedIn)
+        [InlineData(true, true)]
+        [InlineData(true, false)]
+        [InlineData(false, true)]
+        [InlineData(false, false)]
+        public void Validator(bool isValid, bool isSuppressed)
         {
             var validator = new TestValidator(isSuppressed);
 
@@ -25,18 +23,20 @@ namespace Core.Test.Tests.Validations
         }
     }
 
-    public class TestValidator : AbstractSimpleValidator<bool> {
+    internal class TestValidator : AbstractSimpleValidator<bool>
+    {
         public TestValidator(bool isSuppressed)
         {
             _isSuppressed = isSuppressed;
         }
 
-        protected override void RunRules(bool isValid) {
+        protected override void RunRules(bool isValid)
+        {
             Invalid("test", "test is invalid")
                 .When(() => !isValid)
                 .Suppress(() => _isSuppressed);
         }
 
-        private bool _isSuppressed;
+        private readonly bool _isSuppressed;
     }
 }

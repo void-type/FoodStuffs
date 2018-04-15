@@ -29,18 +29,18 @@ namespace FoodStuffs.Web.Services
             Response = new ObjectResult(item);
         }
 
+        public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
+        {
+            _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}, EntityId: {id}");
+            Response = new ObjectResult(new PostSuccessMessage(userMessage, id));
+        }
+
         public override void WithSet<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
         {
             var set = new CountedItemSet<TItemType> { Items = items.ToList() };
 
             _logger.Info($"Count: {set.Count}", logExtra);
             Response = new ObjectResult(set) { StatusCode = 200 };
-        }
-
-        public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
-        {
-            _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}, EntityId: {id}");
-            Response = new ObjectResult(new PostSuccessMessage(userMessage, id));
         }
 
         public override void WithSuccess(string userMessage, string logExtra = null)

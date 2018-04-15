@@ -28,9 +28,9 @@ namespace Core.Model.Actions.Responder
 
         public abstract void WithItem<T>(T item, string logExtra = null);
 
-        public abstract void WithSet<T>(IEnumerable<T> items, string logExtra = null);
-
         public abstract void WithPostSuccess(string userMessage, string id, string logExtra = null);
+
+        public abstract void WithSet<T>(IEnumerable<T> items, string logExtra = null);
 
         public abstract void WithSuccess(string userMessage, string logExtra = null);
 

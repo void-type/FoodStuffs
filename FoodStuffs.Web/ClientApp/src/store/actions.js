@@ -142,6 +142,6 @@ export default {
     if (recentRecipeIds.length > 3) {
       recentRecipeIds.pop();
     }
-    context.commit("setRecentRecipeIds", recentRecipeIds)
+    context.commit("setRecentRecipeIds", recentRecipeIds);
   }
 }

@@ -20,7 +20,7 @@ namespace Core.Model.Actions.Steps
             respond.WithSet(_set, _logExtra);
         }
 
-        private readonly IEnumerable<T> _set;
         private readonly string _logExtra;
+        private readonly IEnumerable<T> _set;
     }
 }

@@ -4,10 +4,24 @@ using Core.Model.Actions.Steps;
 using Core.Model.Validation;
 using Xunit;
 
-namespace Ccore.Test.Tests.Actions
+namespace Core.Test.Tests.Actions
 {
     public class RespondOnValidationErrorTests
     {
+        [Fact]
+        public void NoValidationErrorsToRespondTo()
+        {
+            var responder = new SimpleActionResponder();
+
+            new ActionChain(responder)
+                .Execute(new RespondOnValidationError());
+
+            var response = responder.Response?.ValidationErrors;
+
+            Assert.Null(response);
+            Assert.False(responder.ResponseCreated);
+        }
+
         [Fact]
         public void RespondWithValidationError()
         {
@@ -24,20 +38,6 @@ namespace Ccore.Test.Tests.Actions
             Assert.NotNull(response);
             Assert.True(responder.ResponseCreated);
             Assert.Equal(2, response.Count);
-        }
-
-        [Fact]
-        public void NoValidationErrorsToRespondTo()
-        {
-            var responder = new SimpleActionResponder();
-
-            new ActionChain(responder)
-                .Execute(new RespondOnValidationError());
-
-            var response = responder.Response?.ValidationErrors;
-
-            Assert.Null(response);
-            Assert.False(responder.ResponseCreated);
         }
     }
 }

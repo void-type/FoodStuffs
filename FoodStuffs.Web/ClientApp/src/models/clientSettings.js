@@ -1,5 +1,5 @@
 export default {
-    applicationName: document.getElementById("applicationName") !== null
-        ? document.getElementById("applicationName").value
-        : "FoodStuffs"
+  applicationName: document.getElementById("applicationName") !== null
+    ? document.getElementById("applicationName").value
+    : "FoodStuffs"
 } 

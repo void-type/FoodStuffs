@@ -3,9 +3,9 @@ using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using Xunit;
 
-namespace Core.Test.Tests.Actions 
+namespace Core.Test.Tests.Actions
 {
-    public class RespondWithItemTests 
+    public class RespondWithItemTests
     {
         [Fact]
         public void RespondWithItem()

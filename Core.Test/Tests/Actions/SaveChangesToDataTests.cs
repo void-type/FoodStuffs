@@ -5,9 +5,9 @@ using Core.Model.Services.Data;
 using Moq;
 using Xunit;
 
-namespace Core.Test.Tests.Actions 
+namespace Core.Test.Tests.Actions
 {
-    public class SaveChangesToDataTests 
+    public class SaveChangesToDataTests
     {
         [Fact]
         public void SaveChangesToData()
@@ -15,7 +15,7 @@ namespace Core.Test.Tests.Actions
             var responder = new SimpleActionResponder();
 
             var mockData = new Mock<IPersistable>();
-            
+
             mockData.Setup(mock => mock.SaveChanges());
 
             new ActionChain(responder)

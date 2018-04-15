@@ -10,7 +10,7 @@
 
         <div v-if="currentRecipe.prepTimeMinutes !== null"><span>Prep Time: {{currentRecipe.prepTimeMinutes}} minutes</span><br /></div>
         <div v-if="currentRecipe.cookTimeMinutes !== null"><span>Cook Time: {{currentRecipe.cookTimeMinutes}} minutes<br /></span></div>
-        <br v-if="currentRecipe.prepTimeMinutes !== null || currentRecipe.cookTimeMinutes !== null"/>
+        <br v-if="currentRecipe.prepTimeMinutes !== null || currentRecipe.cookTimeMinutes !== null" />
         Created By: {{currentRecipe.createdBy}}<br />
         Created On: {{currentRecipe.createdOnUtc | localDateString}}<br />
         Modified By: {{currentRecipe.modifiedBy}}<br />
