@@ -1,7 +1,7 @@
 ﻿namespace Core.Model.Services.DateTime
 {
     /// <summary>
-    /// Used for testing with explicit times.
+    /// Used for injeccting an explicit time.
     /// </summary>
     public class DiscreteDateTimeService : IDateTimeService
     {
