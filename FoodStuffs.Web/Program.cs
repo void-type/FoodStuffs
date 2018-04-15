@@ -13,7 +13,6 @@ namespace FoodStuffs.Web
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((builderContext, config) =>
                 {
-                    var env = builderContext.HostingEnvironment;
                 })
                 .UseStartup<Startup>()
                 .UseSerilog()
@@ -21,7 +20,7 @@ namespace FoodStuffs.Web
 
         public static int Main(string[] args)
         {
-            var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
             var logPath = isWindows ? "C:/WebAppLogs/" : "/var/WebAppLogs/";
             var logFile = $"{logPath}FoodStuffs-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}_.log";

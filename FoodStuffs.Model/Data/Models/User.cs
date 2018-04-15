@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public partial class User
+    public class User
     {
         public string FirstName { get; set; }
 
