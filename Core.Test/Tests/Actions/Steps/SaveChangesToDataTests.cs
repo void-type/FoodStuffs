@@ -5,7 +5,7 @@ using Core.Model.Services.Data;
 using Moq;
 using Xunit;
 
-namespace Core.Test.Tests.Actions
+namespace Core.Test.Tests.Actions.Steps
 {
     public class SaveChangesToDataTests
     {

@@ -5,7 +5,7 @@ using Core.Model.Actions.Steps;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Core.Test.Tests.Actions
+namespace Core.Test.Tests.Actions.Steps
 {
     public class RespondWithPaginatedSetTests
     {

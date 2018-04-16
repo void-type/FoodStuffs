@@ -6,7 +6,7 @@ using Moq;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Core.Test.Tests.Actions
+namespace Core.Test.Tests.Actions.Steps
 {
     public class ValidateTests
     {
