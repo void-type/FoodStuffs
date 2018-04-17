@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public class Recipe
+    public partial class Recipe
     {
         public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
 

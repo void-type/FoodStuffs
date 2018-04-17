@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public class Category
+    public partial class Category
     {
         public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
 

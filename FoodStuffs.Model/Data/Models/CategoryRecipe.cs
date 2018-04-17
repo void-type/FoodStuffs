@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Model.Data.Models
 {
-    public class CategoryRecipe
+    public partial class CategoryRecipe
     {
         public Category Category { get; set; }
         public int CategoryId { get; set; }
