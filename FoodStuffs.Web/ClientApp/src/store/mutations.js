@@ -1,6 +1,8 @@
-import valueFilters from "../models/valueFilters";
-
 export default {
+  setApplicationName(state, appName) {
+    state.applicationName = appName;
+  },
+
   setCurrentRecipe(state, recipe) {
     state.currentRecipe = recipe;
   },
@@ -18,11 +20,11 @@ export default {
   },
 
   setRecipePrepTimeMinutes(state, { recipe, value }) {
-    recipe.prepTimeMinutes = valueFilters.limitIntegers(value);
+    recipe.prepTimeMinutes = value;
   },
 
   setRecipeCookTimeMinutes(state, { recipe, value }) {
-    recipe.cookTimeMinutes = valueFilters.limitIntegers(value);
+    recipe.cookTimeMinutes = value;
   },
 
   addCategoryToRecipe(state, { recipe, categoryName }) {

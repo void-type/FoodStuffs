@@ -73,9 +73,10 @@ export default {
     ...mapGetters(["applicationName", "currentRecipe"])
   },
   methods: {
-    ...mapActions(["fetchRecipes"])
+    ...mapActions(["fetchApplicationName", "fetchRecipes"])
   },
   beforeMount() {
+    this.fetchApplicationName();
     this.fetchRecipes();
     document.title = this.applicationName;
   }

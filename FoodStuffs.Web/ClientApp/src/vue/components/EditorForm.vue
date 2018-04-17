@@ -64,9 +64,9 @@
         </div>
         <div v-if="currentRecipe.id">
             Created By: {{currentRecipe.createdBy}}<br />
-            Created On: {{currentRecipe.createdOnUtc | localDateString}}<br />
+            Created On: {{currentRecipe.createdOnUtc | utcToLocalDateString}}<br />
             Modified By: {{currentRecipe.modifiedBy}}<br />
-            Modified On: {{currentRecipe.modifiedOnUtc | localDateString}}
+            Modified On: {{currentRecipe.modifiedOnUtc | utcToLocalDateString}}
         </div>
     </form>
 </template>
@@ -74,14 +74,14 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import TagEditor from "./EditorForTags";
-import localDateString from "../../filters/localDateString";
+import utcToLocalDateString from "../../filters/utcToLocalDateString";
 
 export default {
   components: {
     TagEditor
   },
   filters: {
-    localDateString: localDateString
+    utcToLocalDateString: utcToLocalDateString
   },
   computed: {
     ...mapGetters(["currentRecipe", "isFieldInError"]),

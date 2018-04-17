@@ -1,4 +1,4 @@
-const webApiCallbacks = {
+export default {
   onSuccess(context, data) {
     context.dispatch("fetchRecipes", data.id);
     context.commit("setIsError", false);
@@ -25,5 +25,3 @@ const webApiCallbacks = {
     }
   }
 }
-
-export { webApiCallbacks }

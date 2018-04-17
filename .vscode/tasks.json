@@ -17,6 +17,19 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "run server",
+            "command": "dotnet run",
+            "options": {
+                "cwd": "./FoodStuffs.Web"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "watch server tests",
             "command": "dotnet watch test",
             "options": {

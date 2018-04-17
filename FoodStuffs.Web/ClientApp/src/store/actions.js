@@ -1,12 +1,18 @@
-import { webApiCallbacks } from "./actions.helpers";
-import valueFilters from "../models/valueFilters";
-import webApi from "../models/webApi";
+import limitIntegers from "../filters/limitIntegers";
+import trimAndCapitalize from "../filters/trimAndCapitalize";
+import applicationNameApi from "../models/applicationNameApi";
 import Recipe from "../models/recipe";
+import recipeApi from "../models/recipeApi";
 import sortTypes from "../models/recipeSearchSortTypes";
+import webApiCallbacks from "../models/webApiCallbacks";
 
 export default {
+  fetchApplicationName(context) {
+    context.commit("setApplicationName", applicationNameApi.applicationName);
+  },
+
   fetchRecipes(context, postbackId) {
-    webApi.listRecipes(
+    recipeApi.listRecipes(
       context.state.recipesSearchParameters,
       data => webApiCallbacks.onFetchListSuccess(context, data, postbackId),
       response => webApiCallbacks.onFailure(context, response));
@@ -23,12 +29,12 @@ export default {
     context.dispatch("clearMessages");
 
     if (recipe.id === undefined || recipe.id < 1) {
-      webApi.createRecipe(
+      recipeApi.createRecipe(
         recipe,
         data => webApiCallbacks.onSuccess(context, data),
         response => webApiCallbacks.onFailure(context, response));
     } else {
-      webApi.updateRecipe(
+      recipeApi.updateRecipe(
         recipe,
         data => webApiCallbacks.onSuccess(context, data),
         response => webApiCallbacks.onFailure(context, response));
@@ -38,7 +44,7 @@ export default {
   deleteRecipe(context, recipe) {
     context.dispatch("clearMessages");
     if (confirm("Are you sure you want to delete this recipe?")) {
-      webApi.deleteRecipe(
+      recipeApi.deleteRecipe(
         recipe,
         data => webApiCallbacks.onSuccess(context, data),
         response => webApiCallbacks.onFailure(context, response));
@@ -68,17 +74,17 @@ export default {
   },
 
   setRecipePrepTimeMinutes(context, { recipe, value }) {
-    value = valueFilters.limitIntegers(value);
+    value = limitIntegers(value);
     context.commit("setRecipePrepTimeMinutes", { recipe, value });
   },
 
   setRecipeCookTimeMinutes(context, { recipe, value }) {
-    value = valueFilters.limitIntegers(value);
+    value = limitIntegers(value);
     context.commit("setRecipeCookTimeMinutes", { recipe, value });
   },
 
   addCategoryToRecipe(context, { recipe, categoryName }) {
-    categoryName = valueFilters.trimAndCapitalize(categoryName);
+    categoryName = trimAndCapitalize(categoryName);
 
     const categoryDoesNotExist = recipe.categories
       .map((value) => value.toUpperCase())

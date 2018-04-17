@@ -12,9 +12,9 @@
         <div v-if="currentRecipe.cookTimeMinutes !== null"><span>Cook Time: {{currentRecipe.cookTimeMinutes}} minutes<br /></span></div>
         <br v-if="currentRecipe.prepTimeMinutes !== null || currentRecipe.cookTimeMinutes !== null" />
         Created By: {{currentRecipe.createdBy}}<br />
-        Created On: {{currentRecipe.createdOnUtc | localDateString}}<br />
+        Created On: {{currentRecipe.createdOnUtc | utcToLocalDateString}}<br />
         Modified By: {{currentRecipe.modifiedBy}}<br />
-        Modified On: {{currentRecipe.modifiedOnUtc | localDateString}}
+        Modified On: {{currentRecipe.modifiedOnUtc | utcToLocalDateString}}
         <br /><br />
         <div class="no-print">
             Categories:
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import localDateString from "../../filters/localDateString";
+import utcToLocalDateString from "../../filters/utcToLocalDateString";
 
 export default {
   props: {
@@ -39,7 +39,7 @@ export default {
     }
   },
   filters: {
-    localDateString: localDateString
+    utcToLocalDateString: utcToLocalDateString
   }
 };
 </script>
