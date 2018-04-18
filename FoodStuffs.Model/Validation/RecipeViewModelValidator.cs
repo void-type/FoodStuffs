@@ -19,13 +19,13 @@ namespace FoodStuffs.Model.Validation
 
             Invalid("cookTimeMinutes", "Cook time must be positive.")
                 .When(() => entity.CookTimeMinutes < 0)
-                .Suppress(() => entity.CookTimeMinutes == null);
+                .ExceptWhen(() => entity.CookTimeMinutes == null);
 
             Invalid("prepTimeMinutes", "Prep time must be positive.")
                 .When(() => entity.PrepTimeMinutes < 0)
-                .Suppress(() => entity.PrepTimeMinutes == null);
+                .ExceptWhen(() => entity.PrepTimeMinutes == null);
 
-            Invalid("categories", "One or more categories is invalid.")
+            Invalid("categories", "Category cannot be blank.")
                 .When(() => entity.Categories.Any(string.IsNullOrWhiteSpace));
         }
     }

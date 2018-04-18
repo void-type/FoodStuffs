@@ -8,7 +8,7 @@ namespace Core.Model.Validation
         bool IsValid { get; }
         IValidationError ValidationError { get; }
 
-        IRule Suppress(Func<bool> conditionExpression);
+        IRule ExceptWhen(Func<bool> conditionExpression);
 
         IRule When(Func<bool> conditionExpression);
     }

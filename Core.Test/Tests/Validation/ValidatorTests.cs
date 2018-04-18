@@ -34,7 +34,7 @@ namespace Core.Test.Tests.Validation
         {
             Invalid("test", "test is invalid")
                 .When(() => !isValid)
-                .Suppress(() => _isSuppressed);
+                .ExceptWhen(() => _isSuppressed);
         }
 
         private readonly bool _isSuppressed;

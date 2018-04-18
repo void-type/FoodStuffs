@@ -36,7 +36,7 @@ namespace Core.Model.Validation
         /// Ignore violations when the condition expression is true.
         /// </summary>
         /// <param name="conditionExpression"></param>
-        public IRule Suppress(Func<bool> conditionExpression)
+        public IRule ExceptWhen(Func<bool> conditionExpression)
         {
             if (IsSuppressed == false && conditionExpression.Invoke())
             {
