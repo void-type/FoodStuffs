@@ -17,8 +17,7 @@ namespace FoodStuffs.Web.Services
 
         public void Debug(Exception ex, params string[] messages)
         {
-            var message = MakeLogString(MakeExceptionMessage(ex).Concat(messages).ToArray());
-            _logger.LogDebug(message);
+            _logger.LogDebug(MakeLogString(ex, messages));
         }
 
         public void Debug(params string[] messages)
@@ -28,8 +27,7 @@ namespace FoodStuffs.Web.Services
 
         public void Error(Exception ex, params string[] messages)
         {
-            var message = MakeLogString(MakeExceptionMessage(ex).Concat(messages).ToArray());
-            _logger.LogError(message);
+            _logger.LogError(MakeLogString(ex, messages));
         }
 
         public void Error(params string[] messages)
@@ -39,8 +37,7 @@ namespace FoodStuffs.Web.Services
 
         public void Fatal(Exception ex, params string[] messages)
         {
-            var message = MakeLogString(MakeExceptionMessage(ex).Concat(messages).ToArray());
-            _logger.LogCritical(message);
+            _logger.LogCritical(MakeLogString(ex, messages));
         }
 
         public void Fatal(params string[] messages)
@@ -50,8 +47,7 @@ namespace FoodStuffs.Web.Services
 
         public void Info(Exception ex, params string[] messages)
         {
-            var message = MakeLogString(MakeExceptionMessage(ex).Concat(messages).ToArray());
-            _logger.LogInformation(message);
+            _logger.LogInformation(MakeLogString(ex, messages));
         }
 
         public void Info(params string[] messages)
@@ -61,8 +57,7 @@ namespace FoodStuffs.Web.Services
 
         public void Warn(Exception ex, params string[] messages)
         {
-            var message = MakeLogString(MakeExceptionMessage(ex).Concat(messages).ToArray());
-            _logger.LogWarning(message);
+            _logger.LogWarning(MakeLogString(ex, messages));
         }
 
         public void Warn(params string[] messages)
@@ -73,7 +68,7 @@ namespace FoodStuffs.Web.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
 
-        private static IEnumerable<string> MakeExceptionMessage(Exception ex)
+        private static IEnumerable<string> FlattenExceptionMessages(Exception ex)
         {
             if (ex == null)
             {
@@ -98,6 +93,11 @@ namespace FoodStuffs.Web.Services
             var payload = string.Join(" ", messages.Where(message => !string.IsNullOrWhiteSpace(message)));
 
             return $"{request.Method.PadRight(8)} {request.Path.Value.PadRight(40)} {payload}";
+        }
+
+        private string MakeLogString(Exception ex, params string[] messages)
+        {
+            return MakeLogString(FlattenExceptionMessages(ex).Concat(messages).ToArray());
         }
     }
 }
