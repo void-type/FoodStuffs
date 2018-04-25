@@ -9,18 +9,20 @@ namespace Core.Model.Actions.Steps
     /// <typeparam name="TValidatable"></typeparam>
     public class Validate<TValidatable> : AbstractActionStep
     {
-        public Validate(IValidator<TValidatable> validator, TValidatable validatableEntity)
+        public Validate(IValidator<TValidatable> validator, TValidatable validatableEntity, string logExtra = null)
         {
             _validator = validator;
             _validatableEntity = validatableEntity;
+            _logExtra = logExtra;
         }
 
         protected override void PerformStep(IActionResponder respond)
         {
             respond.ValidationErrors.AddRange(_validator.Validate(_validatableEntity));
-            respond.TryWithValidationError();
+            respond.TryWithValidationError(_logExtra);
         }
 
+        private readonly string _logExtra;
         private readonly TValidatable _validatableEntity;
         private readonly IValidator<TValidatable> _validator;
     }

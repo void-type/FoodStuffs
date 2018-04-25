@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FoodStuffs.Model.Validation
 {
-    public class RecipeViewModelValidator : AbstractSimpleValidator<IRecipeViewModel>
+    public class RecipeViewModelValidator : AbstractValidator<IRecipeViewModel>
     {
         protected override void RunRules(IRecipeViewModel entity)
         {
