@@ -20,7 +20,14 @@ namespace FoodStuffs.Web.Services
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
         {
             _logger.Error(ex, logExtra, $"ErrorUserMessage: {userMessage}");
-            Response = new ObjectResult(new ErrorMessage(userMessage)) { StatusCode = 500 };
+            Response = new ObjectResult(
+                    new ErrorMessage()
+                    {
+                        Message = userMessage
+                    })
+            {
+                StatusCode = 500
+            };
         }
 
         public override void WithItem<TItemType>(TItemType item, string logExtra = null)
@@ -32,7 +39,12 @@ namespace FoodStuffs.Web.Services
         public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
         {
             _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}, EntityId: {id}");
-            Response = new ObjectResult(new PostSuccessMessage(userMessage, id));
+            Response = new ObjectResult(
+                new PostSuccessMessage()
+                {
+                    Message = userMessage,
+                    Id = id
+                });
         }
 
         public override void WithSet<TItemType>(IEnumerable<TItemType> items, string logExtra = null)
@@ -46,7 +58,10 @@ namespace FoodStuffs.Web.Services
         public override void WithSuccess(string userMessage, string logExtra = null)
         {
             _logger.Info(logExtra, $"SuccessUserMessage: {userMessage}");
-            Response = new ObjectResult(new SuccessMessage(userMessage));
+            Response = new ObjectResult(new SuccessMessage()
+            {
+                Message = userMessage
+            });
         }
 
         protected override void CreateValidationErrorResponse(string logExtra)
@@ -60,7 +75,10 @@ namespace FoodStuffs.Web.Services
 
             _logger.Warn(logParams);
 
-            var set = new CountedItemSet<IValidationError>(ValidationErrors);
+            var set = new CountedItemSet<IValidationError>()
+            {
+                Items = ValidationErrors
+            };
             Response = new ObjectResult(set) { StatusCode = 400 };
         }
 

@@ -17,7 +17,10 @@ namespace Core.Test.Actions.Responses
         [Fact]
         public void CountItemsThree()
         {
-            var set = new CountedItemSet<string>(new List<string>() { "", "", "" });
+            var set = new CountedItemSet<string>()
+            {
+                Items = new List<string>() { "", "", "" }
+            };
 
             Assert.Equal(3, set.Count);
         }
@@ -25,7 +28,10 @@ namespace Core.Test.Actions.Responses
         [Fact]
         public void CountItemsZero()
         {
-            var set = new CountedItemSet<string>(new List<string>());
+            var set = new CountedItemSet<string>()
+            {
+                Items = new List<string>()
+            };
 
             Assert.Equal(0, set.Count);
         }

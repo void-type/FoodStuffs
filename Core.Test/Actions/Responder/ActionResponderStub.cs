@@ -1,10 +1,10 @@
+using Core.Model.Actions.Responder;
 using System;
 using System.Collections.Generic;
-using Core.Model.Actions.Responder;
 
 namespace Core.Test.Actions.Responder
 {
-    public class ActionResponderStub : AbstractActionResponder<string>
+    internal class ActionResponderStub : AbstractActionResponder<string>
     {
         public void SetResponse(string response)
         {

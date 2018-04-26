@@ -12,14 +12,5 @@ namespace Core.Model.Actions.Responses.ItemSet
         public virtual int Count => Items?.Count() ?? 0;
 
         public IEnumerable<TEntity> Items { get; set; }
-
-        public CountedItemSet(IEnumerable<TEntity> items)
-        {
-            Items = items.ToList();
-        }
-
-        public CountedItemSet()
-        {
-        }
     }
 }

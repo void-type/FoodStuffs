@@ -1,4 +1,3 @@
-using Core.Model.Validation;
 using System.Linq;
 using Xunit;
 
@@ -17,26 +16,9 @@ namespace Core.Test.Validation
 
             var errors = validator.Validate(isValid).ToList();
 
-            var errorsExpected = !(isValid || isSuppressed);
+            var errorExpected = !(isValid || isSuppressed);
 
-            Assert.Equal(errorsExpected, errors.Any());
+            Assert.Equal(errorExpected ? 1 : 0, errors.Count());
         }
-    }
-
-    internal class TestValidator : AbstractValidator<bool>
-    {
-        public TestValidator(bool isSuppressed)
-        {
-            _isSuppressed = isSuppressed;
-        }
-
-        protected override void RunRules(bool isValid)
-        {
-            Invalid("test", "test is invalid")
-                .When(() => !isValid)
-                .ExceptWhen(() => _isSuppressed);
-        }
-
-        private readonly bool _isSuppressed;
     }
 }

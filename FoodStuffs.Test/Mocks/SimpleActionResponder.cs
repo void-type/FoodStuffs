@@ -13,7 +13,10 @@ namespace FoodStuffs.Test.Mocks
     {
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
         {
-            _simpleResponse.Error = new ErrorMessage(userMessage);
+            _simpleResponse.Error = new ErrorMessage()
+            {
+                Message = userMessage
+            };
             Response = _simpleResponse;
         }
 
@@ -25,7 +28,11 @@ namespace FoodStuffs.Test.Mocks
 
         public override void WithPostSuccess(string userMessage, string id, string logExtra = null)
         {
-            _simpleResponse.PostSuccess = new PostSuccessMessage(userMessage, id);
+            _simpleResponse.PostSuccess = new PostSuccessMessage()
+            {
+                Message = userMessage,
+                Id = id
+            };
             Response = _simpleResponse;
         }
 
@@ -37,7 +44,7 @@ namespace FoodStuffs.Test.Mocks
 
         public override void WithSuccess(string userMessage, string logExtra = null)
         {
-            _simpleResponse.Success = new SuccessMessage(userMessage);
+            _simpleResponse.Success = new SuccessMessage() { Message = userMessage };
             Response = _simpleResponse;
         }
 
