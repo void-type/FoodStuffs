@@ -1,16 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core.Model\Core.Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Linq.Queryable">
-      <HintPath>..\..\..\.nuget\packages\system.linq.queryable\4.3.0\ref\netstandard1.0\System.Linq.Queryable.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
