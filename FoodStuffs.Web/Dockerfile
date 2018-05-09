@@ -1,17 +1,17 @@
-
 FROM microsoft/aspnetcore-build:2.0 AS build-env
 WORKDIR /app
 
-# copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
+# copy everything and restore
+COPY ../ ./
+RUN dotnet restore && dotnet publish FoodStuffs.Web -c Release -o out
 
-# copy everything else and build
-COPY . ./
 RUN dotnet publish -c Release -o out
 
 # build runtime image
 FROM microsoft/aspnetcore:2.0
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/FoodStuffs.Web/out .
 ENTRYPOINT ["dotnet", "FoodStuffs.Web.dll"]
+
+# docker build -t foodstuffs-prod .
+# docker run --name foodstuffs-prod foodstuffs-prod 
