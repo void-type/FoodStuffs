@@ -13,4 +13,7 @@
     <ProjectReference Include="..\FoodStuffs.Data\FoodStuffs.Data.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.2" />
+  </ItemGroup>
 </Project>
