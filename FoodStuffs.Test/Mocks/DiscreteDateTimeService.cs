@@ -1,4 +1,4 @@
-﻿using Core.Model.Services.DateTime;
+﻿using Core.Model.Services.Time;
 
 namespace FoodStuffs.Test.Mocks
 {
