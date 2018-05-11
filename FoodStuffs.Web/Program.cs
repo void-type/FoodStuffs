@@ -22,7 +22,7 @@ namespace FoodStuffs.Web
         {
             var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-            var logPath = isWindows ? "C:/WebAppLogs/" : "/var/WebAppLogs/";
+            var logPath = isWindows ? "C:/WebAppLogs/" : "/webapplogs/";
             var logFile = $"{logPath}FoodStuffs-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}_.log";
 
             Log.Logger = new LoggerConfiguration()
