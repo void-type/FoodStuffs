@@ -44,7 +44,6 @@ namespace FoodStuffs.Web
             services.AddMvc();
             services.AddSingleton(_configuration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IFoodStuffsData, FoodStuffsEfData>();
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
@@ -59,6 +58,7 @@ namespace FoodStuffs.Web
                 services.AddDbContext<FoodStuffsContext>(options =>
                     options.UseSqlServer(_configuration["FoodStuffsConnectionString"]));
             }
+            services.AddTransient<IFoodStuffsData, FoodStuffsEfData>();
         }
 
         private readonly IConfiguration _configuration;
