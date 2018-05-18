@@ -85,5 +85,5 @@ export default {
 
   setRecentRecipeIds(state, recipeIds) {
     state.recentRecipeIds = recipeIds;
-  }
-}
+  },
+};

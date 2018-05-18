@@ -1,4 +1,4 @@
-﻿import sortTypes from "../models/recipeSearchSortTypes";
+import sortTypes from '../models/recipeSearchSortTypes';
 
 export default {
   applicationName(state) {
@@ -17,9 +17,7 @@ export default {
     return state.fieldsInError;
   },
 
-  isFieldInError: (state) => (fieldName) => {
-    return state.fieldsInError.indexOf(fieldName) > -1;
-  },
+  isFieldInError: state => fieldName => state.fieldsInError.indexOf(fieldName) > -1,
 
   isError(state) {
     return state.isError;
@@ -29,9 +27,8 @@ export default {
     return state.recipesList;
   },
 
-  findRecipeById: (state) => (idToFind) => {
-    return state.recipesList.filter(item => item.id === parseInt(idToFind))[0] || null;
-  },
+  findRecipeById: state => idToFind => state.recipesList
+    .filter(item => item.id === parseInt(idToFind, 10))[0] || null,
 
   recipesListPage(state) {
     return state.recipesListPage;
@@ -46,7 +43,7 @@ export default {
   },
 
   recentRecipes(state, getters) {
-    let recents = state.recentRecipeIds
+    const recents = state.recentRecipeIds
       .map(id => getters.findRecipeById(id))
       .filter(recipe => recipe != null);
     return recents;
@@ -58,5 +55,5 @@ export default {
 
   recipesSearchParametersSortType(state) {
     return sortTypes.filter(type => type.name === state.recipesSearchParameters.sort)[0];
-  }
-}
+  },
+};

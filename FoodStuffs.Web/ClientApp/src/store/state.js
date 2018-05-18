@@ -1,8 +1,8 @@
-import Recipe from "../models/recipe";
-import RecipesSearchParameters from "../models/recipesSearchParameters";
+import Recipe from '../models/recipe';
+import RecipesSearchParameters from '../models/recipesSearchParameters';
 
 export default {
-  applicationName: "",
+  applicationName: '',
   currentRecipe: new Recipe(),
   messages: [],
   fieldsInError: [],
@@ -12,5 +12,5 @@ export default {
   recipesListTake: 0,
   recipesListTotalCount: 0,
   recentRecipeIds: [],
-  recipesSearchParameters: new RecipesSearchParameters()
-}
+  recipesSearchParameters: new RecipesSearchParameters(),
+};

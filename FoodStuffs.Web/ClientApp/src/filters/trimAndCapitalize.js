@@ -1,8 +1,8 @@
-export default function(value) {
+export default function (value) {
   return value
     .trim()
-    .split(" ")
+    .split(' ')
     .filter(word => word.length > 0)
     .map(word => word[0].toUpperCase() + word.substring(1))
-    .join(" ");
+    .join(' ');
 }

@@ -1,10 +1,11 @@
-export default function(value) {
-  value = parseInt(value);
+export default function (value) {
+  const intValue = parseInt(value, 10);
 
-  if (value > 2147483647) {
-    value = 2147483647;
-  } else if (value < 0) {
-    value = 0;
+  if (intValue > 2147483647) {
+    return 2147483647;
+  } else if (intValue < 0) {
+    return 0;
   }
-  return value;
+
+  return intValue;
 }
