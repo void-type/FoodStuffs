@@ -24,9 +24,9 @@ cd foodstuffs
 dotnet restore
 dotnet build FoodStuffs.sln
 cd FoodStuffs.Web
-yarn install
-yarn run build
-dotnet run
+yarn
+yarn build
+dotnet run --launch-profile "Kestrel (Production)"
 ```
 
 #### Run development version (with webpack-dev-server)
@@ -37,9 +37,9 @@ git checkout dev
 dotnet restore
 dotnet build FoodStuffs.sln
 cd FoodStuffs.Web
-yarn install
-yarn run build
-yarn run dev
+yarn
+yarn build
+yarn serve
 dotnet run --launch-profile "Kestrel (Development)"
 ```
 Note: This sets ASPNETCORE_ENVIRONMENT to "Development" and serves client assets from webpack-dev-server. This is a trade off of stability since not all assets are fetched from that server, versus rapid development since webpack gives us hot reloading. The other environment profiles will run a production build of the SPA from wwwroot.
