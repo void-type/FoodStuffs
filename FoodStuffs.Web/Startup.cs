@@ -23,14 +23,15 @@ namespace FoodStuffs.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsEnvironment("Production"))
-            {
-                app.UseExceptionHandler("/Error");
-            }
-            else
+            if (env.IsEnvironment("Development"))
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
+
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
