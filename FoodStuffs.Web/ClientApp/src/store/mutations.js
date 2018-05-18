@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 export default {
   setApplicationName(state, appName) {
     state.applicationName = appName;
@@ -87,3 +88,4 @@ export default {
     state.recentRecipeIds = recipeIds;
   },
 };
+/* eslint-enable no-param-reassign */
