@@ -1,14 +1,13 @@
 {
   "name": "foodstuffs",
   "version": "1.1.0",
-  "description": "A recipe management application.",
-  "author": "Jeff Schreiner <jeff.s.schreiner@gmail.com>",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest '../wwwroot'",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "build-watch": "vue-cli-service build-watch"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -30,6 +29,7 @@
     "babel-jest": "^22.0.4",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
+    "vue-cli-plugin-build-watch": "^1.0.0",
     "vue-template-compiler": "^2.5.13"
   },
   "babel": {
@@ -75,5 +75,7 @@
     "testMatch": [
       "<rootDir>/(tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx))"
     ]
-  }
+  },
+  "author": "Jeff Schreiner <jeff.s.schreiner@gmail.com>",
+  "description": "A recipe management application."
 }
