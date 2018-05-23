@@ -43,6 +43,32 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "server tests with coverage",
+            "command": "dotnet test /p:CollectCoverage=true",
+            "options": {
+                "cwd": "./FoodStuffs.Test"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "server core tests with coverage",
+            "command": "dotnet test /p:CollectCoverage=true",
+            "options": {
+                "cwd": "./Core.Test"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "server core tests watch",
             "command": "dotnet watch test",
             "options": {
