@@ -3,11 +3,10 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "watch": "vue-cli-service build-watch --dest '../wwwroot' --mode 'development'",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "build-watch": "vue-cli-service build-watch"
+    "build": "vue-cli-service build --dest '../wwwroot'"
   },
   "dependencies": {
     "axios": "^0.18.0",

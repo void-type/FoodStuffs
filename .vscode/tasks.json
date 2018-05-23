@@ -4,33 +4,33 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "watch server",
-            "command": "dotnet watch run",
+            "label": "client watch",
+            "command": "yarn watch",
             "options": {
-                "cwd": "./FoodStuffs.Web"
+                "cwd": "./FoodStuffs.Web/ClientApp"
             },
             "type": "shell",
             "group": "test",
             "presentation": {
                 "reveal": "silent"
             },
-            "problemMatcher": "$msCompile"
+            "problemMatcher": []
         },
         {
-            "label": "run server",
-            "command": "dotnet run",
+            "label": "client build",
+            "command": "yarn build",
             "options": {
-                "cwd": "./FoodStuffs.Web"
+                "cwd": "./FoodStuffs.Web/ClientApp"
             },
             "type": "shell",
-            "group": "test",
+            "group": "build",
             "presentation": {
                 "reveal": "silent"
             },
-            "problemMatcher": "$msCompile"
+            "problemMatcher": []
         },
         {
-            "label": "watch server tests",
+            "label": "server tests watch",
             "command": "dotnet watch test",
             "options": {
                 "cwd": "./FoodStuffs.Test"
@@ -43,7 +43,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch core tests",
+            "label": "server core tests watch",
             "command": "dotnet watch test",
             "options": {
                 "cwd": "./Core.Test"
@@ -56,8 +56,8 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch client",
-            "command": "yarn dev",
+            "label": "server watch",
+            "command": "dotnet watch run",
             "options": {
                 "cwd": "./FoodStuffs.Web"
             },
@@ -66,9 +66,10 @@
             "presentation": {
                 "reveal": "silent"
             },
+            "problemMatcher": "$msCompile"
         },
         {
-            "label": "build server Debug",
+            "label": "server build debug",
             "command": "dotnet build --configuration Debug",
             "options": {
                 "cwd": "./FoodStuffs.Web"
@@ -81,7 +82,20 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build server",
+            "label": "server run Debug",
+            "command": "dotnet run --configuration Debug",
+            "options": {
+                "cwd": "./FoodStuffs.Web"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "server build",
             "command": "dotnet build --configuration Release",
             "options": {
                 "cwd": "./FoodStuffs.Web"
@@ -94,17 +108,17 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build client",
-            "command": "yarn build",
+            "label": "server run",
+            "command": "dotnet run --configuration Release --launch-profile 'Kestrel (Test)'",
             "options": {
                 "cwd": "./FoodStuffs.Web"
             },
             "type": "shell",
-            "group": "build",
+            "group": "test",
             "presentation": {
                 "reveal": "silent"
             },
+            "problemMatcher": "$msCompile"
         }
-        
     ]
 }
