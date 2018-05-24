@@ -20,7 +20,6 @@ namespace FoodStuffs.Web.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.UseWebpackDevServer = _environment.IsEnvironment("Development");
             ViewBag.ApplicationName = _configuration["ApplicationName"];
 
             return View();

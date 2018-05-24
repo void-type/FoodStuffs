@@ -83,7 +83,7 @@
         },
         {
             "label": "server watch",
-            "command": "dotnet watch run",
+            "command": "dotnet watch run --launch-profile 'Kestrel (Development)'",
             "options": {
                 "cwd": "./FoodStuffs.Web"
             },
@@ -108,8 +108,8 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "server run Debug",
-            "command": "dotnet run --configuration Debug",
+            "label": "server run debug",
+            "command": "dotnet run --configuration Debug --launch-profile 'Kestrel (Development)'",
             "options": {
                 "cwd": "./FoodStuffs.Web"
             },
@@ -135,7 +135,7 @@
         },
         {
             "label": "server run",
-            "command": "dotnet run --configuration Release --launch-profile 'Kestrel (Test)'",
+            "command": "dotnet run --configuration Release --launch-profile 'Kestrel (Development)'",
             "options": {
                 "cwd": "./FoodStuffs.Web"
             },

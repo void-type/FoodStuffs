@@ -49,17 +49,9 @@ namespace FoodStuffs.Web
             services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
 
-            if (_configuration["FoodStuffsConnectionString"] == "In-Memory")
-            {
-                services.AddDbContext<FoodStuffsContext>(options =>
-                    options.UseInMemoryDatabase("FoodStuffsDev"));
-            }
-            else
-            {
-                services.AddDbContext<FoodStuffsContext>(options =>
-                    options.UseSqlServer(_configuration["FoodStuffsConnectionString"]));
-            }
-            services.AddTransient<IFoodStuffsData, FoodStuffsEfData>();
+            services.AddDbContext<FoodStuffsContext>(options =>
+                options.UseSqlServer(_configuration["FoodStuffsConnectionString"]));
+            services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
         }
 
         private readonly IConfiguration _configuration;

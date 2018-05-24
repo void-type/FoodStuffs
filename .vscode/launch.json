@@ -8,7 +8,7 @@
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build server Debug",
+            "preLaunchTask": "server build debug",
             "program": "${workspaceFolder}/FoodStuffs.Web/bin/Debug/netcoreapp2.0/FoodStuffs.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/FoodStuffs.Web",

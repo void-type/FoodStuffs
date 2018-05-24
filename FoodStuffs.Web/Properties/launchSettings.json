@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:58626/",
+      "applicationUrl": "http://localhost:3333/",
       "sslPort": 0
     }
   },
@@ -15,11 +15,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IIS Express (Test)": {
+    "IIS Express (Staging)": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Test"
+        "ASPNETCORE_ENVIRONMENT": "Staging"
       }
     },
     "IIS Express (Production)": {
@@ -37,11 +37,11 @@
       },
       "applicationUrl": "http://localhost:3333/"
     },
-    "Kestrel (Test)": {
+    "Kestrel (Staging)": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Test"
+        "ASPNETCORE_ENVIRONMENT": "Staging"
       },
       "applicationUrl": "http://localhost:3333/"
     },
