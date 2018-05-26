@@ -16,12 +16,12 @@ RUN curl -SL "$NODE_DOWNLOAD_URL" --output nodejs.tar.gz \
 
 # copy everything and restore
 COPY ./ ./
-RUN dotnet restore && \
-    cd FoodStuffs.Web/ClientApp && \
-    yarn && \
-    yarn build && \
-    cd ../../ && \
-    dotnet publish FoodStuffs.Web -c Release -o out
+RUN dotnet restore \
+    && cd FoodStuffs.Web/ClientApp \
+    && yarn \
+    && yarn build \
+    && cd ../../ \
+    && dotnet publish FoodStuffs.Web -c Release -o out
 
 # build runtime image
 FROM microsoft/aspnetcore:2.0
