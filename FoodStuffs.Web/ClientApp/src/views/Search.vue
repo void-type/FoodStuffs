@@ -12,9 +12,10 @@
                      @selectRecipe="selectRecipe"
                      @cycleSelectedNameSortType="cycleSelectedNameSortType" />
 
-        <SearchTablePager :page="recipesListPage"
-                          :take="recipesListTake"
+        <SearchTablePager :page="page"
+                          :take="take"
                           :totalCount="recipesListTotalCount"
+                          @updateTake="updateTake"
                           @requestPage="requestPage" />
     </section>
 </template>
@@ -34,8 +35,6 @@ export default {
   computed: {
     ...mapGetters([
       'recipesList',
-      'recipesListPage',
-      'recipesListTake',
       'recipesListTotalCount',
       'recipesSearchParameters',
       'recipesSearchParametersSortType',
@@ -64,6 +63,14 @@ export default {
         this.$store.dispatch('setRecipesSearchParametersPage', value);
       },
     },
+    take: {
+      get() {
+        return this.recipesSearchParameters.take;
+      },
+      set(value) {
+        this.$store.dispatch('setRecipesSearchParametersTake', value);
+      },
+    },
   },
   methods: {
     ...mapActions([
@@ -89,6 +96,9 @@ export default {
     },
     updateCategorySearch(value) {
       this.categorySearch = value;
+    },
+    updateTake(value) {
+      this.take = value;
     },
   },
 };

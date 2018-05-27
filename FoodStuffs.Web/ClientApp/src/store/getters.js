@@ -9,37 +9,17 @@ export default {
     return state.currentRecipe;
   },
 
-  messages(state) {
-    return state.messages;
-  },
-
-  fieldsInError(state) {
-    return state.fieldsInError;
-  },
-
-  isFieldInError: state => fieldName => state.fieldsInError.indexOf(fieldName) > -1,
+  findRecipeById: state => idToFind => state.recipesList
+    .filter(item => item.id === parseInt(idToFind, 10))[0] || null,
 
   isError(state) {
     return state.isError;
   },
 
-  recipesList(state) {
-    return state.recipesList;
-  },
+  isFieldInError: state => fieldName => state.fieldsInError.indexOf(fieldName) > -1,
 
-  findRecipeById: state => idToFind => state.recipesList
-    .filter(item => item.id === parseInt(idToFind, 10))[0] || null,
-
-  recipesListPage(state) {
-    return state.recipesListPage;
-  },
-
-  recipesListTake(state) {
-    return state.recipesListTake;
-  },
-
-  recipesListTotalCount(state) {
-    return state.recipesListTotalCount;
+  messages(state) {
+    return state.messages;
   },
 
   recentRecipes(state, getters) {
@@ -47,6 +27,14 @@ export default {
       .map(id => getters.findRecipeById(id))
       .filter(recipe => recipe != null);
     return recents;
+  },
+
+  recipesList(state) {
+    return state.recipesList;
+  },
+
+  recipesListTotalCount(state) {
+    return state.recipesListTotalCount;
   },
 
   recipesSearchParameters(state) {

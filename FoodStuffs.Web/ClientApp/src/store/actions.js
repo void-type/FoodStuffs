@@ -1,4 +1,3 @@
-import limitIntegers from '../filters/limitIntegers';
 import trimAndCapitalize from '../filters/trimAndCapitalize';
 import applicationNameApi from '../models/applicationNameApi';
 import Recipe from '../models/recipe';
@@ -22,8 +21,6 @@ export default {
   setRecipesList(context, data) {
     context.commit('setRecipesList', data.items);
     context.commit('setRecipesListTotalCount', data.totalCount);
-    context.commit('setRecipesListPage', data.page);
-    context.commit('setRecipesListTake', data.take);
   },
 
   saveRecipe(context, recipe) {
@@ -76,13 +73,11 @@ export default {
   },
 
   setRecipePrepTimeMinutes(context, { recipe, value }) {
-    const limitedValue = limitIntegers(value);
-    context.commit('setRecipePrepTimeMinutes', { recipe, limitedValue });
+    context.commit('setRecipePrepTimeMinutes', { recipe, value });
   },
 
   setRecipeCookTimeMinutes(context, { recipe, value }) {
-    const limitedValue = limitIntegers(value);
-    context.commit('setRecipeCookTimeMinutes', { recipe, limitedValue });
+    context.commit('setRecipeCookTimeMinutes', { recipe, value });
   },
 
   addCategoryToRecipe(context, { recipe, categoryName }) {
@@ -121,6 +116,10 @@ export default {
 
   setRecipesSearchParametersPage(context, page) {
     context.commit('setRecipesSearchParametersPage', page);
+  },
+
+  setRecipesSearchParametersTake(context, take) {
+    context.commit('setRecipesSearchParametersTake', take);
   },
 
   cycleSelectedNameSortType(context) {

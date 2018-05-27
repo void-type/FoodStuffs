@@ -6,6 +6,6 @@ export default class {
     this.categorySearch = '';
     this.sort = recipeSearchSortTypes[0].name;
     this.page = 1;
-    this.take = 30;
+    this.take = 15;
   }
 }

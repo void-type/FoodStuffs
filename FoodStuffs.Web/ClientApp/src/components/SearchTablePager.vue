@@ -1,12 +1,21 @@
 <template>
-    <div>
-        <span v-for="pageNumber in pageNumbers"
+  <div>
+    <div class="pages">
+        <span v-for="pageNumber in numberOfPages"
               :key="pageNumber"
               :class="{currentPage: pageNumber === page}"
-              @click="requestPage(pageNumber)">
-            {{pageNumber}}
+              @click="requestPage(pageNumber)" >
+          {{pageNumber}}
         </span>
     </div>
+    <div>
+      <input type="number"
+             min="1"
+             name="take"
+             id="take"
+             v-model="takeEditor" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -27,10 +36,16 @@ export default {
   },
   computed: {
     numberOfPages() {
-      return Math.ceil(this.totalCount / this.take) || 0;
+      return Math.ceil(this.totalCount / this.take) || 1;
     },
-    pageNumbers() {
-      return Array.from(Array(this.numberOfPages).keys());
+    takeEditor: {
+      get() {
+        return this.take;
+      },
+      set(value) {
+        this.$emit('updateTake', value);
+        this.requestPage(this.page);
+      },
     },
   },
   methods: {
@@ -50,15 +65,20 @@ export default {
   box-shadow: $highlight-border;
 }
 
-div {
+div>div {
   display: flex;
   justify-content: center;
-}
 
-span {
-  padding: 0.5em 1em;
-  border: $border;
-  cursor: pointer;
-  font-weight: bold;
+  span {
+    padding: 0.5em 1em;
+    border: $border;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  input {
+    padding: 0.5em 1em;
+    max-width: 4em;
+  }
 }
 </style>

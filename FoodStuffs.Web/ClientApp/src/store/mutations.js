@@ -40,14 +40,6 @@ export default {
     state.recipesList = recipes;
   },
 
-  setRecipesListPage(state, page) {
-    state.recipesListPage = page;
-  },
-
-  setRecipesListTake(state, take) {
-    state.recipesListTake = take;
-  },
-
   setRecipesListTotalCount(state, totalCount) {
     state.recipesListTotalCount = totalCount;
   },
@@ -62,6 +54,10 @@ export default {
 
   setRecipesSearchParametersPage(state, page) {
     state.recipesSearchParameters.page = page;
+  },
+
+  setRecipesSearchParametersTake(state, take) {
+    state.recipesSearchParameters.take = take;
   },
 
   setRecipesSearchParametersSort(state, sort) {
