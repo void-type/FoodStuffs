@@ -43,7 +43,7 @@ export default {
         return this.take;
       },
       set(value) {
-        this.$emit('updateTake', value);
+        this.$emit('updateTake', parseInt(value));
         this.requestPage(this.page);
       },
     },
