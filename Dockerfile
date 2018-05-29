@@ -1,7 +1,7 @@
 FROM microsoft/aspnetcore-build:2.0 AS build-env
 WORKDIR /app
 
-# set up node and yarn
+# Install Yarn and Node in the build container
 ENV NODE_VERSION 8.11.2
 ENV YARN_VERSION 1.6.0
 ENV NODE_DOWNLOAD_SHA 67dc4c06a58d4b23c5378325ad7e0a2ec482b48cea802252b99ebe8538a3ab79
@@ -14,21 +14,12 @@ RUN curl -SL "$NODE_DOWNLOAD_URL" --output nodejs.tar.gz \
     && npm i -g yarn@$YARN_VERSION \
     && ln -f -s /usr/local/bin/node /usr/local/bin/nodejs
 
-# copy everything and restore
+# Copy everything to the build container, build the app.
 COPY ./ ./
-RUN dotnet restore \
-    && cd FoodStuffs.Web/ClientApp \
-    && yarn \
-    && yarn build \
-    && cd ../../ \
-    && dotnet publish FoodStuffs.Web -c Release -o out
+RUN ./buildApp.sh
 
-# build runtime image
+# Copy /out from the build container to the run container
 FROM microsoft/aspnetcore:2.0
 WORKDIR /app
 COPY --from=build-env /app/FoodStuffs.Web/out .
 ENTRYPOINT ["dotnet", "FoodStuffs.Web.dll"]
-
-# To use:
-# docker build -t foodstuffs-prod .
-# docker run -it --rm -p 3333:80 --name foodstuffs-prod foodstuffs-prod
