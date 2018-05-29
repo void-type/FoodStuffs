@@ -6,7 +6,7 @@ namespace FoodStuffs.Model.Validation
 {
     public class RecipeViewModelValidator : AbstractValidator<IRecipeViewModel>
     {
-        protected override void RunRules(IRecipeViewModel entity)
+        protected override void Rules(IRecipeViewModel entity)
         {
             Invalid("name", "Please enter a name.")
                 .When(() => string.IsNullOrWhiteSpace(entity.Name));

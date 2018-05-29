@@ -9,7 +9,7 @@ namespace Core.Test.Validation
             _isSuppressed = isSuppressed;
         }
 
-        protected override void RunRules(bool isValid)
+        protected override void Rules(bool isValid)
         {
             Invalid("test", "test is invalid")
                 .When(() => !isValid)

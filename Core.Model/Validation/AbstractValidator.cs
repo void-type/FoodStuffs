@@ -17,7 +17,7 @@ namespace Core.Model.Validation
         public IEnumerable<IValidationError> Validate(TValidatableEntity validatable)
         {
             _rules = new List<IRule>();
-            RunRules(validatable);
+            Rules(validatable);
             return Errors;
         }
 
@@ -38,7 +38,7 @@ namespace Core.Model.Validation
         /// Override this method to build the validation ruleset.
         /// </summary>
         /// <param name="validatable"></param>
-        protected abstract void RunRules(TValidatableEntity validatable);
+        protected abstract void Rules(TValidatableEntity validatable);
 
         /// <summary>
         /// A collection of rules used to validate the entity.
