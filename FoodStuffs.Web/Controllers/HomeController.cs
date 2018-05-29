@@ -21,7 +21,6 @@ namespace FoodStuffs.Web.Controllers
         public IActionResult Index()
         {
             ViewBag.ApplicationName = _configuration["ApplicationName"];
-
             return View();
         }
 

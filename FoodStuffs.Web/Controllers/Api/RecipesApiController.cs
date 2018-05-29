@@ -54,7 +54,6 @@ namespace FoodStuffs.Web.Controllers.Api
         public IActionResult List(string nameSearch = null, string categorySearch = null, string sort = null, int take = int.MaxValue, int page = 1)
         {
             var context = new List<IRecipeViewModel>();
-
             var logExtra = $"NameSearch: {nameSearch}, CategorySearch: {categorySearch}, Sort: {sort}";
 
             new ActionChain(_responder)
