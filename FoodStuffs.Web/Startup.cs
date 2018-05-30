@@ -3,9 +3,9 @@ using Core.Model.Services.Time;
 using Core.Services.Action;
 using Core.Services.Logging;
 using Core.Services.Time;
-using FoodStuffs.Services.EntityFramework;
-using FoodStuffs.Services.Data;
 using FoodStuffs.Model.Data;
+using FoodStuffs.Services.Data;
+using FoodStuffs.Services.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +45,7 @@ namespace FoodStuffs.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => 
+            services.AddMvc(options =>
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
             services.AddAntiforgery(options =>
                 options.HeaderName = "X-CSRF-TOKEN");

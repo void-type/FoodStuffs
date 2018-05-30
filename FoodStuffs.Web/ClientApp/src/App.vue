@@ -42,7 +42,6 @@ export default {
     this.fetchRecipes();
   },
 };
-
 </script>
 
 <style lang="scss">

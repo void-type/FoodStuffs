@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Antiforgery;
 
 namespace FoodStuffs.Web.Controllers
 {
@@ -28,8 +28,8 @@ namespace FoodStuffs.Web.Controllers
             return View();
         }
 
-        private readonly IConfiguration _configuration;
         private readonly IAntiforgery _antiforgery;
+        private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _environment;
     }
 }

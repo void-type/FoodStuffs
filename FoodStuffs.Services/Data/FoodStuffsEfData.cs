@@ -1,8 +1,7 @@
 ﻿using Core.Model.Services.Data;
-using FoodStuffs.Services.EntityFramework;
-using FoodStuffs.Services.Data;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Services.EntityFramework;
 using System;
 
 namespace FoodStuffs.Services.Data

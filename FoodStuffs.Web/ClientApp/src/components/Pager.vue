@@ -4,7 +4,7 @@
         <span v-for="pageNumber in numberOfPages"
               :key="pageNumber"
               :class="{currentPage: pageNumber === page}"
-              @click="requestPage(pageNumber)" >
+              @click="requestPage(pageNumber)">
           {{pageNumber}}
         </span>
     </div>
