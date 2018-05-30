@@ -25,3 +25,18 @@ export default {
       .catch(error => failure(error.response));
   },
 };
+
+function apiConfigure() {
+  const csrfToken = document.getElementById('requestVerificationToken').value;
+
+  const headers = {
+    'X-CSRF-TOKEN': csrfToken,
+    'X-Requested-With': 'XMLHttpRequest',
+  };
+
+  axios.defaults.headers.post = headers;
+  axios.defaults.headers.put = headers;
+  axios.defaults.headers.delete = headers;
+}
+
+apiConfigure();
