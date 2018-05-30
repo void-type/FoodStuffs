@@ -2,10 +2,10 @@ import recipeSearchSortTypes from './recipeSearchSortTypes';
 
 export default class {
   constructor() {
-    this.nameSearch = '';
     this.categorySearch = '';
-    this.sort = recipeSearchSortTypes[0].name;
+    this.nameSearch = '';
     this.page = 1;
+    this.sort = recipeSearchSortTypes[0].name;
     this.take = 15;
   }
 }

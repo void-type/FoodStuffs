@@ -1,10 +1,4 @@
 export default {
-  onSuccess(context, data) {
-    context.dispatch('fetchRecipes', data.id);
-    context.commit('setMessageIsError', false);
-    context.commit('setMessage', data.message);
-  },
-
   onFailure(context, response) {
     context.commit('setMessageIsError', true);
     if (response === undefined || response === null) {
@@ -23,5 +17,11 @@ export default {
       const selectedRecipe = context.getters.findRecipeById(postbackId);
       context.dispatch('setCurrentRecipe', selectedRecipe);
     }
+  },
+
+  onSuccess(context, data) {
+    context.dispatch('fetchRecipes', data.id);
+    context.commit('setMessageIsError', false);
+    context.commit('setMessage', data.message);
   },
 };

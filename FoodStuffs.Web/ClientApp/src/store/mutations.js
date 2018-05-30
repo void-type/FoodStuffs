@@ -36,6 +36,10 @@ export default {
     recipe.categories.splice(categoryIndex, 1);
   },
 
+  setRecentRecipeIds(state, recipeIds) {
+    state.recentRecipeIds = recipeIds;
+  },
+
   setRecipesList(state, recipes) {
     state.recipesList = recipes;
   },
@@ -78,10 +82,6 @@ export default {
 
   setMessageIsError(state, status) {
     state.messageIsError = status;
-  },
-
-  setRecentRecipeIds(state, recipeIds) {
-    state.recentRecipeIds = recipeIds;
   },
 };
 /* eslint-enable no-param-reassign */

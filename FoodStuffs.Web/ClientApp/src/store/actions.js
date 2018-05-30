@@ -18,9 +18,13 @@ export default {
     );
   },
 
-  setRecipesList(context, data) {
-    context.commit('setRecipesList', data.items);
-    context.commit('setRecipesListTotalCount', data.totalCount);
+  deleteRecipe(context, recipe) {
+    context.dispatch('clearMessages');
+    recipeApi.deleteRecipe(
+      recipe,
+      data => webApiCallbacks.onSuccess(context, data),
+      response => webApiCallbacks.onFailure(context, response),
+    );
   },
 
   saveRecipe(context, recipe) {
@@ -39,20 +43,6 @@ export default {
         response => webApiCallbacks.onFailure(context, response),
       );
     }
-  },
-
-  deleteRecipe(context, recipe) {
-    context.dispatch('clearMessages');
-    recipeApi.deleteRecipe(
-      recipe,
-      data => webApiCallbacks.onSuccess(context, data),
-      response => webApiCallbacks.onFailure(context, response),
-    );
-  },
-
-  selectRecipe(context, recipe) {
-    context.dispatch('clearMessages');
-    context.dispatch('setCurrentRecipe', recipe);
   },
 
   setCurrentRecipe(context, recipe) {
@@ -80,6 +70,31 @@ export default {
     context.commit('setRecipeCookTimeMinutes', { recipe, value });
   },
 
+  selectRecipe(context, recipe) {
+    context.dispatch('clearMessages');
+    context.dispatch('setCurrentRecipe', recipe);
+  },
+
+  addRecipeToRecents(context, recipe) {
+    if (!context.getters.recipesList.includes(recipe)) {
+      return;
+    }
+
+    const recentRecipeIds = context.state.recentRecipeIds.slice();
+    const recentRecipeIndex = recentRecipeIds.indexOf(recipe.id);
+
+    if (recentRecipeIndex > -1) {
+      recentRecipeIds.splice(recentRecipeIndex, 1);
+    }
+    if (recipe.id > 0) {
+      recentRecipeIds.unshift(recipe.id);
+    }
+    if (recentRecipeIds.length > 3) {
+      recentRecipeIds.pop();
+    }
+    context.commit('setRecentRecipeIds', recentRecipeIds);
+  },
+
   addCategoryToRecipe(context, { recipe, categoryName }) {
     const cleanedCategoryName = trimAndCapitalize(categoryName);
 
@@ -100,10 +115,9 @@ export default {
     }
   },
 
-  clearMessages(context) {
-    context.commit('setMessageIsError', false);
-    context.commit('setFieldsInError', []);
-    context.commit('setMessages', []);
+  setRecipesList(context, data) {
+    context.commit('setRecipesList', data.items);
+    context.commit('setRecipesListTotalCount', data.totalCount);
   },
 
   setRecipesSearchParametersNameSearch(context, nameSearch) {
@@ -132,23 +146,9 @@ export default {
     context.dispatch('fetchRecipes');
   },
 
-  addRecipeToRecents(context, recipe) {
-    if (!context.getters.recipesList.includes(recipe)) {
-      return;
-    }
-
-    const recentRecipeIds = context.state.recentRecipeIds.slice();
-    const recentRecipeIndex = recentRecipeIds.indexOf(recipe.id);
-
-    if (recentRecipeIndex > -1) {
-      recentRecipeIds.splice(recentRecipeIndex, 1);
-    }
-    if (recipe.id > 0) {
-      recentRecipeIds.unshift(recipe.id);
-    }
-    if (recentRecipeIds.length > 3) {
-      recentRecipeIds.pop();
-    }
-    context.commit('setRecentRecipeIds', recentRecipeIds);
+  clearMessages(context) {
+    context.commit('setMessageIsError', false);
+    context.commit('setFieldsInError', []);
+    context.commit('setMessages', []);
   },
 };
