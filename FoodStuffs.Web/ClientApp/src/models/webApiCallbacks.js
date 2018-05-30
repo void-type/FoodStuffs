@@ -1,12 +1,12 @@
 export default {
   onSuccess(context, data) {
     context.dispatch('fetchRecipes', data.id);
-    context.commit('setIsError', false);
+    context.commit('setMessageIsError', false);
     context.commit('setMessage', data.message);
   },
 
   onFailure(context, response) {
-    context.commit('setIsError', true);
+    context.commit('setMessageIsError', true);
     if (response === undefined || response === null) {
       context.commit('setMessage', 'Cannot connect to server.');
     } else if (response.status >= 500) {

@@ -1,21 +1,15 @@
 <template>
     <div id="app">
         <div id="no-print">
-          <Topbar />
-          <MessageCenter></MessageCenter>
+          <AppHeader />
+          <AppMessageCenter></AppMessageCenter>
           <main>
               <router-view />
           </main>
-          <footer>
-              <div>
-                  <a href="https://github.com/void-type/foodstuffs">
-                      FoodStuffs is open source!
-                  </a>
-              </div>
-          </footer>
+          <AppFooter />
         </div>
         <div id="print-only">
-            <HomeViewer :currentRecipe="currentRecipe" />
+            <RecipeViewer :currentRecipe="currentRecipe" />
         </div>
     </div>
 </template>
@@ -24,15 +18,17 @@
 import { mapActions, mapGetters } from 'vuex';
 import router from './router';
 import store from './store';
-import HomeViewer from './components/HomeViewer.vue';
-import MessageCenter from './components/MessageCenter.vue';
-import Topbar from './components/Topbar.vue';
+import RecipeViewer from './components/RecipeViewer.vue';
+import AppMessageCenter from './components/AppMessageCenter.vue';
+import AppHeader from './components/AppHeader.vue';
+import AppFooter from './components/AppFooter.vue';
 
 export default {
   components: {
-    HomeViewer,
-    MessageCenter,
-    Topbar,
+    RecipeViewer,
+    AppMessageCenter,
+    AppHeader,
+    AppFooter,
   },
   router,
   store,
@@ -81,15 +77,6 @@ main > section {
 
   & > *:not(:last-child) {
     margin-right: 2em;
-  }
-}
-
-footer {
-  border-top: $border;
-  padding: 1em 0em;
-
-  & div {
-    text-align: center;
   }
 }
 

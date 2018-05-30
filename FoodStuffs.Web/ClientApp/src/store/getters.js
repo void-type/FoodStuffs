@@ -12,8 +12,8 @@ export default {
   findRecipeById: state => idToFind => state.recipesList
     .filter(item => item.id === parseInt(idToFind, 10))[0] || null,
 
-  isError(state) {
-    return state.isError;
+  messageIsError(state) {
+    return state.messageIsError;
   },
 
   isFieldInError: state => fieldName => state.fieldsInError.indexOf(fieldName) > -1,

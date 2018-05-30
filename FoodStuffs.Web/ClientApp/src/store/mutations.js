@@ -76,8 +76,8 @@ export default {
     state.fieldsInError = fieldNames;
   },
 
-  setIsError(state, status) {
-    state.isError = status;
+  setMessageIsError(state, status) {
+    state.messageIsError = status;
   },
 
   setRecentRecipeIds(state, recipeIds) {

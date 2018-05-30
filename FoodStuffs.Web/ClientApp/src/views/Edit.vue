@@ -1,18 +1,18 @@
 <template>
     <section>
         <SelectSidebar />
-        <EditorForm />
+        <RecipeEditor />
     </section>
 </template>
 
 <script>
 import SelectSidebar from '../components/SelectSidebar.vue';
-import EditorForm from '../components/EditorForm.vue';
+import RecipeEditor from '../components/RecipeEditor.vue';
 
 export default {
   components: {
     SelectSidebar,
-    EditorForm,
+    RecipeEditor,
   },
 };
 </script>

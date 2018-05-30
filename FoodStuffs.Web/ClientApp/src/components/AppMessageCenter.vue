@@ -1,6 +1,6 @@
 <template>
     <div v-if="messages.length > 0"
-         :class="{messages: true, danger: isError}"
+         :class="{messages: true, danger: messageIsError}"
          @click="clearMessages()">
         <ul>
             <li v-for="message in messages"
@@ -16,7 +16,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters(['messages', 'isError']),
+    ...mapGetters(['messages', 'messageIsError']),
   },
   methods: {
     ...mapActions(['clearMessages']),

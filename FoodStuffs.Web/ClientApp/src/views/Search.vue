@@ -12,7 +12,7 @@
                      @selectRecipe="selectRecipe"
                      @cycleSelectedNameSortType="cycleSelectedNameSortType" />
 
-        <SearchTablePager :page="page"
+        <Pager :page="page"
                           :take="take"
                           :totalCount="recipesListTotalCount"
                           @updateTake="updateTake"
@@ -24,13 +24,13 @@
 import { mapActions, mapGetters } from 'vuex';
 import SearchControls from '../components/SearchControls.vue';
 import SearchTable from '../components/SearchTable.vue';
-import SearchTablePager from '../components/SearchTablePager.vue';
+import Pager from '../components/Pager.vue';
 
 export default {
   components: {
     SearchControls,
     SearchTable,
-    SearchTablePager,
+    Pager,
   },
   computed: {
     ...mapGetters([

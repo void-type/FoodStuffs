@@ -101,7 +101,7 @@ export default {
   },
 
   clearMessages(context) {
-    context.commit('setIsError', false);
+    context.commit('setMessageIsError', false);
     context.commit('setFieldsInError', []);
     context.commit('setMessages', []);
   },

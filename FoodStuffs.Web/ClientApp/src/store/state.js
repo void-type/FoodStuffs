@@ -6,7 +6,7 @@ export default {
   currentRecipe: new Recipe(),
   messages: [],
   fieldsInError: [],
-  isError: false,
+  messageIsError: false,
   recipesList: [],
   recipesListTotalCount: 0,
   recentRecipeIds: [],

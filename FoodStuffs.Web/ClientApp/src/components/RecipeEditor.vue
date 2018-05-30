@@ -73,7 +73,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import TagEditor from './EditorForTags.vue';
+import TagEditor from './TagEditor.vue';
 import utcToLocalDateString from '../filters/utcToLocalDateString';
 
 export default {
