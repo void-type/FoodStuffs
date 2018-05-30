@@ -1,6 +1,6 @@
 ﻿using Core.Model.Services.Time;
-using FoodStuffs.Data.Models;
-using FoodStuffs.Data.Service;
+using FoodStuffs.Services.EntityFramework;
+using FoodStuffs.Services.Data;
 using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,11 +1,11 @@
 ﻿using Core.Model.Services.Data;
-using FoodStuffs.Data.Models;
-using FoodStuffs.Data.Service.CustomRepositories;
+using FoodStuffs.Services.EntityFramework;
+using FoodStuffs.Services.Data;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using System;
 
-namespace FoodStuffs.Data.Service
+namespace FoodStuffs.Services.Data
 {
     public class FoodStuffsEfData : IFoodStuffsData
     {

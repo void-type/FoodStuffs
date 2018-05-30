@@ -10,7 +10,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FoodStuffs.Data\FoodStuffs.Data.csproj" />
+    <ProjectReference Include="..\FoodStuffs.Services\FoodStuffs.Services.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
   <ItemGroup>

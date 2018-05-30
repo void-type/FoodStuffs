@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Core.Data.EntityFramework
+namespace Core.Services.EntityFramework
 {
     public class EfReadOnlyRepository<TDbEntity> : IReadOnlyRepository<TDbEntity> where TDbEntity : class, new()
 

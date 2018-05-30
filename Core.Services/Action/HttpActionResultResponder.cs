@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FoodStuffs.Web.Services
+namespace Core.Services.Action
 {
     public class HttpActionResultResponder : AbstractActionResponder<IActionResult>
     {

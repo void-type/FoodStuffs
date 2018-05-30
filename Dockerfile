@@ -16,9 +16,9 @@ RUN curl -SL "$NODE_DOWNLOAD_URL" --output nodejs.tar.gz \
 
 # Optimize build by only copying files that will restore dependencies.
 COPY ./FoodStuffs.sln ./
-COPY ./Core.Data/Core.Data.csproj ./Core.Data/
+COPY ./Core.Services/Core.Services.csproj ./Core.Services/
 COPY ./Core.Model/Core.Model.csproj ./Core.Model/
-COPY ./FoodStuffs.Data/FoodStuffs.Data.csproj ./FoodStuffs.Data/
+COPY ./FoodStuffs.Services/FoodStuffs.Services.csproj ./FoodStuffs.Services/
 COPY ./FoodStuffs.Model/FoodStuffs.Model.csproj ./FoodStuffs.Model/
 COPY ./FoodStuffs.Web/FoodStuffs.Web.csproj ./FoodStuffs.Web/
 COPY ./FoodStuffs.Web/ClientApp/package.json ./FoodStuffs.Web/ClientApp/

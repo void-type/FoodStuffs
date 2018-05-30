@@ -11,7 +11,7 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FoodStuffs.Data\FoodStuffs.Data.csproj" />
+    <ProjectReference Include="..\FoodStuffs.Services\FoodStuffs.Services.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
 </Project>

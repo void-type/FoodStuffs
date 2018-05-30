@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-namespace Core.Data.EntityFramework
+namespace Core.Services.EntityFramework
 {
     public class EfWritableRepository<TDbEntity> : EfReadOnlyRepository<TDbEntity>, IWritableRepository<TDbEntity> where TDbEntity : class, new()
     {

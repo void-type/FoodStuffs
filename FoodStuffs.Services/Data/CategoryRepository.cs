@@ -1,9 +1,9 @@
-﻿using Core.Data.EntityFramework;
+﻿using Core.Services.EntityFramework;
 using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace FoodStuffs.Data.Service.CustomRepositories
+namespace FoodStuffs.Services.Data
 {
     public class CategoryRepository : EfWritableRepository<Category>
     {

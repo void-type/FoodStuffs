@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FoodStuffs.Web.Services
+namespace Core.Services.Logging
 {
     public class ActionToAspNetLoggerAdapter : ILoggingService
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace FoodStuffs.Data.Models
+namespace FoodStuffs.Services.EntityFramework
 {
     public partial class FoodStuffsContext
     {

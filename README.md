@@ -2,7 +2,7 @@
 A web application for managing recipes based on .Net Core 2.0 and Vue.js 2.0.
 
 ## Make a Database
-    1. Build a SQL Server database using the scripts in FoodStuffs.Data/Scripts
+    1. Build a SQL Server database using the scripts in FoodStuffs.Services/Scripts
     2. Set a connection string in an appsettings.{environment}.json file.
 
 ## Get some tools

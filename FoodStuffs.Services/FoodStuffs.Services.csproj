@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.Data\Core.Data.csproj" />
+    <ProjectReference Include="..\Core.Services\Core.Services.csproj" />
     <ProjectReference Include="..\Core.Model\Core.Model.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>

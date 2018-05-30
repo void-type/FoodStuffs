@@ -1,6 +1,6 @@
 ﻿using Core.Model.Services.Time;
 
-namespace FoodStuffs.Web.Services
+namespace Core.Services.Time
 {
     /// <summary>
     /// A service for getting the current UTC DateTime.
