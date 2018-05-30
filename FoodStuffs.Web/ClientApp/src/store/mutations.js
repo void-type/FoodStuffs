@@ -28,8 +28,8 @@ export default {
     recipe.cookTimeMinutes = value;
   },
 
-  addCategoryToRecipe(state, { recipe, categoryName }) {
-    recipe.categories.push(categoryName);
+  addCategoryToRecipe(state, { recipe, cleanedCategoryName }) {
+    recipe.categories.push(cleanedCategoryName);
   },
 
   removeCategoryFromRecipe(state, { recipe, categoryIndex }) {
