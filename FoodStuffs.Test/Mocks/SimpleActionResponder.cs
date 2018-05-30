@@ -1,4 +1,5 @@
 ﻿using Core.Model.Actions.Responder;
+using Core.Model.Actions.Responses.File;
 using Core.Model.Actions.Responses.Message;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,12 @@ namespace FoodStuffs.Test.Mocks
             {
                 Message = userMessage
             };
+            Response = _simpleResponse;
+        }
+
+        public override void WithFile(IFileViewModel file, string logExtra = null)
+        {
+            _simpleResponse.File = file;
             Response = _simpleResponse;
         }
 

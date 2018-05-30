@@ -1,4 +1,5 @@
 using Core.Model.Actions.Responder;
+using Core.Model.Actions.Responses.File;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +13,11 @@ namespace Core.Test.Actions.Responder
         }
 
         public override void WithError(string userMessage, string logExtra = null, Exception ex = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WithFile(IFileViewModel file, string logExtra = null)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
-﻿using Core.Model.Actions.Responses.Message;
+﻿using Core.Model.Actions.Responses.File;
+using Core.Model.Actions.Responses.Message;
 using Core.Model.Validation;
 using System.Collections.Generic;
 
@@ -15,5 +16,6 @@ namespace FoodStuffs.Test.Mocks
         public PostSuccessMessage PostSuccess = null;
         public List<object> Set = null;
         public SuccessMessage Success = null;
+        public IFileViewModel File { get; set; }
     }
 }

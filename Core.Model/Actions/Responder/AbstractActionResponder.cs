@@ -1,4 +1,5 @@
-﻿using Core.Model.Validation;
+﻿using Core.Model.Actions.Responses.File;
+using Core.Model.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace Core.Model.Actions.Responder
         }
 
         public abstract void WithError(string userMessage, string logExtra = null, Exception ex = null);
+
+        public abstract void WithFile(IFileViewModel file, string logExtra = null);
 
         public abstract void WithItem<T>(T item, string logExtra = null);
 

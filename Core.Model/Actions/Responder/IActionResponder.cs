@@ -1,4 +1,5 @@
-﻿using Core.Model.Validation;
+﻿using Core.Model.Actions.Responses.File;
+using Core.Model.Validation;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +34,13 @@ namespace Core.Model.Actions.Responder
         /// <param name="logExtra"></param>
         /// <param name="ex"></param>
         void WithError(string userMessage, string logExtra = null, Exception ex = null);
+
+        /// <summary>
+        /// Return a binary file back to the browser.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="logExtra"></param>
+        void WithFile(IFileViewModel file, string logExtra = null);
 
         /// <summary>
         /// Create a response with an object.

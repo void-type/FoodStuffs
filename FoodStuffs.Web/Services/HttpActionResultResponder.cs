@@ -1,4 +1,5 @@
 using Core.Model.Actions.Responder;
+using Core.Model.Actions.Responses.File;
 using Core.Model.Actions.Responses.ItemSet;
 using Core.Model.Actions.Responses.Message;
 using Core.Model.Services.Logging;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace FoodStuffs.Web.Services
 {
@@ -28,6 +30,18 @@ namespace FoodStuffs.Web.Services
             {
                 StatusCode = 500
             };
+        }
+
+        public override void WithFile(IFileViewModel file, string logExtra = null)
+        {
+            var response = new FileContentResult(Encoding.UTF8.GetBytes(file.Content), "application/force-download")
+            {
+                FileDownloadName = file.Name
+            };
+
+            _logger.Info(logExtra, $"FileName: {file.Name}");
+
+            Response = response;
         }
 
         public override void WithItem<TItemType>(TItemType item, string logExtra = null)
