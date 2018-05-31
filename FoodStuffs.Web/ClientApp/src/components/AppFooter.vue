@@ -1,8 +1,8 @@
 <template>
     <footer>
-            <a href="https://github.com/void-type/foodstuffs">
-                FoodStuffs is open source!
-            </a>
+        <a href="https://github.com/void-type/foodstuffs">
+            FoodStuffs is open source!
+        </a>
     </footer>
 </template>
 
