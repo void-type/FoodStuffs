@@ -1,14 +1,14 @@
 <template>
     <footer>
-        <div>
             <a href="https://github.com/void-type/foodstuffs">
                 FoodStuffs is open source!
             </a>
-        </div>
     </footer>
 </template>
 
 <script>
+export default {
+};
 </script>
 
 <style lang="scss" scoped>
@@ -17,9 +17,6 @@
 footer {
   border-top: $border;
   padding: 1em 0em;
-
-  & div {
-    text-align: center;
-  }
+  text-align: center;
 }
 </style>
