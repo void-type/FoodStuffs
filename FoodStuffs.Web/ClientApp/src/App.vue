@@ -3,8 +3,10 @@
         <div id="no-print">
           <AppHeader />
           <AppMessageCenter></AppMessageCenter>
-          <main>
+          <main class="container">
+            <transition name="slide-fade">
               <router-view />
+            </transition>
           </main>
           <AppFooter />
         </div>
@@ -100,6 +102,13 @@ a:link {
   &:active {
     color: $color-secondary-dark;
   }
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 
 @media screen {
