@@ -3,6 +3,7 @@ using Core.Model.Services.Time;
 using Core.Services.Action;
 using Core.Services.Logging;
 using Core.Services.Time;
+using Core.Services.WebServerConfiguration;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Services.Data;
 using FoodStuffs.Services.EntityFramework;
@@ -23,7 +24,6 @@ namespace FoodStuffs.Web
             _configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsEnvironment("Development"))
@@ -38,7 +38,6 @@ namespace FoodStuffs.Web
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
-                // If an attribute route is not found, serve the home page.
                 routes.MapRoute(
                     name: "catch",
                     template: "{*url}",
@@ -46,20 +45,15 @@ namespace FoodStuffs.Web
             });
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
-            services.AddAntiforgery(options =>
-                options.HeaderName = "X-CSRF-TOKEN");
             services.AddSingleton(_configuration);
+            services.AddMvcAntiforgery();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
-            services.AddDbContext<FoodStuffsContext>(options =>
-                options.UseSqlServer(_configuration["FoodStuffsConnectionString"]));
+            services.AddFoodStuffsDbContext(_configuration);
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
         }
 
