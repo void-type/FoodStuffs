@@ -7,9 +7,11 @@ import SearchView from '../views/Search.vue';
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
+      alias: '/home',
       name: 'home',
       component: HomeView,
     },
@@ -22,6 +24,10 @@ export default new Router({
       path: '/search',
       name: 'search',
       component: SearchView,
+    },
+    {
+      path: '*',
+      redirect: {name: 'home'}
     },
   ],
 });

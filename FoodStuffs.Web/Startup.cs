@@ -38,7 +38,11 @@ namespace FoodStuffs.Web
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
-                routes.MapRoute("default", "{controller=Home}/{action=Index}");
+                // If an attribute route is not found, serve the home page.
+                routes.MapRoute(
+                    name: "catch",
+                    template: "{*url}",
+                    defaults: new {controller = "Home", action = "Index"});
             });
         }
 
