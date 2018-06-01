@@ -1,14 +1,12 @@
 <template>
     <div id="app">
         <div id="no-print">
-          <AppHeader />
-          <AppMessageCenter></AppMessageCenter>
-          <main class="container">
-            <transition name="slide-fade">
-              <router-view />
-            </transition>
-          </main>
-          <AppFooter />
+            <AppHeader />
+            <AppMessageCenter></AppMessageCenter>
+            <main class="container">
+                <router-view />
+            </main>
+            <AppFooter />
         </div>
         <div id="print-only">
             <RecipeViewer :currentRecipe="currentRecipe" />
