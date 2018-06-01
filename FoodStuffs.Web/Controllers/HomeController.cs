@@ -7,9 +7,8 @@ namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(IHostingEnvironment environment, IConfiguration configuration, IAntiforgery antiforgery)
+        public HomeController(IConfiguration configuration, IAntiforgery antiforgery)
         {
-            _environment = environment;
             _configuration = configuration;
             _antiforgery = antiforgery;
         }
@@ -30,6 +29,5 @@ namespace FoodStuffs.Web.Controllers
 
         private readonly IAntiforgery _antiforgery;
         private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _environment;
     }
 }
