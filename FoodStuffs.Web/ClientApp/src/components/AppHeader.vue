@@ -127,7 +127,7 @@ header {
       }
     }
   }
-  
+
   nav {
     background-color: $color-primary-dark;
     height: $topbar-height;
