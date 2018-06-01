@@ -21,6 +21,11 @@ export default {
   methods: {
     ...mapActions(['clearMessages']),
   },
+  watch: {
+    $route() {
+      this.clearMessages();
+    },
+  },
 };
 </script>
 
