@@ -22,6 +22,7 @@ COPY ./FoodStuffs.Services/FoodStuffs.Services.csproj ./FoodStuffs.Services/
 COPY ./FoodStuffs.Model/FoodStuffs.Model.csproj ./FoodStuffs.Model/
 COPY ./FoodStuffs.Web/FoodStuffs.Web.csproj ./FoodStuffs.Web/
 COPY ./FoodStuffs.Web/ClientApp/package.json ./FoodStuffs.Web/ClientApp/
+COPY ./FoodStuffs.Web/ClientApp/yarn.lock ./FoodStuffs.Web/ClientApp/
 
 # Restore dependencies.
 RUN dotnet restore && \
