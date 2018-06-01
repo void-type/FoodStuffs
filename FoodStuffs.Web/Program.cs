@@ -19,9 +19,11 @@ namespace FoodStuffs.Web
         {
             var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-            var logPath = isWindows ? "C:/WebAppLogs/" : "/webapplogs/";
-            var logFile = $"{logPath}FoodStuffs-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}_.log";
-
+            var logPath = isWindows ? "C:/WebAppLogs" : "/webapplogs";
+            var assemblyName = typeof(Program).Assembly.GetName().Name;
+            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var logFile = $"{logPath}/{assemblyName}-{environmentName}_.log";
+            
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
