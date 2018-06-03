@@ -1,14 +1,13 @@
 ﻿function Scaffold-FoodstuffsDbContext {
 	[CmdletBinding()]
 	param(
-		$Password
 	)
 
 	# Run this script from the root of the concrete services project.
 
 	$contextDirectory = "Data/EntityFramework"
 
-	$connectionString = Get-Content -Path "../FoodStuffs.Web/appSettings.Development.json" | ConvertFrom-Json | Select-Object -ExpandProperty ConnectionString
+	$connectionString = Get-Content -Path "../FoodStuffs.Web/appsettings.Development.json" | ConvertFrom-Json | Select-Object -ExpandProperty ConnectionString
 
 	# Build the models and context
 	dotnet ef dbcontext scaffold "$connectionString" Microsoft.EntityFrameworkCore.SqlServer -o "$contextDirectory" -f
