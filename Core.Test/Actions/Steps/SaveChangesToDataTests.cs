@@ -1,6 +1,6 @@
 using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
-using Core.Model.Services.Data;
+using Core.Model.Data;
 using Moq;
 using Xunit;
 

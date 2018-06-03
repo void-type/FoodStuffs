@@ -1,4 +1,4 @@
-﻿using Core.Model.Services.Data;
+﻿using Core.Model.Data;
 using FoodStuffs.Model.Data.Models;
 
 namespace FoodStuffs.Model.Data

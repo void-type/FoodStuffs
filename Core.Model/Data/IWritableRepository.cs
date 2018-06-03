@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Core.Model.Services.Data
+namespace Core.Model.Data
 {
     /// <summary>
     /// A persistent repository that can be modified.

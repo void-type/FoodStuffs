@@ -1,5 +1,5 @@
 ﻿using Core.Model.Actions.Responder;
-using Core.Model.Services.Data;
+using Core.Model.Data;
 
 namespace Core.Model.Actions.Steps
 {

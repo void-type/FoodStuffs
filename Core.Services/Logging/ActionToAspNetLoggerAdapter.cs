@@ -1,4 +1,4 @@
-using Core.Model.Services.Logging;
+using Core.Model.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;

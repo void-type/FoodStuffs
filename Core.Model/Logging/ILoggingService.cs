@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Model.Services.Logging
+namespace Core.Model.Logging
 {
     /// <summary>
     /// Common interface for logging within the model.

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Core.Model.Services.Data
+namespace Core.Model.Data
 {
     /// <summary>
     /// A persistent repository of objects that can be queried.

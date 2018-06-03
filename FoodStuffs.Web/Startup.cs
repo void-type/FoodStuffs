@@ -1,5 +1,5 @@
-using Core.Model.Services.Logging;
-using Core.Model.Services.Time;
+using Core.Model.Logging;
+using Core.Model.Time;
 using Core.Services.Action;
 using Core.Services.Logging;
 using Core.Services.Time;

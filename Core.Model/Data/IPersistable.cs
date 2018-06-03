@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Model.Services.Data
+namespace Core.Model.Data
 {
     /// <summary>
     /// Can save changes through a disposable connection to some form of persistence.

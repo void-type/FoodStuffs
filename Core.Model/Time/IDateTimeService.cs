@@ -1,4 +1,4 @@
-﻿namespace Core.Model.Services.Time
+﻿namespace Core.Model.Time
 {
     public interface IDateTimeService
     {
