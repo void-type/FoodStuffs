@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Services.WebServerConfiguration
+namespace Core.Services.Configuration
 {
-    public static class ServicesConfiguration
+    public static class ServiceCollectionExtensions
     {
         public static void AddMvcAntiforgery(this IServiceCollection services)
         {

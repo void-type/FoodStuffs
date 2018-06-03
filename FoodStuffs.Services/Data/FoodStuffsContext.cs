@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodStuffs.Services.EntityFramework
+namespace FoodStuffs.Services.Data
 {
     public partial class FoodStuffsContext : DbContext
     {

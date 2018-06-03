@@ -1,4 +1,4 @@
-﻿using Core.Services.EntityFramework;
+﻿using Core.Services.Data;
 using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

@@ -1,10 +1,11 @@
+using FoodStuffs.Services.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodStuffs.Services.EntityFramework
+namespace FoodStuffs.Services.Configuration
 {
-    public static class ServiceConfiguration
+    public static class ServiceCollectionExtensions
     {
         public static void AddFoodStuffsDbContext(this IServiceCollection services, IConfiguration configuration)
         {
