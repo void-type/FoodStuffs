@@ -1,3 +1,4 @@
+using Core.Services.Configuration;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +8,9 @@ namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(IConfiguration configuration, IAntiforgery antiforgery)
+        public HomeController(ApplicationSettings applicationSettings, IAntiforgery antiforgery)
         {
-            _configuration = configuration;
+            _applicationSettings = applicationSettings;
             _antiforgery = antiforgery;
         }
 
@@ -21,13 +22,13 @@ namespace FoodStuffs.Web.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.ApplicationName = _configuration["ApplicationName"];
+            ViewBag.ApplicationName = _applicationSettings.Name;
             ViewBag.RequestVerificationToken = _antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
 
             return View();
         }
 
         private readonly IAntiforgery _antiforgery;
-        private readonly IConfiguration _configuration;
+        private readonly ApplicationSettings _applicationSettings;
     }
 }

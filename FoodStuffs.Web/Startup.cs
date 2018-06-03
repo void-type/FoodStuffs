@@ -39,7 +39,7 @@ namespace FoodStuffs.Web
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "catch",
+                    name: "spa-fallback",
                     template: "{*url}",
                     defaults: new {controller = "Home", action = "Index"});
             });
@@ -47,13 +47,16 @@ namespace FoodStuffs.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(_configuration);
+            var applicationSettings = services.ConfigureSettings<ApplicationSettings>(_configuration);
+            services.AddSingleton(applicationSettings);
+
             services.AddMvcAntiforgery();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
             services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
             services.AddTransient<HttpActionResultResponder>();
-            services.AddFoodStuffsDbContext(_configuration);
+
+            services.AddFoodStuffsDbContext(applicationSettings);
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
         }
 
