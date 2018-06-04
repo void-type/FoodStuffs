@@ -1,19 +1,20 @@
 <template>
-    <table>
-        <thead v-if="title !== null">
-            <tr>
-                <th>{{title}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="recipe in recipes"
-                :key="recipe.id"
-                @click="selectClick(recipe)">
+  <table>
+    <thead v-if="title !== null">
+      <tr>
+        <th>{{ title }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        @click="selectClick(recipe)">
 
-                <td>{{recipe.name}}</td>
-            </tr>
-        </tbody>
-    </table>
+        <td>{{ recipe.name }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
@@ -26,6 +27,7 @@ export default {
     title: {
       type: String,
       required: false,
+      default: '',
     },
   },
   methods: {

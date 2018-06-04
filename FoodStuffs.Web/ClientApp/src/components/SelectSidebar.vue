@@ -1,16 +1,18 @@
 <template>
-    <div>
-        <button @click="newRecipe()">New</button>
+  <div>
+    <button @click="newRecipe()">New</button>
 
-        <SelectSidebarList :recipes="recentRecipes"
-                           :title="'Recent'"
-                           v-if="recentRecipes.length > 0"
-                           @selectRecipe="selectRecipe" />
+    <SelectSidebarList
+      v-if="recentRecipes.length > 0"
+      :recipes="recentRecipes"
+      :title="'Recent'"
+      @selectRecipe="selectRecipe" />
 
-        <SelectSidebarList :recipes="recipesList"
-                           :title="'Recipes'"
-                           @selectRecipe="selectRecipe" />
-    </div>
+    <SelectSidebarList
+      :recipes="recipesList"
+      :title="'Recipes'"
+      @selectRecipe="selectRecipe" />
+  </div>
 </template>
 
 <script>

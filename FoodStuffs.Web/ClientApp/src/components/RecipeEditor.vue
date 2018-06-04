@@ -1,74 +1,81 @@
 <template>
-    <form @keydown.ctrl.enter.prevent="saveRecipe(currentRecipe)">
-        <h1>Edit Recipe</h1>
-        <div class="form-row">
-            <div :class="{'form-group': true, danger: isFieldInError('name')}">
-                <input type="text"
-                       id="name"
-                       name="name"
-                       v-model="name" />
-                <label for="name">Name</label>
-            </div>
-        </div>
-        <div class="form-row">
-            <div :class="{'form-group': true, danger: isFieldInError('ingredients')}">
-                <textarea id="ingredients"
-                          name="ingredients"
-                          v-model="ingredients"></textarea>
-                <label for="ingredients">Ingredients</label>
-            </div>
-        </div>
-        <div class="form-row">
-            <div :class="{'form-group': true, danger: isFieldInError('directions')}">
-                <textarea id="directions"
-                          name="directions"
-                          v-model="directions"></textarea>
-                <label for="directions">Directions</label>
-            </div>
-        </div>
-        <div class="form-row">
-            <div :class="{'form-group': true, danger: isFieldInError('prepTimeMinutes')}">
-                <input type="number"
-                       id="prepTimeMinutes"
-                       name="prepTimeMinutes"
-                       v-model="prepTimeMinutes" />
-                <label for="prepTimeMinutes">Prep Time Minutes</label>
-            </div>
-            <div :class="{'form-group': true, danger: isFieldInError('cookTimeMinutes')}">
-                <input type="number"
-                       id="cookTimeMinutes"
-                       name="cookTimeMinutes"
-                       v-model="cookTimeMinutes" />
-                <label for="cookTimeMinutes">Cook Time Minutes</label>
-            </div>
-        </div>
-        <div class="form-row">
-            <TagEditor :class="{'form-group': true, danger: isFieldInError('categories')}"
-                       fieldName="categories"
-                       label="Categories"
-                       :tags="categories"
-                       @addTag="addCategoryToCurrentRecipe"
-                       @removeTag="removeCategoryFromCurrentRecipe" />
-        </div>
-        <div class="form-row button-row">
-            <button @click.prevent="saveRecipe(currentRecipe)">
-                Save
-            </button>
-            <button @click.prevent="cancelClick()">
-                Cancel
-            </button>
-            <button class="pull-right danger"
-                    @click.prevent="deleteRecipe(currentRecipe)">
-                Delete
-            </button>
-        </div>
-        <div v-if="currentRecipe.id">
-            Created By: {{currentRecipe.createdBy}}<br />
-            Created On: {{currentRecipe.createdOnUtc | utcToLocalDateString}}<br />
-            Modified By: {{currentRecipe.modifiedBy}}<br />
-            Modified On: {{currentRecipe.modifiedOnUtc | utcToLocalDateString}}
-        </div>
-    </form>
+  <form @keydown.ctrl.enter.prevent="saveRecipe(currentRecipe)">
+    <h1>Edit Recipe</h1>
+    <div class="form-row">
+      <div :class="{'form-group': true, danger: isFieldInError('name')}">
+        <input
+          id="name"
+          v-model="name"
+          type="text"
+          name="name" >
+        <label for="name">Name</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div :class="{'form-group': true, danger: isFieldInError('ingredients')}">
+        <textarea
+          id="ingredients"
+          v-model="ingredients"
+          name="ingredients"/>
+        <label for="ingredients">Ingredients</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div :class="{'form-group': true, danger: isFieldInError('directions')}">
+        <textarea
+          id="directions"
+          v-model="directions"
+          name="directions"/>
+        <label for="directions">Directions</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div :class="{'form-group': true, danger: isFieldInError('prepTimeMinutes')}">
+        <input
+          id="prepTimeMinutes"
+          v-model="prepTimeMinutes"
+          type="number"
+          name="prepTimeMinutes" >
+        <label for="prepTimeMinutes">Prep Time Minutes</label>
+      </div>
+      <div :class="{'form-group': true, danger: isFieldInError('cookTimeMinutes')}">
+        <input
+          id="cookTimeMinutes"
+          v-model="cookTimeMinutes"
+          type="number"
+          name="cookTimeMinutes" >
+        <label for="cookTimeMinutes">Cook Time Minutes</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <TagEditor
+        :class="{'form-group': true, danger: isFieldInError('categories')}"
+        :tags="categories"
+        field-name="categories"
+        label="Categories"
+        @addTag="addCategoryToCurrentRecipe"
+        @removeTag="removeCategoryFromCurrentRecipe" />
+    </div>
+    <div class="form-row button-row">
+      <button @click.prevent="saveRecipe(currentRecipe)">
+        Save
+      </button>
+      <button @click.prevent="cancelClick()">
+        Cancel
+      </button>
+      <button
+        class="pull-right danger"
+        @click.prevent="deleteRecipe(currentRecipe)">
+        Delete
+      </button>
+    </div>
+    <div v-if="currentRecipe.id">
+      Created By: {{ currentRecipe.createdBy }}<br >
+      Created On: {{ currentRecipe.createdOnUtc | utcToLocalDateString }}<br >
+      Modified By: {{ currentRecipe.modifiedBy }}<br >
+      Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}
+    </div>
+  </form>
 </template>
 
 <script>

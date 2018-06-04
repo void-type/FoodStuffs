@@ -1,19 +1,21 @@
 <template>
   <div>
     <div class="pages">
-        <span v-for="pageNumber in numberOfPages"
-              :key="pageNumber"
-              :class="{currentPage: pageNumber === page}"
-              @click="requestPage(pageNumber)">
-          {{pageNumber}}
-        </span>
+      <span
+        v-for="pageNumber in numberOfPages"
+        :key="pageNumber"
+        :class="{currentPage: pageNumber === page}"
+        @click="requestPage(pageNumber)">
+        {{ pageNumber }}
+      </span>
     </div>
     <div>
-      <input type="number"
-             min="1"
-             name="take"
-             id="take"
-             v-model="takeEditor" />
+      <input
+        id="take"
+        v-model="takeEditor"
+        type="number"
+        min="1"
+        name="take" >
     </div>
   </div>
 </template>

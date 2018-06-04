@@ -1,23 +1,26 @@
 <template>
-    <section>
-        <SearchControls :nameSearch="nameSearch"
-                        :categorySearch="categorySearch"
-                        @updateNameSearch="updateNameSearch"
-                        @updateCategorySearch="updateCategorySearch"
-                        @search="requestSearch"
-                        @clear="clearSearch" />
+  <section>
+    <SearchControls
+      :name-search="nameSearch"
+      :category-search="categorySearch"
+      @updateNameSearch="updateNameSearch"
+      @updateCategorySearch="updateCategorySearch"
+      @search="requestSearch"
+      @clear="clearSearch" />
 
-        <SearchTable :recipes="recipesList"
-                     :selectedNameSortType="recipesSearchParametersSortType"
-                     @selectRecipe="selectRecipe"
-                     @cycleSelectedNameSortType="cycleSelectedNameSortType" />
+    <SearchTable
+      :recipes="recipesList"
+      :selected-name-sort-type="recipesSearchParametersSortType"
+      @selectRecipe="selectRecipe"
+      @cycleSelectedNameSortType="cycleSelectedNameSortType" />
 
-        <Pager :page="page"
-                          :take="take"
-                          :totalCount="recipesListTotalCount"
-                          @updateTake="updateTake"
-                          @requestPage="requestPage" />
-    </section>
+    <Pager
+      :page="page"
+      :take="take"
+      :total-count="recipesListTotalCount"
+      @updateTake="updateTake"
+      @requestPage="requestPage" />
+  </section>
 </template>
 
 <script>

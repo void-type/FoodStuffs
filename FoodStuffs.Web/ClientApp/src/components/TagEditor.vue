@@ -1,29 +1,32 @@
 <template>
+  <div>
     <div>
-        <div>
-            <div class="tags">
-                <span v-for="tag in tags" :key="tag">
-                    {{tag}}&nbsp;&nbsp;
-                    <span @click="removeTagClick(tag)">
-                        &#x2716;
-                    </span>
-                </span>
-            </div>
-        </div>
-
-        <div>
-            <input type="text"
-                   v-model="newTagName"
-                   :id="fieldName"
-                   :name="fieldName"
-                   @keydown.enter.prevent="addTagClick()" />
-            <button @click.prevent="addTagClick()">
-                Add
-            </button>
-        </div>
-
-        <label :for="fieldName">{{label}}</label>
+      <div class="tags">
+        <span
+          v-for="tag in tags"
+          :key="tag">
+          {{ tag }}&nbsp;&nbsp;
+          <span @click="removeTagClick(tag)">
+            &#x2716;
+          </span>
+        </span>
+      </div>
     </div>
+
+    <div>
+      <input
+        v-model="newTagName"
+        :id="fieldName"
+        :name="fieldName"
+        type="text"
+        @keydown.enter.prevent="addTagClick()" >
+      <button @click.prevent="addTagClick()">
+        Add
+      </button>
+    </div>
+
+    <label :for="fieldName">{{ label }}</label>
+  </div>
 </template>
 
 <script>

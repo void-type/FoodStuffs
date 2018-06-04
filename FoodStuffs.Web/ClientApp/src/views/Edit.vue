@@ -1,8 +1,8 @@
 <template>
-    <section>
-        <SelectSidebar />
-        <RecipeEditor />
-    </section>
+  <section>
+    <SelectSidebar />
+    <RecipeEditor />
+  </section>
 </template>
 
 <script>

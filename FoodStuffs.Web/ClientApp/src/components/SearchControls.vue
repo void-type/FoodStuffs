@@ -1,34 +1,36 @@
 <template>
-    <form>
-        <div class="form-row">
-            <div class="form-group">
-                <input type="text"
-                       id="nameSearch"
-                       name="nameSearch"
-                       :value="nameSearch"
-                       @input="updateNameSearch($event.target.value)" />
-                <label for="nameSearch">Name Contains</label>
-            </div>
-            <div class="form-group">
-                <input type="text"
-                       id="categorySearch"
-                       name="categorySearch"
-                       :value="categorySearch"
-                       @input="updateCategorySearch($event.target.value)" />
-                <label for="categorySearch">Categories Contain</label>
-            </div>
-            <div class="form-group button-group">
-                <div>
-                    <button @click.prevent="search()">
-                        Search
-                    </button>
-                    <button @click.prevent="clear()">
-                        Clear All
-                    </button>
-                </div>
-            </div>
+  <form>
+    <div class="form-row">
+      <div class="form-group">
+        <input
+          id="nameSearch"
+          :value="nameSearch"
+          type="text"
+          name="nameSearch"
+          @input="updateNameSearch($event.target.value)" >
+        <label for="nameSearch">Name Contains</label>
+      </div>
+      <div class="form-group">
+        <input
+          id="categorySearch"
+          :value="categorySearch"
+          type="text"
+          name="categorySearch"
+          @input="updateCategorySearch($event.target.value)" >
+        <label for="categorySearch">Categories Contain</label>
+      </div>
+      <div class="form-group button-group">
+        <div>
+          <button @click.prevent="search()">
+            Search
+          </button>
+          <button @click.prevent="clear()">
+            Clear All
+          </button>
         </div>
-    </form>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script>

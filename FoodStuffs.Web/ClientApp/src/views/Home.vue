@@ -1,8 +1,8 @@
 <template>
-    <section>
-        <SelectSidebar />
-        <RecipeViewer :currentRecipe="currentRecipe" />
-    </section>
+  <section>
+    <SelectSidebar />
+    <RecipeViewer :current-recipe="currentRecipe" />
+  </section>
 </template>
 
 <script>

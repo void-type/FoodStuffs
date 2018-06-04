@@ -1,17 +1,17 @@
 <template>
-    <div id="app">
-        <div id="no-print">
-            <AppHeader />
-            <AppMessageCenter></AppMessageCenter>
-            <main class="container">
-                <router-view />
-            </main>
-            <AppFooter />
-        </div>
-        <div id="print-only">
-            <RecipeViewer :currentRecipe="currentRecipe" />
-        </div>
+  <div id="app">
+    <div id="no-print">
+      <AppHeader />
+      <AppMessageCenter/>
+      <main class="container">
+        <router-view />
+      </main>
+      <AppFooter />
     </div>
+    <div id="print-only">
+      <RecipeViewer :current-recipe="currentRecipe" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -35,11 +35,11 @@ export default {
   computed: {
     ...mapGetters(['currentRecipe']),
   },
-  methods: {
-    ...mapActions(['fetchRecipes']),
-  },
   beforeMount() {
     this.fetchRecipes();
+  },
+  methods: {
+    ...mapActions(['fetchRecipes']),
   },
 };
 </script>

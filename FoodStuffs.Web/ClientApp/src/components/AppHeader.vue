@@ -1,41 +1,47 @@
 <template>
-<header>
-  <div class="container">
-    <router-link class="logo"
-                  :to="{name: 'home'}">
-        <img src="../assets/logo.png"
-              alt="FoodStuffs logo" />
-        <span>{{applicationName}}</span>
-    </router-link>
-    <nav>
+  <header>
+    <div class="container">
+      <router-link
+        :to="{name: 'home'}"
+        class="logo">
+        <img
+          src="../assets/logo.png"
+          alt="FoodStuffs logo" >
+        <span>{{ applicationName }}</span>
+      </router-link>
+      <nav>
         <ul>
-            <li>
-                <router-link :to="{name: 'home'}"
-                              :class="{'current-page': $route.name === 'home'}">
-                    Home
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'edit'}"
-                              :class="{'current-page': $route.name === 'edit'}">
-                    Edit
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'search'}"
-                              :class="{'current-page': $route.name === 'search'}">
-                    Search
-                </router-link>
-            </li>
+          <li>
+            <router-link
+              :to="{name: 'home'}"
+              :class="{'current-page': $route.name === 'home'}">
+              Home
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              :to="{name: 'edit'}"
+              :class="{'current-page': $route.name === 'edit'}">
+              Edit
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              :to="{name: 'search'}"
+              :class="{'current-page': $route.name === 'search'}">
+              Search
+            </router-link>
+          </li>
         </ul>
-    </nav>
-    <router-link :to="{name: 'home'}"
-                  :class="{'current-page': $route.name === 'login',
-                          'pull-right': true}">
+      </nav>
+      <router-link
+        :to="{name: 'home'}"
+        :class="{'current-page': $route.name === 'login',
+                 'pull-right': true}">
         Login
-    </router-link>
-  </div>
-</header>
+      </router-link>
+    </div>
+  </header>
 </template>
 
 <script>
@@ -45,12 +51,12 @@ export default {
   computed: {
     ...mapGetters(['applicationName']),
   },
-  methods: {
-    ...mapActions(['fetchApplicationName']),
-  },
   mounted() {
     this.fetchApplicationName();
     document.title = this.applicationName;
+  },
+  methods: {
+    ...mapActions(['fetchApplicationName']),
   },
 };
 </script>

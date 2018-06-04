@@ -1,14 +1,16 @@
 <template>
-    <div v-if="messages.length > 0"
-         :class="{messages: true, danger: messageIsError}"
-         @click="clearMessages()">
-        <ul>
-            <li v-for="message in messages"
-                :key="message">
-                {{message}}
-            </li>
-        </ul>
-    </div>
+  <div
+    v-if="messages.length > 0"
+    :class="{messages: true, danger: messageIsError}"
+    @click="clearMessages()">
+    <ul>
+      <li
+        v-for="message in messages"
+        :key="message">
+        {{ message }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -18,13 +20,13 @@ export default {
   computed: {
     ...mapGetters(['messages', 'messageIsError']),
   },
-  methods: {
-    ...mapActions(['clearMessages']),
-  },
   watch: {
     $route() {
       this.clearMessages();
     },
+  },
+  methods: {
+    ...mapActions(['clearMessages']),
   },
 };
 </script>

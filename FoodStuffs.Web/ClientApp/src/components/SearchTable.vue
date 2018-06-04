@@ -1,24 +1,26 @@
 <template>
-    <table>
-        <thead>
-            <tr>
-                <th class="sortable-header"
-                    @click="sortByNameClick()">
-                    Name &nbsp;
-                    <span v-html="selectedNameSortType.symbol"></span>
-                </th>
-                <th>Category</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="recipe in recipes"
-                :key="recipe.id"
-                @click="selectClick(recipe)">
-                <td>{{recipe.name}}</td>
-                <td>{{recipe.categories.join(", ")}}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th
+          class="sortable-header"
+          @click="sortByNameClick()">
+          Name &nbsp;
+          <span v-html="selectedNameSortType.symbol"/>
+        </th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        @click="selectClick(recipe)">
+        <td>{{ recipe.name }}</td>
+        <td>{{ recipe.categories.join(", ") }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
