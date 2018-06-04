@@ -1,9 +1,9 @@
 using Core.Model.Logging;
 using Core.Model.Time;
 using Core.Services.Action;
+using Core.Services.Configuration;
 using Core.Services.Logging;
 using Core.Services.Time;
-using Core.Services.Configuration;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Services.Configuration;
 using FoodStuffs.Services.Data;
@@ -26,7 +26,7 @@ namespace FoodStuffs.Web
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsEnvironment("Development"))
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -41,7 +41,7 @@ namespace FoodStuffs.Web
                 routes.MapRoute(
                     name: "spa-fallback",
                     template: "{*url}",
-                    defaults: new {controller = "Home", action = "Index"});
+                    defaults : new { controller = "Home", action = "Index" });
             });
         }
 
