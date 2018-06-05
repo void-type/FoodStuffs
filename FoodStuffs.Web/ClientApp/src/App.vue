@@ -70,12 +70,16 @@ main {
   max-width: $contained-width;
 }
 
-main > section {
-  display: flex;
-  padding: 2em 0;
+main {
+  display: block;
 
-  & > *:not(:last-child) {
-    margin-right: 2em;
+  & > section {
+    display: flex;
+    padding: 2em 0;
+
+    & > *:not(:last-child) {
+      margin-right: 2em;
+    }
   }
 }
 
