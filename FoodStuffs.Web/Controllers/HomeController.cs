@@ -8,12 +8,6 @@ namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(ApplicationSettings applicationSettings, IAntiforgery antiforgery)
-        {
-            _applicationSettings = applicationSettings;
-            _antiforgery = antiforgery;
-        }
-
         [Route("/Error")]
         public IActionResult Error()
         {
@@ -22,13 +16,7 @@ namespace FoodStuffs.Web.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.ApplicationName = _applicationSettings.Name;
-            ViewBag.RequestVerificationToken = _antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
-
             return View();
         }
-
-        private readonly IAntiforgery _antiforgery;
-        private readonly ApplicationSettings _applicationSettings;
     }
 }

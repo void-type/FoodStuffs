@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default {
   onFailure(context, response) {
     context.commit('setMessageIsError', true);
@@ -23,5 +25,15 @@ export default {
     context.dispatch('fetchRecipes', data.id);
     context.commit('setMessageIsError', false);
     context.commit('setMessage', data.message);
+  },
+
+  setRequestVerificationToken(csrfToken) {
+    const headers = {
+      'X-CSRF-TOKEN': csrfToken,
+      'X-Requested-With': 'XMLHttpRequest',
+    };
+    axios.defaults.headers.post = headers;
+    axios.defaults.headers.put = headers;
+    axios.defaults.headers.delete = headers;
   },
 };

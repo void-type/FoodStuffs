@@ -1,13 +1,22 @@
 import trimAndCapitalize from '../filters/trimAndCapitalize';
-import applicationNameApi from '../models/applicationNameApi';
 import Recipe from '../models/recipe';
+import applicationInfoApi from '../models/applicationInfoApi';
 import recipeApi from '../models/recipeApi';
 import sortTypes from '../models/recipeSearchSortTypes';
 import webApiCallbacks from '../models/webApiCallbacks';
 
 export default {
-  fetchApplicationName(context) {
-    context.commit('setApplicationName', applicationNameApi.applicationName);
+  fetchApplicationInfo(context) {
+    applicationInfoApi.fetchApplicationInfo(
+      (data) => {
+        context.commit('setApplicationName', data.applicationName);
+        context.commit('setUserName', data.userName);
+        webApiCallbacks.setRequestVerificationToken(data.antiforgeryToken);
+      },
+      (response) => {
+        webApiCallbacks.onFailure(context, response);
+      },
+    );
   },
 
   fetchRecipes(context, postbackId) {

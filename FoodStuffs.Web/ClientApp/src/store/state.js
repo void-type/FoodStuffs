@@ -3,6 +3,7 @@ import RecipesSearchParameters from '../models/recipesSearchParameters';
 
 export default {
   applicationName: '',
+  userName: '',
   currentRecipe: new Recipe(),
   fieldsInError: [],
   messages: [],

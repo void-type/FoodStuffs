@@ -5,6 +5,10 @@ export default {
     return state.applicationName;
   },
 
+  userName(state) {
+    return state.userName;
+  },
+
   currentRecipe(state) {
     return state.currentRecipe;
   },

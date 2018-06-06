@@ -52,11 +52,11 @@ export default {
     ...mapGetters(['applicationName']),
   },
   mounted() {
-    this.fetchApplicationName();
+    this.fetchApplicationInfo();
     document.title = this.applicationName;
   },
   methods: {
-    ...mapActions(['fetchApplicationName']),
+    ...mapActions(['fetchApplicationInfo']),
   },
 };
 </script>

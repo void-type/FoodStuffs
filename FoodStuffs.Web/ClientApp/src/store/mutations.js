@@ -4,6 +4,10 @@ export default {
     state.applicationName = appName;
   },
 
+  setUserName(state, userName) {
+    state.userName = userName;
+  },
+
   setCurrentRecipe(state, recipe) {
     state.currentRecipe = recipe;
   },
