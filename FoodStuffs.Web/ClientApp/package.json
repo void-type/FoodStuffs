@@ -1,6 +1,6 @@
 {
   "name": "foodstuffs",
-  "version": "1.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "watch": "vue-cli-service build-watch --mode 'development'",
@@ -17,19 +17,19 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-beta.10",
-    "@vue/cli-plugin-eslint": "^3.0.0-beta.10",
-    "@vue/cli-plugin-pwa": "^3.0.0-beta.10",
-    "@vue/cli-plugin-unit-jest": "^3.0.0-beta.10",
-    "@vue/cli-service": "^3.0.0-beta.10",
-    "@vue/eslint-config-airbnb": "^3.0.0-beta.10",
-    "@vue/test-utils": "^1.0.0-beta.10",
-    "babel-core": "^7.0.0-0",
-    "babel-jest": "^22.0.4",
-    "node-sass": "^4.7.2",
-    "sass-loader": "^6.0.6",
+    "@vue/cli-plugin-babel": "^3.0.0-beta.15",
+    "@vue/cli-plugin-eslint": "^3.0.0-beta.15",
+    "@vue/cli-plugin-unit-jest": "^3.0.0-beta.15",
+    "@vue/cli-service": "^3.0.0-beta.15",
+    "@vue/eslint-config-airbnb": "^3.0.0-beta.15",
+    "@vue/test-utils": "^1.0.0-beta.16",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^22.4.3",
+    "lint-staged": "^6.0.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
     "vue-cli-plugin-build-watch": "^1.0.0",
-    "vue-template-compiler": "^2.5.13"
+    "vue-template-compiler": "^2.5.16"
   },
   "babel": {
     "presets": [
@@ -38,10 +38,17 @@
   },
   "eslintConfig": {
     "root": true,
+    "env": {
+      "node": true
+    },
     "extends": [
       "plugin:vue/recommended",
       "@vue/airbnb"
-    ]
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
   },
   "postcss": {
     "plugins": {
@@ -75,6 +82,17 @@
       "<rootDir>/(tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx))"
     ]
   },
-  "author": "Jeff Schreiner <jeff.s.schreiner@gmail.com>",
-  "description": "A recipe management application."
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
 }
