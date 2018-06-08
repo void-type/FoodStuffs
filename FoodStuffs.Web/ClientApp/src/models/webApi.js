@@ -13,17 +13,8 @@ export default {
     }
   },
 
-  onFetchListSuccess(context, data, postbackId) {
-    context.dispatch('setRecipesList', data);
-    if (postbackId > 0) {
-      const selectedRecipe = context.getters.findRecipeById(postbackId);
-      context.dispatch('setCurrentRecipe', selectedRecipe);
-    }
-  },
-
   onSuccess(context, data) {
-    context.dispatch('fetchRecipes', data.id);
-    context.commit('setMessageIsError', false);
+    context.dispatch('clearMessages');
     context.commit('setMessage', data.message);
   },
 

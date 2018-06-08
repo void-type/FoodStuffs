@@ -28,20 +28,25 @@ namespace FoodStuffs.Model.Queries
 
         public static IEnumerable<IRecipeViewModel> ToViewModels(this IEnumerable<Recipe> recipes)
         {
-            return recipes.Select(r => new RecipeViewModel
+            return recipes.Select(r => r.ToViewModel());
+        }
+
+        public static IRecipeViewModel ToViewModel(this Recipe recipe)
+        {
+            return new RecipeViewModel
             {
-                Id = r.Id,
-                Name = r.Name,
-                Directions = r.Directions,
-                Ingredients = r.Ingredients,
-                CookTimeMinutes = r.CookTimeMinutes,
-                PrepTimeMinutes = r.PrepTimeMinutes,
-                CreatedBy = $"{r.CreatedByUser?.FirstName} {r.CreatedByUser?.LastName}",
-                CreatedOnUtc = r.CreatedOnUtc,
-                ModifiedBy = $"{r.ModifiedByUser?.FirstName} {r.ModifiedByUser?.LastName}",
-                ModifiedOnUtc = r.ModifiedOnUtc,
-                Categories = r.CategoryRecipe.Select(cr => cr.Category.Name)
-            });
+                Id = recipe.Id,
+                Name = recipe.Name,
+                Directions = recipe.Directions,
+                Ingredients = recipe.Ingredients,
+                CookTimeMinutes = recipe.CookTimeMinutes,
+                PrepTimeMinutes = recipe.PrepTimeMinutes,
+                CreatedBy = $"{recipe.CreatedByUser?.FirstName} {recipe.CreatedByUser?.LastName}",
+                CreatedOnUtc = recipe.CreatedOnUtc,
+                ModifiedBy = $"{recipe.ModifiedByUser?.FirstName} {recipe.ModifiedByUser?.LastName}",
+                ModifiedOnUtc = recipe.ModifiedOnUtc,
+                Categories = recipe.CategoryRecipe.Select(cr => cr.Category.Name)
+            };
         }
     }
 }

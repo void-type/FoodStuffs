@@ -146,13 +146,13 @@ export default {
   methods: {
     ...mapActions([
       'deleteRecipe',
-      'fetchRecipes',
+      'fetchRecipesList',
       'saveRecipe',
       'addCategoryToRecipe',
       'removeCategoryFromRecipe',
     ]),
     cancelClick() {
-      this.fetchRecipes(this.currentRecipe.id);
+      this.fetchRecipesList(this.currentRecipe.id);
       this.$router.push({ name: 'home' });
     },
     addCategoryToCurrentRecipe(categoryName) {

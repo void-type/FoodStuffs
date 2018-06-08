@@ -36,10 +36,10 @@ export default {
     ...mapGetters(['currentRecipe']),
   },
   beforeMount() {
-    this.fetchRecipes();
+    this.fetchRecipesList();
   },
   methods: {
-    ...mapActions(['fetchRecipes']),
+    ...mapActions(['fetchRecipesList']),
   },
 };
 </script>

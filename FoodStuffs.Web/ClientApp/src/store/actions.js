@@ -3,36 +3,62 @@ import Recipe from '../models/recipe';
 import applicationInfoApi from '../models/applicationInfoApi';
 import recipeApi from '../models/recipeApi';
 import sortTypes from '../models/recipeSearchSortTypes';
-import webApiCallbacks from '../models/webApiCallbacks';
+import webApi from '../models/webApi';
 
 export default {
+  clearMessages(context) {
+    context.commit('setMessageIsError', false);
+    context.commit('setFieldsInError', []);
+    context.commit('setMessages', []);
+  },
+
   fetchApplicationInfo(context) {
     applicationInfoApi.fetchApplicationInfo(
       (data) => {
         context.commit('setApplicationName', data.applicationName);
         context.commit('setUserName', data.userName);
-        webApiCallbacks.setRequestVerificationToken(data.antiforgeryToken);
+        webApi.setRequestVerificationToken(data.antiforgeryToken);
       },
       (response) => {
-        webApiCallbacks.onFailure(context, response);
+        webApi.onFailure(context, response);
       },
     );
   },
 
-  fetchRecipes(context, postbackId) {
+  fetchRecipe(context, id) {
+    recipeApi.getRecipe(
+      id,
+      (data) => {
+        context.dispatch('setCurrentRecipe', data);
+      },
+      response => webApi.onFailure(context, response),
+    );
+  },
+
+  fetchRecipesList(context, postbackId) {
     recipeApi.listRecipes(
       context.state.recipesSearchParameters,
-      data => webApiCallbacks.onFetchListSuccess(context, data, postbackId),
-      response => webApiCallbacks.onFailure(context, response),
+      (data) => {
+        context.dispatch('setRecipesList', data);
+        if (postbackId > 0) {
+          const selectedRecipe = context.getters.findRecipeById(postbackId);
+          context.dispatch('setCurrentRecipe', selectedRecipe);
+        }
+      },
+      response => webApi.onFailure(context, response),
     );
   },
 
   deleteRecipe(context, recipe) {
     context.dispatch('clearMessages');
+
     recipeApi.deleteRecipe(
       recipe,
-      data => webApiCallbacks.onSuccess(context, data),
-      response => webApiCallbacks.onFailure(context, response),
+      (data) => {
+        context.dispatch('fetchRecipesList', data.id);
+        webApi.onSuccess(context, data);
+      },
+      response => webApi.onFailure(context, response),
     );
   },
 
@@ -42,15 +68,31 @@ export default {
     if (recipe.id === undefined || recipe.id < 1) {
       recipeApi.createRecipe(
         recipe,
-        data => webApiCallbacks.onSuccess(context, data),
-        response => webApiCallbacks.onFailure(context, response),
+        (data) => {
+          context.dispatch('fetchRecipesList', data.id);
+          webApi.onSuccess(context, data);
+        },
+        response => webApi.onFailure(context, response),
       );
     } else {
       recipeApi.updateRecipe(
         recipe,
-        data => webApiCallbacks.onSuccess(context, data),
-        response => webApiCallbacks.onFailure(context, response),
+        (data) => {
+          context.dispatch('fetchRecipesList', data.id);
+          webApi.onSuccess(context, data);
+        },
+        response => webApi.onFailure(context, response),
       );
+    }
+  },
+
+  selectRecipe(context, recipe) {
+    context.dispatch('clearMessages');
+
+    if (recipe && recipe.id !== undefined) {
+      context.dispatch('fetchRecipe', recipe.id);
+    } else {
+      context.dispatch('setCurrentRecipe');
     }
   },
 
@@ -79,9 +121,24 @@ export default {
     context.commit('setRecipeCookTimeMinutes', { recipe, value });
   },
 
-  selectRecipe(context, recipe) {
-    context.dispatch('clearMessages');
-    context.dispatch('setCurrentRecipe', recipe);
+  addCategoryToRecipe(context, { recipe, categoryName }) {
+    const cleanedCategoryName = trimAndCapitalize(categoryName);
+
+    const categoryDoesNotExist = recipe.categories
+      .map(value => value.toUpperCase())
+      .indexOf(categoryName.toUpperCase()) < 0;
+
+    if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
+      context.commit('addCategoryToRecipe', { recipe, cleanedCategoryName });
+    }
+  },
+
+  removeCategoryFromRecipe(context, { recipe, categoryName }) {
+    const categoryIndex = recipe.categories.indexOf(categoryName);
+
+    if (categoryIndex > -1) {
+      context.commit('removeCategoryFromRecipe', { recipe, categoryIndex });
+    }
   },
 
   addRecipeToRecents(context, recipe) {
@@ -102,26 +159,6 @@ export default {
       recentRecipeIds.pop();
     }
     context.commit('setRecentRecipeIds', recentRecipeIds);
-  },
-
-  addCategoryToRecipe(context, { recipe, categoryName }) {
-    const cleanedCategoryName = trimAndCapitalize(categoryName);
-
-    const categoryDoesNotExist = recipe.categories
-      .map(value => value.toUpperCase())
-      .indexOf(categoryName.toUpperCase()) < 0;
-
-    if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
-      context.commit('addCategoryToRecipe', { recipe, cleanedCategoryName });
-    }
-  },
-
-  removeCategoryFromRecipe(context, { recipe, categoryName }) {
-    const categoryIndex = recipe.categories.indexOf(categoryName);
-
-    if (categoryIndex > -1) {
-      context.commit('removeCategoryFromRecipe', { recipe, categoryIndex });
-    }
   },
 
   setRecipesList(context, data) {
@@ -152,12 +189,6 @@ export default {
     const newSortId = (currentSortId + 1) % sortTypes.length;
     const newSortName = sortTypes[newSortId].name;
     context.commit('setRecipesSearchParametersSort', newSortName);
-    context.dispatch('fetchRecipes');
-  },
-
-  clearMessages(context) {
-    context.commit('setMessageIsError', false);
-    context.commit('setFieldsInError', []);
-    context.commit('setMessages', []);
+    context.dispatch('fetchRecipesList');
   },
 };

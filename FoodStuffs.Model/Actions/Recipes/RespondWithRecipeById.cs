@@ -1,6 +1,7 @@
 ﻿using Core.Model.Actions.Responder;
 using Core.Model.Actions.Steps;
 using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Queries;
 using System.Linq;
 
 namespace FoodStuffs.Model.Actions.Recipes
@@ -24,7 +25,7 @@ namespace FoodStuffs.Model.Actions.Recipes
                 return;
             }
 
-            respond.WithItem(savedRecipe);
+            respond.WithItem(savedRecipe.ToViewModel());
         }
 
         private readonly IFoodStuffsData _data;

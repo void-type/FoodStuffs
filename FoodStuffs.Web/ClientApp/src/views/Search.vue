@@ -78,21 +78,21 @@ export default {
   methods: {
     ...mapActions([
       'selectRecipe',
-      'fetchRecipes',
+      'fetchRecipesList',
       'cycleSelectedNameSortType',
     ]),
     requestPage(pageNumber) {
       this.page = pageNumber;
-      this.fetchRecipes();
+      this.fetchRecipesList();
     },
     requestSearch() {
-      this.fetchRecipes();
+      this.fetchRecipesList();
     },
     clearSearch() {
       this.nameSearch = '';
       this.categorySearch = '';
       this.page = 1;
-      this.fetchRecipes();
+      this.fetchRecipesList();
     },
     updateNameSearch(value) {
       this.nameSearch = value;

@@ -22,7 +22,7 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpPut]
-        public IActionResult Create([FromBody]RecipeViewModel viewModel)
+        public IActionResult Create([FromBody] RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
                 .Execute(new Validate<IRecipeViewModel>(new RecipeViewModelValidator(), viewModel))
@@ -40,7 +40,7 @@ namespace FoodStuffs.Web.Controllers.Api
             return _responder.Response;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public IActionResult Get(int id)
         {
             new ActionChain(_responder)
@@ -53,19 +53,21 @@ namespace FoodStuffs.Web.Controllers.Api
         [HttpGet]
         public IActionResult List(string nameSearch = null, string categorySearch = null, string sort = null, int take = int.MaxValue, int page = 1)
         {
-            var context = new List<IRecipeViewModel>();
+            var recipesContext = new List<IRecipeViewModel>();
+            var listContext = new List<IRecipeListItem>();
             var logExtra = $"NameSearch: {nameSearch}, CategorySearch: {categorySearch}, Sort: {sort}";
 
             new ActionChain(_responder)
-                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, context))
-                .Execute(new SortRecipes(sort, context))
-                .Execute(new RespondWithPaginatedSet<IRecipeViewModel>(context, take, page, logExtra));
+                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, recipesContext))
+                .Execute(new SortRecipes(sort, recipesContext))
+                .Execute(new ConvertRecipesToListItems(recipesContext, listContext))
+                .Execute(new RespondWithPaginatedSet<IRecipeListItem>(listContext, take, page, logExtra));
 
             return _responder.Response;
         }
 
         [HttpPost]
-        public IActionResult Update([FromBody]RecipeViewModel viewModel)
+        public IActionResult Update([FromBody] RecipeViewModel viewModel)
         {
             new ActionChain(_responder)
                 .Execute(new Validate<IRecipeViewModel>(new RecipeViewModelValidator(), viewModel))
