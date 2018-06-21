@@ -35,15 +35,11 @@ export default {
     );
   },
 
-  fetchRecipesList(context, postbackId) {
+  fetchRecipesList(context) {
     recipeApi.listRecipes(
       context.state.recipesSearchParameters,
       (data) => {
         context.dispatch('setRecipesList', data);
-        if (postbackId > 0) {
-          const selectedRecipe = context.getters.findRecipeById(postbackId);
-          context.dispatch('setCurrentRecipe', selectedRecipe);
-        }
       },
       response => webApi.onFailure(context, response),
     );
@@ -54,10 +50,7 @@ export default {
 
     recipeApi.deleteRecipe(
       recipe,
-      (data) => {
-        context.dispatch('fetchRecipesList', data.id);
-        webApi.onSuccess(context, data);
-      },
+      data => webApi.onSuccess(context, data),
       response => webApi.onFailure(context, response),
     );
   },
@@ -69,7 +62,7 @@ export default {
       recipeApi.createRecipe(
         recipe,
         (data) => {
-          context.dispatch('fetchRecipesList', data.id);
+          context.dispatch('fetchRecipe', data.id);
           webApi.onSuccess(context, data);
         },
         response => webApi.onFailure(context, response),
@@ -78,7 +71,7 @@ export default {
       recipeApi.updateRecipe(
         recipe,
         (data) => {
-          context.dispatch('fetchRecipesList', data.id);
+          context.dispatch('fetchRecipe', data.id);
           webApi.onSuccess(context, data);
         },
         response => webApi.onFailure(context, response),
