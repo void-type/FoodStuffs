@@ -55,7 +55,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var recipesContext = new List<IRecipeViewModel>();
             var listContext = new List<IRecipeListItem>();
-            var logExtra = $"NameSearch: {nameSearch}, CategorySearch: {categorySearch}, Sort: {sort}";
+            var logExtra = $"NameSearch: {nameSearch}, CategorySearch: {categorySearch}, Sort: {sort}, Take: {take}, Page: {page}";
 
             new ActionChain(_responder)
                 .Execute(new SearchRecipes(_data, nameSearch, categorySearch, recipesContext))
