@@ -25,16 +25,17 @@ COPY ./FoodStuffs.Web/ClientApp/package.json ./FoodStuffs.Web/ClientApp/
 COPY ./FoodStuffs.Web/ClientApp/yarn.lock ./FoodStuffs.Web/ClientApp/
 
 # Restore dependencies.
-RUN dotnet restore && \
-    cd FoodStuffs.Web/ClientApp && \
+RUN dotnet restore
+RUN cd FoodStuffs.Web/ClientApp && \
     yarn
 
-# Copy everything to the build container, build the app.
+# Copy everything to the build container
 COPY ./ ./
+
+# Build the app
 RUN cd FoodStuffs.Web/ClientApp && \
-    yarn build && \
-    cd ../../ && \
-    dotnet publish FoodStuffs.Web -c Release -o out
+    yarn build
+RUN dotnet publish FoodStuffs.Web -c Release -o out
 
 # Copy /out from the build container to the run container
 FROM microsoft/aspnetcore:2.0
