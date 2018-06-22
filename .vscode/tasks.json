@@ -4,10 +4,110 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "client watch",
-            "command": "yarn watch",
+            "label": "buildApp",
+            "command": "./buildApp.sh",
             "options": {
-                "cwd": "./FoodStuffs.Web/ClientApp"
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact",
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "buildServerDebug",
+            "command": "./buildServerDebug.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "devClient",
+            "command": "./devClient.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact"
+            ]
+        },
+        {
+            "label": "devServer",
+            "command": "./devServer.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "docker-Production",
+            "command": "./docker-Production.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact",
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "docker-Staging",
+            "command": "./docker-Staging.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact",
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "testClient",
+            "command": "./testClient.sh",
+            "options": {
+                "cwd": "./Scripts"
             },
             "type": "shell",
             "group": "test",
@@ -17,23 +117,10 @@
             "problemMatcher": []
         },
         {
-            "label": "client build",
-            "command": "yarn build",
+            "label": "testCore",
+            "command": "./testCore.sh",
             "options": {
-                "cwd": "./FoodStuffs.Web/ClientApp"
-            },
-            "type": "shell",
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "server tests watch",
-            "command": "dotnet watch test",
-            "options": {
-                "cwd": "./FoodStuffs.Test"
+                "cwd": "./Scripts"
             },
             "type": "shell",
             "group": "test",
@@ -43,10 +130,10 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "server tests with coverage",
-            "command": "dotnet test /p:CollectCoverage=true",
+            "label": "testServer",
+            "command": "./testServer.sh",
             "options": {
-                "cwd": "./FoodStuffs.Test"
+                "cwd": "./Scripts"
             },
             "type": "shell",
             "group": "test",
@@ -56,10 +143,10 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "server core tests with coverage",
-            "command": "dotnet test /p:CollectCoverage=true",
+            "label": "testWatchCore",
+            "command": "./testWatchCore.sh",
             "options": {
-                "cwd": "./Core.Test"
+                "cwd": "./Scripts"
             },
             "type": "shell",
             "group": "test",
@@ -69,10 +156,10 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "server core tests watch",
-            "command": "dotnet watch test",
+            "label": "testWatchServer",
+            "command": "./testWatchServer.sh",
             "options": {
-                "cwd": "./Core.Test"
+                "cwd": "./Scripts"
             },
             "type": "shell",
             "group": "test",
@@ -81,70 +168,5 @@
             },
             "problemMatcher": "$msCompile"
         },
-        {
-            "label": "server watch",
-            "command": "dotnet watch run --launch-profile 'Kestrel (Development)'",
-            "options": {
-                "cwd": "./FoodStuffs.Web"
-            },
-            "type": "shell",
-            "group": "test",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "server build debug",
-            "command": "dotnet build --configuration Debug",
-            "options": {
-                "cwd": "./FoodStuffs.Web"
-            },
-            "type": "shell",
-            "group": "test",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "server run debug",
-            "command": "dotnet run --configuration Debug --launch-profile 'Kestrel (Development)'",
-            "options": {
-                "cwd": "./FoodStuffs.Web"
-            },
-            "type": "shell",
-            "group": "test",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "server build",
-            "command": "dotnet build --configuration Release",
-            "options": {
-                "cwd": "./FoodStuffs.Web"
-            },
-            "type": "shell",
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "server run",
-            "command": "dotnet run --configuration Release --launch-profile 'Kestrel (Development)'",
-            "options": {
-                "cwd": "./FoodStuffs.Web"
-            },
-            "type": "shell",
-            "group": "test",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        }
     ]
 }
