@@ -25,7 +25,7 @@ form {
                     color: $color-danger;
                 }
 
-                input [type="password"], input[type="number"], input[type="text"], select, textarea {
+                input [type="password"], input[type="number"], input[type="text"], input[type="date"], select, textarea {
                     border-color: $color-danger;
                 }
             }
@@ -53,7 +53,7 @@ form {
         }
     }
 
-    input[type="password"], input[type="number"], input[type="text"], select, textarea, input[type="button"], input[type="submit"], button, span {
+    input[type="password"], input[type="number"], input[type="text"], input[type="date"], select, textarea, input[type="button"], input[type="submit"], button, span {
         margin-bottom: .5em;
 
         &:not(:last-child) {
@@ -62,7 +62,7 @@ form {
     }
 }
 
-input[type="password"], input[type="number"], input[type="text"], select, textarea {
+input[type="password"], input[type="number"], input[type="text"], input[type="date"], select, textarea {
     padding: .3em .4em;
     border: $border;
     box-shadow: $shadow;
