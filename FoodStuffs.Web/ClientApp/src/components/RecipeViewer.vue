@@ -24,8 +24,7 @@
     Created By: {{ currentRecipe.createdBy }}<br >
     Created On: {{ currentRecipe.createdOnUtc | utcToLocalDateString }}<br >
     Modified By: {{ currentRecipe.modifiedBy }}<br >
-    Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}
-    <br ><br >
+    Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}<br ><br >
     <div class="no-print">
       Categories:
       <span class="categories">

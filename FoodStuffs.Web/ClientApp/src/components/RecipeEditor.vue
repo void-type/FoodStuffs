@@ -73,8 +73,7 @@
       Created By: {{ currentRecipe.createdBy }}<br >
       Created On: {{ currentRecipe.createdOnUtc | utcToLocalDateString }}<br >
       Modified By: {{ currentRecipe.modifiedBy }}<br >
-      Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}
-    </div>
+      Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}</div>
   </form>
 </template>
 

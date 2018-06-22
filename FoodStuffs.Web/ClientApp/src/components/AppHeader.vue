@@ -15,22 +15,19 @@
             <router-link
               :to="{name: 'home'}"
               :class="{'current-page': $route.name === 'home'}">
-              Home
-            </router-link>
+              Home</router-link>
           </li>
           <li>
             <router-link
               :to="{name: 'edit'}"
               :class="{'current-page': $route.name === 'edit'}">
-              Edit
-            </router-link>
+              Edit</router-link>
           </li>
           <li>
             <router-link
               :to="{name: 'search'}"
               :class="{'current-page': $route.name === 'search'}">
-              Search
-            </router-link>
+              Search</router-link>
           </li>
         </ul>
       </nav>
@@ -38,8 +35,7 @@
         :to="{name: 'home'}"
         :class="{'current-page': $route.name === 'login',
                  'pull-right': true}">
-        Login
-      </router-link>
+        Login</router-link>
     </div>
   </header>
 </template>

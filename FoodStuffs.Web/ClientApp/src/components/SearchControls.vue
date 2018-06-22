@@ -22,11 +22,9 @@
       <div class="form-group button-group">
         <div>
           <button @click.prevent="search()">
-            Search
-          </button>
+            Search</button>
           <button @click.prevent="clear()">
-            Clear All
-          </button>
+            Clear All</button>
         </div>
       </div>
     </div>

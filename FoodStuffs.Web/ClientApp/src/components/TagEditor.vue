@@ -5,10 +5,8 @@
         <span
           v-for="tag in tags"
           :key="tag">
-          {{ tag }}&nbsp;&nbsp;
-          <span @click="removeTagClick(tag)">
-            &#x2716;
-          </span>
+          {{ tag }}&nbsp;&nbsp;<span @click="removeTagClick(tag)">
+            &#x2716;</span>
         </span>
       </div>
     </div>
@@ -21,8 +19,7 @@
         type="text"
         @keydown.enter.prevent="addTagClick()" >
       <button @click.prevent="addTagClick()">
-        Add
-      </button>
+        Add</button>
     </div>
 
     <label :for="fieldName">{{ label }}</label>

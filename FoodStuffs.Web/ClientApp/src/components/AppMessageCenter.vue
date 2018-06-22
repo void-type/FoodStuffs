@@ -7,8 +7,7 @@
       <li
         v-for="message in messages"
         :key="message">
-        {{ message }}
-      </li>
+        {{ message }}</li>
     </ul>
   </div>
 </template>

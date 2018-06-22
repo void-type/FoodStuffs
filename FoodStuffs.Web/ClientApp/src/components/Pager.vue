@@ -6,8 +6,7 @@
         :key="pageNumber"
         :class="{currentPage: pageNumber === page}"
         @click="requestPage(pageNumber)">
-        {{ pageNumber }}
-      </span>
+        {{ pageNumber }}</span>
     </div>
     <div>
       <input

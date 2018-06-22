@@ -5,8 +5,7 @@
         <th
           class="sortable-header"
           @click="sortByNameClick()">
-          Name &nbsp;
-          <span v-html="selectedNameSortType.symbol"/>
+          Name&nbsp;&nbsp;<span v-html="selectedNameSortType.symbol"/>
         </th>
         <th>Category</th>
       </tr>
