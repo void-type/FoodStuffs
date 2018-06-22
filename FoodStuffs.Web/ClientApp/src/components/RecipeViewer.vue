@@ -18,14 +18,7 @@
       <span>Cook Time: {{ currentRecipe.cookTimeMinutes }} minutes</span>
       <br >
     </div>
-    <br
-      v-if="currentRecipe.prepTimeMinutes !== null
-      || currentRecipe.cookTimeMinutes !== null" >
-    Created By: {{ currentRecipe.createdBy }}<br >
-    Created On: {{ currentRecipe.createdOnUtc | utcToLocalDateString }}<br >
-    Modified By: {{ currentRecipe.modifiedBy }}<br >
-    Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}<br ><br >
-    <div class="no-print">
+    <div>
       Categories:
       <span class="categories">
         <span
@@ -34,6 +27,13 @@
           {{ category }}</span>
       </span>
     </div>
+    <br
+      v-if="currentRecipe.prepTimeMinutes !== null
+      || currentRecipe.cookTimeMinutes !== null" >
+    Created By: {{ currentRecipe.createdBy }}<br >
+    Created On: {{ currentRecipe.createdOnUtc | utcToLocalDateString }}<br >
+    Modified By: {{ currentRecipe.modifiedBy }}<br >
+    Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}<br >
   </div>
 </template>
 
