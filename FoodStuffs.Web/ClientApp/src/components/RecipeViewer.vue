@@ -32,8 +32,7 @@
         <span
           v-for="category in currentRecipe.categories"
           :key="category">
-          {{ category }}
-        </span>
+          {{ category }}</span>
       </span>
     </div>
   </div>
