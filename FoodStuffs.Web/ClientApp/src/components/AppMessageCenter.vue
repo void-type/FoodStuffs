@@ -39,12 +39,12 @@ export default {
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: $color-secondary;
+  background-color: $color-success;
   box-shadow: $shadow;
   cursor: pointer;
 
   &.danger {
-    background-color: $color-danger-background;
+    background-color: $color-danger;
   }
 
   ul {

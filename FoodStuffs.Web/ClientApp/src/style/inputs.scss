@@ -2,23 +2,24 @@
 
 form {
     margin-bottom: 0;
-    width: 100%;
+    flex: 1;
 
     h1 {
         margin-top: 0;
     }
 
-    .form-row {
+    .button-row {
+        margin-top: 1.5em;
+    }
+
+    .form-row, .button-row {
         display: flex;
         flex-wrap: wrap;
-
-        &:not(:last-child) {
-            margin-bottom: 1em;
-        }
+        margin-bottom: 1em;
 
         .form-group {
             display: flex;
-            flex-grow: 1;
+            flex: 1;
 
             &.danger {
                 label {
@@ -53,9 +54,7 @@ form {
         }
     }
 
-    input[type="password"], input[type="number"], input[type="text"], input[type="date"], select, textarea, input[type="button"], input[type="submit"], button, span {
-        margin-bottom: .5em;
-
+    input[type="button"], input[type="submit"], button, span {
         &:not(:last-child) {
             margin-right: .5em;
         }
@@ -68,7 +67,7 @@ input[type="password"], input[type="number"], input[type="text"], input[type="da
     box-shadow: $shadow;
     font-family: $font-family;
     font-size: 1em;
-    width: 100%;
+    flex: 1;
 
     &:focus {
         outline: none;
@@ -83,7 +82,7 @@ textarea {
 
 input[type="button"], input[type="submit"], button {
     padding: .5em;
-    background-color: $color-secondary;
+    background-color: $color-button-primary;
     border: $border;
     box-shadow: $shadow;
     color: black;
@@ -94,36 +93,45 @@ input[type="button"], input[type="submit"], button {
     white-space: nowrap;
 
     &:active {
-        background-color: $color-secondary-dark;
+        background-color: $color-button-primary-dark;
         box-shadow: $shadow-collapse;
         top: 4px;
     }
 
     &.danger {
-        background: $color-danger-background;
+        background: $color-danger;
 
         &:focus {
             outline: none;
-            border-color: $color-danger;
         }
 
         &:active {
-            background-color: $color-danger-background-dark;
+            background-color: $color-danger-dark;
+        }
+    }
+
+    &.success {
+        background: $color-success;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:active {
+            background-color: $color-success-dark;
         }
     }
 }
 
-input.chk {
-    height: 1.5em;
-    width: 1.5em;
-    padding: .5em;
-    top: .4em;
-    position: relative;
+input[type="checkbox"] {
+    height: 2.0em;
+    width: 2.0em;
 }
 
 @media #{$medium-screen} {
     form .form-row .form-group:not(:last-child) {
         margin-right: 0;
+        margin-bottom: 1em;
     }
 
     .form-row:not(.button-row) {

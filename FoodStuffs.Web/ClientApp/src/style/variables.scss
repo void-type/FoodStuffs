@@ -13,9 +13,14 @@ $color-neutral: black;
 $color-neutral-medium: lightgray;
 $color-neutral-inverse: white;
 
-$color-danger: rgba(178, 30, 30, 1);
-$color-danger-background: rgba(250, 103, 95, 1);
-$color-danger-background-dark: darken($color-danger-background, 6%);
+$color-danger: rgba(250, 103, 95, 1);
+$color-danger-dark: darken($color-danger, 8%);
+
+$color-success-dark: $color-secondary-dark;
+$color-success: $color-secondary;
+
+$color-button-primary-dark: $color-secondary-dark;
+$color-button-primary: $color-secondary;
 
 $color-background: $color-ternary;
 $color-border: rgba(37, 40, 53, 1);
@@ -30,7 +35,7 @@ $shadow-collapse: 1px 1px 2px rgba($color-border, .5);
 $font-family: "Source Sans Pro", sans-serif;
 
 $contained-width: 70em;
-$topbar-height: 4em;
+$topbar-height: 3em;
 
 $extra-large-screen: "(min-width:1921px)";
 $medium-screen: "(max-width:880px)";

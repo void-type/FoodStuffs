@@ -81,7 +81,7 @@ export default {
 
     & > span:hover {
       cursor: pointer;
-      color: $color-danger;
+      color: $color-danger-dark;
     }
   }
 }
