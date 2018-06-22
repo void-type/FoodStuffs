@@ -6,20 +6,18 @@ A web application for managing recipes based on .Net Core 2.0 and Vue.js 2.0.
     2. Set a connection string in an appsettings.{environment}.json file.
 
 ## Get some tools
-- [.Net Core SDK ^2.1.200](https://www.microsoft.com/net/download)
-- [Yarn ^1.6.0](https://yarnpkg.com/lang/en/docs/install/)
+- [.Net Core SDK ^2.1.300](https://www.microsoft.com/net/download)
+- [Yarn ^1.7.0](https://yarnpkg.com/lang/en/docs/install/)
 - [Docker ^18.05 (optional)](https://docker.com)
 
 ## Clone, Build, And Run
 
 #### Run a production version
+These development versions run on port 3333.
 ```
 git clone https://github.com/void-type/foodstuffs
-cd foodstuffs
-dotnet build
-cd FoodStuffs.Web/ClientApp
-yarn
-yarn build
+cd foodstuffs/Scripts
+./buildClient.sh
 cd ../
 dotnet run --launch-profile "Kestrel (Production)"
 ```
@@ -27,13 +25,12 @@ dotnet run --launch-profile "Kestrel (Production)"
 #### Run development version with file watching
 ```
 git clone https://github.com/void-type/foodstuffs
-cd foodstuffs/FoodStuffs.Web/ClientApp
-yarn
-yarn watch
+cd foodstuffs/Scripts
+./devClient.sh
 
 # In another terminal
-cd foodstuffs
-dotnet watch run --launch-profile 'Kestrel (Development)'
+cd foodstuffs/Scripts
+./devServer.sh
 ```
 
 #### VSCode tasks
@@ -41,3 +38,4 @@ There are various tasks set up in VSCode to build, test and watch files for rapi
 
 ## Docker Support with multistage build
 Git clone and run the DockerFile. You don't need Dotnet or Yarn locally.
+buildDocker-Staging.sh will build and run a Docker container on port 3333.
