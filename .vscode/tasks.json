@@ -104,6 +104,22 @@
             ]
         },
         {
+            "label": "lintClient",
+            "command": "./lintClient.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact"
+            ]
+        },
+        {
             "label": "testClient",
             "command": "./testClient.sh",
             "options": {
