@@ -18,6 +18,7 @@ export default {
         context.commit('setApplicationName', data.applicationName);
         context.commit('setUserName', data.userName);
         webApi.setRequestVerificationToken(data.antiforgeryToken);
+        webApi.setTitle(data.applicationName);
       },
       (response) => {
         webApi.onFailure(context, response);
