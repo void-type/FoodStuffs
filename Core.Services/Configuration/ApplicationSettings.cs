@@ -1,6 +1,7 @@
-namespace Core.Services.Configuration 
+namespace Core.Services.Configuration
 {
-    public class ApplicationSettings {
+    public class ApplicationSettings
+    {
         public string Name { get; set; }
         public string ConnectionString { get; set; }
     }
