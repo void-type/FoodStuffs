@@ -19,7 +19,9 @@
           @input="updateCategorySearch($event.target.value)" >
         <label for="categorySearch">Categories Contain</label>
       </div>
-      <div class="form-group button-group">
+    </div>
+    <div class="form-row">
+      <div class="button-group">
         <div>
           <button @click.prevent="search()">
             Search</button>

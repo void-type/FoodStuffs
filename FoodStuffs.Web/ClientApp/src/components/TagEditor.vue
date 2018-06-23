@@ -66,9 +66,14 @@ export default {
 
 .form-group > div {
   display: flex;
+
+  & button {
+    margin-left: .5em;
+  }
 }
 
 .tags {
+  margin-top: .5em;
   display: flex;
   flex-flow: wrap;
 
