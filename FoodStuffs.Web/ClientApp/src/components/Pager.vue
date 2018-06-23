@@ -78,6 +78,7 @@ div>div {
   }
 
   input {
+    margin-top: 0.5em;
     padding: 0.5em 1em;
     max-width: 4em;
   }
