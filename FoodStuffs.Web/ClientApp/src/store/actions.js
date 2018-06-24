@@ -15,6 +15,18 @@ export default {
     context.commit('setMessage', message);
   },
 
+  setFailureMessage(context, response) {
+    context.commit('setMessageIsError', true);
+    if (response === undefined || response === null) {
+      context.commit('setMessage', 'Cannot connect to server.');
+    } else if (response.status >= 500) {
+      context.commit('setMessage', response.data.message);
+    } else {
+      context.commit('setMessages', response.data.items.map(item => item.errorMessage));
+      context.commit('setFieldsInError', response.data.items.map(item => item.fieldName));
+    }
+  },
+
   fetchApplicationInfo(context) {
     webApi.app.fetchInfo(
       (data) => {
@@ -24,7 +36,7 @@ export default {
         webApi.setTitle(data.applicationName);
       },
       (response) => {
-        webApi.onFailure(context, response);
+        context.dispatch('setFailureMessage', response);
       },
     );
   },
@@ -35,7 +47,7 @@ export default {
       (data) => {
         context.dispatch('setCurrentRecipe', data);
       },
-      response => webApi.onFailure(context, response),
+      response => context.dispatch('setFailureMessage', response),
     );
   },
 
@@ -45,7 +57,7 @@ export default {
       (data) => {
         context.dispatch('setRecipesList', data);
       },
-      response => webApi.onFailure(context, response),
+      response => context.dispatch('setFailureMessage', response),
     );
   },
 
@@ -58,7 +70,7 @@ export default {
         context.dispatch('setSuccessMessage', data.message);
         context.dispatch('fetchRecipesList');
       },
-      response => webApi.onFailure(context, response),
+      response => context.dispatch('setFailureMessage', response),
     );
   },
 
@@ -73,7 +85,7 @@ export default {
           context.dispatch('fetchRecipesList');
           context.dispatch('setSuccessMessage', data.message);
         },
-        response => webApi.onFailure(context, response),
+        response => context.dispatch('setFailureMessage', response),
       );
     } else {
       webApi.recipes.update(
@@ -83,7 +95,7 @@ export default {
           context.dispatch('fetchRecipesList');
           context.dispatch('setSuccessMessage', data.message);
         },
-        response => webApi.onFailure(context, response),
+        response => context.dispatch('setFailureMessage', response),
       );
     }
   },
