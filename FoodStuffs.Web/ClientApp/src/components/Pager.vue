@@ -59,11 +59,24 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/variables";
+@import "../style/inputs";
 
-.currentPage {
-  background-color: $color-focus;
-  background-color: mix($color-ternary, $color-secondary, 60%);
-  box-shadow: $highlight-border;
+.pages {
+
+  & span {
+
+    &.currentPage {
+      background-color: $color-focus;
+      background-color: mix($color-ternary, $color-secondary, 90%);
+      box-shadow: $highlight-border;
+    }
+
+    &:hover,
+    &:active {
+      background-color: mix($color-ternary, $color-secondary, 60%);
+      box-shadow: $highlight-border;
+    }
+  }
 }
 
 div>div {
@@ -79,8 +92,7 @@ div>div {
 
   input {
     margin-top: 0.5em;
-    padding: 0.5em 1em;
-    max-width: 4em;
+    max-width: 3.5em;
   }
 }
 </style>
