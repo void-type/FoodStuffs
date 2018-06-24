@@ -1,9 +1,7 @@
 import trimAndCapitalize from '../filters/trimAndCapitalize';
 import Recipe from '../models/recipe';
-import applicationInfoApi from '../models/applicationInfoApi';
-import recipeApi from '../models/recipeApi';
 import sortTypes from '../models/recipeSearchSortTypes';
-import webApi from '../models/webApi';
+import webApi from '../webApi/index';
 
 export default {
   clearMessages(context) {
@@ -12,8 +10,13 @@ export default {
     context.commit('setMessages', []);
   },
 
+  setSuccessMessage(context, message) {
+    context.dispatch('clearMessages');
+    context.commit('setMessage', message);
+  },
+
   fetchApplicationInfo(context) {
-    applicationInfoApi.fetchApplicationInfo(
+    webApi.app.fetchInfo(
       (data) => {
         context.commit('setApplicationName', data.applicationName);
         context.commit('setUserName', data.userName);
@@ -27,7 +30,7 @@ export default {
   },
 
   fetchRecipe(context, id) {
-    recipeApi.getRecipe(
+    webApi.recipes.get(
       id,
       (data) => {
         context.dispatch('setCurrentRecipe', data);
@@ -37,7 +40,7 @@ export default {
   },
 
   fetchRecipesList(context) {
-    recipeApi.listRecipes(
+    webApi.recipes.list(
       context.state.recipesSearchParameters,
       (data) => {
         context.dispatch('setRecipesList', data);
@@ -49,10 +52,10 @@ export default {
   deleteRecipe(context, recipe) {
     context.dispatch('clearMessages');
 
-    recipeApi.deleteRecipe(
+    webApi.recipes.delete(
       recipe,
       (data) => {
-        webApi.onSuccess(context, data);
+        context.dispatch('setSuccessMessage', data.message);
         context.dispatch('fetchRecipesList');
       },
       response => webApi.onFailure(context, response),
@@ -63,22 +66,22 @@ export default {
     context.dispatch('clearMessages');
 
     if (recipe.id === undefined || recipe.id < 1) {
-      recipeApi.createRecipe(
+      webApi.recipes.create(
         recipe,
         (data) => {
           context.dispatch('fetchRecipe', data.id);
           context.dispatch('fetchRecipesList');
-          webApi.onSuccess(context, data);
+          context.dispatch('setSuccessMessage', data.message);
         },
         response => webApi.onFailure(context, response),
       );
     } else {
-      recipeApi.updateRecipe(
+      webApi.recipes.update(
         recipe,
         (data) => {
           context.dispatch('fetchRecipe', data.id);
           context.dispatch('fetchRecipesList');
-          webApi.onSuccess(context, data);
+          context.dispatch('setSuccessMessage', data.message);
         },
         response => webApi.onFailure(context, response),
       );

@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/variables";
+@import "../style/theme";
 @import "../style/inputs";
 
 form .form-group.button-group {

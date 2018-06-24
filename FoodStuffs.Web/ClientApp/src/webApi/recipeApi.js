@@ -1,31 +1,31 @@
 import axios from 'axios';
 
 export default {
-  createRecipe(recipe, success, failure) {
+  create(recipe, success, failure) {
     axios.put('api/recipes', recipe)
       .then(response => success(response.data))
       .catch(error => failure(error.response));
   },
 
-  deleteRecipe(recipe, success, failure) {
+  delete(recipe, success, failure) {
     axios.delete('api/recipes', { params: { id: recipe.id } })
       .then(response => success(response.data))
       .catch(error => failure(error.response));
   },
 
-  getRecipe(id, success, failure) {
+  get(id, success, failure) {
     axios.get('api/recipes', { params: { id } })
       .then(response => success(response.data))
       .catch(error => failure(error.response));
   },
 
-  listRecipes(recipeSearchParameters, success, failure) {
+  list(recipeSearchParameters, success, failure) {
     axios.get('api/recipes/list', { params: recipeSearchParameters })
       .then(response => success(response.data))
       .catch(error => failure(error.response));
   },
 
-  updateRecipe(recipe, success, failure) {
+  update(recipe, success, failure) {
     axios.post('api/recipes', recipe)
       .then(response => success(response.data))
       .catch(error => failure(error.response));

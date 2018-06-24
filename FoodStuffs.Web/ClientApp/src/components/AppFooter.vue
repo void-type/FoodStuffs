@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/variables";
+@import "../style/theme";
 
 footer {
   border-top: $border;

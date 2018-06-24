@@ -1,6 +1,11 @@
 import axios from 'axios';
+import recipes from './recipeApi';
+import app from './appApi';
 
 export default {
+  recipes,
+  app,
+
   onFailure(context, response) {
     context.commit('setMessageIsError', true);
     if (response === undefined || response === null) {
@@ -11,11 +16,6 @@ export default {
       context.commit('setMessages', response.data.items.map(item => item.errorMessage));
       context.commit('setFieldsInError', response.data.items.map(item => item.fieldName));
     }
-  },
-
-  onSuccess(context, data) {
-    context.dispatch('clearMessages');
-    context.commit('setMessage', data.message);
   },
 
   setRequestVerificationToken(csrfToken) {
