@@ -26,11 +26,8 @@ export default {
     return state.messages;
   },
 
-  recentRecipes(state, getters) {
-    const recents = state.recentRecipeIds
-      .map(id => getters.findRecipeById(id))
-      .filter(recipe => recipe != null);
-    return recents;
+  recentRecipes(state) {
+    return state.recentRecipes;
   },
 
   recipesList(state) {

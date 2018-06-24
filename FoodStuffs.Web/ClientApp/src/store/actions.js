@@ -136,23 +136,28 @@ export default {
   },
 
   addRecipeToRecents(context, recipe) {
-    if (!context.getters.recipesList.includes(recipe)) {
-      return;
-    }
+    const recentRecipes = context.state.recentRecipes.slice();
 
-    const recentRecipeIds = context.state.recentRecipeIds.slice();
-    const recentRecipeIndex = recentRecipeIds.indexOf(recipe.id);
+    const indexOfCurrentInRecents = recentRecipes
+      .map(recentRecipe => recentRecipe.id)
+      .indexOf(recipe.id);
 
-    if (recentRecipeIndex > -1) {
-      recentRecipeIds.splice(recentRecipeIndex, 1);
+    const recipeListItem = {
+      id: recipe.id,
+      name: recipe.name,
+      categories: recipe.categories,
+    };
+
+    if (indexOfCurrentInRecents > -1) {
+      recentRecipes.splice(indexOfCurrentInRecents, 1);
     }
     if (recipe.id > 0) {
-      recentRecipeIds.unshift(recipe.id);
+      recentRecipes.unshift(recipeListItem);
     }
-    if (recentRecipeIds.length > 3) {
-      recentRecipeIds.pop();
+    if (recentRecipes.length > 3) {
+      recentRecipes.pop();
     }
-    context.commit('setRecentRecipeIds', recentRecipeIds);
+    context.commit('setRecentRecipes', recentRecipes);
   },
 
   setRecipesList(context, data) {

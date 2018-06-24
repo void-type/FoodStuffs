@@ -40,8 +40,8 @@ export default {
     recipe.categories.splice(categoryIndex, 1);
   },
 
-  setRecentRecipeIds(state, recipeIds) {
-    state.recentRecipeIds = recipeIds;
+  setRecentRecipes(state, recentRecipes) {
+    state.recentRecipes = recentRecipes;
   },
 
   setRecipesList(state, recipes) {

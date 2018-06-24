@@ -8,7 +8,7 @@ export default {
   fieldsInError: [],
   messages: [],
   messageIsError: false,
-  recentRecipeIds: [],
+  recentRecipes: [],
   recipesList: [],
   recipesListTotalCount: 0,
   recipesSearchParameters: new RecipesSearchParameters(),
