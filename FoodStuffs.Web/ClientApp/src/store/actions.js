@@ -51,7 +51,10 @@ export default {
 
     recipeApi.deleteRecipe(
       recipe,
-      data => webApi.onSuccess(context, data),
+      (data) => {
+        webApi.onSuccess(context, data);
+        context.dispatch('fetchRecipesList');
+      },
       response => webApi.onFailure(context, response),
     );
   },
@@ -64,6 +67,7 @@ export default {
         recipe,
         (data) => {
           context.dispatch('fetchRecipe', data.id);
+          context.dispatch('fetchRecipesList');
           webApi.onSuccess(context, data);
         },
         response => webApi.onFailure(context, response),
@@ -73,6 +77,7 @@ export default {
         recipe,
         (data) => {
           context.dispatch('fetchRecipe', data.id);
+          context.dispatch('fetchRecipesList');
           webApi.onSuccess(context, data);
         },
         response => webApi.onFailure(context, response),

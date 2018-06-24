@@ -9,7 +9,7 @@
       <AppFooter />
     </div>
     <div id="print-only">
-      <RecipeViewer :current-recipe="currentRecipe" />
+      <RecipeViewer :recipe="currentRecipe" />
     </div>
   </div>
 </template>

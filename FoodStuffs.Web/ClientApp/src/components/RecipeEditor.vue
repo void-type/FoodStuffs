@@ -69,25 +69,21 @@
         Delete
       </button>
     </div>
-    <div v-if="currentRecipe.id">
-      Created By: {{ currentRecipe.createdBy }}<br >
-      Created On: {{ currentRecipe.createdOnUtc | utcToLocalDateString }}<br >
-      Modified By: {{ currentRecipe.modifiedBy }}<br >
-      Modified On: {{ currentRecipe.modifiedOnUtc | utcToLocalDateString }}</div>
+    <RecipeAudit
+      v-if="currentRecipe.id"
+      :recipe="currentRecipe" />
   </form>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import TagEditor from './TagEditor.vue';
-import utcToLocalDateString from '../filters/utcToLocalDateString';
+import RecipeAudit from './RecipeAudit.vue';
 
 export default {
   components: {
     TagEditor,
-  },
-  filters: {
-    utcToLocalDateString,
+    RecipeAudit,
   },
   computed: {
     ...mapGetters(['currentRecipe', 'isFieldInError']),

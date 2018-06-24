@@ -1,7 +1,7 @@
 <template>
   <section>
     <SelectSidebar />
-    <RecipeViewer :current-recipe="currentRecipe" />
+    <RecipeViewer :recipe="currentRecipe" />
   </section>
 </template>
 
