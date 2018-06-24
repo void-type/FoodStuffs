@@ -7,7 +7,7 @@
           @click="sortByNameClick()">
           Name&nbsp;&nbsp;<span v-html="selectedNameSortType.symbol"/>
         </th>
-        <th>Category</th>
+        <th>Categories</th>
       </tr>
     </thead>
     <tbody>
