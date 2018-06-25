@@ -56,6 +56,9 @@
         @addTag="addCategoryToCurrentRecipe"
         @removeTag="removeCategoryFromCurrentRecipe" />
     </div>
+    <RecipeAudit
+      v-if="currentRecipe.id"
+      :recipe="currentRecipe" />
     <div class="form-row button-row">
       <button @click.prevent="saveRecipe(currentRecipe)">
         Save
@@ -69,9 +72,6 @@
         Delete
       </button>
     </div>
-    <RecipeAudit
-      v-if="currentRecipe.id"
-      :recipe="currentRecipe" />
   </form>
 </template>
 
