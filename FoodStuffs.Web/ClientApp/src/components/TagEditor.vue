@@ -73,11 +73,11 @@ export default {
 }
 
 .tags {
-  margin-top: .5em;
   display: flex;
   flex-flow: wrap;
 
   & > span {
+    margin-top: .5em;
     background-color: $color-neutral-medium;
     box-sizing: border-box;
     padding: 0.3em 0.6em;
