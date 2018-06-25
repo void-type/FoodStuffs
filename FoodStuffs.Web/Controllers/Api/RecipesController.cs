@@ -12,9 +12,9 @@ using System.Collections.Generic;
 namespace FoodStuffs.Web.Controllers.Api
 {
     [Route("api/recipes")]
-    public class RecipesApiController : Controller
+    public class RecipesController : Controller
     {
-        public RecipesApiController(HttpActionResultResponder responder, IFoodStuffsData data, IDateTimeService now)
+        public RecipesController(HttpActionResultResponder responder, IFoodStuffsData data, IDateTimeService now)
         {
             _responder = responder;
             _data = data;
