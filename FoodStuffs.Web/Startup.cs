@@ -48,7 +48,7 @@ namespace FoodStuffs.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var applicationSettings = services.ConfigureSettings<ApplicationSettings>(_configuration);
-            services.AddSingleton(applicationSettings);
+            services.AddSingleton<IApplicationSettings>(applicationSettings);
 
             services.AddMvcAntiforgery();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
