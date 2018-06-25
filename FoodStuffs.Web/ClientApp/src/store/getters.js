@@ -9,13 +9,6 @@ export default {
     return state.userName;
   },
 
-  currentRecipe(state) {
-    return state.currentRecipe;
-  },
-
-  findRecipeById: state => idToFind => state.recipesList
-    .filter(item => item.id === parseInt(idToFind, 10))[0] || null,
-
   messageIsError(state) {
     return state.messageIsError;
   },
@@ -24,6 +17,10 @@ export default {
 
   messages(state) {
     return state.messages;
+  },
+
+  currentRecipe(state) {
+    return state.currentRecipe;
   },
 
   recentRecipes(state) {

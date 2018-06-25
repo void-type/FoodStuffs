@@ -3,8 +3,8 @@ import recipes from './recipeApi';
 import app from './appApi';
 
 export default {
-  recipes,
   app,
+  recipes,
 
   setRequestVerificationToken(csrfToken) {
     const headers = {

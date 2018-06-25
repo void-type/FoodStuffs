@@ -1,7 +1,7 @@
 import trimAndCapitalize from '../filters/trimAndCapitalize';
 import Recipe from '../models/recipe';
 import sortTypes from '../models/recipeSearchSortTypes';
-import webApi from '../webApi/index';
+import webApi from '../webApi';
 
 export default {
   clearMessages(context) {
@@ -28,7 +28,7 @@ export default {
   },
 
   fetchApplicationInfo(context) {
-    webApi.app.fetchInfo(
+    webApi.app.getInfo(
       (data) => {
         context.commit('setApplicationName', data.applicationName);
         context.commit('setUserName', data.userName);
