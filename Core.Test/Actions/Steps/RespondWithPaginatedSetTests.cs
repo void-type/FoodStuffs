@@ -15,7 +15,7 @@ namespace Core.Test.Actions.Steps
         [InlineData(100, 10, 10, 10)]
         [InlineData(100, 10, 11, 0)]
         [InlineData(105, 10, 11, 5)]
-        public void RespondWithPaginatedRecipes(int totalCount, int take, int page, int expectedCount)
+        public void RespondWithPaginatedStrings(int totalCount, int take, int page, int expectedCount)
         {
             ItemSetPage<string> itemSetPage = null;
 
