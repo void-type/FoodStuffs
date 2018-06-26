@@ -49,7 +49,6 @@ export default {
   },
   mounted() {
     this.fetchApplicationInfo();
-    document.title = this.applicationName;
   },
   methods: {
     ...mapActions(['fetchApplicationInfo']),
