@@ -16,7 +16,7 @@ export default {
     axios.defaults.headers.delete = headers;
   },
 
-  setTitle(applicationName) {
+  setDocumentTitle(applicationName) {
     document.title = applicationName;
   },
 };

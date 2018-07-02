@@ -11,33 +11,58 @@ export default {
   },
 
   setSuccessMessage(context, message) {
-    context.dispatch('clearMessages');
     context.commit('setMessage', message);
   },
 
-  setFailureMessage(context, response) {
+  setErrorMessage(context, message) {
     context.commit('setMessageIsError', true);
+    context.commit('setMessage', message);
+  },
+
+  setErrorMessages(context, messages, fieldNames) {
+    context.commit('setMessageIsError', true);
+    context.commit('setMessages', messages);
+    context.commit('setFieldsInError', fieldNames);
+  },
+
+  setApiFailureMessage(context, response) {
     if (response === undefined || response === null) {
-      context.commit('setMessage', 'Cannot connect to server.');
+      context.dispatch('setErrorMessage', 'Cannot connect to server.');
+    } else if (response.status === 401 || response.status === 403) {
+      context.dispatch('setErrorMessage', 'You are not authorized for this endpoint.');
+    } else if (response.status === 404) {
+      context.dispatch('setErrorMessage', 'Endpoint not available.');
     } else if (response.status >= 500) {
-      context.commit('setMessage', response.data.message);
+      context.dispatch('setErrorMessage', response.data.message);
     } else {
-      context.commit('setMessages', response.data.items.map(item => item.errorMessage));
-      context.commit('setFieldsInError', response.data.items.map(item => item.fieldName));
+      context.dispatch(
+        'setErrorMessages',
+        response.data.items.map(item => item.errorMessage),
+        response.data.items.map(item => item.fieldName),
+      );
     }
+  },
+
+  setApiDownloadFailureMessage(context, response) {
+    let decodedResponse = response;
+    if (response.request.responseType === 'arraybuffer') {
+      const decodedString = String.fromCharCode.apply(null, new Uint8Array(response.data));
+      if (decodedString.length > 0) {
+        decodedResponse = Object.assign(response, { data: JSON.parse(decodedString) });
+      }
+    }
+    context.dispatch('setApiFailureMessage', decodedResponse);
   },
 
   fetchApplicationInfo(context) {
     webApi.app.getInfo(
       (data) => {
         context.commit('setApplicationName', data.applicationName);
+        webApi.setDocumentTitle(data.applicationName);
         context.commit('setUserName', data.userName);
         webApi.setRequestVerificationToken(data.antiforgeryToken);
-        webApi.setTitle(data.applicationName);
       },
-      (response) => {
-        context.dispatch('setFailureMessage', response);
-      },
+      response => context.dispatch('setApiFailureMessage', response),
     );
   },
 
@@ -47,7 +72,7 @@ export default {
       (data) => {
         context.dispatch('setCurrentRecipe', data);
       },
-      response => context.dispatch('setFailureMessage', response),
+      response => context.dispatch('setApiFailureMessage', response),
     );
   },
 
@@ -57,7 +82,7 @@ export default {
       (data) => {
         context.dispatch('setRecipesList', data);
       },
-      response => context.dispatch('setFailureMessage', response),
+      response => context.dispatch('setApiFailureMessage', response),
     );
   },
 
@@ -70,7 +95,7 @@ export default {
         context.dispatch('setSuccessMessage', data.message);
         context.dispatch('fetchRecipesList');
       },
-      response => context.dispatch('setFailureMessage', response),
+      response => context.dispatch('setApiFailureMessage', response),
     );
   },
 
@@ -85,7 +110,7 @@ export default {
           context.dispatch('fetchRecipesList');
           context.dispatch('setSuccessMessage', data.message);
         },
-        response => context.dispatch('setFailureMessage', response),
+        response => context.dispatch('setApiFailureMessage', response),
       );
     } else {
       webApi.recipes.update(
@@ -95,7 +120,7 @@ export default {
           context.dispatch('fetchRecipesList');
           context.dispatch('setSuccessMessage', data.message);
         },
-        response => context.dispatch('setFailureMessage', response),
+        response => context.dispatch('setApiFailureMessage', response),
       );
     }
   },

@@ -38,8 +38,11 @@ export default {
   beforeMount() {
     this.fetchRecipesList();
   },
+  mounted() {
+    this.fetchApplicationInfo();
+  },
   methods: {
-    ...mapActions(['fetchRecipesList']),
+    ...mapActions(['fetchApplicationInfo', 'fetchRecipesList']),
   },
 };
 </script>

@@ -41,17 +41,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   computed: {
     ...mapGetters(['applicationName']),
-  },
-  mounted() {
-    this.fetchApplicationInfo();
-  },
-  methods: {
-    ...mapActions(['fetchApplicationInfo']),
   },
 };
 </script>
