@@ -1,8 +1,6 @@
 using Core.Model.Actions.Chain;
-using Core.Model.Actions.Steps;
 using Core.Services.Action;
 using Core.Services.ClientApp;
-using Core.Services.Configuration;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,8 +27,12 @@ namespace FoodStuffs.Web.Controllers.Api
         [Route("info")]
         public IActionResult GetInfo()
         {
+            var applicationName = _applicationSettings.Name;
+            var userName = _contextAccessor.HttpContext.User.Identity.Name;
+            var antiforgeryRequestToken = _antiforgery.GetAndStoreTokens(_contextAccessor.HttpContext).RequestToken;
+
             new ActionChain(_responder)
-                .Execute(new RespondWithApplicationInfo(_applicationSettings, _antiforgery, _contextAccessor));
+                .Execute(new RespondWithApplicationInfo(applicationName, userName, antiforgeryRequestToken));
 
             return _responder.Response;
         }

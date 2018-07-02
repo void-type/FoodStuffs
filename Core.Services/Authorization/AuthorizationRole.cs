@@ -1,4 +1,4 @@
-namespace Core.Services.Configuration
+namespace Core.Services.Authorization
 {
     public class AuthorizationRole
     {
