@@ -1,4 +1,4 @@
-﻿function Scaffold-FoodstuffsDbContext {
+﻿function New-FoodstuffsDbContext {
 	[CmdletBinding()]
 	param(
 	)
@@ -11,7 +11,7 @@
 
 	# Build the models and context
 	dotnet ef dbcontext scaffold "$connectionString" Microsoft.EntityFrameworkCore.SqlServer -o "$contextDirectory" -f
-	
+
 	# Move models to FoodStuffs.Model\Data\Models
 	Move-Item -Path "$contextDirectory/*" -Exclude "*Context.cs" -Destination "../FoodStuffs.Model/Data/Models/" -Force
 

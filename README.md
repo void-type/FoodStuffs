@@ -6,7 +6,7 @@ A web application for managing recipes based on .Net Core 2.0 and Vue.js 2.0.
     2. Set a connection string in an appsettings.{environment}.json file.
 
 ## Get some tools
-- [.Net Core SDK ^2.1.300](https://www.microsoft.com/net/download)
+- [.Net Core SDK ^2.1.301](https://www.microsoft.com/net/download)
 - [Yarn ^1.7.0](https://yarnpkg.com/lang/en/docs/install/)
 - [Docker ^18.05 (optional)](https://docker.com)
 
