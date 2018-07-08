@@ -14,15 +14,10 @@ RUN curl -SL "$NODE_DOWNLOAD_URL" --output nodejs.tar.gz \
     && npm i -g yarn@$YARN_VERSION \
     && ln -f -s /usr/local/bin/node /usr/local/bin/nodejs
 
-RUN apt-get install powershell-preview -y
-
 # Optimize build by only copying files that will restore dependencies.
-COPY ./FoodStuffs.sln ./
-COPY ./Core.Services/Core.Services.csproj ./Core.Services/
-COPY ./Core.Model/Core.Model.csproj ./Core.Model/
-COPY ./FoodStuffs.Services/FoodStuffs.Services.csproj ./FoodStuffs.Services/
-COPY ./FoodStuffs.Model/FoodStuffs.Model.csproj ./FoodStuffs.Model/
-COPY ./FoodStuffs.Web/FoodStuffs.Web.csproj ./FoodStuffs.Web/
+COPY ./*.sln ./
+COPY ./*/*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p ./${file%.*}/ && mv $file ./${file%.*}/; done
 COPY ./FoodStuffs.Web/ClientApp/package.json ./FoodStuffs.Web/ClientApp/
 COPY ./FoodStuffs.Web/ClientApp/yarn.lock ./FoodStuffs.Web/ClientApp/
 
@@ -38,7 +33,7 @@ COPY ./ ./
 
 # Build the server app
 RUN cd Scripts && \
-    ./buildApp.ps1
+    ./publishApp.sh
 
 # Copy /out from the build container to the run container
 FROM microsoft/aspnetcore:2.0

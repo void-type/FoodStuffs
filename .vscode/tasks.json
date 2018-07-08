@@ -4,26 +4,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildApp",
-            "command": "./buildApp.sh",
-            "options": {
-                "cwd": "./Scripts"
-            },
-            "type": "shell",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
-                "$msCompile"
-            ]
-        },
-        {
             "label": "buildServerDebug",
             "command": "./buildServerDebug.sh",
             "options": {
@@ -70,8 +50,8 @@
             ]
         },
         {
-            "label": "docker-Production",
-            "command": "./docker-Production.sh",
+            "label": "dockerBuild-Production",
+            "command": "./dockerBuild-Production.sh",
             "options": {
                 "cwd": "./Scripts"
             },
@@ -87,8 +67,8 @@
             ]
         },
         {
-            "label": "docker-Staging",
-            "command": "./docker-Staging.sh",
+            "label": "dockerBuild-Staging",
+            "command": "./dockerBuild-Staging.sh",
             "options": {
                 "cwd": "./Scripts"
             },
@@ -117,6 +97,26 @@
             "problemMatcher": [
                 "$node-sass",
                 "$eslint-compact"
+            ]
+        },
+        {
+            "label": "publishApp",
+            "command": "./publishApp.sh",
+            "options": {
+                "cwd": "./Scripts"
+            },
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact",
+                "$msCompile"
             ]
         },
         {
