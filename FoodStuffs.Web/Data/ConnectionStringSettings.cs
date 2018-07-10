@@ -1,4 +1,4 @@
-namespace FoodStuffs.Services.Data
+namespace FoodStuffs.Web.Data
 {
     public class ConnectionStringSettings
     {
