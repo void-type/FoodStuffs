@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /app
 
 # Install Yarn and Node in the build container
@@ -36,7 +36,7 @@ RUN cd Scripts && \
     ./publishApp.sh
 
 # Copy /out from the build container to the run container
-FROM microsoft/aspnetcore:2.0
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
 ARG env="Production"
 WORKDIR /app
 COPY --from=build-env /app/FoodStuffs.Web/out .
