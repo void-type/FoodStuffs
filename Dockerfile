@@ -2,9 +2,9 @@ FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /app
 
 # Install Yarn and Node in the build container
-ENV NODE_VERSION 8.11.2
-ENV YARN_VERSION 1.7.0
-ENV NODE_DOWNLOAD_SHA 67dc4c06a58d4b23c5378325ad7e0a2ec482b48cea802252b99ebe8538a3ab79
+ENV NODE_VERSION 8.12.0
+ENV YARN_VERSION 1.9.4
+ENV NODE_DOWNLOAD_SHA 3df19b748ee2b6dfe3a03448ebc6186a3a86aeab557018d77a0f7f3314594ef6
 ENV NODE_DOWNLOAD_URL https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz
 
 RUN curl -SL "$NODE_DOWNLOAD_URL" --output nodejs.tar.gz \

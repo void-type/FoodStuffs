@@ -1,9 +1,9 @@
-﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Model.Actions.Recipes;
+﻿using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
 using System.Collections.Generic;
+using VoidCore.Model.Actions.Chain;
 using Xunit;
 
 namespace FoodStuffs.Test.Actions.Recipes
@@ -15,7 +15,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -39,7 +39,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 var recipe1 = MockFactory.Recipe1;
                 var recipe2 = MockFactory.Recipe2;
@@ -110,7 +110,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);
@@ -134,7 +134,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Recipes.Add(MockFactory.Recipe1);

@@ -1,7 +1,7 @@
-﻿using Core.Services.Data;
-using FoodStuffs.Model.Data.Models;
+﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using VoidCore.AspNet.Data;
 
 namespace FoodStuffs.Web.Data
 {
@@ -11,7 +11,6 @@ namespace FoodStuffs.Web.Data
         .Include(c => c.CategoryRecipe)
         .ThenInclude(cr => cr.Recipe);
 
-        public CategoryRepository(DbContext context) : base(context)
-        { }
+        public CategoryRepository(DbContext context) : base(context) { }
     }
 }

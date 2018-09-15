@@ -1,8 +1,8 @@
-using Core.Services.Logging;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using System;
+using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
 {
@@ -10,9 +10,9 @@ namespace FoodStuffs.Web
     {
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSerilog()
-                .Build();
+            .UseStartup<Startup>()
+            .UseSerilog()
+            .Build();
 
         public static int Main(string[] args)
         {

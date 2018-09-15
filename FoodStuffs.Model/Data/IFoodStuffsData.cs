@@ -1,5 +1,5 @@
-﻿using Core.Model.Data;
-using FoodStuffs.Model.Data.Models;
+﻿using FoodStuffs.Model.Data.Models;
+using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Data
 {

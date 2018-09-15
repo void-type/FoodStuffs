@@ -1,10 +1,10 @@
-﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Model.Actions.Recipes;
+﻿using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
 using System.Collections.Generic;
 using System.Linq;
+using VoidCore.Model.Actions.Chain;
 using Xunit;
 
 namespace FoodStuffs.Test.Actions.Recipes
@@ -24,12 +24,12 @@ namespace FoodStuffs.Test.Actions.Recipes
                 PrepTimeMinutes = 2,
                 Categories = new List<string>
                 {
-                    "Category1",
-                    "Category2"
+                "Category1",
+                "Category2"
                 }
             };
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 

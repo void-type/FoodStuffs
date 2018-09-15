@@ -5,6 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core.Model\Core.Model.csproj" />
+    <ProjectReference Include="..\..\VoidCore\VoidCore.Model\VoidCore.Model.csproj" />
   </ItemGroup>
 </Project>

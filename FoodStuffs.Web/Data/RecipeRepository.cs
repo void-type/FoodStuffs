@@ -1,7 +1,7 @@
-﻿using Core.Services.Data;
-using FoodStuffs.Model.Data.Models;
+﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using VoidCore.AspNet.Data;
 
 namespace FoodStuffs.Web.Data
 {
@@ -13,7 +13,6 @@ namespace FoodStuffs.Web.Data
         .Include(r => r.CreatedByUser)
         .Include(r => r.ModifiedByUser);
 
-        public RecipeRepository(DbContext context) : base(context)
-        { }
+        public RecipeRepository(DbContext context) : base(context) { }
     }
 }

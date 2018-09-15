@@ -1,9 +1,9 @@
-﻿using Core.Model.Actions.Responder;
-using Core.Model.Actions.Responses.File;
-using Core.Model.Actions.Responses.Message;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VoidCore.Model.Actions.Responder;
+using VoidCore.Model.Actions.Responses.File;
+using VoidCore.Model.Actions.Responses.Message;
 
 namespace FoodStuffs.Test.Mocks
 {
@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Mocks
         {
             _simpleResponse.Error = new ErrorMessage()
             {
-                Message = userMessage
+            Message = userMessage
             };
             Response = _simpleResponse;
         }
@@ -37,15 +37,15 @@ namespace FoodStuffs.Test.Mocks
         {
             _simpleResponse.PostSuccess = new PostSuccessMessage()
             {
-                Message = userMessage,
-                Id = id
+            Message = userMessage,
+            Id = id
             };
             Response = _simpleResponse;
         }
 
         public override void WithSet<T>(IEnumerable<T> items, string logExtra = null)
         {
-            _simpleResponse.Set = items.Select(item => (object)item).ToList();
+            _simpleResponse.Set = items.Select(item =>(object) item).ToList();
             Response = _simpleResponse;
         }
 

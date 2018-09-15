@@ -1,11 +1,11 @@
-﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Model.Actions.Recipes;
+﻿using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.ViewModels;
 using FoodStuffs.Test.Mocks;
 using System.Collections.Generic;
 using System.Linq;
+using VoidCore.Model.Actions.Chain;
 using Xunit;
 
 namespace FoodStuffs.Test.Actions.Recipes
@@ -19,7 +19,7 @@ namespace FoodStuffs.Test.Actions.Recipes
             var then = MockFactory.DateTimeServiceEarly;
             var now = MockFactory.DateTimeServiceLate;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
                 data.Users.Add(MockFactory.User2);
@@ -34,35 +34,36 @@ namespace FoodStuffs.Test.Actions.Recipes
 
                 data.Recipes.Add(MockFactory.Recipe2);
 
-                data.CategoryRecipes.AddRange(new List<CategoryRecipe> {
+                data.CategoryRecipes.AddRange(new List<CategoryRecipe>
+                {
                     new CategoryRecipe
                     {
                         RecipeId = 11,
-                        CategoryId = 11
+                            CategoryId = 11
                     },
 
                     new CategoryRecipe
                     {
                         RecipeId = 11,
-                        CategoryId = 12
+                            CategoryId = 12
                     },
 
                     new CategoryRecipe
                     {
                         RecipeId = 11,
-                        CategoryId = 13
+                            CategoryId = 13
                     },
 
                     new CategoryRecipe
                     {
                         RecipeId = 12,
-                        CategoryId = 12
+                            CategoryId = 12
                     },
 
                     new CategoryRecipe
                     {
                         RecipeId = 12,
-                        CategoryId = 13
+                            CategoryId = 13
                     }
                 });
 
@@ -76,7 +77,8 @@ namespace FoodStuffs.Test.Actions.Recipes
                     PrepTimeMinutes = 4,
                     Categories = new List<string>
                     {
-                        "Category3","Category4"
+                    "Category3",
+                    "Category4"
                     },
                 };
 
@@ -114,11 +116,11 @@ namespace FoodStuffs.Test.Actions.Recipes
                 Id = 12,
                 Categories = new List<string>
                 {
-                    "Category1"
+                "Category1"
                 }
             };
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 new ActionChain(responder)
                     .Execute(new UpdateRecipe(data, now, recipeViewModel, 11));

@@ -1,9 +1,9 @@
-﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Model.Actions.Recipes;
+﻿using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Test.Mocks;
 using System.Linq;
+using VoidCore.Model.Actions.Chain;
 using Xunit;
 
 namespace FoodStuffs.Test.Actions.Recipes
@@ -15,7 +15,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -39,7 +39,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -52,13 +52,13 @@ namespace FoodStuffs.Test.Actions.Recipes
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
                     RecipeId = 11,
-                    CategoryId = 11
+                        CategoryId = 11
                 });
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
                     RecipeId = 11,
-                    CategoryId = 12
+                        CategoryId = 12
                 });
 
                 data.Recipes.Add(MockFactory.Recipe2);
@@ -68,13 +68,13 @@ namespace FoodStuffs.Test.Actions.Recipes
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
                     RecipeId = 12,
-                    CategoryId = 12
+                        CategoryId = 12
                 });
 
                 data.CategoryRecipes.Add(new CategoryRecipe
                 {
                     RecipeId = 12,
-                    CategoryId = 13
+                        CategoryId = 13
                 });
 
                 data.SaveChanges();
@@ -106,7 +106,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 new ActionChain(responder)
                     .Execute(new DeleteRecipe(data, 12));

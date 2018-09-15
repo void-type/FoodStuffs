@@ -1,4 +1,4 @@
-﻿using Core.Model.Time;
+﻿using VoidCore.Model.Time;
 
 namespace FoodStuffs.Test.Mocks
 {

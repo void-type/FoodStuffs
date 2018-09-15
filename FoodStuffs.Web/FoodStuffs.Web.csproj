@@ -4,20 +4,22 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core.Model\Core.Model.csproj" />
-    <ProjectReference Include="..\Core.Services\Core.Services.csproj" />
+    <ProjectReference Include="..\..\VoidCore\VoidCore.Model\VoidCore.Model.csproj" />
+    <ProjectReference Include="..\..\VoidCore\VoidCore.AspNet\VoidCore.AspNet.csproj" />
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="ClientApp\**" CopyToPublishDirectory="Never" />
+    <Content Remove="out\**" CopyToPublishDirectory="Never" />
   </ItemGroup>
 </Project>

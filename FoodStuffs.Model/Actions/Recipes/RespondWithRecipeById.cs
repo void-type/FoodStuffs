@@ -1,8 +1,8 @@
-﻿using Core.Model.Actions.Responder;
-using Core.Model.Actions.Steps;
-using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
 using System.Linq;
+using VoidCore.Model.Actions.Responder;
+using VoidCore.Model.Actions.Steps;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {

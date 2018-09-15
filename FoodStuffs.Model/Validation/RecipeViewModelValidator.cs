@@ -1,6 +1,6 @@
-﻿using Core.Model.Validation;
-using FoodStuffs.Model.ViewModels;
+﻿using FoodStuffs.Model.ViewModels;
 using System.Linq;
+using VoidCore.Model.Validation;
 
 namespace FoodStuffs.Model.Validation
 {

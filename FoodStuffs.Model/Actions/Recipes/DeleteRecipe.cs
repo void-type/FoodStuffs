@@ -1,11 +1,11 @@
-﻿using Core.Model.Actions.Responder;
-using Core.Model.Actions.Steps;
-using Core.Model.Validation;
-using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using System.Collections.Generic;
 using System.Linq;
+using VoidCore.Model.Actions.Responder;
+using VoidCore.Model.Actions.Steps;
+using VoidCore.Model.Validation;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {

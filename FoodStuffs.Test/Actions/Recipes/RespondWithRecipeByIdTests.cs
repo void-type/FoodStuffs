@@ -1,6 +1,6 @@
-﻿using Core.Model.Actions.Chain;
-using FoodStuffs.Model.Actions.Recipes;
+﻿using FoodStuffs.Model.Actions.Recipes;
 using FoodStuffs.Test.Mocks;
+using VoidCore.Model.Actions.Chain;
 using Xunit;
 
 namespace FoodStuffs.Test.Actions.Recipes
@@ -12,7 +12,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         {
             var responder = MockFactory.Responder;
 
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 data.Users.Add(MockFactory.User1);
 
@@ -33,7 +33,7 @@ namespace FoodStuffs.Test.Actions.Recipes
         [Fact]
         public void RespondWithRecipeByIdNotFound()
         {
-            using (var data = MockFactory.FoodStuffsData())
+            using(var data = MockFactory.FoodStuffsData())
             {
                 var responder = MockFactory.Responder;
 

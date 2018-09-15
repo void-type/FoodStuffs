@@ -1,9 +1,9 @@
-﻿using Core.Model.Data;
-using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
 using System;
+using VoidCore.Model.Data;
 
 namespace FoodStuffs.Web.Data
 {

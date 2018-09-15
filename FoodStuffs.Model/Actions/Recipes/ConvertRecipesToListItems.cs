@@ -1,8 +1,8 @@
-using Core.Model.Actions.Responder;
-using Core.Model.Actions.Steps;
 using FoodStuffs.Model.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using VoidCore.Model.Actions.Responder;
+using VoidCore.Model.Actions.Steps;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
@@ -24,8 +24,8 @@ namespace FoodStuffs.Model.Actions.Recipes
             _listContext.AddRange(_recipesContext.Select(recipe => new RecipeListItem
             {
                 Categories = recipe.Categories,
-                Id = recipe.Id,
-                Name = recipe.Name
+                    Id = recipe.Id,
+                    Name = recipe.Name
             }));
         }
     }

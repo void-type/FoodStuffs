@@ -1,10 +1,3 @@
-using Core.Model.Logging;
-using Core.Model.Time;
-using Core.Services.Action;
-using Core.Services.ClientApp;
-using Core.Services.Configuration;
-using Core.Services.Logging;
-using Core.Services.Time;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
@@ -13,6 +6,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VoidCore.AspNet.Action;
+using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Configuration;
+using VoidCore.AspNet.Logging;
+using VoidCore.AspNet.Time;
+using VoidCore.Model.Logging;
+using VoidCore.Model.Time;
 
 namespace FoodStuffs.Web
 {

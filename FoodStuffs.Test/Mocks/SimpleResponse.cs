@@ -1,7 +1,7 @@
-﻿using Core.Model.Actions.Responses.File;
-using Core.Model.Actions.Responses.Message;
-using Core.Model.Validation;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using VoidCore.Model.Actions.Responses.File;
+using VoidCore.Model.Actions.Responses.Message;
+using VoidCore.Model.Validation;
 
 namespace FoodStuffs.Test.Mocks
 {
