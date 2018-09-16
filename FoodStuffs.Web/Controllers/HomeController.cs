@@ -1,14 +1,16 @@
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using VoidCore.AspNet.Configuration;
 
 namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        [Route("/Error")]
+        [Route("/forbidden")]
+        public IActionResult Forbidden()
+        {
+            return View();
+        }
+
+        [Route("/error")]
         public IActionResult Error()
         {
             return View();

@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VoidCore.AspNet.Action;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
-using VoidCore.AspNet.Time;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
 
@@ -18,36 +16,38 @@ namespace FoodStuffs.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration config, IHostingEnvironment env)
         {
-            _configuration = configuration;
-            _environment = environment;
+            _config = config;
+            _env = env;
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseExceptionPage(_environment)
+            app.UseSpaExceptionPage(_env)
+                .UseSecureTransport(_env)
                 .UseStaticFiles()
-                .AddMvcSpaRoute();
+                .UseSpaMvcRoute();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSettingsSingleton<ApplicationSettings>(_configuration);
+            services.AddSettingsSingleton<ApplicationSettings>(_config);
             var connectionStrings = services
-                .AddSettingsSingleton<ConnectionStringSettings>(_configuration.GetSection(ConnectionStringSettings.SectionName));
+                .AddSettingsSingleton<ConnectionStringSettings>(_config.GetSection(ConnectionStringSettings.SectionName));
 
-            services.AddMvcAntiforgery();
+            services.AddAntiforgery();
+            services.AddApiExceptionFilter(_env);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<ILoggingService, ActionToAspNetLoggerAdapter>();
+            services.AddTransient<ILoggingService, MicrosoftLoggingAdapter>();
             services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
-            services.AddTransient<HttpActionResultResponder>();
+            services.AddTransient<HttpResponder>();
 
             services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
         }
 
-        private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _environment;
+        private readonly IConfiguration _config;
+        private readonly IHostingEnvironment _env;
     }
 }

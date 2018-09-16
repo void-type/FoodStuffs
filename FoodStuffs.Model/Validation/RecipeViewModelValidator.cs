@@ -4,29 +4,29 @@ using VoidCore.Model.Validation;
 
 namespace FoodStuffs.Model.Validation
 {
-    public class RecipeViewModelValidator : AbstractValidator<IRecipeViewModel>
+    public class RecipeViewModelValidator : ValidatorAbstract<IRecipeViewModel>
     {
-        protected override void Rules(IRecipeViewModel entity)
+        protected override void BuildRules()
         {
-            Invalid("name", "Please enter a name.")
-                .When(() => string.IsNullOrWhiteSpace(entity.Name));
+            CreateRule("Please enter a name.", "name")
+                .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-            Invalid("ingredients", "Please enter ingredients.")
-                .When(() => string.IsNullOrWhiteSpace(entity.Ingredients));
+            CreateRule("Please enter ingredients.", "ingredients")
+                .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Ingredients));
 
-            Invalid("directions", "Please enter directions.")
-                .When(() => string.IsNullOrWhiteSpace(entity.Directions));
+            CreateRule("Please enter directions.", "directions")
+                .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Directions));
 
-            Invalid("cookTimeMinutes", "Cook time must be positive.")
-                .When(() => entity.CookTimeMinutes < 0)
-                .ExceptWhen(() => entity.CookTimeMinutes == null);
+            CreateRule("Cook time must be positive.", "cookTimeMinutes")
+                .InvalidWhen(entity => entity.CookTimeMinutes < 0)
+                .ExceptWhen(entity => entity.CookTimeMinutes == null);
 
-            Invalid("prepTimeMinutes", "Prep time must be positive.")
-                .When(() => entity.PrepTimeMinutes < 0)
-                .ExceptWhen(() => entity.PrepTimeMinutes == null);
+            CreateRule("Prep time must be positive.", "prepTimeMinutes")
+                .InvalidWhen(entity => entity.PrepTimeMinutes < 0)
+                .ExceptWhen(entity => entity.PrepTimeMinutes == null);
 
-            Invalid("categories", "Category cannot be blank.")
-                .When(() => entity.Categories.Any(string.IsNullOrWhiteSpace));
+            CreateRule("Category cannot be blank.", "categories")
+                .InvalidWhen(entity => entity.Categories.Any(string.IsNullOrWhiteSpace));
         }
     }
 }
