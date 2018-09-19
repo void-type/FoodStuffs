@@ -1,4 +1,5 @@
 using VoidCore.AspNet.Configuration;
+using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
 {
@@ -6,7 +7,9 @@ namespace FoodStuffs.Web
     {
         public static int Main(string[] args)
         {
-            return WebServer.BuildAndRun<Startup>(args);
+            // TODO: MS warnings are suppressed in logs.
+            var logger = SerilogFileLoggerFactory.Create<Startup>(true);
+            return WebServer.BuildAndRun<Startup>(args, logger);
         }
     }
 }

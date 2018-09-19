@@ -5,10 +5,11 @@ obj/
 out/
 wwwroot/
 node_modules/
-/FoodStuffs.Web/Properties/
+/*.Web/Properties/
+/*.Test/coveragereport/
 
 .gitignore
 .gitattributes
-coverage.json
+/*.Test/coverage.*
 LICENSE
 README.md

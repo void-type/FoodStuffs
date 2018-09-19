@@ -2,7 +2,7 @@
 
 pushd "../FoodStuffs.Web/ClientApp"
 yarn
-yarn run vue-cli-service build
+yarn run vue-cli-service build --modern
 popd
 pushd "../FoodStuffs.Web/"
-dotnet publish --configuration Release --output out
+dotnet publish --configuration "Release" --output "out"
