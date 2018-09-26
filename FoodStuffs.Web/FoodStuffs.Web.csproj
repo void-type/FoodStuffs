@@ -15,8 +15,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="VoidCore.AspNet" Version="1.0.0" />
-    <PackageReference Include="VoidCore.Model" Version="1.0.0" />
+    <PackageReference Include="VoidCore.AspNet" Version="1.0.1" />
+    <PackageReference Include="VoidCore.Model" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
