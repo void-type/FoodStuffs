@@ -1,15 +1,12 @@
-function Stop-OnError {
-  if ($LASTEXITCODE -ne 0) {
-    Pop-Location
-    Exit $LASTEXITCODE
-  }
-}
+. ./util.ps1
 
 Push-Location -Path "../FoodStuffs.Web/ClientApp"
 yarn
 yarn run vue-cli-service lint
 Stop-OnError
-yarn run vue-cli-service build --modern
+yarn run vue-cli-service test:unit
+Stop-OnError
+yarn run vue-cli-service build
 Pop-Location
 Stop-OnError
 ./testServer.ps1

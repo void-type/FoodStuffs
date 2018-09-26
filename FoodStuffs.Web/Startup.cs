@@ -4,6 +4,7 @@ using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VoidCore.AspNet.ClientApp;
@@ -32,19 +33,26 @@ namespace FoodStuffs.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Get the newest MVC behavior.
+            // TODO: for aspnet versions newer than 2.1, update or remove this.
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Settings
             services.AddSettingsSingleton<ApplicationSettings>(_config);
             var connectionStrings = services
                 .AddSettingsSingleton<ConnectionStringSettings>(_config.GetSection(ConnectionStringSettings.SectionName));
 
+            // Infrastructure and authorization
             services.AddAntiforgery();
             services.AddApiExceptionFilter(_env);
+
+            // Dependencies
+            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
             services.AddTransient<ILoggingService, MicrosoftLoggingAdapter>();
             services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
             services.AddTransient<HttpResponder>();
-
-            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
-            services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
         }
 
         private readonly IConfiguration _config;
