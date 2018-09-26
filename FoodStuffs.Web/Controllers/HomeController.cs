@@ -1,17 +1,20 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        [Route("/forbidden")]
-        public IActionResult Forbidden()
+        [AllowAnonymous]
+        [Route("/error")]
+        public IActionResult Error()
         {
             return View();
         }
 
-        [Route("/error")]
-        public IActionResult Error()
+        [AllowAnonymous]
+        [Route("/forbidden")]
+        public IActionResult Forbidden()
         {
             return View();
         }

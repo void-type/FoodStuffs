@@ -1,83 +1,85 @@
-using FoodStuffs.Model.Actions.Recipes;
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Validation;
-using FoodStuffs.Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using VoidCore.AspNet.Action;
-using VoidCore.Model.Actions.Chain;
-using VoidCore.Model.Actions.Steps;
-using VoidCore.Model.Time;
+using FoodStuffs.Model.DomainEvents.Recipes;
+using VoidCore.AspNet.ClientApp;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
-    [Route("api/recipes")]
+    [ApiRoute("recipes")]
     public class RecipesController : Controller
     {
-        public RecipesController(HttpActionResultResponder responder, IFoodStuffsData data, IDateTimeService now)
+        public RecipesController(HttpResponder responder, GetRecipe.Handler getHandler, GetRecipe.Logging getLogging,
+            ListRecipes.Handler listHandler, ListRecipes.Logging listLogging, DeleteRecipe.Handler deleteHandler, DeleteRecipe.Logging deleteLogging,
+            SaveRecipe.Handler updateHandler, SaveRecipe.RequestValidator updateValidator, SaveRecipe.Logging updateLogging)
         {
             _responder = responder;
-            _data = data;
-            _now = now;
-        }
-
-        [HttpPut]
-        public IActionResult Create([FromBody] RecipeViewModel viewModel)
-        {
-            new ActionChain(_responder)
-                .Execute(new Validate<IRecipeViewModel>(new RecipeViewModelValidator(), viewModel))
-                .Execute(new CreateRecipe(_data, _now, viewModel, 1));
-
-            return _responder.Response;
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(int id)
-        {
-            new ActionChain(_responder)
-                .Execute(new DeleteRecipe(_data, id));
-
-            return _responder.Response;
+            _getHandler = getHandler;
+            _getLogging = getLogging;
+            _listHandler = listHandler;
+            _listLogging = listLogging;
+            _saveHandler = updateHandler;
+            _saveValidator = updateValidator;
+            _saveLogging = updateLogging;
+            _deleteHandler = deleteHandler;
+            _deleteLogging = deleteLogging;
         }
 
         [HttpGet]
         public IActionResult Get(int id)
         {
-            new ActionChain(_responder)
-                .Execute(new RespondWithRecipeById(_data, id));
+            var request = new GetRecipe.Request(id);
 
-            return _responder.Response;
+            var result = _getHandler
+                .AddPostProcessor(_getLogging)
+                .Handle(request);
+
+            return _responder.Respond(result);
         }
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List(string nameSearch = null, string categorySearch = null, string sort = null, int take = int.MaxValue, int page = 1)
+        public IActionResult List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string sort = null)
         {
-            var recipesContext = new List<IRecipeViewModel>();
-            var listContext = new List<IRecipeListItem>();
-            var logExtra = $"NameSearch: {nameSearch}, CategorySearch: {categorySearch}, Sort: {sort}, Take: {take}, Page: {page}";
+            var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, sort);
 
-            new ActionChain(_responder)
-                .Execute(new SearchRecipes(_data, nameSearch, categorySearch, recipesContext))
-                .Execute(new SortRecipes(sort, recipesContext))
-                .Execute(new ConvertRecipesToListItems(recipesContext, listContext))
-                .Execute(new RespondWithPaginatedSet<IRecipeListItem>(listContext, take, page, logExtra));
+            var result = _listHandler
+                .AddPostProcessor(_listLogging)
+                .Handle(request);
 
-            return _responder.Response;
+            return _responder.Respond(result);
         }
 
         [HttpPost]
-        public IActionResult Update([FromBody] RecipeViewModel viewModel)
+        public IActionResult Save([FromBody] SaveRecipe.Request request)
         {
-            new ActionChain(_responder)
-                .Execute(new Validate<IRecipeViewModel>(new RecipeViewModelValidator(), viewModel))
-                .Execute(new UpdateRecipe(_data, _now, viewModel, 1));
+            var result = _saveHandler
+                .AddRequestValidator(_saveValidator)
+                .AddPostProcessor(_saveLogging)
+                .Handle(request);
 
-            return _responder.Response;
+            return _responder.Respond(result);
         }
 
-        private readonly IFoodStuffsData _data;
-        private readonly IDateTimeService _now;
-        private readonly HttpActionResultResponder _responder;
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var request = new DeleteRecipe.Request(id);
+
+            var result = _deleteHandler
+                .AddPostProcessor(_deleteLogging)
+                .Handle(request);
+
+            return _responder.Respond(result);
+        }
+
+        private readonly HttpResponder _responder;
+        private readonly GetRecipe.Handler _getHandler;
+        private readonly GetRecipe.Logging _getLogging;
+        private readonly ListRecipes.Handler _listHandler;
+        private readonly ListRecipes.Logging _listLogging;
+        private readonly SaveRecipe.Handler _saveHandler;
+        private readonly SaveRecipe.RequestValidator _saveValidator;
+        private readonly SaveRecipe.Logging _saveLogging;
+        private readonly DeleteRecipe.Handler _deleteHandler;
+        private readonly DeleteRecipe.Logging _deleteLogging;
     }
 }

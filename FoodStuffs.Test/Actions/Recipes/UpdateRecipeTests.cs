@@ -83,7 +83,7 @@ namespace FoodStuffs.Test.Actions.Recipes
                 };
 
                 new ActionChain(responder)
-                    .Execute(new UpdateRecipe(data, now, newRecipeViewModel, 12));
+                    .Execute(new SaveRecipe(data, now, newRecipeViewModel, 12));
 
                 var changedRecipe = data.Recipes.Stored.GetById(recipeToUpdate.Id);
 
@@ -123,7 +123,7 @@ namespace FoodStuffs.Test.Actions.Recipes
             using(var data = MockFactory.FoodStuffsData())
             {
                 new ActionChain(responder)
-                    .Execute(new UpdateRecipe(data, now, recipeViewModel, 11));
+                    .Execute(new SaveRecipe(data, now, recipeViewModel, 11));
             }
 
             Assert.True(responder.ResponseCreated);

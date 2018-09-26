@@ -11,9 +11,9 @@ using VoidCore.Model.Validation;
 
 namespace FoodStuffs.Model.Actions.Recipes
 {
-    public class UpdateRecipe : AbstractActionStep
+    public class SaveRecipe : AbstractActionStep
     {
-        public UpdateRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userId)
+        public SaveRecipe(IFoodStuffsData data, IDateTimeService now, RecipeViewModel viewModel, int userId)
         {
             _data = data;
             _now = now;
