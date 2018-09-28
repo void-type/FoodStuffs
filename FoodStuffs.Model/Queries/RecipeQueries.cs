@@ -8,6 +8,11 @@ namespace FoodStuffs.Model.Queries
 {
     public static class RecipeQueries
     {
+        public static IQueryable<Recipe> WhereById(this IQueryable<Recipe> recipes, int id)
+        {
+            return recipes.Where(r => r.Id == id);
+        }
+
         public static Recipe GetById(this IQueryable<Recipe> recipes, int id)
         {
             return recipes.SingleOrDefault(r => r.Id == id);

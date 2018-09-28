@@ -62,9 +62,9 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 
         public class RecipeListItemDto
         {
-            public IEnumerable<string> Categories { get; set; }
             public int Id { get; set; }
             public string Name { get; set; }
+            public IEnumerable<string> Categories { get; set; }
         }
 
         public class Logging : ItemSetPageLogging<Request, RecipeListItemDto>
