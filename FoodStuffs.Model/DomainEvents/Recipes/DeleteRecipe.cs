@@ -1,6 +1,7 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,10 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
     {
         public class Handler : DomainEventAbstract<Request, PostSuccessUserMessage<int>>
         {
-            public Handler(IFoodStuffsData data)
+            public Handler(IFoodStuffsData data, ICategoryManager categoryManager)
             {
                 _data = data;
+                _categoryManager = categoryManager;
             }
 
             protected override Result<PostSuccessUserMessage<int>> HandleInternal(Request request)
@@ -30,12 +32,11 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                     return Result.Fail<PostSuccessUserMessage<int>>("Recipe not found.");
                 }
 
-                var recipeCategories = recipe.CategoryRecipe;
-                _data.CategoryRecipes.RemoveRange(recipeCategories);
+                var categoryRecipes = _data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id);
+                var unusedCategories = _categoryManager.FindUnusedCategories(recipe, categoryRecipes);
 
-                var unusedCategories = FindUnusedCategories(recipe);
+                _data.CategoryRecipes.RemoveRange(categoryRecipes);
                 _data.Categories.RemoveRange(unusedCategories);
-
                 _data.Recipes.Remove(recipe);
 
                 _data.SaveChanges();
@@ -43,23 +44,8 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 return Result.Ok(PostSuccessUserMessage.Create<int>("Recipe deleted.", request.Id));
             }
 
-            private IEnumerable<Category> FindUnusedCategories(Recipe recipe)
-            {
-                var categoryIdsToCheck = recipe.CategoryRecipe.Select(cr => cr.CategoryId);
-
-                var categoriesToCheck = _data.Categories.Stored.Where(c => categoryIdsToCheck.Contains(c.Id));
-
-                foreach (var categoryToCheck in categoriesToCheck)
-                {
-                    if (_data.CategoryRecipes.Stored.Where(cr => cr.CategoryId == categoryToCheck.Id)
-                        .All(cr => cr.RecipeId == recipe.Id))
-                    {
-                        yield return categoryToCheck;
-                    }
-                }
-            }
-
             private readonly IFoodStuffsData _data;
+            private readonly ICategoryManager _categoryManager;
         }
 
         public class Request

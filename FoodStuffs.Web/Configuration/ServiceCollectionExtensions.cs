@@ -1,4 +1,5 @@
 using FoodStuffs.Model.DomainEvents.Recipes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodStuffs.Web.Configuration
 {

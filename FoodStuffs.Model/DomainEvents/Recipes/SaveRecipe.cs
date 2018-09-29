@@ -51,62 +51,6 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 return recipe;
             }
 
-            private void AddCategoriesAndCategoryRecipes(int recipeId, Request request)
-            {
-                foreach (var viewModelCategoryName in request.Categories)
-                {
-                    var category = _data.Categories.Stored.GetByName(viewModelCategoryName) ?? CreateCategory(viewModelCategoryName);
-
-                    var existingCategoryRecipe = _data.CategoryRecipes.Stored.GetById(recipeId, category.Id);
-
-                    if (existingCategoryRecipe == null)
-                    {
-                        CreateCategoryRecipe(recipeId, category);
-                    }
-                }
-            }
-
-            private Category CreateCategory(string viewModelCategory)
-            {
-                var newCategory = _data.Categories.New;
-                newCategory.Name = viewModelCategory;
-                _data.Categories.Add(newCategory);
-                return newCategory;
-            }
-
-            private void CreateCategoryRecipe(int recipeId, Category category)
-            {
-                var categoryRecipe = _data.CategoryRecipes.New;
-                categoryRecipe.RecipeId = recipeId;
-                categoryRecipe.CategoryId = category.Id;
-                _data.CategoryRecipes.Add(categoryRecipe);
-            }
-
-            private IEnumerable<Category> FindUnusedCategories(Recipe recipe, IEnumerable<CategoryRecipe> unusedCategoryRecipes)
-            {
-                var categoryIds = unusedCategoryRecipes.Select(cr => cr.CategoryId);
-
-                var categories = _data.Categories.Stored.Where(category => categoryIds.Contains(category.Id));
-
-                foreach (var category in categories)
-                {
-                    if (category.CategoryRecipe.All(cr => cr.RecipeId == recipe.Id))
-                    {
-                        yield return category;
-                    }
-                }
-            }
-
-            private IEnumerable<CategoryRecipe> FindUnusedCategoryRecipes(Recipe recipe, Request request)
-            {
-                var newCategoryNames = request.Categories.Select(c => c.ToUpper().Trim()).ToList();
-
-                var unusedCategoryRecipes =
-                    recipe.CategoryRecipe.Where(cr => !newCategoryNames.Contains(cr.Category.Name.ToUpper().Trim()));
-
-                return unusedCategoryRecipes;
-            }
-
             private readonly IFoodStuffsData _data;
             private readonly IMapper _mapper;
             private readonly DateTime _now;
@@ -155,9 +99,6 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 CreateRule("Prep time must be positive.", "prepTimeMinutes")
                     .InvalidWhen(entity => entity.PrepTimeMinutes < 0)
                     .ExceptWhen(entity => entity.PrepTimeMinutes == null);
-
-                CreateRule("Category cannot be blank.", "categories")
-                    .InvalidWhen(entity => entity.Categories.Any(string.IsNullOrWhiteSpace));
             }
         }
 
