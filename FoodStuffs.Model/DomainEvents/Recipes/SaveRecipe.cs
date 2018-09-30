@@ -5,6 +5,7 @@ using FoodStuffs.Model.Queries;
 using FoodStuffs.Model.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using VoidCore.Model.DomainEvents;
 using VoidCore.Model.Logging;
@@ -36,11 +37,63 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 recipe.ModifiedOnUtc = _now;
                 recipe.ModifiedByUserId = _user.Id;
 
-                // TODO: figure out categories and categoryRecipes, share this knowledge with delete
+                var cleanedRequestedCategories = CleanCategoryNames(request.Categories);
+
+                var currentCategoriesAndCategoryRecipes = _data.CategoryRecipes.Stored
+                    .WhereForRecipe(recipe.Id)
+                    .Join(_data.Categories.Stored,
+                        cr => cr.CategoryId,
+                        c => c.Id,
+                        (cr, c) => new { Category = c, CategoryRecipe = cr });
+
+                var categoriesToCreate = cleanedRequestedCategories
+                    .Where(cName => !_data.Categories.Stored
+                        .Select(c => c.Name)
+                        .Contains(cName))
+                    .Select(cName => CreateCategory(cName));
+
+                _data.Categories.AddRange(categoriesToCreate);
+
+                var categoryRecipesToRemove = currentCategoriesAndCategoryRecipes
+                    .Where(crc => !cleanedRequestedCategories.Contains(crc.Category.Name))
+                    .Select(crc => crc.CategoryRecipe);
+
+                _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
+
+                var categoryRecipesToCreate = _data.Categories.Stored
+                    .Where(c => cleanedRequestedCategories.Contains(c.Name))
+                    .Where(c => !currentCategoriesAndCategoryRecipes
+                        .Select(crc => crc.Category.Name)
+                        .Contains(c.Name))
+                    .Select(c => CreateCategoryRecipe(recipe.Id, c));
+
+                _data.CategoryRecipes.AddRange(categoryRecipesToCreate);
 
                 _data.SaveChanges();
 
                 return Result.Ok(PostSuccessUserMessage.Create<int>("Recipe saved.", request.Id));
+            }
+
+            private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)
+            {
+                var categoryRecipe = _data.CategoryRecipes.New;
+                categoryRecipe.RecipeId = recipeId;
+                categoryRecipe.CategoryId = category.Id;
+                return categoryRecipe;
+            }
+
+            private Category CreateCategory(string viewModelCategory)
+            {
+                var category = _data.Categories.New;
+                category.Name = viewModelCategory;
+                return category;
+            }
+
+            private IEnumerable<string> CleanCategoryNames(IEnumerable<string> categories)
+            {
+                return categories
+                    .Where(c => !string.IsNullOrWhiteSpace(c))
+                    .Select(c => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(c.Trim()));
             }
 
             private Recipe NewFromData()

@@ -5,10 +5,9 @@ namespace FoodStuffs.Model.Queries
 {
     public static class CategoryRecipeQueries
     {
-        public static CategoryRecipe GetById(this IQueryable<CategoryRecipe> categoryRecipes, int recipeId,
-            int categoryId)
+        public static IQueryable<CategoryRecipe> WhereForRecipe(this IQueryable<CategoryRecipe> collection, int recipeId)
         {
-            return categoryRecipes.SingleOrDefault(cr => cr.RecipeId == recipeId && cr.CategoryId == categoryId);
+            return collection.Where(cr => cr.RecipeId == recipeId);
         }
     }
 }

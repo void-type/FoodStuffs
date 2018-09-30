@@ -1,9 +1,5 @@
 using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
-using FoodStuffs.Model.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using VoidCore.Model.DomainEvents;
 using VoidCore.Model.Logging;
@@ -15,29 +11,26 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
     {
         public class Handler : DomainEventAbstract<Request, PostSuccessUserMessage<int>>
         {
-            public Handler(IFoodStuffsData data, ICategoryManager categoryManager)
+            public Handler(IFoodStuffsData data)
             {
                 _data = data;
-                _categoryManager = categoryManager;
             }
 
             protected override Result<PostSuccessUserMessage<int>> HandleInternal(Request request)
             {
-                var recipe = _data.Recipes.Stored
+                var recipeToRemove = _data.Recipes.Stored
                     .WhereById(request.Id)
                     .FirstOrDefault();
 
-                if (recipe == null)
+                if (recipeToRemove == null)
                 {
                     return Result.Fail<PostSuccessUserMessage<int>>("Recipe not found.");
                 }
 
-                var categoryRecipes = _data.CategoryRecipes.Stored.Where(cr => cr.RecipeId == recipe.Id);
-                var unusedCategories = _categoryManager.FindUnusedCategories(recipe, categoryRecipes);
+                var categoryRecipesToRemove = _data.CategoryRecipes.Stored.WhereForRecipe(recipeToRemove.Id);
 
-                _data.CategoryRecipes.RemoveRange(categoryRecipes);
-                _data.Categories.RemoveRange(unusedCategories);
-                _data.Recipes.Remove(recipe);
+                _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
+                _data.Recipes.Remove(recipeToRemove);
 
                 _data.SaveChanges();
 
@@ -45,7 +38,6 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             }
 
             private readonly IFoodStuffsData _data;
-            private readonly ICategoryManager _categoryManager;
         }
 
         public class Request
