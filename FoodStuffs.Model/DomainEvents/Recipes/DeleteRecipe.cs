@@ -3,13 +3,13 @@ using FoodStuffs.Model.Queries;
 using System.Linq;
 using VoidCore.Model.DomainEvents;
 using VoidCore.Model.Logging;
-using VoidCore.Model.Responses.Message;
+using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class DeleteRecipe
     {
-        public class Handler : DomainEventAbstract<Request, PostSuccessUserMessage<int>>
+        public class Handler : EventHandlerAbstract<Request, PostSuccessUserMessage<int>>
         {
             public Handler(IFoodStuffsData data)
             {
@@ -50,9 +50,9 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             public int Id { get; }
         }
 
-        public class Logging : PostSuccessUserMessageLogging<Request, int>
+        public class Logger : PostSuccessUserMessageEventLogger<Request, int>
         {
-            public Logging(ILoggingService logger) : base(logger) { }
+            public Logger(ILoggingService logger) : base(logger) { }
 
             public override void OnBoth(Request request, IResult<PostSuccessUserMessage<int>> result)
             {

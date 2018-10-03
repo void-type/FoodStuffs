@@ -1,6 +1,5 @@
-using FoodStuffs.Model.Validation;
-using FoodStuffs.Model.ViewModels;
 using System.Linq;
+using FoodStuffs.Model.DomainEvents.Recipes;
 using Xunit;
 
 namespace FoodStuffs.Test.Validation
@@ -13,14 +12,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(" \n")]
         public void InvalidWhenDirectionsEmpty(string directions)
         {
-            var recipe = new RecipeViewModel
-            {
-                Directions = directions
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, null, directions, null, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "directions"));
+            Assert.True(result.IsFailed);
+            Assert.NotEmpty(result.Failures.Where(x => x.UiHandle == "directions"));
         }
 
         [Theory]
@@ -29,14 +26,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(" \n")]
         public void InvalidWhenIngredientsEmpty(string ingredients)
         {
-            var recipe = new RecipeViewModel
-            {
-                Ingredients = ingredients
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, ingredients, null, null, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "ingredients"));
+            Assert.True(result.IsFailed);
+            Assert.NotEmpty(result.Failures.Where(x => x.UiHandle == "ingredients"));
         }
 
         [Theory]
@@ -45,14 +40,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(" \n")]
         public void InvalidWhenRecipeNameEmpty(string recipeName)
         {
-            var recipe = new RecipeViewModel
-            {
-                Name = recipeName
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, recipeName, null, null, null, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "name"));
+            Assert.True(result.IsFailed);
+            Assert.NotEmpty(result.Failures.Where(x => x.UiHandle == "name"));
         }
 
         [Theory]
@@ -60,14 +53,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(-1000)]
         private void InvalidWhenCookTimeNegative(int? time)
         {
-            var recipe = new RecipeViewModel
-            {
-                CookTimeMinutes = time
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, null, null, time, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "cookTimeMinutes"));
+            Assert.True(result.IsFailed);
+            Assert.NotEmpty(result.Failures.Where(x => x.UiHandle == "cookTimeMinutes"));
         }
 
         [Theory]
@@ -75,14 +66,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(-1000)]
         private void InvalidWhenPrepTimeNegative(int? time)
         {
-            var recipe = new RecipeViewModel
-            {
-                PrepTimeMinutes = time
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, null, null, null, time, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.NotEmpty(errors.Where(x => x.FieldName == "prepTimeMinutes"));
+            Assert.True(result.IsFailed);
+            Assert.NotEmpty(result.Failures.Where(x => x.UiHandle == "prepTimeMinutes"));
         }
 
         [Theory]
@@ -92,14 +81,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(1000)]
         private void ValidWhenCookTimeNullOrPositive(int? time)
         {
-            var recipe = new RecipeViewModel
-            {
-                CookTimeMinutes = time
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, null, null, time, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "cookTimeMinutes"));
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Failures.Where(x => x.UiHandle == "cookTimeMinutes"));
         }
 
         [Theory]
@@ -107,14 +94,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWhenDirectionsNotEmpty(string directions)
         {
-            var recipe = new RecipeViewModel
-            {
-                Directions = directions
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, null, directions, null, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "directions"));
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Failures.Where(x => x.UiHandle == "directions"));
         }
 
         [Theory]
@@ -122,14 +107,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWhenIngredientsNotEmpty(string ingredients)
         {
-            var recipe = new RecipeViewModel
-            {
-                Ingredients = ingredients
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, ingredients, null, null, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "ingredients"));
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Failures.Where(x => x.UiHandle == "ingredients"));
         }
 
         [Theory]
@@ -139,14 +122,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData(1000)]
         private void ValidWhenPrepTimeNullOrPositive(int? time)
         {
-            var recipe = new RecipeViewModel
-            {
-                PrepTimeMinutes = time
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, null, null, null, null, time, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "prepTimeMinutes"));
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Failures.Where(x => x.UiHandle == "prepTimeMinutes"));
         }
 
         [Theory]
@@ -154,14 +135,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWhenRecipeNameNotEmpty(string recipeName)
         {
-            var recipe = new RecipeViewModel
-            {
-                Name = recipeName
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, recipeName, null, null, null, null, new string[]{});
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.Empty(errors.Where(x => x.FieldName == "name"));
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Failures.Where(x => x.UiHandle == "name"));
         }
 
         [Theory]
@@ -169,16 +148,12 @@ namespace FoodStuffs.Test.Validation
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         private void ValidWithMinimumInfo(string testString)
         {
-            var recipe = new RecipeViewModel
-            {
-                Name = testString,
-                Directions = testString,
-                Ingredients = testString
-            };
-            var validator = new RecipeViewModelValidator();
-            var errors = validator.Validate(recipe);
+            var recipe = new SaveRecipe.Request(0, testString, testString, testString, null, null, null);
+            var validator = new SaveRecipe.RequestValidator();
+            var result = validator.Validate(recipe);
 
-            Assert.Empty(errors);
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Failures);
         }
     }
 }

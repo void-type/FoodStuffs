@@ -7,20 +7,20 @@ namespace FoodStuffs.Web.Controllers.Api
     [ApiRoute("recipes")]
     public class RecipesController : Controller
     {
-        public RecipesController(HttpResponder responder, GetRecipe.Handler getHandler, GetRecipe.Logging getLogging,
-            ListRecipes.Handler listHandler, ListRecipes.Logging listLogging, DeleteRecipe.Handler deleteHandler, DeleteRecipe.Logging deleteLogging,
-            SaveRecipe.Handler updateHandler, SaveRecipe.RequestValidator updateValidator, SaveRecipe.Logging updateLogging)
+        public RecipesController(HttpResponder responder, GetRecipe.Handler getHandler, GetRecipe.Logger getLogger,
+            ListRecipes.Handler listHandler, ListRecipes.Logger listLogger, DeleteRecipe.Handler deleteHandler, DeleteRecipe.Logger deleteLogger,
+            SaveRecipe.Handler updateHandler, SaveRecipe.RequestValidator updateValidator, SaveRecipe.Logger updateLogger)
         {
             _responder = responder;
             _getHandler = getHandler;
-            _getLogging = getLogging;
+            _getLogger = getLogger;
             _listHandler = listHandler;
-            _listLogging = listLogging;
+            _listLogger = listLogger;
             _saveHandler = updateHandler;
             _saveValidator = updateValidator;
-            _saveLogging = updateLogging;
+            _saveLogger = updateLogger;
             _deleteHandler = deleteHandler;
-            _deleteLogging = deleteLogging;
+            _deleteLogger = deleteLogger;
         }
 
         [HttpGet]
@@ -29,7 +29,7 @@ namespace FoodStuffs.Web.Controllers.Api
             var request = new GetRecipe.Request(id);
 
             var result = _getHandler
-                .AddPostProcessor(_getLogging)
+                .AddPostProcessor(_getLogger)
                 .Handle(request);
 
             return _responder.Respond(result);
@@ -42,7 +42,7 @@ namespace FoodStuffs.Web.Controllers.Api
             var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, sort);
 
             var result = _listHandler
-                .AddPostProcessor(_listLogging)
+                .AddPostProcessor(_listLogger)
                 .Handle(request);
 
             return _responder.Respond(result);
@@ -53,7 +53,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var result = _saveHandler
                 .AddRequestValidator(_saveValidator)
-                .AddPostProcessor(_saveLogging)
+                .AddPostProcessor(_saveLogger)
                 .Handle(request);
 
             return _responder.Respond(result);
@@ -65,7 +65,7 @@ namespace FoodStuffs.Web.Controllers.Api
             var request = new DeleteRecipe.Request(id);
 
             var result = _deleteHandler
-                .AddPostProcessor(_deleteLogging)
+                .AddPostProcessor(_deleteLogger)
                 .Handle(request);
 
             return _responder.Respond(result);
@@ -73,13 +73,13 @@ namespace FoodStuffs.Web.Controllers.Api
 
         private readonly HttpResponder _responder;
         private readonly GetRecipe.Handler _getHandler;
-        private readonly GetRecipe.Logging _getLogging;
+        private readonly GetRecipe.Logger _getLogger;
         private readonly ListRecipes.Handler _listHandler;
-        private readonly ListRecipes.Logging _listLogging;
+        private readonly ListRecipes.Logger _listLogger;
         private readonly SaveRecipe.Handler _saveHandler;
         private readonly SaveRecipe.RequestValidator _saveValidator;
-        private readonly SaveRecipe.Logging _saveLogging;
+        private readonly SaveRecipe.Logger _saveLogger;
         private readonly DeleteRecipe.Handler _deleteHandler;
-        private readonly DeleteRecipe.Logging _deleteLogging;
+        private readonly DeleteRecipe.Logger _deleteLogger;
     }
 }

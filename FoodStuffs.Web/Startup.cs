@@ -1,4 +1,6 @@
 using FoodStuffs.Model.Data;
+using FoodStuffs.Model.DomainEvents.Recipes;
+using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
+using VoidCore.Model.ClientApp;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
 
@@ -49,10 +52,14 @@ namespace FoodStuffs.Web
             // Dependencies
             services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<HttpResponder>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
-            services.AddTransient<ILoggingService, MicrosoftLoggingAdapter>();
-            services.AddTransient<IDateTimeService, UtcNowDateTimeService>();
-            services.AddTransient<HttpResponder>();
+            services.AddScoped<ILoggingService, MicrosoftLoggingAdapter>();
+            services.AddScoped<IDateTimeService, UtcNowDateTimeService>();
+            services.AddScoped<GetApplicationInfo.IApplicationInfo, WebApplicationInfo>();
+
+            // Domain Events
+            services.AddDomainEvents();
         }
 
         private readonly IConfiguration _config;

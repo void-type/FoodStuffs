@@ -12,7 +12,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class GetRecipe
     {
-        public class Handler : DomainEventAbstract<Request, RecipeDto>
+        public class Handler : EventHandlerAbstract<Request, RecipeDto>
         {
             public Handler(IFoodStuffsData data, IMapper mapper)
             {
@@ -64,9 +64,9 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             public IEnumerable<string> Categories { get; set; } = new List<string>();
         }
 
-        public class Logging : FallibleLogging<Request, RecipeDto>
+        public class Logger : FallibleEventLogger<Request, RecipeDto>
         {
-            public Logging(ILoggingService logger) : base(logger) { }
+            public Logger(ILoggingService logger) : base(logger) { }
 
             public override void OnBoth(Request request, IResult<RecipeDto> result)
             {

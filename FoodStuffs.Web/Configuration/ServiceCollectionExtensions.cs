@@ -1,5 +1,6 @@
 using FoodStuffs.Model.DomainEvents.Recipes;
 using Microsoft.Extensions.DependencyInjection;
+using VoidCore.Model.ClientApp;
 
 namespace FoodStuffs.Web.Configuration
 {
@@ -7,18 +8,21 @@ namespace FoodStuffs.Web.Configuration
     {
         public static void AddDomainEvents(this IServiceCollection services)
         {
-            services.AddTransient<GetRecipe.Handler>();
-            services.AddTransient<GetRecipe.Logging>();
+            services.AddScoped<GetApplicationInfo.Handler>();
+            services.AddScoped<GetApplicationInfo.Logger>();
 
-            services.AddTransient<ListRecipes.Handler>();
-            services.AddTransient<ListRecipes.Logging>();
+            services.AddScoped<GetRecipe.Handler>();
+            services.AddScoped<GetRecipe.Logger>();
 
-            services.AddTransient<SaveRecipe.Handler>();
-            services.AddTransient<SaveRecipe.RequestValidator>();
-            services.AddTransient<SaveRecipe.Logging>();
+            services.AddScoped<ListRecipes.Handler>();
+            services.AddScoped<ListRecipes.Logger>();
 
-            services.AddTransient<DeleteRecipe.Handler>();
-            services.AddTransient<DeleteRecipe.Logging>();
+            services.AddScoped<SaveRecipe.Handler>();
+            services.AddScoped<SaveRecipe.RequestValidator>();
+            services.AddScoped<SaveRecipe.Logger>();
+
+            services.AddScoped<DeleteRecipe.Handler>();
+            services.AddScoped<DeleteRecipe.Logger>();
         }
     }
 }

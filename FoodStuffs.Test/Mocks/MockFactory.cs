@@ -81,8 +81,6 @@ namespace FoodStuffs.Test.Mocks
             ModifiedByUserId = 11
         };
 
-        public static SimpleActionResponder Responder => new SimpleActionResponder();
-
         public static User User1 => new User
         {
             Id = 11,

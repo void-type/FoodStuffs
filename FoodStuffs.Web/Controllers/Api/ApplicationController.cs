@@ -8,20 +8,26 @@ namespace FoodStuffs.Web.Controllers.Api
     public class ApplicationController : Controller
     {
 
-        public ApplicationController(HttpResponder responder, IApplicationInfo applicationInfo)
+        public ApplicationController(HttpResponder responder, GetApplicationInfo.Handler getApplicationInfoHandler, GetApplicationInfo.Logger getApplicationInfoLogger)
         {
             _responder = responder;
-            _applicationInfo = applicationInfo;
+            _getApplicationInfoHandler = getApplicationInfoHandler;
+            _getApplicationInfoLogger = getApplicationInfoLogger;
         }
 
         [HttpGet]
         [Route("info")]
         public IActionResult GetInfo()
         {
-            return _responder.Respond(_applicationInfo);
+            var result = _getApplicationInfoHandler
+                .AddPostProcessor(_getApplicationInfoLogger)
+                .Handle(new GetApplicationInfo.Request());
+
+            return _responder.Respond(result);
         }
 
         private readonly HttpResponder _responder;
-        private readonly IApplicationInfo _applicationInfo;
+        private readonly GetApplicationInfo.Handler _getApplicationInfoHandler;
+        private readonly GetApplicationInfo.Logger _getApplicationInfoLogger;
     }
 }

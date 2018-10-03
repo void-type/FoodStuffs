@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using VoidCore.Model.DomainEvents;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Queries;
-using VoidCore.Model.Responses.ItemSet;
+using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class ListRecipes
     {
-        public class Handler : DomainEventAbstract<Request, IItemSetPage<RecipeListItemDto>>
+        public class Handler : EventHandlerAbstract<Request, IItemSetPage<RecipeListItemDto>>
         {
             public Handler(IFoodStuffsData data, IMapper mapper)
             {
@@ -67,9 +67,9 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             public IEnumerable<string> Categories { get; set; }
         }
 
-        public class Logging : ItemSetPageLogging<Request, RecipeListItemDto>
+        public class Logger : ItemSetPageEventLogger<Request, RecipeListItemDto>
         {
-            public Logging(ILoggingService logger) : base(logger) { }
+            public Logger(ILoggingService logger) : base(logger) { }
 
             public override void OnBoth(Request request, IResult<IItemSetPage<RecipeListItemDto>> result)
             {
