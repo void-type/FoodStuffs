@@ -1,6 +1,6 @@
 Push-Location -Path "../FoodStuffs.Web/ClientApp"
-yarn
-yarn run vue-cli-service build --mode "development"
+npm install
+npm run build --mode "development"
 Pop-Location
 
 Push-Location -Path "../FoodStuffs.Web"

@@ -1,3 +1,3 @@
 Push-Location -Path "../FoodStuffs.Web/ClientApp"
-yarn run vue-cli-service lint
+npm run lint
 Pop-Location

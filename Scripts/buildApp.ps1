@@ -1,12 +1,12 @@
 . ./util.ps1
 
 Push-Location -Path "../FoodStuffs.Web/ClientApp"
-yarn
-yarn run vue-cli-service lint
+npm install
+npm run lint
 Stop-OnError
-yarn run vue-cli-service test:unit
+npm run test:unit
 Stop-OnError
-yarn run vue-cli-service build
+npm run build
 Pop-Location
 Stop-OnError
 ./testServer.ps1
