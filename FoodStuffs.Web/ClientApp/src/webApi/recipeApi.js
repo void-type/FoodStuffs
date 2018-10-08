@@ -1,12 +1,6 @@
 import axios from 'axios';
 
 export default {
-  create(recipe, success, failure) {
-    axios.put('api/recipes', recipe)
-      .then(response => success(response.data))
-      .catch(error => failure(error.response));
-  },
-
   delete(recipe, success, failure) {
     axios.delete('api/recipes', { params: { id: recipe.id } })
       .then(response => success(response.data))
@@ -25,7 +19,7 @@ export default {
       .catch(error => failure(error.response));
   },
 
-  update(recipe, success, failure) {
+  save(recipe, success, failure) {
     axios.post('api/recipes', recipe)
       .then(response => success(response.data))
       .catch(error => failure(error.response));
