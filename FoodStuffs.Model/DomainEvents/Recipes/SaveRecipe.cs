@@ -50,7 +50,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                     .Where(cName => !_data.Categories.Stored
                         .Select(c => c.Name)
                         .Contains(cName))
-                    .Select(cName => CreateCategory(cName));
+                    .Select(CreateCategory);
 
                 _data.Categories.AddRange(categoriesToCreate);
 
@@ -71,7 +71,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 
                 _data.SaveChanges();
 
-                return Result.Ok(PostSuccessUserMessage.Create<int>("Recipe saved.", request.Id));
+                return Result.Ok(PostSuccessUserMessage.Create("Recipe saved.", request.Id));
             }
 
             private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)
@@ -89,11 +89,12 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 return category;
             }
 
-            private IEnumerable<string> CleanCategoryNames(IEnumerable<string> categories)
+            private string[] CleanCategoryNames(IEnumerable<string> categories)
             {
                 return categories
                     .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Select(c => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(c.Trim()));
+                    .Select(c => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(c.Trim()))
+                    .ToArray();
             }
 
             private Recipe NewFromData()

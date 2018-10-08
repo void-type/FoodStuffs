@@ -34,7 +34,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 
                 _data.SaveChanges();
 
-                return Result.Ok(PostSuccessUserMessage.Create<int>("Recipe deleted.", request.Id));
+                return Result.Ok(PostSuccessUserMessage.Create("Recipe deleted.", request.Id));
             }
 
             private readonly IFoodStuffsData _data;

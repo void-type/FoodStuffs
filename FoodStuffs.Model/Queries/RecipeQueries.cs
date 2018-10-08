@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Data.Models;
-using System.Collections.Generic;
 using System.Linq;
 using static FoodStuffs.Model.DomainEvents.Recipes.ListRecipes;
 

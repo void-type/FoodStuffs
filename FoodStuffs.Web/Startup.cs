@@ -1,5 +1,4 @@
 using FoodStuffs.Model.Data;
-using FoodStuffs.Model.DomainEvents.Recipes;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
