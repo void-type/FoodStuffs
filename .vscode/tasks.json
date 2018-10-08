@@ -116,7 +116,7 @@
         },
         {
             "label": "dockerBuild-Production",
-            "command": "./dockerBuild-Production.sh",
+            "command": "./dockerBuild-Production.ps1",
             "options": {
                 "cwd": "./Scripts"
             },
@@ -133,7 +133,7 @@
         },
         {
             "label": "dockerBuild-Staging",
-            "command": "./dockerBuild-Staging.sh",
+            "command": "./dockerBuild-Staging.ps1",
             "options": {
                 "cwd": "./Scripts"
             },

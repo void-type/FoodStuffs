@@ -1,4 +1,6 @@
-Push-Location -Path "../FoodStuffs.Web/ClientApp"
-yarn
-yarn run vue-cli-service build --watch --mode "development"
+. ./util.ps1
+
+Push-Location -Path "$webClientProjectFolder"
+npm install
+npm run build -- --watch --mode "development"
 Pop-Location

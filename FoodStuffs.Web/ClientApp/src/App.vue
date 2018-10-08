@@ -18,10 +18,10 @@
 import { mapActions, mapGetters } from 'vuex';
 import router from './router';
 import store from './store';
-import RecipeViewer from './components/RecipeViewer.vue';
-import AppMessageCenter from './components/AppMessageCenter.vue';
-import AppHeader from './components/AppHeader.vue';
-import AppFooter from './components/AppFooter.vue';
+import RecipeViewer from './viewComponents/RecipeViewer.vue';
+import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
+import AppHeader from './viewComponents/AppHeader.vue';
+import AppFooter from './viewComponents/AppFooter.vue';
 
 export default {
   components: {
@@ -110,10 +110,10 @@ a:link {
 }
 
 .slide-fade-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 .slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 @media screen {

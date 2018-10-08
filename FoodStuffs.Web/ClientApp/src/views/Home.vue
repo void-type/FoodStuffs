@@ -7,8 +7,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import SelectSidebar from '../components/SelectSidebar.vue';
-import RecipeViewer from '../components/RecipeViewer.vue';
+import SelectSidebar from '../viewComponents/SelectSidebar.vue';
+import RecipeViewer from '../viewComponents/RecipeViewer.vue';
 
 export default {
   components: {
@@ -22,5 +22,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

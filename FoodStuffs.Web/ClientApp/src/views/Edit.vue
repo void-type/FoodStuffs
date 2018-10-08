@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import SelectSidebar from '../components/SelectSidebar.vue';
-import RecipeEditor from '../components/RecipeEditor.vue';
+import SelectSidebar from '../viewComponents/SelectSidebar.vue';
+import RecipeEditor from '../viewComponents/RecipeEditor.vue';
 
 export default {
   components: {
@@ -18,5 +18,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

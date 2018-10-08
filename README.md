@@ -4,21 +4,20 @@ A web application for managing recipes based on .Net Core 2.1 and Vue.js 2.0.
 
 ## Make a Database
 
-    1. Build a SQL Server database using the migration scripts in /Scripts/sql
-    2. Set a connection string in an appsettings.{environment}.json file.
+1. Build a SQL Server database using the migration scripts in /Scripts/sql
+2. Set a connection string in an appsettings.{environment}.json file.
 
 ## Get some tools
 
 - [.Net Core SDK ^2.1.400](https://www.microsoft.com/net/download)
-- [Yarn ^1.9.0](https://yarnpkg.com/lang/en/docs/install/)
 - [Node ^8.11.0](https://nodejs.org/en/)
 - [Docker ^18.00 (optional)](https://docker.com)
+
+Run installAndUpdateTools.ps1 in Scripts to get some dotnet global tools needed for running other scripts.
 
 ## Developers
 
 You will find everything you need to build and test this project in the Scripts folder.
-
-There is a script to install and update global tools used to develop this project.
 
 There are also VSCode tasks for most scripts.
 
@@ -33,5 +32,5 @@ cd Scripts/
 
 ## Docker Support with multistage build
 
-Git clone and run the DockerFile. You don't need .Net or Yarn locally.
+Git clone and run the DockerFile. You don't need .Net or Node locally for this.
 buildDocker-Staging.ps1 will build and run a Docker container on port 3333.

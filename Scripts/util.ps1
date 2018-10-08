@@ -4,3 +4,11 @@ function Stop-OnError {
     Exit $LASTEXITCODE
   }
 }
+
+$shortAppName = "FoodStuffs"
+$projectName = "$($shortAppName)"
+$dataModelsFolder = "../$projectName.Model/Data/Models/"
+$testProjectFolder = "../$projectName.Test"
+
+$webProjectFolder = "../$projectName.Web"
+$webClientProjectFolder = "$webProjectFolder/ClientApp";

@@ -25,9 +25,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import SearchControls from '../components/SearchControls.vue';
-import SearchTable from '../components/SearchTable.vue';
-import Pager from '../components/Pager.vue';
+import SearchControls from '../viewComponents/SearchControls.vue';
+import SearchTable from '../viewComponents/SearchTable.vue';
+import Pager from '../viewComponents/Pager.vue';
 
 export default {
   components: {
