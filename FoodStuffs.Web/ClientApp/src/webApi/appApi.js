@@ -6,4 +6,16 @@ export default {
       .then(response => success(response.data))
       .catch(error => failure(error.response));
   },
+  setAntiforgeryToken(csrfTokenHeaderName, csrfToken) {
+    axios.defaults.headers.get = {
+      Pragma: 'no-cache',
+    };
+    const headers = {
+      [csrfTokenHeaderName]: csrfToken,
+      'X-Requested-With': 'XMLHttpRequest',
+    };
+    axios.defaults.headers.post = headers;
+    axios.defaults.headers.put = headers;
+    axios.defaults.headers.delete = headers;
+  },
 };

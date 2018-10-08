@@ -18,6 +18,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import router from './router';
 import store from './store';
+import progressBar from './util/progressBar';
 import RecipeViewer from './viewComponents/RecipeViewer.vue';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
@@ -35,14 +36,20 @@ export default {
   computed: {
     ...mapGetters(['currentRecipe']),
   },
+  watch: {
+    applicationName(newApplicationName) {
+      document.title = newApplicationName;
+    },
+  },
   beforeMount() {
     this.fetchRecipesList();
   },
   mounted() {
+    progressBar.setupProgressBarHooks(this.$Progress);
     this.fetchApplicationInfo();
   },
   methods: {
-    ...mapActions(['fetchApplicationInfo', 'fetchRecipesList']),
+    ...mapActions(['app/fetchApplicationInfo', 'recipes/recipesfetchRecipesList']),
   },
 };
 </script>

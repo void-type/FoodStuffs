@@ -1,33 +1,24 @@
 import Vue from 'vue';
-import Router from 'vue-router';
-import HomeView from '../views/Home.vue';
-import EditView from '../views/Edit.vue';
-import SearchView from '../views/Search.vue';
+import VueRouter from 'vue-router';
+import store from '../store';
+import recipes from './recipes';
 
-Vue.use(Router);
+Vue.use(VueRouter);
 
-export default new Router({
+const router = new VueRouter({
   mode: 'history',
   routes: [
-    {
-      path: '/',
-      alias: '/home',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/edit',
-      name: 'edit',
-      component: EditView,
-    },
-    {
-      path: '/search',
-      name: 'search',
-      component: SearchView,
-    },
+    ...recipes,
     {
       path: '*',
       redirect: { name: 'home' },
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  store.dispatch('app/clearMessages');
+  next();
+});
+
+export default router;
