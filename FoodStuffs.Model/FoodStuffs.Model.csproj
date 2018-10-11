@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="VoidCore.Model" Version="1.1.0-alpha-8" />
+    <!-- <PackageReference Include="VoidCore.Model" Version="0.1.0-alpha-11" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\VoidCore\VoidCore.Model\VoidCore.Model.csproj" />
   </ItemGroup>
 </Project>

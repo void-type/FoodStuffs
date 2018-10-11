@@ -53,7 +53,7 @@ namespace FoodStuffs.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<HttpResponder>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
-            services.AddScoped<ILoggingService, MicrosoftLoggingAdapter>();
+            services.AddScoped<ILoggingService, MicrosoftLoggerAdapter>();
             services.AddScoped<IDateTimeService, UtcNowDateTimeService>();
             services.AddScoped<GetApplicationInfo.IApplicationInfo, WebApplicationInfo>();
 
