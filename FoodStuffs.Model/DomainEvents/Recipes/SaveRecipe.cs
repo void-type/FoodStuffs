@@ -92,8 +92,8 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             private string[] FormatCategoryNames(IEnumerable<string> categories)
             {
                 return categories
-                    .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Select(c => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(c.Trim()))
+                    .Where(category => !string.IsNullOrWhiteSpace(category))
+                    .Select(category => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.Trim()))
                     .ToArray();
             }
 

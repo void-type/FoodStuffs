@@ -1,5 +1,3 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
 using System;
@@ -14,17 +12,27 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
     {
         public class Handler : EventHandlerAbstract<Request, RecipeDto>
         {
-            public Handler(IFoodStuffsData data, IMapper mapper)
+            public Handler(IFoodStuffsData data)
             {
                 _data = data;
-                _mapper = mapper;
             }
 
             protected override Result<RecipeDto> HandleInternal(Request request)
             {
                 var dto = _data.Recipes.Stored
                     .WhereById(request.Id)
-                    .ProjectTo<RecipeDto>(_mapper.ConfigurationProvider)
+                    .Select(recipe => new RecipeDto(
+                        recipe.Id,
+                        recipe.Name,
+                        recipe.Ingredients,
+                        recipe.Directions,
+                        recipe.CookTimeMinutes,
+                        recipe.PrepTimeMinutes,
+                        recipe.CreatedByUser.UserName,
+                        recipe.CreatedOnUtc,
+                        recipe.ModifiedByUser.UserName,
+                        recipe.ModifiedOnUtc,
+                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
                     .FirstOrDefault();
 
                 if (dto == null)
@@ -36,7 +44,6 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             }
 
             private readonly IFoodStuffsData _data;
-            private readonly IMapper _mapper;
         }
 
         public class Request
@@ -51,17 +58,33 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 
         public class RecipeDto
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string Ingredients { get; set; }
-            public string Directions { get; set; }
-            public int? CookTimeMinutes { get; set; }
-            public int? PrepTimeMinutes { get; set; }
-            public string CreatedBy { get; set; }
-            public DateTime CreatedOnUtc { get; set; }
-            public string ModifiedBy { get; set; }
-            public DateTime ModifiedOnUtc { get; set; }
-            public IEnumerable<string> Categories { get; set; } = new List<string>();
+            public RecipeDto(int id, string name, string ingredients, string directions, int? cookTimeMinutes, int? prepTimeMinutes,
+                string createdBy, DateTime createdOnUtc, string modifiedBy, DateTime modifiedOnUtc, IEnumerable<string> categories)
+            {
+                Id = id;
+                Name = name;
+                Ingredients = ingredients;
+                Directions = directions;
+                CookTimeMinutes = cookTimeMinutes;
+                PrepTimeMinutes = prepTimeMinutes;
+                CreatedBy = createdBy;
+                CreatedOnUtc = createdOnUtc;
+                ModifiedBy = modifiedBy;
+                ModifiedOnUtc = modifiedOnUtc;
+                Categories = categories;
+            }
+
+            public int Id { get; }
+            public string Name { get; }
+            public string Ingredients { get; }
+            public string Directions { get; }
+            public int? CookTimeMinutes { get; }
+            public int? PrepTimeMinutes { get; }
+            public string CreatedBy { get; }
+            public DateTime CreatedOnUtc { get; }
+            public string ModifiedBy { get; }
+            public DateTime ModifiedOnUtc { get; }
+            public IEnumerable<string> Categories { get; } = new List<string>();
         }
 
         public class Logger : FallibleEventLogger<Request, RecipeDto>

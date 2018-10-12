@@ -1,8 +1,7 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
 using System.Collections.Generic;
+using System.Linq;
 using VoidCore.Model.DomainEvents;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Queries;
@@ -14,16 +13,18 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
     {
         public class Handler : EventHandlerAbstract<Request, IItemSetPage<RecipeListItemDto>>
         {
-            public Handler(IFoodStuffsData data, IMapper mapper)
+            public Handler(IFoodStuffsData data)
             {
                 _data = data;
-                _mapper = mapper;
             }
 
             protected override Result<IItemSetPage<RecipeListItemDto>> HandleInternal(Request request)
             {
                 var page = _data.Recipes.Stored
-                    .ProjectTo<RecipeListItemDto>(_mapper.ConfigurationProvider)
+                    .Select(recipe => new RecipeListItemDto(
+                        recipe.Id,
+                        recipe.Name,
+                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
                     .SearchStringProperties(
                         request.NameSearch,
                         dto => dto.Name
@@ -39,7 +40,6 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             }
 
             private readonly IFoodStuffsData _data;
-            private readonly IMapper _mapper;
         }
 
         public class Request
@@ -62,9 +62,16 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 
         public class RecipeListItemDto
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public IEnumerable<string> Categories { get; set; }
+            public RecipeListItemDto(int id, string name, IEnumerable<string> categories)
+            {
+                Id = id;
+                Name = name;
+                Categories = categories;
+            }
+
+            public int Id { get; }
+            public string Name { get; }
+            public IEnumerable<string> Categories { get; }
         }
 
         public class Logger : ItemSetPageEventLogger<Request, RecipeListItemDto>

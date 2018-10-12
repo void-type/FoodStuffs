@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <!-- <PackageReference Include="VoidCore.AspNet" Version="0.1.0-alpha-11" /> -->
     <!-- <PackageReference Include="VoidCore.Model" Version="0.1.0-alpha-11" /> -->
