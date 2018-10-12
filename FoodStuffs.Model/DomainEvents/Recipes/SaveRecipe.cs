@@ -37,7 +37,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 recipe.ModifiedOnUtc = _now;
                 recipe.ModifiedByUserId = _user.Id;
 
-                var cleanedRequestedCategories = CleanCategoryNames(request.Categories);
+                var cleanedRequestedCategories = FormatCategoryNames(request.Categories);
 
                 var currentCategoriesAndCategoryRecipes = _data.CategoryRecipes.Stored
                     .WhereForRecipe(recipe.Id)
@@ -89,7 +89,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 return category;
             }
 
-            private string[] CleanCategoryNames(IEnumerable<string> categories)
+            private string[] FormatCategoryNames(IEnumerable<string> categories)
             {
                 return categories
                     .Where(c => !string.IsNullOrWhiteSpace(c))

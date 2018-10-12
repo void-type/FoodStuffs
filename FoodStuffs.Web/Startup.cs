@@ -50,7 +50,7 @@ namespace FoodStuffs.Web
 
             // Dependencies
             services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
             services.AddSingleton<HttpResponder>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
             services.AddScoped<ILoggingService, MicrosoftLoggerAdapter>();
