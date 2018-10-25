@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class SaveRecipe
     {
-        public class Handler : EventHandlerAbstract<Request, PostSuccessUserMessage<int>>
+        public class Handler : EventHandlerSyncAbstract<Request, PostSuccessUserMessage<int>>
         {
             public Handler(IFoodStuffsData data, IMapper mapper, IDateTimeService now, ICurrentUserAccessor userAccessor)
             {
@@ -27,7 +27,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 _user = userAccessor.User;
             }
 
-            protected override Result<PostSuccessUserMessage<int>> HandleInternal(Request request)
+            protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
             {
                 var recipe = _data.Recipes.Stored
                     .WhereById(request.Id)

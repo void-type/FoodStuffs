@@ -1,6 +1,6 @@
 using FoodStuffs.Model.DomainEvents.Recipes;
 using Microsoft.Extensions.DependencyInjection;
-using VoidCore.Model.ClientApp;
+using VoidCore.AspNet.ClientApp;
 
 namespace FoodStuffs.Web.Configuration
 {
@@ -8,8 +8,8 @@ namespace FoodStuffs.Web.Configuration
     {
         public static void AddDomainEvents(this IServiceCollection services)
         {
-            services.AddScoped<GetApplicationInfo.Handler>();
-            services.AddScoped<GetApplicationInfo.Logger>();
+            services.AddScoped<GetWebApplicationInfo.Handler>();
+            services.AddScoped<GetWebApplicationInfo.Logger>();
 
             services.AddScoped<GetRecipe.Handler>();
             services.AddScoped<GetRecipe.Logger>();

@@ -9,14 +9,14 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class DeleteRecipe
     {
-        public class Handler : EventHandlerAbstract<Request, PostSuccessUserMessage<int>>
+        public class Handler : EventHandlerSyncAbstract<Request, PostSuccessUserMessage<int>>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override Result<PostSuccessUserMessage<int>> HandleInternal(Request request)
+            protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
             {
                 var recipeToRemove = _data.Recipes.Stored
                     .WhereById(request.Id)

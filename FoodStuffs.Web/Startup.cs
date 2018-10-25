@@ -40,21 +40,21 @@ namespace FoodStuffs.Web
 
             // Settings
             services.AddSettingsSingleton<ApplicationSettings>(_config);
-            var connectionStrings = services
-                .AddSettingsSingleton<ConnectionStringSettings>(_config.GetSection(ConnectionStringSettings.SectionName));
+            var connectionStrings = services.AddSettingsSingleton<ConnectionStringSettings>(_config);
 
             // Infrastructure and authorization
             services.AddAntiforgery();
             services.AddApiExceptionFilter(_env);
 
             // Dependencies
-            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
             services.AddHttpContextAccessor();
+            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
             services.AddSingleton<HttpResponder>();
+            services.AddSingleton<ICurrentUser, HttpContextCurrentUser>();
+            services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
+            services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
-            services.AddScoped<ILoggingService, MicrosoftLoggerAdapter>();
             services.AddScoped<IDateTimeService, UtcNowDateTimeService>();
-            services.AddScoped<GetApplicationInfo.IApplicationInfo, WebApplicationInfo>();
 
             // Domain Events
             services.AddDomainEvents();

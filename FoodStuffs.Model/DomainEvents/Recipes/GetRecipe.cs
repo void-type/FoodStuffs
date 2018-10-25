@@ -10,14 +10,14 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class GetRecipe
     {
-        public class Handler : EventHandlerAbstract<Request, RecipeDto>
+        public class Handler : EventHandlerSyncAbstract<Request, RecipeDto>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override Result<RecipeDto> HandleInternal(Request request)
+            protected override Result<RecipeDto> HandleSync(Request request)
             {
                 var dto = _data.Recipes.Stored
                     .WhereById(request.Id)

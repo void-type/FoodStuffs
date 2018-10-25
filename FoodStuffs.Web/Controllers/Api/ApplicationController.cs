@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using VoidCore.AspNet.Attributes;
 using VoidCore.AspNet.ClientApp;
-using VoidCore.Model.ClientApp;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
@@ -8,7 +8,7 @@ namespace FoodStuffs.Web.Controllers.Api
     public class ApplicationController : Controller
     {
 
-        public ApplicationController(HttpResponder responder, GetApplicationInfo.Handler getApplicationInfoHandler, GetApplicationInfo.Logger getApplicationInfoLogger)
+        public ApplicationController(HttpResponder responder, GetWebApplicationInfo.Handler getApplicationInfoHandler, GetWebApplicationInfo.Logger getApplicationInfoLogger)
         {
             _responder = responder;
             _getApplicationInfoHandler = getApplicationInfoHandler;
@@ -21,13 +21,13 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var result = _getApplicationInfoHandler
                 .AddPostProcessor(_getApplicationInfoLogger)
-                .Handle(new GetApplicationInfo.Request());
+                .Handle(new GetWebApplicationInfo.Request());
 
             return _responder.Respond(result);
         }
 
         private readonly HttpResponder _responder;
-        private readonly GetApplicationInfo.Handler _getApplicationInfoHandler;
-        private readonly GetApplicationInfo.Logger _getApplicationInfoLogger;
+        private readonly GetWebApplicationInfo.Handler _getApplicationInfoHandler;
+        private readonly GetWebApplicationInfo.Logger _getApplicationInfoLogger;
     }
 }

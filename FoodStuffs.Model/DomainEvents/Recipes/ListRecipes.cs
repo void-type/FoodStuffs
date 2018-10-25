@@ -11,14 +11,14 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class ListRecipes
     {
-        public class Handler : EventHandlerAbstract<Request, IItemSetPage<RecipeListItemDto>>
+        public class Handler : EventHandlerSyncAbstract<Request, IItemSetPage<RecipeListItemDto>>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override Result<IItemSetPage<RecipeListItemDto>> HandleInternal(Request request)
+            protected override Result<IItemSetPage<RecipeListItemDto>> HandleSync(Request request)
             {
                 var page = _data.Recipes.Stored
                     .Select(recipe => new RecipeListItemDto(
