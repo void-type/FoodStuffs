@@ -27,7 +27,8 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                     return Result.Fail<PostSuccessUserMessage<int>>("Recipe not found.");
                 }
 
-                var categoryRecipesToRemove = _data.CategoryRecipes.Stored.WhereForRecipe(recipeToRemove.Id);
+                var categoryRecipesToRemove = _data.CategoryRecipes.Stored
+                    .WhereForRecipe(recipeToRemove.Id);
 
                 _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
                 _data.Recipes.Remove(recipeToRemove);

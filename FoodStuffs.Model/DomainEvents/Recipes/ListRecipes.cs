@@ -2,6 +2,8 @@ using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using VoidCore.Model.DomainEvents;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Queries;
@@ -11,16 +13,16 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
 {
     public class ListRecipes
     {
-        public class Handler : EventHandlerSyncAbstract<Request, IItemSetPage<RecipeListItemDto>>
+        public class Handler : EventHandlerAbstract<Request, IItemSetPage<RecipeListItemDto>>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override Result<IItemSetPage<RecipeListItemDto>> HandleSync(Request request)
+            public override async Task<Result<IItemSetPage<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellation = default(CancellationToken))
             {
-                var page = _data.Recipes.Stored
+                var page = await Task.Run(() => _data.Recipes.Stored
                     .Select(recipe => new RecipeListItemDto(
                         recipe.Id,
                         recipe.Name,
@@ -34,7 +36,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                         dto => string.Join(" ", dto.Categories)
                     )
                     .SortListItemDtosByName(request.Sort)
-                    .ToItemSetPage(request.Page, request.Take);
+                    .ToItemSetPage(request.Page, request.Take));
 
                 return Result.Ok(page);
             }

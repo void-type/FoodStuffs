@@ -1,4 +1,3 @@
-using AutoMapper;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
@@ -19,9 +18,8 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
     {
         public class Handler : EventHandlerSyncAbstract<Request, PostSuccessUserMessage<int>>
         {
-            public Handler(IFoodStuffsData data, IMapper mapper, IDateTimeService now, ICurrentUserAccessor userAccessor)
+            public Handler(IFoodStuffsData data, IDateTimeService now, ICurrentUserAccessor userAccessor)
             {
-                _mapper = mapper;
                 _data = data;
                 _now = now.Moment;
                 _user = userAccessor.User;
@@ -33,11 +31,15 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                     .WhereById(request.Id)
                     .FirstOrDefault() ?? NewFromData();
 
-                _mapper.Map(request, recipe);
+                recipe.Name = request.Name;
+                recipe.Ingredients = request.Ingredients;
+                recipe.Directions = request.Directions;
+                recipe.CookTimeMinutes = request.CookTimeMinutes;
+                recipe.PrepTimeMinutes = request.PrepTimeMinutes;
                 recipe.ModifiedOnUtc = _now;
                 recipe.ModifiedByUserId = _user.Id;
 
-                var cleanedRequestedCategories = FormatCategoryNames(request.Categories);
+                var formattedRequestCategories = FormatCategoryNames(request.Categories);
 
                 var currentCategoriesAndCategoryRecipes = _data.CategoryRecipes.Stored
                     .WhereForRecipe(recipe.Id)
@@ -46,7 +48,7 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                         c => c.Id,
                         (cr, c) => new { Category = c, CategoryRecipe = cr });
 
-                var categoriesToCreate = cleanedRequestedCategories
+                var categoriesToCreate = formattedRequestCategories
                     .Where(cName => !_data.Categories.Stored
                         .Select(c => c.Name)
                         .Contains(cName))
@@ -55,13 +57,13 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
                 _data.Categories.AddRange(categoriesToCreate);
 
                 var categoryRecipesToRemove = currentCategoriesAndCategoryRecipes
-                    .Where(crc => !cleanedRequestedCategories.Contains(crc.Category.Name))
+                    .Where(crc => !formattedRequestCategories.Contains(crc.Category.Name))
                     .Select(crc => crc.CategoryRecipe);
 
                 _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
 
                 var categoryRecipesToCreate = _data.Categories.Stored
-                    .Where(c => cleanedRequestedCategories.Contains(c.Name))
+                    .Where(c => formattedRequestCategories.Contains(c.Name))
                     .Where(c => !currentCategoriesAndCategoryRecipes
                         .Select(crc => crc.Category.Name)
                         .Contains(c.Name))
@@ -106,7 +108,6 @@ namespace FoodStuffs.Model.DomainEvents.Recipes
             }
 
             private readonly IFoodStuffsData _data;
-            private readonly IMapper _mapper;
             private readonly DateTime _now;
             private readonly User _user;
         }
