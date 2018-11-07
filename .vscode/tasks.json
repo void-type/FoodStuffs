@@ -7,7 +7,7 @@
             "label": "buildApp",
             "command": "./buildApp.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": {
@@ -24,7 +24,7 @@
             "label": "buildAppDebug",
             "command": "./buildAppDebug.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -38,7 +38,7 @@
             "label": "buildServerDebug",
             "command": "./buildServerDebug.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -50,7 +50,7 @@
             "label": "devClientWatch",
             "command": "./devClientWatch.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -63,7 +63,7 @@
             "label": "devServerWatch",
             "command": "./devServerWatch.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -75,7 +75,7 @@
             "label": "lintClient",
             "command": "./lintClient.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -88,7 +88,7 @@
             "label": "testClient",
             "command": "./testClient.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -98,7 +98,7 @@
             "label": "testServer",
             "command": "./testServer.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -108,7 +108,7 @@
             "label": "testServerWatch",
             "command": "./testServerWatch.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -118,7 +118,7 @@
             "label": "dockerBuild-Production",
             "command": "./dockerBuild-Production.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
@@ -135,7 +135,7 @@
             "label": "dockerBuild-Staging",
             "command": "./dockerBuild-Staging.ps1",
             "options": {
-                "cwd": "./Scripts"
+                "cwd": "./build"
             },
             "type": "shell",
             "group": "test",

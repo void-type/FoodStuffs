@@ -4,12 +4,11 @@ bin/
 obj/
 out/
 wwwroot/
+/artifacts/
+/coverage/
 node_modules/
-/*.Web/Properties/
-/*.Test/coveragereport/
 
 .gitignore
 .gitattributes
-/*.Test/coverage.*
 LICENSE
 README.md

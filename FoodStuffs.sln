@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodStuffs.Model", "FoodStuffs.Model\FoodStuffs.Model.csproj", "{B9C7EEB7-4F98-43C5-9EB5-89684E07211E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodStuffs.Model", "src/FoodStuffs.Model\FoodStuffs.Model.csproj", "{B9C7EEB7-4F98-43C5-9EB5-89684E07211E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodStuffs.Test", "FoodStuffs.Test\FoodStuffs.Test.csproj", "{D12802C4-62D5-4E85-AA11-07518ADBE466}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodStuffs.Web", "src/FoodStuffs.Web\FoodStuffs.Web.csproj", "{21FC932B-2A99-46AA-96F7-327781D09214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodStuffs.Web", "FoodStuffs.Web\FoodStuffs.Web.csproj", "{21FC932B-2A99-46AA-96F7-327781D09214}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodStuffs.Test", "tests/FoodStuffs.Test\FoodStuffs.Test.csproj", "{D12802C4-62D5-4E85-AA11-07518ADBE466}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
