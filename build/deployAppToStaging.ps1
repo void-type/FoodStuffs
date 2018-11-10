@@ -1,11 +1,8 @@
 # Run this script as a server administrator from the scripts directory
 . ./util.ps1
 
-$iisDirectory = "\\server1\c$\inetpub\wwwroot\$($shortAppName)Test"
-$settingsDirectory = "\\server1\appSettings\$($shortAppName)"
-
 Push-Location -Path "../"
-New-Item -Path "$iisDirectory\app_offline.htm"
-ROBOCOPY "./artifacts" $iisDirectory /MIR
-Copy-Item -Path "$settingsDirectory\*" -Include "*.Staging.json" -Recurse -Destination $iisDirectory
+New-Item -Path "$iisDirectoryStaging\app_offline.htm"
+ROBOCOPY "./artifacts" $iisDirectoryStaging /MIR
+Copy-Item -Path "$settingsDirectoryStaging\*" -Include "*.Staging.json" -Recurse -Destination $iisDirectoryStaging
 Pop-Location
