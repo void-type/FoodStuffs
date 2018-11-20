@@ -1,11 +1,26 @@
 import ItemSetPage from './ItemSetPage';
 
+const RecipeGetRequestSortTypes = [
+  {
+    name: 'ascending',
+    symbol: '&#9660;',
+  },
+  {
+    name: 'descending',
+    symbol: '&#9650;',
+  },
+  {
+    name: 'chronological',
+    symbol: '&#x1F552;',
+  },
+];
+
 class RecipeGetRequest {
   constructor() {
     this.categorySearch = '';
     this.nameSearch = '';
     this.page = 1;
-    this.sort = recipeSearchSortTypes[0].name;
+    this.sort = RecipeGetRequestSortTypes[0].name;
     this.take = 15;
   }
 }
@@ -25,21 +40,6 @@ class RecipeSaveRequest {
     this.prepTimeMinutes = null;
   }
 }
-
-const RecipeGetRequestSortTypes = [
-  {
-    name: 'ascending',
-    symbol: '&#9660;',
-  },
-  {
-    name: 'descending',
-    symbol: '&#9650;',
-  },
-  {
-    name: 'chronological',
-    symbol: '&#x1F552;',
-  },
-];
 
 export default {
   GetRequest: RecipeGetRequest,

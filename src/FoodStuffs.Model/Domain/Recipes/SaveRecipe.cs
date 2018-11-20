@@ -1,11 +1,12 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
-using FoodStuffs.Model.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using VoidCore.Model.ClientApp;
+using VoidCore.Model.Data;
 using VoidCore.Model.Domain;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
@@ -18,11 +19,12 @@ namespace FoodStuffs.Model.Domain.Recipes
     {
         public class Handler : EventHandlerSyncAbstract<Request, PostSuccessUserMessage<int>>
         {
-            public Handler(IFoodStuffsData data, IDateTimeService now, ICurrentUserAccessor userAccessor)
+            public Handler(IFoodStuffsData data, IDateTimeService now, ICurrentUserAccessor userAccessor, IAuditUpdater auditUpdater)
             {
                 _data = data;
                 _now = now.Moment;
-                _user = userAccessor.User;
+                _user = userAccessor;
+                _auditUpdater = auditUpdater;
             }
 
             protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
@@ -36,8 +38,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                 recipe.Directions = request.Directions;
                 recipe.CookTimeMinutes = request.CookTimeMinutes;
                 recipe.PrepTimeMinutes = request.PrepTimeMinutes;
-                recipe.ModifiedOnUtc = _now;
-                recipe.ModifiedByUserId = _user.Id;
+                _auditUpdater.Update(recipe);
 
                 var formattedRequestCategories = FormatCategoryNames(request.Categories);
 
@@ -49,9 +50,9 @@ namespace FoodStuffs.Model.Domain.Recipes
                         (cr, c) => new { Category = c, CategoryRecipe = cr });
 
                 var categoriesToCreate = formattedRequestCategories
-                    .Where(cName => !_data.Categories.Stored
+                    .Where(name => !_data.Categories.Stored
                         .Select(c => c.Name)
-                        .Contains(cName))
+                        .Contains(name))
                     .Select(CreateCategory);
 
                 _data.Categories.AddRange(categoriesToCreate);
@@ -102,14 +103,14 @@ namespace FoodStuffs.Model.Domain.Recipes
             private Recipe NewFromData()
             {
                 var recipe = _data.Recipes.New;
-                recipe.CreatedOnUtc = _now;
-                recipe.CreatedByUserId = _user.Id;
+                _auditUpdater.Create(recipe);
                 return recipe;
             }
 
             private readonly IFoodStuffsData _data;
             private readonly DateTime _now;
-            private readonly User _user;
+            private readonly ICurrentUserAccessor _user;
+            private readonly IAuditUpdater _auditUpdater;
         }
 
         public class Request

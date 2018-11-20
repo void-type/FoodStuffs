@@ -1,4 +1,4 @@
-import sortTypes from '../models/recipeSearchSortTypes';
+import recipeApiModels from '../../../models/RecipeApiModels';
 
 export default {
   currentRecipe(state) {
@@ -17,6 +17,7 @@ export default {
     return state.recipesSearchParameters;
   },
   recipesSearchParametersSortType(state) {
-    return sortTypes.filter(type => type.name === state.recipesSearchParameters.sort)[0];
+    return recipeApiModels.GetRequestSortTypes
+      .filter(type => type.name === state.recipesSearchParameters.sort)[0];
   },
 };

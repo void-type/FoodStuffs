@@ -29,12 +29,10 @@ namespace FoodStuffs.Model.Domain.Recipes
                         recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
                     .SearchStringProperties(
                         request.NameSearch,
-                        dto => dto.Name
-                    )
+                        dto => dto.Name)
                     .SearchStringProperties(
                         request.CategorySearch,
-                        dto => string.Join(" ", dto.Categories)
-                    )
+                        dto => string.Join(" ", dto.Categories))
                     .SortListItemDtosByName(request.Sort)
                     .ToItemSetPage(request.Page, request.Take));
 

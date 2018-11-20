@@ -1,35 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public partial class Recipe
+    public partial class Recipe : IAuditable
     {
-        public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
-
-        public int? CookTimeMinutes { get; set; }
-
-        public User CreatedByUser { get; set; }
-
-        public int CreatedByUserId { get; set; }
-
-        public DateTime CreatedOnUtc { get; set; }
-
-        public string Directions { get; set; }
-
         public int Id { get; set; }
-
-        public string Ingredients { get; set; }
-
-        public User ModifiedByUser { get; set; }
-
-        public int ModifiedByUserId { get; set; }
-
-        public DateTime ModifiedOnUtc { get; set; }
-
         public string Name { get; set; }
-
+        public string Directions { get; set; }
+        public string Ingredients { get; set; }
         public int? PrepTimeMinutes { get; set; }
+        public int? CookTimeMinutes { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTime ModifiedOn { get; set; }
+        
+        public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
 
         public Recipe()
         {

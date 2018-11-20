@@ -1,7 +1,6 @@
-import trimAndCapitalize from '../../filters/trimAndCapitalize';
-import Recipe from '../models/recipe';
-import sortTypes from '../models/recipeSearchSortTypes';
-import webApi from '../../webApi';
+import trimAndCapitalize from '../../../filters/trimAndCapitalize';
+import recipeApiModels from '../../../models/RecipeApiModels';
+import webApi from '../../../webApi';
 
 export default {
   fetchRecipe(context, id) {
@@ -70,22 +69,22 @@ export default {
   },
   setCurrentRecipe(context, recipe) {
     context.dispatch('addRecipeToRecents', context.getters.currentRecipe);
-    context.commit('setCurrentRecipe', recipe || new Recipe());
+    context.commit('SET_CURRENT_RECIPE', recipe || new recipeApiModels.GetResponse());
   },
   setRecipeName(context, { recipe, value }) {
-    context.commit('setRecipeName', { recipe, value });
+    context.commit('SET_RECIPE_NAME', { recipe, value });
   },
   setRecipeIngredients(context, { recipe, value }) {
-    context.commit('setRecipeIngredients', { recipe, value });
+    context.commit('SET_RECIPE_INGREDIENTS', { recipe, value });
   },
   setRecipeDirections(context, { recipe, value }) {
-    context.commit('setRecipeDirections', { recipe, value });
+    context.commit('SET_RECIPE_DIRECTIONS', { recipe, value });
   },
   setRecipePrepTimeMinutes(context, { recipe, value }) {
-    context.commit('setRecipePrepTimeMinutes', { recipe, value });
+    context.commit('SET_RECIPE_PREP_TIME_MINUTES', { recipe, value });
   },
   setRecipeCookTimeMinutes(context, { recipe, value }) {
-    context.commit('setRecipeCookTimeMinutes', { recipe, value });
+    context.commit('SET_RECIPE_COOK_TIME_MINUTES', { recipe, value });
   },
   addCategoryToRecipe(context, { recipe, categoryName }) {
     const cleanedCategoryName = trimAndCapitalize(categoryName);
@@ -95,14 +94,14 @@ export default {
       .indexOf(categoryName.toUpperCase()) < 0;
 
     if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
-      context.commit('addCategoryToRecipe', { recipe, cleanedCategoryName });
+      context.commit('ADD_CATEGORY_TO_RECIPE', { recipe, cleanedCategoryName });
     }
   },
   removeCategoryFromRecipe(context, { recipe, categoryName }) {
     const categoryIndex = recipe.categories.indexOf(categoryName);
 
     if (categoryIndex > -1) {
-      context.commit('removeCategoryFromRecipe', { recipe, categoryIndex });
+      context.commit('REMOVE_CATEGORY_FROM_RECIPE', { recipe, categoryIndex });
     }
   },
   addRecipeToRecents(context, recipe) {
@@ -127,31 +126,35 @@ export default {
     if (recentRecipes.length > 3) {
       recentRecipes.pop();
     }
-    context.commit('setRecentRecipes', recentRecipes);
+    context.commit('SET_RECENT_RECIPES', recentRecipes);
   },
   setRecipesList(context, data) {
-    context.commit('setRecipesList', data.items);
-    context.commit('setRecipesListTotalCount', data.totalCount);
+    context.commit('SET_RECIPES_LIST', data.items);
+    context.commit('SET_RECIPES_LIST_TOTAL_COUNT', data.totalCount);
   },
   setRecipesSearchParametersNameSearch(context, nameSearch) {
-    context.commit('setRecipesSearchParametersNameSearch', nameSearch);
+    context.commit('SET_RECIPES_SEARCH_PARAMETERS_NAME_SEARCH', nameSearch);
   },
   setRecipesSearchParametersCategorySearch(context, categorySearch) {
-    context.commit('setRecipesSearchParametersCategorySearch', categorySearch);
+    context.commit('SET_RECIPES_SEARCH_PARAMETERS_CATEGORY_SEARCH', categorySearch);
   },
   setRecipesSearchParametersPage(context, page) {
-    context.commit('setRecipesSearchParametersPage', page);
+    context.commit('SET_RECIPES_SEARCH_PARAMETERS_PAGE', page);
   },
   setRecipesSearchParametersTake(context, take) {
-    context.commit('setRecipesSearchParametersTake', take);
+    context.commit('SET_RECIPES_SEARCH_PARAMETERS_TAKE', take);
   },
   cycleSelectedNameSortType(context) {
+    const sortTypes = recipeApiModels.GetRequestSortTypes;
+
     const currentSortId = sortTypes
       .indexOf(sortTypes
         .filter(type => type.name === context.state.recipesSearchParameters.sort)[0]);
+
     const newSortId = (currentSortId + 1) % sortTypes.length;
     const newSortName = sortTypes[newSortId].name;
-    context.commit('setRecipesSearchParametersSort', newSortName);
+
+    context.commit('SET_RECIPES_SEARCH_PARAMETERS_SORT', newSortName);
     context.dispatch('fetchRecipesList');
   },
 };

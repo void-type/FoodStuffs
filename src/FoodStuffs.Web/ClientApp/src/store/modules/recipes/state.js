@@ -1,10 +1,9 @@
-import Recipe from '../models/recipe';
-import RecipesSearchParameters from '../models/recipesSearchParameters';
+import recipeApiModels from '../../../models/RecipeApiModels';
 
 export default {
-  currentRecipe: new Recipe(),
+  currentRecipe: new recipeApiModels.GetResponse(),
   recentRecipes: [],
   recipesList: [],
   recipesListTotalCount: 0,
-  recipesSearchParameters: new RecipesSearchParameters(),
+  recipesSearchParameters: recipeApiModels.GetRequestSortTypes,
 };

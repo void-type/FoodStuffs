@@ -53,7 +53,7 @@ namespace FoodStuffs.Web
             services.AddHttpContextAccessor();
             services.AddSingleton<HttpResponder>();
             services.AddSingleton<IUserNameFormatStrategy, AdLoginUserNameFormatStrategy>();
-            services.AddSingleton<ICurrentUserAccessor, CurrentUserAccessor>();
+            services.AddSingleton<ICurrentUserAccessor, WebCurrentUserAccessor>();
             services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
             services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();
             services.AddSingleton<IDateTimeService, UtcNowDateTimeService>();

@@ -28,10 +28,10 @@ namespace FoodStuffs.Model.Domain.Recipes
                         recipe.Directions,
                         recipe.CookTimeMinutes,
                         recipe.PrepTimeMinutes,
-                        recipe.CreatedByUser.UserName,
-                        recipe.CreatedOnUtc,
-                        recipe.ModifiedByUser.UserName,
-                        recipe.ModifiedOnUtc,
+                        recipe.CreatedBy,
+                        recipe.CreatedOn,
+                        recipe.ModifiedBy,
+                        recipe.ModifiedOn,
                         recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
                     .FirstOrDefault();
 
