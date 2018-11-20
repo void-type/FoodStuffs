@@ -29,9 +29,11 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
             {
-                var recipe = _data.Recipes.Stored
+                var maybeRecipe = Maybe.From(_data.Recipes.Stored
                     .WhereById(request.Id)
-                    .FirstOrDefault() ?? NewFromData();
+                    .FirstOrDefault());
+
+                var recipe = maybeRecipe.HasValue ? maybeRecipe.Value : CreateRecipe();
 
                 recipe.Name = request.Name;
                 recipe.Ingredients = request.Ingredients;
@@ -100,7 +102,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .ToArray();
             }
 
-            private Recipe NewFromData()
+            private Recipe CreateRecipe()
             {
                 var recipe = _data.Recipes.New;
                 _auditUpdater.Create(recipe);

@@ -51,10 +51,10 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe1",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOnUtc = DateTimeServiceEarly.Moment,
-            ModifiedOnUtc = DateTimeServiceEarly.Moment,
-            CreatedByUserId = 11,
-            ModifiedByUserId = 11
+            CreatedOn = DateTimeServiceEarly.Moment,
+            ModifiedOn = DateTimeServiceEarly.Moment,
+            CreatedBy = "11",
+            ModifiedBy = "11"
         };
 
         public static Recipe Recipe2 => new Recipe
@@ -63,10 +63,10 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe2",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOnUtc = DateTimeServiceEarly.Moment,
-            ModifiedOnUtc = DateTimeServiceEarly.Moment,
-            CreatedByUserId = 11,
-            ModifiedByUserId = 11
+            CreatedOn = DateTimeServiceEarly.Moment,
+            ModifiedOn = DateTimeServiceEarly.Moment,
+            CreatedBy = "11",
+            ModifiedBy = "11"
         };
 
         public static Recipe Recipe3 => new Recipe
@@ -75,10 +75,10 @@ namespace FoodStuffs.Test.Mocks
             Name = "Recipe3",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOnUtc = DateTimeServiceEarly.Moment,
-            ModifiedOnUtc = DateTimeServiceEarly.Moment,
-            CreatedByUserId = 11,
-            ModifiedByUserId = 11
+            CreatedOn = DateTimeServiceEarly.Moment,
+            ModifiedOn = DateTimeServiceEarly.Moment,
+            CreatedBy = "11",
+            ModifiedBy = "11"
         };
 
         public static User User1 => new User

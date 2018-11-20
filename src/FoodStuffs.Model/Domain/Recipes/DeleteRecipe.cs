@@ -18,14 +18,16 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
             {
-                var recipeToRemove = _data.Recipes.Stored
+                var maybeRecipe = Maybe.From(_data.Recipes.Stored
                     .WhereById(request.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault());
 
-                if (recipeToRemove == null)
+                if (maybeRecipe.HasNoValue)
                 {
                     return Result.Fail<PostSuccessUserMessage<int>>("Recipe not found.");
                 }
+
+                var recipeToRemove = maybeRecipe.Value;
 
                 var categoryRecipesToRemove = _data.CategoryRecipes.Stored
                     .WhereForRecipe(recipeToRemove.Id);

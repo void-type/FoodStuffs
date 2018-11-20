@@ -7,9 +7,7 @@ namespace FoodStuffs.Web.Data
 {
     public class UserRepository : EfWritableRepository<User>
     {
-        public override IQueryable<User> Stored => Context.Set<User>()
-        .Include(u => u.RecipeModifiedByUser)
-        .Include(u => u.RecipeCreatedByUser);
+        public override IQueryable<User> Stored => Context.Set<User>();
 
         public UserRepository(DbContext context) : base(context) { }
     }

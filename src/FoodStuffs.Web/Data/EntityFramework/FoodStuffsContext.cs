@@ -42,27 +42,15 @@ namespace FoodStuffs.Web.Data.EntityFramework
             {
                 entity.ToTable("Recipe", "dbo");
 
-                entity.Property(e => e.CreatedOnUtc).HasColumnType("datetime");
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Directions).IsRequired();
 
                 entity.Property(e => e.Ingredients).IsRequired();
 
-                entity.Property(e => e.ModifiedOnUtc).HasColumnType("datetime");
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsRequired();
-
-                entity.HasOne(d => d.CreatedByUser)
-                    .WithMany(p => p.RecipeCreatedByUser)
-                    .HasForeignKey(d => d.CreatedByUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Recipe_UserCreated");
-
-                entity.HasOne(d => d.ModifiedByUser)
-                    .WithMany(p => p.RecipeModifiedByUser)
-                    .HasForeignKey(d => d.ModifiedByUserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Recipe_UserModified");
             });
 
             modelBuilder.Entity<User>(entity =>

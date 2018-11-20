@@ -9,9 +9,7 @@ namespace FoodStuffs.Web.Data
     {
         public override IQueryable<Recipe> Stored => Context.Set<Recipe>()
         .Include(r => r.CategoryRecipe)
-        .ThenInclude(cr => cr.Category)
-        .Include(r => r.CreatedByUser)
-        .Include(r => r.ModifiedByUser);
+        .ThenInclude(cr => cr.Category);
 
         public RecipeRepository(DbContext context) : base(context) { }
     }

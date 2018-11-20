@@ -19,28 +19,22 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override Result<RecipeDto> HandleSync(Request request)
             {
-                var dto = _data.Recipes.Stored
-                    .WhereById(request.Id)
-                    .Select(recipe => new RecipeDto(
-                        recipe.Id,
-                        recipe.Name,
-                        recipe.Ingredients,
-                        recipe.Directions,
-                        recipe.CookTimeMinutes,
-                        recipe.PrepTimeMinutes,
-                        recipe.CreatedBy,
-                        recipe.CreatedOn,
-                        recipe.ModifiedBy,
-                        recipe.ModifiedOn,
-                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                    .FirstOrDefault();
-
-                if (dto == null)
-                {
-                    return Result.Fail<RecipeDto>("Recipe not found.");
-                }
-
-                return Result.Ok(dto);
+                return Maybe.From(_data.Recipes.Stored
+                        .WhereById(request.Id)
+                        .Select(recipe => new RecipeDto(
+                            recipe.Id,
+                            recipe.Name,
+                            recipe.Ingredients,
+                            recipe.Directions,
+                            recipe.CookTimeMinutes,
+                            recipe.PrepTimeMinutes,
+                            recipe.CreatedBy,
+                            recipe.CreatedOn,
+                            recipe.ModifiedBy,
+                            recipe.ModifiedOn,
+                            recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
+                        .FirstOrDefault())
+                    .ToResult("Recipe not found.");
             }
 
             private readonly IFoodStuffsData _data;
