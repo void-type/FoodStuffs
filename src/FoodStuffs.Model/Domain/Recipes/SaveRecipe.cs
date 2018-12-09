@@ -5,19 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using VoidCore.Model.ClientApp;
+using VoidCore.Domain;
+using VoidCore.Domain.Events;
+using VoidCore.Domain.RuleValidator;
 using VoidCore.Model.Data;
-using VoidCore.Model.Domain;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 using VoidCore.Model.Time;
-using VoidCore.Model.Validation;
+using VoidCore.Model.Users;
 
 namespace FoodStuffs.Model.Domain.Recipes
 {
     public class SaveRecipe
     {
-        public class Handler : EventHandlerSyncAbstract<Request, PostSuccessUserMessage<int>>
+        public class Handler : EventHandlerSyncAbstract<Request, UserMessageWithEntityId<int>>
         {
             public Handler(IFoodStuffsData data, IDateTimeService now, ICurrentUserAccessor userAccessor, IAuditUpdater auditUpdater)
             {
@@ -27,11 +28,9 @@ namespace FoodStuffs.Model.Domain.Recipes
                 _auditUpdater = auditUpdater;
             }
 
-            protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
+            protected override Result<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
-                var maybeRecipe = Maybe.From(_data.Recipes.Stored
-                    .WhereById(request.Id)
-                    .FirstOrDefault());
+                var maybeRecipe = _data.Recipes.Stored.GetById(request.Id);
 
                 var recipe = maybeRecipe.HasValue ? maybeRecipe.Value : CreateRecipe();
 
@@ -76,7 +75,7 @@ namespace FoodStuffs.Model.Domain.Recipes
 
                 _data.SaveChanges();
 
-                return Result.Ok(PostSuccessUserMessage.Create("Recipe saved.", request.Id));
+                return Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", request.Id));
             }
 
             private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)
@@ -139,7 +138,7 @@ namespace FoodStuffs.Model.Domain.Recipes
 
         public class RequestValidator : RuleValidatorAbstract<Request>
         {
-            protected override void BuildRules()
+            public RequestValidator()
             {
                 CreateRule("Please enter a name.", "name")
                     .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
@@ -160,7 +159,7 @@ namespace FoodStuffs.Model.Domain.Recipes
             }
         }
 
-        public class Logger : PostSuccessUserMessageEventLogger<Request, int>
+        public class Logger : UserMessageWithEntityIdEventLogger<Request, int>
         {
             public Logger(ILoggingService logger) : base(logger) { }
         }

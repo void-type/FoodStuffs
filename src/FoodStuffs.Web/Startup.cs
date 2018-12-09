@@ -2,6 +2,7 @@ using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
+using FoodStuffs.Web.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
-using VoidCore.Model.ClientApp;
 using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
+using VoidCore.Model.Users;
 
 namespace FoodStuffs.Web
 {
@@ -35,8 +36,8 @@ namespace FoodStuffs.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Get the newest MVC behavior.
             // TODO: for aspnet versions newer than 2.1, update or remove this.
+            // Get the newest MVC behavior.
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Settings
@@ -44,19 +45,18 @@ namespace FoodStuffs.Web
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
 
             // Infrastructure and authorization
-            services.AddSecureTransport();
-            services.AddAntiforgery();
+            services.AddSecureTransport(_env);
             services.AddApiExceptionFilter(_env);
+            services.AddAntiforgery(_env);
 
             // Dependencies
             services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
             services.AddHttpContextAccessor();
             services.AddSingleton<HttpResponder>();
-            services.AddSingleton<IUserNameFormatStrategy, AdLoginUserNameFormatStrategy>();
-            services.AddSingleton<ICurrentUserAccessor, WebCurrentUserAccessor>();
+            services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
             services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
             services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();
-            services.AddSingleton<IDateTimeService, UtcNowDateTimeService>();
+            services.AddSingleton<IDateTimeService, NowDateTimeService>();
             services.AddSingleton<IAuditUpdater, AuditUpdater>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 

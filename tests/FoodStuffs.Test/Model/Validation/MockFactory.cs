@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using VoidCore.Model.Time;
 
-namespace FoodStuffs.Test.Mocks
+namespace FoodStuffs.Test.Model.Validation
 {
     public static class MockFactory
     {

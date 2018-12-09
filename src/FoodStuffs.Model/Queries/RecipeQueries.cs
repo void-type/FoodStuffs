@@ -1,14 +1,15 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using System.Linq;
+using VoidCore.Domain;
 using static FoodStuffs.Model.Domain.Recipes.ListRecipes;
 
 namespace FoodStuffs.Model.Queries
 {
     public static class RecipeQueries
     {
-        public static IQueryable<Recipe> WhereById(this IQueryable<Recipe> recipes, int id)
+        public static Maybe<Recipe> GetById(this IQueryable<Recipe> recipes, int id)
         {
-            return recipes.Where(r => r.Id == id);
+            return recipes.FirstOrDefault(r => r.Id == id);
         }
 
         public static IQueryable<RecipeListItemDto> SortListItemDtosByName(this IQueryable<RecipeListItemDto> recipes, string sort)

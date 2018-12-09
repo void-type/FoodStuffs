@@ -262,7 +262,7 @@ __pycache__/
 *.pyc
 
 # Compiled client app
-/*/wwwroot
+**/*.Web/wwwroot
 
 # App
 app[Ss]ettings.*.json

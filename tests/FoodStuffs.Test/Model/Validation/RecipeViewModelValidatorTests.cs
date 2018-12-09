@@ -2,7 +2,7 @@ using FoodStuffs.Model.Domain.Recipes;
 using System.Linq;
 using Xunit;
 
-namespace FoodStuffs.Test.Validation
+namespace FoodStuffs.Test.Model.Validation
 {
     public class RecipeViewModelValidatorTests
     {

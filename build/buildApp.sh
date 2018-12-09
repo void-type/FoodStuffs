@@ -6,4 +6,4 @@ npm install
 npm run build
 popd
 pushd "../src/FoodStuffs.Web/"
-dotnet publish --configuration "Release" --output "../../artifacts" /p:PublicRelease=true
+dotnet publish --configuration "Release" --output "../../artifacts"

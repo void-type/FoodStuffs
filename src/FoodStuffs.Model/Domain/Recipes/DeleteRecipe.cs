@@ -1,7 +1,7 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Queries;
-using System.Linq;
-using VoidCore.Model.Domain;
+using VoidCore.Domain;
+using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
@@ -9,22 +9,20 @@ namespace FoodStuffs.Model.Domain.Recipes
 {
     public class DeleteRecipe
     {
-        public class Handler : EventHandlerSyncAbstract<Request, PostSuccessUserMessage<int>>
+        public class Handler : EventHandlerSyncAbstract<Request, UserMessageWithEntityId<int>>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override Result<PostSuccessUserMessage<int>> HandleSync(Request request)
+            protected override Result<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
-                var maybeRecipe = Maybe.From(_data.Recipes.Stored
-                    .WhereById(request.Id)
-                    .FirstOrDefault());
+                var maybeRecipe = _data.Recipes.Stored.GetById(request.Id);
 
                 if (maybeRecipe.HasNoValue)
                 {
-                    return Result.Fail<PostSuccessUserMessage<int>>("Recipe not found.");
+                    return Result.Fail<UserMessageWithEntityId<int>>("Recipe not found.");
                 }
 
                 var recipeToRemove = maybeRecipe.Value;
@@ -37,7 +35,7 @@ namespace FoodStuffs.Model.Domain.Recipes
 
                 _data.SaveChanges();
 
-                return Result.Ok(PostSuccessUserMessage.Create("Recipe deleted.", request.Id));
+                return Result.Ok(UserMessageWithEntityId.Create("Recipe deleted.", request.Id));
             }
 
             private readonly IFoodStuffsData _data;
@@ -53,11 +51,11 @@ namespace FoodStuffs.Model.Domain.Recipes
             public int Id { get; }
         }
 
-        public class Logger : PostSuccessUserMessageEventLogger<Request, int>
+        public class Logger : UserMessageWithEntityIdEventLogger<Request, int>
         {
             public Logger(ILoggingService logger) : base(logger) { }
 
-            public override void OnBoth(Request request, IResult<PostSuccessUserMessage<int>> result)
+            public override void OnBoth(Request request, IResult<UserMessageWithEntityId<int>> result)
             {
                 Logger.Info($"Id: '{request.Id}'");
                 base.OnBoth(request, result);

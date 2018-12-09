@@ -3,7 +3,8 @@ using FoodStuffs.Model.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VoidCore.Model.Domain;
+using VoidCore.Domain;
+using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 
 namespace FoodStuffs.Model.Domain.Recipes
@@ -19,21 +20,20 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override Result<RecipeDto> HandleSync(Request request)
             {
-                return Maybe.From(_data.Recipes.Stored
-                        .WhereById(request.Id)
-                        .Select(recipe => new RecipeDto(
-                            recipe.Id,
-                            recipe.Name,
-                            recipe.Ingredients,
-                            recipe.Directions,
-                            recipe.CookTimeMinutes,
-                            recipe.PrepTimeMinutes,
-                            recipe.CreatedBy,
-                            recipe.CreatedOn,
-                            recipe.ModifiedBy,
-                            recipe.ModifiedOn,
-                            recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                        .FirstOrDefault())
+                return _data.Recipes.Stored
+                    .GetById(request.Id)
+                    .Select(recipe => new RecipeDto(
+                        recipe.Id,
+                        recipe.Name,
+                        recipe.Ingredients,
+                        recipe.Directions,
+                        recipe.CookTimeMinutes,
+                        recipe.PrepTimeMinutes,
+                        recipe.CreatedBy,
+                        recipe.CreatedOn,
+                        recipe.ModifiedBy,
+                        recipe.ModifiedOn,
+                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
                     .ToResult("Recipe not found.");
             }
 

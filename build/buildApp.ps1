@@ -19,7 +19,7 @@ Stop-OnError
 
 # Build solution
 Push-Location -Path "../"
-dotnet build --configuration "Release" /p:PublicRelease=true
+dotnet build --configuration "Release"
 Stop-OnError
 Pop-Location
 
@@ -38,5 +38,5 @@ Pop-Location
 # Package build
 Push-Location -Path "$webProjectFolder"
 # Uncomment the self-contained and runtime args if we cannot update the server-wide framework.
-dotnet publish --configuration "Release" --no-build --output "../../artifacts" /p:PublicRelease=true #--self-contained --runtime "win-x64"
+dotnet publish --configuration "Release" --no-build --output "../../artifacts" #--self-contained --runtime "win-x64"
 Pop-Location
