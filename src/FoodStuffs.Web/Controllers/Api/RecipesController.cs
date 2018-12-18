@@ -38,9 +38,9 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string sort = null)
+        public IActionResult List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string nameSort = null)
         {
-            var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, sort);
+            var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, nameSort);
 
             var result = _listHandler
                 .AddPostProcessor(_listLogger)

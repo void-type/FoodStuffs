@@ -34,7 +34,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .SearchStringProperties(
                         request.CategorySearch,
                         dto => string.Join(" ", dto.Categories))
-                    .SortListItemDtosByName(request.Sort)
+                    .SortListItemDtosByName(request.NameSort)
                     .ToItemSetPage(request.Page, request.Take));
 
                 return Result.Ok(page);
@@ -45,20 +45,20 @@ namespace FoodStuffs.Model.Domain.Recipes
 
         public class Request
         {
-            public Request(int take, int page, string nameSearch, string categorySearch, string sort)
+            public Request(int take, int page, string nameSearch, string categorySearch, string nameSort)
             {
                 Take = take;
                 Page = page;
                 NameSearch = nameSearch;
                 CategorySearch = categorySearch;
-                Sort = sort;
+                NameSort = nameSort;
             }
 
             public int Take { get; }
             public int Page { get; }
             public string NameSearch { get; }
             public string CategorySearch { get; }
-            public string Sort { get; }
+            public string NameSort { get; }
         }
 
         public class RecipeListItemDto
@@ -81,7 +81,7 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             public override void OnBoth(Request request, IResult<IItemSetPage<RecipeListItemDto>> result)
             {
-                Logger.Info($"CategorySearch: '{request.CategorySearch}'", $"NameSearch: '{request.NameSearch}", $"Sort: '{request.Sort}'");
+                Logger.Info($"CategorySearch: '{request.CategorySearch}'", $"NameSearch: '{request.NameSearch}", $"Sort: '{request.NameSort}'");
                 base.OnBoth(request, result);
             }
         }

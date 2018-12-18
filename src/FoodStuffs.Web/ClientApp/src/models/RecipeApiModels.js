@@ -20,7 +20,7 @@ class RecipeGetRequest {
     this.categorySearch = '';
     this.nameSearch = '';
     this.page = 1;
-    this.sort = RecipeGetRequestSortTypes[0].name;
+    this.nameSort = RecipeGetRequestSortTypes[0].name;
     this.take = 15;
   }
 }

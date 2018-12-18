@@ -45,8 +45,8 @@ export default {
   SET_RECIPES_SEARCH_PARAMETERS_TAKE(state, take) {
     state.recipesSearchParameters.take = take;
   },
-  SET_RECIPES_SEARCH_PARAMETERS_SORT(state, sort) {
-    state.recipesSearchParameters.sort = sort;
+  SET_RECIPES_SEARCH_PARAMETERS_SORT(state, nameSort) {
+    state.recipesSearchParameters.nameSort = nameSort;
   },
 };
 /* eslint-enable no-param-reassign */

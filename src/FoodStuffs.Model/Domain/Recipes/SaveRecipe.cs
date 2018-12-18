@@ -24,7 +24,7 @@ namespace FoodStuffs.Model.Domain.Recipes
             {
                 _data = data;
                 _now = now.Moment;
-                _user = userAccessor;
+                _userAccessor = userAccessor;
                 _auditUpdater = auditUpdater;
             }
 
@@ -110,7 +110,7 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             private readonly IFoodStuffsData _data;
             private readonly DateTime _now;
-            private readonly ICurrentUserAccessor _user;
+            private readonly ICurrentUserAccessor _userAccessor;
             private readonly IAuditUpdater _auditUpdater;
         }
 
