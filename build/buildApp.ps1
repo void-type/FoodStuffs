@@ -14,8 +14,10 @@ Stop-OnError
 npm run test:unit
 Stop-OnError
 npm run build
-Pop-Location
 Stop-OnError
+node "tasks/set-version.js"
+Stop-OnError
+Pop-Location
 
 # Build solution
 Push-Location -Path "../"
