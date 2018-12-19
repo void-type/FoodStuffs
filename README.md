@@ -32,7 +32,7 @@ cd build/
 ./buildApp.ps1
 ```
 
-## Docker Support with multistage build
+## Docker Support with multi-stage build
 
 You don't need .Net or Node locally to run this application in docker.
 

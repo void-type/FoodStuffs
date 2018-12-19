@@ -3,12 +3,13 @@
 bin/
 obj/
 out/
-wwwroot/
+**/*.Web/wwwroot/
 /artifacts/
 /coverage/
 node_modules/
 
 .gitignore
 .gitattributes
+app[Ss]ettings.*.json
 LICENSE
 README.md
