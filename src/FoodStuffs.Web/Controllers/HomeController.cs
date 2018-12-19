@@ -30,8 +30,7 @@ namespace FoodStuffs.Web.Controllers
         public IActionResult Index()
         {
             _logger.Info("Home page requested.");
-            return File("~/index.html", "text/html");
-
+            return File("app.html", "text/html");
         }
 
         private readonly ILoggingService _logger;
