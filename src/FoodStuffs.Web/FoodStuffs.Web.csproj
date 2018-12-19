@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +14,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.33" PrivateAssets="All" />
-    <PackageReference Include="VoidCore.AspNet" Version="0.3.14" />
-    <PackageReference Include="VoidCore.Domain" Version="0.3.14" />
-    <PackageReference Include="VoidCore.Model" Version="0.3.14" />
+    <PackageReference Include="VoidCore.AspNet" Version="0.3.15" />
+    <PackageReference Include="VoidCore.Domain" Version="0.3.15" />
+    <PackageReference Include="VoidCore.Model" Version="0.3.15" />
   </ItemGroup>
 
   <ItemGroup>
