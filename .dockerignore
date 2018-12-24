@@ -11,5 +11,5 @@ node_modules/
 .gitignore
 .gitattributes
 app[Ss]ettings.*.json
-LICENSE
+LICENSE.txt
 README.md
