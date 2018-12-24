@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.33" PrivateAssets="All" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.38" PrivateAssets="All" />
     <PackageReference Include="VoidCore.AspNet" Version="0.3.15" />
     <PackageReference Include="VoidCore.Domain" Version="0.3.15" />
     <PackageReference Include="VoidCore.Model" Version="0.3.15" />
