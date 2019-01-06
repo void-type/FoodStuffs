@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.38" PrivateAssets="All" />
-    <PackageReference Include="VoidCore.Domain" Version="0.3.16" />
-    <PackageReference Include="VoidCore.Model" Version="0.3.16" />
+    <PackageReference Include="VoidCore.Domain" Version="0.3.20" />
+    <PackageReference Include="VoidCore.Model" Version="0.3.20" />
   </ItemGroup>
 </Project>
