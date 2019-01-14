@@ -18,7 +18,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                 _data = data;
             }
 
-            protected override Result<RecipeDto> HandleSync(Request request)
+            protected override IResult<RecipeDto> HandleSync(Request request)
             {
                 return _data.Recipes.Stored
                     .GetById(request.Id)

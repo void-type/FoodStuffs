@@ -21,7 +21,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                 _data = data;
             }
 
-            public override async Task<Result<IItemSetPage<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellation = default(CancellationToken))
+            public override async Task<IResult<IItemSetPage<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellation = default(CancellationToken))
             {
                 var page = await Task.Run(() => _data.Recipes.Stored
                     .Select(recipe => new RecipeListItemDto(

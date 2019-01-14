@@ -20,28 +20,51 @@ namespace FoodStuffs.Model.Domain.Recipes
     {
         public class Handler : EventHandlerSyncAbstract<Request, UserMessageWithEntityId<int>>
         {
-            public Handler(IFoodStuffsData data, IDateTimeService now, ICurrentUserAccessor userAccessor, IAuditUpdater auditUpdater)
+            public Handler(IFoodStuffsData data, IDateTimeService now, IAuditUpdater auditUpdater)
             {
                 _data = data;
                 _now = now.Moment;
-                _userAccessor = userAccessor;
                 _auditUpdater = auditUpdater;
             }
 
-            protected override Result<UserMessageWithEntityId<int>> HandleSync(Request request)
+            protected override IResult<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
-                var maybeRecipe = _data.Recipes.Stored.GetById(request.Id);
+                _data.Recipes.Stored
+                    .GetById(request.Id)
+                    .Unwrap(CreateRecipe())
+                    .Tee(r => UpdateRecipe(r, request));
 
-                var recipe = maybeRecipe.HasValue ? maybeRecipe.Value : CreateRecipe();
+                return Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", request.Id));
+            }
 
-                recipe.Name = request.Name;
-                recipe.Ingredients = request.Ingredients;
-                recipe.Directions = request.Directions;
-                recipe.CookTimeMinutes = request.CookTimeMinutes;
-                recipe.PrepTimeMinutes = request.PrepTimeMinutes;
-                _auditUpdater.Update(recipe);
+            private Recipe CreateRecipe()
+            {
+                var recipe = _data.Recipes.New;
+                _auditUpdater.Create(recipe);
+                return recipe;
+            }
 
-                var formattedRequestCategories = FormatCategoryNames(request.Categories);
+            private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)
+            {
+                var categoryRecipe = _data.CategoryRecipes.New;
+                categoryRecipe.RecipeId = recipeId;
+                categoryRecipe.CategoryId = category.Id;
+                return categoryRecipe;
+            }
+
+            private Category CreateCategory(string viewModelCategory)
+            {
+                var category = _data.Categories.New;
+                category.Name = viewModelCategory;
+                return category;
+            }
+
+            private void ManageCategories(Recipe recipe, Request request)
+            {
+                var formattedRequestCategories = request.Categories
+                    .Where(category => !string.IsNullOrWhiteSpace(category))
+                    .Select(category => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.Trim()))
+                    .ToArray();
 
                 var currentCategoriesAndCategoryRecipes = _data.CategoryRecipes.Stored
                     .WhereForRecipe(recipe.Id)
@@ -72,45 +95,24 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .Select(c => CreateCategoryRecipe(recipe.Id, c));
 
                 _data.CategoryRecipes.AddRange(categoryRecipesToCreate);
+            }
+
+            private void UpdateRecipe(Recipe recipe, Request request)
+            {
+                recipe.Name = request.Name;
+                recipe.Ingredients = request.Ingredients;
+                recipe.Directions = request.Directions;
+                recipe.CookTimeMinutes = request.CookTimeMinutes;
+                recipe.PrepTimeMinutes = request.PrepTimeMinutes;
+                _auditUpdater.Update(recipe);
+
+                ManageCategories(recipe, request);
 
                 _data.SaveChanges();
-
-                return Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", request.Id));
-            }
-
-            private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)
-            {
-                var categoryRecipe = _data.CategoryRecipes.New;
-                categoryRecipe.RecipeId = recipeId;
-                categoryRecipe.CategoryId = category.Id;
-                return categoryRecipe;
-            }
-
-            private Category CreateCategory(string viewModelCategory)
-            {
-                var category = _data.Categories.New;
-                category.Name = viewModelCategory;
-                return category;
-            }
-
-            private string[] FormatCategoryNames(IEnumerable<string> categories)
-            {
-                return categories
-                    .Where(category => !string.IsNullOrWhiteSpace(category))
-                    .Select(category => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.Trim()))
-                    .ToArray();
-            }
-
-            private Recipe CreateRecipe()
-            {
-                var recipe = _data.Recipes.New;
-                _auditUpdater.Create(recipe);
-                return recipe;
             }
 
             private readonly IFoodStuffsData _data;
             private readonly DateTime _now;
-            private readonly ICurrentUserAccessor _userAccessor;
             private readonly IAuditUpdater _auditUpdater;
         }
 
@@ -150,12 +152,10 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Directions));
 
                 CreateRule("Cook time must be positive.", "cookTimeMinutes")
-                    .InvalidWhen(entity => entity.CookTimeMinutes < 0)
-                    .ExceptWhen(entity => entity.CookTimeMinutes == null);
+                    .InvalidWhen(entity => entity.CookTimeMinutes < 0);
 
                 CreateRule("Prep time must be positive.", "prepTimeMinutes")
-                    .InvalidWhen(entity => entity.PrepTimeMinutes < 0)
-                    .ExceptWhen(entity => entity.PrepTimeMinutes == null);
+                    .InvalidWhen(entity => entity.PrepTimeMinutes < 0);
             }
         }
 

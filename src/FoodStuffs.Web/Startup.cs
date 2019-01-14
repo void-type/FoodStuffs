@@ -41,7 +41,7 @@ namespace FoodStuffs.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Settings
-            var applicationSettings = services.AddSettingsSingleton<IApplicationSettings, ApplicationSettings>(_config, true);
+            var applicationSettings = services.AddSettingsSingleton<ApplicationSettings>(_config, true);
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
 
             // Infrastructure and authorization

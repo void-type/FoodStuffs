@@ -1,4 +1,5 @@
 using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
@@ -16,26 +17,24 @@ namespace FoodStuffs.Model.Domain.Recipes
                 _data = data;
             }
 
-            protected override Result<UserMessageWithEntityId<int>> HandleSync(Request request)
+            protected override IResult<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
-                var maybeRecipe = _data.Recipes.Stored.GetById(request.Id);
+                return _data.Recipes.Stored
+                    .GetById(request.Id)
+                    .ToResult("Recipe not found.")
+                    .TeeOnSuccess(RemoveRecipe)
+                    .Select(recipe => UserMessageWithEntityId.Create("Recipe deleted.", recipe.Id));
+            }
 
-                if (maybeRecipe.HasNoValue)
-                {
-                    return Result.Fail<UserMessageWithEntityId<int>>("Recipe not found.");
-                }
+            private void RemoveRecipe(Recipe recipe)
+            {
+                _data.CategoryRecipes.Stored
+                    .WhereForRecipe(recipe.Id)
+                    .Tee(_data.CategoryRecipes.RemoveRange);
 
-                var recipeToRemove = maybeRecipe.Value;
-
-                var categoryRecipesToRemove = _data.CategoryRecipes.Stored
-                    .WhereForRecipe(recipeToRemove.Id);
-
-                _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
-                _data.Recipes.Remove(recipeToRemove);
+                _data.Recipes.Remove(recipe);
 
                 _data.SaveChanges();
-
-                return Result.Ok(UserMessageWithEntityId.Create("Recipe deleted.", request.Id));
             }
 
             private readonly IFoodStuffsData _data;
