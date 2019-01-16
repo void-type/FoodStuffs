@@ -14,16 +14,16 @@ namespace FoodStuffs.Model.Domain.Recipes
 {
     public class ListRecipes
     {
-        public class Handler : EventHandlerAbstract<Request, IItemSetPage<RecipeListItemDto>>
+        public class Handler : EventHandlerSyncAbstract<Request, IItemSetPage<RecipeListItemDto>>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            public override async Task<IResult<IItemSetPage<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellation = default(CancellationToken))
+            protected override IResult<IItemSetPage<RecipeListItemDto>> HandleSync(Request request)
             {
-                var page = await Task.Run(() => _data.Recipes.Stored
+                return _data.Recipes.Stored
                     .Select(recipe => new RecipeListItemDto(
                         recipe.Id,
                         recipe.Name,
@@ -35,9 +35,8 @@ namespace FoodStuffs.Model.Domain.Recipes
                         request.CategorySearch,
                         dto => string.Join(" ", dto.Categories))
                     .SortListItemDtosByName(request.NameSort)
-                    .ToItemSetPage(request.Page, request.Take));
-
-                return Result.Ok(page);
+                    .ToItemSetPage(request.Page, request.Take)
+                    .Map(page => Result.Ok(page));
             }
 
             private readonly IFoodStuffsData _data;

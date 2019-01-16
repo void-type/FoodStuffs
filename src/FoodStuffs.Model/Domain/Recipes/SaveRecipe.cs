@@ -29,12 +29,11 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override IResult<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
-                _data.Recipes.Stored
+                return _data.Recipes.Stored
                     .GetById(request.Id)
                     .Unwrap(CreateRecipe())
-                    .Tee(r => UpdateRecipe(r, request));
-
-                return Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", request.Id));
+                    .Tee(r => UpdateRecipe(r, request))
+                    .Map(r => Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", r.Id)));
             }
 
             private Recipe CreateRecipe()
