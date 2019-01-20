@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
+using System.IO;
 using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
@@ -10,19 +12,18 @@ namespace FoodStuffs.Web
     {
         public static int Main(string[] args)
         {
-            // TODO: MS warnings are suppressed in logs.
-            Log.Logger = SerilogFileLoggerFactory.Create<Startup>(true);
+            var host = WebHost
+                .CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .UseSerilog()
+                .Build();
+
+            var loggingSettings = host.Services.GetRequiredService<LoggingSettings>();
+            Log.Logger = SerilogFileLoggerFactory.Create<Startup>(loggingSettings);
 
             try
             {
-                var host = WebHost
-                    .CreateDefaultBuilder(args)
-                    .UseStartup<Startup>()
-                    .UseSerilog()
-                    .Build();
-
                 Log.Information("Starting web host.");
-
                 host.Run();
                 return 0;
             }
