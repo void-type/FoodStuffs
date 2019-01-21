@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
-using System.IO;
 using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web

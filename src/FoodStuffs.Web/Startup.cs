@@ -43,7 +43,7 @@ namespace FoodStuffs.Web
             // Settings
             var applicationSettings = services.AddSettingsSingleton<ApplicationSettings>(_config, true);
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
-            var loggingSettings = services.AddSettingsSingleton<LoggingSettings>(_config);
+            services.AddSettingsSingleton<LoggingSettings>(_config);
 
             // Infrastructure and authorization
             services.AddSecureTransport(_env);
