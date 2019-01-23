@@ -1,7 +1,7 @@
 using FoodStuffs.Model.Domain.Recipes;
 using Microsoft.AspNetCore.Mvc;
-using VoidCore.AspNet.Attributes;
 using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Routing;
 
 namespace FoodStuffs.Web.Controllers.Api
 {

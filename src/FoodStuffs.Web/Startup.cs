@@ -9,8 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VoidCore.AspNet.ClientApp;
-using VoidCore.AspNet.Configuration;
+using VoidCore.AspNet.Data;
 using VoidCore.AspNet.Logging;
+using VoidCore.AspNet.Routing;
+using VoidCore.AspNet.Security;
+using VoidCore.AspNet.Settings;
 using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
@@ -41,7 +44,7 @@ namespace FoodStuffs.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Settings
-            var applicationSettings = services.AddSettingsSingleton<ApplicationSettings>(_config, true);
+            services.AddSettingsSingleton<ApplicationSettings>(_config, true);
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
             services.AddSettingsSingleton<LoggingSettings>(_config);
 
