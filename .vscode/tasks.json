@@ -4,8 +4,8 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildApp",
-            "command": "./buildApp.ps1",
+            "label": "build",
+            "command": "./build.ps1",
             "options": {
                 "cwd": "./build"
             },
@@ -21,8 +21,8 @@
             ]
         },
         {
-            "label": "buildAppDebug",
-            "command": "./buildAppDebug.ps1",
+            "label": "buildClientDebug",
+            "command": "./buildClientDebug.ps1",
             "options": {
                 "cwd": "./build"
             },
@@ -30,8 +30,7 @@
             "group": "test",
             "problemMatcher": [
                 "$node-sass",
-                "$eslint-compact",
-                "$msCompile"
+                "$eslint-compact"
             ]
         },
         {
