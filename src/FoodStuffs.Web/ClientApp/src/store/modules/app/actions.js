@@ -25,11 +25,13 @@ export default {
       context.dispatch('setErrorMessage', 'Server responded with endpoint not found.');
     } else if (response.status >= 500) {
       context.dispatch('setErrorMessage', response.data.message);
-    } else {
+    } else if (response.data.items !== undefined) {
       context.dispatch('setValidationErrorMessages', {
         errorMessages: response.data.items.map(item => item.message),
         fieldNames: response.data.items.map(item => item.uiHandle),
       });
+    } else {
+      context.dispatch('setErrorMessage', 'Something went wrong. Try refreshing your browser or contact the administrator.');
     }
   },
   setApiDownloadFailureMessage(context, response) {

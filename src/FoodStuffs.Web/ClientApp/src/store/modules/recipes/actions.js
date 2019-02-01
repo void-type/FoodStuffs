@@ -3,15 +3,6 @@ import recipeApiModels from '../../../models/RecipeApiModels';
 import webApi from '../../../webApi';
 
 export default {
-  fetchRecipe(context, id) {
-    webApi.recipes.get(
-      id,
-      (data) => {
-        context.dispatch('setCurrentRecipe', data);
-      },
-      response => context.dispatch('setApiFailureMessage', response),
-    );
-  },
   fetchRecipesList(context) {
     webApi.recipes.list(
       context.state.recipesSearchParameters,
@@ -21,9 +12,27 @@ export default {
       response => context.dispatch('setApiFailureMessage', response),
     );
   },
+  fetchRecipe(context, id) {
+    webApi.recipes.get(
+      id,
+      (data) => {
+        context.dispatch('setCurrentRecipe', data);
+      },
+      response => context.dispatch('setApiFailureMessage', response),
+    );
+  },
+  saveRecipe(context, recipe) {
+    webApi.recipes.save(
+      recipe,
+      (data) => {
+        context.dispatch('fetchRecipe', data.id);
+        context.dispatch('fetchRecipesList');
+        context.dispatch('setSuccessMessage', data.message);
+      },
+      response => context.dispatch('setApiFailureMessage', response),
+    );
+  },
   deleteRecipe(context, recipe) {
-    context.dispatch('clearMessages');
-
     webApi.recipes.delete(
       recipe,
       (data) => {
@@ -33,34 +42,7 @@ export default {
       response => context.dispatch('setApiFailureMessage', response),
     );
   },
-  saveRecipe(context, recipe) {
-    context.dispatch('clearMessages');
-
-    if (recipe.id === undefined || recipe.id < 1) {
-      webApi.recipes.create(
-        recipe,
-        (data) => {
-          context.dispatch('fetchRecipe', data.id);
-          context.dispatch('fetchRecipesList');
-          context.dispatch('setSuccessMessage', data.message);
-        },
-        response => context.dispatch('setApiFailureMessage', response),
-      );
-    } else {
-      webApi.recipes.update(
-        recipe,
-        (data) => {
-          context.dispatch('fetchRecipe', data.id);
-          context.dispatch('fetchRecipesList');
-          context.dispatch('setSuccessMessage', data.message);
-        },
-        response => context.dispatch('setApiFailureMessage', response),
-      );
-    }
-  },
   selectRecipe(context, recipe) {
-    context.dispatch('clearMessages');
-
     if (recipe && recipe.id !== undefined) {
       context.dispatch('fetchRecipe', recipe.id);
     } else {

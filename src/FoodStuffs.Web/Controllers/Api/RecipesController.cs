@@ -24,18 +24,6 @@ namespace FoodStuffs.Web.Controllers.Api
             _deleteLogger = deleteLogger;
         }
 
-        [HttpGet]
-        public IActionResult Get(int id)
-        {
-            var request = new GetRecipe.Request(id);
-
-            var result = _getHandler
-                .AddPostProcessor(_getLogger)
-                .Handle(request);
-
-            return _responder.Respond(result);
-        }
-
         [Route("list")]
         [HttpGet]
         public IActionResult List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string nameSort = null)
@@ -44,6 +32,18 @@ namespace FoodStuffs.Web.Controllers.Api
 
             var result = _listHandler
                 .AddPostProcessor(_listLogger)
+                .Handle(request);
+
+            return _responder.Respond(result);
+        }
+
+        [HttpGet]
+        public IActionResult Get(int id)
+        {
+            var request = new GetRecipe.Request(id);
+
+            var result = _getHandler
+                .AddPostProcessor(_getLogger)
                 .Handle(request);
 
             return _responder.Respond(result);
