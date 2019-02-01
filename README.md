@@ -2,7 +2,9 @@
 
 A web application for managing recipes based on .Net Core 2.1 and Vue.js 2.0.
 
-WARNING - This application is still in early development.
+| Warning |
+| --- |
+| This application is still in early development. |
 
 ## Make a Database
 
@@ -29,7 +31,7 @@ Note: VoidCore currently has no public build. You will have to build it manually
 
 ```powershell
 cd build/
-./buildApp.ps1
+./build.ps1
 ```
 
 ## Docker Support with multi-stage build
