@@ -16,7 +16,7 @@ namespace FoodStuffs.Web.Controllers
         public IActionResult Error()
         {
             _logger.Info("Error page requested.");
-            return View();
+            return File("error.html", "text/html");
         }
 
         [AllowAnonymous]
@@ -24,7 +24,7 @@ namespace FoodStuffs.Web.Controllers
         public IActionResult Forbidden()
         {
             _logger.Info("Forbidden page requested.");
-            return View();
+            return File("forbidden.html", "text/html");
         }
 
         public IActionResult Index()

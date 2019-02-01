@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="no-print">
+    <div class="no-print">
       <AppHeader />
       <AppMessageCenter/>
       <main class="container">
@@ -8,7 +8,7 @@
       </main>
       <AppFooter />
     </div>
-    <div id="print-only">
+    <div class="print-only">
       <RecipeViewer :recipe="currentRecipe" />
     </div>
   </div>
@@ -128,14 +128,12 @@ a:link {
     background-color: $color-background;
   }
 
-  #print-only,
   .print-only {
     display: none;
   }
 }
 
 @media print {
-  #no-print,
   .no-print {
     display: none;
   }

@@ -66,7 +66,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .ToArray();
 
                 var currentCategoriesAndCategoryRecipes = _data.CategoryRecipes.Stored
-                    .WhereForRecipe(recipe.Id)
+                    .Where(cr => cr.RecipeId == recipe.Id)
                     .Join(_data.Categories.Stored,
                         cr => cr.CategoryId,
                         c => c.Id,

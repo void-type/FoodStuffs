@@ -1,6 +1,7 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
+using System.Linq;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
@@ -29,7 +30,7 @@ namespace FoodStuffs.Model.Domain.Recipes
             private void RemoveRecipe(Recipe recipe)
             {
                 _data.CategoryRecipes.Stored
-                    .WhereForRecipe(recipe.Id)
+                    .Where(cr => cr.RecipeId == recipe.Id)
                     .Tee(_data.CategoryRecipes.RemoveRange);
 
                 _data.Recipes.Remove(recipe);
