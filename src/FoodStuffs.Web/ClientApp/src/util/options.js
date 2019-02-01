@@ -17,7 +17,7 @@ export default {
       value: null,
     },
   ],
-  ternaryOptions: [
+  booleanOptions: [
     {
       text: 'All',
       value: null,

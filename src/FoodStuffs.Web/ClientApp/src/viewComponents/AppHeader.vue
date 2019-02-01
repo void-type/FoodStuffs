@@ -2,20 +2,20 @@
   <header>
     <div class="container">
       <router-link
-        :to="{name: 'home'}"
+        :to="'/'"
         class="logo">
         <img
           src="../assets/logo.png"
           alt="FoodStuffs logo" >
-        <span>{{ applicationName }}</span>
+        <span>{{ brand }}</span>
       </router-link>
       <nav>
         <ul>
           <li>
             <router-link
-              :to="{name: 'home'}"
-              :class="{'current-page': $route.name === 'home'}">
-              Home</router-link>
+              :to="{name: 'view'}"
+              :class="{'current-page': $route.name === 'view'}">
+              View</router-link>
           </li>
           <li>
             <router-link
@@ -32,7 +32,7 @@
         </ul>
       </nav>
       <router-link
-        :to="{name: 'home'}"
+        :to="'/'"
         :class="{'current-page': $route.name === 'login',
                  'pull-right': true}">
         Login</router-link>
@@ -41,11 +41,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
-  computed: {
-    ...mapGetters(['applicationName']),
+  props: {
+    brand: {
+      type: String,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
   },
 };
 </script>
@@ -87,7 +92,6 @@ header {
       }
 
       &:not(.logo) {
-
         &:link,
         &:visited {
           color: $color-neutral-inverse;

@@ -28,16 +28,16 @@
     <br
       v-if="recipe.prepTimeMinutes !== null
       || recipe.cookTimeMinutes !== null" >
-    <RecipeAudit :recipe="recipe" />
+    <EntityDetailsAuditInfo :entity="recipe" />
   </div>
 </template>
 
 <script>
-import RecipeAudit from './RecipeAudit.vue';
+import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 
 export default {
   components: {
-    RecipeAudit,
+    EntityDetailsAuditInfo,
   },
   props: {
     recipe: {

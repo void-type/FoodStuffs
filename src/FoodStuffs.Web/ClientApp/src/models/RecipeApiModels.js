@@ -1,27 +1,13 @@
 import ItemSetPage from './ItemSetPage';
-
-const RecipeGetRequestSortTypes = [
-  {
-    name: 'ascending',
-    symbol: '&#9660;',
-  },
-  {
-    name: 'descending',
-    symbol: '&#9650;',
-  },
-  {
-    name: 'chronological',
-    symbol: '&#x1F552;',
-  },
-];
+import sort from '../util/sort';
 
 class RecipeGetRequest {
   constructor() {
     this.categorySearch = '';
     this.nameSearch = '';
     this.page = 1;
-    this.nameSort = RecipeGetRequestSortTypes[0].name;
     this.take = 15;
+    this.nameSort = sort.types[0].name;
   }
 }
 
@@ -43,7 +29,6 @@ class RecipeSaveRequest {
 
 export default {
   GetRequest: RecipeGetRequest,
-  GetRequestSortTypes: RecipeGetRequestSortTypes,
   GetResponse: ItemSetPage,
   SaveRequest: RecipeSaveRequest,
 };

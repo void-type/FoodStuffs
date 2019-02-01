@@ -56,9 +56,9 @@
         @addTag="addCategoryToCurrentRecipe"
         @removeTag="removeCategoryFromCurrentRecipe" />
     </div>
-    <RecipeAudit
+    <EntityDetailsAuditInfo
       v-if="currentRecipe.id"
-      :recipe="currentRecipe" />
+      :entity="currentRecipe" />
     <div class="form-row button-row">
       <button @click.prevent="saveRecipe(currentRecipe)">
         Save
@@ -78,12 +78,38 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import TagEditor from './TagEditor.vue';
-import RecipeAudit from './RecipeAudit.vue';
+import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
+
+// addCategoryToRecipe(context, { recipe, categoryName }) {
+//   const cleanedCategoryName = trimAndCapitalize(categoryName);
+
+//   const categoryDoesNotExist = recipe.categories
+//     .map(value => value.toUpperCase())
+//     .indexOf(categoryName.toUpperCase()) < 0;
+
+//   if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
+//     context.commit('ADD_CATEGORY_TO_RECIPE', { recipe, cleanedCategoryName });
+//   }
+// },
+// removeCategoryFromRecipe(context, { recipe, categoryName }) {
+//   const categoryIndex = recipe.categories.indexOf(categoryName);
+
+//   if (categoryIndex > -1) {
+//     context.commit('REMOVE_CATEGORY_FROM_RECIPE', { recipe, categoryIndex });
+//   }
+// },
+
+// ADD_CATEGORY_TO_RECIPE(state, { recipe, cleanedCategoryName }) {
+//   recipe.categories.push(cleanedCategoryName);
+// },
+// REMOVE_CATEGORY_FROM_RECIPE(state, { recipe, categoryIndex }) {
+//   recipe.categories.splice(categoryIndex, 1);
+// },
 
 export default {
   components: {
     TagEditor,
-    RecipeAudit,
+    EntityDetailsAuditInfo,
   },
   computed: {
     ...mapGetters(['currentRecipe', 'isFieldInError']),
@@ -148,7 +174,7 @@ export default {
     ]),
     cancelClick() {
       this.fetchRecipesList(this.currentRecipe.id);
-      this.$router.push({ name: 'home' });
+      this.$router.push({ name: 'view' });
     },
     addCategoryToCurrentRecipe(categoryName) {
       const recipe = this.currentRecipe;
@@ -167,6 +193,6 @@ export default {
 @import "../style/inputs";
 
 .pull-right {
-    margin-left: auto;
+  margin-left: auto;
 }
 </style>

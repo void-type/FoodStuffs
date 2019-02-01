@@ -1,10 +1,7 @@
 <template>
   <section>
     <SelectSidebar />
-    <RecipeEditor
-      :is-field-in-error="isFieldInError"
-      :on-save="saveRecipe"
-      :source-recipe="sourceRecipe"/>
+    <RecipeViewer :recipe="sourceRecipe" />
   </section>
 </template>
 
@@ -13,12 +10,12 @@ import { mapActions } from 'vuex';
 import webApi from '../webApi';
 import recipeModels from '../models/RecipeApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
-import RecipeEditor from '../viewComponents/RecipeEditor.vue';
+import RecipeViewer from '../viewComponents/RecipeViewer.vue';
 
 export default {
   components: {
     SelectSidebar,
-    RecipeEditor,
+    RecipeViewer,
   },
   data() {
     return {
@@ -31,7 +28,6 @@ export default {
   methods: {
     ...mapActions({
       setApiFailureMessage: 'app/setApiFailureMessage',
-      saveRecipe: 'recipes/save',
     }),
     fetchRecipe(id) {
       webApi.recipes.get(

@@ -1,16 +1,15 @@
 <template>
   <div id="app">
-    <div class="no-print">
-      <AppHeader />
-      <AppMessageCenter/>
-      <main class="container">
-        <router-view />
-      </main>
-      <AppFooter />
-    </div>
-    <div class="print-only">
-      <RecipeViewer :recipe="currentRecipe" />
-    </div>
+    <vue-progress-bar />
+    <AppHeader
+      :brand="applicationName"
+      :user="user" />
+    <AppMessageCenter
+      class="no-print" />
+    <main class="container">
+      <router-view />
+    </main>
+    <AppFooter />
   </div>
 </template>
 
@@ -19,14 +18,12 @@ import { mapActions, mapGetters } from 'vuex';
 import router from './router';
 import store from './store';
 import progressBar from './util/progressBar';
-import RecipeViewer from './viewComponents/RecipeViewer.vue';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
 import AppFooter from './viewComponents/AppFooter.vue';
 
 export default {
   components: {
-    RecipeViewer,
     AppMessageCenter,
     AppHeader,
     AppFooter,
@@ -34,22 +31,24 @@ export default {
   router,
   store,
   computed: {
-    ...mapGetters(['currentRecipe']),
+    ...mapGetters('app', [
+      'applicationName',
+      'user',
+    ]),
   },
   watch: {
     applicationName(newApplicationName) {
       document.title = newApplicationName;
     },
   },
-  beforeMount() {
-    this.fetchRecipesList();
-  },
   mounted() {
     progressBar.setupProgressBarHooks(this.$Progress);
     this.fetchApplicationInfo();
   },
   methods: {
-    ...mapActions(['app/fetchApplicationInfo', 'recipes/recipesfetchRecipesList']),
+    ...mapActions('app', [
+      'fetchApplicationInfo',
+    ]),
   },
 };
 </script>
@@ -123,39 +122,6 @@ a:link {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-@media screen {
-  body {
-    background-color: $color-background;
-  }
-
-  .print-only {
-    display: none;
-  }
-}
-
-@media print {
-  .no-print {
-    display: none;
-  }
-
-  body {
-    font-size: 90% !important;
-  }
-
-  div {
-    background-color: $color-neutral-inverse;
-  }
-
-  p,
-  pre,
-  h1,
-  h2,
-  h3,
-  h4 {
-    color: $color-neutral;
-  }
-}
-
 @media #{$extra-large-screen} {
   body {
     font-size: 130%;
@@ -182,6 +148,32 @@ a:link {
 @media #{$small-screen} {
   body {
     font-size: 90%;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none;
+  }
+
+  body {
+    font-size: 90% !important;
+    background-color: $color-neutral-inverse;
+  }
+
+  p,
+  pre,
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: $color-neutral;
   }
 }
 </style>

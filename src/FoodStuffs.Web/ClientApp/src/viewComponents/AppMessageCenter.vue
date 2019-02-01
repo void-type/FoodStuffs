@@ -17,15 +17,15 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters(['messages', 'messageIsError']),
-  },
-  watch: {
-    $route() {
-      this.clearMessages();
-    },
+    ...mapGetters('app', [
+      'messages',
+      'messageIsError',
+    ]),
   },
   methods: {
-    ...mapActions(['clearMessages']),
+    ...mapActions('app', [
+      'clearMessages',
+    ]),
   },
 };
 </script>

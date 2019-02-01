@@ -5,21 +5,24 @@
         v-for="pageNumber in numberOfPages"
         :key="pageNumber"
         :class="{currentPage: pageNumber === page}"
-        @click="requestPage(pageNumber)">
+        @click="changePage(pageNumber)">
         {{ pageNumber }}</span>
     </div>
     <div>
       <input
         id="take"
-        v-model="takeEditor"
-        type="number"
-        min="1"
-        name="take" >
+        :value="take"
+        :options="takeOptions"
+        name="take"
+        type="select"
+        @change="changeTake" >
     </div>
   </div>
 </template>
 
 <script>
+import defaults from '../util/options';
+
 export default {
   props: {
     totalCount: {
@@ -34,24 +37,21 @@ export default {
       type: Number,
       required: true,
     },
+    changePage: {
+      type: Function,
+      required: true,
+    },
+    changeTake: {
+      type: Function,
+      required: true,
+    },
   },
   computed: {
     numberOfPages() {
       return Math.ceil(this.totalCount / this.take) || 1;
     },
-    takeEditor: {
-      get() {
-        return this.take;
-      },
-      set(value) {
-        this.$emit('updateTake', parseInt(value, 10));
-        this.requestPage(this.page);
-      },
-    },
-  },
-  methods: {
-    requestPage(pageNumber) {
-      this.$emit('requestPage', pageNumber);
+    takeOptions() {
+      return defaults.paginationTakeOptions;
     },
   },
 };
@@ -62,9 +62,7 @@ export default {
 @import "../style/inputs";
 
 .pages {
-
   & span {
-
     &.currentPage {
       background-color: $color-focus;
       background-color: mix($color-ternary, $color-secondary, 90%);
@@ -79,7 +77,7 @@ export default {
   }
 }
 
-div>div {
+div > div {
   display: flex;
   justify-content: center;
 

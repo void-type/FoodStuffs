@@ -5,7 +5,7 @@
         <span
           v-for="tag in tags"
           :key="tag">
-          {{ tag }}&nbsp;&nbsp;<span @click="removeTagClick(tag)">
+          {{ tag }}&nbsp;&nbsp;<span @click="removeTag(tag)">
             &#x2716;</span>
         </span>
       </div>
@@ -13,7 +13,7 @@
 
     <div>
       <input
-        v-model="newTagName"
+        v-model="newTag"
         :id="fieldName"
         :name="fieldName"
         type="text"
@@ -41,20 +41,24 @@ export default {
       type: Array,
       required: true,
     },
+    addTag: {
+      type: Function,
+      required: true,
+    },
+    removeTag: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
-      newTagName: '',
+      newTag: '',
     };
   },
   methods: {
     addTagClick() {
-      this.$emit('addTag', this.newTagName);
-      this.newTagName = '';
-    },
-
-    removeTagClick(tagToRemove) {
-      this.$emit('removeTag', tagToRemove);
+      this.addTag(this.newTag);
+      this.newTag = '';
     },
   },
 };
@@ -68,7 +72,7 @@ export default {
   display: flex;
 
   & button {
-    margin-left: .5em;
+    margin-left: 0.5em;
   }
 }
 
@@ -77,7 +81,7 @@ export default {
   flex-flow: wrap;
 
   & > span {
-    margin-top: .5em;
+    margin-top: 0.5em;
     background-color: $color-neutral-medium;
     box-sizing: border-box;
     padding: 0.3em 0.6em;

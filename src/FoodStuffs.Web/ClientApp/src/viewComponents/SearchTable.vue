@@ -4,7 +4,7 @@
       <tr>
         <th
           class="sortable-header"
-          @click="sortByNameClick()">
+          @click="cycleSelectedNameSortType()">
           Name&nbsp;&nbsp;<span v-html="selectedNameSortType.symbol"/>
         </th>
         <th>Categories</th>
@@ -33,15 +33,19 @@ export default {
       type: Object,
       required: true,
     },
+    selectRecipe: {
+      type: Function,
+      required: true,
+    },
+    cycleSelectedNameSortType: {
+      type: Function,
+      required: true,
+    },
   },
   methods: {
     selectClick(recipe) {
-      this.$emit('selectRecipe', recipe);
-      this.$router.push({ name: 'home' });
-    },
-
-    sortByNameClick() {
-      this.$emit('cycleSelectedNameSortType');
+      this.selectRecipe(recipe);
+      this.$router.push({ name: 'view' });
     },
   },
 };

@@ -9,7 +9,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="selectClick(recipe)">
+        @click="selectRecipe(recipe)">
 
         <td>{{ recipe.name }}</td>
       </tr>
@@ -29,10 +29,9 @@ export default {
       required: false,
       default: '',
     },
-  },
-  methods: {
-    selectClick(recipe) {
-      this.$emit('selectRecipe', recipe);
+    selectRecipe: {
+      type: Function,
+      required: true,
     },
   },
 };

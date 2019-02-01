@@ -6,12 +6,12 @@
       v-if="recentRecipes.length > 0"
       :recipes="recentRecipes"
       :title="'Recent'"
-      @selectRecipe="selectRecipe" />
+      :select-recipe="selectRecipe" />
 
     <SelectSidebarList
       :recipes="recipesList"
       :title="'Recipes'"
-      @selectRecipe="selectRecipe" />
+      :select-recipe="selectRecipe" />
   </div>
 </template>
 

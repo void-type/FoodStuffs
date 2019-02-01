@@ -1,22 +1,21 @@
-const HomeView = () => import(/* webpackChunkName: "recipes" */ '../views/Home.vue');
-const EditView = () => import(/* webpackChunkName: "recipes" */ '../views/Edit.vue');
-const SearchView = () => import(/* webpackChunkName: "recipes" */ '../views/Search.vue');
+const View = () => import(/* webpackChunkName: "recipes" */ '../views/View.vue');
+const Edit = () => import(/* webpackChunkName: "recipes" */ '../views/Edit.vue');
+const Search = () => import(/* webpackChunkName: "recipes" */ '../views/Search.vue');
 
 export default [
   {
-    path: '/',
-    alias: '/home',
-    name: 'home',
-    component: HomeView,
+    alias: '/view',
+    name: 'view',
+    component: View,
   },
   {
     path: '/edit',
     name: 'edit',
-    component: EditView,
+    component: Edit,
   },
   {
     path: '/search',
     name: 'search',
-    component: SearchView,
+    component: Search,
   },
 ];

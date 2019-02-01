@@ -1,4 +1,4 @@
-import defaults from './defaults';
+import defaults from '../util/options';
 
 export default class {
   constructor() {

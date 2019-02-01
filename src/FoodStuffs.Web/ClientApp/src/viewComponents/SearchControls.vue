@@ -44,19 +44,21 @@ export default {
       type: String,
       required: true,
     },
-  },
-  methods: {
-    search() {
-      this.$emit('search');
+    search: {
+      type: Function,
+      required: true,
     },
-    clear() {
-      this.$emit('clear');
+    clear: {
+      type: Function,
+      required: true,
     },
-    updateNameSearch(value) {
-      this.$emit('updateNameSearch', value);
+    updateNameSearch: {
+      type: Function,
+      required: true,
     },
-    updateCategorySearch(value) {
-      this.$emit('updateCategorySearch', value);
+    updateCategorySearch: {
+      type: Function,
+      required: true,
     },
   },
 };
