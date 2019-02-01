@@ -78,7 +78,7 @@ namespace FoodStuffs.Model.Domain.Recipes
             public DateTime CreatedOnUtc { get; }
             public string ModifiedBy { get; }
             public DateTime ModifiedOnUtc { get; }
-            public IEnumerable<string> Categories { get; } = new List<string>();
+            public IEnumerable<string> Categories { get; }
         }
 
         public class Logger : FallibleEventLogger<Request, RecipeDto>

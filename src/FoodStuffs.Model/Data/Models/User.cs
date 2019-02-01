@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace FoodStuffs.Model.Data.Models
+﻿namespace FoodStuffs.Model.Data.Models
 {
-    public partial class User
+    public class User
     {
         public int Id { get; set; }
         public string UserName { get; set; }

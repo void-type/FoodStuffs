@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public partial class Category
+    public class Category
     {
 
         public int Id { get; set; }

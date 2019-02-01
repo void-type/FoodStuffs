@@ -4,7 +4,7 @@ using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public partial class Recipe : IAuditable
+    public class Recipe : IAuditable
     {
         public int Id { get; set; }
         public string Name { get; set; }

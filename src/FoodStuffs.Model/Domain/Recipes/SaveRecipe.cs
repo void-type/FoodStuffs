@@ -1,7 +1,6 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,8 +10,6 @@ using VoidCore.Domain.RuleValidator;
 using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
-using VoidCore.Model.Time;
-using VoidCore.Model.Users;
 
 namespace FoodStuffs.Model.Domain.Recipes
 {
@@ -20,10 +17,9 @@ namespace FoodStuffs.Model.Domain.Recipes
     {
         public class Handler : EventHandlerSyncAbstract<Request, UserMessageWithEntityId<int>>
         {
-            public Handler(IFoodStuffsData data, IDateTimeService now, IAuditUpdater auditUpdater)
+            public Handler(IFoodStuffsData data, IAuditUpdater auditUpdater)
             {
                 _data = data;
-                _now = now.Moment;
                 _auditUpdater = auditUpdater;
             }
 
@@ -111,7 +107,6 @@ namespace FoodStuffs.Model.Domain.Recipes
             }
 
             private readonly IFoodStuffsData _data;
-            private readonly DateTime _now;
             private readonly IAuditUpdater _auditUpdater;
         }
 
