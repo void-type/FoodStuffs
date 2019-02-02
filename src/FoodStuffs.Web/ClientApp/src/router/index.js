@@ -11,7 +11,7 @@ const router = new VueRouter({
     ...recipes,
     {
       path: '*',
-      redirect: { name: 'view' },
+      redirect: { name: 'search' },
     },
   ],
 });

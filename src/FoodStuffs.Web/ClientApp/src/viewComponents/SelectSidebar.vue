@@ -1,22 +1,18 @@
 <template>
   <div>
-    <button @click="newRecipe()">New</button>
-
+    <button :to="{name: 'new'}">New</button>
     <SelectSidebarList
-      v-if="recentRecipes.length > 0"
-      :recipes="recentRecipes"
-      :title="'Recent'"
-      :select-recipe="selectRecipe" />
-
+      v-if="recent.length > 0"
+      :recipes="recent"
+      :title="'Recent'" />
     <SelectSidebarList
-      :recipes="recipesList"
-      :title="'Recipes'"
-      :select-recipe="selectRecipe" />
+      :recipes="listResponse.items"
+      :title="'Recipes'" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import SelectSidebarList from './SelectSidebarList.vue';
 
 export default {
@@ -24,14 +20,10 @@ export default {
     SelectSidebarList,
   },
   computed: {
-    ...mapGetters(['recipesList', 'recentRecipes']),
-  },
-  methods: {
-    ...mapActions(['selectRecipe']),
-    newRecipe() {
-      this.selectRecipe();
-      this.$router.push({ name: 'edit' });
-    },
+    ...mapGetters({
+      listResponse: 'recipes/listResponse',
+      recent: 'recipes/recent',
+    }),
   },
 };
 </script>

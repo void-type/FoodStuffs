@@ -9,8 +9,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="selectRecipe(recipe)">
-
+        :to="{name: 'view', props: {id: recipe.id}}">
         <td>{{ recipe.name }}</td>
       </tr>
     </tbody>
@@ -28,10 +27,6 @@ export default {
       type: String,
       required: false,
       default: '',
-    },
-    selectRecipe: {
-      type: Function,
-      required: true,
     },
   },
 };
