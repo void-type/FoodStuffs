@@ -16,7 +16,7 @@ namespace FoodStuffs.Model.Data.Models
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
-        
+
         public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
 
         public Recipe()
