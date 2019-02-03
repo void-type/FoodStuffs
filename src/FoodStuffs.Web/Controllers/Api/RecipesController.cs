@@ -1,5 +1,6 @@
 using FoodStuffs.Model.Domain.Recipes;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 
@@ -26,11 +27,11 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public IActionResult List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string nameSort = null)
+        public async Task<IActionResult> List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string nameSort = null)
         {
             var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, nameSort);
 
-            var result = _listHandler
+            var result = await _listHandler
                 .AddPostProcessor(_listLogger)
                 .Handle(request);
 
@@ -38,11 +39,11 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpGet]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var request = new GetRecipe.Request(id);
 
-            var result = _getHandler
+            var result = await _getHandler
                 .AddPostProcessor(_getLogger)
                 .Handle(request);
 
@@ -50,9 +51,9 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpPost]
-        public IActionResult Save([FromBody] SaveRecipe.Request request)
+        public async Task<IActionResult> Save([FromBody] SaveRecipe.Request request)
         {
-            var result = _saveHandler
+            var result = await _saveHandler
                 .AddRequestValidator(_saveValidator)
                 .AddPostProcessor(_saveLogger)
                 .Handle(request);
@@ -61,11 +62,11 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var request = new DeleteRecipe.Request(id);
 
-            var result = _deleteHandler
+            var result = await _deleteHandler
                 .AddPostProcessor(_deleteLogger)
                 .Handle(request);
 

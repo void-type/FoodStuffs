@@ -4,8 +4,8 @@
       <tr>
         <th
           class="sortable-header"
-          @click="cycleSelectedNameSortType()">
-          Name&nbsp;&nbsp;<span v-html="selectedNameSortType.symbol"/>
+          @click="cycleNameSort()">
+          Name&nbsp;&nbsp;<span v-html="nameSort.symbol"/>
         </th>
         <th>Categories</th>
       </tr>
@@ -14,7 +14,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="selectClick(recipe)">
+        :to="{name: 'view', props: {id: recipe.id}}">
         <td>{{ recipe.name }}</td>
         <td>{{ recipe.categories.join(", ") }}</td>
       </tr>
@@ -29,23 +29,13 @@ export default {
       type: Array,
       required: true,
     },
-    selectedNameSortType: {
+    nameSort: {
       type: Object,
       required: true,
     },
-    selectRecipe: {
+    cycleNameSort: {
       type: Function,
       required: true,
-    },
-    cycleSelectedNameSortType: {
-      type: Function,
-      required: true,
-    },
-  },
-  methods: {
-    selectClick(recipe) {
-      this.selectRecipe(recipe);
-      this.$router.push({ name: 'view' });
     },
   },
 };

@@ -14,7 +14,7 @@ export default {
     },
     {
       text: 'All',
-      value: null,
+      value: 2147483647,
     },
   ],
   booleanOptions: [

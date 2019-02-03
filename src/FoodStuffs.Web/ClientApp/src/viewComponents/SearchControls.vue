@@ -7,7 +7,7 @@
           :value="nameSearch"
           type="text"
           name="nameSearch"
-          @input="updateNameSearch($event.target.value)" >
+          @input="changeNameSearch($event.target.value)" >
         <label for="nameSearch">Name Contains</label>
       </div>
       <div class="form-group">
@@ -16,16 +16,16 @@
           :value="categorySearch"
           type="text"
           name="categorySearch"
-          @input="updateCategorySearch($event.target.value)" >
+          @input="changeCategorySearch($event.target.value)" >
         <label for="categorySearch">Categories Contain</label>
       </div>
     </div>
     <div class="form-row">
       <div class="button-group">
         <div>
-          <button @click.prevent="search()">
+          <button @click.prevent="initSearch()">
             Search</button>
-          <button @click.prevent="clear()">
+          <button @click.prevent="clearSearch()">
             Clear All</button>
         </div>
       </div>
@@ -36,27 +36,27 @@
 <script>
 export default {
   props: {
-    nameSearch: {
-      type: String,
-      required: true,
-    },
     categorySearch: {
       type: String,
       required: true,
     },
-    search: {
+    nameSearch: {
+      type: String,
+      required: true,
+    },
+    changeCategorySearch: {
       type: Function,
       required: true,
     },
-    clear: {
+    changeNameSearch: {
       type: Function,
       required: true,
     },
-    updateNameSearch: {
+    initSearch: {
       type: Function,
       required: true,
     },
-    updateCategorySearch: {
+    clearSearch: {
       type: Function,
       required: true,
     },

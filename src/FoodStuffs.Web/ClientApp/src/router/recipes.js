@@ -4,13 +4,24 @@ const Search = () => import(/* webpackChunkName: "recipes" */ '../views/Search.v
 
 export default [
   {
-    alias: '/view',
     name: 'view',
     component: View,
+    path: '/view/:id',
+    props: route => ({
+      id: +route.params.id,
+    }),
   },
   {
-    path: '/edit',
     name: 'edit',
+    component: Edit,
+    path: '/edit/:id',
+    props: route => ({
+      id: +route.params.id,
+    }),
+  },
+  {
+    path: '/new',
+    name: 'new',
     component: Edit,
   },
   {

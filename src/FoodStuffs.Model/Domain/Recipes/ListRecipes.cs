@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                         request.CategorySearch,
                         dto => string.Join(" ", dto.Categories))
                     .SortListItemDtosByName(request.NameSort)
-                    .ToItemSetPage(request.Page, request.Take)
+                    .ToItemSetPage(request.Take, request.Page)
                     .Map(page => Result.Ok(page));
             }
 

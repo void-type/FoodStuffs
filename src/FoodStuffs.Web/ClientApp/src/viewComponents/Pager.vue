@@ -9,13 +9,16 @@
         {{ pageNumber }}</span>
     </div>
     <div>
-      <input
+      <select
         id="take"
         :value="take"
-        :options="takeOptions"
         name="take"
-        type="select"
-        @change="changeTake" >
+        @change="selectTakeOption" >
+        <option
+          v-for="opt in takeOptions"
+          :key="opt.id"
+          :value="opt.value">{{ opt.text }}</option>
+      </select>
     </div>
   </div>
 </template>
@@ -54,6 +57,11 @@ export default {
       return defaults.paginationTakeOptions;
     },
   },
+  methods: {
+    selectTakeOption(event) {
+      this.changeTake(event.target.value);
+    },
+  },
 };
 </script>
 
@@ -88,9 +96,10 @@ div > div {
     font-weight: bold;
   }
 
+  select,
   input {
     margin-top: 0.5em;
-    max-width: 3.5em;
+    max-width: 4em;
   }
 }
 </style>

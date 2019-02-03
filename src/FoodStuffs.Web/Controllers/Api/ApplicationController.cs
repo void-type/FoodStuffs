@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 
@@ -8,26 +9,26 @@ namespace FoodStuffs.Web.Controllers.Api
     public class ApplicationController : Controller
     {
 
-        public ApplicationController(HttpResponder responder, GetWebApplicationInfo.Handler getApplicationInfoHandler, GetWebApplicationInfo.Logger getApplicationInfoLogger)
+        public ApplicationController(HttpResponder responder, GetWebApplicationInfo.Handler getHandler, GetWebApplicationInfo.Logger getLogger)
         {
             _responder = responder;
-            _getApplicationInfoHandler = getApplicationInfoHandler;
-            _getApplicationInfoLogger = getApplicationInfoLogger;
+            _getHandler = getHandler;
+            _getLogger = getLogger;
         }
 
         [HttpGet]
         [Route("info")]
-        public IActionResult GetInfo()
+        public async Task<IActionResult> GetInfo()
         {
-            var result = _getApplicationInfoHandler
-                .AddPostProcessor(_getApplicationInfoLogger)
+            var result = await _getHandler
+                .AddPostProcessor(_getLogger)
                 .Handle(new GetWebApplicationInfo.Request());
 
             return _responder.Respond(result);
         }
 
         private readonly HttpResponder _responder;
-        private readonly GetWebApplicationInfo.Handler _getApplicationInfoHandler;
-        private readonly GetWebApplicationInfo.Logger _getApplicationInfoLogger;
+        private readonly GetWebApplicationInfo.Handler _getHandler;
+        private readonly GetWebApplicationInfo.Logger _getLogger;
     }
 }

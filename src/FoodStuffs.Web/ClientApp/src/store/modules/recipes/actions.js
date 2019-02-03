@@ -33,17 +33,17 @@ export default {
   resetListRequest(context) {
     context.commit('RESET_LIST_REQUEST');
   },
-  setListTake(context, take) {
-    context.commit('SET_LIST_REQUEST_TAKE', take);
-  },
   setListPage(context, page) {
     context.commit('SET_LIST_REQUEST_PAGE', page);
   },
-  setListNameSearch(context, nameSearch) {
-    context.commit('SET_LIST_REQUEST_NAME_SEARCH', nameSearch);
+  setListTake(context, take) {
+    context.commit('SET_LIST_REQUEST_TAKE', take);
   },
   setListCategorySearch(context, categorySearch) {
     context.commit('SET_LIST_REQUEST_CATEGORY_SEARCH', categorySearch);
+  },
+  setListNameSearch(context, nameSearch) {
+    context.commit('SET_LIST_REQUEST_NAME_SEARCH', nameSearch);
   },
   setListNameSort(context, sortName) {
     context.commit('SET_LIST_REQUEST_NAME_SORT', sortName);

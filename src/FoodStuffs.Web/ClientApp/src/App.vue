@@ -31,10 +31,10 @@ export default {
   router,
   store,
   computed: {
-    ...mapGetters('app', [
-      'applicationName',
-      'user',
-    ]),
+    ...mapGetters({
+      applicationName: 'app/applicationName',
+      user: 'app/user',
+    }),
   },
   watch: {
     applicationName(newApplicationName) {

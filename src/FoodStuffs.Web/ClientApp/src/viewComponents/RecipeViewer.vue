@@ -52,7 +52,7 @@ export default {
 @import "../style/theme";
 @import "../style/inputs";
 
-div.viewer {
+.viewer {
   width: 100%;
 }
 

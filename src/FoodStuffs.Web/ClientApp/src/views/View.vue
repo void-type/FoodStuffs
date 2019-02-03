@@ -17,6 +17,12 @@ export default {
     SelectSidebar,
     RecipeViewer,
   },
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       sourceRecipe: new recipeModels.GetResponse(),

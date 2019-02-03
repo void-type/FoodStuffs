@@ -14,11 +14,11 @@ export default {
   SET_LIST_REQUEST_TAKE(state, take) {
     state.listRequest.take = take;
   },
-  SET_LIST_REQUEST_NAME_SEARCH(state, nameSearch) {
-    state.listRequest.nameSearch = nameSearch;
-  },
   SET_LIST_REQUEST_CATEGORY_SEARCH(state, categorySearch) {
     state.listRequest.categorySearch = categorySearch;
+  },
+  SET_LIST_REQUEST_NAME_SEARCH(state, nameSearch) {
+    state.listRequest.nameSearch = nameSearch;
   },
   SET_LIST_REQUEST_NAME_SORT(state, nameSort) {
     state.listRequest.nameSort = nameSort;

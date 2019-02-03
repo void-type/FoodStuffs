@@ -16,6 +16,8 @@
               :to="{name: 'search'}"
               :class="{'current-page': $route.name === 'search'}">
               Search</router-link>
+          </li>
+          <li>
             <router-link
               :to="{name: 'new'}"
               :class="{'current-page': $route.name === 'new'}">

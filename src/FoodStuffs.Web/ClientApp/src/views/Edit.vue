@@ -20,6 +20,13 @@ export default {
     SelectSidebar,
     RecipeEditor,
   },
+  props: {
+    id: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+  },
   data() {
     return {
       sourceRecipe: new recipeModels.GetResponse(),
@@ -34,6 +41,9 @@ export default {
       saveRecipe: 'recipes/save',
     }),
     fetchRecipe(id) {
+      if (this.id === 0) {
+        return;
+      }
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },

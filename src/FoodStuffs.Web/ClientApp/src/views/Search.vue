@@ -1,28 +1,28 @@
 <template>
   <section>
     <SearchControls
-      :name-search="nameSearch"
-      :update-name="updateNameSearch"
-      :category-search="categorySearch"
-      :update-category="updateCategorySearch"
-      :init-search="requestSearch"
+      :category-search="listRequest.categorySearch"
+      :name-search="listRequest.nameSearch"
+      :change-category-search="setListCategorySearch"
+      :change-name-search="setListNameSearch"
+      :init-search="fetchRecipesList"
       :clear-search="clearSearch" />
     <SearchTable
-      :recipes="recipesList"
-      :selected-name-sort-type="recipesSearchParametersSortType"
-      :select-recipe="selectRecipe"
-      :cycle-selected-name-sort-type="cycleSelectedNameSortType" />
+      :recipes="listResponse.items"
+      :name-sort="getNameSortType"
+      :cycle-name-sort="cycleNameSort" />
     <Pager
-      :total-count="recipesListTotalCount"
-      :page="page"
-      :take="take"
-      :change-take="updateTake"
-      :change-page="requestPage" />
+      :total-count="listResponse.totalCount"
+      :page="listResponse.page"
+      :take="listResponse.take"
+      :change-page="updatePage"
+      :change-take="updateTake" />
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import sort from '../util/sort';
 import SearchControls from '../viewComponents/SearchControls.vue';
 import SearchTable from '../viewComponents/SearchTable.vue';
 import Pager from '../viewComponents/Pager.vue';
@@ -34,72 +34,43 @@ export default {
     Pager,
   },
   computed: {
-    ...mapGetters([
-      'recipesList',
-      'recipesListTotalCount',
-      'recipesSearchParameters',
-      'recipesSearchParametersSortType',
-    ]),
-    nameSearch: {
-      get() {
-        return this.recipesSearchParameters.nameSearch;
-      },
-      set(value) {
-        this.$store.dispatch('setRecipesSearchParametersNameSearch', value);
-      },
-    },
-    categorySearch: {
-      get() {
-        return this.recipesSearchParameters.categorySearch;
-      },
-      set(value) {
-        this.$store.dispatch('setRecipesSearchParametersCategorySearch', value);
-      },
-    },
-    page: {
-      get() {
-        return this.recipesSearchParameters.page;
-      },
-      set(value) {
-        this.$store.dispatch('setRecipesSearchParametersPage', value);
-      },
-    },
-    take: {
-      get() {
-        return this.recipesSearchParameters.take;
-      },
-      set(value) {
-        this.$store.dispatch('setRecipesSearchParametersTake', value);
-      },
+    ...mapGetters({
+      listResponse: 'recipes/listResponse',
+      listRequest: 'recipes/listRequest',
+    }),
+    getNameSortType() {
+      return sort.getTypeByName(this.listResponse.nameSort);
     },
   },
+  mounted() {
+    this.fetchRecipesList();
+  },
   methods: {
-    ...mapActions([
-      'selectRecipe',
-      'fetchRecipesList',
-      'cycleSelectedNameSortType',
-    ]),
-    requestPage(pageNumber) {
-      this.page = pageNumber;
+    ...mapActions({
+      fetchRecipesList: 'recipes/fetchList',
+      resetListRequest: 'recipes/resetListRequest',
+      setListPage: 'recipes/setListPage',
+      setListTake: 'recipes/setListTake',
+      setListCategorySearch: 'recipes/setListCategorySearch',
+      setListNameSearch: 'recipes/setListNameSearch',
+      setListNameSort: 'recipes/setListNameSort',
+    }),
+    updatePage(page) {
+      this.setListPage(page);
       this.fetchRecipesList();
     },
-    requestSearch() {
+    updateTake(take) {
+      this.setListTake(take);
+      this.setListPage(1);
+      this.fetchRecipesList();
+    },
+    cycleNameSort() {
+      this.setListNameSort(sort.nextType(this.listResponse.nameSort).name);
       this.fetchRecipesList();
     },
     clearSearch() {
-      this.nameSearch = '';
-      this.categorySearch = '';
-      this.page = 1;
+      this.resetListRequest();
       this.fetchRecipesList();
-    },
-    updateNameSearch(value) {
-      this.nameSearch = value;
-    },
-    updateCategorySearch(value) {
-      this.categorySearch = value;
-    },
-    updateTake(value) {
-      this.take = value;
     },
   },
 };

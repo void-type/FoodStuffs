@@ -1,34 +1,31 @@
 import ItemSetPage from './ItemSetPage';
 import sort from '../util/sort';
+import options from '../util/options';
 
-class RecipeGetRequest {
+class ListRequest {
   constructor() {
+    this.page = 1;
+    this.take = options.paginationTakeOptions[0].value;
     this.categorySearch = '';
     this.nameSearch = '';
-    this.page = 1;
-    this.take = 15;
     this.nameSort = sort.types[0].name;
   }
 }
 
-class RecipeSaveRequest {
+class SaveRequest {
   constructor() {
-    this.categories = [];
-    this.cookTimeMinutes = null;
-    this.createdBy = '';
-    this.createdOn = new Date();
-    this.directions = '';
     this.id = 0;
-    this.ingredients = '';
-    this.modifiedBy = '';
-    this.modifiedOn = new Date();
     this.name = '';
+    this.ingredients = '';
+    this.directions = '';
+    this.cookTimeMinutes = null;
     this.prepTimeMinutes = null;
+    this.categories = [];
   }
 }
 
 export default {
-  GetRequest: RecipeGetRequest,
-  GetResponse: ItemSetPage,
-  SaveRequest: RecipeSaveRequest,
+  ListRequest,
+  ListResponse: ItemSetPage,
+  SaveRequest,
 };
