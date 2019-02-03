@@ -29,7 +29,7 @@
         :to="'/'"
         :class="{'current-page': $route.name === 'login',
                  'pull-right': true}"
-      >Login</router-link>
+      >Sign in</router-link>
     </div>
   </header>
 </template>
