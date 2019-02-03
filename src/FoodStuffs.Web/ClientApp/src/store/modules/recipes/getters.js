@@ -6,6 +6,6 @@ export default {
     return state.listRequest;
   },
   recent(state) {
-    return state.recentRecipes;
+    return state.recent;
   },
 };

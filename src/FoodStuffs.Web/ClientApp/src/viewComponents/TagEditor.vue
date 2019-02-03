@@ -10,7 +10,6 @@
         </span>
       </div>
     </div>
-
     <div>
       <input
         v-model="newTag"
@@ -21,7 +20,6 @@
       <button @click.prevent="addTagClick()">
         Add</button>
     </div>
-
     <label :for="fieldName">{{ label }}</label>
   </div>
 </template>

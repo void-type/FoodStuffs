@@ -23,9 +23,25 @@ class SaveRequest {
     this.categories = [];
   }
 }
+class GetResponse {
+  constructor() {
+    this.id = 0;
+    this.name = '';
+    this.ingredients = '';
+    this.directions = '';
+    this.cookTimeMinutes = null;
+    this.prepTimeMinutes = null;
+    this.categories = [];
+    this.createdOnUtc = new Date();
+    this.createdBy = '';
+    this.modifiedOnUtc = new Date();
+    this.modifiedBy = '';
+  }
+}
 
 export default {
   ListRequest,
   ListResponse: ItemSetPage,
+  GetResponse,
   SaveRequest,
 };

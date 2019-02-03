@@ -1,6 +1,6 @@
 <template>
   <section>
-    <SelectSidebar />
+    <SelectSidebar :route-name="'edit'" />
     <RecipeEditor
       :is-field-in-error="isFieldInError"
       :on-save="saveRecipe"
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import recipeModels from '../models/RecipeApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
@@ -31,6 +31,16 @@ export default {
     return {
       sourceRecipe: new recipeModels.GetResponse(),
     };
+  },
+  computed: {
+    ...mapGetters({
+      isFieldInError: 'app/isFieldInError',
+    }),
+  },
+  watch: {
+    id() {
+      this.fetchRecipe(this.id);
+    },
   },
   created() {
     this.fetchRecipe(this.id);

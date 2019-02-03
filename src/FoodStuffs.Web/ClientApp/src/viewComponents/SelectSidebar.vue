@@ -1,13 +1,14 @@
 <template>
-  <div>
-    <button :to="{name: 'new'}">New</button>
+  <div class="no-print">
     <SelectSidebarList
       v-if="recent.length > 0"
       :recipes="recent"
-      :title="'Recent'" />
+      :title="'Recent'"
+      :route-name="routeName" />
     <SelectSidebarList
       :recipes="listResponse.items"
-      :title="'Recipes'" />
+      :title="'Recipes'"
+      :route-name="routeName" />
   </div>
 </template>
 
@@ -18,6 +19,12 @@ import SelectSidebarList from './SelectSidebarList.vue';
 export default {
   components: {
     SelectSidebarList,
+  },
+  props: {
+    routeName: {
+      type: String,
+      required: true,
+    },
   },
   computed: {
     ...mapGetters({

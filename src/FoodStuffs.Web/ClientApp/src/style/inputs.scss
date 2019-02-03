@@ -1,141 +1,158 @@
-@import './theme';
+@import "./theme";
 
 form {
-    margin-bottom: 0;
-    flex: 1;
+  margin-bottom: 0;
+  flex: 1;
 
-    h1 {
-        margin-top: 0;
-    }
+  h1 {
+    margin-top: 0;
+  }
 
-    .button-row {
-        margin-top: 1.5em;
-    }
+  .button-row {
+    margin-top: 1.5em;
+  }
 
-    .form-row, .button-row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 1em;
+  .form-row,
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
 
-        .form-group {
-            display: flex;
-            flex: 1;
+    .form-group {
+      display: flex;
+      flex: 1;
 
-            &.danger {
-                label {
-                    color: $color-danger;
-                }
-
-                input [type="password"], input[type="number"], input[type="text"], input[type="date"], select, textarea {
-                    border-color: $color-danger;
-                }
-            }
-
-            &:not(:last-child) {
-                margin-right: 2em;
-            }
-
-            &:not(.button-row) {
-                flex-direction: column-reverse;
-            }
-
-            label {
-                display: block;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-weight: bold;
-                margin-bottom: .2em;
-            }
-
-            &:focus-within label {
-                color: $color-focus;
-            }
+      &.danger {
+        label {
+          color: $color-danger;
         }
-    }
 
-    input[type="button"], input[type="submit"], button, span {
-        &:not(:last-child) {
-            margin-right: .5em;
+        input [type="password"],
+        input[type="number"],
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+          border-color: $color-danger;
         }
+      }
+
+      &:not(:last-child) {
+        margin-right: 2em;
+      }
+
+      &:not(.button-row) {
+        flex-direction: column-reverse;
+      }
+
+      label {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+        margin-bottom: 0.2em;
+      }
+
+      &:focus-within label {
+        color: $color-primary;
+      }
     }
+  }
+
+  input[type="button"],
+  input[type="submit"],
+  button,
+  span {
+    &:not(:last-child) {
+      margin-right: 0.5em;
+    }
+  }
 }
 
-input[type="password"], input[type="number"], input[type="text"], input[type="date"], select, textarea {
-    padding: .3em .4em;
-    border: $border;
-    box-shadow: $shadow;
-    font-family: $font-family;
-    font-size: 1em;
-    flex: 1;
-    width: auto;
+input[type="password"],
+input[type="number"],
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+  padding: 0.3em 0.4em;
+  border: $border;
+  box-shadow: $shadow;
+  font-family: $font-family;
+  font-size: 1em;
+  flex: 1;
+  width: auto;
 
-    &:focus {
-        outline: none;
-        border-color: $color-focus;
-        box-shadow: $input-focus;
-    }
+  &:focus {
+    outline: none;
+    border-color: $color-focus;
+    box-shadow: $input-focus;
+  }
 }
 
 textarea {
-    min-height: 8em;
+  min-height: 8em;
 }
 
-input[type="button"], input[type="submit"], button {
-    padding: .5em;
-    background-color: $color-button-primary;
-    border: $border;
-    box-shadow: $shadow;
-    color: black;
-    font-weight: bold;
-    position: relative;
-    min-width: 5em;
-    cursor: pointer;
-    white-space: nowrap;
+input[type="button"],
+input[type="submit"],
+button {
+  padding: 0.5em;
+  background-color: $color-button-primary;
+  border: $border;
+  box-shadow: $shadow;
+  color: black;
+  position: relative;
+  min-width: 5em;
+  font-weight: 600;
+  font-family: $font-family;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:active {
+    background-color: $color-button-primary-dark;
+    box-shadow: $shadow-collapse;
+    top: 4px;
+  }
+
+  &.danger {
+    background: $color-danger;
+
+    &:focus {
+      outline: none;
+    }
 
     &:active {
-        background-color: $color-button-primary-dark;
-        box-shadow: $shadow-collapse;
-        top: 4px;
+      background-color: $color-danger-dark;
+    }
+  }
+
+  &.success {
+    background: $color-success;
+
+    &:focus {
+      outline: none;
     }
 
-    &.danger {
-        background: $color-danger;
-
-        &:focus {
-            outline: none;
-        }
-
-        &:active {
-            background-color: $color-danger-dark;
-        }
+    &:active {
+      background-color: $color-success-dark;
     }
-
-    &.success {
-        background: $color-success;
-
-        &:focus {
-            outline: none;
-        }
-
-        &:active {
-            background-color: $color-success-dark;
-        }
-    }
+  }
 }
 
 input[type="checkbox"] {
-    height: 2.0em;
-    width: 2.0em;
+  height: 2em;
+  width: 2em;
 }
 
 @media #{$medium-screen} {
-    form .form-row .form-group:not(:last-child) {
-        margin-right: 0;
-        margin-bottom: 1em;
-    }
+  form .form-row .form-group:not(:last-child) {
+    margin-right: 0;
+    margin-bottom: 1em;
+  }
 
-    .form-row:not(.button-row) {
-        flex-direction: column;
-    }
+  .form-row:not(.button-row) {
+    flex-direction: column;
+  }
 }

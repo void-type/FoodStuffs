@@ -93,7 +93,7 @@ div > div {
     padding: 0.5em 1em;
     border: $border;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
   }
 
   select,

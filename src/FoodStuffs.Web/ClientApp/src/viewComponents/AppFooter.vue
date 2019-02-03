@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="no-print">
     <a href="https://github.com/void-type/foodstuffs">
       FoodStuffs is open source!</a>
   </footer>

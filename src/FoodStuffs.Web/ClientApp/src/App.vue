@@ -44,11 +44,13 @@ export default {
   mounted() {
     progressBar.setupProgressBarHooks(this.$Progress);
     this.fetchApplicationInfo();
+    this.fetchRecipesList();
   },
   methods: {
-    ...mapActions('app', [
-      'fetchApplicationInfo',
-    ]),
+    ...mapActions({
+      fetchApplicationInfo: 'app/fetchApplicationInfo',
+      fetchRecipesList: 'recipes/fetchList',
+    }),
   },
 };
 </script>

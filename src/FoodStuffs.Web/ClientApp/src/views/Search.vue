@@ -42,9 +42,6 @@ export default {
       return sort.getTypeByName(this.listResponse.nameSort);
     },
   },
-  mounted() {
-    this.fetchRecipesList();
-  },
   methods: {
     ...mapActions({
       fetchRecipesList: 'recipes/fetchList',

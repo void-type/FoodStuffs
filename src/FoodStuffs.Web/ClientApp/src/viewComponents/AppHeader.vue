@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="no-print">
     <div class="container">
       <router-link
         :to="'/'"
@@ -14,22 +14,22 @@
           <li>
             <router-link
               :to="{name: 'search'}"
-              :class="{'current-page': $route.name === 'search'}">
-              Search</router-link>
+              :class="{'current-page': $route.name === 'search'}"
+            >Search</router-link>
           </li>
           <li>
             <router-link
               :to="{name: 'new'}"
-              :class="{'current-page': $route.name === 'new'}">
-              New</router-link>
+              :class="{'current-page': $route.name === 'new'}"
+            >New</router-link>
           </li>
         </ul>
       </nav>
       <router-link
         :to="'/'"
         :class="{'current-page': $route.name === 'login',
-                 'pull-right': true}">
-        Login</router-link>
+                 'pull-right': true}"
+      >Login</router-link>
     </div>
   </header>
 </template>
@@ -92,8 +92,7 @@ header {
         }
 
         &.current-page {
-          color: $color-secondary-dark;
-          font-weight: bold;
+          background-color: darken($color-primary-dark, 10%);
         }
 
         &:hover,
@@ -106,7 +105,7 @@ header {
 
       span {
         font-size: 150%;
-        font-weight: bold;
+        font-weight: 600;
         color: $color-secondary-dark;
 
         &:hover,

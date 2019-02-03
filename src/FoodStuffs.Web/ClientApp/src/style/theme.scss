@@ -1,5 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
-
 $color-primary-dark: rgba(100, 43, 97, 1);
 $color-primary: lighten($color-primary-dark, 8%);
 
@@ -32,7 +30,7 @@ $border-light: 1px solid mix($color-border, $color-neutral-inverse, 20%);
 $shadow: 2px 3px 2px rgba($color-border, .5);
 $input-focus: 2px 3px 2px rgba($color-focus, .5);
 $shadow-collapse: 1px 1px 2px rgba($color-border, .5);
-$font-family: "Source Sans Pro", sans-serif;
+$font-family: "Segoe UI", Arial, sans-serif;
 
 $contained-width: 70em;
 $topbar-height: 3em;

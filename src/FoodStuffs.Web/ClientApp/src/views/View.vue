@@ -1,6 +1,6 @@
 <template>
   <section>
-    <SelectSidebar />
+    <SelectSidebar :route-name="'view'" />
     <RecipeViewer :recipe="sourceRecipe" />
   </section>
 </template>
@@ -27,6 +27,11 @@ export default {
     return {
       sourceRecipe: new recipeModels.GetResponse(),
     };
+  },
+  watch: {
+    id() {
+      this.fetchRecipe(this.id);
+    },
   },
   created() {
     this.fetchRecipe(this.id);

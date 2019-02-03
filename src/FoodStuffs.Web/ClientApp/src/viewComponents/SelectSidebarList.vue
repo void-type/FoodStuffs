@@ -9,7 +9,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        :to="{name: 'view', props: {id: recipe.id}}">
+        @click="$router.push({name: routeName, params: {id: recipe.id}})">
         <td>{{ recipe.name }}</td>
       </tr>
     </tbody>
@@ -27,6 +27,10 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    routeName: {
+      type: String,
+      required: true,
     },
   },
 };

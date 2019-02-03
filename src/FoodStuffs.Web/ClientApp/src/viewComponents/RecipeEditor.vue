@@ -80,109 +80,60 @@ import { mapActions, mapGetters } from 'vuex';
 import TagEditor from './TagEditor.vue';
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 
-// addCategoryToRecipe(context, { recipe, categoryName }) {
-//   const cleanedCategoryName = trimAndCapitalize(categoryName);
-
-//   const categoryDoesNotExist = recipe.categories
-//     .map(value => value.toUpperCase())
-//     .indexOf(categoryName.toUpperCase()) < 0;
-
-//   if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
-//     context.commit('ADD_CATEGORY_TO_RECIPE', { recipe, cleanedCategoryName });
-//   }
-// },
-// removeCategoryFromRecipe(context, { recipe, categoryName }) {
-//   const categoryIndex = recipe.categories.indexOf(categoryName);
-
-//   if (categoryIndex > -1) {
-//     context.commit('REMOVE_CATEGORY_FROM_RECIPE', { recipe, categoryIndex });
-//   }
-// },
-
-// ADD_CATEGORY_TO_RECIPE(state, { recipe, cleanedCategoryName }) {
-//   recipe.categories.push(cleanedCategoryName);
-// },
-// REMOVE_CATEGORY_FROM_RECIPE(state, { recipe, categoryIndex }) {
-//   recipe.categories.splice(categoryIndex, 1);
-// },
-
 export default {
   components: {
     TagEditor,
     EntityDetailsAuditInfo,
   },
   computed: {
-    ...mapGetters(['currentRecipe', 'isFieldInError']),
-    name: {
-      get() {
-        return this.currentRecipe.name;
+    ...mapGetters({
+      isFieldInError: 'app/isFieldInError',
+    }),
+    methods: {
+      ...mapActions([
+        'deleteRecipe',
+        'fetchRecipesList',
+        'saveRecipe',
+        'addCategoryToRecipe',
+        'removeCategoryFromRecipe',
+      ]),
+      cancelClick() {
+        this.$router.push({ name: 'view' });
       },
-      set(value) {
+      addCategoryToCurrentRecipe(categoryName) {
         const recipe = this.currentRecipe;
-        this.$store.dispatch('setRecipeName', { recipe, value });
+        this.addCategoryToRecipe({ recipe, categoryName });
+
+      // addCategoryToRecipe(context, { recipe, categoryName }) {
+      //   const cleanedCategoryName = trimAndCapitalize(categoryName);
+
+      //   const categoryDoesNotExist = recipe.categories
+      //     .map(value => value.toUpperCase())
+      //     .indexOf(categoryName.toUpperCase()) < 0;
+
+      //   if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
+      //     context.commit('ADD_CATEGORY_TO_RECIPE', { recipe, cleanedCategoryName });
+      //   }
+      // },
+      // removeCategoryFromRecipe(context, { recipe, categoryName }) {
+      //   const categoryIndex = recipe.categories.indexOf(categoryName);
+
+      //   if (categoryIndex > -1) {
+      //     context.commit('REMOVE_CATEGORY_FROM_RECIPE', { recipe, categoryIndex });
+      //   }
+      // },
+
+      // ADD_CATEGORY_TO_RECIPE(state, { recipe, cleanedCategoryName }) {
+      //   recipe.categories.push(cleanedCategoryName);
+      // },
+      // REMOVE_CATEGORY_FROM_RECIPE(state, { recipe, categoryIndex }) {
+      //   recipe.categories.splice(categoryIndex, 1);
+      // },
       },
-    },
-    ingredients: {
-      get() {
-        return this.currentRecipe.ingredients;
-      },
-      set(value) {
+      removeCategoryFromCurrentRecipe(categoryName) {
         const recipe = this.currentRecipe;
-        this.$store.dispatch('setRecipeIngredients', { recipe, value });
+        this.removeCategoryFromRecipe({ recipe, categoryName });
       },
-    },
-    directions: {
-      get() {
-        return this.currentRecipe.directions;
-      },
-      set(value) {
-        const recipe = this.currentRecipe;
-        this.$store.dispatch('setRecipeDirections', { recipe, value });
-      },
-    },
-    prepTimeMinutes: {
-      get() {
-        return this.currentRecipe.prepTimeMinutes;
-      },
-      set(value) {
-        const recipe = this.currentRecipe;
-        this.$store.dispatch('setRecipePrepTimeMinutes', { recipe, value });
-      },
-    },
-    cookTimeMinutes: {
-      get() {
-        return this.currentRecipe.cookTimeMinutes;
-      },
-      set(value) {
-        const recipe = this.currentRecipe;
-        this.$store.dispatch('setRecipeCookTimeMinutes', { recipe, value });
-      },
-    },
-    categories: {
-      get() {
-        return this.currentRecipe.categories;
-      },
-    },
-  },
-  methods: {
-    ...mapActions([
-      'deleteRecipe',
-      'fetchRecipesList',
-      'saveRecipe',
-      'addCategoryToRecipe',
-      'removeCategoryFromRecipe',
-    ]),
-    cancelClick() {
-      this.fetchRecipesList(this.currentRecipe.id);
-      this.$router.push({ name: 'view' });
-    },
-    addCategoryToCurrentRecipe(categoryName) {
-      const recipe = this.currentRecipe;
-      this.addCategoryToRecipe({ recipe, categoryName });
-    },
-    removeCategoryFromCurrentRecipe(categoryName) {
-      const recipe = this.currentRecipe;
-      this.removeCategoryFromRecipe({ recipe, categoryName });
     },
   },
 };

@@ -14,7 +14,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        :to="{name: 'view', props: {id: recipe.id}}">
+        @click="$router.push({name: 'view', params: {id: recipe.id}})">
         <td>{{ recipe.name }}</td>
         <td>{{ recipe.categories.join(", ") }}</td>
       </tr>
