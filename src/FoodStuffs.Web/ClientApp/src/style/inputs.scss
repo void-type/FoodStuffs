@@ -9,14 +9,14 @@ form {
   }
 
   .button-row {
-    margin-top: 1.5em;
+    margin-top: 1.5rem;
   }
 
   .form-row,
   .button-row {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
 
     .form-group {
       display: flex;
@@ -38,7 +38,7 @@ form {
       }
 
       &:not(:last-child) {
-        margin-right: 2em;
+        margin-right: 2rem;
       }
 
       &:not(.button-row) {
@@ -51,7 +51,7 @@ form {
         overflow: hidden;
         text-overflow: ellipsis;
         font-weight: 600;
-        margin-bottom: 0.2em;
+        margin-bottom: 0.2rem;
       }
 
       &:focus-within label {
@@ -65,7 +65,7 @@ form {
   button,
   span {
     &:not(:last-child) {
-      margin-right: 0.5em;
+      margin-right: 0.5rem;
     }
   }
 }
@@ -76,11 +76,11 @@ input[type="text"],
 input[type="date"],
 select,
 textarea {
-  padding: 0.3em 0.4em;
+  padding: 0.3em 0.4rem;
   border: $border;
   box-shadow: $shadow;
   font-family: $font-family;
-  font-size: 1em;
+  font-size: 1rem;
   flex: 1;
   width: auto;
 
@@ -92,19 +92,19 @@ textarea {
 }
 
 textarea {
-  min-height: 8em;
+  min-height: 8rem;
 }
 
 input[type="button"],
 input[type="submit"],
 button {
-  padding: 0.5em;
+  padding: 0.5rem;
   background-color: $color-button-primary;
   border: $border;
   box-shadow: $shadow;
   color: black;
   position: relative;
-  min-width: 5em;
+  min-width: 5rem;
   font-weight: 600;
   font-family: $font-family;
   cursor: pointer;
@@ -142,14 +142,14 @@ button {
 }
 
 input[type="checkbox"] {
-  height: 2em;
-  width: 2em;
+  height: 2rem;
+  width: 2rem;
 }
 
 @media #{$medium-screen} {
   form .form-row .form-group:not(:last-child) {
     margin-right: 0;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
   }
 
   .form-row:not(.button-row) {

@@ -70,7 +70,7 @@ export default {
   display: flex;
 
   & button {
-    margin-left: 0.5em;
+    margin-left: 0.5rem;
   }
 }
 
@@ -79,10 +79,10 @@ export default {
   flex-flow: wrap;
 
   & > span {
-    margin-top: 0.5em;
+    margin-top: 0.5rem;
     background-color: $color-neutral-medium;
     box-sizing: border-box;
-    padding: 0.3em 0.6em;
+    padding: 0.3em 0.6rem;
     border: $border;
     box-shadow: $shadow;
 

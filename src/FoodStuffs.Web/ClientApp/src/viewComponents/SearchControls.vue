@@ -69,7 +69,7 @@ export default {
 @import "../style/inputs";
 
 form .form-group.button-group {
-  margin-top: 1em;
+  margin-top: 1rem;
   flex-grow: 0;
 }
 </style>

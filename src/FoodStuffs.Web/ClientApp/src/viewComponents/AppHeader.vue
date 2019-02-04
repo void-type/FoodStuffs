@@ -6,25 +6,10 @@
         class="logo">
         <img
           src="../assets/logo.png"
-          alt="FoodStuffs logo" >
+          alt="logo" >
         <span>{{ brand }}</span>
       </router-link>
-      <nav>
-        <ul>
-          <li>
-            <router-link
-              :to="{name: 'search'}"
-              :class="{'current-page': $route.name === 'search'}"
-            >Search</router-link>
-          </li>
-          <li>
-            <router-link
-              :to="{name: 'new'}"
-              :class="{'current-page': $route.name === 'new'}"
-            >New</router-link>
-          </li>
-        </ul>
-      </nav>
+      <slot name="nav" />
       <router-link
         :to="'/'"
         :class="{'current-page': $route.name === 'login',
@@ -67,7 +52,6 @@ header {
       align-items: center;
       justify-content: center;
       height: $topbar-height;
-      padding: 0em 1em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -75,19 +59,32 @@ header {
       &.logo {
         height: 100%;
 
-        & > * {
-          margin-right: 1em;
+        & > img,
+        span {
+          margin-right: 1rem;
         }
 
         img {
           width: auto;
           height: 70%;
         }
+
+        span {
+          font-size: 150%;
+          font-weight: 600;
+          color: $color-secondary;
+
+          &:hover,
+          &:active {
+            color: $color-secondary;
+          }
+        }
       }
 
       &:not(.logo) {
         &:link,
         &:visited {
+          padding: 0em 1rem;
           color: $color-neutral-inverse;
         }
 
@@ -103,56 +100,8 @@ header {
         }
       }
 
-      span {
-        font-size: 150%;
-        font-weight: 600;
-        color: $color-secondary-dark;
-
-        &:hover,
-        &:active {
-          color: $color-secondary;
-        }
-      }
-
       &.pull-right {
         margin-left: auto;
-      }
-    }
-  }
-
-  nav {
-    background-color: $color-primary-dark;
-    height: $topbar-height;
-
-    ul {
-      display: flex;
-      justify-content: space-between;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      background-color: $color-primary-dark;
-
-      li {
-        display: block;
-        position: relative;
-        text-align: center;
-
-        &:hover > ul {
-          display: block;
-          position: absolute;
-        }
-      }
-
-      ul {
-        display: none;
-        width: 100%;
-        box-shadow: $shadow;
-
-        ul {
-          left: 100%;
-          top: 0;
-          box-shadow: $shadow;
-        }
       }
     }
   }

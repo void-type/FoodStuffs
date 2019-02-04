@@ -40,6 +40,6 @@ export default {
 @import "../style/inputs";
 
 div > * {
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 }
 </style>

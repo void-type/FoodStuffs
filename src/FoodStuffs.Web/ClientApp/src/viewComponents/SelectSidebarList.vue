@@ -41,8 +41,8 @@ export default {
 @import "../style/inputs";
 
 table {
-  width: 15em;
-  padding: 1em;
+  width: 15rem;
+  padding: 1rem;
   border-collapse: collapse;
   border-spacing: 0;
 
@@ -60,7 +60,7 @@ table {
 
   th,
   td {
-    padding: 0.5em 1em;
+    padding: 0.5em 1rem;
   }
 
   tbody tr:hover {

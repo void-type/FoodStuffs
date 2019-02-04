@@ -90,7 +90,7 @@ div > div {
   justify-content: center;
 
   span {
-    padding: 0.5em 1em;
+    padding: 0.5em 1rem;
     border: $border;
     cursor: pointer;
     font-weight: 600;
@@ -98,8 +98,8 @@ div > div {
 
   select,
   input {
-    margin-top: 0.5em;
-    max-width: 4em;
+    margin-top: 0.5rem;
+    max-width: 4rem;
   }
 }
 </style>

@@ -3,7 +3,11 @@
     <vue-progress-bar />
     <AppHeader
       :brand="applicationName"
-      :user="user" />
+      :user="user" >
+      <AppNav
+        slot="nav"
+        :links="navItems" />
+    </AppHeader>
     <AppMessageCenter
       class="no-print" />
     <main class="container">
@@ -20,13 +24,29 @@ import store from './store';
 import progressBar from './util/progressBar';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
+import AppNav from './viewComponents/AppNav.vue';
 import AppFooter from './viewComponents/AppFooter.vue';
 
 export default {
   components: {
     AppMessageCenter,
     AppHeader,
+    AppNav,
     AppFooter,
+  },
+  data() {
+    return {
+      navItems: [
+        {
+          label: 'Search',
+          route: 'search',
+        },
+        {
+          label: 'New',
+          route: 'new',
+        },
+      ],
+    };
   },
   router,
   store,
@@ -72,8 +92,8 @@ pre {
 
 header,
 main {
-  padding-left: 2em;
-  padding-right: 2em;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .container {
@@ -89,13 +109,13 @@ main {
     padding: 2em 0;
 
     & > *:not(:last-child) {
-      margin-right: 2em;
+      margin-right: 2rem;
     }
   }
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 2rem;
 }
 
 h1,
@@ -142,8 +162,8 @@ a:link {
   header,
   main,
   footer {
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

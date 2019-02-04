@@ -48,7 +48,7 @@ export default {
   }
 
   ul {
-    padding: 1em 1em 1em 2.5em;
+    padding: 1em 1em 1em 2.5rem;
     text-align: center;
     list-style: none;
     margin: 0;

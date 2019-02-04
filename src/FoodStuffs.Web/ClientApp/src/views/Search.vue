@@ -79,7 +79,7 @@ main > section {
   flex-direction: column;
 
   & > *:not(:last-child) {
-    margin-bottom: 1.5em;
+    margin-bottom: 1.5rem;
     margin-right: 0;
   }
 }

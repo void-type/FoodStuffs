@@ -15,7 +15,7 @@ export default {
 
 footer {
   border-top: $border;
-  padding: 1em 0em;
+  padding: 1em 0rem;
   text-align: center;
 }
 </style>
