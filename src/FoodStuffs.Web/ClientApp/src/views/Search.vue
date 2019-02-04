@@ -39,7 +39,7 @@ export default {
       listRequest: 'recipes/listRequest',
     }),
     getNameSortType() {
-      return sort.getTypeByName(this.listResponse.nameSort);
+      return sort.getTypeByName(this.listRequest.nameSort);
     },
   },
   methods: {
@@ -62,7 +62,7 @@ export default {
       this.fetchRecipesList();
     },
     cycleNameSort() {
-      this.setListNameSort(sort.nextType(this.listResponse.nameSort).name);
+      this.setListNameSort(sort.nextType(this.listRequest.nameSort).name);
       this.fetchRecipesList();
     },
     clearSearch() {
