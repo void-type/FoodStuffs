@@ -19,9 +19,9 @@ export default {
       response => context.dispatch('app/setApiFailureMessage', response, { root: true }),
     );
   },
-  delete(context, recipe) {
+  delete(context, id) {
     webApi.recipes.delete(
-      recipe.id,
+      id,
       (data) => {
         context.dispatch('fetchList');
         router.push({ name: 'search' });

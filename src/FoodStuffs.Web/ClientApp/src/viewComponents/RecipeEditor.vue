@@ -1,6 +1,6 @@
 <template>
   <form @keydown.ctrl.enter.prevent="onSave(workingRecipe)">
-    <h1>Edit Recipe</h1>
+    <h1>{{ workingRecipe.id > 0 ? 'Edit' : 'New' }} Recipe</h1>
     <div class="form-row">
       <div :class="{'form-group': true, danger: isFieldInError('name')}">
         <input
@@ -50,9 +50,9 @@
     <div class="form-row">
       <TagEditor
         :class="{'form-group': true, danger: isFieldInError('categories')}"
-        :tags="categories"
-        :on-add-tag="addCategoryToCurrentRecipe"
-        :on-remove-tag="removeCategoryFromCurrentRecipe"
+        :tags="workingRecipe.categories"
+        :on-add-tag="addCategory"
+        :on-remove-tag="removeCategory"
         field-name="categories"
         label="Categories" />
     </div>
@@ -64,12 +64,14 @@
         @click.prevent="onSave(workingRecipe)"
       >Save</button>
       <router-link
+        v-if="workingRecipe.id > 0"
         :to="{name: 'view', params: {id: sourceRecipe.id}}"
         tag="button"
       >Cancel</router-link>
       <button
+        v-if="workingRecipe.id > 0"
         class="pull-right danger"
-        @click.prevent="onDelete(workingRecipe)"
+        @click.prevent="onDelete(workingRecipe.id)"
       >Delete</button>
     </div>
   </form>
@@ -79,6 +81,7 @@
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
 import recipeApiModels from '../models/RecipeApiModels';
+import trimAndCapitalize from '../util/trimAndCapitalize';
 
 export default {
   components: {
@@ -120,39 +123,23 @@ export default {
     reset() {
       Object.assign(this.workingRecipe, this.sourceRecipe);
     },
-    addCategoryToCurrentRecipe(categoryName) {
-      const recipe = this.currentRecipe;
-      this.addCategoryToRecipe({ recipe, categoryName });
+    addCategory(tag) {
+      const categoryName = trimAndCapitalize(tag);
 
-    // addCategoryToRecipe(context, { recipe, categoryName }) {
-    //   const cleanedCategoryName = trimAndCapitalize(categoryName);
+      const categoryDoesNotExist = this.workingRecipe.categories
+        .map(value => value.toUpperCase())
+        .indexOf(categoryName.toUpperCase()) < 0;
 
-    //   const categoryDoesNotExist = recipe.categories
-    //     .map(value => value.toUpperCase())
-    //     .indexOf(categoryName.toUpperCase()) < 0;
-
-    //   if (categoryDoesNotExist && cleanedCategoryName.length > 0) {
-    //     context.commit('ADD_CATEGORY_TO_RECIPE', { recipe, cleanedCategoryName });
-    //   }
-    // },
-    // removeCategoryFromRecipe(context, { recipe, categoryName }) {
-    //   const categoryIndex = recipe.categories.indexOf(categoryName);
-
-    //   if (categoryIndex > -1) {
-    //     context.commit('REMOVE_CATEGORY_FROM_RECIPE', { recipe, categoryIndex });
-    //   }
-    // },
-
-    // ADD_CATEGORY_TO_RECIPE(state, { recipe, cleanedCategoryName }) {
-    //   recipe.categories.push(cleanedCategoryName);
-    // },
-    // REMOVE_CATEGORY_FROM_RECIPE(state, { recipe, categoryIndex }) {
-    //   recipe.categories.splice(categoryIndex, 1);
-    // },
+      if (categoryDoesNotExist && categoryName.length > 0) {
+        this.workingRecipe.categories.push(categoryName);
+      }
     },
-    removeCategoryFromCurrentRecipe(categoryName) {
-      const recipe = this.currentRecipe;
-      this.removeCategoryFromRecipe({ recipe, categoryName });
+    removeCategory(categoryName) {
+      const categoryIndex = this.workingRecipe.categories.indexOf(categoryName);
+
+      if (categoryIndex > -1) {
+        this.workingRecipe.categories.splice(categoryIndex, 1);
+      }
     },
   },
 };

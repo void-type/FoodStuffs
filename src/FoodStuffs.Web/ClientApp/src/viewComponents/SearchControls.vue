@@ -7,7 +7,7 @@
           :value="nameSearch"
           type="text"
           name="nameSearch"
-          @input="changeNameSearch($event.target.value)" >
+          @input="onNameSearchChange($event.target.value)" >
         <label for="nameSearch">Name Contains</label>
       </div>
       <div class="form-group">
@@ -16,16 +16,16 @@
           :value="categorySearch"
           type="text"
           name="categorySearch"
-          @input="changeCategorySearch($event.target.value)" >
+          @input="onCategorySearchChange($event.target.value)" >
         <label for="categorySearch">Categories Contain</label>
       </div>
     </div>
     <div class="form-row">
       <div class="button-group">
         <div>
-          <button @click.prevent="initSearch()">
+          <button @click.prevent="onSearch()">
             Search</button>
-          <button @click.prevent="clearSearch()">
+          <button @click.prevent="onClear()">
             Clear All</button>
         </div>
       </div>
@@ -44,11 +44,11 @@ export default {
       type: String,
       required: true,
     },
-    onCategorySearchChange: {
+    onNameSearchChange: {
       type: Function,
       required: true,
     },
-    onNameSearchChange: {
+    onCategorySearchChange: {
       type: Function,
       required: true,
     },

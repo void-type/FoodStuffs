@@ -1,11 +1,11 @@
 <template>
   <section>
-    <SelectSidebar :route-name="'edit'" />
+    <SelectSidebar :route-name="'view'" />
     <RecipeEditor
       :source-recipe="sourceRecipe"
       :is-field-in-error="isFieldInError"
-      :on-delete="deleteRecipe"
-      :on-save="saveRecipe"/>
+      :on-save="saveRecipe"
+      :on-delete="deleteRecipe" />
   </section>
 </template>
 
@@ -50,6 +50,7 @@ export default {
     ...mapActions({
       setApiFailureMessage: 'app/setApiFailureMessage',
       saveRecipe: 'recipes/save',
+      deleteRecipe: 'recipes/delete',
     }),
     fetchRecipe(id) {
       if (this.id === 0) {

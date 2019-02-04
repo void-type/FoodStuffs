@@ -5,7 +5,7 @@
         v-for="pageNumber in numberOfPages"
         :key="pageNumber"
         :class="{currentPage: pageNumber === page}"
-        @click="changePage(pageNumber)">
+        @click="onPageChange(pageNumber)">
         {{ pageNumber }}</span>
     </div>
     <div>
@@ -28,15 +28,15 @@ import defaults from '../util/options';
 
 export default {
   props: {
-    totalCount: {
-      type: Number,
-      required: true,
-    },
     page: {
       type: Number,
       required: true,
     },
     take: {
+      type: Number,
+      required: true,
+    },
+    totalCount: {
       type: Number,
       required: true,
     },
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     selectTakeOption(event) {
-      this.changeTake(event.target.value);
+      this.onTakeChange(event.target.value);
     },
   },
 };

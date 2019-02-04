@@ -3,18 +3,18 @@
     <SearchControls
       :category-search="listRequest.categorySearch"
       :name-search="listRequest.nameSearch"
-      :change-category-search="setListCategorySearch"
-      :change-name-search="setListNameSearch"
-      :init-search="fetchRecipesList"
-      :clear-search="clearSearch" />
+      :on-category-search-change="setListCategorySearch"
+      :on-name-search-change="setListNameSearch"
+      :on-search="fetchRecipesList"
+      :on-clear="clearSearch" />
     <SearchTable
       :recipes="listResponse.items"
       :name-sort="getNameSortType"
       :on-cycle-name-sort="cycleNameSort" />
     <Pager
-      :total-count="listResponse.totalCount"
       :page="listResponse.page"
       :take="listResponse.take"
+      :total-count="listResponse.totalCount"
       :on-page-change="updatePage"
       :on-take-change="updateTake" />
   </section>
