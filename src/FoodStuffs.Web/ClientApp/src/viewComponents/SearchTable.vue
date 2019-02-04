@@ -33,7 +33,7 @@ export default {
       type: Object,
       required: true,
     },
-    cycleNameSort: {
+    onCycleNameSort: {
       type: Function,
       required: true,
     },

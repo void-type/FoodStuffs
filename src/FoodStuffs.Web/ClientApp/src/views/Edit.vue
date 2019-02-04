@@ -2,9 +2,10 @@
   <section>
     <SelectSidebar :route-name="'edit'" />
     <RecipeEditor
+      :source-recipe="sourceRecipe"
       :is-field-in-error="isFieldInError"
-      :on-save="saveRecipe"
-      :source-recipe="sourceRecipe"/>
+      :on-delete="deleteRecipe"
+      :on-save="saveRecipe"/>
   </section>
 </template>
 
@@ -52,6 +53,7 @@ export default {
     }),
     fetchRecipe(id) {
       if (this.id === 0) {
+        this.sourceRecipe = new recipeModels.GetResponse();
         return;
       }
       webApi.recipes.get(

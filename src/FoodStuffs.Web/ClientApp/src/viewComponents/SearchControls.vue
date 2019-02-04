@@ -44,19 +44,19 @@ export default {
       type: String,
       required: true,
     },
-    changeCategorySearch: {
+    onCategorySearchChange: {
       type: Function,
       required: true,
     },
-    changeNameSearch: {
+    onNameSearchChange: {
       type: Function,
       required: true,
     },
-    initSearch: {
+    onSearch: {
       type: Function,
       required: true,
     },
-    clearSearch: {
+    onClear: {
       type: Function,
       required: true,
     },

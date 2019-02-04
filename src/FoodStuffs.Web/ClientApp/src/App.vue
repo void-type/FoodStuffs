@@ -156,6 +156,7 @@ a:link {
 
     & > *:not(:last-child) {
       margin-right: 0;
+      margin-bottom: 1.5rem;
     }
   }
 
@@ -185,17 +186,21 @@ a:link {
   }
 
   body {
-    font-size: 90% !important;
     background-color: $color-neutral-inverse;
-  }
 
-  p,
-  pre,
-  h1,
-  h2,
-  h3,
-  h4 {
-    color: $color-neutral;
+    button,
+    .btn {
+      display: none;
+    }
+
+    p,
+    pre,
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: $color-neutral;
+    }
   }
 }
 </style>

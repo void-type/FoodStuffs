@@ -2,6 +2,11 @@
   <div
     v-if="recipe.name"
     class="viewer">
+    <router-link
+      :to="{name: 'edit', params: {id: recipe.id}}"
+      class="float-right"
+      tag="button"
+    >Edit</router-link>
     <h1>{{ recipe.name }}</h1>
     <h3>Ingredients</h3>
     <pre>{{ recipe.ingredients }}</pre>
@@ -65,9 +70,11 @@ hr {
   visibility: hidden;
 }
 
-@media screen {
-  h1 {
-    margin-top: 0;
-  }
+.float-right {
+  float: right;
+}
+
+h1 {
+  margin-top: 0;
 }
 </style>

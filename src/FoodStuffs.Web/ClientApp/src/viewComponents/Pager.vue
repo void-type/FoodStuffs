@@ -40,11 +40,11 @@ export default {
       type: Number,
       required: true,
     },
-    changePage: {
+    onPageChange: {
       type: Function,
       required: true,
     },
-    changeTake: {
+    onTakeChange: {
       type: Function,
       required: true,
     },

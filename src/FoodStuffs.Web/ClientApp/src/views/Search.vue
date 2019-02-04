@@ -10,13 +10,13 @@
     <SearchTable
       :recipes="listResponse.items"
       :name-sort="getNameSortType"
-      :cycle-name-sort="cycleNameSort" />
+      :on-cycle-name-sort="cycleNameSort" />
     <Pager
       :total-count="listResponse.totalCount"
       :page="listResponse.page"
       :take="listResponse.take"
-      :change-page="updatePage"
-      :change-take="updateTake" />
+      :on-page-change="updatePage"
+      :on-take-change="updateTake" />
   </section>
 </template>
 

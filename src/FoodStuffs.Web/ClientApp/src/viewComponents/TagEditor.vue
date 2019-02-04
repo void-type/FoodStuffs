@@ -5,7 +5,7 @@
         <span
           v-for="tag in tags"
           :key="tag">
-          {{ tag }}&nbsp;&nbsp;<span @click="removeTag(tag)">
+          {{ tag }}&nbsp;&nbsp;<span @click="removeTagClick(tag)">
             &#x2716;</span>
         </span>
       </div>
@@ -27,11 +27,11 @@
 <script>
 export default {
   props: {
-    fieldName: {
+    label: {
       type: String,
       required: true,
     },
-    label: {
+    fieldName: {
       type: String,
       required: true,
     },
@@ -39,11 +39,11 @@ export default {
       type: Array,
       required: true,
     },
-    addTag: {
+    onAddTag: {
       type: Function,
       required: true,
     },
-    removeTag: {
+    onRemoveTag: {
       type: Function,
       required: true,
     },
@@ -55,8 +55,11 @@ export default {
   },
   methods: {
     addTagClick() {
-      this.addTag(this.newTag);
+      this.onAddTag(this.newTag);
       this.newTag = '';
+    },
+    removeTagClick(tag) {
+      this.onRemoveTag(tag);
     },
   },
 };
