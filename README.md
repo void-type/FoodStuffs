@@ -1,6 +1,6 @@
 # FoodStuffs
 
-A web application for managing recipes based on .Net Core 2.1 and Vue.js 2.0.
+A web application for managing recipes based on .Net Core 2.1 and Vue.js 2.5.
 
 | Warning |
 | --- |

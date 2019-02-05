@@ -87,7 +87,7 @@ INSERT INTO [dbo].[User]
     , [FirstName]
     , [LastName])
 VALUES
-    ( 'FirstUser'
+    ( 'SingleUser'
     , '80c9cc7840dc718ed2e85018daf13d7596a83df289baeec61748ade36b54cf93'
     , 1
     , 'd55c0a75cd34955bced4210f203dfe77f5b296892c2e786c091325d329c2482e'
