@@ -4,7 +4,7 @@
       <tr>
         <th
           class="sortable-header"
-          @click="cycleNameSort()">
+          @click="onCycleNameSort(nameSort.name)">
           Name&nbsp;&nbsp;<span v-html="nameSort.symbol"/>
         </th>
         <th>Categories</th>
