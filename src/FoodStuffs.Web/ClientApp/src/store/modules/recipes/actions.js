@@ -49,7 +49,7 @@ export default {
     context.commit('SET_LIST_REQUEST_NAME_SORT', sortName);
   },
   addToRecent(context, recipe) {
-    const recentRecipes = context.state.recentRecipes.slice();
+    const recentRecipes = context.state.recent.slice();
 
     const indexOfCurrentInRecents = recentRecipes
       .map(recentRecipe => recentRecipe.id)
@@ -58,7 +58,6 @@ export default {
     const recipeListItem = {
       id: recipe.id,
       name: recipe.name,
-      categories: recipe.categories,
     };
 
     if (indexOfCurrentInRecents > -1) {

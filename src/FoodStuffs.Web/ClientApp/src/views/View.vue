@@ -39,6 +39,7 @@ export default {
   methods: {
     ...mapActions({
       setApiFailureMessage: 'app/setApiFailureMessage',
+      addToRecent: 'recipes/addToRecent',
     }),
     fetchRecipe(id) {
       webApi.recipes.get(
@@ -47,6 +48,14 @@ export default {
         response => this.setApiFailureMessage(response),
       );
     },
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.addToRecent(this.sourceRecipe);
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    this.addToRecent(this.sourceRecipe);
+    next();
   },
 };
 </script>

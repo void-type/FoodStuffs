@@ -51,6 +51,7 @@ export default {
       setApiFailureMessage: 'app/setApiFailureMessage',
       saveRecipe: 'recipes/save',
       deleteRecipe: 'recipes/delete',
+      addToRecent: 'recipes/addToRecent',
     }),
     fetchRecipe(id) {
       if (this.id === 0) {
@@ -63,6 +64,25 @@ export default {
         response => this.setApiFailureMessage(response),
       );
     },
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.addToRecent(this.sourceRecipe);
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    // TODO: find out if the child is dirty
+    // const dirty = JSON.stringify(this.sourceRecipe) !== JSON.stringify(this.workingRecipe);
+
+    // if (dirty) {
+    //   const answer = window.confirm('Do you really want to leave? you have unsaved changes!');
+
+    //   if (!answer) {
+    //     next(false);
+    //   }
+    // }
+
+    this.addToRecent(this.sourceRecipe);
+    next();
   },
 };
 </script>
