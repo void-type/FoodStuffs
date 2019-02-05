@@ -23,6 +23,7 @@ class SaveRequest {
     this.categories = [];
   }
 }
+
 class GetResponse {
   constructor() {
     this.id = 0;
@@ -32,9 +33,9 @@ class GetResponse {
     this.cookTimeMinutes = null;
     this.prepTimeMinutes = null;
     this.categories = [];
-    this.createdOnUtc = new Date();
+    this.createdOn = new Date();
     this.createdBy = '';
-    this.modifiedOnUtc = new Date();
+    this.modifiedOn = new Date();
     this.modifiedBy = '';
   }
 }

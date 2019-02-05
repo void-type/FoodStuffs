@@ -53,7 +53,7 @@ namespace FoodStuffs.Model.Domain.Recipes
         public class RecipeDto
         {
             public RecipeDto(int id, string name, string ingredients, string directions, int? cookTimeMinutes, int? prepTimeMinutes,
-                string createdBy, DateTime createdOnUtc, string modifiedBy, DateTime modifiedOnUtc, IEnumerable<string> categories)
+                string createdBy, DateTime createdOn, string modifiedBy, DateTime modifiedOn, IEnumerable<string> categories)
             {
                 Id = id;
                 Name = name;
@@ -62,9 +62,9 @@ namespace FoodStuffs.Model.Domain.Recipes
                 CookTimeMinutes = cookTimeMinutes;
                 PrepTimeMinutes = prepTimeMinutes;
                 CreatedBy = createdBy;
-                CreatedOnUtc = createdOnUtc;
+                CreatedOn = createdOn;
                 ModifiedBy = modifiedBy;
-                ModifiedOnUtc = modifiedOnUtc;
+                ModifiedOn = modifiedOn;
                 Categories = categories;
             }
 
@@ -75,9 +75,9 @@ namespace FoodStuffs.Model.Domain.Recipes
             public int? CookTimeMinutes { get; }
             public int? PrepTimeMinutes { get; }
             public string CreatedBy { get; }
-            public DateTime CreatedOnUtc { get; }
+            public DateTime CreatedOn { get; }
             public string ModifiedBy { get; }
-            public DateTime ModifiedOnUtc { get; }
+            public DateTime ModifiedOn { get; }
             public IEnumerable<string> Categories { get; }
         }
 

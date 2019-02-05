@@ -25,18 +25,25 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override IResult<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
+                // TODO: this needs work
                 return _data.Recipes.Stored
                     .GetById(request.Id)
-                    .Unwrap(CreateRecipe())
+                    .Unwrap(_data.Recipes.New)
+                    .Tee(r =>
+                    {
+                        if (r.Id > 0)
+                        {
+                            _auditUpdater.Update(r);
+                        }
+                        else
+                        {
+                            _auditUpdater.Create(r);
+                            _data.Recipes.Add(r);
+                        }
+                    })
                     .Tee(r => UpdateRecipe(r, request))
+                    .Tee(r => _data.SaveChanges())
                     .Map(r => Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", r.Id)));
-            }
-
-            private Recipe CreateRecipe()
-            {
-                var recipe = _data.Recipes.New;
-                _auditUpdater.Create(recipe);
-                return recipe;
             }
 
             private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)

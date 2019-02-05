@@ -4,14 +4,15 @@
     <RecipeEditor
       :source-recipe="sourceRecipe"
       :is-field-in-error="isFieldInError"
-      :on-save="saveRecipe"
-      :on-delete="deleteRecipe" />
+      :on-save="onSave"
+      :on-delete="onDelete" />
   </section>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
+import router from '../router';
 import recipeModels from '../models/RecipeApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
@@ -49,9 +50,9 @@ export default {
   methods: {
     ...mapActions({
       setApiFailureMessage: 'app/setApiFailureMessage',
-      saveRecipe: 'recipes/save',
-      deleteRecipe: 'recipes/delete',
+      setSuccessMessage: 'app/setSuccessMessage',
       addToRecent: 'recipes/addToRecent',
+      fetchList: 'recipes/fetchList',
     }),
     fetchRecipe(id) {
       if (this.id === 0) {
@@ -61,6 +62,29 @@ export default {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
+        response => this.setApiFailureMessage(response),
+      );
+    },
+    onSave(recipe) {
+      webApi.recipes.save(
+        recipe,
+        (data) => {
+          this.fetchRecipe(this.id);
+          router.push({ name: 'edit', params: { id: data.id } });
+          this.fetchList();
+          this.setSuccessMessage(data.message);
+        },
+        response => this.setApiFailureMessage(response),
+      );
+    },
+    onDelete(id) {
+      webApi.recipes.delete(
+        id,
+        (data) => {
+          this.fetchList();
+          router.push({ name: 'search' });
+          this.setSuccessMessage(data.message);
+        },
         response => this.setApiFailureMessage(response),
       );
     },

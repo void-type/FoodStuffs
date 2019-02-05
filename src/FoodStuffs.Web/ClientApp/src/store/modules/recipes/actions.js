@@ -1,4 +1,3 @@
-import router from '../../../router';
 import webApi from '../../../webApi';
 
 export default {
@@ -7,27 +6,6 @@ export default {
       context.getters.listRequest,
       data => context.commit('SET_LIST_RESPONSE', data),
       response => context.dispatch('app/setApiFailureMessage', response, { root: true }),
-    );
-  },
-  save(context, recipe) {
-    webApi.recipes.save(
-      recipe,
-      (data) => {
-        router.push({ name: 'edit', params: { id: data.id } });
-        context.dispatch('app/setSuccessMessage', data.message, { root: true });
-      },
-      response => context.dispatch('app/setApiFailureMessage', response, { root: true }),
-    );
-  },
-  delete(context, id) {
-    webApi.recipes.delete(
-      id,
-      (data) => {
-        context.dispatch('fetchList');
-        router.push({ name: 'search' });
-        context.dispatch('app/setSuccessMessage', data.message, { root: true });
-      },
-      response => context.dispatch('setApiFailureMessage', response),
     );
   },
   resetListRequest(context) {

@@ -1,5 +1,5 @@
 <template>
-  <form @keydown.ctrl.enter.prevent="onSave(workingRecipe)">
+  <form @keydown.ctrl.enter.prevent="saveClick(workingRecipe)">
     <h1>{{ workingRecipe.id > 0 ? 'Edit' : 'New' }} Recipe</h1>
     <div class="form-row">
       <div :class="{'form-group': true, danger: isFieldInError('name')}">
@@ -61,7 +61,7 @@
       :entity="sourceRecipe" />
     <div class="form-row button-row">
       <button
-        @click.prevent="onSave(workingRecipe)"
+        @click.prevent="saveClick(workingRecipe)"
       >Save</button>
       <router-link
         v-if="workingRecipe.id > 0"
@@ -108,7 +108,7 @@ export default {
   },
   data() {
     return {
-      workingRecipe: new recipeApiModels.GetResponse(),
+      workingRecipe: new recipeApiModels.SaveRequest(),
     };
   },
   watch: {
@@ -122,6 +122,15 @@ export default {
   methods: {
     reset() {
       Object.assign(this.workingRecipe, this.sourceRecipe);
+    },
+    saveClick(workingRecipe) {
+      const sendableRecipe = new recipeApiModels.SaveRequest();
+
+      Object.keys(sendableRecipe).forEach((key) => {
+        sendableRecipe[key] = workingRecipe[key];
+      });
+
+      this.onSave(sendableRecipe);
     },
     addCategory(tag) {
       const categoryName = trimAndCapitalize(tag);
