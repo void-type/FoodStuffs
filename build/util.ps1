@@ -14,6 +14,8 @@ $testProjectFolder = "../tests/$projectName.Test"
 $webProjectFolder = "../src/$projectName.Web"
 $webClientProjectFolder = "$webProjectFolder/ClientApp"
 
+$testProjectFolder = "../tests/$projectName.Test"
+
 $iisDirectoryProduction = "\\server1\c$\inetpub\wwwroot\$($shortAppName)"
 $settingsDirectoryProduction = "\\server1\appSettings\$($shortAppName)"
 

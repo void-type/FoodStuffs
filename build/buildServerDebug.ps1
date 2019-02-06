@@ -1,5 +1,6 @@
-. ./util.ps1
+[CmdletBinding()]
+param(
+  [string] $Configuration = "Debug"
+)
 
-Push-Location -Path "$webProjectFolder"
-dotnet build --configuration "Debug"
-Pop-Location
+./build.ps1 -Configuration Debug -SkipClient -SkipTest -SkipPublish

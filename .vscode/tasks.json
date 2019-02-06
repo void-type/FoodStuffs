@@ -21,19 +21,6 @@
             ]
         },
         {
-            "label": "buildClientDebug",
-            "command": "./buildClientDebug.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact"
-            ]
-        },
-        {
             "label": "buildServerDebug",
             "command": "./buildServerDebug.ps1",
             "options": {

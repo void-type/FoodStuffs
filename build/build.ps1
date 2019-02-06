@@ -2,18 +2,20 @@
 param(
   [string] $Configuration = "Release",
   [switch] $SkipClient,
+  [switch] $SkipPublish,
   [switch] $SkipTest
 )
 
 . ./util.ps1
 
-# Clean the artifacts folder
+$nodeModes = @{
+  "Release" = "production";
+  "Debug"   = "development"
+}
+
+# Clean the artifacts folders
 Remove-Item -Path "../artifacts" -Recurse -ErrorAction SilentlyContinue
-
-# Clean coverage folder
 Remove-Item -Path "../coverage" -Recurse -ErrorAction SilentlyContinue
-
-# Clean testResults folder
 Remove-Item -Path "../testResults" -Recurse -ErrorAction SilentlyContinue
 
 if (-not $SkipClient) {
@@ -28,7 +30,7 @@ if (-not $SkipClient) {
     Stop-OnError
   }
 
-  npm run build
+  npm run build -- --mode "$($nodeModes[$Configuration])"
   Stop-OnError
   node "tasks/set-version.js"
   Stop-OnError
@@ -43,7 +45,7 @@ Pop-Location
 
 if (-not $SkipTest) {
   # Run tests, gather coverage
-  Push-Location -Path "../tests/FoodStuffs.Test"
+  Push-Location -Path "$testProjectFolder"
 
   dotnet test `
     --configuration "$Configuration" `
@@ -65,8 +67,10 @@ if (-not $SkipTest) {
   Pop-Location
 }
 
-# Package build
-Push-Location -Path "$webProjectFolder"
-dotnet publish --configuration "$Configuration" --no-build --output "../../artifacts"
-Stop-OnError
-Pop-Location
+if (-not $SkipPublish) {
+  # Package build
+  Push-Location -Path "$webProjectFolder"
+  dotnet publish --configuration "$Configuration" --no-build --output "../../artifacts"
+  Stop-OnError
+  Pop-Location
+}
