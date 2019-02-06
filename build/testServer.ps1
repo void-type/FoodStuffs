@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
   [string] $Configuration = "Release",
-  [switch] $Quick
+  [switch] $SkipReport
 )
 
 . ./util.ps1
@@ -27,7 +27,7 @@ dotnet test `
 Stop-OnError
 Pop-Location
 
-if ($Quick) {
+if ($SkipReport) {
   Exit $LASTEXITCODE
 }
 

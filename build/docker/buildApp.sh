@@ -1,7 +1,6 @@
 #! /bin/bash
 
-# TODO: Find a way to build in docker with PowerShell
-# TODO: docker build cannot restore VoidCore unless local feed is configured in the container.
+# TODO: Find a way to build in docker with PowerShell https://github.com/dotnet/dotnet-docker/issues/360
 pushd "../../src/FoodStuffs.Web/ClientApp"
 npm run build
 node tasks/set-version.js
