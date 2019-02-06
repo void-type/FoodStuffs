@@ -49,4 +49,17 @@ export default {
     }
     context.commit('SET_RECENT_RECIPES', recentRecipes);
   },
+  removeFromRecent(context, id) {
+    const recentRecipes = context.state.recent.slice();
+
+    const indexOfCurrentInRecents = recentRecipes
+      .map(recentRecipe => recentRecipe.id)
+      .indexOf(id);
+
+    if (indexOfCurrentInRecents > -1) {
+      recentRecipes.splice(indexOfCurrentInRecents, 1);
+    }
+
+    context.commit('SET_RECENT_RECIPES', recentRecipes);
+  },
 };

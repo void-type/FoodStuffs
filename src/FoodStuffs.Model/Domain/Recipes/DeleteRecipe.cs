@@ -24,6 +24,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .GetById(request.Id)
                     .ToResult("Recipe not found.")
                     .TeeOnSuccess(RemoveRecipe)
+                    .TeeOnSuccess(r => _data.SaveChanges())
                     .Select(recipe => UserMessageWithEntityId.Create("Recipe deleted.", recipe.Id));
             }
 
@@ -34,8 +35,6 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .Tee(_data.CategoryRecipes.RemoveRange);
 
                 _data.Recipes.Remove(recipe);
-
-                _data.SaveChanges();
             }
 
             private readonly IFoodStuffsData _data;

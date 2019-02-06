@@ -25,25 +25,67 @@ namespace FoodStuffs.Model.Domain.Recipes
 
             protected override IResult<UserMessageWithEntityId<int>> HandleSync(Request request)
             {
-                // TODO: this needs work
                 return _data.Recipes.Stored
                     .GetById(request.Id)
-                    .Unwrap(_data.Recipes.New)
-                    .Tee(r =>
-                    {
-                        if (r.Id > 0)
-                        {
-                            _auditUpdater.Update(r);
-                        }
-                        else
-                        {
-                            _auditUpdater.Create(r);
-                            _data.Recipes.Add(r);
-                        }
-                    })
+                    .Unwrap(CreateNewRecipe)
                     .Tee(r => UpdateRecipe(r, request))
+                    .Tee(r => ManageCategories(r, request))
                     .Tee(r => _data.SaveChanges())
                     .Map(r => Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", r.Id)));
+            }
+
+            private Recipe CreateNewRecipe()
+            {
+                var recipe = _data.Recipes.New;
+                _data.Recipes.Add(recipe);
+                _auditUpdater.Create(recipe);
+                return recipe;
+            }
+
+            private void UpdateRecipe(Recipe recipe, Request request)
+            {
+                recipe.Name = request.Name;
+                recipe.Ingredients = request.Ingredients;
+                recipe.Directions = request.Directions;
+                recipe.CookTimeMinutes = request.CookTimeMinutes;
+                recipe.PrepTimeMinutes = request.PrepTimeMinutes;
+                _auditUpdater.Update(recipe);
+            }
+
+            private void ManageCategories(Recipe recipe, Request request)
+            {
+                var requested = request.Categories
+                    .Where(n => !string.IsNullOrWhiteSpace(n))
+                    .Select(n => n.ToLower().Trim())
+                    .ToArray();
+
+                var categoriesToCreate = requested
+                    .Where(n => !_data.Categories.Stored
+                        .Select(c => c.Name.ToLower())
+                        .Contains(n))
+                    .Select(n => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n))
+                    .Select(CreateCategory);
+
+                _data.Categories.AddRange(categoriesToCreate);
+
+                _data.SaveChanges();
+
+                var currentRelations = _data.CategoryRecipes.Stored
+                    .Where(cr => cr.RecipeId == recipe.Id);
+
+                var relationsToRemove = currentRelations
+                    .Where(r => !requested.Contains(r.Category.Name.ToLower()));
+
+                _data.CategoryRecipes.RemoveRange(relationsToRemove);
+
+                var relationsToCreate = _data.Categories.Stored
+                    .Where(c => requested.Contains(c.Name.ToLower()))
+                    .Where(c => !currentRelations
+                        .Select(r => r.Category.Name.ToLower())
+                        .Contains(c.Name))
+                    .Select(c => CreateCategoryRecipe(recipe.Id, c));
+
+                _data.CategoryRecipes.AddRange(relationsToCreate);
             }
 
             private CategoryRecipe CreateCategoryRecipe(int recipeId, Category category)
@@ -59,58 +101,6 @@ namespace FoodStuffs.Model.Domain.Recipes
                 var category = _data.Categories.New;
                 category.Name = viewModelCategory;
                 return category;
-            }
-
-            private void ManageCategories(Recipe recipe, Request request)
-            {
-                var formattedRequestCategories = request.Categories
-                    .Where(category => !string.IsNullOrWhiteSpace(category))
-                    .Select(category => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.Trim()))
-                    .ToArray();
-
-                var currentCategoriesAndCategoryRecipes = _data.CategoryRecipes.Stored
-                    .Where(cr => cr.RecipeId == recipe.Id)
-                    .Join(_data.Categories.Stored,
-                        cr => cr.CategoryId,
-                        c => c.Id,
-                        (cr, c) => new { Category = c, CategoryRecipe = cr });
-
-                var categoriesToCreate = formattedRequestCategories
-                    .Where(name => !_data.Categories.Stored
-                        .Select(c => c.Name)
-                        .Contains(name))
-                    .Select(CreateCategory);
-
-                _data.Categories.AddRange(categoriesToCreate);
-
-                var categoryRecipesToRemove = currentCategoriesAndCategoryRecipes
-                    .Where(crc => !formattedRequestCategories.Contains(crc.Category.Name))
-                    .Select(crc => crc.CategoryRecipe);
-
-                _data.CategoryRecipes.RemoveRange(categoryRecipesToRemove);
-
-                var categoryRecipesToCreate = _data.Categories.Stored
-                    .Where(c => formattedRequestCategories.Contains(c.Name))
-                    .Where(c => !currentCategoriesAndCategoryRecipes
-                        .Select(crc => crc.Category.Name)
-                        .Contains(c.Name))
-                    .Select(c => CreateCategoryRecipe(recipe.Id, c));
-
-                _data.CategoryRecipes.AddRange(categoryRecipesToCreate);
-            }
-
-            private void UpdateRecipe(Recipe recipe, Request request)
-            {
-                recipe.Name = request.Name;
-                recipe.Ingredients = request.Ingredients;
-                recipe.Directions = request.Directions;
-                recipe.CookTimeMinutes = request.CookTimeMinutes;
-                recipe.PrepTimeMinutes = request.PrepTimeMinutes;
-                _auditUpdater.Update(recipe);
-
-                ManageCategories(recipe, request);
-
-                _data.SaveChanges();
             }
 
             private readonly IFoodStuffsData _data;

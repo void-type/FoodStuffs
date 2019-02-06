@@ -52,6 +52,7 @@ export default {
       setApiFailureMessage: 'app/setApiFailureMessage',
       setSuccessMessage: 'app/setSuccessMessage',
       addToRecent: 'recipes/addToRecent',
+      removeFromRecent: 'recipes/removeFromRecent',
       fetchList: 'recipes/fetchList',
     }),
     fetchRecipe(id) {
@@ -81,6 +82,8 @@ export default {
       webApi.recipes.delete(
         id,
         (data) => {
+          this.removeFromRecent(this.id);
+          this.sourceRecipe = null;
           this.fetchList();
           router.push({ name: 'search' });
           this.setSuccessMessage(data.message);
@@ -104,8 +107,9 @@ export default {
     //     next(false);
     //   }
     // }
-
-    this.addToRecent(this.sourceRecipe);
+    if (this.sourceRecipe !== null) {
+      this.addToRecent(this.sourceRecipe);
+    }
     next();
   },
 };

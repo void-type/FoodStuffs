@@ -81,7 +81,7 @@
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
 import recipeApiModels from '../models/RecipeApiModels';
-import trimAndCapitalize from '../util/trimAndCapitalize';
+import trimAndTitleCase from '../util/trimAndTitleCase';
 
 export default {
   components: {
@@ -133,7 +133,7 @@ export default {
       this.onSave(sendableRecipe);
     },
     addCategory(tag) {
-      const categoryName = trimAndCapitalize(tag);
+      const categoryName = trimAndTitleCase(tag);
 
       const categoryDoesNotExist = this.workingRecipe.categories
         .map(value => value.toUpperCase())
