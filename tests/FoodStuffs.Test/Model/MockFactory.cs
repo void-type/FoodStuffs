@@ -5,28 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using VoidCore.Model.Time;
 
-namespace FoodStuffs.Test.Model.Validation
+namespace FoodStuffs.Test.Model
 {
     public static class MockFactory
     {
-        public static Category Category1 => new Category
-        {
-            Id = 11,
-            Name = "Category1"
-        };
-
-        public static Category Category2 => new Category
-        {
-            Id = 12,
-            Name = "Category2"
-        };
-
-        public static Category Category3 => new Category
-        {
-            Id = 13,
-            Name = "Category3"
-        };
-
         public static IDateTimeService DateTimeServiceEarly
         {
             get
@@ -44,6 +26,24 @@ namespace FoodStuffs.Test.Model.Validation
                 return new DiscreteDateTimeService(when);
             }
         }
+
+        public static Category Category1 => new Category
+        {
+            Id = 11,
+            Name = "Category1"
+        };
+
+        public static Category Category2 => new Category
+        {
+            Id = 12,
+            Name = "Category2"
+        };
+
+        public static Category Category3 => new Category
+        {
+            Id = 13,
+            Name = "Category3"
+        };
 
         public static Recipe Recipe1 => new Recipe
         {
@@ -97,9 +97,33 @@ namespace FoodStuffs.Test.Model.Validation
 
         public static FoodStuffsEfData FoodStuffsData(string dbName = null)
         {
-            return new FoodStuffsEfData(new FoodStuffsContext(new DbContextOptionsBuilder<FoodStuffsContext>()
-                .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
-                .Options));
+            return new FoodStuffsEfData(
+                new FoodStuffsContext(
+                    new DbContextOptionsBuilder<FoodStuffsContext>()
+                    .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
+                    .Options
+                )
+            );
+        }
+
+        public static void PopulateWithData(FoodStuffsEfData data)
+        {
+            data.Categories.Add(Category1);
+            data.Categories.Add(Category2);
+            data.Categories.Add(Category3);
+
+            data.Recipes.Add(Recipe1);
+            data.Recipes.Add(Recipe2);
+            data.Recipes.Add(Recipe3);
+
+            data.CategoryRecipes.Add(new CategoryRecipe { CategoryId = 11, RecipeId = 11 });
+            data.CategoryRecipes.Add(new CategoryRecipe { CategoryId = 12, RecipeId = 11 });
+            data.CategoryRecipes.Add(new CategoryRecipe { CategoryId = 11, RecipeId = 12 });
+
+            data.Users.Add(User1);
+            data.Users.Add(User2);
+
+            data.SaveChanges();
         }
     }
 }

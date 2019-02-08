@@ -27,7 +27,7 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public async Task<IActionResult> List(int take = int.MaxValue, int page = 1, string nameSearch = null, string categorySearch = null, string nameSort = null)
+        public async Task<IActionResult> List(int page = 1, int take = int.MaxValue, string nameSearch = null, string categorySearch = null, string nameSort = null)
         {
             var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, nameSort);
 

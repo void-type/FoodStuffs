@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                         request.CategorySearch,
                         dto => string.Join(" ", dto.Categories))
                     .SortListItemDtosByName(request.NameSort)
-                    .ToItemSetPage(request.Take, request.Page)
+                    .ToItemSetPage(request.Page, request.Take)
                     .Map(page => Result.Ok(page));
             }
 
@@ -42,7 +42,7 @@ namespace FoodStuffs.Model.Domain.Recipes
 
         public class Request
         {
-            public Request(int take, int page, string nameSearch, string categorySearch, string nameSort)
+            public Request(int page, int take, string nameSearch, string categorySearch, string nameSort)
             {
                 Take = take;
                 Page = page;
