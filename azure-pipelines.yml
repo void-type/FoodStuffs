@@ -1,0 +1,44 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+steps:
+- task: DotNetCoreInstaller@0
+  inputs:
+    packageType: 'sdk'
+    version: '2.1.503'
+
+- task: 'PowerShell@2'
+  displayName: 'Install Build Tools'
+  inputs:
+    targetType: 'filePath'
+    filePath: 'build/installAndUpdateTools.ps1'
+    workingDirectory: 'build'
+
+- task: 'PowerShell@2'
+  displayName: 'Build, Test, and Publish'
+  inputs:
+    targetType: 'filePath'
+    filePath: 'build/build.ps1'
+    workingDirectory: 'build'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: 'coverage/coverage.cobertura.xml'
+    reportDirectory: 'coverage'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results'
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: 'testResults/*.trx'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifacts'
+  inputs:
+    pathtoPublish: 'artifacts'
+    artifactName: 'artifacts'
