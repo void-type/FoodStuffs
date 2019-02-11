@@ -23,18 +23,17 @@ namespace FoodStuffs.Model.Domain.Recipes
                 return _data.Recipes.Stored
                     .GetById(request.Id)
                     .ToResult("Recipe not found.")
-                    .TeeOnSuccess(RemoveRecipe)
-                    .TeeOnSuccess(r => _data.SaveChanges())
+                    .TeeOnSuccess(RemoveCategoryRecipes)
+                    .TeeOnSuccess(_data.Recipes.Remove)
+                    .TeeOnSuccess(_data.SaveChanges)
                     .Select(recipe => UserMessageWithEntityId.Create("Recipe deleted.", recipe.Id));
             }
 
-            private void RemoveRecipe(Recipe recipe)
+            private void RemoveCategoryRecipes(Recipe recipe)
             {
                 _data.CategoryRecipes.Stored
                     .Where(cr => cr.RecipeId == recipe.Id)
                     .Tee(_data.CategoryRecipes.RemoveRange);
-
-                _data.Recipes.Remove(recipe);
             }
 
             private readonly IFoodStuffsData _data;

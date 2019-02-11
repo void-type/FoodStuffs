@@ -30,16 +30,15 @@ namespace FoodStuffs.Model.Domain.Recipes
                     .Unwrap(CreateNewRecipe)
                     .Tee(r => UpdateRecipe(r, request))
                     .Tee(r => ManageCategories(r, request))
-                    .Tee(r => _data.SaveChanges())
+                    .Tee(_data.SaveChanges)
                     .Map(r => Result.Ok(UserMessageWithEntityId.Create("Recipe saved.", r.Id)));
             }
 
             private Recipe CreateNewRecipe()
             {
-                var recipe = _data.Recipes.New;
-                _data.Recipes.Add(recipe);
-                _auditUpdater.Create(recipe);
-                return recipe;
+                return _data.Recipes.New
+                    .Tee(_data.Recipes.Add)
+                    .Tee(_auditUpdater.Create);
             }
 
             private void UpdateRecipe(Recipe recipe, Request request)
