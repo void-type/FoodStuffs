@@ -39,9 +39,8 @@ namespace FoodStuffs.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: for aspnet versions newer than 2.1, update or remove this.
-            // Get the newest MVC behavior.
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // TODO: when updating versions of .Net Core, update this to get the newest behavior.
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Settings
             services.AddSettingsSingleton<ApplicationSettings>(_config, true);
