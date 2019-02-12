@@ -4,7 +4,7 @@
 [![Build Status](https://img.shields.io/azure-devops/build/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
 [![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
 
-A web application for managing recipes based on .Net Core 2.1 and Vue.js 2.5.
+A web application for managing recipes based on .Net Core 2.2 and Vue.js 2.5.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
@@ -31,8 +31,8 @@ Not implemented yet:
 
 ## Get some tools
 
-* [.Net Core SDK ^2.1.402](https://www.microsoft.com/net/download)
-* [Node ^8.11.0](https://nodejs.org/en/)
+* [.Net Core SDK ^2.2.104](https://www.microsoft.com/net/download)
+* [Node ^10.15.0](https://nodejs.org/en/)
 * [Docker ^18.00 (optional)](https://docker.com)
 
 Run /build/installAndUpdateTools.ps1 to get dotnet global tools needed for building this app.
