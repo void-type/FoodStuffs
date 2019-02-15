@@ -34,7 +34,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                         recipe.ModifiedBy,
                         recipe.ModifiedOn,
                         recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                    .ToResult("Recipe not found.");
+                    .ToResult("Recipe not found.", "recipeId");
             }
 
             private readonly IFoodStuffsData _data;

@@ -22,7 +22,7 @@ namespace FoodStuffs.Model.Domain.Recipes
             {
                 return _data.Recipes.Stored
                     .GetById(request.Id)
-                    .ToResult("Recipe not found.")
+                    .ToResult("Recipe not found.", "recipeId")
                     .TeeOnSuccess(RemoveCategoryRecipes)
                     .TeeOnSuccess(_data.Recipes.Remove)
                     .TeeOnSuccess(_data.SaveChanges)
