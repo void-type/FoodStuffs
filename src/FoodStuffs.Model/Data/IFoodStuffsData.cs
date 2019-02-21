@@ -6,7 +6,7 @@ namespace FoodStuffs.Model.Data
     /// <summary>
     /// Represents all the tables, views and functions of the database.
     /// </summary>
-    public interface IFoodStuffsData : IPersistable
+    public interface IFoodStuffsData
     {
         IWritableRepository<Category> Categories { get; }
         IWritableRepository<CategoryRecipe> CategoryRecipes { get; }

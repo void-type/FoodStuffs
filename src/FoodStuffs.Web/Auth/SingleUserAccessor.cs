@@ -1,6 +1,6 @@
-using VoidCore.Model.Users;
+using VoidCore.Model.Auth;
 
-namespace FoodStuffs.Web.Users
+namespace FoodStuffs.Web.Auth
 {
     public class SingleUserAccessor : ICurrentUserAccessor
     {
