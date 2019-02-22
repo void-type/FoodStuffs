@@ -1,5 +1,6 @@
 import webApi from '../../../webApi';
 
+// TODO: Pull API out of store.
 export default {
   clearMessages(context) {
     context.commit('SET_MESSAGE_IS_ERROR', false);

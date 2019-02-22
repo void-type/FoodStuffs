@@ -1,7 +1,8 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
@@ -11,49 +12,47 @@ namespace FoodStuffs.Model.Domain.Recipes
 {
     public class DeleteRecipe
     {
-        public class Handler : EventHandlerSyncAbstract<Request, UserMessageWithEntityId<int>>
+        public class Handler : EventHandlerAbstract<Request, UserMessageWithEntityId<int>>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override IResult<UserMessageWithEntityId<int>> HandleSync(Request request)
+            public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _data.Recipes.Stored
-                    .GetById(request.Id)
-                    .ToResult("Recipe not found.", "recipeId")
-                    .TeeOnSuccess(RemoveCategoryRecipes)
-                    .TeeOnSuccess(_data.Recipes.Remove)
-                    .TeeOnSuccess(_data.SaveChanges)
-                    .Select(recipe => UserMessageWithEntityId.Create("Recipe deleted.", recipe.Id));
-            }
+                var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-            private void RemoveCategoryRecipes(Recipe recipe)
-            {
-                _data.CategoryRecipes.Stored
-                    .Where(cr => cr.RecipeId == recipe.Id)
-                    .Tee(_data.CategoryRecipes.RemoveRange);
+                return (await _data.Recipes.Get(byId))
+                    .ToResult("Recipe not found.", "recipeId")
+                    .TeeOnSuccess(async r => await RemoveRecipe(r))
+                    .Select(r => UserMessageWithEntityId.Create("Recipe deleted.", r.Id));
             }
 
             private readonly IFoodStuffsData _data;
+
+            private async Task RemoveRecipe(Recipe recipe)
+            {
+                await _data.CategoryRecipes.RemoveRange(recipe.CategoryRecipe.AsReadOnly());
+                await _data.Recipes.Remove(recipe);
+            }
         }
 
         public class Request
         {
+            public int Id { get; }
+
             public Request(int id)
             {
                 Id = id;
             }
-
-            public int Id { get; }
         }
 
         public class Logger : UserMessageWithEntityIdEventLogger<Request, int>
         {
             public Logger(ILoggingService logger) : base(logger) { }
 
-            public override void OnBoth(Request request, IResult<UserMessageWithEntityId<int>> result)
+            protected override void OnBoth(Request request, IResult<UserMessageWithEntityId<int>> result)
             {
                 Logger.Info($"Id: '{request.Id}'");
                 base.OnBoth(request, result);

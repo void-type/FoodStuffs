@@ -14,14 +14,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.105" PrivateAssets="all" />
-    <PackageReference Include="VoidCore.AspNet" Version="0.4.49" />
-    <PackageReference Include="VoidCore.Domain" Version="0.4.49" />
-    <PackageReference Include="VoidCore.Model" Version="0.4.49" />
+    <PackageReference Include="VoidCore.AspNet" Version="0.5.1" />
+    <PackageReference Include="VoidCore.Domain" Version="0.5.1" />
+    <PackageReference Include="VoidCore.Model" Version="0.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FoodStuffs.Model\FoodStuffs.Model.csproj" />
   </ItemGroup>
 </Project>
-
-

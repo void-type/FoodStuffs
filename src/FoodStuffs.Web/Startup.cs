@@ -2,7 +2,7 @@ using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
-using FoodStuffs.Web.Users;
+using FoodStuffs.Web.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +14,10 @@ using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
 using VoidCore.AspNet.Settings;
+using VoidCore.Model.Auth;
 using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
-using VoidCore.Model.Users;
 
 namespace FoodStuffs.Web
 {
@@ -53,7 +53,7 @@ namespace FoodStuffs.Web
             services.AddAntiforgery(_env);
 
             // Dependencies
-            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings.FoodStuffs);
+            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings["FoodStuffs"]);
             services.AddHttpContextAccessor();
             services.AddSingleton<HttpResponder>();
             services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();

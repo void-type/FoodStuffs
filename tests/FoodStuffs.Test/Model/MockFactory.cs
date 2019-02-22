@@ -49,12 +49,14 @@ namespace FoodStuffs.Test.Model
         {
             Id = 11,
             Name = "Recipe1",
-            CookTimeMinutes = 2,
+            Ingredients = "ing",
+            Directions = "dir",
+            CookTimeMinutes = 21,
             PrepTimeMinutes = 2,
             CreatedOn = DateTimeServiceEarly.Moment,
-            ModifiedOn = DateTimeServiceEarly.Moment,
+            ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",
-            ModifiedBy = "11"
+            ModifiedBy = "12"
         };
 
         public static Recipe Recipe2 => new Recipe
@@ -64,7 +66,7 @@ namespace FoodStuffs.Test.Model
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             CreatedOn = DateTimeServiceEarly.Moment,
-            ModifiedOn = DateTimeServiceEarly.Moment,
+            ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",
             ModifiedBy = "11"
         };
@@ -76,7 +78,7 @@ namespace FoodStuffs.Test.Model
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             CreatedOn = DateTimeServiceEarly.Moment,
-            ModifiedOn = DateTimeServiceEarly.Moment,
+            ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",
             ModifiedBy = "11"
         };
@@ -116,14 +118,12 @@ namespace FoodStuffs.Test.Model
             data.Recipes.Add(Recipe2);
             data.Recipes.Add(Recipe3);
 
-            data.CategoryRecipes.Add(new CategoryRecipe { CategoryId = 11, RecipeId = 11 });
-            data.CategoryRecipes.Add(new CategoryRecipe { CategoryId = 12, RecipeId = 11 });
-            data.CategoryRecipes.Add(new CategoryRecipe { CategoryId = 11, RecipeId = 12 });
+            data.CategoryRecipes.Add(new CategoryRecipe { RecipeId = 11, CategoryId = 11 });
+            data.CategoryRecipes.Add(new CategoryRecipe { RecipeId = 11, CategoryId = 12 });
+            data.CategoryRecipes.Add(new CategoryRecipe { RecipeId = 12, CategoryId = 11 });
 
             data.Users.Add(User1);
             data.Users.Add(User2);
-
-            data.SaveChanges();
         }
     }
 }

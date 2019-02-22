@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Web.Data.EntityFramework;
-using System;
+using VoidCore.AspNet.Data;
 using VoidCore.Model.Data;
 
 namespace FoodStuffs.Web.Data
@@ -15,32 +15,10 @@ namespace FoodStuffs.Web.Data
 
         public FoodStuffsEfData(FoodStuffsContext context)
         {
-            _context = context;
-            Categories = new CategoryRepository(context);
-            CategoryRecipes = new CategoryRecipeRepository(context);
-            Recipes = new RecipeRepository(context);
-            Users = new UserRepository(context);
+            Categories = new EfWritableRepository<Category>(context);
+            CategoryRecipes = new EfWritableRepository<CategoryRecipe>(context);
+            Recipes = new EfWritableRepository<Recipe>(context);
+            Users = new EfWritableRepository<User>(context);
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public void SaveChanges()
-        {
-            _context.SaveChanges();
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _context?.Dispose();
-            }
-        }
-
-        private readonly FoodStuffsContext _context;
     }
 }
