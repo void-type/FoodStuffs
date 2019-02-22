@@ -4,15 +4,8 @@ namespace FoodStuffs.Model.Data.Models
 {
     public class Category
     {
-
+        public List<CategoryRecipe> CategoryRecipe { get; set; } = new List<CategoryRecipe>();
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public ICollection<CategoryRecipe> CategoryRecipe { get; set; }
-
-        public Category()
-        {
-            CategoryRecipe = new HashSet<CategoryRecipe>();
-        }
     }
 }

@@ -3,6 +3,8 @@ using FoodStuffs.Model.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
@@ -11,17 +13,19 @@ namespace FoodStuffs.Model.Domain.Recipes
 {
     public class GetRecipe
     {
-        public class Handler : EventHandlerSyncAbstract<Request, RecipeDto>
+        public class Handler : EventHandlerAbstract<Request, RecipeDto>
         {
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
             }
 
-            protected override IResult<RecipeDto> HandleSync(Request request)
+            public override async Task<IResult<RecipeDto>> Handle(Request request, CancellationToken cancellationToken = default(CancellationToken))
             {
-                return _data.Recipes.Stored
-                    .GetById(request.Id)
+                var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
+
+                return (await _data.Recipes.Get(byId))
+                    .ToResult("Recipe not found.", "recipeId")
                     .Select(recipe => new RecipeDto(
                         recipe.Id,
                         recipe.Name,
@@ -33,8 +37,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                         recipe.CreatedOn,
                         recipe.ModifiedBy,
                         recipe.ModifiedOn,
-                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                    .ToResult("Recipe not found.", "recipeId");
+                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)));
             }
 
             private readonly IFoodStuffsData _data;
@@ -85,7 +88,7 @@ namespace FoodStuffs.Model.Domain.Recipes
         {
             public Logger(ILoggingService logger) : base(logger) { }
 
-            public override void OnBoth(Request request, IResult<RecipeDto> result)
+            protected override void OnBoth(Request request, IResult<RecipeDto> result)
             {
                 Logger.Info($"Id: '{request.Id}'");
                 base.OnBoth(request, result);

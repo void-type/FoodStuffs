@@ -41,8 +41,8 @@ CREATE TABLE [dbo].[Recipe]
     [PrepTimeMinutes] [int] NULL,
     [CookTimeMinutes] [int] NULL,
     [CreatedBy] [nvarchar](max) NOT NULL,
-    [ModifiedBy] [nvarchar](max) NOT NULL,
     [CreatedOn] [datetime] NOT NULL,
+    [ModifiedBy] [nvarchar](max) NOT NULL,
     [ModifiedOn] [datetime] NOT NULL,
     CONSTRAINT [PK_Recipe] PRIMARY KEY CLUSTERED
 (
