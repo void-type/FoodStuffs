@@ -13,7 +13,7 @@ using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Model.Domain.Recipes
+namespace FoodStuffs.Model.Events.Recipes
 {
     public class SaveRecipe
     {
@@ -29,24 +29,24 @@ namespace FoodStuffs.Model.Domain.Recipes
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-                var recipeMaybe = await _data.Recipes.Get(byId);
+                var maybeRecipe = await _data.Recipes.Get(byId);
 
-                if (recipeMaybe.HasValue)
+                if (maybeRecipe.HasValue)
                 {
-                    return recipeMaybe.Value
+                    return await maybeRecipe.Value
                         .Tee(r => Transfer(request, r))
-                        .Tee(async r => await _data.Recipes.Update(r))
-                        .Tee(async r => await ManageCategories(r, request))
-                        .Map(r => Result.Ok(UserMessageWithEntityId.Create("Recipe added.", r.Id)));
+                        .TeeAsync(_data.Recipes.Update)
+                        .TeeAsync(r => ManageCategories(request, r))
+                        .MapAsync(r => Result.Ok(UserMessageWithEntityId.Create("Recipe updated.", r.Id)));
                 }
                 else
                 {
-                    return new Recipe()
+                    return await new Recipe()
                         .Tee(_auditUpdater.Create)
                         .Tee(r => Transfer(request, r))
-                        .Tee(async r => await _data.Recipes.Add(r))
-                        .Tee(async r => await ManageCategories(r, request))
-                        .Map(r => Result.Ok(UserMessageWithEntityId.Create("Recipe updated.", r.Id)));
+                        .TeeAsync(_data.Recipes.Add)
+                        .TeeAsync(r => ManageCategories(request, r))
+                        .MapAsync(r => Result.Ok(UserMessageWithEntityId.Create("Recipe added.", r.Id)));
                 }
             }
 
@@ -60,7 +60,7 @@ namespace FoodStuffs.Model.Domain.Recipes
                 _auditUpdater.Update(recipe);
             }
 
-            private async Task ManageCategories(Recipe recipe, Request request)
+            private async Task ManageCategories(Request request, Recipe recipe)
             {
                 var requested = request.Categories
                     .Where(n => !string.IsNullOrWhiteSpace(n))
@@ -73,31 +73,30 @@ namespace FoodStuffs.Model.Domain.Recipes
                 var categoriesExist = (await _data.Categories.List(categoriesThatMatchRequestedSpec))
                     .Select(c => c.Name.ToLower().Trim());
 
-                var categoriesToAdd = requested
+                // Add categories that don't exist
+                await requested
                     .Where(n => !categoriesExist.Contains(n))
-                    .Select(n => new Category
-                    {
-                        Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n)
-                    });
+                    .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) })
+                    .TeeAsync(_data.Categories.AddRange);
 
-                await _data.Categories.AddRange(categoriesToAdd);
+                // Remove relations that are no longer needed
+                await recipe.CategoryRecipe
+                    .Where(r => !requested.Contains(r.Category.Name.ToLower().Trim()))
+                    .TeeAsync(_data.CategoryRecipes.RemoveRange);
 
-                var relationsToRemove = recipe.CategoryRecipe
-                    .Where(r => !requested.Contains(r.Category.Name.ToLower().Trim()));
-
-                await _data.CategoryRecipes.RemoveRange(relationsToRemove);
-
-                var relationsToCreate = (await _data.Categories.List(categoriesThatMatchRequestedSpec))
-                    .Where(c => !recipe.CategoryRecipe
-                        .Select(r => r.Category.Name.ToLower().Trim())
-                        .Contains(c.Name.ToLower().Trim()))
-                    .Select(c => new CategoryRecipe
-                    {
-                        RecipeId = recipe.Id,
-                            CategoryId = c.Id
-                    });
-
-                await _data.CategoryRecipes.AddRange(relationsToCreate);
+                // Add relations that don't exist
+                await _data.Categories
+                    .List(categoriesThatMatchRequestedSpec)
+                    .MapAsync(categories => categories
+                        .Where(c => !recipe.CategoryRecipe
+                            .Select(r => r.Category.Name.ToLower().Trim())
+                            .Contains(c.Name.ToLower().Trim()))
+                        .Select(c => new CategoryRecipe
+                        {
+                            RecipeId = recipe.Id,
+                                CategoryId = c.Id
+                        }))
+                    .TeeAsync(_data.CategoryRecipes.AddRange);
             }
 
             private readonly IFoodStuffsData _data;

@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Domain.Recipes;
+using FoodStuffs.Model.Events.Recipes;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
@@ -27,9 +27,9 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public async Task<IActionResult> List(int page = 1, int take = int.MaxValue, string nameSearch = null, string categorySearch = null, string nameSort = null)
+        public async Task<IActionResult> List(string nameSearch = null, string categorySearch = null, string nameSort = null, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
-            var request = new ListRecipes.Request(page, take, nameSearch, categorySearch, nameSort);
+            var request = new ListRecipes.Request(nameSearch, categorySearch, nameSort, isPagingEnabled, page, take);
 
             var result = await _listHandler
                 .AddPostProcessor(_listLogger)

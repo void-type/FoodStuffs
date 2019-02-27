@@ -1,14 +1,15 @@
-import ItemSetPage from './ItemSetPage';
+import ItemSet from './ItemSet';
 import sort from '../util/sort';
 import options from '../util/options';
 
 class ListRequest {
   constructor() {
-    this.page = 1;
-    this.take = options.paginationTakeOptions[0].value;
     this.categorySearch = '';
     this.nameSearch = '';
     this.nameSort = sort.types[0].name;
+    this.isPagingEnabled = true;
+    this.page = 1;
+    this.take = options.paginationTakeOptions[0].value;
   }
 }
 
@@ -42,7 +43,7 @@ class GetResponse {
 
 export default {
   ListRequest,
-  ListResponse: ItemSetPage,
+  ListResponse: ItemSet,
   GetResponse,
   SaveRequest,
 };

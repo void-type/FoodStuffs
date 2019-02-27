@@ -8,6 +8,9 @@ export default {
   RESET_LIST_REQUEST(state) {
     state.listRequest = new recipesModels.ListRequest();
   },
+  SET_LIST_REQUEST_IS_PAGING_ENABLED(state, isEnabled) {
+    state.listRequest.isPagingEnabled = isEnabled;
+  },
   SET_LIST_REQUEST_PAGE(state, page) {
     state.listRequest.page = page;
   },

@@ -1,22 +1,22 @@
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Domain.Recipes;
+using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Queries;
 using FoodStuffs.Web.Auth;
 using System.Linq;
+using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Model.Data;
 using Xunit;
 
-namespace FoodStuffs.Test.Model.Domain
+namespace FoodStuffs.Test.Model.Events
 {
 
     public class RecipeEventTests
     {
         [Fact]
-        public async void GetRecipeFound()
+        public async Task GetRecipeFound()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new GetRecipe.Handler(data)
                 .Handle(new GetRecipe.Request(11));
@@ -29,17 +29,16 @@ namespace FoodStuffs.Test.Model.Domain
             Assert.Equal(21, result.Value.CookTimeMinutes);
             Assert.Equal(2, result.Value.PrepTimeMinutes);
             Assert.Equal("11", result.Value.CreatedBy);
-            Assert.Equal(MockFactory.DateTimeServiceEarly.Moment, result.Value.CreatedOn);
+            Assert.Equal(Deps.DateTimeServiceEarly.Moment, result.Value.CreatedOn);
             Assert.Equal("12", result.Value.ModifiedBy);
-            Assert.Equal(MockFactory.DateTimeServiceLate.Moment, result.Value.ModifiedOn);
+            Assert.Equal(Deps.DateTimeServiceLate.Moment, result.Value.ModifiedOn);
             Assert.Equal(2, result.Value.Categories.Count());
         }
 
         [Fact]
-        public async void GetRecipeNotFound()
+        public async Task GetRecipeNotFound()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new GetRecipe.Handler(data)
                 .Handle(new GetRecipe.Request(1000));
@@ -48,13 +47,12 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipes()
+        public async Task ListRecipes()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(2, 1, null, null, null));
+                .Handle(new ListRecipes.Request(null, null, null, true, 2, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -67,13 +65,28 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipesSortDesc()
+        public async Task ListRecipesWithoutPaging()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(1, 1, null, null, "descending"));
+                .Handle(new ListRecipes.Request(null, null, null, false, 0, 0));
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(3, result.Value.Count);
+            Assert.Equal(3, result.Value.TotalCount);
+            Assert.Contains("Recipe2", result.Value.Items.Select(r => r.Name));
+            Assert.Contains(12, result.Value.Items.Select(r => r.Id));
+            Assert.Contains("Category1", result.Value.Items.SelectMany(r => r.Categories));
+        }
+
+        [Fact]
+        public async Task ListRecipesSortDesc()
+        {
+            var data = await Deps.FoodStuffsData().Seed();
+
+            var result = await new ListRecipes.Handler(data)
+                .Handle(new ListRecipes.Request(null, null, "descending", true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -84,15 +97,14 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipesSortAscend()
+        public async Task ListRecipesSortAscend()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             await data.Recipes.Add(new Recipe() { Name = "ANewRecipe" });
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(1, 1, null, null, "ascending"));
+                .Handle(new ListRecipes.Request(null, null, "ascending", true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -103,13 +115,12 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipesNameSearch()
+        public async Task ListRecipesNameSearch()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(1, 2, "recipe 2", null, null));
+                .Handle(new ListRecipes.Request("recipe 2", null, null, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -120,13 +131,12 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipesCategorySearch()
+        public async Task ListRecipesCategorySearch()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(1, 4, null, "cat 1 2", null));
+                .Handle(new ListRecipes.Request(null, "cat 1 2", null, true, 1, 4));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -139,13 +149,12 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipesNoneFoundByNameSearch()
+        public async Task ListRecipesNoneFoundByNameSearch()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(1, 2, "nothing matches", null, null));
+                .Handle(new ListRecipes.Request("nothing matches", null, null, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(0, result.Value.Count);
@@ -153,13 +162,12 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void ListRecipesNoneFoundByCategorySearch()
+        public async Task ListRecipesNoneFoundByCategorySearch()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(1, 2, null, "nothing matches", null));
+                .Handle(new ListRecipes.Request(null, "nothing matches", null, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(0, result.Value.Count);
@@ -167,10 +175,9 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void DeleteRecipeFound()
+        public async Task DeleteRecipeFound()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(11));
@@ -183,10 +190,9 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void DeleteRecipeNotFound()
+        public async Task DeleteRecipeNotFound()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(1000));
@@ -198,12 +204,11 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void SaveNewRecipe()
+        public async Task SaveNewRecipe()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
-            var result = await new SaveRecipe.Handler(data, new AuditUpdater(MockFactory.DateTimeServiceEarly, new SingleUserAccessor()))
+            var result = await new SaveRecipe.Handler(data, new AuditUpdater(Deps.DateTimeServiceEarly, new SingleUserAccessor()))
                 .Handle(new SaveRecipe.Request(0, "New", "New", "New", null, 20, new [] { "Category2", "Category3", "Category4" }));
 
             Assert.True(result.IsSuccess);
@@ -211,8 +216,8 @@ namespace FoodStuffs.Test.Model.Domain
 
             Maybe<Recipe> maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(result.Value.Id));
             Assert.True(maybeRecipe.HasValue);
-            Assert.Equal(MockFactory.DateTimeServiceEarly.Moment, maybeRecipe.Value.CreatedOn);
-            Assert.Equal(MockFactory.DateTimeServiceEarly.Moment, maybeRecipe.Value.ModifiedOn);
+            Assert.Equal(Deps.DateTimeServiceEarly.Moment, maybeRecipe.Value.CreatedOn);
+            Assert.Equal(Deps.DateTimeServiceEarly.Moment, maybeRecipe.Value.ModifiedOn);
             Assert.DoesNotContain("Category1", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
             Assert.Contains("Category2", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
             Assert.Contains("Category3", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
@@ -227,15 +232,14 @@ namespace FoodStuffs.Test.Model.Domain
         }
 
         [Fact]
-        public async void SaveExistingRecipe()
+        public async Task SaveExistingRecipe()
         {
-            var data = MockFactory.FoodStuffsData();
-            MockFactory.PopulateWithData(data);
+            var data = await Deps.FoodStuffsData().Seed();
 
             Maybe<Recipe> maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(11));
             Assert.True(maybeRecipe.HasValue);
 
-            var result = await new SaveRecipe.Handler(data, new AuditUpdater(MockFactory.DateTimeServiceEarly, new SingleUserAccessor()))
+            var result = await new SaveRecipe.Handler(data, new AuditUpdater(Deps.DateTimeServiceEarly, new SingleUserAccessor()))
                 .Handle(new SaveRecipe.Request(11, "New", "New", "New", null, 20, new [] { "Category2", "Category3", "Category4" }));
 
             Assert.True(result.IsSuccess);
@@ -243,8 +247,8 @@ namespace FoodStuffs.Test.Model.Domain
 
             maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(11));
             Assert.True(maybeRecipe.HasValue);
-            Assert.Equal(MockFactory.DateTimeServiceEarly.Moment, maybeRecipe.Value.CreatedOn);
-            Assert.Equal(MockFactory.DateTimeServiceEarly.Moment, maybeRecipe.Value.ModifiedOn);
+            Assert.Equal(Deps.DateTimeServiceEarly.Moment, maybeRecipe.Value.CreatedOn);
+            Assert.Equal(Deps.DateTimeServiceEarly.Moment, maybeRecipe.Value.ModifiedOn);
             Assert.DoesNotContain("Category1", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
             Assert.Contains("Category2", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
             Assert.Contains("Category3", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));

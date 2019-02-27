@@ -12,8 +12,8 @@
       :name-sort="getNameSortType"
       :on-cycle-name-sort="cycleNameSort" />
     <Pager
-      :page="listResponse.page"
-      :take="listResponse.take"
+      :page="listRequest.page"
+      :take="listRequest.take"
       :total-count="listResponse.totalCount"
       :on-page-change="updatePage"
       :on-take-change="updateTake" />
