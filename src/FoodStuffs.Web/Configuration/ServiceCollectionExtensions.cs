@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Domain.Recipes;
+using FoodStuffs.Model.Events.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using VoidCore.AspNet.ClientApp;
 

@@ -9,7 +9,7 @@ using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 
-namespace FoodStuffs.Model.Domain.Recipes
+namespace FoodStuffs.Model.Events.Recipes
 {
     public class GetRecipe
     {
@@ -24,20 +24,20 @@ namespace FoodStuffs.Model.Domain.Recipes
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-                return (await _data.Recipes.Get(byId))
-                    .ToResult("Recipe not found.", "recipeId")
-                    .Select(recipe => new RecipeDto(
-                        recipe.Id,
-                        recipe.Name,
-                        recipe.Ingredients,
-                        recipe.Directions,
-                        recipe.CookTimeMinutes,
-                        recipe.PrepTimeMinutes,
-                        recipe.CreatedBy,
-                        recipe.CreatedOn,
-                        recipe.ModifiedBy,
-                        recipe.ModifiedOn,
-                        recipe.CategoryRecipe.Select(cr => cr.Category.Name)));
+                return await _data.Recipes.Get(byId)
+                    .ToResultAsync("Recipe not found.", "recipeId")
+                    .SelectAsync(r => new RecipeDto(
+                        r.Id,
+                        r.Name,
+                        r.Ingredients,
+                        r.Directions,
+                        r.CookTimeMinutes,
+                        r.PrepTimeMinutes,
+                        r.CreatedBy,
+                        r.CreatedOn,
+                        r.ModifiedBy,
+                        r.ModifiedOn,
+                        r.CategoryRecipe.Select(cr => cr.Category.Name)));
             }
 
             private readonly IFoodStuffsData _data;

@@ -1,8 +1,8 @@
-using FoodStuffs.Model.Domain.Recipes;
 using System.Linq;
+using FoodStuffs.Model.Events.Recipes;
 using Xunit;
 
-namespace FoodStuffs.Test.Model.Domain
+namespace FoodStuffs.Test.Model.Events
 {
     public class RecipeViewModelValidatorTests
     {

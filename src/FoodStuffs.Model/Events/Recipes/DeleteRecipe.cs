@@ -8,7 +8,7 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Model.Domain.Recipes
+namespace FoodStuffs.Model.Events.Recipes
 {
     public class DeleteRecipe
     {
@@ -23,10 +23,10 @@ namespace FoodStuffs.Model.Domain.Recipes
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-                return (await _data.Recipes.Get(byId))
-                    .ToResult("Recipe not found.", "recipeId")
-                    .TeeOnSuccess(async r => await RemoveRecipe(r))
-                    .Select(r => UserMessageWithEntityId.Create("Recipe deleted.", r.Id));
+               return await _data.Recipes.Get(byId)
+                    .ToResultAsync("Recipe not found.", "recipeId")
+                    .TeeOnSuccessAsync(RemoveRecipe)
+                    .SelectAsync(r => UserMessageWithEntityId.Create("Recipe deleted.", r.Id));
             }
 
             private readonly IFoodStuffsData _data;

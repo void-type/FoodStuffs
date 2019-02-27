@@ -15,6 +15,7 @@ export default {
     context.commit('SET_LIST_REQUEST_PAGE', page);
   },
   setListTake(context, take) {
+    context.commit('SET_LIST_REQUEST_IS_PAGING_ENABLED', (take !== null));
     context.commit('SET_LIST_REQUEST_TAKE', take);
   },
   setListCategorySearch(context, categorySearch) {

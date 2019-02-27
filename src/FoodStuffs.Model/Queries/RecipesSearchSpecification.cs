@@ -1,5 +1,4 @@
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Domain.Recipes;
 using System;
 using System.Linq.Expressions;
 using VoidCore.Model.Queries;
@@ -8,11 +7,16 @@ namespace FoodStuffs.Model.Queries
 {
     public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
     {
-        public RecipesSearchSpecification(ListRecipes.Request request, params Expression<Func<Recipe, bool>>[] criteria) : base(criteria)
+        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, string nameSort = null, bool pagingEnabled = false, int page = 1, int take = 1) : base(criteria)
         {
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
 
-            switch (request.NameSort)
+            if (pagingEnabled)
+            {
+                ApplyPaging(page, take);
+            }
+
+            switch (nameSort?.ToLower())
             {
                 case "ascending":
                     ApplyOrderBy(recipe => recipe.Name);
