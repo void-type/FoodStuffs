@@ -1,7 +1,7 @@
-import recipeApiModels from '../../../models/RecipeApiModels';
+import webApi from '../../../webApi';
 
 export default {
-  listResponse: new recipeApiModels.ListResponse(),
-  listRequest: new recipeApiModels.ListRequest(),
+  listResponse: new webApi.recipes.ListResponse(),
+  listRequest: new webApi.recipes.ListRequest(),
   recent: [],
 };

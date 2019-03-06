@@ -23,19 +23,22 @@ namespace FoodStuffs.Model.Events.Recipes
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-               return await _data.Recipes.Get(byId)
-                    .ToResultAsync("Recipe not found.", "recipeId")
+                return await _data.Recipes.Get(byId)
+                    .ToResultAsync(new RecipeNotFoundFailure())
                     .TeeOnSuccessAsync(RemoveRecipe)
-                    .SelectAsync(r => UserMessageWithEntityId.Create("Recipe deleted.", r.Id));
+                    .SelectAsync(r =>
+                        UserMessageWithEntityId.Create(
+                            message: "Recipe deleted.",
+                            id : r.Id));
             }
-
-            private readonly IFoodStuffsData _data;
 
             private async Task RemoveRecipe(Recipe recipe)
             {
                 await _data.CategoryRecipes.RemoveRange(recipe.CategoryRecipe.AsReadOnly());
                 await _data.Recipes.Remove(recipe);
             }
+
+            private readonly IFoodStuffsData _data;
         }
 
         public class Request

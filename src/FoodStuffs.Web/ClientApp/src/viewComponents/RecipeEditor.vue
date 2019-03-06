@@ -80,7 +80,7 @@
 <script>
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
-import recipeApiModels from '../models/RecipeApiModels';
+import webApi from '../webApi';
 import trimAndTitleCase from '../util/trimAndTitleCase';
 
 export default {
@@ -108,7 +108,7 @@ export default {
   },
   data() {
     return {
-      workingRecipe: new recipeApiModels.SaveRequest(),
+      workingRecipe: new webApi.recipes.SaveRequest(),
     };
   },
   watch: {
@@ -124,7 +124,7 @@ export default {
       Object.assign(this.workingRecipe, this.sourceRecipe);
     },
     saveClick(workingRecipe) {
-      const sendableRecipe = new recipeApiModels.SaveRequest();
+      const sendableRecipe = new webApi.recipes.SaveRequest();
 
       Object.keys(sendableRecipe).forEach((key) => {
         sendableRecipe[key] = workingRecipe[key];

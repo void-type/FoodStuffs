@@ -1,16 +1,16 @@
 <template>
   <section>
     <SearchControls
-      :category-search="listRequest.categorySearch"
       :name-search="listRequest.nameSearch"
+      :category-search="listRequest.categorySearch"
       :on-category-search-change="setListCategorySearch"
       :on-name-search-change="setListNameSearch"
       :on-search="fetchRecipesList"
       :on-clear="clearSearch" />
     <SearchTable
       :recipes="listResponse.items"
-      :name-sort="getNameSortType"
-      :on-cycle-name-sort="cycleNameSort" />
+      :sort="getSortType"
+      :on-cycle-sort="cycleSort" />
     <Pager
       :page="listRequest.page"
       :take="listRequest.take"
@@ -22,7 +22,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import sort from '../util/sort';
+import recipesApi from '../webApi/recipes';
 import SearchControls from '../viewComponents/SearchControls.vue';
 import SearchTable from '../viewComponents/SearchTable.vue';
 import Pager from '../viewComponents/Pager.vue';
@@ -38,19 +38,19 @@ export default {
       listResponse: 'recipes/listResponse',
       listRequest: 'recipes/listRequest',
     }),
-    getNameSortType() {
-      return sort.getTypeByName(this.listRequest.nameSort);
+    getSortType() {
+      return recipesApi.listSortOptions.getTypeByName(this.listRequest.sort);
     },
   },
   methods: {
     ...mapActions({
       fetchRecipesList: 'recipes/fetchList',
       resetListRequest: 'recipes/resetListRequest',
+      setListNameSearch: 'recipes/setListNameSearch',
+      setListCategorySearch: 'recipes/setListCategorySearch',
+      setListSort: 'recipes/setListSort',
       setListPage: 'recipes/setListPage',
       setListTake: 'recipes/setListTake',
-      setListCategorySearch: 'recipes/setListCategorySearch',
-      setListNameSearch: 'recipes/setListNameSearch',
-      setListNameSort: 'recipes/setListNameSort',
     }),
     updatePage(page) {
       this.setListPage(page);
@@ -61,8 +61,8 @@ export default {
       this.setListPage(1);
       this.fetchRecipesList();
     },
-    cycleNameSort() {
-      this.setListNameSort(sort.nextType(this.listRequest.nameSort).name);
+    cycleSort() {
+      this.setListSort(recipesApi.listSortOptions.nextSort(this.listRequest.sort).name);
       this.fetchRecipesList();
     },
     clearSearch() {

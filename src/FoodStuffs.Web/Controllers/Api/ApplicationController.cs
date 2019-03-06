@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
+using VoidCore.Domain;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
@@ -20,11 +21,10 @@ namespace FoodStuffs.Web.Controllers.Api
         [Route("info")]
         public async Task<IActionResult> GetInfo()
         {
-            var result = await _getHandler
+            return await _getHandler
                 .AddPostProcessor(_getLogger)
-                .Handle(new GetWebApplicationInfo.Request());
-
-            return _responder.Respond(result);
+                .Handle(new GetWebApplicationInfo.Request())
+                .MapAsync(_responder.Respond);
         }
 
         private readonly HttpResponder _responder;

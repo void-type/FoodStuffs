@@ -86,7 +86,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = await Deps.FoodStuffsData().Seed();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, "descending", true, 1, 1));
+                .Handle(new ListRecipes.Request(null, null, "nameDesc", true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -104,7 +104,7 @@ namespace FoodStuffs.Test.Model.Events
             await data.Recipes.Add(new Recipe() { Name = "ANewRecipe" });
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, "ascending", true, 1, 1));
+                .Handle(new ListRecipes.Request(null, null, "name", true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);

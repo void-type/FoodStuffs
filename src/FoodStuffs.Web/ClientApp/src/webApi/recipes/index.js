@@ -1,4 +1,5 @@
 import axios from 'axios';
+import models from './models';
 
 export default {
   list(params, success, failure) {
@@ -21,4 +22,5 @@ export default {
       .then(response => success(response.data))
       .catch(error => failure(error.response));
   },
+  ...models,
 };

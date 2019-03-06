@@ -8,7 +8,6 @@
 <script>
 import { mapActions } from 'vuex';
 import webApi from '../webApi';
-import recipeModels from '../models/RecipeApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeViewer from '../viewComponents/RecipeViewer.vue';
 
@@ -25,7 +24,7 @@ export default {
   },
   data() {
     return {
-      sourceRecipe: new recipeModels.GetResponse(),
+      sourceRecipe: new webApi.recipes.GetResponse(),
     };
   },
   watch: {
@@ -38,14 +37,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      setApiFailureMessage: 'app/setApiFailureMessage',
       addToRecent: 'recipes/addToRecent',
     }),
     fetchRecipe(id) {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => this.setApiFailureMessage(response),
+        response => webApi.setApiFailureMessage(response),
       );
     },
   },

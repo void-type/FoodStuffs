@@ -13,7 +13,6 @@
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import router from '../router';
-import recipeModels from '../models/RecipeApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
 
@@ -31,7 +30,7 @@ export default {
   },
   data() {
     return {
-      sourceRecipe: new recipeModels.GetResponse(),
+      sourceRecipe: new webApi.recipes.GetResponse(),
     };
   },
   computed: {
@@ -49,7 +48,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      setApiFailureMessage: 'app/setApiFailureMessage',
       setSuccessMessage: 'app/setSuccessMessage',
       addToRecent: 'recipes/addToRecent',
       removeFromRecent: 'recipes/removeFromRecent',
@@ -57,13 +55,13 @@ export default {
     }),
     fetchRecipe(id) {
       if (this.id === 0) {
-        this.sourceRecipe = new recipeModels.GetResponse();
+        this.sourceRecipe = new webApi.recipes.GetResponse();
         return;
       }
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => this.setApiFailureMessage(response),
+        response => webApi.setApiFailureMessage(response),
       );
     },
     onSave(recipe) {
@@ -75,7 +73,7 @@ export default {
           this.fetchList();
           this.setSuccessMessage(data.message);
         },
-        response => this.setApiFailureMessage(response),
+        response => webApi.setApiFailureMessage(response),
       );
     },
     onDelete(id) {
@@ -88,7 +86,7 @@ export default {
           router.push({ name: 'search' });
           this.setSuccessMessage(data.message);
         },
-        response => this.setApiFailureMessage(response),
+        response => webApi.setApiFailureMessage(response),
       );
     },
   },

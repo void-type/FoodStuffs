@@ -24,4 +24,17 @@ export default {
       window.navigator.msSaveBlob(blob, filename);
     }
   },
+  decodeFailureResponse(response) {
+    if (response.request.responseType !== 'arraybuffer') {
+      return response;
+    }
+
+    const decodedString = String.fromCharCode.apply(null, new Uint8Array(response.data));
+
+    if (decodedString.length <= 0) {
+      return '';
+    }
+
+    return Object.assign(response, { data: JSON.parse(decodedString) });
+  },
 };

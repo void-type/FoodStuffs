@@ -25,19 +25,19 @@ namespace FoodStuffs.Model.Events.Recipes
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
                 return await _data.Recipes.Get(byId)
-                    .ToResultAsync("Recipe not found.", "recipeId")
+                    .ToResultAsync(new RecipeNotFoundFailure())
                     .SelectAsync(r => new RecipeDto(
-                        r.Id,
-                        r.Name,
-                        r.Ingredients,
-                        r.Directions,
-                        r.CookTimeMinutes,
-                        r.PrepTimeMinutes,
-                        r.CreatedBy,
-                        r.CreatedOn,
-                        r.ModifiedBy,
-                        r.ModifiedOn,
-                        r.CategoryRecipe.Select(cr => cr.Category.Name)));
+                        id: r.Id,
+                        name: r.Name,
+                        ingredients: r.Ingredients,
+                        directions: r.Directions,
+                        cookTimeMinutes: r.CookTimeMinutes,
+                        prepTimeMinutes: r.PrepTimeMinutes,
+                        createdBy: r.CreatedBy,
+                        createdOn: r.CreatedOn,
+                        modifiedBy: r.ModifiedBy,
+                        modifiedOn: r.ModifiedOn,
+                        categories: r.CategoryRecipe.Select(cr => cr.Category.Name)));
             }
 
             private readonly IFoodStuffsData _data;

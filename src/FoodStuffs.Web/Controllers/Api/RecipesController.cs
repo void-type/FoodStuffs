@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
+using VoidCore.Domain;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
@@ -27,15 +28,20 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public async Task<IActionResult> List(string nameSearch = null, string categorySearch = null, string nameSort = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+        public async Task<IActionResult> List(string nameSearch = null, string categorySearch = null, string sort = null, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
-            var request = new ListRecipes.Request(nameSearch, categorySearch, nameSort, isPagingEnabled, page, take);
+            var request = new ListRecipes.Request(
+                nameSearch: nameSearch,
+                categorySearch: categorySearch,
+                sort: sort,
+                isPagingEnabled: isPagingEnabled,
+                page: page,
+                take: take);
 
-            var result = await _listHandler
+            return await _listHandler
                 .AddPostProcessor(_listLogger)
-                .Handle(request);
-
-            return _responder.Respond(result);
+                .Handle(request)
+                .MapAsync(_responder.Respond);
         }
 
         [HttpGet]
@@ -43,22 +49,20 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var request = new GetRecipe.Request(id);
 
-            var result = await _getHandler
+            return await _getHandler
                 .AddPostProcessor(_getLogger)
-                .Handle(request);
-
-            return _responder.Respond(result);
+                .Handle(request)
+                .MapAsync(_responder.Respond);
         }
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] SaveRecipe.Request request)
         {
-            var result = await _saveHandler
+            return await _saveHandler
                 .AddRequestValidator(_saveValidator)
                 .AddPostProcessor(_saveLogger)
-                .Handle(request);
-
-            return _responder.Respond(result);
+                .Handle(request)
+                .MapAsync(_responder.Respond);
         }
 
         [HttpDelete]
@@ -66,11 +70,10 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var request = new DeleteRecipe.Request(id);
 
-            var result = await _deleteHandler
+            return await _deleteHandler
                 .AddPostProcessor(_deleteLogger)
-                .Handle(request);
-
-            return _responder.Respond(result);
+                .Handle(request)
+                .MapAsync(_responder.Respond);
         }
 
         private readonly HttpResponder _responder;

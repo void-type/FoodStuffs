@@ -1,4 +1,4 @@
-import recipesModels from '../../../models/RecipeApiModels';
+import webApi from '../../../webApi';
 
 /* eslint-disable no-param-reassign */
 export default {
@@ -6,7 +6,7 @@ export default {
     state.listResponse = listResponse;
   },
   RESET_LIST_REQUEST(state) {
-    state.listRequest = new recipesModels.ListRequest();
+    state.listRequest = new webApi.recipes.ListRequest();
   },
   SET_LIST_REQUEST_IS_PAGING_ENABLED(state, isEnabled) {
     state.listRequest.isPagingEnabled = isEnabled;
@@ -23,8 +23,8 @@ export default {
   SET_LIST_REQUEST_NAME_SEARCH(state, nameSearch) {
     state.listRequest.nameSearch = nameSearch;
   },
-  SET_LIST_REQUEST_NAME_SORT(state, nameSort) {
-    state.listRequest.nameSort = nameSort;
+  SET_LIST_REQUEST_SORT(state, sortName) {
+    state.listRequest.sort = sortName;
   },
   SET_RECENT_RECIPES(state, recent) {
     state.recent = recent;

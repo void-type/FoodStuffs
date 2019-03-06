@@ -4,8 +4,8 @@
       <tr>
         <th
           class="sortable-header"
-          @click="onCycleNameSort(nameSort.name)">
-          Name&nbsp;&nbsp;<span v-html="nameSort.symbol"/>
+          @click="onCycleSort(sort.name)">
+          Name&nbsp;&nbsp;<span v-html="sort.symbol"/>
         </th>
         <th>Categories</th>
       </tr>
@@ -29,11 +29,11 @@ export default {
       type: Array,
       required: true,
     },
-    nameSort: {
+    sort: {
       type: Object,
       required: true,
     },
-    onCycleNameSort: {
+    onCycleSort: {
       type: Function,
       required: true,
     },
