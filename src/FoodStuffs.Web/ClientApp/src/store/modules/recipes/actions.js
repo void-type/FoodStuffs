@@ -5,7 +5,7 @@ export default {
     webApi.recipes.list(
       context.getters.listRequest,
       data => context.commit('SET_LIST_RESPONSE', data),
-      response => context.dispatch('app/setApiFailureMessage', response, { root: true }),
+      response => webApi.setApiFailureMessage(response),
     );
   },
   resetListRequest(context) {
@@ -24,8 +24,8 @@ export default {
   setListNameSearch(context, nameSearch) {
     context.commit('SET_LIST_REQUEST_NAME_SEARCH', nameSearch);
   },
-  setListNameSort(context, sortName) {
-    context.commit('SET_LIST_REQUEST_NAME_SORT', sortName);
+  setListSort(context, sortName) {
+    context.commit('SET_LIST_REQUEST_SORT', sortName);
   },
   addToRecent(context, recipe) {
     const recentRecipes = context.state.recent.slice();

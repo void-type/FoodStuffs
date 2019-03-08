@@ -6,6 +6,8 @@ namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILoggingService _logger;
+
         public HomeController(ILoggingService logger)
         {
             _logger = logger;
@@ -32,7 +34,5 @@ namespace FoodStuffs.Web.Controllers
             _logger.Info("Home page requested.");
             return File("app.html", "text/html");
         }
-
-        private readonly ILoggingService _logger;
     }
 }
