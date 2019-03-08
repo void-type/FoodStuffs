@@ -17,6 +17,8 @@ namespace FoodStuffs.Model.Events.Recipes
     {
         public class Handler : EventHandlerAbstract<Request, IItemSet<RecipeListItemDto>>
         {
+            private readonly IFoodStuffsData _data;
+
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
@@ -42,32 +44,31 @@ namespace FoodStuffs.Model.Events.Recipes
                 var totalCount = await _data.Recipes.Count(allSearch);
 
                 var pagedSearch = new RecipesSearchSpecification(
-                    searchExpressions,
-                    request.NameSort,
-                    request.IsPagingEnabled,
-                    request.Page,
-                    request.Take);
+                    criteria: searchExpressions,
+                    sort: request.Sort,
+                    pagingEnabled: request.IsPagingEnabled,
+                    page: request.Page,
+                    take: request.Take);
 
-                return await _data.Recipes.List(pagedSearch)
-                    .MapAsync(recipes => recipes
-                        .Select(recipe => new RecipeListItemDto(
-                            recipe.Id,
-                            recipe.Name,
-                            recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                        .ToItemSet(request.Page, request.Take, totalCount)
-                        .Map(page => Result.Ok(page)));
+                var recipes = await _data.Recipes.List(pagedSearch);
+
+                return recipes
+                    .Select(recipe => new RecipeListItemDto(
+                        id: recipe.Id,
+                        name: recipe.Name,
+                        categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
+                    .ToItemSet(request.Page, request.Take, totalCount)
+                    .Map(page => Result.Ok(page));
             }
-
-            private readonly IFoodStuffsData _data;
         }
 
         public class Request
         {
-            public Request(string nameSearch, string categorySearch, string nameSort, bool isPagingEnabled, int page, int take)
+            public Request(string nameSearch, string categorySearch, string sort, bool isPagingEnabled, int page, int take)
             {
                 NameSearch = nameSearch;
                 CategorySearch = categorySearch;
-                NameSort = nameSort;
+                Sort = sort;
                 IsPagingEnabled = isPagingEnabled;
                 Page = page;
                 Take = take;
@@ -75,7 +76,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public string NameSearch { get; }
             public string CategorySearch { get; }
-            public string NameSort { get; }
+            public string Sort { get; }
             public bool IsPagingEnabled { get; }
             public int Page { get; }
             public int Take { get; }
@@ -101,7 +102,15 @@ namespace FoodStuffs.Model.Events.Recipes
 
             protected override void OnBoth(Request request, IResult<IItemSet<RecipeListItemDto>> result)
             {
-                Logger.Info($"CategorySearch: '{request.CategorySearch}'", $"NameSearch: '{request.NameSearch}'", $"NameSort: '{request.NameSort}'");
+                Logger.Info(
+                    $"NameSearch: '{request.NameSearch}'",
+                    $"CategorySearch: '{request.CategorySearch}'",
+                    $"Sort: '{request.Sort}'",
+                    $"IsPagingEnabled: '{request.IsPagingEnabled}'",
+                    $"Page: '{request.Page}'",
+                    $"Take: '{request.Take}'"
+                );
+
                 base.OnBoth(request, result);
             }
         }

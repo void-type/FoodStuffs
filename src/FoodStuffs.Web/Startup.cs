@@ -1,8 +1,8 @@
 using FoodStuffs.Model.Data;
+using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
-using FoodStuffs.Web.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +23,9 @@ namespace FoodStuffs.Web
 {
     public class Startup
     {
+        private readonly IConfiguration _config;
+        private readonly IHostingEnvironment _env;
+
         public Startup(IConfiguration config, IHostingEnvironment env)
         {
             _config = config;
@@ -66,8 +69,5 @@ namespace FoodStuffs.Web
             // Domain Events
             services.AddDomainEvents();
         }
-
-        private readonly IConfiguration _config;
-        private readonly IHostingEnvironment _env;
     }
 }

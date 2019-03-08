@@ -19,6 +19,9 @@ namespace FoodStuffs.Model.Events.Recipes
     {
         public class Handler : EventHandlerAbstract<Request, UserMessageWithEntityId<int>>
         {
+            private readonly IFoodStuffsData _data;
+            private readonly IAuditUpdater _auditUpdater;
+
             public Handler(IFoodStuffsData data, IAuditUpdater auditUpdater)
             {
                 _data = data;
@@ -37,7 +40,8 @@ namespace FoodStuffs.Model.Events.Recipes
                         .Tee(r => Transfer(request, r))
                         .TeeAsync(_data.Recipes.Update)
                         .TeeAsync(r => ManageCategories(request, r))
-                        .MapAsync(r => Result.Ok(UserMessageWithEntityId.Create("Recipe updated.", r.Id)));
+                        .MapAsync(r => Result.Ok(
+                            UserMessageWithEntityId.Create("Recipe updated.", r.Id)));
                 }
                 else
                 {
@@ -46,7 +50,8 @@ namespace FoodStuffs.Model.Events.Recipes
                         .Tee(r => Transfer(request, r))
                         .TeeAsync(_data.Recipes.Add)
                         .TeeAsync(r => ManageCategories(request, r))
-                        .MapAsync(r => Result.Ok(UserMessageWithEntityId.Create("Recipe added.", r.Id)));
+                        .MapAsync(r => Result.Ok(
+                            UserMessageWithEntityId.Create("Recipe added.", r.Id)));
                 }
             }
 
@@ -98,9 +103,6 @@ namespace FoodStuffs.Model.Events.Recipes
                         }))
                     .TeeAsync(_data.CategoryRecipes.AddRange);
             }
-
-            private readonly IFoodStuffsData _data;
-            private readonly IAuditUpdater _auditUpdater;
         }
 
         public class Request
@@ -129,19 +131,19 @@ namespace FoodStuffs.Model.Events.Recipes
         {
             public RequestValidator()
             {
-                CreateRule("Please enter a name.", "name")
+                CreateRule(new Failure("Please enter a name.", "name"))
                     .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-                CreateRule("Please enter ingredients.", "ingredients")
+                CreateRule(new Failure("Please enter ingredients.", "ingredients"))
                     .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Ingredients));
 
-                CreateRule("Please enter directions.", "directions")
+                CreateRule(new Failure("Please enter directions.", "directions"))
                     .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Directions));
 
-                CreateRule("Cook time must be positive.", "cookTimeMinutes")
+                CreateRule(new Failure("Cook time must be positive.", "cookTimeMinutes"))
                     .InvalidWhen(entity => entity.CookTimeMinutes < 0);
 
-                CreateRule("Prep time must be positive.", "prepTimeMinutes")
+                CreateRule(new Failure("Prep time must be positive.", "prepTimeMinutes"))
                     .InvalidWhen(entity => entity.PrepTimeMinutes < 0);
             }
         }

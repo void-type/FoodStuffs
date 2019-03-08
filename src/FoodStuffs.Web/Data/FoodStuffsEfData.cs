@@ -8,11 +8,6 @@ namespace FoodStuffs.Web.Data
 {
     public class FoodStuffsEfData : IFoodStuffsData
     {
-        public IWritableRepository<Category> Categories { get; }
-        public IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
-        public IWritableRepository<Recipe> Recipes { get; }
-        public IWritableRepository<User> Users { get; }
-
         public FoodStuffsEfData(FoodStuffsContext context)
         {
             Categories = new EfWritableRepository<Category>(context);
@@ -20,5 +15,10 @@ namespace FoodStuffs.Web.Data
             Recipes = new EfWritableRepository<Recipe>(context);
             Users = new EfWritableRepository<User>(context);
         }
+
+        public IWritableRepository<Category> Categories { get; }
+        public IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
+        public IWritableRepository<Recipe> Recipes { get; }
+        public IWritableRepository<User> Users { get; }
     }
 }

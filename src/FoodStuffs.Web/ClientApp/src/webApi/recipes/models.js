@@ -1,12 +1,38 @@
-import ItemSet from './ItemSet';
-import sort from '../util/sort';
-import options from '../util/options';
+import ItemSet from '../ItemSet';
+import options from '../../util/options';
+
+const listSortOptions = {
+  types: [
+    {
+      id: 0,
+      name: 'name',
+      symbol: '&#9660;',
+    },
+    {
+      id: 1,
+      name: 'nameDesc',
+      symbol: '&#9650;',
+    },
+    {
+      id: 2,
+      name: null,
+      symbol: '',
+    },
+  ],
+  getTypeByName(name) {
+    return this.types.filter(type => type.name === name)[0] || this.types[0];
+  },
+  nextSort(name) {
+    const nextId = (this.getTypeByName(name).id + 1) % this.types.length;
+    return this.types[nextId];
+  },
+};
 
 class ListRequest {
   constructor() {
     this.categorySearch = '';
     this.nameSearch = '';
-    this.nameSort = sort.types[0].name;
+    this.sort = listSortOptions.types[0].name;
     this.isPagingEnabled = true;
     this.page = 1;
     this.take = options.paginationTakeOptions[0].value;
@@ -42,6 +68,7 @@ class GetResponse {
 }
 
 export default {
+  listSortOptions,
   ListRequest,
   ListResponse: ItemSet,
   GetResponse,

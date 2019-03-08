@@ -7,7 +7,7 @@ namespace FoodStuffs.Model.Queries
 {
     public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
     {
-        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, string nameSort = null, bool pagingEnabled = false, int page = 1, int take = 1) : base(criteria)
+        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, string sort = null, bool pagingEnabled = false, int page = 1, int take = 1) : base(criteria)
         {
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
 
@@ -16,13 +16,13 @@ namespace FoodStuffs.Model.Queries
                 ApplyPaging(page, take);
             }
 
-            switch (nameSort?.ToLower())
+            switch (sort)
             {
-                case "ascending":
+                case "name":
                     ApplyOrderBy(recipe => recipe.Name);
                     break;
 
-                case "descending":
+                case "nameDesc":
                     ApplyOrderByDescending(recipe => recipe.Name);
                     break;
 

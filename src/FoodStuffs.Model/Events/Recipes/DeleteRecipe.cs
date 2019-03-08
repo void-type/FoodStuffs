@@ -14,6 +14,8 @@ namespace FoodStuffs.Model.Events.Recipes
     {
         public class Handler : EventHandlerAbstract<Request, UserMessageWithEntityId<int>>
         {
+            private readonly IFoodStuffsData _data;
+
             public Handler(IFoodStuffsData data)
             {
                 _data = data;
@@ -23,13 +25,11 @@ namespace FoodStuffs.Model.Events.Recipes
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-               return await _data.Recipes.Get(byId)
-                    .ToResultAsync("Recipe not found.", "recipeId")
+                return await _data.Recipes.Get(byId)
+                    .ToResultAsync(new RecipeNotFoundFailure())
                     .TeeOnSuccessAsync(RemoveRecipe)
                     .SelectAsync(r => UserMessageWithEntityId.Create("Recipe deleted.", r.Id));
             }
-
-            private readonly IFoodStuffsData _data;
 
             private async Task RemoveRecipe(Recipe recipe)
             {
@@ -40,12 +40,12 @@ namespace FoodStuffs.Model.Events.Recipes
 
         public class Request
         {
-            public int Id { get; }
-
             public Request(int id)
             {
                 Id = id;
             }
+
+            public int Id { get; }
         }
 
         public class Logger : UserMessageWithEntityIdEventLogger<Request, int>
