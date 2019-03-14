@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -78,8 +77,8 @@ namespace FoodStuffs.Test.Model
             await data.CategoryRecipes.Add(new CategoryRecipe { RecipeId = 11, CategoryId = 12 });
             await data.CategoryRecipes.Add(new CategoryRecipe { RecipeId = 12, CategoryId = 11 });
 
-            await data.Users.Add(new User { Id = 11, FirstName = "First", LastName = "Last", });
-            await data.Users.Add(new User { Id = 12, FirstName = "First", LastName = "Last", });
+            await data.Users.Add(new User { Id = 11, FirstName = "First", LastName = "Last" });
+            await data.Users.Add(new User { Id = 12, FirstName = "First", LastName = "Last" });
 
             return data;
         }

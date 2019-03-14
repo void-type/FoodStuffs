@@ -1,5 +1,6 @@
 using FoodStuffs.Model.Events.Recipes;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -10,7 +11,6 @@ namespace FoodStuffs.Web.Controllers.Api
     [ApiRoute("recipes")]
     public class RecipesController : Controller
     {
-        private readonly HttpResponder _responder;
         private readonly GetRecipe.Handler _getHandler;
         private readonly GetRecipe.Logger _getLogger;
         private readonly ListRecipes.Handler _listHandler;
@@ -21,11 +21,10 @@ namespace FoodStuffs.Web.Controllers.Api
         private readonly DeleteRecipe.Handler _deleteHandler;
         private readonly DeleteRecipe.Logger _deleteLogger;
 
-        public RecipesController(HttpResponder responder, GetRecipe.Handler getHandler, GetRecipe.Logger getLogger,
+        public RecipesController(GetRecipe.Handler getHandler, GetRecipe.Logger getLogger,
             ListRecipes.Handler listHandler, ListRecipes.Logger listLogger, DeleteRecipe.Handler deleteHandler, DeleteRecipe.Logger deleteLogger,
             SaveRecipe.Handler updateHandler, SaveRecipe.RequestValidator updateValidator, SaveRecipe.Logger updateLogger)
         {
-            _responder = responder;
             _getHandler = getHandler;
             _getLogger = getLogger;
             _listHandler = listHandler;
@@ -49,10 +48,14 @@ namespace FoodStuffs.Web.Controllers.Api
                 page: page,
                 take: take);
 
+            // Cancel long-running queries
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(5000);
+
             return await _listHandler
                 .AddPostProcessor(_listLogger)
-                .Handle(request)
-                .MapAsync(_responder.Respond);
+                .Handle(request, cts.Token)
+                .MapAsync(HttpResponder.Respond);
         }
 
         [HttpGet]
@@ -63,7 +66,7 @@ namespace FoodStuffs.Web.Controllers.Api
             return await _getHandler
                 .AddPostProcessor(_getLogger)
                 .Handle(request)
-                .MapAsync(_responder.Respond);
+                .MapAsync(HttpResponder.Respond);
         }
 
         [HttpPost]
@@ -73,7 +76,7 @@ namespace FoodStuffs.Web.Controllers.Api
                 .AddRequestValidator(_saveValidator)
                 .AddPostProcessor(_saveLogger)
                 .Handle(request)
-                .MapAsync(_responder.Respond);
+                .MapAsync(HttpResponder.Respond);
         }
 
         [HttpDelete]
@@ -84,7 +87,7 @@ namespace FoodStuffs.Web.Controllers.Api
             return await _deleteHandler
                 .AddPostProcessor(_deleteLogger)
                 .Handle(request)
-                .MapAsync(_responder.Respond);
+                .MapAsync(HttpResponder.Respond);
         }
     }
 }

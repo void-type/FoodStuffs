@@ -12,7 +12,7 @@ export default {
         context.commit('SET_APPLICATION_NAME', data.applicationName);
         context.commit('SET_USER', data.user);
       },
-      response => webApi.setApiFailureMessage(response),
+      response => webApi.showFailureMessages(response),
     );
   },
   setErrorMessage(context, message) {

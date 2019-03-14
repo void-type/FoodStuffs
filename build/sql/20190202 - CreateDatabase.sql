@@ -1,6 +1,6 @@
 ﻿-- Requirements: An target database and sql server login.
--- This script will create the necessary tables and map the login to the db user.
--- This script will destroy any data within the database and reset the databse to a new condition.
+-- This script will create the necessary tables and an initial app user.
+-- This script will destroy any data within the database and reset the database to a new condition.
 
 SET ANSI_NULLS ON
 GO

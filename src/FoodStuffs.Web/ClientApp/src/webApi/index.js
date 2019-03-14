@@ -5,7 +5,11 @@ import recipes from './recipes';
 export default {
   app,
   recipes,
-  setApiFailureMessage(response) {
+  showFailureMessages(response) {
+    const data = (response.request.responseType !== 'arraybuffer') ?
+      response.data :
+      this.decodeDownloadFailureData(response);
+
     if (response === undefined || response === null) {
       store.dispatch('app/setErrorMessage', 'Cannot connect to server.');
     } else if (response.status === 401 || response.status === 403) {
@@ -13,11 +17,11 @@ export default {
     } else if (response.status === 404) {
       store.dispatch('app/setErrorMessage', 'Server responded with endpoint not found.');
     } else if (response.status >= 500) {
-      store.dispatch('app/setErrorMessage', response.data.message);
-    } else if (response.data.items !== undefined) {
+      store.dispatch('app/setErrorMessage', data.message);
+    } else if (data.items !== undefined) {
       store.dispatch('app/setValidationErrorMessages', {
-        errorMessages: response.data.items.map(item => item.message),
-        fieldNames: response.data.items.map(item => item.uiHandle),
+        errorMessages: data.items.map(item => item.message),
+        fieldNames: data.items.map(item => item.uiHandle),
       });
     } else {
       store.dispatch('app/setErrorMessage', 'Something went wrong. Try refreshing your browser or contact the administrator.');
@@ -48,17 +52,13 @@ export default {
       window.navigator.msSaveBlob(blob, filename);
     }
   },
-  decodeFileDownloadFailureResponse(response) {
-    if (response.request.responseType !== 'arraybuffer') {
-      return response;
-    }
-
+  decodeDownloadFailureData(response) {
     const decodedString = String.fromCharCode.apply(null, new Uint8Array(response.data));
 
     if (decodedString.length <= 0) {
-      return '';
+      return {};
     }
 
-    return Object.assign(response, { data: JSON.parse(decodedString) });
+    return JSON.parse(decodedString);
   },
 };
