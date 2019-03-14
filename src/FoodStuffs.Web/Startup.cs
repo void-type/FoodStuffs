@@ -1,7 +1,6 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
-using FoodStuffs.Web.Data;
 using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,13 +51,12 @@ namespace FoodStuffs.Web
 
             // Infrastructure and authorization
             services.AddSecureTransport(_env);
-            services.AddApiExceptionFilter(_env);
-            services.AddAntiforgery(_env);
+            services.AddApiExceptionFilter();
+            services.AddApiAntiforgery();
 
             // Dependencies
             services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings["FoodStuffs"]);
             services.AddHttpContextAccessor();
-            services.AddSingleton<HttpResponder>();
             services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
             services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
             services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();

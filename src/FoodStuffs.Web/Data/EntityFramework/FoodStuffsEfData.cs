@@ -1,10 +1,9 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Web.Data.EntityFramework;
 using VoidCore.AspNet.Data;
 using VoidCore.Model.Data;
 
-namespace FoodStuffs.Web.Data
+namespace FoodStuffs.Web.Data.EntityFramework
 {
     public class FoodStuffsEfData : IFoodStuffsData
     {

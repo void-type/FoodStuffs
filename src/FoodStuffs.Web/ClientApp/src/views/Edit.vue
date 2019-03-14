@@ -61,7 +61,7 @@ export default {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => webApi.setApiFailureMessage(response),
+        response => webApi.showFailureMessages(response),
       );
     },
     onSave(recipe) {
@@ -73,7 +73,7 @@ export default {
           this.fetchList();
           this.setSuccessMessage(data.message);
         },
-        response => webApi.setApiFailureMessage(response),
+        response => webApi.showFailureMessages(response),
       );
     },
     onDelete(id) {
@@ -86,7 +86,7 @@ export default {
           router.push({ name: 'search' });
           this.setSuccessMessage(data.message);
         },
-        response => webApi.setApiFailureMessage(response),
+        response => webApi.showFailureMessages(response),
       );
     },
   },

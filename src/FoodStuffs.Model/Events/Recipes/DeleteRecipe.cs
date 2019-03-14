@@ -21,11 +21,11 @@ namespace FoodStuffs.Model.Events.Recipes
                 _data = data;
             }
 
-            public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default(CancellationToken))
+            public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-                return await _data.Recipes.Get(byId)
+                return await _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
                     .TeeOnSuccessAsync(RemoveRecipe)
                     .SelectAsync(r => UserMessageWithEntityId.Create("Recipe deleted.", r.Id));

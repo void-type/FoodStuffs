@@ -9,13 +9,11 @@ namespace FoodStuffs.Web.Controllers.Api
     [ApiRoute("app")]
     public class ApplicationController : Controller
     {
-        private readonly HttpResponder _responder;
         private readonly GetWebApplicationInfo.Handler _getHandler;
         private readonly GetWebApplicationInfo.Logger _getLogger;
 
-        public ApplicationController(HttpResponder responder, GetWebApplicationInfo.Handler getHandler, GetWebApplicationInfo.Logger getLogger)
+        public ApplicationController(GetWebApplicationInfo.Handler getHandler, GetWebApplicationInfo.Logger getLogger)
         {
-            _responder = responder;
             _getHandler = getHandler;
             _getLogger = getLogger;
         }
@@ -27,7 +25,7 @@ namespace FoodStuffs.Web.Controllers.Api
             return await _getHandler
                 .AddPostProcessor(_getLogger)
                 .Handle(new GetWebApplicationInfo.Request())
-                .MapAsync(_responder.Respond);
+                .MapAsync(HttpResponder.Respond);
         }
     }
 }

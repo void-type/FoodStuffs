@@ -5,7 +5,7 @@ export default {
     webApi.recipes.list(
       context.getters.listRequest,
       data => context.commit('SET_LIST_RESPONSE', data),
-      response => webApi.setApiFailureMessage(response),
+      response => webApi.showFailureMessages(response),
     );
   },
   resetListRequest(context) {

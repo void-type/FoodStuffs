@@ -43,7 +43,7 @@ export default {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => webApi.setApiFailureMessage(response),
+        response => webApi.showFailureMessages(response),
       );
     },
   },

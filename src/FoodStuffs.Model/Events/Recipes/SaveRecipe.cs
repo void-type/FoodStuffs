@@ -28,31 +28,29 @@ namespace FoodStuffs.Model.Events.Recipes
                 _auditUpdater = auditUpdater;
             }
 
-            public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default(CancellationToken))
+            public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
-                var maybeRecipe = await _data.Recipes.Get(byId);
+                var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken);
 
                 if (maybeRecipe.HasValue)
                 {
                     return await maybeRecipe.Value
                         .Tee(r => Transfer(request, r))
-                        .TeeAsync(_data.Recipes.Update)
+                        .TeeAsync(r => _data.Recipes.Update(r, cancellationToken))
                         .TeeAsync(r => ManageCategories(request, r))
                         .MapAsync(r => Result.Ok(
                             UserMessageWithEntityId.Create("Recipe updated.", r.Id)));
                 }
-                else
-                {
-                    return await new Recipe()
-                        .Tee(_auditUpdater.Create)
-                        .Tee(r => Transfer(request, r))
-                        .TeeAsync(_data.Recipes.Add)
-                        .TeeAsync(r => ManageCategories(request, r))
-                        .MapAsync(r => Result.Ok(
-                            UserMessageWithEntityId.Create("Recipe added.", r.Id)));
-                }
+
+                return await new Recipe()
+                    .Tee(_auditUpdater.Create)
+                    .Tee(r => Transfer(request, r))
+                    .TeeAsync(r => _data.Recipes.Add(r, cancellationToken))
+                    .TeeAsync(r => ManageCategories(request, r))
+                    .MapAsync(r => Result.Ok(
+                        UserMessageWithEntityId.Create("Recipe added.", r.Id)));
             }
 
             private void Transfer(Request request, Recipe recipe)
@@ -82,12 +80,12 @@ namespace FoodStuffs.Model.Events.Recipes
                 await requested
                     .Where(n => !categoriesExist.Contains(n))
                     .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) })
-                    .TeeAsync(_data.Categories.AddRange);
+                    .TeeAsync(r => _data.Categories.AddRange(r));
 
                 // Remove relations that are no longer needed
                 await recipe.CategoryRecipe
                     .Where(r => !requested.Contains(r.Category.Name.ToLower().Trim()))
-                    .TeeAsync(_data.CategoryRecipes.RemoveRange);
+                    .TeeAsync(r => _data.CategoryRecipes.RemoveRange(r));
 
                 // Add relations that don't exist
                 await _data.Categories
@@ -101,7 +99,7 @@ namespace FoodStuffs.Model.Events.Recipes
                             RecipeId = recipe.Id,
                                 CategoryId = c.Id
                         }))
-                    .TeeAsync(_data.CategoryRecipes.AddRange);
+                    .TeeAsync(r => _data.CategoryRecipes.AddRange(r));
             }
         }
 
