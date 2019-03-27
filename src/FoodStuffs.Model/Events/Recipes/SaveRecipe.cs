@@ -70,7 +70,7 @@ namespace FoodStuffs.Model.Events.Recipes
                     .Select(n => n.ToLower().Trim())
                     .ToArray();
 
-                var categoriesThatMatchRequestedSpec = new CategorySpecification(
+                var categoriesThatMatchRequestedSpec = new CategoriesSpecification(
                     c => requested.Contains(c.Name.ToLower().Trim()));
 
                 var categoriesExist = (await _data.Categories.List(categoriesThatMatchRequestedSpec))
