@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
-using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
 {
@@ -16,9 +14,6 @@ namespace FoodStuffs.Web
                 .UseStartup<Startup>()
                 .UseSerilog()
                 .Build();
-
-            var loggingSettings = host.Services.GetRequiredService<LoggingSettings>();
-            Log.Logger = SerilogFileLoggerFactory.Create<Startup>(loggingSettings);
 
             try
             {

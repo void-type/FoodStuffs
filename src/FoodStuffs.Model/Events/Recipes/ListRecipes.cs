@@ -46,7 +46,7 @@ namespace FoodStuffs.Model.Events.Recipes
                 var pagedSearch = new RecipesSearchSpecification(
                     criteria: searchExpressions,
                     sort: request.Sort,
-                    pagingEnabled: request.IsPagingEnabled,
+                    isPagingEnabled: request.IsPagingEnabled,
                     page: request.Page,
                     take: request.Take);
 

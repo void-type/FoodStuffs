@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Data;
 using VoidCore.AspNet.Logging;
@@ -35,6 +36,7 @@ namespace FoodStuffs.Web
         {
             app.UseSpaExceptionPage(_env)
                 .UseSecureTransport(_env)
+                .UseSecurityHeaders(_env)
                 .UseStaticFiles()
                 .UseSpaMvcRoute();
         }
@@ -47,16 +49,17 @@ namespace FoodStuffs.Web
             // Settings
             services.AddSettingsSingleton<ApplicationSettings>(_config, true);
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
-            services.AddSettingsSingleton<LoggingSettings>(_config);
+            var loggingSettings = services.AddSettingsSingleton<LoggingSettings>(_config);
 
-            // Infrastructure and authorization
+            // Infrastructure
+            Log.Logger = SerilogFileLoggerFactory.Create<Startup>(loggingSettings);
             services.AddSecureTransport(_env);
             services.AddApiExceptionFilter();
             services.AddApiAntiforgery();
-
-            // Dependencies
-            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings["FoodStuffs"]);
+            services.AddSqlServerDbContext<FoodStuffsContext>(_env, connectionStrings["FoodStuffs"]);
             services.AddHttpContextAccessor();
+
+            // Model Dependencies
             services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
             services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
             services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();

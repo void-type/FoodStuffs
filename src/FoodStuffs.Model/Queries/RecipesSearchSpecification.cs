@@ -7,11 +7,11 @@ namespace FoodStuffs.Model.Queries
 {
     public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
     {
-        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, string sort = null, bool pagingEnabled = false, int page = 1, int take = 1) : base(criteria)
+        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, string sort = null, bool isPagingEnabled = false, int page = 1, int take = 1) : base(criteria)
         {
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
 
-            if (pagingEnabled)
+            if (isPagingEnabled)
             {
                 ApplyPaging(page, take);
             }
