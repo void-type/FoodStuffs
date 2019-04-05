@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/github/license/void-type/FoodStuffs.svg?style=flat-square)](https://github.com/void-type/FoodStuffs/blob/master/LICENSE.txt)
 [![Build Status](https://img.shields.io/azure-devops/build/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
-[![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
+[![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)[![ReleaseVersion](https://img.shields.io/github/release/void-type/FoodStuffs.svg?style=flat-square)](https://github.com/void-type/FoodStuffs/releases)
 
 A web application for managing recipes based on .Net Core 2.2 and Vue.js 2.5.
 
