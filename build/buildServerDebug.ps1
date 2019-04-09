@@ -3,4 +3,4 @@ param(
   [string] $Configuration = "Debug"
 )
 
-./build.ps1 -Configuration Debug -SkipClient -SkipTest -SkipPublish
+./build.ps1 -Configuration $Configuration -SkipClient -SkipTest -SkipPublish

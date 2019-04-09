@@ -3,11 +3,11 @@
 Push-Location -Path "$webProjectFolder"
 
 $contextDirectory = "Data/EntityFramework"
-$contextName = "$($shortAppName)Context"
+$contextName = "$($projectName)Context"
 $connectionString = Get-Content -Path "appsettings.Development.json" |
   ConvertFrom-Json |
   Select-Object -ExpandProperty ConnectionStrings |
-  Select-Object -ExpandProperty $shortAppName
+  Select-Object -ExpandProperty $projectName
 
 dotnet ef dbcontext scaffold "$connectionString" Microsoft.EntityFrameworkCore.SqlServer --force --context-dir "$contextDirectory" --context "$contextName" --output-dir "../$dataModelsFolder"
 
