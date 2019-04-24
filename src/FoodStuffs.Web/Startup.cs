@@ -15,7 +15,6 @@ using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
 using VoidCore.AspNet.Settings;
 using VoidCore.Model.Auth;
-using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
 
@@ -64,7 +63,6 @@ namespace FoodStuffs.Web
             services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
             services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
-            services.AddSingleton<IAuditUpdater, AuditUpdater>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
             // Domain Events

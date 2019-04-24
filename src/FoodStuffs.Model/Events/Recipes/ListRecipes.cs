@@ -28,12 +28,12 @@ namespace FoodStuffs.Model.Events.Recipes
             {
                 var searchExpressions = new []
                 {
-                SearchCriteria.PropertiesContain<Recipe>(
+                SearchCriteria.PropertiesContainAll<Recipe>(
                 new SearchTerms(request.NameSearch),
                 r => r.Name
                 ),
                 // TODO: Category search doesn't seem to work against SQL Server.
-                SearchCriteria.PropertiesContain<Recipe>(
+                SearchCriteria.PropertiesContainAll<Recipe>(
                 new SearchTerms(request.CategorySearch),
                 r => string.Join(" ", r.CategoryRecipe.Select(cr => cr.Category.Name))
                 )
@@ -41,7 +41,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 var allSearch = new RecipesSearchSpecification(searchExpressions);
 
-                var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
+                var totalCount = await _data.Recipes.Count(allSearch);
 
                 var pagedSearch = new RecipesSearchSpecification(
                     criteria: searchExpressions,
@@ -50,14 +50,14 @@ namespace FoodStuffs.Model.Events.Recipes
                     page: request.Page,
                     take: request.Take);
 
-                var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
+                var recipes = await _data.Recipes.List(pagedSearch);
 
                 return recipes
                     .Select(recipe => new RecipeListItemDto(
                         id: recipe.Id,
                         name: recipe.Name,
                         categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                    .ToItemSet(request.IsPagingEnabled, request.Page, request.Take, totalCount)
+                    .ToItemSet(request.Page, request.Take, totalCount, request.IsPagingEnabled)
                     .Map(page => Result.Ok(page));
             }
         }
