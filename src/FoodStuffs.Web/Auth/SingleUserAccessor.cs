@@ -4,6 +4,8 @@ namespace FoodStuffs.Web.Auth
 {
     public class SingleUserAccessor : ICurrentUserAccessor
     {
-        public DomainUser User => new DomainUser("SingleUser", new string[0]);
+        private static DomainUser _singleUser = new DomainUser("SingleUser", new string[0]);
+
+        public DomainUser User => _singleUser;
     }
 }

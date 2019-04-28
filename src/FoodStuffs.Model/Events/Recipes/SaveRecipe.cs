@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Domain.RuleValidator;
-using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
@@ -20,12 +19,10 @@ namespace FoodStuffs.Model.Events.Recipes
         public class Handler : EventHandlerAbstract<Request, UserMessageWithEntityId<int>>
         {
             private readonly IFoodStuffsData _data;
-            private readonly IAuditUpdater _auditUpdater;
 
-            public Handler(IFoodStuffsData data, IAuditUpdater auditUpdater)
+            public Handler(IFoodStuffsData data)
             {
                 _data = data;
-                _auditUpdater = auditUpdater;
             }
 
             public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default)
@@ -45,7 +42,6 @@ namespace FoodStuffs.Model.Events.Recipes
                 }
 
                 return await new Recipe()
-                    .Tee(_auditUpdater.Create)
                     .Tee(r => Transfer(request, r))
                     .TeeAsync(r => _data.Recipes.Add(r, cancellationToken))
                     .TeeAsync(r => ManageCategories(request, r))
@@ -60,7 +56,6 @@ namespace FoodStuffs.Model.Events.Recipes
                 recipe.Directions = request.Directions;
                 recipe.CookTimeMinutes = request.CookTimeMinutes;
                 recipe.PrepTimeMinutes = request.PrepTimeMinutes;
-                _auditUpdater.Update(recipe);
             }
 
             private async Task ManageCategories(Request request, Recipe recipe)
