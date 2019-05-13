@@ -6,12 +6,12 @@ const listSortOptions = {
     {
       id: 0,
       name: 'name',
-      symbol: '&#9660;',
+      symbol: '▼',
     },
     {
       id: 1,
       name: 'nameDesc',
-      symbol: '&#9650;',
+      symbol: '▲',
     },
     {
       id: 2,

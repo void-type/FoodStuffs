@@ -3,11 +3,14 @@
     <ul>
       <li
         v-for="link in links"
-        :key="link.label">
+        :key="link.label"
+      >
         <router-link
           :to="{name: link.route}"
           :class="{'current-page': $route.name === link.route}"
-        >{{ link.label }}</router-link>
+        >
+          {{ link.label }}
+        </router-link>
       </li>
     </ul>
   </nav>

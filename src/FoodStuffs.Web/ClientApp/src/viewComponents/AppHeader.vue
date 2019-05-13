@@ -3,10 +3,12 @@
     <div class="container">
       <router-link
         :to="'/'"
-        class="logo">
+        class="logo"
+      >
         <img
           src="../assets/logo.png"
-          alt="logo" >
+          alt="logo"
+        >
         <span>{{ brand }}</span>
       </router-link>
       <slot name="nav" />
@@ -14,7 +16,9 @@
         :to="'/'"
         :class="{'current-page': $route.name === 'login',
                  'pull-right': true}"
-      >Sign in</router-link>
+      >
+        Sign in
+      </router-link>
     </div>
   </header>
 </template>

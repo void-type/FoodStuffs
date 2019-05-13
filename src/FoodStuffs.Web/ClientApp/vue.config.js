@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   outputDir: '../wwwroot',
+  lintOnSave: true,
   chainWebpack: (config) => {
     config
       .plugin('html')

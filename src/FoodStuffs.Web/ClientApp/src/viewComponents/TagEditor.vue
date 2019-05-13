@@ -4,21 +4,27 @@
       <div class="tags">
         <span
           v-for="tag in tags"
-          :key="tag">
-          {{ tag }}&nbsp;&nbsp;<span @click="removeTagClick(tag)">
-            &#x2716;</span>
+          :key="tag"
+        >
+          {{ tag }}<span
+            class="remove-tag"
+            @click="removeTagClick(tag)"
+          >
+            ✖</span>
         </span>
       </div>
     </div>
     <div>
       <input
-        v-model="newTag"
         :id="fieldName"
+        v-model="newTag"
         :name="fieldName"
         type="text"
-        @keydown.enter.prevent="addTagClick()" >
+        @keydown.enter.prevent="addTagClick()"
+      >
       <button @click.prevent="addTagClick()">
-        Add</button>
+        Add
+      </button>
     </div>
     <label :for="fieldName">{{ label }}</label>
   </div>
@@ -88,6 +94,10 @@ export default {
     padding: 0.3em 0.6rem;
     border: $border;
     box-shadow: $shadow;
+
+    &.remove-tag {
+      margin-left: 0.5rem;
+    }
 
     & > span:hover {
       cursor: pointer;

@@ -1,6 +1,6 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidCore.Domain;

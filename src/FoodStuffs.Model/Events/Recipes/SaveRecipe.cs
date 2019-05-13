@@ -1,6 +1,6 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -92,7 +92,7 @@ namespace FoodStuffs.Model.Events.Recipes
                         .Select(c => new CategoryRecipe
                         {
                             RecipeId = recipe.Id,
-                                CategoryId = c.Id
+                            CategoryId = c.Id
                         }))
                     .TeeAsync(r => _data.CategoryRecipes.AddRange(r));
             }

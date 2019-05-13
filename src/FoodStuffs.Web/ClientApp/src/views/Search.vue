@@ -6,23 +6,27 @@
       :on-category-search-change="setListCategorySearch"
       :on-name-search-change="setListNameSearch"
       :on-search="fetchRecipesList"
-      :on-clear="clearSearch" />
+      :on-clear="clearSearch"
+    />
     <SearchTable
       :recipes="listResponse.items"
       :sort="getSortType"
-      :on-cycle-sort="cycleSort" />
+      :on-cycle-sort="cycleSort"
+    />
     <Pager
       :page="listRequest.page"
       :take="listRequest.take"
       :total-count="listResponse.totalCount"
       :on-page-change="updatePage"
-      :on-take-change="updateTake" />
+      :on-take-change="updateTake"
+    />
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import recipesApiModels from '../webApi/recipes/models';
+import webApi from '../webApi';
 import SearchControls from '../viewComponents/SearchControls.vue';
 import SearchTable from '../viewComponents/SearchTable.vue';
 import Pager from '../viewComponents/Pager.vue';
@@ -42,16 +46,29 @@ export default {
       return recipesApiModels.listSortOptions.getTypeByName(this.listRequest.sort);
     },
   },
+  created() {
+    if (this.listResponse.count === 0) {
+      this.fetchRecipesList();
+    }
+  },
   methods: {
     ...mapActions({
-      fetchRecipesList: 'recipes/fetchList',
+      setApiFailureMessages: 'app/setApiFailureMessages',
       resetListRequest: 'recipes/resetListRequest',
+      setListResponse: 'recipes/setListResponse',
       setListNameSearch: 'recipes/setListNameSearch',
       setListCategorySearch: 'recipes/setListCategorySearch',
       setListSort: 'recipes/setListSort',
       setListPage: 'recipes/setListPage',
       setListTake: 'recipes/setListTake',
     }),
+    fetchRecipesList() {
+      webApi.recipes.list(
+        this.listRequest,
+        data => this.setListResponse(data),
+        response => this.setApiFailureMessages(response),
+      );
+    },
     updatePage(page) {
       this.setListPage(page);
       this.fetchRecipesList();

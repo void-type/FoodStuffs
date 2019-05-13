@@ -5,7 +5,8 @@
       :source-recipe="sourceRecipe"
       :is-field-in-error="isFieldInError"
       :on-save="onSave"
-      :on-delete="onDelete" />
+      :on-delete="onDelete"
+    />
   </section>
 </template>
 
@@ -36,6 +37,7 @@ export default {
   computed: {
     ...mapGetters({
       isFieldInError: 'app/isFieldInError',
+      listResponse: 'recipes/listResponse',
     }),
   },
   watch: {
@@ -45,14 +47,26 @@ export default {
   },
   created() {
     this.fetchRecipe(this.id);
+
+    if (this.listResponse.count === 0) {
+      this.fetchRecipesList();
+    }
   },
   methods: {
     ...mapActions({
       setSuccessMessage: 'app/setSuccessMessage',
+      setApiFailureMessages: 'app/setApiFailureMessages',
       addToRecent: 'recipes/addToRecent',
       removeFromRecent: 'recipes/removeFromRecent',
-      fetchList: 'recipes/fetchList',
+      setListResponse: 'recipes/setListResponse',
     }),
+    fetchRecipesList() {
+      webApi.recipes.list(
+        this.listRequest,
+        data => this.setListResponse(data),
+        response => this.setApiFailureMessages(response),
+      );
+    },
     fetchRecipe(id) {
       if (this.id === 0) {
         this.sourceRecipe = new webApi.recipes.models.GetResponse();
@@ -61,7 +75,7 @@ export default {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => webApi.showFailureMessages(response),
+        response => this.setApiFailureMessages(response),
       );
     },
     onSave(recipe) {
@@ -70,10 +84,10 @@ export default {
         (data) => {
           this.fetchRecipe(this.id);
           router.push({ name: 'edit', params: { id: data.id } });
-          this.fetchList();
+          this.fetchRecipesList();
           this.setSuccessMessage(data.message);
         },
-        response => webApi.showFailureMessages(response),
+        response => this.setApiFailureMessages(response),
       );
     },
     onDelete(id) {
@@ -82,11 +96,11 @@ export default {
         (data) => {
           this.removeFromRecent(this.id);
           this.sourceRecipe = null;
-          this.fetchList();
+          this.fetchRecipesList();
           router.push({ name: 'search' });
           this.setSuccessMessage(data.message);
         },
-        response => webApi.showFailureMessages(response),
+        response => this.setApiFailureMessages(response),
       );
     },
   },

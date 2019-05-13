@@ -3,13 +3,16 @@
     <vue-progress-bar />
     <AppHeader
       :brand="applicationName"
-      :user="user" >
+      :user="user"
+    >
       <AppNav
         slot="nav"
-        :links="navItems" />
+        :links="navItems"
+      />
     </AppHeader>
     <AppMessageCenter
-      class="no-print" />
+      class="no-print"
+    />
     <main class="container">
       <router-view />
     </main>
@@ -22,6 +25,7 @@ import { mapActions, mapGetters } from 'vuex';
 import router from './router';
 import store from './store';
 import progressBar from './util/progressBar';
+import webApi from './webApi';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
 import AppNav from './viewComponents/AppNav.vue';
@@ -64,13 +68,18 @@ export default {
   mounted() {
     progressBar.setupProgressBarHooks(this.$Progress);
     this.fetchApplicationInfo();
-    this.fetchRecipesList();
   },
   methods: {
     ...mapActions({
-      fetchApplicationInfo: 'app/fetchApplicationInfo',
-      fetchRecipesList: 'recipes/fetchList',
+      setApplicationInfo: 'app/setApplicationInfo',
+      setApiFailureMessages: 'app/setApiFailureMessages',
     }),
+    fetchApplicationInfo() {
+      webApi.app.getInfo(
+        data => this.setApplicationInfo(data),
+        response => this.setApiFailureMessages(response),
+      );
+    },
   },
 };
 </script>
