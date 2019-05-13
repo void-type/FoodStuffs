@@ -7,6 +7,7 @@ root = true
 [*]
 indent_style = space
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
+end_of_line = lf
 
 # Code files
 [*.{cs,csx,vb,vbx}]
@@ -32,7 +33,6 @@ indent_size = 2
 
 # Shell script files
 [*.sh]
-end_of_line = lf
 indent_size = 2
 
 # Dotnet diagnostic settings
@@ -199,10 +199,21 @@ csharp_prefer_braces = true:silent
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
 
+# Javascript and Vue
 [*.{js,jsx,ts,tsx,vue}]
-indent_style = space
 indent_size = 2
-end_of_line = lf
+charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 max_line_length = 100
+
+# XML and XAML for WPF
+[**.{xaml,xml}]
+indent_size = 4
+charset = utf-8-bom
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
