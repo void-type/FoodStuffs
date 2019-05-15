@@ -18,11 +18,16 @@ namespace FoodStuffs.Web.Configuration
 
                     options.Styles
                         .AllowSelf()
+
+                        // Add the inline styling from error and forbidden.
+                        .AllowHash("sha256", "qZf1DVNyfsB5Tl6kG5RGHR8i3XXliXpcIMDN3VN3esQ=")
+
                         // Add the Vue-Progressbar hash because it applies inline styling.
                         .AllowHash("sha256", "DNQ8Cm24tOHANsjo3O93DpqGvfN0qkQZsMZIt0PmA2o=");
 
                     options.Images
                         .AllowSelf()
+
                         // Add data images for compiled image assets, such as the app logo.
                         .Allow("data:");
                 });

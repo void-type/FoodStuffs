@@ -4,8 +4,9 @@
       <tr>
         <th
           class="sortable-header"
-          @click="onCycleSort(sort.name)">
-          Name&nbsp;&nbsp;<span v-html="sort.symbol"/>
+          @click="onCycleSort(sort.name)"
+        >
+          Name<span class="sort-type">{{ sort.symbol }}</span>
         </th>
         <th>Categories</th>
       </tr>
@@ -14,7 +15,8 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="$router.push({name: 'view', params: {id: recipe.id}})">
+        @click="$router.push({name: 'view', params: {id: recipe.id}})"
+      >
         <td>{{ recipe.name }}</td>
         <td>{{ recipe.categories.join(", ") }}</td>
       </tr>
@@ -77,6 +79,10 @@ table {
 
 .sortable-header {
   cursor: pointer;
+}
+
+.sort-type {
+  margin-left: 0.5rem;
 }
 
 @media #{$medium-screen} {

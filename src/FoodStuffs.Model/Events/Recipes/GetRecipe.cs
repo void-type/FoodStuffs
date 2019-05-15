@@ -1,5 +1,5 @@
 using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;

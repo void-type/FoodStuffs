@@ -2,12 +2,15 @@
   <div
     v-if="messages.length > 0"
     :class="{messages: true, danger: messageIsError}"
-    @click="clearMessages()">
+    @click="clearMessages()"
+  >
     <ul>
       <li
         v-for="message in messages"
-        :key="message">
-        {{ message }}</li>
+        :key="message"
+      >
+        {{ message }}
+      </li>
     </ul>
   </div>
 </template>

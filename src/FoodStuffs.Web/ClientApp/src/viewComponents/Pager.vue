@@ -5,7 +5,8 @@
         v-for="pageNumber in numberOfPages"
         :key="pageNumber"
         :class="{currentPage: pageNumber === page}"
-        @click="onPageChange(pageNumber)">
+        @click="onPageChange(pageNumber)"
+      >
         {{ pageNumber }}</span>
     </div>
     <div>
@@ -13,11 +14,15 @@
         id="take"
         :value="take"
         name="take"
-        @change="selectTakeOption" >
+        @change="selectTakeOption"
+      >
         <option
           v-for="opt in takeOptions"
           :key="opt.id"
-          :value="opt.value">{{ opt.text }}</option>
+          :value="opt.value"
+        >
+          {{ opt.text }}
+        </option>
       </select>
     </div>
   </div>

@@ -7,7 +7,8 @@
           id="name"
           v-model="workingRecipe.name"
           type="text"
-          name="name" >
+          name="name"
+        >
         <label for="name">Name</label>
       </div>
     </div>
@@ -16,7 +17,8 @@
         <textarea
           id="ingredients"
           v-model="workingRecipe.ingredients"
-          name="ingredients"/>
+          name="ingredients"
+        />
         <label for="ingredients">Ingredients</label>
       </div>
     </div>
@@ -25,7 +27,8 @@
         <textarea
           id="directions"
           v-model="workingRecipe.directions"
-          name="directions"/>
+          name="directions"
+        />
         <label for="directions">Directions</label>
       </div>
     </div>
@@ -35,7 +38,8 @@
           id="prepTimeMinutes"
           v-model="workingRecipe.prepTimeMinutes"
           type="number"
-          name="prepTimeMinutes" >
+          name="prepTimeMinutes"
+        >
         <label for="prepTimeMinutes">Prep Time Minutes</label>
       </div>
       <div :class="{'form-group': true, danger: isFieldInError('cookTimeMinutes')}">
@@ -43,7 +47,8 @@
           id="cookTimeMinutes"
           v-model="workingRecipe.cookTimeMinutes"
           type="number"
-          name="cookTimeMinutes" >
+          name="cookTimeMinutes"
+        >
         <label for="cookTimeMinutes">Cook Time Minutes</label>
       </div>
     </div>
@@ -54,25 +59,33 @@
         :on-add-tag="addCategory"
         :on-remove-tag="removeCategory"
         field-name="categories"
-        label="Categories" />
+        label="Categories"
+      />
     </div>
     <EntityDetailsAuditInfo
       v-if="sourceRecipe.id"
-      :entity="sourceRecipe" />
+      :entity="sourceRecipe"
+    />
     <div class="form-row button-row">
       <button
         @click.prevent="saveClick(workingRecipe)"
-      >Save</button>
+      >
+        Save
+      </button>
       <router-link
         v-if="workingRecipe.id > 0"
         :to="{name: 'view', params: {id: sourceRecipe.id}}"
         tag="button"
-      >Cancel</router-link>
+      >
+        Cancel
+      </router-link>
       <button
         v-if="workingRecipe.id > 0"
         class="pull-right danger"
         @click.prevent="onDelete(workingRecipe.id)"
-      >Delete</button>
+      >
+        Delete
+      </button>
     </div>
   </form>
 </template>

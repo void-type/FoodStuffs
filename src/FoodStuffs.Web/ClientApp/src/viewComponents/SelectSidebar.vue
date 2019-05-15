@@ -4,11 +4,13 @@
       v-if="recent.length > 0"
       :recipes="recent"
       :title="'Recent'"
-      :route-name="routeName" />
+      :route-name="routeName"
+    />
     <SelectSidebarList
       :recipes="listResponse.items"
       :title="'Recipes'"
-      :route-name="routeName" />
+      :route-name="routeName"
+    />
   </div>
 </template>
 

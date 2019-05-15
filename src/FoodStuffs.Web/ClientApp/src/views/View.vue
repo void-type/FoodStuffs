@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeViewer from '../viewComponents/RecipeViewer.vue';
@@ -27,6 +27,11 @@ export default {
       sourceRecipe: new webApi.recipes.models.GetResponse(),
     };
   },
+  computed: {
+    ...mapGetters({
+      listResponse: 'recipes/listResponse',
+    }),
+  },
   watch: {
     id() {
       this.fetchRecipe(this.id);
@@ -34,16 +39,29 @@ export default {
   },
   created() {
     this.fetchRecipe(this.id);
+
+    if (this.listResponse.count === 0) {
+      this.fetchRecipesList();
+    }
   },
   methods: {
     ...mapActions({
+      setApiFailureMessages: 'app/setApiFailureMessages',
       addToRecent: 'recipes/addToRecent',
+      setListResponse: 'recipes/setListResponse',
     }),
     fetchRecipe(id) {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => webApi.showFailureMessages(response),
+        response => this.setApiFailureMessages(response),
+      );
+    },
+    fetchRecipesList() {
+      webApi.recipes.list(
+        this.listRequest,
+        data => this.setListResponse(data),
+        response => this.setApiFailureMessages(response),
       );
     },
   },

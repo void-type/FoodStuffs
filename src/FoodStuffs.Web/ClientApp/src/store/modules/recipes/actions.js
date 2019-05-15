@@ -1,15 +1,9 @@
-import webApi from '../../../webApi';
-
 export default {
-  fetchList(context) {
-    webApi.recipes.list(
-      context.getters.listRequest,
-      data => context.commit('SET_LIST_RESPONSE', data),
-      response => webApi.showFailureMessages(response),
-    );
-  },
   resetListRequest(context) {
     context.commit('RESET_LIST_REQUEST');
+  },
+  setListResponse(context, data) {
+    context.commit('SET_LIST_RESPONSE', data);
   },
   setListPage(context, page) {
     context.commit('SET_LIST_REQUEST_PAGE', page);

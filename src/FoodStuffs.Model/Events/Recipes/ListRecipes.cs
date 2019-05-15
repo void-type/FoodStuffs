@@ -1,14 +1,14 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
+using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
-using VoidCore.Model.Queries;
 using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.Events.Recipes
@@ -26,7 +26,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public override async Task<IResult<IItemSet<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var searchExpressions = new []
+                var searchExpressions = new[]
                 {
                 SearchCriteria.PropertiesContainAll<Recipe>(
                 new SearchTerms(request.NameSearch),

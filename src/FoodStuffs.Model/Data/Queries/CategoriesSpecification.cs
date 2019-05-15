@@ -1,9 +1,9 @@
 using FoodStuffs.Model.Data.Models;
 using System;
 using System.Linq.Expressions;
-using VoidCore.Model.Queries;
+using VoidCore.Model.Data;
 
-namespace FoodStuffs.Model.Queries
+namespace FoodStuffs.Model.Data.Queries
 {
     public class CategoriesSpecification : QuerySpecificationAbstract<Category>
     {
