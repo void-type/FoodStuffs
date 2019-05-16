@@ -40,9 +40,11 @@ if (-not $SkipClient) {
 
 # Build solution
 Push-Location -Path "../"
-dotnet format
-dotnet outdated
-dotnet build --configuration "$Configuration"
+dotnet format --check
+Stop-OnError
+dotnet restore
+dotnet list package --outdated
+dotnet build --configuration "$Configuration" --no-restore
 Stop-OnError
 Pop-Location
 
