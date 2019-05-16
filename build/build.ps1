@@ -42,8 +42,9 @@ if (-not $SkipClient) {
 Push-Location -Path "../"
 dotnet format --check
 Stop-OnError
-dotnet outdated
-dotnet build --configuration "$Configuration"
+dotnet restore
+dotnet list package --outdated
+dotnet build --configuration "$Configuration" --no-restore
 Stop-OnError
 Pop-Location
 
