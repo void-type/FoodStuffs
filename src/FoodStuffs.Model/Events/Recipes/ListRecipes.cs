@@ -1,13 +1,14 @@
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
-using VoidCore.Model.Data;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Collections;
 
@@ -26,25 +27,14 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public override async Task<IResult<IItemSet<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var searchExpressions = new[]
-                {
-                SearchCriteria.PropertiesContainAll<Recipe>(
-                new SearchTerms(request.NameSearch),
-                r => r.Name
-                ),
-                // TODO: Category search doesn't seem to work against SQL Server.
-                SearchCriteria.PropertiesContainAll<Recipe>(
-                new SearchTerms(request.CategorySearch),
-                r => string.Join(" ", r.CategoryRecipe.Select(cr => cr.Category.Name))
-                )
-                };
+                var searchCriteria = GetSearchCriteria(request);
 
-                var allSearch = new RecipesSearchSpecification(searchExpressions);
+                var allSearch = new RecipesSearchSpecification(searchCriteria);
 
                 var totalCount = await _data.Recipes.Count(allSearch);
 
                 var pagedSearch = new RecipesSearchSpecification(
-                    criteria: searchExpressions,
+                    criteria: searchCriteria,
                     sort: request.Sort,
                     isPagingEnabled: request.IsPagingEnabled,
                     page: request.Page,
@@ -59,6 +49,23 @@ namespace FoodStuffs.Model.Events.Recipes
                         categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
                     .ToItemSet(request.Page, request.Take, totalCount, request.IsPagingEnabled)
                     .Map(page => Result.Ok(page));
+            }
+
+            private Expression<Func<Recipe, bool>>[] GetSearchCriteria(Request request)
+            {
+                var searchCriteria = new List<Expression<Func<Recipe, bool>>>();
+
+                if (!string.IsNullOrWhiteSpace(request.NameSearch))
+                {
+                    searchCriteria.Add(recipe => recipe.Name.ToLower().Contains(request.NameSearch.ToLower()));
+                };
+
+                if (!string.IsNullOrWhiteSpace(request.CategorySearch))
+                {
+                    searchCriteria.Add(recipe => recipe.CategoryRecipe.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
+                };
+
+                return searchCriteria.ToArray();
             }
         }
 

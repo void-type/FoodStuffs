@@ -136,7 +136,7 @@ namespace FoodStuffs.Test.Model.Events
                 var data = context.Seed().FoodStuffsData();
 
                 var result = await new ListRecipes.Handler(data)
-                    .Handle(new ListRecipes.Request("recipe 2", null, null, true, 1, 2));
+                    .Handle(new ListRecipes.Request("recipe2", null, null, true, 1, 2));
 
                 Assert.True(result.IsSuccess);
                 Assert.Equal(1, result.Value.Count);
@@ -155,15 +155,15 @@ namespace FoodStuffs.Test.Model.Events
                 var data = context.Seed().FoodStuffsData();
 
                 var result = await new ListRecipes.Handler(data)
-                    .Handle(new ListRecipes.Request(null, "cat 1 2", null, true, 1, 4));
+                    .Handle(new ListRecipes.Request(null, "cat", null, true, 1, 4));
 
                 Assert.True(result.IsSuccess);
-                Assert.Equal(1, result.Value.Count);
-                Assert.Equal(1, result.Value.TotalCount);
+                Assert.Equal(2, result.Value.Count);
+                Assert.Equal(2, result.Value.TotalCount);
                 Assert.Equal(1, result.Value.Page);
                 Assert.Equal(4, result.Value.Take);
                 Assert.Contains("Recipe1", result.Value.Items.Select(r => r.Name));
-                Assert.DoesNotContain("Recipe2", result.Value.Items.Select(r => r.Name));
+                Assert.Contains("Recipe2", result.Value.Items.Select(r => r.Name));
                 Assert.DoesNotContain("Recipe3", result.Value.Items.Select(r => r.Name));
             }
         }
