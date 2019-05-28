@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-preview5 AS build-env
 WORKDIR /app
 
 # Copy build scripts first
@@ -28,11 +28,11 @@ RUN cd ./build/docker && \
 COPY ./ ./
 
 # Build the app
-RUN cd ./build/docker && \
-  ./buildApp.sh
+RUN cd ./build/ && \
+  pwsh ./build.ps1
 
 # Copy output from the build container to the run container
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-preview5
 ARG env="Production"
 WORKDIR /app
 COPY --from=build-env /app/artifacts .
