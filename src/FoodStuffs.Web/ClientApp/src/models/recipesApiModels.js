@@ -1,5 +1,5 @@
-import ItemSet from '../ItemSet';
-import options from '../../util/options';
+import ItemSet from './itemSet';
+import options from '../util/options';
 
 const listSortOptions = {
   types: [

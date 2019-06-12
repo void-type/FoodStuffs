@@ -25,7 +25,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import recipesApiModels from '../webApi/recipes/models';
+import recipesApiModels from '../models/recipesApiModels';
 import webApi from '../webApi';
 import SearchControls from '../viewComponents/SearchControls.vue';
 import SearchTable from '../viewComponents/SearchTable.vue';

@@ -93,7 +93,7 @@
 <script>
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
-import recipesApiModels from '../webApi/recipes/models';
+import recipesApiModels from '../models/recipesApiModels';
 import trimAndTitleCase from '../util/trimAndTitleCase';
 
 export default {
