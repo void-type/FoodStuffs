@@ -13,10 +13,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151" PrivateAssets="all" />
-    <PackageReference Include="VoidCore.AspNet" Version="0.8.7" />
-    <PackageReference Include="VoidCore.Domain" Version="0.8.7" />
-    <PackageReference Include="VoidCore.Model" Version="0.8.7" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.183" PrivateAssets="all" />
+    <PackageReference Include="VoidCore.AspNet" Version="0.8.8" />
+    <PackageReference Include="VoidCore.Domain" Version="0.8.8" />
+    <PackageReference Include="VoidCore.Model" Version="0.8.8" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" />
     <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Domain\VoidCore.Domain.csproj" />

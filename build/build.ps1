@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
   [string] $Configuration = "Release",
+  [switch] $SkipFormat,
+  [switch] $SkipOutdated,
   [switch] $SkipClient,
   [switch] $SkipTest,
   [switch] $SkipTestReport,
@@ -19,12 +21,19 @@ Remove-Item -Path "../artifacts" -Recurse -ErrorAction SilentlyContinue
 Remove-Item -Path "../coverage" -Recurse -ErrorAction SilentlyContinue
 Remove-Item -Path "../testResults" -Recurse -ErrorAction SilentlyContinue
 
+# Lint, test and build client
 if (-not $SkipClient) {
-  # Lint, test and build client
   Push-Location -Path "$webClientProjectFolder"
   npm install
-  npm run lint
-  Stop-OnError
+
+  if (-not $SkipFormat) {
+    npm run lint
+    Stop-OnError
+  }
+
+  if (-not $SkipOutdated) {
+    npm outdated
+  }
 
   if (-not $SkipTest) {
     npm run test:unit
@@ -40,10 +49,18 @@ if (-not $SkipClient) {
 
 # Build solution
 Push-Location -Path "../"
-dotnet format --check
-Stop-OnError
+
+if (-not $SkipFormat) {
+  dotnet format --check
+  Stop-OnError
+}
+
 dotnet restore
-dotnet list package --outdated
+
+if (-not $SkipOutdated) {
+  dotnet list package --outdated
+}
+
 dotnet build --configuration "$Configuration" --no-restore
 Stop-OnError
 Pop-Location

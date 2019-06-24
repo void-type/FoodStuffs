@@ -56,7 +56,7 @@ cd build/
 You don't need .Net or Node locally to run this application in [Docker](https://www.docker.com/).
 
 ```powershell
-cd build/
-./dockerBuild-Staging.ps1
-./dockerRun-Staging.ps1
+cd build/docker/
+./dockerBuild-Production.ps1
+./dockerRun-Production.ps1
 ```
