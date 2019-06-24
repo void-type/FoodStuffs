@@ -3,8 +3,8 @@
     <SearchControls
       :name-search="listRequest.nameSearch"
       :category-search="listRequest.categorySearch"
-      :on-category-search-change="setListCategorySearch"
-      :on-name-search-change="setListNameSearch"
+      :on-category-search-change="setListRequestCategorySearch"
+      :on-name-search-change="setListRequestNameSearch"
       :on-search="fetchRecipesList"
       :on-clear="clearSearch"
     />
@@ -56,11 +56,11 @@ export default {
       setApiFailureMessages: 'app/setApiFailureMessages',
       resetListRequest: 'recipes/resetListRequest',
       setListResponse: 'recipes/setListResponse',
-      setListNameSearch: 'recipes/setListNameSearch',
-      setListCategorySearch: 'recipes/setListCategorySearch',
-      setListSort: 'recipes/setListSort',
-      setListPage: 'recipes/setListPage',
-      setListTake: 'recipes/setListTake',
+      setListRequestNameSearch: 'recipes/setListRequestNameSearch',
+      setListRequestCategorySearch: 'recipes/setListRequestCategorySearch',
+      setListRequestSort: 'recipes/setListRequestSort',
+      setListRequestPage: 'recipes/setListRequestPage',
+      setListRequestTake: 'recipes/setListRequestTake',
     }),
     fetchRecipesList() {
       webApi.recipes.list(
@@ -70,16 +70,17 @@ export default {
       );
     },
     updatePage(page) {
-      this.setListPage(page);
+      this.setListRequestPage(page);
       this.fetchRecipesList();
     },
     updateTake(take) {
-      this.setListTake(take);
-      this.setListPage(1);
+      this.setListRequestTake(take);
+      this.setListRequestPage(1);
       this.fetchRecipesList();
     },
     cycleSort() {
-      this.setListSort(recipesApiModels.listSortOptions.nextSort(this.listRequest.sort).name);
+      const { nextSort } = recipesApiModels.listSortOptions;
+      this.setListRequestSort(nextSort(this.listRequest.sort).name);
       this.fetchRecipesList();
     },
     clearSearch() {
