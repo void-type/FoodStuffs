@@ -14,6 +14,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import router from '../router';
+import recipeModels from '../models/recipesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
 
@@ -31,7 +32,7 @@ export default {
   },
   data() {
     return {
-      sourceRecipe: new webApi.recipes.models.GetResponse(),
+      sourceRecipe: new recipeModels.GetResponse(),
     };
   },
   computed: {
@@ -69,7 +70,7 @@ export default {
     },
     fetchRecipe(id) {
       if (this.id === 0) {
-        this.sourceRecipe = new webApi.recipes.models.GetResponse();
+        this.sourceRecipe = new recipeModels.GetResponse();
         return;
       }
       webApi.recipes.get(

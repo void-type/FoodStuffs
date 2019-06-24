@@ -1,24 +1,24 @@
 export default {
-  resetListRequest(context) {
-    context.commit('RESET_LIST_REQUEST');
-  },
   setListResponse(context, data) {
     context.commit('SET_LIST_RESPONSE', data);
   },
-  setListPage(context, page) {
+  resetListRequest(context) {
+    context.commit('RESET_LIST_REQUEST');
+  },
+  setListRequestPage(context, page) {
     context.commit('SET_LIST_REQUEST_PAGE', page);
   },
-  setListTake(context, take) {
+  setListRequestTake(context, take) {
     context.commit('SET_LIST_REQUEST_IS_PAGING_ENABLED', (take !== null));
     context.commit('SET_LIST_REQUEST_TAKE', take);
   },
-  setListCategorySearch(context, categorySearch) {
+  setListRequestCategorySearch(context, categorySearch) {
     context.commit('SET_LIST_REQUEST_CATEGORY_SEARCH', categorySearch);
   },
-  setListNameSearch(context, nameSearch) {
+  setListRequestNameSearch(context, nameSearch) {
     context.commit('SET_LIST_REQUEST_NAME_SEARCH', nameSearch);
   },
-  setListSort(context, sortName) {
+  setListRequestSort(context, sortName) {
     context.commit('SET_LIST_REQUEST_SORT', sortName);
   },
   addToRecent(context, recipe) {

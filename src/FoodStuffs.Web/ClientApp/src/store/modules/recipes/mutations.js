@@ -1,4 +1,4 @@
-import recipesApiModels from '../../../webApi/recipes/models';
+import recipesApiModels from '../../../models/recipesApiModels';
 
 /* eslint-disable no-param-reassign */
 export default {

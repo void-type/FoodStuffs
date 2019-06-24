@@ -21,20 +21,8 @@
             ]
         },
         {
-            "label": "buildServerDebug",
-            "command": "./buildServerDebug.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": [
-                "$msCompile"
-            ]
-        },
-        {
-            "label": "devClientWatch",
-            "command": "./devClientWatch.ps1",
+            "label": "buildDebug",
+            "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipTest -SkipPublish",
             "options": {
                 "cwd": "./build"
             },
@@ -42,32 +30,8 @@
             "group": "test",
             "problemMatcher": [
                 "$node-sass",
-                "$eslint-compact"
-            ]
-        },
-        {
-            "label": "devServerWatch",
-            "command": "./devServerWatch.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": [
+                "$eslint-compact",
                 "$msCompile"
-            ]
-        },
-        {
-            "label": "lintClient",
-            "command": "./lintClient.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact"
             ]
         },
         {
@@ -82,7 +46,7 @@
         },
         {
             "label": "testServer",
-            "command": "./testServer.ps1",
+            "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipClient -SkipPublish",
             "options": {
                 "cwd": "./build"
             },
@@ -91,48 +55,39 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "testServerWatch",
-            "command": "./testServerWatch.ps1",
+            "label": "watchClient",
+            "command": "./watchClient.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact"
+            ]
+        },
+        {
+            "label": "watchServer",
+            "command": "./watchServer.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "watchServerTest",
+            "command": "./watchServerTest.ps1",
             "options": {
                 "cwd": "./build"
             },
             "type": "shell",
             "group": "test",
             "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "dockerBuild-Production",
-            "command": "./dockerBuild-Production.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
-                "$msCompile"
-            ]
-        },
-        {
-            "label": "dockerBuild-Staging",
-            "command": "./dockerBuild-Staging.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
-                "$msCompile"
-            ]
         },
     ]
 }

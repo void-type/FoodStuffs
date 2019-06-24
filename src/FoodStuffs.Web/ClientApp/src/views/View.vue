@@ -8,6 +8,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
+import recipeModels from '../models/recipesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeViewer from '../viewComponents/RecipeViewer.vue';
 
@@ -24,7 +25,7 @@ export default {
   },
   data() {
     return {
-      sourceRecipe: new webApi.recipes.models.GetResponse(),
+      sourceRecipe: new recipeModels.GetResponse(),
     };
   },
   computed: {

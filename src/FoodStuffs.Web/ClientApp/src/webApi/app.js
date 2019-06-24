@@ -20,7 +20,7 @@ function setHeaders(response) {
 
 export default {
   getInfo(success, failure) {
-    axios.get('api/app/info')
+    axios.get('/api/app/info')
       .then((response) => {
         setHeaders(response);
         success(response.data);
