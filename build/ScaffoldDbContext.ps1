@@ -1,13 +1,16 @@
 ﻿. ./util.ps1
 
+dotnet tool install --global dotnet-ef
+dotnet tool update --global dotnet-ef
+
 Push-Location -Path "$webProjectFolder"
 
 $contextDirectory = "Data/EntityFramework"
-$contextName = "$($projectName)Context"
+$contextName = "$($shortAppName)Context"
 $connectionString = Get-Content -Path "appsettings.Development.json" |
   ConvertFrom-Json |
   Select-Object -ExpandProperty ConnectionStrings |
-  Select-Object -ExpandProperty $projectName
+  Select-Object -ExpandProperty $shortAppName
 
 dotnet ef dbcontext scaffold "$connectionString" Microsoft.EntityFrameworkCore.SqlServer --force --context-dir "$contextDirectory" --context "$contextName" --output-dir "../$dataModelsFolder"
 

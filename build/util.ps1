@@ -5,7 +5,8 @@ function Stop-OnError {
   }
 }
 
-$projectName = "FoodStuffs"
+$shortAppName= "FoodStuffs"
+$projectName = "$shortAppName"
 
 $dataModelsFolder = "../src/$projectName.Model/Data/Models/"
 $testProjectFolder = "../tests/$projectName.Test"
