@@ -51,7 +51,7 @@ namespace FoodStuffs.Test.Model.Events
         [Theory]
         [InlineData(-1)]
         [InlineData(-1000)]
-        private void InvalidWhenCookTimeNegative(int? time)
+        public void InvalidWhenCookTimeNegative(int? time)
         {
             var recipe = new SaveRecipe.Request(0, "null", "null", "null", time, 10, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -64,7 +64,7 @@ namespace FoodStuffs.Test.Model.Events
         [Theory]
         [InlineData(-1)]
         [InlineData(-1000)]
-        private void InvalidWhenPrepTimeNegative(int? time)
+        public void InvalidWhenPrepTimeNegative(int? time)
         {
             var recipe = new SaveRecipe.Request(0, "null", "null", "null", 10, time, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -79,7 +79,7 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(1)]
         [InlineData(0)]
         [InlineData(1000)]
-        private void ValidWhenCookTimeNullOrPositive(int? time)
+        public void ValidWhenCookTimeNullOrPositive(int? time)
         {
             var recipe = new SaveRecipe.Request(0, "null", "null", "null", time, 10, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -92,7 +92,7 @@ namespace FoodStuffs.Test.Model.Events
         [Theory]
         [InlineData("1")]
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
-        private void ValidWhenDirectionsNotEmpty(string directions)
+        public void ValidWhenDirectionsNotEmpty(string directions)
         {
             var recipe = new SaveRecipe.Request(0, "null", "null", directions, 10, 10, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -105,7 +105,7 @@ namespace FoodStuffs.Test.Model.Events
         [Theory]
         [InlineData("1")]
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
-        private void ValidWhenIngredientsNotEmpty(string ingredients)
+        public void ValidWhenIngredientsNotEmpty(string ingredients)
         {
             var recipe = new SaveRecipe.Request(0, "null", ingredients, "null", 10, 10, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -120,7 +120,7 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(1)]
         [InlineData(0)]
         [InlineData(1000)]
-        private void ValidWhenPrepTimeNullOrPositive(int? time)
+        public void ValidWhenPrepTimeNullOrPositive(int? time)
         {
             var recipe = new SaveRecipe.Request(0, "null", "null", "null", 10, time, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -133,7 +133,7 @@ namespace FoodStuffs.Test.Model.Events
         [Theory]
         [InlineData("1")]
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
-        private void ValidWhenRecipeNameNotEmpty(string recipeName)
+        public void ValidWhenRecipeNameNotEmpty(string recipeName)
         {
             var recipe = new SaveRecipe.Request(0, recipeName, "null", "null", 10, 10, new string[] { });
             var validator = new SaveRecipe.RequestValidator();
@@ -146,7 +146,7 @@ namespace FoodStuffs.Test.Model.Events
         [Theory]
         [InlineData("1")]
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
-        private void ValidWithMinimumInfo(string testString)
+        public void ValidWithMinimumInfo(string testString)
         {
             var recipe = new SaveRecipe.Request(0, testString, testString, testString, null, null, null);
             var validator = new SaveRecipe.RequestValidator();
