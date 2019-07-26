@@ -52,10 +52,14 @@ namespace FoodStuffs.Web.Controllers.Api
             var cts = new CancellationTokenSource();
             cts.CancelAfter(5000);
 
-            return await _listHandler
+            var result = await _listHandler
                 .AddPostProcessor(_listLogger)
                 .Handle(request, cts.Token)
                 .MapAsync(HttpResponder.Respond);
+
+            cts.Dispose();
+
+            return result;
         }
 
         [HttpGet]
