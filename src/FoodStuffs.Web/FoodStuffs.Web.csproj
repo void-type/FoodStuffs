@@ -4,6 +4,7 @@
     <LangVersion>Latest</LangVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+    <CodeAnalysisRuleSet>..\..\.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
