@@ -16,7 +16,7 @@ namespace FoodStuffs.Model.Events.Recipes
 {
     public class SaveRecipe
     {
-        public class Handler : EventHandlerAbstract<Request, UserMessageWithEntityId<int>>
+        public class Handler : EventHandlerAbstract<Request, UserMessage<int>>
         {
             private readonly IFoodStuffsData _data;
 
@@ -25,7 +25,7 @@ namespace FoodStuffs.Model.Events.Recipes
                 _data = data;
             }
 
-            public override async Task<IResult<UserMessageWithEntityId<int>>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override async Task<IResult<UserMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
@@ -38,7 +38,7 @@ namespace FoodStuffs.Model.Events.Recipes
                         .TeeAsync(r => _data.Recipes.Update(r, cancellationToken))
                         .TeeAsync(r => ManageCategories(request, r))
                         .MapAsync(r => Result.Ok(
-                            UserMessageWithEntityId.Create("Recipe updated.", r.Id)));
+                            UserMessage.Create("Recipe updated.", r.Id)));
                 }
 
                 return await new Recipe()
@@ -46,7 +46,7 @@ namespace FoodStuffs.Model.Events.Recipes
                     .TeeAsync(r => _data.Recipes.Add(r, cancellationToken))
                     .TeeAsync(r => ManageCategories(request, r))
                     .MapAsync(r => Result.Ok(
-                        UserMessageWithEntityId.Create("Recipe added.", r.Id)));
+                        UserMessage.Create("Recipe added.", r.Id)));
             }
 
             private void Transfer(Request request, Recipe recipe)
