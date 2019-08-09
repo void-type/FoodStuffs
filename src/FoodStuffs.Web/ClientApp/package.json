@@ -31,7 +31,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-vue": "^5.0.0",
     "fs": "0.0.1-security",
-    "nerdbank-gitversioning": "^2.3.183",
+    "nerdbank-gitversioning": "^3.0.25",
     "sass": "^1.21.0",
     "sass-lint": "^1.12.1",
     "sass-loader": "^7.1.0",
