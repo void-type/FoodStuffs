@@ -2,13 +2,16 @@ import downloadHelpers from '../../../util/downloadHelpers';
 
 export default {
   setApiFailureMessages(context, response) {
+    if (response === undefined || response === null) {
+      context.dispatch('setErrorMessage', 'Cannot connect to server.');
+      return;
+    }
+
     const data = (response.request.responseType !== 'arraybuffer')
       ? response.data
       : downloadHelpers.decodeDownloadFailureData(response);
 
-    if (response === undefined || response === null) {
-      context.dispatch('setErrorMessage', 'Cannot connect to server.');
-    } else if (response.status === 401 || response.status === 403) {
+    if (response.status === 401 || response.status === 403) {
       context.dispatch('setErrorMessage', 'You are not authorized for this server endpoint.');
     } else if (response.status === 404) {
       context.dispatch('setErrorMessage', 'Server responded with endpoint not found.');
