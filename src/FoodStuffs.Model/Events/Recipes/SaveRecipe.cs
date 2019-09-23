@@ -37,16 +37,14 @@ namespace FoodStuffs.Model.Events.Recipes
                         .Tee(r => Transfer(request, r))
                         .TeeAsync(r => _data.Recipes.Update(r, cancellationToken))
                         .TeeAsync(r => ManageCategories(request, r))
-                        .MapAsync(r => Result.Ok(
-                            UserMessage.Create("Recipe updated.", r.Id)));
+                        .MapAsync(r => Ok(UserMessage.Create("Recipe updated.", r.Id)));
                 }
 
                 return await new Recipe()
                     .Tee(r => Transfer(request, r))
                     .TeeAsync(r => _data.Recipes.Add(r, cancellationToken))
                     .TeeAsync(r => ManageCategories(request, r))
-                    .MapAsync(r => Result.Ok(
-                        UserMessage.Create("Recipe added.", r.Id)));
+                    .MapAsync(r => Ok(UserMessage.Create("Recipe added.", r.Id)));
             }
 
             private void Transfer(Request request, Recipe recipe)

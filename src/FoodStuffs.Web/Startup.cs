@@ -37,6 +37,7 @@ namespace FoodStuffs.Web
                 .UseSecureTransport(_env)
                 .UseSecurityHeaders(_env)
                 .UseStaticFiles()
+                .UseSerilogRequestLogging()
                 .UseSpaMvcRoute();
         }
 
@@ -48,10 +49,8 @@ namespace FoodStuffs.Web
             // Settings
             services.AddSettingsSingleton<ApplicationSettings>(_config, true);
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
-            var loggingSettings = services.AddSettingsSingleton<LoggingSettings>(_config);
 
             // Infrastructure
-            Log.Logger = SerilogFileLoggerFactory.Create<Startup>(loggingSettings);
             services.AddSecureTransport(_env);
             services.AddApiExceptionFilter();
             services.AddApiAntiforgery();

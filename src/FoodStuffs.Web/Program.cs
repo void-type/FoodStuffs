@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System.Collections.Generic;
 using System;
+using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
 {
@@ -9,11 +14,13 @@ namespace FoodStuffs.Web
     {
         public static int Main(string[] args)
         {
-            var host = WebHost
-                .CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSerilog()
-                .Build();
+            var host = CreateHostBuilder(args).Build();
+
+            var configuration = host.Services.GetRequiredService<IConfiguration>();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
 
             try
             {
@@ -31,5 +38,18 @@ namespace FoodStuffs.Web
                 Log.CloseAndFlush();
             }
         }
+
+        public static IWebHostBuilder CreateHostBuilder(string[] args) => WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    var configurationDefaults = new Dictionary<string, string>
+                    {
+                        {"Serilog:WriteTo:0:Args:path", Defaults.FilePath<Program>()}
+                    };
+
+                    config.AddInMemoryCollection(configurationDefaults);
+                })
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }
