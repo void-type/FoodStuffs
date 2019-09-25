@@ -4,7 +4,7 @@ using VoidCore.Model.Logging;
 
 namespace FoodStuffs.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
         private readonly ILoggingService _logger;
 
@@ -29,6 +29,7 @@ namespace FoodStuffs.Web.Controllers
             return File("forbidden.html", "text/html");
         }
 
+        [Route("/")]
         public IActionResult Index()
         {
             _logger.Info("Home page requested.");

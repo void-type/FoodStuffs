@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore;
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System.Collections.Generic;
-using System;
+using Microsoft.Extensions.Configuration;
 using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
@@ -39,7 +38,7 @@ namespace FoodStuffs.Web
             }
         }
 
-        public static IWebHostBuilder CreateHostBuilder(string[] args) => WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     var configurationDefaults = new Dictionary<string, string>
@@ -49,7 +48,10 @@ namespace FoodStuffs.Web
 
                     config.AddInMemoryCollection(configurationDefaults);
                 })
-                .UseStartup<Startup>()
-                .UseSerilog();
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
+                });
     }
 }

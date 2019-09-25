@@ -7,7 +7,7 @@ using VoidCore.Domain;
 namespace FoodStuffs.Web.Controllers.Api
 {
     [ApiRoute("app")]
-    public class ApplicationController : Controller
+    public class ApplicationController : ControllerBase
     {
         private readonly GetWebApplicationInfo.Handler _getHandler;
         private readonly GetWebApplicationInfo.Logger _getLogger;

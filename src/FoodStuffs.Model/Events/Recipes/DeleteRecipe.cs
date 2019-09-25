@@ -12,7 +12,7 @@ namespace FoodStuffs.Model.Events.Recipes
 {
     public class DeleteRecipe
     {
-        public class Handler : EventHandlerAbstract<Request, UserMessage<int>>
+        public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
             private readonly IFoodStuffsData _data;
 
@@ -21,14 +21,14 @@ namespace FoodStuffs.Model.Events.Recipes
                 _data = data;
             }
 
-            public override async Task<IResult<UserMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
                 return await _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
                     .TeeOnSuccessAsync(RemoveRecipe)
-                    .SelectAsync(r => UserMessage.Create("Recipe deleted.", r.Id));
+                    .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
             }
 
             private async Task RemoveRecipe(Recipe recipe)
@@ -48,11 +48,11 @@ namespace FoodStuffs.Model.Events.Recipes
             public int Id { get; }
         }
 
-        public class Logger : UserMessageWithEntityIdEventLogger<Request, int>
+        public class Logger : EntityMessageEventLogger<Request, int>
         {
             public Logger(ILoggingService logger) : base(logger) { }
 
-            protected override void OnBoth(Request request, IResult<UserMessage<int>> result)
+            protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
                 Logger.Info($"Id: '{request.Id}'");
                 base.OnBoth(request, result);

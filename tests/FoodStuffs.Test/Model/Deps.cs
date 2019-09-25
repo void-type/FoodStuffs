@@ -37,15 +37,21 @@ namespace FoodStuffs.Test.Model
             );
         }
 
+        public static FoodStuffsEfData FoodStuffsData(this FoodStuffsContext context)
+        {
+            var loggingStrategyMock = new Mock<ILoggingStrategy>();
+            loggingStrategyMock.Setup(x => x.Log(It.IsAny<string[]>())).Returns("test request");
+            return new FoodStuffsEfData(context, loggingStrategyMock.Object, DateTimeServiceLate, CurrentUserAccessor);
+        }
+
         public static FoodStuffsContext Seed(this FoodStuffsContext data)
         {
-            data.Category.Add(new Category { Id = 11, Name = "Category1" });
-            data.Category.Add(new Category { Id = 12, Name = "Category2" });
-            data.Category.Add(new Category { Id = 13, Name = "Category3" });
+            var category1 = data.Category.Add(new Category { Name = "Category1" }).Entity.Id;
+            var category2 = data.Category.Add(new Category { Name = "Category2" }).Entity.Id;
+            var category3 = data.Category.Add(new Category { Name = "Category3" }).Entity.Id;
 
-            data.Recipe.Add(new Recipe
+            var recipe1 = data.Recipe.Add(new Recipe
             {
-                Id = 11,
                 Name = "Recipe1",
                 Ingredients = "ing",
                 Directions = "dir",
@@ -55,11 +61,10 @@ namespace FoodStuffs.Test.Model
                 ModifiedOn = DateTimeServiceLate.Moment,
                 CreatedBy = "11",
                 ModifiedBy = "12"
-            });
+            }).Entity.Id;
 
-            data.Recipe.Add(new Recipe
+            var recipe2 = data.Recipe.Add(new Recipe
             {
-                Id = 12,
                 Name = "Recipe2",
                 CookTimeMinutes = 2,
                 PrepTimeMinutes = 2,
@@ -67,11 +72,10 @@ namespace FoodStuffs.Test.Model
                 ModifiedOn = DateTimeServiceLate.Moment,
                 CreatedBy = "11",
                 ModifiedBy = "11"
-            });
+            }).Entity.Id;
 
             data.Recipe.Add(new Recipe
             {
-                Id = 13,
                 Name = "Recipe3",
                 CookTimeMinutes = 2,
                 PrepTimeMinutes = 2,
@@ -81,21 +85,12 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "11"
             });
 
-            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = 11, CategoryId = 11 });
-            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = 11, CategoryId = 12 });
-            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = 12, CategoryId = 11 });
+            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category1 });
+            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category2 });
+            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe2, CategoryId = category3 });
 
             data.SaveChanges();
-
             return data;
-        }
-
-        public static FoodStuffsEfData FoodStuffsData(this FoodStuffsContext context)
-        {
-            var loggingStrategyMock = new Mock<ILoggingStrategy>();
-            loggingStrategyMock.Setup(x => x.Log(It.IsAny<string[]>())).Returns("test request");
-
-            return new FoodStuffsEfData(context, loggingStrategyMock.Object, DateTimeServiceLate, CurrentUserAccessor);
         }
     }
 }
