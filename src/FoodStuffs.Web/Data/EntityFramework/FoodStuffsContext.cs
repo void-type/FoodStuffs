@@ -55,6 +55,8 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<User>(entity =>
             {
+                entity.HasKey(e => e.Id);
+
                 entity.ToTable("User", "dbo");
 
                 entity.Property(e => e.FirstName).IsRequired();

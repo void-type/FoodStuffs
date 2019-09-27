@@ -9,7 +9,7 @@ using VoidCore.Domain;
 namespace FoodStuffs.Web.Controllers.Api
 {
     [ApiRoute("recipes")]
-    public class RecipesController : Controller
+    public class RecipesController : ControllerBase
     {
         private readonly GetRecipe.Handler _getHandler;
         private readonly GetRecipe.Logger _getLogger;
@@ -49,15 +49,13 @@ namespace FoodStuffs.Web.Controllers.Api
                 take: take);
 
             // Cancel long-running queries
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(5000);
+            using var cts = new CancellationTokenSource()
+                .Tee(c => c.CancelAfter(5000));
 
             var result = await _listHandler
                 .AddPostProcessor(_listLogger)
                 .Handle(request, cts.Token)
                 .MapAsync(HttpResponder.Respond);
-
-            cts.Dispose();
 
             return result;
         }

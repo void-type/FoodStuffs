@@ -3,29 +3,28 @@ using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Data;
-using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
+using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Security;
 using VoidCore.AspNet.Settings;
 using VoidCore.Model.Auth;
-using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
+using VoidCore.EntityFramework;
 
 namespace FoodStuffs.Web
 {
     public class Startup
     {
         private readonly IConfiguration _config;
-        private readonly IHostingEnvironment _env;
+        private readonly IHostEnvironment _env;
 
-        public Startup(IConfiguration config, IHostingEnvironment env)
+        public Startup(IConfiguration config, IHostEnvironment env)
         {
             _config = config;
             _env = env;
@@ -37,32 +36,34 @@ namespace FoodStuffs.Web
                 .UseSecureTransport(_env)
                 .UseSecurityHeaders(_env)
                 .UseStaticFiles()
-                .UseSpaMvcRoute();
+                .UseRouting()
+                .UseSerilogRequestLogging()
+                .UseSpaEndpoints();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: when updating versions of .Net Core, update this to get the newest behavior.
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             // Settings
             services.AddSettingsSingleton<ApplicationSettings>(_config, true);
             var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
-            var loggingSettings = services.AddSettingsSingleton<LoggingSettings>(_config);
 
             // Infrastructure
-            Log.Logger = SerilogFileLoggerFactory.Create<Startup>(loggingSettings);
-            services.AddSecureTransport(_env);
+            services.AddControllers()
+            // TODO: Try the built-in JSON support when it supports constructors.
+                .AddNewtonsoftJson();
+            services.AddSpaSecurityServices(_env);
             services.AddApiExceptionFilter();
-            services.AddApiAntiforgery();
-            services.AddSqlServerDbContext<FoodStuffsContext>(_env, connectionStrings["FoodStuffs"]);
-            services.AddHttpContextAccessor();
 
-            // Model Dependencies
+            // Authorization
+
+            // Dependencies
+            services.AddHttpContextAccessor();
+            services.AddWebLoggingAdapters();
             services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
-            services.AddSingleton<ILoggingStrategy, HttpRequestLoggingStrategy>();
-            services.AddSingleton<ILoggingService, MicrosoftLoggerAdapter>();
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
+
+            // TODO: how can we make this a singleton (pool?) and then make domain events singletons.
+            services.AddSqlServerDbContext<FoodStuffsContext>(_env, connectionStrings["FoodStuffs"]);
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
             // Domain Events

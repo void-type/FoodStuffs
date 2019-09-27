@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using VoidCore.AspNet.Security;
 
 namespace FoodStuffs.Web.Configuration
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostingEnvironment environment)
+        public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment)
         {
             // Disable in development because Vue tools extension injects a script.
             if (!environment.IsDevelopment())

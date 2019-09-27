@@ -8,21 +8,21 @@ namespace FoodStuffs.Web.Configuration
     {
         public static void AddDomainEvents(this IServiceCollection services)
         {
-            services.AddScoped<GetWebApplicationInfo.Handler>();
-            services.AddScoped<GetWebApplicationInfo.Logger>();
+            services.AddSingleton<GetWebApplicationInfo.Handler>();
+            services.AddSingleton<GetWebApplicationInfo.Logger>();
 
             services.AddScoped<GetRecipe.Handler>();
-            services.AddScoped<GetRecipe.Logger>();
+            services.AddSingleton<GetRecipe.Logger>();
 
             services.AddScoped<ListRecipes.Handler>();
-            services.AddScoped<ListRecipes.Logger>();
+            services.AddSingleton<ListRecipes.Logger>();
 
             services.AddScoped<SaveRecipe.Handler>();
-            services.AddScoped<SaveRecipe.RequestValidator>();
-            services.AddScoped<SaveRecipe.Logger>();
+            services.AddSingleton<SaveRecipe.RequestValidator>();
+            services.AddSingleton<SaveRecipe.Logger>();
 
             services.AddScoped<DeleteRecipe.Handler>();
-            services.AddScoped<DeleteRecipe.Logger>();
+            services.AddSingleton<DeleteRecipe.Logger>();
         }
     }
 }

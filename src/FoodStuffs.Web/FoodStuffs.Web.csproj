@@ -1,27 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <LangVersion>Latest</LangVersion>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
     <CodeAnalysisRuleSet>..\..\.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Remove="ClientApp\**" CopyToPublishDirectory="Never" />
-    <Content Remove="appsettings*.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.25" PrivateAssets="all" />
-    <PackageReference Include="VoidCore.AspNet" Version="1.0.1" />
-    <PackageReference Include="VoidCore.Domain" Version="1.0.1" />
-    <PackageReference Include="VoidCore.Model" Version="1.0.1" />
+    <PackageReference Include="VoidCore.AspNet" Version="2.0.3-g13a436a019" />
+    <PackageReference Include="VoidCore.EntityFramework" Version="2.0.3-g13a436a019" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" />
-    <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Domain\VoidCore.Domain.csproj" />
-    <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" /> -->
+    <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" /> -->
   </ItemGroup>
 
   <ItemGroup>
