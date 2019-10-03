@@ -9,7 +9,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="$router.push({name: routeName, params: {id: recipe.id}})"
+        @click="$router.push({name: routeName, params: {id: recipe.id}}).catch(() => {})"
       >
         <td>{{ recipe.name }}</td>
       </tr>

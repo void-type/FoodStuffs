@@ -74,6 +74,13 @@
       </button>
       <router-link
         v-if="workingRecipe.id > 0"
+        :to="{name: 'new', params: {newRecipeSuggestion: workingRecipe}}"
+        tag="button"
+      >
+        Copy
+      </router-link>
+      <router-link
+        v-if="workingRecipe.id > 0"
         :to="{name: 'view', params: {id: sourceRecipe.id}}"
         tag="button"
       >
