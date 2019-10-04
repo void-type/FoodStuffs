@@ -103,7 +103,7 @@ export default {
           this.removeFromRecent(this.id);
           this.sourceRecipe = new recipeModels.GetResponse();
           this.fetchRecipesList();
-          router.push({ name: 'search' });
+          router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);
         },
         response => this.setApiFailureMessages(response),

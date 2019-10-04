@@ -39,7 +39,8 @@ export default {
     },
     take: {
       type: Number,
-      required: true,
+      required: false,
+      default: 0,
     },
     totalCount: {
       type: Number,
@@ -56,7 +57,8 @@ export default {
   },
   computed: {
     numberOfPages() {
-      return Math.ceil(this.totalCount / this.take) || 1;
+      const computed = Math.ceil(this.totalCount / this.take);
+      return computed > 1 && Number.isFinite(computed) ? computed : 1;
     },
     takeOptions() {
       return defaults.paginationTakeOptions;
@@ -64,7 +66,9 @@ export default {
   },
   methods: {
     selectTakeOption(event) {
-      this.onTakeChange(event.target.value);
+      // Select only returns strings
+      const { value } = event.target;
+      this.onTakeChange(value === '' ? null : +value);
     },
   },
 };
