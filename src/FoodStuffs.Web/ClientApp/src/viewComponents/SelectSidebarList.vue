@@ -9,7 +9,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="$router.push({name: routeName, params: {id: recipe.id}}).catch(() => {})"
+        @click="onTableRowClick(recipe)"
       >
         <td>{{ recipe.name }}</td>
       </tr>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import router from '../router';
+
 export default {
   props: {
     recipes: {
@@ -32,6 +34,11 @@ export default {
     routeName: {
       type: String,
       required: true,
+    },
+  },
+  methods: {
+    onTableRowClick(recipe) {
+      router.push({ name: 'view', params: { id: recipe.id } }).catch(() => {});
     },
   },
 };

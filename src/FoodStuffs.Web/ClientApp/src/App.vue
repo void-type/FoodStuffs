@@ -21,11 +21,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import router from './router';
-import store from './store';
+import { mapGetters } from 'vuex';
 import progressBar from './util/progressBar';
-import webApi from './webApi';
+import initializeStore from './models/initializeStore';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
 import AppNav from './viewComponents/AppNav.vue';
@@ -52,8 +50,6 @@ export default {
       ],
     };
   },
-  router,
-  store,
   computed: {
     ...mapGetters({
       applicationName: 'app/applicationName',
@@ -67,19 +63,8 @@ export default {
   },
   mounted() {
     progressBar.setupProgressBarHooks(this.$Progress);
-    this.fetchApplicationInfo();
-  },
-  methods: {
-    ...mapActions({
-      setApplicationInfo: 'app/setApplicationInfo',
-      setApiFailureMessages: 'app/setApiFailureMessages',
-    }),
-    fetchApplicationInfo() {
-      webApi.app.getInfo(
-        data => this.setApplicationInfo(data),
-        response => this.setApiFailureMessages(response),
-      );
-    },
+
+    initializeStore();
   },
 };
 </script>
