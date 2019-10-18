@@ -33,7 +33,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             private async Task RemoveRecipe(Recipe recipe)
             {
-                await _data.CategoryRecipes.RemoveRange(recipe.CategoryRecipe.AsReadOnly());
+                await _data.CategoryRecipes.RemoveRange(recipe.CategoryRecipe);
                 await _data.Recipes.Remove(recipe);
             }
         }

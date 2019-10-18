@@ -5,6 +5,11 @@ namespace FoodStuffs.Web.Data.EntityFramework
 {
     public partial class FoodStuffsContext : DbContext
     {
+        public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options)
+            : base(options)
+        {
+        }
+
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<CategoryRecipe> CategoryRecipe { get; set; }
         public virtual DbSet<Recipe> Recipe { get; set; }
@@ -14,16 +19,12 @@ namespace FoodStuffs.Web.Data.EntityFramework
         {
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.ToTable("Category", "dbo");
-
                 entity.Property(e => e.Name).IsRequired();
             });
 
             modelBuilder.Entity<CategoryRecipe>(entity =>
             {
                 entity.HasKey(e => new { e.RecipeId, e.CategoryId });
-
-                entity.ToTable("CategoryRecipe", "dbo");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.CategoryRecipe)
@@ -40,13 +41,15 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<Recipe>(entity =>
             {
-                entity.ToTable("Recipe", "dbo");
+                entity.Property(e => e.CreatedBy).IsRequired();
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Directions).IsRequired();
 
                 entity.Property(e => e.Ingredients).IsRequired();
+
+                entity.Property(e => e.ModifiedBy).IsRequired();
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
@@ -55,22 +58,24 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Id);
-
-                entity.ToTable("User", "dbo");
-
                 entity.Property(e => e.FirstName).IsRequired();
 
                 entity.Property(e => e.LastName).IsRequired();
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasColumnType("char(128)");
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
+                    .IsFixedLength();
 
                 entity.Property(e => e.Salt).IsRequired();
 
                 entity.Property(e => e.UserName).IsRequired();
             });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
