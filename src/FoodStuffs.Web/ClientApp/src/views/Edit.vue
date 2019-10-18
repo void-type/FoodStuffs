@@ -29,6 +29,11 @@ export default {
       required: false,
       default: 0,
     },
+    newRecipeSuggestion: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
   data() {
     return {
@@ -70,7 +75,7 @@ export default {
     },
     fetchRecipe(id) {
       if (this.id === 0) {
-        this.sourceRecipe = new recipeModels.GetResponse();
+        this.sourceRecipe = this.newRecipeSuggestion || new recipeModels.GetResponse();
         return;
       }
       webApi.recipes.get(
@@ -84,7 +89,7 @@ export default {
         recipe,
         (data) => {
           this.fetchRecipe(this.id);
-          router.push({ name: 'edit', params: { id: data.id } });
+          router.push({ name: 'edit', params: { id: data.id } }).catch(() => {});
           this.fetchRecipesList();
           this.setSuccessMessage(data.message);
         },
@@ -96,9 +101,9 @@ export default {
         id,
         (data) => {
           this.removeFromRecent(this.id);
-          this.sourceRecipe = null;
+          this.sourceRecipe = new recipeModels.GetResponse();
           this.fetchRecipesList();
-          router.push({ name: 'search' });
+          router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);
         },
         response => this.setApiFailureMessages(response),

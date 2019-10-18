@@ -15,7 +15,7 @@
       <tr
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="$router.push({name: 'view', params: {id: recipe.id}})"
+        @click="onTableRowClick(recipe)"
       >
         <td>{{ recipe.name }}</td>
         <td>{{ recipe.categories.join(", ") }}</td>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import router from '../router';
+
 export default {
   props: {
     recipes: {
@@ -38,6 +40,11 @@ export default {
     onCycleSort: {
       type: Function,
       required: true,
+    },
+  },
+  methods: {
+    onTableRowClick(recipe) {
+      router.push({ name: 'view', params: { id: recipe.id } }).catch(() => {});
     },
   },
 };

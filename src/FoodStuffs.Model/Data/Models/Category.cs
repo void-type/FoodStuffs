@@ -2,10 +2,16 @@
 
 namespace FoodStuffs.Model.Data.Models
 {
-    public class Category
+    public partial class Category
     {
-        public List<CategoryRecipe> CategoryRecipe { get; set; } = new List<CategoryRecipe>();
+        public Category()
+        {
+            CategoryRecipe = new HashSet<CategoryRecipe>();
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public virtual ICollection<CategoryRecipe> CategoryRecipe { get; set; }
     }
 }

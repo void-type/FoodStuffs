@@ -1,4 +1,6 @@
 # Run this script as a server administrator from the scripts directory
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = "Medium")]
+param()
 
 . ./util.ps1
 
@@ -8,7 +10,15 @@ if (-not (Test-Path -Path "../artifacts")) {
 }
 
 Push-Location -Path "../"
-New-Item -Path "$iisDirectoryStaging\app_offline.htm"
-ROBOCOPY "./artifacts" $iisDirectoryStaging /MIR
-Copy-Item -Path "$settingsDirectoryStaging\*" -Include "*.Staging.json" -Recurse -Destination $iisDirectoryStaging
-Pop-Location
+
+try {
+  if ($PSCmdlet.ShouldProcess("$iisDirectoryStaging", "Deploy $shortAppName to Staging.")) {
+    New-Item -Path "$iisDirectoryStaging\app_offline.htm"
+    Start-Sleep 5
+    ROBOCOPY "./artifacts" $iisDirectoryStaging /MIR /XF "$iisDirectoryStaging\app_offline.htm"
+    Copy-Item -Path "$settingsDirectoryStaging\*" -Include "*.Staging.json" -Recurse -Destination $iisDirectoryStaging
+    Remove-Item -Path "$iisDirectoryStaging\app_offline.htm"
+  }
+} finally {
+  Pop-Location
+}

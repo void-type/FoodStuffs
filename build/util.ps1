@@ -5,7 +5,7 @@ function Stop-OnError {
   }
 }
 
-$shortAppName= "FoodStuffs"
+$shortAppName = "FoodStuffs"
 $projectName = "$shortAppName"
 
 $dataModelsFolder = "../src/$projectName.Model/Data/Models/"
@@ -16,8 +16,8 @@ $webClientProjectFolder = "$webProjectFolder/ClientApp"
 
 $testProjectFolder = "../tests/$projectName.Test"
 
-$iisDirectoryProduction = "\\server1\c$\inetpub\wwwroot\$($projectName)"
-$settingsDirectoryProduction = "\\server1\appSettings\$($projectName)"
+$iisDirectoryProduction = "\\server2\c$\inetpub\wwwroot\$($projectName)"
+$settingsDirectoryProduction = "\\server2\appSettings\$($projectName)"
 
-$iisDirectoryStaging = "\\server1\c$\inetpub\wwwroot\$($projectName)Test"
+$iisDirectoryStaging = "\\server2\c$\inetpub\wwwroot\$($projectName)Test"
 $settingsDirectoryStaging = "$settingsDirectoryProduction"

@@ -13,6 +13,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 * Printer-friendly views.
 * Category tags on recipes.
+* Copy recipes.
 * Text search on recipe names and categories.
 * View history.
 * Full logging on the server.
@@ -23,7 +24,6 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 * Users and authentication
 * Side-by-side recipe viewing
-* Recipe copying/cloning
 
 ## Build and Run FoodStuffs
 
