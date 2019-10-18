@@ -16,8 +16,8 @@ $webClientProjectFolder = "$webProjectFolder/ClientApp"
 
 $testProjectFolder = "../tests/$projectName.Test"
 
-$iisDirectoryProduction = "\\server2\c$\inetpub\wwwroot\$($projectName)"
+$iisDirectoryProduction = "\\server2\wwwroot\$($projectName)"
 $settingsDirectoryProduction = "\\server2\appSettings\$($projectName)"
 
-$iisDirectoryStaging = "\\server2\c$\inetpub\wwwroot\$($projectName)Test"
+$iisDirectoryStaging = "\\server2\wwwroot\$($projectName)Test"
 $settingsDirectoryStaging = "$settingsDirectoryProduction"
