@@ -1,8 +1,7 @@
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Data.Queries;
 using System.Threading;
 using System.Threading.Tasks;
+using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
@@ -27,14 +26,9 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 return await _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
-                    .TeeOnSuccessAsync(RemoveRecipe)
+                    .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipe, cancellationToken))
+                    .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
                     .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
-            }
-
-            private async Task RemoveRecipe(Recipe recipe)
-            {
-                await _data.CategoryRecipes.RemoveRange(recipe.CategoryRecipe);
-                await _data.Recipes.Remove(recipe);
             }
         }
 
