@@ -14,7 +14,7 @@ namespace FoodStuffs.Test.Model.Events
             using var context = Deps.FoodStuffsContext();
             var data = context.Seed().FoodStuffsData();
 
-            var recipes = await data.Recipes.ListAll();
+            var recipes = await data.Recipes.ListAll(default);
             var recipeToFind = recipes.First();
 
             var result = await new GetRecipe.Handler(data)
@@ -175,13 +175,13 @@ namespace FoodStuffs.Test.Model.Events
             using var context = Deps.FoodStuffsContext();
             var data = context.Seed().FoodStuffsData();
 
-            var recipes = await data.Recipes.ListAll();
+            var recipes = await data.Recipes.ListAll(default);
             var recipeToDelete = recipes.First();
 
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(recipeToDelete.Id));
 
-            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(recipeToDelete.Id));
+            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(recipeToDelete.Id), default);
 
             Assert.True(result.IsSuccess);
             Assert.True(maybeRecipe.HasNoValue);
@@ -212,7 +212,7 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(result.IsSuccess);
             Assert.True(result.Value.Id > 0);
 
-            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(result.Value.Id));
+            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(result.Value.Id), default);
 
             Assert.True(maybeRecipe.HasValue);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, maybeRecipe.Value.CreatedOn);
@@ -229,7 +229,7 @@ namespace FoodStuffs.Test.Model.Events
             using var context = Deps.FoodStuffsContext();
             var data = context.Seed().FoodStuffsData();
 
-            var existingRecipeId = (await data.Recipes.ListAll()).First().Id;
+            var existingRecipeId = (await data.Recipes.ListAll(default)).First().Id;
 
             var result = await new SaveRecipe.Handler(data)
                 .Handle(new SaveRecipe.Request(existingRecipeId, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
@@ -237,7 +237,7 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(result.IsSuccess);
             Assert.Equal(existingRecipeId, result.Value.Id);
 
-            var updatedRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(existingRecipeId));
+            var updatedRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(existingRecipeId), default);
             Assert.True(updatedRecipe.HasValue);
             Assert.Equal(Deps.DateTimeServiceEarly.Moment, updatedRecipe.Value.CreatedOn);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.Value.ModifiedOn);

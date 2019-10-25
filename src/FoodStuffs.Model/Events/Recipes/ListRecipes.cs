@@ -31,7 +31,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 var allSearch = new RecipesSearchSpecification(searchCriteria);
 
-                var totalCount = await _data.Recipes.Count(allSearch);
+                var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
 
                 var pagedSearch = new RecipesSearchSpecification(
                     criteria: searchCriteria,
@@ -40,7 +40,7 @@ namespace FoodStuffs.Model.Events.Recipes
                     page: request.Page,
                     take: request.Take);
 
-                var recipes = await _data.Recipes.List(pagedSearch);
+                var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
 
                 return recipes
                     .Select(recipe => new RecipeListItemDto(

@@ -7,7 +7,13 @@ Push-Location -Path "$webProjectFolder"
 
 $contextDirectory = "Data/EntityFramework"
 $contextName = "$($shortAppName)Context"
-$connectionString = Get-Content -Path "appsettings.Development.json" |
+$settingsFile = "appsettings.Development.json"
+
+if (-not (Test-Path -Path $settingsFile)) {
+  Write-Host "$settingsFile does not exist to get the Connection String from."
+}
+
+$connectionString = Get-Content -Path "$settingsFile" |
   ConvertFrom-Json |
   Select-Object -ExpandProperty ConnectionStrings |
   Select-Object -ExpandProperty $shortAppName
