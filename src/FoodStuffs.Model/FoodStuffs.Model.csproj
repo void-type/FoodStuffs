@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.26" PrivateAssets="all" />
-    <PackageReference Include="VoidCore.Model" Version="2.0.10-g7905748d25" />
+    <PackageReference Include="VoidCore.Model" Version="2.0.12-gf2667249f2" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" /> -->
   </ItemGroup>

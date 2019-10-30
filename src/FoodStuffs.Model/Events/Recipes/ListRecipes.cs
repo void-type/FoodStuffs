@@ -1,12 +1,12 @@
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Data.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
@@ -27,6 +27,8 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public override async Task<IResult<IItemSet<RecipeListItemDto>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
+                var paginationOptions = new PaginationOptions(request.Page, request.Take, request.IsPagingEnabled);
+
                 var searchCriteria = GetSearchCriteria(request);
 
                 var allSearch = new RecipesSearchSpecification(searchCriteria);
@@ -35,10 +37,8 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 var pagedSearch = new RecipesSearchSpecification(
                     criteria: searchCriteria,
-                    sort: request.Sort,
-                    isPagingEnabled: request.IsPagingEnabled,
-                    page: request.Page,
-                    take: request.Take);
+                    paginationOptions: paginationOptions,
+                    sort: request.Sort);
 
                 var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
 
@@ -47,7 +47,7 @@ namespace FoodStuffs.Model.Events.Recipes
                         id: recipe.Id,
                         name: recipe.Name,
                         categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
-                    .ToItemSet(request.Page, request.Take, totalCount, request.IsPagingEnabled)
+                    .ToItemSet(paginationOptions, totalCount)
                     .Map(page => Ok(page));
             }
 

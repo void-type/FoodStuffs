@@ -1,10 +1,10 @@
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
@@ -29,17 +29,17 @@ namespace FoodStuffs.Model.Events.Recipes
                 return await _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
                     .SelectAsync(r => new RecipeDto(
-                        id: r.Id,
-                        name: r.Name,
-                        ingredients: r.Ingredients,
-                        directions: r.Directions,
-                        cookTimeMinutes: r.CookTimeMinutes,
-                        prepTimeMinutes: r.PrepTimeMinutes,
-                        createdBy: r.CreatedBy,
-                        createdOn: r.CreatedOn,
-                        modifiedBy: r.ModifiedBy,
-                        modifiedOn: r.ModifiedOn,
-                        categories: r.CategoryRecipe.Select(cr => cr.Category.Name)));
+                       id: r.Id,
+                       name: r.Name,
+                       ingredients: r.Ingredients,
+                       directions: r.Directions,
+                       cookTimeMinutes: r.CookTimeMinutes,
+                       prepTimeMinutes: r.PrepTimeMinutes,
+                       createdBy: r.CreatedBy,
+                       createdOn: r.CreatedOn,
+                       modifiedBy: r.ModifiedBy,
+                       modifiedOn: r.ModifiedOn,
+                       categories: r.CategoryRecipe.Select(cr => cr.Category.Name)));
             }
         }
 

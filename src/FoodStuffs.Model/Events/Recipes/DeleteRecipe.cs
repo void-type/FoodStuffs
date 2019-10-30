@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
