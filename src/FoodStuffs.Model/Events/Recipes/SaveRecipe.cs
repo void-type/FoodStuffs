@@ -1,11 +1,11 @@
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Data.Queries;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Domain.RuleValidator;
@@ -84,14 +84,14 @@ namespace FoodStuffs.Model.Events.Recipes
                 await _data.Categories
                     .List(categoriesThatMatchRequestedSpec, cancellationToken)
                     .MapAsync(categories => categories
-                        .Where(c => !recipe.CategoryRecipe
-                            .Select(r => r.Category.Name.ToLower().Trim())
-                            .Contains(c.Name.ToLower().Trim()))
-                        .Select(c => new CategoryRecipe
-                        {
-                            RecipeId = recipe.Id,
-                            CategoryId = c.Id
-                        }))
+                       .Where(c => !recipe.CategoryRecipe
+                          .Select(r => r.Category.Name.ToLower().Trim())
+                          .Contains(c.Name.ToLower().Trim()))
+                       .Select(c => new CategoryRecipe
+                       {
+                           RecipeId = recipe.Id,
+                           CategoryId = c.Id
+                       }))
                     .TeeAsync(r => _data.CategoryRecipes.AddRange(r, cancellationToken));
             }
         }

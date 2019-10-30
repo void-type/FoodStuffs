@@ -1,7 +1,7 @@
 using FoodStuffs.Model.Data.Models;
 using VoidCore.Model.Data;
 
-namespace FoodStuffs.Model.Data.Queries
+namespace FoodStuffs.Model.Queries
 {
     public class RecipesByIdWithCategoriesSpecification : QuerySpecificationAbstract<Recipe>
     {
