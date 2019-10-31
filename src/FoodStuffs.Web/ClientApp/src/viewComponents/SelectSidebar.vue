@@ -39,7 +39,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/theme";
-@import "../style/inputs";
 
 div > * {
   margin-bottom: 1rem;

@@ -5,22 +5,23 @@
       :brand="applicationName"
       :user="user"
     >
-      <AppNav
-        slot="nav"
-        :links="navItems"
-      />
+      <AppNav slot="navItems" />
     </AppHeader>
     <AppMessageCenter
       class="no-print"
     />
-    <main class="container">
-      <router-view />
+    <main class="mt-4 mb-4">
+      <b-container>
+        <router-view />
+      </b-container>
     </main>
     <AppFooter />
   </div>
 </template>
 
 <script>
+import BootstrapVue from 'bootstrap-vue';
+import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import progressBar from './util/progressBar';
 import initializeStore from './models/initializeStore';
@@ -29,26 +30,14 @@ import AppHeader from './viewComponents/AppHeader.vue';
 import AppNav from './viewComponents/AppNav.vue';
 import AppFooter from './viewComponents/AppFooter.vue';
 
+Vue.use(BootstrapVue);
+
 export default {
   components: {
     AppMessageCenter,
     AppHeader,
     AppNav,
     AppFooter,
-  },
-  data() {
-    return {
-      navItems: [
-        {
-          label: 'Search',
-          route: 'search',
-        },
-        {
-          label: 'New',
-          route: 'new',
-        },
-      ],
-    };
   },
   computed: {
     ...mapGetters({
@@ -72,101 +61,28 @@ export default {
 <style lang="scss">
 @import "./style/theme";
 
-html {
-  height: 100%;
-}
+$primary: $color-primary;
+$secondary: $color-secondary;
+$body-bg: $color-background;
 
-body,
-pre {
-  font-family: $font-family;
-  color: $color-neutral;
-  background-color: $color-background;
-  margin: 0;
-}
+$enable-rounded: false;
+$print-page-size: auto;
 
-header,
-main {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
+input[type="button"].btn,
+input[type="submit"].btn,
+button.btn,
+a.btn {
+  box-shadow: $shadow;
+  position: relative;
+  min-width: 5rem;
 
-.container {
-  margin: 0 auto;
-  max-width: $contained-width;
-}
-
-main {
-  display: block;
-
-  & > section {
-    display: flex;
-    padding: 2em 0;
-
-    & > *:not(:last-child) {
-      margin-right: 2rem;
-    }
-  }
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  color: $color-primary-dark;
-}
-
-a,
-a:link {
-  text-decoration: none;
-  color: $color-primary-dark;
-  cursor: pointer;
-
-  &:hover,
   &:active {
-    color: $color-secondary-dark;
+    box-shadow: $shadow-collapse;
+    top: 3px;
   }
 }
 
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-@media #{$extra-large-screen} {
-  body {
-    font-size: 130%;
-  }
-}
-
-@media #{$medium-screen} {
-  main > section {
-    flex-direction: column;
-
-    & > *:not(:last-child) {
-      margin-right: 0;
-      margin-bottom: 1.5rem;
-    }
-  }
-
-  header,
-  main,
-  footer {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-@media #{$small-screen} {
-  body {
-    font-size: 90%;
-  }
-}
+@import "~bootstrap/scss/bootstrap";
 
 @media screen {
   .print-only {
@@ -179,22 +95,22 @@ a:link {
     display: none;
   }
 
-  body {
-    background-color: $color-neutral-inverse;
+  div {
+    background-color: white;
+  }
 
-    button,
-    .btn {
-      display: none;
-    }
+  button,
+  .btn {
+    display: none;
+  }
 
-    p,
-    pre,
-    h1,
-    h2,
-    h3,
-    h4 {
-      color: $color-neutral;
-    }
+  p,
+  pre,
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: black;
   }
 }
 </style>

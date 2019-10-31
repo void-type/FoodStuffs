@@ -3,42 +3,44 @@
     v-if="recipe.name"
     class="viewer"
   >
-    <router-link
+    <b-button
       :to="{name: 'edit', params: {id: recipe.id}}"
       class="float-right"
-      tag="button"
     >
       Edit
-    </router-link>
+    </b-button>
     <h1>{{ recipe.name }}</h1>
-    <h3>Ingredients</h3>
-    <pre>{{ recipe.ingredients }}</pre>
-    <h3>Directions</h3>
-    <pre>{{ recipe.directions }}</pre>
-    <h3>Stats</h3>
-    <div v-if="recipe.prepTimeMinutes !== null">
-      <span>Prep Time: {{ recipe.prepTimeMinutes }} minutes</span>
-      <br>
-    </div>
-    <div v-if="recipe.cookTimeMinutes !== null">
-      <span>Cook Time: {{ recipe.cookTimeMinutes }} minutes</span>
-      <br>
-    </div>
-    <div>
-      Categories:
-      <span class="categories">
-        <span
-          v-for="category in recipe.categories"
-          :key="category"
-        >
-          {{ category }}</span>
-      </span>
-    </div>
-    <br
-      v-if="recipe.prepTimeMinutes !== null
-        || recipe.cookTimeMinutes !== null"
+    <h3
+      class="mt-3"
     >
-    <EntityDetailsAuditInfo :entity="recipe" />
+      Ingredients
+    </h3>
+    <b-card>{{ recipe.ingredients }}</b-card>
+    <h3
+      class="mt-3"
+    >
+      Directions
+    </h3>
+    <b-card>{{ recipe.directions }}</b-card>
+    <h3
+      class="mt-3"
+    >
+      Stats
+    </h3>
+    <b-card>
+      <div v-if="recipe.prepTimeMinutes !== null">
+        Prep Time: {{ recipe.prepTimeMinutes }} minutes
+      </div>
+      <div v-if="recipe.cookTimeMinutes !== null">
+        Cook Time: {{ recipe.cookTimeMinutes }} minutes
+      </div>
+      <div v-if="recipe.categories.length > 0">
+        Categories: {{ recipe.categories.join(', ') }}
+      </div>
+    </b-card>
+    <b-card>
+      <EntityDetailsAuditInfo :entity="recipe" />
+    </b-card>
   </div>
 </template>
 
@@ -60,24 +62,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/theme";
-@import "../style/inputs";
-
-.viewer {
-  width: 100%;
-}
-
-.categories > span:not(:last-child):after {
-  content: ", ";
-}
-
-hr {
-  clear: both;
-  visibility: hidden;
-}
-
-.float-right {
-  float: right;
-}
 
 h1 {
   margin-top: 0;

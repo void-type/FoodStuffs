@@ -1,13 +1,21 @@
 <template>
-  <section>
-    <SelectSidebar :route-name="'view'" />
-    <RecipeEditor
-      :source-recipe="sourceRecipe"
-      :is-field-in-error="isFieldInError"
-      :on-save="onSave"
-      :on-delete="onDelete"
-    />
-  </section>
+  <div>
+    <b-row>
+      <b-col
+        sm="3"
+      >
+        <SelectSidebar :route-name="'view'" />
+      </b-col>
+      <b-col>
+        <RecipeEditor
+          :source-recipe="sourceRecipe"
+          :is-field-in-error="isFieldInError"
+          :on-save="onSave"
+          :on-delete="onDelete"
+        />
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>

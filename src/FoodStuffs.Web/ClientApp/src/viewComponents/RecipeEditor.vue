@@ -1,99 +1,138 @@
 <template>
   <form @keydown.ctrl.enter.prevent="saveClick(workingRecipe)">
     <h1>{{ workingRecipe.id > 0 ? 'Edit' : 'New' }} Recipe</h1>
-    <div class="form-row">
-      <div :class="{'form-group': true, danger: isFieldInError('name')}">
-        <input
-          id="name"
-          v-model="workingRecipe.name"
-          type="text"
-          name="name"
+    <b-form-row>
+      <b-col
+        md="12"
+      >
+        <b-form-group
+          label="Name"
+          label-for="name"
         >
-        <label for="name">Name</label>
-      </div>
-    </div>
-    <div class="form-row">
-      <div :class="{'form-group': true, danger: isFieldInError('ingredients')}">
-        <textarea
-          id="ingredients"
-          v-model="workingRecipe.ingredients"
-          name="ingredients"
+          <b-form-input
+            id="name"
+            v-model="workingRecipe.name"
+            :class="{'is-invalid': isFieldInError('name')}"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        md="12"
+      >
+        <b-form-group
+          label="Ingredients"
+          label-for="ingredients"
+        >
+          <b-form-textarea
+            id="ingredients"
+            v-model="workingRecipe.ingredients"
+            :rows="3"
+            :class="{'is-invalid': isFieldInError('ingredients')}"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        md="12"
+      >
+        <b-form-group
+          label="Directions"
+          label-for="directions"
+        >
+          <b-form-textarea
+            id="directions"
+            v-model="workingRecipe.directions"
+            :rows="3"
+            :class="{'is-invalid': isFieldInError('directions')}"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        sm="12"
+        md="6"
+      >
+        <b-form-group
+          label="Prep Time Minutes"
+          label-for="prepTimeMinutes"
+        >
+          <b-form-input
+            id="prepTimeMinutes"
+            v-model="workingRecipe.prepTimeMinutes"
+            :class="{'is-invalid': isFieldInError('prepTimeMinutes')}"
+            type="number"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        sm="12"
+        md="6"
+      >
+        <b-form-group
+          label="Cook Time Minutes"
+          label-for="cookTimeMinutes"
+        >
+          <b-form-input
+            id="cookTimeMinutes"
+            v-model="workingRecipe.cookTimeMinutes"
+            :class="{'is-invalid': isFieldInError('cookTimeMinutes')}"
+            type="number"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        md="12"
+      >
+        <TagEditor
+          :class="{'form-group': true, danger: isFieldInError('categories')}"
+          :tags="workingRecipe.categories"
+          :on-add-tag="addCategory"
+          :on-remove-tag="removeCategory"
+          field-name="categories"
+          label="Categories"
         />
-        <label for="ingredients">Ingredients</label>
-      </div>
-    </div>
-    <div class="form-row">
-      <div :class="{'form-group': true, danger: isFieldInError('directions')}">
-        <textarea
-          id="directions"
-          v-model="workingRecipe.directions"
-          name="directions"
-        />
-        <label for="directions">Directions</label>
-      </div>
-    </div>
-    <div class="form-row">
-      <div :class="{'form-group': true, danger: isFieldInError('prepTimeMinutes')}">
-        <input
-          id="prepTimeMinutes"
-          v-model="workingRecipe.prepTimeMinutes"
-          type="number"
-          name="prepTimeMinutes"
-        >
-        <label for="prepTimeMinutes">Prep Time Minutes</label>
-      </div>
-      <div :class="{'form-group': true, danger: isFieldInError('cookTimeMinutes')}">
-        <input
-          id="cookTimeMinutes"
-          v-model="workingRecipe.cookTimeMinutes"
-          type="number"
-          name="cookTimeMinutes"
-        >
-        <label for="cookTimeMinutes">Cook Time Minutes</label>
-      </div>
-    </div>
-    <div class="form-row">
-      <TagEditor
-        :class="{'form-group': true, danger: isFieldInError('categories')}"
-        :tags="workingRecipe.categories"
-        :on-add-tag="addCategory"
-        :on-remove-tag="removeCategory"
-        field-name="categories"
-        label="Categories"
-      />
-    </div>
+      </b-col>
+    </b-form-row>
     <EntityDetailsAuditInfo
       v-if="sourceRecipe.id"
+      class="mb-3"
       :entity="sourceRecipe"
     />
-    <div class="form-row button-row">
-      <button
-        @click.prevent="saveClick(workingRecipe)"
+    <b-form-row>
+      <b-col
+        md="12"
       >
-        Save
-      </button>
-      <router-link
-        v-if="workingRecipe.id > 0"
-        :to="{name: 'new', params: {newRecipeSuggestion: workingRecipe}}"
-        tag="button"
-      >
-        Copy
-      </router-link>
-      <router-link
-        v-if="workingRecipe.id > 0"
-        :to="{name: 'view', params: {id: sourceRecipe.id}}"
-        tag="button"
-      >
-        Cancel
-      </router-link>
-      <button
-        v-if="workingRecipe.id > 0"
-        class="pull-right danger"
-        @click.prevent="onDelete(workingRecipe.id)"
-      >
-        Delete
-      </button>
-    </div>
+        <b-button-toolbar>
+          <b-button
+            class="mr-1"
+            variant="primary"
+            @click.stop.prevent="saveClick(workingRecipe)"
+          >
+            Save
+          </b-button>
+          <b-button
+            v-if="workingRecipe.id > 0"
+            :to="{name: 'new', params: {newRecipeSuggestion: workingRecipe}}"
+            class="mr-1"
+          >
+            Copy
+          </b-button>
+          <b-button
+            v-if="workingRecipe.id > 0"
+            :to="{name: 'view', params: {id: sourceRecipe.id}}"
+            class="mr-1"
+          >
+            Cancel
+          </b-button>
+          <b-button
+            v-if="workingRecipe.id > 0"
+            class="ml-auto"
+            variant="danger"
+            @click.prevent="onDelete(workingRecipe.id)"
+          >
+            Delete
+          </b-button>
+        </b-button-toolbar>
+      </b-col>
+    </b-form-row>
   </form>
 </template>
 
@@ -176,7 +215,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/theme";
-@import "../style/inputs";
 
 .pull-right {
   margin-left: auto;

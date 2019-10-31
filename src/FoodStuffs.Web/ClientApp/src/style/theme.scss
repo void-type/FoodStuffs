@@ -1,40 +1,7 @@
-$color-primary-dark: rgba(100, 43, 97, 1);
-$color-primary: lighten($color-primary-dark, 8%);
+$color-primary: rgba(100, 43, 97, 1);
+$color-secondary: lighten(rgba(114, 196, 203, 1), 8%);
+$color-background: lighten(rgba(244, 222, 203, 1), 8%);
 
-$color-secondary-dark: rgba(114, 196, 203, 1);
-$color-secondary: lighten($color-secondary-dark, 8%);
-
-$color-ternary-dark: rgba(244, 222, 203, 1);
-$color-ternary: lighten($color-ternary-dark, 8%);
-
-$color-neutral: black;
-$color-neutral-medium: lightgray;
-$color-neutral-inverse: white;
-
-$color-danger: rgba(250, 103, 95, 1);
-$color-danger-dark: darken($color-danger, 8%);
-
-$color-success-dark: $color-secondary-dark;
-$color-success: $color-secondary;
-
-$color-button-primary-dark: $color-secondary-dark;
-$color-button-primary: $color-secondary;
-
-$color-background: $color-ternary;
 $color-border: rgba(37, 40, 53, 1);
-$color-focus: rgba($color-primary, .9);
-
-$highlight-border: inset 0 0 1px $color-secondary, inset 0 0 3px $color-secondary, inset 0 0 5px $color-secondary;
-$border: 1px solid mix($color-border, $color-neutral-inverse, 70%);
-$border-light: 1px solid mix($color-border, $color-neutral-inverse, 20%);
 $shadow: 2px 3px 2px rgba($color-border, .5);
-$input-focus: 2px 3px 2px rgba($color-focus, .5);
 $shadow-collapse: 1px 1px 2px rgba($color-border, .5);
-$font-family: "Segoe UI", Arial, sans-serif;
-
-$contained-width: 70rem;
-$topbar-height: 3rem;
-
-$extra-large-screen: "(min-width:1921px)";
-$medium-screen: "(max-width:880px)";
-$small-screen: "(max-width:420px)";

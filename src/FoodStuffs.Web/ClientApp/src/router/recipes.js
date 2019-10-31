@@ -39,7 +39,6 @@ export default [
   {
     name: 'search',
     path: '/search',
-    alias: '/',
     component: Search,
   },
 ];

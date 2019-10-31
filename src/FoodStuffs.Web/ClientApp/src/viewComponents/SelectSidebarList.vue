@@ -46,7 +46,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/theme";
-@import "../style/inputs";
 
 table {
   width: 15rem;
@@ -58,29 +57,9 @@ table {
     text-align: left;
   }
 
-  th {
-    border-bottom: $border;
-  }
-
-  td {
-    border-bottom: $border-light;
-  }
-
   th,
   td {
     padding: 0.5em 1rem;
-  }
-
-  tbody tr:hover {
-    cursor: pointer;
-    background-color: mix($color-ternary, $color-secondary, 60%);
-    box-shadow: $highlight-border;
-  }
-}
-
-@media #{$medium-screen} {
-  table {
-    width: 100%;
   }
 }
 </style>

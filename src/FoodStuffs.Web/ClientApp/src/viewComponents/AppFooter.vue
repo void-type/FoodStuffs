@@ -11,10 +11,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
-
 footer {
-  border-top: $border;
+  border-top: 1px solid;
   padding: 1em 0rem;
   text-align: center;
 }
