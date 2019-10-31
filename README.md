@@ -17,7 +17,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 * Text search on recipe names and categories.
 * View history.
 * Full logging on the server.
-* No style dependencies. All custom CSS.
+* Bootstrap-Vue UI.
 * See screenshots [here](docs/screenshots.md).
 
 ### Coming Soon™
