@@ -1,5 +1,5 @@
 <template>
-  <div class="no-print">
+  <div>
     <SelectSidebarList
       v-if="recent.length > 0"
       :recipes="recent"

@@ -3,6 +3,7 @@
     <b-row>
       <b-col
         sm="3"
+        class="no-print"
       >
         <SelectSidebar :route-name="'view'" />
       </b-col>
