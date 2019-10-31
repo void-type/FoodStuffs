@@ -1,41 +1,69 @@
 <template>
-  <section>
-    <SearchControls
-      :name-search="listRequest.nameSearch"
-      :category-search="listRequest.categorySearch"
-      :on-category-search-change="setListRequestCategorySearch"
-      :on-name-search-change="setListRequestNameSearch"
-      :on-search="fetchRecipesList"
-      :on-clear="clearSearch"
+  <div>
+    <EntityTableControls
+      :clear-search="clearSearch"
+      :init-search="fetchRecipesList"
+      class="mt-4"
+    >
+      <EntityTableTextSearch
+        slot="searchControls"
+        :search-string="listRequest.nameSearch"
+        :update-search-string="setListRequestNameSearch"
+        class="mr-1"
+      />
+      <EntityTableTextSearch
+        slot="searchControls"
+        :search-string="listRequest.categorySearch"
+        :update-search-string="setListRequestCategorySearch"
+        class="mr-1"
+      />
+    </EntityTableControls>
+    <b-table
+      :items="listResponse.items"
+      :fields="tableFields"
+      show-empty
+      hover
+      class="mt-3"
+      @row-clicked="onTableRowClick"
     />
-    <SearchTable
-      :recipes="listResponse.items"
-      :sort="getSortType"
-      :on-cycle-sort="cycleSort"
+    <EntityTablePager
+      :list-response="listResponse"
+      :list-request="listRequest"
+      :change-page="updatePage"
+      :change-take="updateTake"
     />
-    <Pager
-      :page="listRequest.page"
-      :take="listRequest.take"
-      :total-count="listResponse.totalCount"
-      :on-page-change="updatePage"
-      :on-take-change="updateTake"
-    />
-  </section>
+  </div>
 </template>
 
 <script>
+
+// :sort="getSortType"
+// :on-cycle-sort="cycleSort"
+
 import { mapActions, mapGetters } from 'vuex';
 import recipesApiModels from '../models/recipesApiModels';
 import webApi from '../webApi';
-import SearchControls from '../viewComponents/SearchControls.vue';
-import SearchTable from '../viewComponents/SearchTable.vue';
-import Pager from '../viewComponents/Pager.vue';
+import router from '../router';
+import EntityTableControls from '../viewComponents/EntityTableControls.vue';
+import EntityTablePager from '../viewComponents/EntityTablePager.vue';
+import EntityTableTextSearch from '../viewComponents/EntityTableTextSearch.vue';
 
 export default {
   components: {
-    SearchControls,
-    SearchTable,
-    Pager,
+    EntityTableControls,
+    EntityTablePager,
+    EntityTableTextSearch,
+  },
+  data() {
+    return {
+      tableFields: [
+        'name',
+        {
+          key: 'categories',
+          formatter: value => value.join(', '),
+        },
+      ],
+    };
   },
   computed: {
     ...mapGetters({
@@ -87,18 +115,15 @@ export default {
       this.resetListRequest();
       this.fetchRecipesList();
     },
+    onTableRowClick(recipe) {
+      router.push({ name: 'view', params: { id: recipe.id } }).catch(() => {});
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-main > section {
-  width: 100%;
-  flex-direction: column;
-
-  & > *:not(:last-child) {
-    margin-bottom: 1.5rem;
-    margin-right: 0;
-  }
+table.table-hover {
+  cursor: pointer;
 }
 </style>

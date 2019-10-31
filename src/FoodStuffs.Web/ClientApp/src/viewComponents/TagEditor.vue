@@ -1,32 +1,39 @@
 <template>
   <div>
     <div>
-      <div class="tags">
-        <span
-          v-for="tag in tags"
-          :key="tag"
-        >
-          {{ tag }}<span
-            class="remove-tag"
-            @click="removeTagClick(tag)"
-          >
-            ✖</span>
-        </span>
-      </div>
-    </div>
-    <div>
-      <input
-        :id="fieldName"
-        v-model="newTag"
-        :name="fieldName"
-        type="text"
-        @keydown.enter.prevent="addTagClick()"
+      <b-form-group
+        :label="label"
+        :label-for="fieldName"
       >
-      <button @click.prevent="addTagClick()">
-        Add
-      </button>
+        <b-input-group>
+          <b-form-input
+            :id="fieldName"
+            v-model="newTag"
+            :disabled="false"
+          />
+          <b-input-group-append>
+            <b-button
+              @click.prevent="addTagClick()"
+            >
+              Add
+            </b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form-group>
     </div>
-    <label :for="fieldName">{{ label }}</label>
+
+    <div class="tags">
+      <span
+        v-for="tag in tags"
+        :key="tag"
+      >
+        {{ tag }}<span
+          class="remove-tag"
+          @click="removeTagClick(tag)"
+        >
+          ✖</span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -73,14 +80,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/theme";
-@import "../style/inputs";
 
-.form-group > div {
-  display: flex;
-
-  & button {
-    margin-left: 0.5rem;
-  }
+.form-group > div button {
+  margin-left: 0.5rem;
 }
 
 .tags {
@@ -89,11 +91,14 @@ export default {
 
   & > span {
     margin-top: 0.5rem;
-    background-color: $color-neutral-medium;
+    background-color: $color-secondary;
     box-sizing: border-box;
     padding: 0.3em 0.6rem;
-    border: $border;
     box-shadow: $shadow;
+
+    &:not(last) {
+      margin-right: 0.5rem;
+    }
 
     &.remove-tag {
       margin-left: 0.5rem;
@@ -101,7 +106,6 @@ export default {
 
     & > span:hover {
       cursor: pointer;
-      color: $color-danger-dark;
     }
   }
 }

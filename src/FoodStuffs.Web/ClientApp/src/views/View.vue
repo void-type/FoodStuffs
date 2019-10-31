@@ -1,8 +1,16 @@
 <template>
-  <section>
-    <SelectSidebar :route-name="'view'" />
-    <RecipeViewer :recipe="sourceRecipe" />
-  </section>
+  <div>
+    <b-row>
+      <b-col
+        sm="3"
+      >
+        <SelectSidebar :route-name="'view'" />
+      </b-col>
+      <b-col>
+        <RecipeViewer :recipe="sourceRecipe" />
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>
