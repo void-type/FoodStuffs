@@ -2,7 +2,8 @@
   <div>
     <b-row>
       <b-col
-        sm="3"
+        md="12"
+        lg="3"
         class="no-print"
       >
         <SelectSidebar :route-name="'view'" />

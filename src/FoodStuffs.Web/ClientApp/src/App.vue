@@ -65,6 +65,8 @@ $primary: $color-primary;
 $secondary: $color-secondary;
 $body-bg: $color-background;
 
+$font-family-sans-serif: "-apple-system", "BlinkMacSystemFont", "Segoe UI",
+  "Roboto", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 $enable-rounded: false;
 $print-page-size: auto;
 
@@ -83,6 +85,15 @@ a.btn {
 }
 
 @import "~bootstrap/scss/bootstrap";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-primary;
+}
 
 @media screen {
   .print-only {

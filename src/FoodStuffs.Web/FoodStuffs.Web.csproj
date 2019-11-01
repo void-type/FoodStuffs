@@ -20,8 +20,8 @@
     <PackageReference Include="Serilog.AspNetCore" Version="3.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="VoidCore.AspNet" Version="2.0.12-gf2667249f2" />
-    <PackageReference Include="VoidCore.EntityFramework" Version="2.0.12-gf2667249f2" />
+    <PackageReference Include="VoidCore.AspNet" Version="2.0.14-gaf6b834165" />
+    <PackageReference Include="VoidCore.EntityFramework" Version="2.0.14-gaf6b834165" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" />
     <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" /> -->

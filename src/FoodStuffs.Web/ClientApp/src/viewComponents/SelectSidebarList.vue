@@ -1,20 +1,27 @@
 <template>
-  <table>
-    <thead v-if="title !== null">
-      <tr>
-        <th>{{ title }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
+  <b-card
+    no-body
+  >
+    <template
+      v-slot:header
+    >
+      <h5 class="mb-0">
+        {{ title }}
+      </h5>
+    </template>
+    <b-list-group
+      flush
+    >
+      <b-list-group-item
         v-for="recipe in recipes"
         :key="recipe.id"
-        @click="onTableRowClick(recipe)"
+        button
+        @click="viewRecipe(recipe)"
       >
-        <td>{{ recipe.name }}</td>
-      </tr>
-    </tbody>
-  </table>
+        {{ recipe.name }}
+      </b-list-group-item>
+    </b-list-group>
+  </b-card>
 </template>
 
 <script>
@@ -37,7 +44,7 @@ export default {
     },
   },
   methods: {
-    onTableRowClick(recipe) {
+    viewRecipe(recipe) {
       router.push({ name: 'view', params: { id: recipe.id } }).catch(() => {});
     },
   },
@@ -45,21 +52,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
-
-table {
-  width: 15rem;
-  padding: 1rem;
-  border-collapse: collapse;
-  border-spacing: 0;
-
-  tr {
-    text-align: left;
-  }
-
-  th,
-  td {
-    padding: 0.5em 1rem;
-  }
-}
 </style>

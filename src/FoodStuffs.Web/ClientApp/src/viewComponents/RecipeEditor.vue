@@ -102,7 +102,7 @@
       >
         <b-button-toolbar>
           <b-button
-            class="mr-1"
+            class="mr-2"
             variant="primary"
             @click.stop.prevent="saveClick(workingRecipe)"
           >
@@ -111,14 +111,13 @@
           <b-button
             v-if="workingRecipe.id > 0"
             :to="{name: 'new', params: {newRecipeSuggestion: workingRecipe}}"
-            class="mr-1"
+            class="mr-2"
           >
             Copy
           </b-button>
           <b-button
             v-if="workingRecipe.id > 0"
             :to="{name: 'view', params: {id: sourceRecipe.id}}"
-            class="mr-1"
           >
             Cancel
           </b-button>
