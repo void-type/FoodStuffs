@@ -5,18 +5,28 @@
       :init-search="fetchRecipesList"
       class="mt-4"
     >
-      <EntityTableTextSearch
+      <b-input-group
         slot="searchControls"
-        :search-string="listRequest.nameSearch"
-        :update-search-string="setListRequestNameSearch"
+        prepend="Name contains"
         class="mr-1"
-      />
-      <EntityTableTextSearch
+      >
+        <b-form-input
+          id="nameSearch"
+          :value="listRequest.nameSearch"
+          @input="setListRequestNameSearch"
+        />
+      </b-input-group>
+      <b-input-group
         slot="searchControls"
-        :search-string="listRequest.categorySearch"
-        :update-search-string="setListRequestCategorySearch"
+        prepend="Categories contain"
         class="mr-1"
-      />
+      >
+        <b-form-input
+          id="categorySearch"
+          :value="listRequest.categorySearch"
+          @input="setListRequestCategorySearch"
+        />
+      </b-input-group>
     </EntityTableControls>
     <b-table
       :items="listResponse.items"
@@ -46,13 +56,11 @@ import webApi from '../webApi';
 import router from '../router';
 import EntityTableControls from '../viewComponents/EntityTableControls.vue';
 import EntityTablePager from '../viewComponents/EntityTablePager.vue';
-import EntityTableTextSearch from '../viewComponents/EntityTableTextSearch.vue';
 
 export default {
   components: {
     EntityTableControls,
     EntityTablePager,
-    EntityTableTextSearch,
   },
   data() {
     return {

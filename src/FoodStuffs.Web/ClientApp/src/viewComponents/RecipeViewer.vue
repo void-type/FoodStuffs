@@ -15,32 +15,30 @@
     >
       Ingredients
     </h3>
-    <b-card>{{ recipe.ingredients }}</b-card>
+    <p>{{ recipe.ingredients }}</p>
     <h3
       class="mt-3"
     >
       Directions
     </h3>
-    <b-card>{{ recipe.directions }}</b-card>
+    <p>{{ recipe.directions }}</p>
     <h3
       class="mt-3"
     >
       Stats
     </h3>
-    <b-card>
-      <div v-if="recipe.prepTimeMinutes !== null">
-        Prep Time: {{ recipe.prepTimeMinutes }} minutes
-      </div>
-      <div v-if="recipe.cookTimeMinutes !== null">
-        Cook Time: {{ recipe.cookTimeMinutes }} minutes
-      </div>
-      <div v-if="recipe.categories.length > 0">
-        Categories: {{ recipe.categories.join(', ') }}
-      </div>
-    </b-card>
-    <b-card>
+    <div v-if="recipe.prepTimeMinutes !== null">
+      Prep Time: {{ recipe.prepTimeMinutes }} minutes
+    </div>
+    <div v-if="recipe.cookTimeMinutes !== null">
+      Cook Time: {{ recipe.cookTimeMinutes }} minutes
+    </div>
+    <div v-if="recipe.categories.length > 0">
+      Categories: {{ recipe.categories.join(', ') }}
+    </div>
+    <div>
       <EntityDetailsAuditInfo :entity="recipe" />
-    </b-card>
+    </div>
   </div>
 </template>
 

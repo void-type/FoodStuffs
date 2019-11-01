@@ -11,8 +11,8 @@ const internal = {
   formats: {
     apiDate: 'YYYY-MM-DD',
     apiDateTime: 'YYYY-MM-DDTHH:mm:ss',
-    viewDate: 'MM-DD-YYYY',
-    viewDateTime: 'MM-DD-YYYY HH:mm:ss',
+    viewDate: 'L',
+    viewDateTime: 'L LT',
   },
 };
 
@@ -20,11 +20,11 @@ export default {
   dateForApi(value) {
     return internal.getFormattedMoment(value, internal.formats.apiDate);
   },
-  dateForView(value) {
-    return internal.getFormattedMoment(value, internal.formats.viewDate);
-  },
   dateTimeForApi(value) {
     return internal.getFormattedMoment(value, internal.formats.apiDateTime);
+  },
+  dateForView(value) {
+    return internal.getFormattedMoment(value, internal.formats.viewDate);
   },
   dateTimeForView(value) {
     return internal.getFormattedMoment(value, internal.formats.viewDateTime);

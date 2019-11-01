@@ -13,6 +13,7 @@
           />
           <b-input-group-append>
             <b-button
+              class="ml-2"
               @click.prevent="addTagClick()"
             >
               Add
@@ -80,10 +81,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/theme";
-
-.form-group > div button {
-  margin-left: 0.5rem;
-}
 
 .tags {
   display: flex;
