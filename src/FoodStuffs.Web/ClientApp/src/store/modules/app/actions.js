@@ -46,8 +46,12 @@ export default {
     context.commit('SET_MESSAGES', [message]);
   },
   setValidationErrorMessages(context, { errorMessages, fieldNames }) {
+    function isNullOrEmpty(item) {
+      return item === null || item === undefined || item === '';
+    }
+
     context.commit('SET_MESSAGE_IS_ERROR', true);
-    context.commit('SET_FIELDS_IN_ERROR', fieldNames);
-    context.commit('SET_MESSAGES', errorMessages);
+    context.commit('SET_FIELDS_IN_ERROR', fieldNames.filter(s => !isNullOrEmpty(s)));
+    context.commit('SET_MESSAGES', errorMessages.filter(s => !isNullOrEmpty(s)));
   },
 };
