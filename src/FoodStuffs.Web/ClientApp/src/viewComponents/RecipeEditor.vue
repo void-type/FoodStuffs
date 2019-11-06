@@ -26,7 +26,8 @@
           <b-form-textarea
             id="ingredients"
             v-model="workingRecipe.ingredients"
-            :rows="3"
+            rows="1"
+            :max-rows="Number.MAX_SAFE_INTEGER"
             :class="{'is-invalid': isFieldInError('ingredients')}"
           />
         </b-form-group>
@@ -41,7 +42,8 @@
           <b-form-textarea
             id="directions"
             v-model="workingRecipe.directions"
-            :rows="3"
+            rows="1"
+            :max-rows="Number.MAX_SAFE_INTEGER"
             :class="{'is-invalid': isFieldInError('directions')}"
           />
         </b-form-group>

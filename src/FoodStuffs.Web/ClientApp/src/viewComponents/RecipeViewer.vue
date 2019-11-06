@@ -15,13 +15,23 @@
     >
       Ingredients
     </h3>
-    <p>{{ recipe.ingredients }}</p>
+    <b-form-textarea
+      plaintext
+      rows="1"
+      :max-rows="Number.MAX_SAFE_INTEGER"
+      :value="recipe.ingredients"
+    />
     <h3
       class="mt-3"
     >
       Directions
     </h3>
-    <p>{{ recipe.directions }}</p>
+    <b-form-textarea
+      plaintext
+      rows="1"
+      :max-rows="Number.MAX_SAFE_INTEGER"
+      :value="recipe.directions"
+    />
     <h3
       class="mt-3"
     >
