@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodStuffs.Model.Data;
@@ -8,9 +7,9 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Model.Events.Recipes
+namespace FoodStuffs.Model.Events.Images
 {
-    public class DeleteRecipe
+    public class DeleteImage
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -23,15 +22,13 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
+                var byId = new ImagesByIdWithBlobsSpecification(request.Id);
 
-                return await _data.Recipes.Get(byId, cancellationToken)
-                    .ToResultAsync(new RecipeNotFoundFailure())
-                    .TeeOnSuccessAsync(r => _data.Blobs.RemoveRange(r.Image.Select(i => i.Blob), cancellationToken))
-                    .TeeOnSuccessAsync(r => _data.Images.RemoveRange(r.Image, cancellationToken))
-                    .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipe, cancellationToken))
-                    .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
-                    .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
+                return await _data.Images.Get(byId, cancellationToken)
+                    .ToResultAsync(new ImageNotFoundFailure())
+                    .TeeOnSuccessAsync(a => _data.Blobs.Remove(a.Blob, cancellationToken))
+                    .TeeOnSuccessAsync(a => _data.Images.Remove(a, cancellationToken))
+                    .SelectAsync(a => EntityMessage.Create("Image deleted.", a.Id));
             }
         }
 

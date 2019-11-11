@@ -8,6 +8,7 @@ namespace FoodStuffs.Model.Data.Models
         public Recipe()
         {
             CategoryRecipe = new HashSet<CategoryRecipe>();
+            Image = new HashSet<Image>();
         }
 
         public int Id { get; set; }
@@ -17,10 +18,11 @@ namespace FoodStuffs.Model.Data.Models
         public int? PrepTimeMinutes { get; set; }
         public int? CookTimeMinutes { get; set; }
         public string CreatedBy { get; set; }
-        public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
 
         public virtual ICollection<CategoryRecipe> CategoryRecipe { get; set; }
+        public virtual ICollection<Image> Image { get; set; }
     }
 }

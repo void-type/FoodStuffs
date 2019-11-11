@@ -27,7 +27,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
+                var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
 
                 var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken);
 

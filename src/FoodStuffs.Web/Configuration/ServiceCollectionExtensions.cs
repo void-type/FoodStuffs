@@ -1,3 +1,4 @@
+using FoodStuffs.Model.Events.Images;
 using FoodStuffs.Model.Events.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 using VoidCore.AspNet.ClientApp;
@@ -23,6 +24,16 @@ namespace FoodStuffs.Web.Configuration
 
             services.AddScoped<DeleteRecipe.Handler>();
             services.AddSingleton<DeleteRecipe.Logger>();
+
+            services.AddScoped<GetImage.Handler>();
+            services.AddSingleton<GetImage.Logger>();
+
+            services.AddScoped<SaveImage.Handler>();
+            services.AddSingleton<SaveImage.RequestValidator>();
+            services.AddSingleton<SaveImage.Logger>();
+
+            services.AddScoped<DeleteImage.Handler>();
+            services.AddSingleton<DeleteImage.Logger>();
         }
     }
 }

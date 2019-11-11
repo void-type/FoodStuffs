@@ -1,4 +1,4 @@
-﻿-- Requirements: An target database and sql server login.
+﻿-- Requirements: A target database and sql server login.
 -- This script will create the necessary tables and an initial app user.
 -- This script will destroy any data within the database and reset the database to a new condition.
 
@@ -15,8 +15,11 @@ ALTER TABLE [dbo].[CategoryRecipe] DROP CONSTRAINT [FK_CategoryRecipe_Category]
 GO
 
 IF OBJECT_ID('dbo.Category', 'U') IS NOT NULL DROP TABLE [dbo].[Category]
+GO
 IF OBJECT_ID('dbo.CategoryRecipe', 'U') IS NOT NULL DROP TABLE [dbo].[CategoryRecipe]
+GO
 IF OBJECT_ID('dbo.Recipe', 'U') IS NOT NULL DROP TABLE [dbo].[Recipe]
+GO
 IF OBJECT_ID('dbo.User', 'U') IS NOT NULL DROP TABLE [dbo].[User]
 GO
 

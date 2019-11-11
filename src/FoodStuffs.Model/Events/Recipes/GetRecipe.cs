@@ -24,7 +24,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public override async Task<IResult<RecipeDto>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
+                var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
 
                 return await _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
@@ -39,7 +39,8 @@ namespace FoodStuffs.Model.Events.Recipes
                        createdOn: r.CreatedOn,
                        modifiedBy: r.ModifiedBy,
                        modifiedOn: r.ModifiedOn,
-                       categories: r.CategoryRecipe.Select(cr => cr.Category.Name)));
+                       categories: r.CategoryRecipe.Select(cr => cr.Category.Name),
+                       images: r.Image.Select(i => i.Id)));
             }
         }
 
@@ -56,7 +57,7 @@ namespace FoodStuffs.Model.Events.Recipes
         public class RecipeDto
         {
             public RecipeDto(int id, string name, string ingredients, string directions, int? cookTimeMinutes, int? prepTimeMinutes,
-                string createdBy, DateTime createdOn, string modifiedBy, DateTime modifiedOn, IEnumerable<string> categories)
+                string createdBy, DateTime createdOn, string modifiedBy, DateTime modifiedOn, IEnumerable<string> categories, IEnumerable<int> images)
             {
                 Id = id;
                 Name = name;
@@ -69,6 +70,7 @@ namespace FoodStuffs.Model.Events.Recipes
                 ModifiedBy = modifiedBy;
                 ModifiedOn = modifiedOn;
                 Categories = categories;
+                Images = images;
             }
 
             public int Id { get; }
@@ -82,6 +84,7 @@ namespace FoodStuffs.Model.Events.Recipes
             public string ModifiedBy { get; }
             public DateTime ModifiedOn { get; }
             public IEnumerable<string> Categories { get; }
+            public IEnumerable<int> Images { get; }
         }
 
         public class Logger : FallibleEventLogger<Request, RecipeDto>

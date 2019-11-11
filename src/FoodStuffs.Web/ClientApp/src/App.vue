@@ -78,7 +78,7 @@ a.btn {
   position: relative;
   min-width: 5rem;
 
-  &:active {
+  &:active:not(:disabled) {
     box-shadow: $shadow-collapse;
     top: 3px;
   }

@@ -60,6 +60,7 @@ class GetResponse {
     this.cookTimeMinutes = null;
     this.prepTimeMinutes = null;
     this.categories = [];
+    this.images = [];
     this.createdOn = new Date();
     this.createdBy = '';
     this.modifiedOn = new Date();

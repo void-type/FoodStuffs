@@ -12,14 +12,18 @@ namespace FoodStuffs.Web.Data.EntityFramework
     {
         public FoodStuffsEfData(FoodStuffsContext context, ILoggingStrategy loggingStrategy, IDateTimeService now, ICurrentUserAccessor currentUserAccessor)
         {
+            Blobs = new EfWritableRepository<Blob>(context, loggingStrategy);
             Categories = new EfWritableRepository<Category>(context, loggingStrategy);
             CategoryRecipes = new EfWritableRepository<CategoryRecipe>(context, loggingStrategy);
+            Images = new EfWritableRepository<Image>(context, loggingStrategy).AddAuditability(now, currentUserAccessor);
             Recipes = new EfWritableRepository<Recipe>(context, loggingStrategy).AddAuditability(now, currentUserAccessor);
             Users = new EfWritableRepository<User>(context, loggingStrategy);
         }
 
+        public IWritableRepository<Blob> Blobs { get; }
         public IWritableRepository<Category> Categories { get; }
         public IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
+        public IWritableRepository<Image> Images { get; }
         public IWritableRepository<Recipe> Recipes { get; }
         public IWritableRepository<User> Users { get; }
     }
