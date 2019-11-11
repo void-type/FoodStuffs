@@ -47,6 +47,7 @@
             v-model="uploadFile"
             :state="isFieldInError('upload') ? false : null"
             name="upload"
+            class="text-nowrap text-truncate"
             placeholder="Drop file or click to browse..."
             drop-placeholder="Drop file here..."
           />

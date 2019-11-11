@@ -46,7 +46,7 @@ namespace FoodStuffs.Model.Events.Recipes
                     .Select(recipe => new RecipeListItemDto(
                         id: recipe.Id,
                         name: recipe.Name,
-                        categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name)))
+                        categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name).OrderBy(n => n)))
                     .ToItemSet(paginationOptions, totalCount)
                     .Map(page => Ok(page));
             }

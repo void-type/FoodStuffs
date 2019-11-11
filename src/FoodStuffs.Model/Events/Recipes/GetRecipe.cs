@@ -39,7 +39,7 @@ namespace FoodStuffs.Model.Events.Recipes
                        createdOn: r.CreatedOn,
                        modifiedBy: r.ModifiedBy,
                        modifiedOn: r.ModifiedOn,
-                       categories: r.CategoryRecipe.Select(cr => cr.Category.Name),
+                       categories: r.CategoryRecipe.Select(cr => cr.Category.Name).OrderBy(n => n),
                        images: r.Image.Select(i => i.Id)));
             }
         }
