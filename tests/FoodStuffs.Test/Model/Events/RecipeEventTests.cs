@@ -181,7 +181,7 @@ namespace FoodStuffs.Test.Model.Events
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(recipeToDelete.Id));
 
-            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(recipeToDelete.Id), default);
+            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesAndImagesSpecification(recipeToDelete.Id), default);
 
             Assert.True(result.IsSuccess);
             Assert.True(maybeRecipe.HasNoValue);
@@ -212,7 +212,7 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(result.IsSuccess);
             Assert.True(result.Value.Id > 0);
 
-            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(result.Value.Id), default);
+            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesAndImagesSpecification(result.Value.Id), default);
 
             Assert.True(maybeRecipe.HasValue);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, maybeRecipe.Value.CreatedOn);
@@ -237,7 +237,7 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(result.IsSuccess);
             Assert.Equal(existingRecipeId, result.Value.Id);
 
-            var updatedRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesSpecification(existingRecipeId), default);
+            var updatedRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesAndImagesSpecification(existingRecipeId), default);
             Assert.True(updatedRecipe.HasValue);
             Assert.Equal(Deps.DateTimeServiceEarly.Moment, updatedRecipe.Value.CreatedOn);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.Value.ModifiedOn);

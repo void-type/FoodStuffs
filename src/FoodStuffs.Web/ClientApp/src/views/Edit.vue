@@ -14,6 +14,8 @@
           :is-field-in-error="isFieldInError"
           :on-save="onSave"
           :on-delete="onDelete"
+          :on-upload-image="uploadImage"
+          :on-delete-image="deleteImage"
         />
       </b-col>
     </b-row>
@@ -98,8 +100,12 @@ export default {
       webApi.recipes.save(
         recipe,
         (data) => {
-          this.fetchRecipe(this.id);
-          router.push({ name: 'edit', params: { id: data.id } }).catch(() => {});
+          if (this.id === 0) {
+            router.push({ name: 'edit', params: { id: data.id } }).catch(() => {});
+          } else {
+            this.fetchRecipe(this.id);
+          }
+
           this.fetchRecipesList();
           this.setSuccessMessage(data.message);
         },
@@ -115,6 +121,26 @@ export default {
           this.fetchRecipesList();
           router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);
+        },
+        response => this.setApiFailureMessages(response),
+      );
+    },
+    uploadImage(request) {
+      webApi.images.upload(
+        request,
+        (data) => {
+          this.setSuccessMessage(data.message);
+          this.fetchRecipe(this.id);
+        },
+        response => this.setApiFailureMessages(response),
+      );
+    },
+    deleteImage(request) {
+      webApi.images.delete(
+        request,
+        (data) => {
+          this.setSuccessMessage(data.message);
+          this.fetchRecipe(this.id);
         },
         response => this.setApiFailureMessages(response),
       );

@@ -9,6 +9,7 @@
     <SelectSidebarList
       :recipes="listResponse.items"
       :title="'Recipes'"
+      class="mt-2"
       :route-name="routeName"
     />
   </div>
@@ -38,9 +39,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
-
-div > * {
-  margin-bottom: 1rem;
-}
 </style>

@@ -3,13 +3,51 @@
     v-if="recipe.name"
     class="viewer"
   >
-    <b-button
-      :to="{name: 'edit', params: {id: recipe.id}}"
-      class="float-right"
-    >
-      Edit
-    </b-button>
     <h1>{{ recipe.name }}</h1>
+    <div
+      md="12"
+      class="no-print"
+    >
+      <b-row
+        no-gutters
+      >
+        <b-form-checkbox
+          id="showImage"
+          v-model="showImage"
+          name="showImage"
+          class="mt-2 ml-auto mr-4"
+          switch
+        >
+          Image
+        </b-form-checkbox>
+        <b-button
+          :to="{name: 'edit', params: {id: recipe.id}}"
+          variant="primary"
+        >
+          Edit
+        </b-button>
+      </b-row>
+    </div>
+    <div
+      v-if="showImage"
+      class="text-center mt-3"
+    >
+      <b-carousel
+        v-if="recipe.images.length > 0"
+        id="image-carousel"
+        v-model="carouselIndex"
+        :interval="0"
+        no-animation
+        controls
+        indicators
+      >
+        <b-carousel-slide
+          v-for="image in recipe.images"
+          :key="image"
+          :img-src="imageUrl(image)"
+        />
+      </b-carousel>
+    </div>
     <h3
       class="mt-3"
     >
@@ -47,13 +85,17 @@
       Categories: {{ recipe.categories.join(', ') }}
     </div>
     <div>
-      <EntityDetailsAuditInfo :entity="recipe" />
+      <EntityDetailsAuditInfo
+        class="mt-3"
+        :entity="recipe"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
+import webApi from '../webApi';
 
 export default {
   components: {
@@ -65,13 +107,23 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      showImage: true,
+      carouselIndex: 0,
+    };
+  },
+  methods: {
+    imageUrl(id) {
+      return webApi.images.url(id);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
-
-h1 {
-  margin-top: 0;
+textarea {
+  overflow: hidden !important;
+  resize: none;
 }
 </style>

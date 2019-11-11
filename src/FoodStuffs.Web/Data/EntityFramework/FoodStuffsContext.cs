@@ -10,13 +10,27 @@ namespace FoodStuffs.Web.Data.EntityFramework
         {
         }
 
+        public virtual DbSet<Blob> Blob { get; set; }
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<CategoryRecipe> CategoryRecipe { get; set; }
+        public virtual DbSet<Image> Image { get; set; }
         public virtual DbSet<Recipe> Recipe { get; set; }
         public virtual DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Blob>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Bytes).IsRequired();
+
+                entity.HasOne(d => d.Image)
+                    .WithOne(p => p.Blob)
+                    .HasForeignKey<Blob>(d => d.Id)
+                    .HasConstraintName("FK_Blob_Image");
+            });
+
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.Property(e => e.Name).IsRequired();
@@ -39,19 +53,28 @@ namespace FoodStuffs.Web.Data.EntityFramework
                     .HasConstraintName("FK_CategoryRecipe_Recipe");
             });
 
-            modelBuilder.Entity<Recipe>(entity =>
+            modelBuilder.Entity<Image>(entity =>
             {
                 entity.Property(e => e.CreatedBy).IsRequired();
 
-                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+                entity.Property(e => e.ModifiedBy).IsRequired();
+
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.Image)
+                    .HasForeignKey(d => d.RecipeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Image_Recipe");
+            });
+
+            modelBuilder.Entity<Recipe>(entity =>
+            {
+                entity.Property(e => e.CreatedBy).IsRequired();
 
                 entity.Property(e => e.Directions).IsRequired();
 
                 entity.Property(e => e.Ingredients).IsRequired();
 
                 entity.Property(e => e.ModifiedBy).IsRequired();
-
-                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsRequired();
             });
