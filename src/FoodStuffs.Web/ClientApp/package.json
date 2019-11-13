@@ -5,10 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
     "axios": "^0.18.1",
     "bootstrap-vue": "^2.0.4",
     "core-js": "^2.6.9",
@@ -29,28 +30,13 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^23.6.0",
     "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-vue": "^5.0.0",
     "fs": "0.0.1-security",
     "nerdbank-gitversioning": "^3.0.26",
     "sass": "^1.23.0",
     "sass-lint": "^1.12.1",
-    "sass-loader": "^7.3.1",
+    "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@vue/app",
-        {
-          "polyfills": [
-            "es6.array.find",
-            "es6.array.from",
-            "es6.symbol"
-          ]
-        }
-      ]
-    ]
   },
   "eslintConfig": {
     "root": true,
