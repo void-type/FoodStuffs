@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     userRoles() {
-      return this.user.authorizedAs.join('\n');
+      return this.user.authorizedAs.join(', ');
     },
   },
 };
