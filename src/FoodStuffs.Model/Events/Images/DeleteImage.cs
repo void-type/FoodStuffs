@@ -48,7 +48,7 @@ namespace FoodStuffs.Model.Events.Images
 
             protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
-                Logger.Info($"Id: '{request.Id}'");
+                Logger.Info($"RequestId: '{request.Id}'");
                 base.OnBoth(request, result);
             }
         }

@@ -29,7 +29,6 @@ namespace FoodStuffs.Web.Configuration
             services.AddSingleton<GetImage.Logger>();
 
             services.AddScoped<SaveImage.Handler>();
-            services.AddSingleton<SaveImage.RequestValidator>();
             services.AddSingleton<SaveImage.Logger>();
 
             services.AddScoped<DeleteImage.Handler>();

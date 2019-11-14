@@ -2,9 +2,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
-using VoidCore.Domain.RuleValidator;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
@@ -23,9 +23,23 @@ namespace FoodStuffs.Model.Events.Images
 
             public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
+                // Note: Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MiB (~28.6 MiB).
+                // To change this, you will need both:
+                // 1. a web.config with requestLimits maxAllowedContentLength="<byte size>"
+                // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
+                // 3. edit the client-side upload validation in the recipeedit.vue file.
+
+                var recipeResult = await _data.Recipes.Get(new RecipesByIdSpecification(request.RecipeId), cancellationToken)
+                    .ToResultAsync(new RecipeNotFoundFailure());
+
+                if (recipeResult.IsFailed)
+                {
+                    return Fail(recipeResult.Failures);
+                }
+
                 var image = new Image
                 {
-                    RecipeId = request.RecipeId
+                    RecipeId = recipeResult.Value.Id
                 };
 
                 await _data.Images.Add(image, cancellationToken);
@@ -54,20 +68,6 @@ namespace FoodStuffs.Model.Events.Images
             public byte[] FileContent { get; }
         }
 
-        public class RequestValidator : RuleValidatorAbstract<Request>
-        {
-            public RequestValidator()
-            {
-                // TODO: check mimetype?
-
-                // Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MiB (~28.6 MiB).
-                // To change this, you will need both:
-                // 1. a web.config with requestLimits maxAllowedContentLength="<byte size>"
-                // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
-                // 3. edit the client-side upload validation in the recipeedit.vue file.
-            }
-        }
-
         public class Logger : EntityMessageEventLogger<Request, int>
         {
             public Logger(ILoggingService logger) : base(logger) { }
@@ -75,8 +75,8 @@ namespace FoodStuffs.Model.Events.Images
             protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
                 Logger.Info(
-                    $"RecipeId: '{request.RecipeId}'",
-                    $"FileSize: '{request.FileContent.Length}'");
+                    $"RequestRecipeId: '{request.RecipeId}'",
+                    $"RequestFileSize: '{request.FileContent.Length}'");
                 base.OnBoth(request, result);
             }
         }

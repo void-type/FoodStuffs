@@ -142,6 +142,12 @@ namespace FoodStuffs.Model.Events.Recipes
         public class Logger : EntityMessageEventLogger<Request, int>
         {
             public Logger(ILoggingService logger) : base(logger) { }
+
+            protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
+            {
+                Logger.Info($"RequestId: '{request.Id}'");
+                base.OnBoth(request, result);
+            }
         }
     }
 }

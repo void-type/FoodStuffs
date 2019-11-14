@@ -15,20 +15,18 @@ namespace FoodStuffs.Web.Controllers.Api
         private readonly GetImage.Handler _getHandler;
         private readonly GetImage.Logger _getLogger;
         private readonly SaveImage.Handler _saveHandler;
-        private readonly SaveImage.RequestValidator _saveValidator;
         private readonly SaveImage.Logger _saveLogger;
         private readonly DeleteImage.Handler _deleteHandler;
         private readonly DeleteImage.Logger _deleteLogger;
 
         public ImagesController(GetImage.Handler getHandler, GetImage.Logger getLogger,
             DeleteImage.Handler deleteHandler, DeleteImage.Logger deleteLogger,
-            SaveImage.Handler updateHandler, SaveImage.RequestValidator updateValidator, SaveImage.Logger updateLogger
+            SaveImage.Handler updateHandler, SaveImage.Logger updateLogger
             )
         {
             _getHandler = getHandler;
             _getLogger = getLogger;
             _saveHandler = updateHandler;
-            _saveValidator = updateValidator;
             _saveLogger = updateLogger;
             _deleteHandler = deleteHandler;
             _deleteLogger = deleteLogger;
@@ -56,7 +54,6 @@ namespace FoodStuffs.Web.Controllers.Api
             var request = new SaveImage.Request(recipeId, content);
 
             return await _saveHandler
-                .AddRequestValidator(_saveValidator)
                 .AddPostProcessor(_saveLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);

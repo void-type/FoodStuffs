@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
@@ -27,11 +28,20 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 return await _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
-                    .TeeOnSuccessAsync(r => _data.Blobs.RemoveRange(r.Image.Select(i => i.Blob), cancellationToken))
-                    .TeeOnSuccessAsync(r => _data.Images.RemoveRange(r.Image, cancellationToken))
+                    .TeeOnSuccessAsync(r => RemoveImages(r, cancellationToken))
                     .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipe, cancellationToken))
                     .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
                     .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
+            }
+
+            private async Task RemoveImages(Recipe recipe, CancellationToken cancellationToken)
+            {
+                var images = recipe.Image;
+                // Optimization: don't bring the whole blob into RAM.
+                var blobs = images.Select(i => new Blob { Id = i.Id });
+
+                await _data.Blobs.RemoveRange(blobs, cancellationToken);
+                await _data.Images.RemoveRange(images, cancellationToken);
             }
         }
 
@@ -51,7 +61,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
-                Logger.Info($"Id: '{request.Id}'");
+                Logger.Info($"RequestId: '{request.Id}'");
                 base.OnBoth(request, result);
             }
         }

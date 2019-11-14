@@ -93,7 +93,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             protected override void OnBoth(Request request, IResult<RecipeDto> result)
             {
-                Logger.Info($"Id: '{request.Id}'");
+                Logger.Info($"RequestId: '{request.Id}'");
                 base.OnBoth(request, result);
             }
         }

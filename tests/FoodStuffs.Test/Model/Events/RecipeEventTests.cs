@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Queries;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace FoodStuffs.Test.Model.Events
@@ -11,8 +12,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task GetRecipe_returns_a_recipe_when_recipe_exists()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var recipes = await data.Recipes.ListAll(default);
             var recipeToFind = recipes.First();
@@ -28,8 +29,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task GetRecipe_returns_failure_when_recipe_does_not_exist()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new GetRecipe.Handler(data)
                 .Handle(new GetRecipe.Request(-22));
@@ -40,8 +41,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_returns_a_page_of_recipes()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request(null, null, null, true, 2, 1));
@@ -56,8 +57,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipe_returns_all_recipes_when_paging_is_disabled()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request(null, null, null, false, 0, 0));
@@ -74,8 +75,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_can_sort_by_descending()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request(null, null, "nameDesc", true, 1, 1));
@@ -91,8 +92,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_can_sort_by_ascending()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request(null, null, "name", true, 1, 1));
@@ -108,8 +109,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_can_search_by_recipe_name()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request("recipe2", null, null, true, 1, 2));
@@ -125,8 +126,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_can_search_by_category_name()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request(null, "cat", null, true, 1, 4));
@@ -144,8 +145,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_returns_empty_item_set_when_name_search_matches_zero_items()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request("nothing matches", null, null, true, 1, 2));
@@ -158,8 +159,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task ListRecipes_returns_empty_item_set_when_category_search_matches_zero_items()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
                 .Handle(new ListRecipes.Request(null, "nothing matches", null, true, 1, 2));
@@ -172,27 +173,41 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task DeleteRecipe_deletes_recipe_and_returns_id_when_recipe_exists()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            // Due to the way we delete, we need a fresh dbcontext to remove tracked entities.
+            using var context1 = Deps.FoodStuffsContext("delete images").Seed();
 
-            var recipes = await data.Recipes.ListAll(default);
-            var recipeToDelete = recipes.First();
+            using var context = Deps.FoodStuffsContext("delete images");
+            var data = context.FoodStuffsData();
+
+            var recipeToDelete = context.Recipe
+                .Include(r => r.Image)
+                .ThenInclude(r => r.Blob)
+                .AsNoTracking()
+                .First(r => r.Name == "Recipe1");
+
+            Assert.True(recipeToDelete.Image.Count() > 0);
+            Assert.True(recipeToDelete.Image.Select(i => i.Blob).Count() > 0);
+            Assert.Equal(recipeToDelete.Image.Count(), recipeToDelete.Image.Select(i => i.Blob).Count());
 
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(recipeToDelete.Id));
 
-            var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesAndImagesSpecification(recipeToDelete.Id), default);
-
             Assert.True(result.IsSuccess);
-            Assert.True(maybeRecipe.HasNoValue);
+
             Assert.Equal(recipeToDelete.Id, result.Value.Id);
+
+            var imageIds = recipeToDelete.Image.Select(i => i.Id);
+            var blobIds = recipeToDelete.Image.Select(i => i.Blob.Id);
+
+            Assert.False(context.Image.Any(i => imageIds.Contains(i.Id)));
+            Assert.False(context.Blob.Any(b => imageIds.Contains(b.Id)));
         }
 
         [Fact]
         public async Task DeleteRecipe_returns_failure_when_recipe_does_not_exist()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(-22));
@@ -203,8 +218,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task SaveRecipe_creates_new_recipe_when_id_0_is_specified()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var result = await new SaveRecipe.Handler(data)
                 .Handle(new SaveRecipe.Request(0, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
@@ -226,8 +241,8 @@ namespace FoodStuffs.Test.Model.Events
         [Fact]
         public async Task SaveRecipe_updates_existing_recipe_when_exists()
         {
-            using var context = Deps.FoodStuffsContext();
-            var data = context.Seed().FoodStuffsData();
+            using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
 
             var existingRecipeId = (await data.Recipes.ListAll(default)).First().Id;
 

@@ -5,6 +5,7 @@ using Moq;
 using System;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Logging;
+using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Time;
 
 namespace FoodStuffs.Test.Model
@@ -44,13 +45,13 @@ namespace FoodStuffs.Test.Model
             return new FoodStuffsEfData(context, loggingStrategyMock.Object, DateTimeServiceLate, CurrentUserAccessor);
         }
 
-        public static FoodStuffsContext Seed(this FoodStuffsContext data)
+        public static FoodStuffsContext Seed(this FoodStuffsContext context)
         {
-            var category1 = data.Category.Add(new Category { Name = "Category1" }).Entity.Id;
-            var category2 = data.Category.Add(new Category { Name = "Category2" }).Entity.Id;
-            var category3 = data.Category.Add(new Category { Name = "Category3" }).Entity.Id;
+            var category1 = context.Category.Add(new Category { Name = "Category1" }).Entity.Id;
+            var category2 = context.Category.Add(new Category { Name = "Category2" }).Entity.Id;
+            var category3 = context.Category.Add(new Category { Name = "Category3" }).Entity.Id;
 
-            var recipe1 = data.Recipe.Add(new Recipe
+            var recipe1 = context.Recipe.Add(new Recipe
             {
                 Name = "Recipe1",
                 Ingredients = "ing",
@@ -63,7 +64,7 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "12"
             }).Entity.Id;
 
-            var recipe2 = data.Recipe.Add(new Recipe
+            var recipe2 = context.Recipe.Add(new Recipe
             {
                 Name = "Recipe2",
                 CookTimeMinutes = 2,
@@ -74,7 +75,7 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "11"
             }).Entity.Id;
 
-            data.Recipe.Add(new Recipe
+            context.Recipe.Add(new Recipe
             {
                 Name = "Recipe3",
                 CookTimeMinutes = 2,
@@ -85,12 +86,47 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "11"
             });
 
-            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category1 });
-            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category2 });
-            data.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe2, CategoryId = category3 });
+            context.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category1 });
+            context.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category2 });
+            context.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe2, CategoryId = category3 });
 
-            data.SaveChanges();
-            return data;
+            var file = new SimpleFile("seeded file content", "some file.txt");
+
+            var image1 = new Image
+            {
+                RecipeId = recipe1,
+                CreatedBy = "Long John Silver2",
+                CreatedOn = new DateTime(2019, 11, 8),
+                ModifiedBy = "Long John Silver2",
+                ModifiedOn = new DateTime(2019, 11, 8),
+            };
+
+            var image2 = new Image
+            {
+                RecipeId = recipe1,
+                CreatedBy = "Long John Silver2",
+                CreatedOn = new DateTime(2019, 11, 8),
+                ModifiedBy = "Long John Silver2",
+                ModifiedOn = new DateTime(2019, 11, 8),
+            };
+
+            context.Image.AddRange(image1, image2);
+
+            context.Blob.AddRange(
+                new Blob
+                {
+                    Bytes = file.Content.AsBytes,
+                    Id = image1.Id,
+                },
+                new Blob
+                {
+                    Bytes = file.Content.AsBytes,
+                    Id = image2.Id,
+                }
+            );
+
+            context.SaveChanges();
+            return context;
         }
     }
 }

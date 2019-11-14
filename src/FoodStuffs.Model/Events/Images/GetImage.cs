@@ -26,7 +26,7 @@ namespace FoodStuffs.Model.Events.Images
 
                 return await _data.Images.Get(byId, cancellationToken)
                     .ToResultAsync(new ImageNotFoundFailure())
-                    .SelectAsync(r => new SimpleFile(r.Blob.Bytes, $"r.Id"));
+                    .SelectAsync(r => new SimpleFile(r.Blob.Bytes, $"{r.Id}"));
             }
         }
 
@@ -46,7 +46,7 @@ namespace FoodStuffs.Model.Events.Images
 
             protected override void OnBoth(Request request, IResult<SimpleFile> result)
             {
-                Logger.Info($"Id: '{request.Id}'");
+                Logger.Info($"RequestId: '{request.Id}'");
                 base.OnBoth(request, result);
             }
         }
