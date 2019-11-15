@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
@@ -22,13 +23,13 @@ namespace FoodStuffs.Model.Events.Images
 
             public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var byId = new ImagesByIdWithBlobsSpecification(request.Id);
+                var byId = new ImagesByIdSpecification(request.Id);
 
                 return await _data.Images.Get(byId, cancellationToken)
                     .ToResultAsync(new ImageNotFoundFailure())
-                    .TeeOnSuccessAsync(a => _data.Blobs.Remove(a.Blob, cancellationToken))
-                    .TeeOnSuccessAsync(a => _data.Images.Remove(a, cancellationToken))
-                    .SelectAsync(a => EntityMessage.Create("Image deleted.", a.Id));
+                    .TeeOnSuccessAsync(i => _data.Blobs.Remove(new Blob { Id = i.Id }, cancellationToken))
+                    .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
+                    .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id));
             }
         }
 
