@@ -9,8 +9,8 @@ namespace FoodStuffs.Web.Configuration
     {
         public static void AddDomainEvents(this IServiceCollection services)
         {
-            services.AddSingleton<GetWebApplicationInfo.Handler>();
-            services.AddSingleton<GetWebApplicationInfo.Logger>();
+            services.AddSingleton<GetWebClientInfo.Handler>();
+            services.AddSingleton<GetWebClientInfo.Logger>();
 
             services.AddScoped<GetRecipe.Handler>();
             services.AddSingleton<GetRecipe.Logger>();

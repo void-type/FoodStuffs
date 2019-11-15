@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.26" PrivateAssets="all" />
-    <PackageReference Include="VoidCore.Model" Version="2.0.18-gdec4b0a8b1" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.28" PrivateAssets="all" />
+    <!-- <PackageReference Include="VoidCore.Model" Version="2.0.19-gcafb065bcd" /> -->
 
-    <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" /> -->
+    <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" />
   </ItemGroup>
 </Project>
