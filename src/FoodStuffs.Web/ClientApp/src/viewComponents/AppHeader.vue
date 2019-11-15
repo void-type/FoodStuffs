@@ -27,7 +27,6 @@
         >
           <slot name="navItems" />
           <b-nav-text
-            v-b-tooltip.hover
             :title="userRoles"
             class="ml-auto"
           >
