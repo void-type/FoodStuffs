@@ -15,6 +15,7 @@ using VoidCore.AspNet.Security;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Time;
 using VoidCore.EntityFramework;
+using VoidCore.Model.Configuration;
 
 namespace FoodStuffs.Web
 {
@@ -59,6 +60,7 @@ namespace FoodStuffs.Web
             services.AddHttpContextAccessor();
             services.AddWebLoggingAdapters();
             services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
+            services.AddSingleton<IWebAppVariables, WebAppVariables>();
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
             // TODO: how can we make this a singleton (pool?) and then make domain events singletons.
