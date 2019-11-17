@@ -12,7 +12,7 @@
           class="p-2"
         >
           <b-carousel
-            v-if="sourceRecipe.images.length > 0"
+            v-if="workingRecipe.images.length > 0"
             id="image-carousel"
             v-model="carouselIndex"
             :interval="0"
@@ -21,7 +21,7 @@
             indicators
           >
             <b-carousel-slide
-              v-for="image in sourceRecipe.images"
+              v-for="image in workingRecipe.images"
               :key="image"
               :img-src="imageUrl(image)"
             />
@@ -58,7 +58,7 @@
               id="deleteImage"
               variant="danger"
               name="deleteImage"
-              :disabled="sourceRecipe.images.length < 1"
+              :disabled="workingRecipe.images.length < 1"
               @click.stop.prevent="deleteImageClick()"
             >
               Delete
@@ -218,6 +218,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
 import recipesApiModels from '../models/recipesApiModels';
@@ -277,11 +278,17 @@ export default {
     this.reset();
   },
   methods: {
+    ...mapActions({
+      setValidationErrorMessages: 'app/setValidationErrorMessages',
+    }),
     imageUrl(id) {
       return webApi.images.url(id);
     },
     reset() {
       Object.assign(this.workingRecipe, this.sourceRecipe);
+      if (this.carouselIndex > this.workingRecipe.images.length - 1) {
+        this.carouselIndex = this.workingRecipe.images.length - 1;
+      }
     },
     addCategory(tag) {
       const categoryName = trimAndTitleCase(tag);
