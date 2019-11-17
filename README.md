@@ -5,7 +5,7 @@
 [![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
 [![ReleaseVersion](https://img.shields.io/github/release/void-type/FoodStuffs.svg?style=flat-square)](https://github.com/void-type/FoodStuffs/releases)
 
-A web application for managing recipes based on .Net Core 3.0 and Vue.js 2.5.
+A web application for managing recipes based on .Net Core 3.0 and Vue.js 2.6.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
@@ -13,9 +13,10 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 * Printer-friendly views.
 * Category tags on recipes.
+* Multi-image uploads for recipes.
 * Copy recipes.
 * Text search on recipe names and categories.
-* View history.
+* Recent history list.
 * Full logging on the server.
 * Bootstrap-Vue UI.
 * See screenshots [here](docs/screenshots.md).
