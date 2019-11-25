@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Events.Images;
+﻿using FoodStuffs.Model.Events.Images;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -47,7 +47,7 @@ namespace FoodStuffs.Web.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> Upload(int recipeId, IFormFile file)
         {
-            using var memoryStream = new MemoryStream();
+            await using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);
             var content = memoryStream.ToArray();
 

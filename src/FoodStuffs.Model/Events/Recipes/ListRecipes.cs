@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -48,7 +48,7 @@ namespace FoodStuffs.Model.Events.Recipes
                         name: recipe.Name,
                         categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name).OrderBy(n => n)))
                     .ToItemSet(paginationOptions, totalCount)
-                    .Map(page => Ok(page));
+                    .Map(Ok);
             }
 
             private Expression<Func<Recipe, bool>>[] GetSearchCriteria(Request request)
@@ -58,12 +58,12 @@ namespace FoodStuffs.Model.Events.Recipes
                 if (!string.IsNullOrWhiteSpace(request.NameSearch))
                 {
                     searchCriteria.Add(recipe => recipe.Name.ToLower().Contains(request.NameSearch.ToLower()));
-                };
+                }
 
                 if (!string.IsNullOrWhiteSpace(request.CategorySearch))
                 {
                     searchCriteria.Add(recipe => recipe.CategoryRecipe.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
-                };
+                }
 
                 return searchCriteria.ToArray();
             }
