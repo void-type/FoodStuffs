@@ -110,12 +110,12 @@ namespace FoodStuffs.Model.Events.Recipes
             protected override void OnBoth(Request request, IResult<IItemSet<RecipeListItemDto>> result)
             {
                 Logger.Info(
-                    $"RequestNameSearch: '{request.NameSearch}'",
-                    $"RequestCategorySearch: '{request.CategorySearch}'",
-                    $"RequestSort: '{request.Sort}'",
-                    $"RequestIsPagingEnabled: '{request.IsPagingEnabled}'",
-                    $"RequestPage: '{request.Page}'",
-                    $"RequestTake: '{request.Take}'"
+                    $"RequestNameSearch: {request.NameSearch}",
+                    $"RequestCategorySearch: {request.CategorySearch}",
+                    $"RequestSort: {request.Sort}",
+                    $"RequestIsPagingEnabled: {request.IsPagingEnabled}",
+                    $"RequestPage: {request.Page}",
+                    $"RequestTake: {request.Take}"
                 );
 
                 base.OnBoth(request, result);

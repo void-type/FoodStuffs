@@ -1,6 +1,6 @@
 using VoidCore.Domain;
 
-namespace FoodStuffs.Model.Events.Images
+namespace FoodStuffs.Model.Events
 {
     public class ImageNotFoundFailure : Failure
     {

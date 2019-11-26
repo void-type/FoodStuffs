@@ -75,8 +75,8 @@ namespace FoodStuffs.Model.Events.Images
             protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
                 Logger.Info(
-                    $"RequestRecipeId: '{request.RecipeId}'",
-                    $"RequestFileSize: '{request.FileContent.Length}'");
+                    $"RequestRecipeId: {request.RecipeId}",
+                    $"RequestFileSize: {request.FileContent.Length}");
                 base.OnBoth(request, result);
             }
         }

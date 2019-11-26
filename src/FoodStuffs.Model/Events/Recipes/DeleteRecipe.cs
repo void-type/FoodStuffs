@@ -61,7 +61,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
             protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
-                Logger.Info($"RequestId: '{request.Id}'");
+                Logger.Info($"RequestRecipeId: {request.Id}");
                 base.OnBoth(request, result);
             }
         }
