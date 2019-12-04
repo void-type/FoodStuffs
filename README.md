@@ -5,7 +5,7 @@
 [![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg?style=flat-square)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
 [![ReleaseVersion](https://img.shields.io/github/release/void-type/FoodStuffs.svg?style=flat-square)](https://github.com/void-type/FoodStuffs/releases)
 
-A web application for managing recipes based on .Net Core 3.0 and Vue.js 2.6.
+A web application for managing recipes based on .Net Core 3.1 and Vue.js 2.6.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
@@ -35,7 +35,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 ### Get some tools
 
-* [.Net Core SDK ^3.0.100](https://www.microsoft.com/net/download)
+* [.Net Core SDK ^3.1.100](https://www.microsoft.com/net/download)
 * [Node ^10.15.0](https://nodejs.org/en/)
 * [Docker ^18.00 (optional)](https://docker.com)
 
