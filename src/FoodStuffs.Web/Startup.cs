@@ -64,7 +64,7 @@ namespace FoodStuffs.Web
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
             // TODO: how can we make this a singleton (pool?) and then make domain events singletons.
-            services.AddSqlServerDbContext<FoodStuffsContext>(_env, connectionStrings["FoodStuffs"]);
+            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings["FoodStuffs"]);
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
             // Domain Events
