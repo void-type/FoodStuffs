@@ -85,6 +85,7 @@ a.btn {
 }
 
 @import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-vue/src/index";
 
 h1,
 h2,

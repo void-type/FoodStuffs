@@ -2,7 +2,7 @@
   <div>
     <EntityTableControls
       :clear-search="clearSearch"
-      :init-search="fetchRecipesList"
+      :init-search="startSearch"
       class="mt-4"
     >
       <b-input-group
@@ -12,8 +12,8 @@
       >
         <b-form-input
           id="nameSearch"
-          :value="listRequest.nameSearch"
-          @input="setListRequestNameSearch"
+          v-model="workingRequest.nameSearch"
+          name="nameSearch"
         />
       </b-input-group>
       <b-input-group
@@ -23,35 +23,36 @@
       >
         <b-form-input
           id="categorySearch"
-          :value="listRequest.categorySearch"
-          @input="setListRequestCategorySearch"
+          v-model="workingRequest.categorySearch"
+          name="categorySearch"
         />
       </b-input-group>
     </EntityTableControls>
     <b-table
       :items="listResponse.items"
       :fields="tableFields"
+      :sort-by.sync="tableSortBy"
+      :sort-desc.sync="tableSortDesc"
+      sort-icon-left
+      no-local-sorting
       show-empty
       hover
       class="mt-3"
-      @row-clicked="onTableRowClick"
+      @row-clicked="showDetails"
+      @sort-changed="tableSortChanged"
     />
     <EntityTablePager
       :list-response="listResponse"
       :list-request="listRequest"
-      :change-page="updatePage"
-      :change-take="updateTake"
+      :change-page="changePage"
+      :change-take="changeTake"
     />
   </div>
 </template>
 
 <script>
-
-// :sort="getSortType"
-// :on-cycle-sort="cycleSort"
-
 import { mapActions, mapGetters } from 'vuex';
-import recipesApiModels from '../models/recipesApiModels';
+import { ListRecipesRequest } from '../models/recipesApiModels';
 import webApi from '../webApi';
 import router from '../router';
 import EntityTableControls from '../viewComponents/EntityTableControls.vue';
@@ -64,13 +65,9 @@ export default {
   },
   data() {
     return {
-      tableFields: [
-        'name',
-        {
-          key: 'categories',
-          formatter: value => value.join(', '),
-        },
-      ],
+      workingRequest: new ListRecipesRequest(),
+      tableSortBy: null,
+      tableSortDesc: false,
     };
   },
   computed: {
@@ -78,53 +75,71 @@ export default {
       listResponse: 'recipes/listResponse',
       listRequest: 'recipes/listRequest',
     }),
-    getSortType() {
-      return recipesApiModels.listSortOptions.getTypeByName(this.listRequest.sort);
+    tableFields() {
+      return [
+        {
+          key: 'name',
+          sortable: true,
+        },
+        {
+          key: 'categories',
+          formatter: value => value.join(', '),
+        },
+      ];
+    },
+  },
+  watch: {
+    workingRequest: {
+      handler(request) {
+        this.setListRequest(Object.assign({}, request));
+      },
+      deep: true,
     },
   },
   created() {
+    this.workingRequest = Object.assign({}, this.listRequest);
+
     if (this.listResponse.count === 0) {
-      this.fetchRecipesList();
+      this.fetchList();
     }
   },
   methods: {
     ...mapActions({
       setApiFailureMessages: 'app/setApiFailureMessages',
-      resetListRequest: 'recipes/resetListRequest',
       setListResponse: 'recipes/setListResponse',
-      setListRequestNameSearch: 'recipes/setListRequestNameSearch',
-      setListRequestCategorySearch: 'recipes/setListRequestCategorySearch',
-      setListRequestSort: 'recipes/setListRequestSort',
-      setListRequestPage: 'recipes/setListRequestPage',
-      setListRequestTake: 'recipes/setListRequestTake',
+      setListRequest: 'recipes/setListRequest',
     }),
-    fetchRecipesList() {
+    fetchList() {
       webApi.recipes.list(
-        this.listRequest,
+        this.workingRequest,
         data => this.setListResponse(data),
         response => this.setApiFailureMessages(response),
       );
     },
-    updatePage(page) {
-      this.setListRequestPage(page);
-      this.fetchRecipesList();
-    },
-    updateTake(take) {
-      this.setListRequestTake(take);
-      this.setListRequestPage(1);
-      this.fetchRecipesList();
-    },
-    cycleSort() {
-      const { nextSort } = recipesApiModels.listSortOptions;
-      this.setListRequestSort(nextSort(this.listRequest.sort).name);
-      this.fetchRecipesList();
-    },
     clearSearch() {
-      this.resetListRequest();
-      this.fetchRecipesList();
+      this.workingRequest = new ListRecipesRequest();
+      this.fetchList();
     },
-    onTableRowClick(recipe) {
-      router.push({ name: 'view', params: { id: recipe.id } }).catch(() => {});
+    startSearch() {
+      this.workingRequest.page = 1;
+      this.fetchList();
+    },
+    changePage(page) {
+      this.workingRequest.page = page;
+      this.fetchList();
+    },
+    changeTake(take) {
+      this.workingRequest.isPagingEnabled = take !== null;
+      this.workingRequest.take = take;
+      this.workingRequest.page = 1;
+      this.fetchList();
+    },
+    showDetails(recipe) {
+      router.push({ name: 'view', params: { id: recipe.id } });
+    },
+    tableSortChanged() {
+      this.workingRequest.sort = `${this.tableSortBy}${this.tableSortDesc ? 'Desc' : ''}`;
+      this.fetchList();
     },
   },
 };
