@@ -1,32 +1,45 @@
 <template>
   <div>
+    <h1>Search Recipes</h1>
     <EntityTableControls
       :clear-search="clearSearch"
       :init-search="startSearch"
       class="mt-4"
     >
-      <b-input-group
+      <b-form-row
         slot="searchControls"
-        prepend="Name contains"
-        class="mr-1"
       >
-        <b-form-input
-          id="nameSearch"
-          v-model="workingRequest.nameSearch"
-          name="nameSearch"
-        />
-      </b-input-group>
-      <b-input-group
-        slot="searchControls"
-        prepend="Categories contain"
-        class="mr-1"
-      >
-        <b-form-input
-          id="categorySearch"
-          v-model="workingRequest.categorySearch"
-          name="categorySearch"
-        />
-      </b-input-group>
+        <b-col
+          sm="12"
+          md="6"
+        >
+          <b-input-group
+            prepend="Name contains"
+            class="mb-2"
+          >
+            <b-form-input
+              id="nameSearch"
+              v-model="workingRequest.nameSearch"
+              name="nameSearch"
+            />
+          </b-input-group>
+        </b-col>
+        <b-col
+          sm="12"
+          md="6"
+        >
+          <b-input-group
+            prepend="Categories contain"
+            class="mb-2"
+          >
+            <b-form-input
+              id="categorySearch"
+              v-model="workingRequest.categorySearch"
+              name="categorySearch"
+            />
+          </b-input-group>
+        </b-col>
+      </b-form-row>
     </EntityTableControls>
     <b-table
       :items="listResponse.items"
@@ -37,7 +50,7 @@
       no-local-sorting
       show-empty
       hover
-      class="mt-3"
+      class="mt-4"
       @row-clicked="showDetails"
       @sort-changed="tableSortChanged"
     />
@@ -46,6 +59,7 @@
       :list-request="listRequest"
       :change-page="changePage"
       :change-take="changeTake"
+      class="mt-4"
     />
   </div>
 </template>

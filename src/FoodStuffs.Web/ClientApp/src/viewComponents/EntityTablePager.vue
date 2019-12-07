@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-3 text-center no-print"
+    class="text-center no-print"
   >
     <b-pagination
       :value="listResponse.page"
