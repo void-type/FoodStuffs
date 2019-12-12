@@ -221,8 +221,8 @@
 import { mapActions } from 'vuex';
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
-import recipesApiModels from '../models/recipesApiModels';
-import imagesApiModels from '../models/imagesApiModels';
+import { SaveRecipeRequest } from '../models/recipesApiModels';
+import { SaveImageRequest, DeleteImageRequest } from '../models/imagesApiModels';
 import trimAndTitleCase from '../util/trimAndTitleCase';
 import webApi from '../webApi';
 
@@ -259,7 +259,7 @@ export default {
   },
   data() {
     return {
-      workingRecipe: new recipesApiModels.SaveRequest(),
+      workingRecipe: new SaveRecipeRequest(),
       uploadFile: null,
       carouselIndex: 0,
     };
@@ -309,7 +309,7 @@ export default {
       }
     },
     saveClick(workingRecipe) {
-      const sendableRecipe = new recipesApiModels.SaveRequest();
+      const sendableRecipe = new SaveRecipeRequest();
 
       Object.keys(sendableRecipe).forEach((key) => {
         sendableRecipe[key] = workingRecipe[key];
@@ -341,7 +341,7 @@ export default {
         return;
       }
 
-      const request = new imagesApiModels.SaveRequest();
+      const request = new SaveImageRequest();
       request.recipeId = this.sourceRecipe.id;
       request.file = this.uploadFile;
 
@@ -350,7 +350,7 @@ export default {
     deleteImageClick() {
       const imageId = this.sourceRecipe.images[this.carouselIndex];
 
-      const request = new imagesApiModels.DeleteRequest();
+      const request = new DeleteImageRequest();
       request.id = imageId;
 
       this.onDeleteImage(request);

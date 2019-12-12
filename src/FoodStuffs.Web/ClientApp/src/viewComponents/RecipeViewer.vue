@@ -6,27 +6,32 @@
     <h1>{{ recipe.name }}</h1>
     <div
       md="12"
-      class="no-print"
+      class="mt-4 no-print"
     >
-      <b-row
-        no-gutters
-      >
-        <b-form-checkbox
-          id="showImage"
-          v-model="showImage"
-          name="showImage"
-          class="mt-2 ml-auto mr-4"
-          switch
+      <b-form-row>
+        <b-col
+          cols="12"
         >
-          Image
-        </b-form-checkbox>
-        <b-button
-          :to="{name: 'edit', params: {id: recipe.id}}"
-          variant="primary"
-        >
-          Edit
-        </b-button>
-      </b-row>
+          <b-button-toolbar>
+            <b-button
+              :to="{name: 'edit', params: {id: recipe.id}}"
+              class="mr-2"
+              variant="primary"
+            >
+              Edit
+            </b-button>
+            <b-form-checkbox
+              id="showImage"
+              v-model="showImage"
+              name="showImage"
+              class="mt-2"
+              switch
+            >
+              Image
+            </b-form-checkbox>
+          </b-button-toolbar>
+        </b-col>
+      </b-form-row>
     </div>
     <div
       v-if="showImage"

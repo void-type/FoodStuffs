@@ -26,7 +26,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import router from '../router';
-import recipeModels from '../models/recipesApiModels';
+import { GetRecipeResponse } from '../models/recipesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
 
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      sourceRecipe: new recipeModels.GetResponse(),
+      sourceRecipe: new GetRecipeResponse(),
     };
   },
   computed: {
@@ -87,7 +87,7 @@ export default {
     },
     fetchRecipe(id) {
       if (this.id === 0) {
-        this.sourceRecipe = this.newRecipeSuggestion || new recipeModels.GetResponse();
+        this.sourceRecipe = this.newRecipeSuggestion || new GetRecipeResponse();
         return;
       }
       webApi.recipes.get(
@@ -117,7 +117,7 @@ export default {
         id,
         (data) => {
           this.removeFromRecent(this.id);
-          this.sourceRecipe = new recipeModels.GetResponse();
+          this.sourceRecipe = new GetRecipeResponse();
           this.fetchRecipesList();
           router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);

@@ -1,10 +1,10 @@
-using FoodStuffs.Model.Events.Recipes;
 using System.Linq;
+using FoodStuffs.Model.Events.Recipes;
 using Xunit;
 
 namespace FoodStuffs.Test.Model.Events
 {
-    public class RecipeViewModelValidatorTests
+    public class SaveRecipeRequestValidatorTests
     {
         [Theory]
         [InlineData(null)]

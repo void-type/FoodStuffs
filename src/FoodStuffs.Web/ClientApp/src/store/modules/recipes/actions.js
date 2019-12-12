@@ -2,24 +2,8 @@ export default {
   setListResponse(context, data) {
     context.commit('SET_LIST_RESPONSE', data);
   },
-  resetListRequest(context) {
-    context.commit('RESET_LIST_REQUEST');
-  },
-  setListRequestPage(context, page) {
-    context.commit('SET_LIST_REQUEST_PAGE', page);
-  },
-  setListRequestTake(context, take) {
-    context.commit('SET_LIST_REQUEST_IS_PAGING_ENABLED', take !== null);
-    context.commit('SET_LIST_REQUEST_TAKE', take);
-  },
-  setListRequestCategorySearch(context, categorySearch) {
-    context.commit('SET_LIST_REQUEST_CATEGORY_SEARCH', categorySearch);
-  },
-  setListRequestNameSearch(context, nameSearch) {
-    context.commit('SET_LIST_REQUEST_NAME_SEARCH', nameSearch);
-  },
-  setListRequestSort(context, sortName) {
-    context.commit('SET_LIST_REQUEST_SORT', sortName);
+  setListRequest(context, request) {
+    context.commit('SET_LIST_REQUEST', request);
   },
   addToRecent(context, recipe) {
     const recentRecipes = context.state.recent.slice();
