@@ -265,7 +265,8 @@ __pycache__/
 **/*.Web/wwwroot
 
 # App
-app[Ss]ettings.*.json
+appsettings.*.json
+!appsettings.example.json
 
 #Test Coverage files
 coverage/

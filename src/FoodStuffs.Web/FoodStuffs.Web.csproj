@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Content Remove="ClientApp\**" CopyToPublishDirectory="Never" />
-    <Content Remove="appSettings.*.json" CopyToPublishDirectory="Never" />
+    <Content Remove="appsettings.*.json" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <ItemGroup>
