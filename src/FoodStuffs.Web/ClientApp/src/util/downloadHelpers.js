@@ -1,9 +1,13 @@
 export default {
   saveDownloadedFile(response) {
-    const filename = response.headers['content-disposition']
+    let filename = response.headers['content-disposition']
       .split('; ')
-      .filter(part => part.startsWith('filename'))[0]
+      .filter(part => part.startsWith('filename='))[0]
       .split('=')[1];
+
+    if (filename.startsWith('"')) {
+      filename = filename.slice(1, -1);
+    }
 
     const contentType = response.headers['content-type'];
     const blob = new Blob([response.data], { type: contentType });
