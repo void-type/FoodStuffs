@@ -16,6 +16,7 @@ using VoidCore.Model.Auth;
 using VoidCore.Model.Time;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Configuration;
+using VoidCore.AspNet.ClientApp;
 
 namespace FoodStuffs.Web
 {
@@ -68,7 +69,9 @@ namespace FoodStuffs.Web
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
             // Domain Events
-            services.AddDomainEvents();
+            services.FindAndRegisterDomainEvents(
+                typeof(GetWebClientInfo).Assembly,
+                typeof(IFoodStuffsData).Assembly);
         }
     }
 }
