@@ -5,7 +5,7 @@ export default function () {
     messageIsError: false,
     messages: [],
     user: {
-      name: '',
+      login: '',
       authorizedAs: [],
     },
   };
