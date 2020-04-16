@@ -5,8 +5,9 @@ namespace FoodStuffs.Model.Queries
 {
     public class ImagesByIdWithBlobsSpecification : QuerySpecificationAbstract<Image>
     {
-        public ImagesByIdWithBlobsSpecification(int id) : base(r => r.Id == id)
+        public ImagesByIdWithBlobsSpecification(int id) : base()
         {
+            AddCriteria(i => i.Id == id);
             AddInclude($"{nameof(Image.Blob)}");
         }
     }

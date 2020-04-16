@@ -5,8 +5,9 @@ namespace FoodStuffs.Model.Queries
 {
     public class RecipesByIdWithCategoriesAndImagesSpecification : QuerySpecificationAbstract<Recipe>
     {
-        public RecipesByIdWithCategoriesAndImagesSpecification(int id) : base(r => r.Id == id)
+        public RecipesByIdWithCategoriesAndImagesSpecification(int id) : base()
         {
+            AddCriteria(r => r.Id == id);
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
             AddInclude($"{nameof(Recipe.Image)}");
         }

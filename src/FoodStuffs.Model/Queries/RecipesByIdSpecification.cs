@@ -5,8 +5,9 @@ namespace FoodStuffs.Model.Queries
 {
     public class RecipesByIdSpecification : QuerySpecificationAbstract<Recipe>
     {
-        public RecipesByIdSpecification(int id) : base(r => r.Id == id)
+        public RecipesByIdSpecification(int id) : base()
         {
+            AddCriteria(r => r.Id == id);
         }
     }
 }
