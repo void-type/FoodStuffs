@@ -70,6 +70,7 @@ namespace FoodStuffs.Web
 
             // Domain Events
             services.FindAndRegisterDomainEvents(
+                ServiceLifetime.Scoped,
                 typeof(GetWebClientInfo).Assembly,
                 typeof(IFoodStuffsData).Assembly);
         }
