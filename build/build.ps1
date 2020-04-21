@@ -32,7 +32,7 @@ if (-not $SkipClient) {
   }
 
   if (-not $SkipOutdated) {
-    npm outdated
+    npm audit --production
   }
 
   if (-not $SkipTest) {
