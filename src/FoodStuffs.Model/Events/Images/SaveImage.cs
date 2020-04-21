@@ -23,7 +23,7 @@ namespace FoodStuffs.Model.Events.Images
 
             public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                // Note: Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MiB (~28.6 MiB).
+                // Note: Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MB (~28.6 MiB).
                 // To change this, you will need both:
                 // 1. a web.config with requestLimits maxAllowedContentLength="<byte size>"
                 // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
