@@ -1,4 +1,3 @@
-.git/
 .vscode/
 bin/
 obj/
@@ -8,8 +7,6 @@ out/
 /coverage/
 node_modules/
 
-.gitignore
-.gitattributes
 app[Ss]ettings.*.json
 LICENSE.txt
 README.md

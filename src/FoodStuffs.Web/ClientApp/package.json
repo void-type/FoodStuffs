@@ -32,7 +32,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "fs": "0.0.1-security",
-    "nerdbank-gitversioning": "^3.0.28",
+    "nerdbank-gitversioning": "^3.1.74",
     "sass": "^1.23.0",
     "sass-lint": "^1.12.1",
     "sass-loader": "^8.0.0",
