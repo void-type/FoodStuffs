@@ -68,7 +68,7 @@ namespace FoodStuffs.Web
             services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings["FoodStuffs"]);
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
-            // Domain Events
+            // Auto-register Domain Events
             services.FindAndRegisterDomainEvents(
                 ServiceLifetime.Scoped,
                 typeof(GetWebClientInfo).Assembly,
