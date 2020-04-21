@@ -23,12 +23,12 @@ namespace FoodStuffs.Model.Queries
             {
                 case "name":
                     ApplyOrderBy(recipe => recipe.Name);
-                    AddThenBy(recipe => recipe.CreatedOn);
+                    AddThenBy(recipe => recipe.Id);
                     break;
 
                 case "nameDesc":
                     ApplyOrderByDescending(recipe => recipe.Name);
-                    AddThenByDescending(recipe => recipe.CreatedOn);
+                    AddThenByDescending(recipe => recipe.Id);
                     break;
 
                 default:
