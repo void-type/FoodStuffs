@@ -2,7 +2,6 @@
   <div
     v-if="messages.length > 0"
     :class="{'shadow': true,
-             'alert': true,
              'alert-danger': messageIsError,
              'alert-success': !messageIsError}"
     @click="clearMessages()"
@@ -52,6 +51,7 @@ div {
 
     & > li {
       margin: 0 auto;
+      color: #000000;
     }
   }
 }
