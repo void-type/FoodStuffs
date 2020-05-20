@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data.EntityFramework;

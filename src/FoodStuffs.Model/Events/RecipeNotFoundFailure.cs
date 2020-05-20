@@ -1,4 +1,4 @@
-using VoidCore.Domain;
+﻿using VoidCore.Domain;
 
 namespace FoodStuffs.Model.Events
 {

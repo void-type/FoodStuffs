@@ -1,4 +1,4 @@
-using VoidCore.Model.Auth;
+﻿using VoidCore.Model.Auth;
 
 namespace FoodStuffs.Web.Auth
 {

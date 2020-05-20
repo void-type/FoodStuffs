@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.200 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.300 AS build-env
 WORKDIR /app
 
 # Install Node in the build container

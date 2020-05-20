@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
