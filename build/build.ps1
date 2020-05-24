@@ -42,8 +42,6 @@ if (-not $SkipClient) {
 
   npm run build -- --mode "$($nodeModes[$Configuration])"
   Stop-OnError
-  node "tasks/set-version.js"
-  Stop-OnError
   Pop-Location
 }
 
