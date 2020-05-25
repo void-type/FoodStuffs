@@ -1,7 +1,18 @@
 <template>
   <footer class="no-print">
-    <a href="https://github.com/void-type/foodstuffs">
-      FoodStuffs is open source!</a>
+    <div>
+      <a href="https://github.com/void-type/foodstuffs">
+        FoodStuffs is open source!</a>
+    </div>
+    <div>
+      Logo icon made by <a
+        href="http://www.freepik.com/"
+        title="Freepik"
+      >Freepik</a> from <a
+        href="https://www.flaticon.com/"
+        title="Flaticon"
+      >www.flaticon.com</a>
+    </div>
   </footer>
 </template>
 

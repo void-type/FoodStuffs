@@ -61,31 +61,20 @@ export default {
 <style lang="scss">
 @import "./style/theme";
 
-$primary: $color-primary;
-$secondary: $color-secondary;
-$body-bg: $color-background;
-
-$font-family-sans-serif: "-apple-system", "BlinkMacSystemFont", "Segoe UI",
-  "Roboto", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-$enable-rounded: false;
-$print-page-size: auto;
-
 input[type="button"].btn,
 input[type="submit"].btn,
 button.btn,
-a.btn {
-  box-shadow: $shadow;
+a.btn,
+.btn {
+  box-shadow: $btn-box-shadow;
   position: relative;
   min-width: 5rem;
 
   &:active:not(:disabled) {
-    box-shadow: $shadow-collapse;
+    box-shadow: $btn-active-box-shadow;
     top: 3px;
   }
 }
-
-@import "~bootstrap/scss/bootstrap";
-@import "~bootstrap-vue/src/index";
 
 h1,
 h2,
@@ -93,7 +82,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: $color-primary;
+  color: $primary;
 }
 
 @media screen {

@@ -15,7 +15,7 @@
     <b-form-select
       :value="listRequest.take"
       :options="takeOptions"
-      class="prpa-small-input"
+      class="small-input"
       type="number"
       @change="changeTake"
     />
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.prpa-small-input {
+.small-input {
   max-width: 5em;
 }
 </style>

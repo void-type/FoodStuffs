@@ -36,6 +36,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../style/theme";
+
 div {
   position: relative;
   margin: 0;
@@ -51,7 +53,7 @@ div {
 
     & > li {
       margin: 0 auto;
-      color: #000000;
+      color: $body-color;
     }
   }
 }

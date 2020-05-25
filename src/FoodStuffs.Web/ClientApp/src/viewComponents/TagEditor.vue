@@ -24,16 +24,17 @@
     </div>
 
     <div class="tags">
-      <span
+      <b-button
         v-for="tag in tags"
         :key="tag"
+        @click="removeTagClick(tag)"
       >
-        {{ tag }}<span
+        {{ tag }}
+        <span
           class="remove-tag"
-          @click="removeTagClick(tag)"
         >
           ✖</span>
-      </span>
+      </b-button>
     </div>
   </div>
 </template>
@@ -86,23 +87,15 @@ export default {
   display: flex;
   flex-flow: wrap;
 
-  & > span {
+  & > .btn {
     margin-top: 0.5rem;
-    background-color: $color-secondary;
-    box-sizing: border-box;
-    padding: 0.3em 0.6rem;
-    box-shadow: $shadow;
 
     &:not(last) {
       margin-right: 0.5rem;
     }
 
-    &.remove-tag {
+    & .remove-tag {
       margin-left: 0.5rem;
-    }
-
-    & > span:hover {
-      cursor: pointer;
     }
   }
 }

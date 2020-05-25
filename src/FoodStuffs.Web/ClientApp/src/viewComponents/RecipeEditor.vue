@@ -8,38 +8,8 @@
         sm="12"
         md="6"
       >
-        <div
-          class="p-2"
-        >
-          <b-carousel
-            v-if="workingRecipe.images.length > 0"
-            id="image-carousel"
-            v-model="carouselIndex"
-            :interval="0"
-            no-animation
-            controls
-            indicators
-          >
-            <b-carousel-slide
-              v-for="image in workingRecipe.images"
-              :key="image"
-              :img-src="imageUrl(image)"
-            />
-          </b-carousel>
-          <b-card
-            v-else
-            class="text-center p-5"
-          >
-            No images.
-          </b-card>
-        </div>
-      </b-col>
-      <b-col
-        sm="12"
-        md="6"
-      >
         <b-form-group
-          label="Upload Image"
+          label="Images"
           label-for="upload"
         >
           <b-form-file
@@ -55,7 +25,17 @@
         <b-form-group>
           <b-button-toolbar>
             <b-button
+              id="uploadImage"
+              variant="primary"
+              name="uploadImage"
+              :disabled="uploadFile === null"
+              @click.stop.prevent="uploadImageClick()"
+            >
+              Upload
+            </b-button>
+            <b-button
               id="deleteImage"
+              class="ml-auto"
               variant="danger"
               name="deleteImage"
               :disabled="workingRecipe.images.length < 1"
@@ -63,17 +43,36 @@
             >
               Delete
             </b-button>
-            <b-button
-              id="uploadImage"
-              variant="primary"
-              name="uploadImage"
-              class="ml-auto"
-              :disabled="uploadFile === null"
-              @click.stop.prevent="uploadImageClick()"
-            >
-              Upload
-            </b-button>
           </b-button-toolbar>
+        </b-form-group>
+      </b-col>
+      <b-col
+        sm="12"
+        md="6"
+      >
+        <b-form-group>
+          <b-carousel
+            v-if="workingRecipe.images.length > 0"
+            id="image-carousel"
+            v-model="carouselIndex"
+            :interval="0"
+            no-animation
+            controls
+            indicators
+            class="mt-2 mb-2"
+          >
+            <b-carousel-slide
+              v-for="image in workingRecipe.images"
+              :key="image"
+              :img-src="imageUrl(image)"
+            />
+          </b-carousel>
+          <b-card
+            v-else
+            class="text-center p-5"
+          >
+            No images.
+          </b-card>
         </b-form-group>
       </b-col>
     </b-form-row>
