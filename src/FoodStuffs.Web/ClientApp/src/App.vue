@@ -18,8 +18,6 @@
 </template>
 
 <script>
-import BootstrapVue from 'bootstrap-vue';
-import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import progressBar from './util/progressBar';
 import initializeStore from './models/initializeStore';
@@ -27,8 +25,6 @@ import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
 import AppNav from './viewComponents/AppNav.vue';
 import AppFooter from './viewComponents/AppFooter.vue';
-
-Vue.use(BootstrapVue);
 
 export default {
   components: {
