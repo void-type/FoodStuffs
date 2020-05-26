@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-container>
     <h1>Search Recipes</h1>
     <EntityTableControls
       :clear-search="clearSearch"
@@ -61,7 +61,7 @@
       :change-take="changeTake"
       class="mt-4"
     />
-  </div>
+  </b-container>
 </template>
 
 <script>

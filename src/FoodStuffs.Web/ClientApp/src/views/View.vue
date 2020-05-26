@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-container>
     <b-row>
       <b-col
         md="12"
@@ -12,7 +12,7 @@
         <RecipeViewer :recipe="sourceRecipe" />
       </b-col>
     </b-row>
-  </div>
+  </b-container>
 </template>
 
 <script>

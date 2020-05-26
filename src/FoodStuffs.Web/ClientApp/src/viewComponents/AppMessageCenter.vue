@@ -1,10 +1,11 @@
 <template>
-  <div
+  <b-alert
     v-if="messages.length > 0"
-    :class="{'shadow': true,
-             'alert-danger': messageIsError,
-             'alert-success': !messageIsError}"
-    @click="clearMessages()"
+    show
+    :variant="messageIsError ? 'danger' : 'success'"
+    class="shadow"
+    dismissible
+    @dismissed="clearMessages()"
   >
     <ul>
       <li
@@ -14,7 +15,7 @@
         {{ message }}
       </li>
     </ul>
-  </div>
+  </b-alert>
 </template>
 
 <script>
@@ -38,23 +39,13 @@ export default {
 <style lang="scss" scoped>
 @import "../style/theme";
 
-div {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  cursor: pointer;
+div.alert {
+  color: $body-color;
 
   ul {
-    padding: 1em 1em 1em 2.5em;
     text-align: center;
     list-style: none;
     margin: 0;
-
-    & > li {
-      margin: 0 auto;
-      color: $body-color;
-    }
   }
 }
 </style>

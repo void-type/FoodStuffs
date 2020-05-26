@@ -11,9 +11,7 @@
       class="no-print"
     />
     <main class="mt-4 mb-4">
-      <b-container>
-        <router-view />
-      </b-container>
+      <router-view />
     </main>
     <AppFooter />
   </div>
