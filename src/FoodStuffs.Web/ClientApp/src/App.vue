@@ -55,6 +55,24 @@ export default {
 <style lang="scss">
 @import "./style/theme";
 
+// Sticky footer
+html,
+body,
+#app {
+  height: 100%;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+}
+footer {
+  flex-shrink: 0;
+}
+
+// Button animation
 input[type="button"].btn,
 input[type="submit"].btn,
 button.btn,
@@ -70,6 +88,7 @@ a.btn,
   }
 }
 
+// Colored headings
 h1,
 h2,
 h3,
@@ -79,6 +98,7 @@ h6 {
   color: $primary;
 }
 
+// Printable screens
 @media screen {
   .print-only {
     display: none;
