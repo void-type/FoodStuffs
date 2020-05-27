@@ -131,4 +131,14 @@ textarea {
   overflow: hidden !important;
   resize: none;
 }
+
+// Don't print carousel controls.
+@media print {
+  #image-carousel ::v-deep {
+    & a,
+    ol {
+      display: none;
+    }
+  }
+}
 </style>
