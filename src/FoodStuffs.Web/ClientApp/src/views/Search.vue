@@ -19,7 +19,7 @@
           >
             <b-form-input
               id="nameSearch"
-              v-model="workingRequest.nameSearch"
+              v-model="workingRequest.name"
               name="nameSearch"
             />
           </b-input-group>
@@ -34,7 +34,7 @@
           >
             <b-form-input
               id="categorySearch"
-              v-model="workingRequest.categorySearch"
+              v-model="workingRequest.category"
               name="categorySearch"
             />
           </b-input-group>
@@ -77,6 +77,13 @@ export default {
     EntityTableControls,
     EntityTablePager,
   },
+  props: {
+    query: {
+      type: Object,
+      required: false,
+      default: () => {},
+    },
+  },
   data() {
     return {
       workingRequest: new ListRecipesRequest(),
@@ -111,11 +118,27 @@ export default {
     },
   },
   created() {
-    this.workingRequest = Object.assign({}, this.listRequest);
+    const defaults = new ListRecipesRequest();
 
-    if (this.listResponse.count === 0) {
-      this.fetchList();
+    const { query, listRequest } = this;
+
+    function queryChanged() {
+      return Object.keys(query).length !== 0
+        && (query.name !== listRequest.name || query.category !== listRequest.category);
     }
+
+    const urlOverrides = {
+      name: query.name || defaults.name,
+      category: query.category || defaults.category,
+    };
+
+    this.workingRequest = Object.assign(
+      {},
+      listRequest,
+      queryChanged() ? urlOverrides : {},
+    );
+
+    this.fetchList();
   },
   methods: {
     ...mapActions({
@@ -124,6 +147,23 @@ export default {
       setListRequest: 'recipes/setListRequest',
     }),
     fetchList() {
+      const request = this.workingRequest;
+      const query = {};
+
+      function nil(value) {
+        return value === null || value === undefined || value === '';
+      }
+
+      if (!nil(request.name)) {
+        query.name = request.name;
+      }
+
+      if (!nil(request.category)) {
+        query.category = request.category;
+      }
+
+      router.replace({ query }).catch(() => {});
+
       webApi.recipes.list(
         this.workingRequest,
         data => this.setListResponse(data),

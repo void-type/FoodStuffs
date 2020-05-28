@@ -38,11 +38,11 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public async Task<IActionResult> List(string nameSearch = null, string categorySearch = null, string sort = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+        public async Task<IActionResult> List(string name = null, string category = null, string sort = null, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
             var request = new ListRecipes.Request(
-                nameSearch: nameSearch,
-                categorySearch: categorySearch,
+                nameSearch: name,
+                categorySearch: category,
                 sort: sort,
                 isPagingEnabled: isPagingEnabled,
                 page: page,

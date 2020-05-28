@@ -1,12 +1,12 @@
 <template>
   <b-navbar-nav>
     <b-nav-item
-      :to="{ name: 'search'}"
+      :to="{ name: 'search' }"
     >
       Search
     </b-nav-item>
     <b-nav-item
-      :to="{ name: 'new'}"
+      :to="{ name: 'new' }"
     >
       New
     </b-nav-item>
@@ -14,7 +14,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
+  computed: {
+    ...mapGetters({
+      recipesListRequest: 'recipes/listRequest',
+    }),
+    searchQuery() {
+      return {
+        name: this.recipesListRequest.name,
+        category: this.recipesListRequest.category,
+      };
+    },
+  },
 };
 </script>
 

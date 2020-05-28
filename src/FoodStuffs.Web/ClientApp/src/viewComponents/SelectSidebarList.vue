@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     viewRecipe(recipe) {
-      router.push({ name: 'view', params: { id: recipe.id } }).catch(() => {});
+      router.push({ name: this.routeName, params: { id: recipe.id } }).catch(() => {});
     },
   },
 };

@@ -11,6 +11,7 @@
       <b-col>
         <RecipeEditor
           :source-recipe="sourceRecipe"
+          :source-images="sourceImages"
           :is-field-in-error="isFieldInError"
           :on-save="onSave"
           :on-delete="onDelete"
@@ -50,12 +51,12 @@ export default {
   data() {
     return {
       sourceRecipe: new GetRecipeResponse(),
+      sourceImages: new GetRecipeResponse().images,
     };
   },
   computed: {
     ...mapGetters({
       isFieldInError: 'app/isFieldInError',
-      listResponse: 'recipes/listResponse',
     }),
   },
   watch: {
@@ -65,10 +66,6 @@ export default {
   },
   created() {
     this.fetchRecipe(this.id);
-
-    if (this.listResponse.count === 0) {
-      this.fetchRecipesList();
-    }
   },
   methods: {
     ...mapActions({
@@ -78,6 +75,11 @@ export default {
       removeFromRecent: 'recipes/removeFromRecent',
       setListResponse: 'recipes/setListResponse',
     }),
+    setSources(getRecipeResponse) {
+      const { images, ...recipe } = getRecipeResponse;
+      this.sourceRecipe = recipe;
+      this.sourceImages = images;
+    },
     fetchRecipesList() {
       webApi.recipes.list(
         this.listRequest,
@@ -87,12 +89,13 @@ export default {
     },
     fetchRecipe(id) {
       if (this.id === 0) {
-        this.sourceRecipe = this.newRecipeSuggestion || new GetRecipeResponse();
+        this.setSources(this.newRecipeSuggestion || new GetRecipeResponse());
         return;
       }
+
       webApi.recipes.get(
         id,
-        (data) => { this.sourceRecipe = data; },
+        (data) => { this.setSources(data); },
         response => this.setApiFailureMessages(response),
       );
     },
@@ -117,7 +120,7 @@ export default {
         id,
         (data) => {
           this.removeFromRecent(this.id);
-          this.sourceRecipe = new GetRecipeResponse();
+          this.setSources(new GetRecipeResponse());
           this.fetchRecipesList();
           router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);
@@ -130,7 +133,7 @@ export default {
         request,
         (data) => {
           this.setSuccessMessage(data.message);
-          this.fetchRecipe(this.id);
+          this.fetchImageIds(this.id);
         },
         response => this.setApiFailureMessages(response),
       );
@@ -140,8 +143,15 @@ export default {
         request,
         (data) => {
           this.setSuccessMessage(data.message);
-          this.fetchRecipe(this.id);
+          this.fetchImageIds(this.id);
         },
+        response => this.setApiFailureMessages(response),
+      );
+    },
+    fetchImageIds(id) {
+      webApi.recipes.get(
+        id,
+        (data) => { this.sourceImages = data.images; },
         response => this.setApiFailureMessages(response),
       );
     },
