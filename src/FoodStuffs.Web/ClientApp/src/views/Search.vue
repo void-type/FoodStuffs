@@ -87,7 +87,7 @@ export default {
   data() {
     return {
       workingRequest: new ListRecipesRequest(),
-      tableSortBy: null,
+      tableSortBy: new ListRecipesRequest().sort,
       tableSortDesc: false,
     };
   },
@@ -118,26 +118,14 @@ export default {
     },
   },
   created() {
-    const defaults = new ListRecipesRequest();
-
-    const { query, listRequest } = this;
-
-    function queryChanged() {
-      return Object.keys(query).length !== 0
-        && (query.name !== listRequest.name || query.category !== listRequest.category);
+    if (Object.keys(this.query).length !== 0) {
+      const defaultRequest = new ListRecipesRequest();
+      this.workingRequest = Object.assign(defaultRequest, this.query);
+    } else {
+      this.workingRequest = this.listRequest;
     }
-
-    const urlOverrides = {
-      name: query.name || defaults.name,
-      category: query.category || defaults.category,
-    };
-
-    this.workingRequest = Object.assign(
-      {},
-      listRequest,
-      queryChanged() ? urlOverrides : {},
-    );
-
+    // TODO: there is bug in b-pagination that misses the page number from a URL navigation.
+    // To replicate, go to page 2, hit F5, note page number is 1 with content of 2
     this.fetchList();
   },
   methods: {
@@ -147,22 +135,7 @@ export default {
       setListRequest: 'recipes/setListRequest',
     }),
     fetchList() {
-      const request = this.workingRequest;
-      const query = {};
-
-      function nil(value) {
-        return value === null || value === undefined || value === '';
-      }
-
-      if (!nil(request.name)) {
-        query.name = request.name;
-      }
-
-      if (!nil(request.category)) {
-        query.category = request.category;
-      }
-
-      router.replace({ query }).catch(() => {});
+      router.replace({ query: this.workingRequest }).catch(() => {});
 
       webApi.recipes.list(
         this.workingRequest,

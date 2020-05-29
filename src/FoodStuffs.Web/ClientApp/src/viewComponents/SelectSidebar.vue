@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import webApi from '../webApi';
 import SelectSidebarList from './SelectSidebarList.vue';
 
 export default {
@@ -32,7 +33,23 @@ export default {
   computed: {
     ...mapGetters({
       listResponse: 'recipes/listResponse',
+      listRequest: 'recipes/listRequest',
       recent: 'recipes/recent',
+    }),
+  },
+  created() {
+    if (this.listResponse.count === 0) {
+      webApi.recipes.list(
+        this.listRequest,
+        data => this.setListResponse(data),
+        response => this.setApiFailureMessages(response),
+      );
+    }
+  },
+  methods: {
+    ...mapActions({
+      setApiFailureMessages: 'app/setApiFailureMessages',
+      setListResponse: 'recipes/setListResponse',
     }),
   },
 };

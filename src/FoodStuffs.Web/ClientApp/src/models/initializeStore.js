@@ -6,10 +6,4 @@ export default function () {
     data => store.dispatch('app/setApplicationInfo', data),
     response => store.dispatch('app/setApiFailureMessages', response),
   );
-
-  webApi.recipes.list(
-    store.getters['recipes/listRequest'],
-    data => store.dispatch('recipes/setListResponse', data),
-    response => store.dispatch('app/setApiFailureMessages', response),
-  );
 }
