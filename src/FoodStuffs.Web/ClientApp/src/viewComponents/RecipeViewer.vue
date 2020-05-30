@@ -3,56 +3,53 @@
     v-if="recipe.name"
     class="viewer"
   >
-    <h1>{{ recipe.name }}</h1>
-    <div
-      md="12"
-      class="mt-4 no-print"
+    <b-row
+      class="no-print"
     >
-      <b-form-row>
-        <b-col
-          cols="12"
-        >
-          <b-button-toolbar>
-            <b-button
-              :to="{name: 'edit', params: {id: recipe.id}}"
-              class="mr-2"
-              variant="primary"
-            >
-              Edit
-            </b-button>
-            <b-form-checkbox
-              id="showImage"
-              v-model="showImage"
-              name="showImage"
-              class="mt-2"
-              switch
-            >
-              Image
-            </b-form-checkbox>
-          </b-button-toolbar>
-        </b-col>
-      </b-form-row>
-    </div>
-    <div
-      v-if="showImage"
-      class="text-center mt-3"
-    >
-      <b-carousel
-        v-if="recipe.images.length > 0"
-        id="image-carousel"
-        v-model="carouselIndex"
-        :interval="0"
-        no-animation
-        controls
-        indicators
+      <b-col
+        cols="12"
       >
-        <b-carousel-slide
-          v-for="image in recipe.images"
-          :key="image"
-          :img-src="imageUrl(image)"
-        />
-      </b-carousel>
-    </div>
+        <b-button-toolbar>
+          <b-button
+            :to="{name: 'edit', params: {id: recipe.id}}"
+            class="mr-2"
+            variant="primary"
+          >
+            Edit
+          </b-button>
+          <b-form-checkbox
+            id="showImage"
+            v-model="showImage"
+            name="showImage"
+            class="mt-2"
+            switch
+          >
+            Image
+          </b-form-checkbox>
+        </b-button-toolbar>
+      </b-col>
+      <b-col
+        v-if="showImage"
+        cols="12"
+        class="text-center mt-3"
+      >
+        <b-carousel
+          v-if="recipe.images.length > 0"
+          id="image-carousel"
+          v-model="carouselIndex"
+          :interval="0"
+          no-animation
+          controls
+          indicators
+        >
+          <b-carousel-slide
+            v-for="image in recipe.images"
+            :key="image"
+            :img-src="imageUrl(image)"
+          />
+        </b-carousel>
+      </b-col>
+    </b-row>
     <h3
       class="mt-3"
     >

@@ -1,230 +1,150 @@
 <template>
-  <div>
-    <form
-      id="recipe-images-form"
-      name="recipe-images-form"
-    >
-      <h1>{{ isEditingMode ? 'Edit' : 'New' }} Recipe</h1>
-      <b-form-row
-        v-if="isEditingMode"
-      >
-        <b-col
-          sm="12"
-          md="6"
-        >
-          <b-form-group
-            label="Images"
-            label-for="upload"
-          >
-            <b-form-file
-              id="upload"
-              v-model="uploadFile"
-              :state="isFieldInError('upload') ? false : null"
-              name="upload"
-              class="text-nowrap text-truncate"
-              placeholder="Drop file or click to browse..."
-              drop-placeholder="Drop file here..."
-            />
-          </b-form-group>
-          <b-form-group>
-            <b-button-toolbar>
-              <b-button
-                id="uploadImage"
-                variant="primary"
-                name="uploadImage"
-                :disabled="uploadFile === null"
-                @click.stop.prevent="uploadImageClick()"
-              >
-                Upload
-              </b-button>
-              <b-button
-                id="deleteImage"
-                class="ml-auto"
-                variant="danger"
-                name="deleteImage"
-                :disabled="!(sourceImages.length > 0)"
-                @click.stop.prevent="deleteImageClick()"
-              >
-                Delete
-              </b-button>
-            </b-button-toolbar>
-          </b-form-group>
-        </b-col>
-        <b-col
-          sm="12"
-          md="6"
-        >
-          <b-form-group>
-            <b-carousel
-              v-if="sourceImages.length > 0"
-              id="image-carousel"
-              v-model="carouselIndex"
-              :interval="0"
-              no-animation
-              controls
-              indicators
-              class="mt-2 mb-2"
-            >
-              <b-carousel-slide
-                v-for="image in sourceImages"
-                :key="image"
-                :img-src="imageUrl(image)"
-              />
-            </b-carousel>
-            <b-card
-              v-else
-              class="text-center p-5"
-            >
-              No images.
-            </b-card>
-          </b-form-group>
-        </b-col>
-      </b-form-row>
-    </form>
-    <form
-      id="recipe-details-form"
-      name="recipe-details-form"
-      @keydown.ctrl.enter.prevent="saveClick()"
-    >
-      <b-form-row>
-        <b-col
-          md="12"
-          sm="6"
-        />
-        <b-col
-          md="12"
-        >
-          <b-form-group
-            label="Name"
-            label-for="name"
-          >
-            <b-form-input
-              id="name"
-              v-model="workingRecipe.name"
-              :class="{'is-invalid': isFieldInError('name')}"
-            />
-          </b-form-group>
-        </b-col>
-        <b-col
-          md="12"
-        >
-          <b-form-group
-            label="Ingredients"
-            label-for="ingredients"
-          >
-            <b-form-textarea
-              id="ingredients"
-              v-model="workingRecipe.ingredients"
-              rows="1"
-              :max-rows="Number.MAX_SAFE_INTEGER"
-              :class="{'is-invalid': isFieldInError('ingredients')}"
-            />
-          </b-form-group>
-        </b-col>
-        <b-col
-          md="12"
-        >
-          <b-form-group
-            label="Directions"
-            label-for="directions"
-          >
-            <b-form-textarea
-              id="directions"
-              v-model="workingRecipe.directions"
-              rows="1"
-              :max-rows="Number.MAX_SAFE_INTEGER"
-              :class="{'is-invalid': isFieldInError('directions')}"
-            />
-          </b-form-group>
-        </b-col>
-        <b-col
-          sm="12"
-          md="6"
-        >
-          <b-form-group
-            label="Prep Time Minutes"
-            label-for="prepTimeMinutes"
-          >
-            <b-form-input
-              id="prepTimeMinutes"
-              v-model="workingRecipe.prepTimeMinutes"
-              :class="{'is-invalid': isFieldInError('prepTimeMinutes')}"
-              type="number"
-            />
-          </b-form-group>
-        </b-col>
-        <b-col
-          sm="12"
-          md="6"
-        >
-          <b-form-group
-            label="Cook Time Minutes"
-            label-for="cookTimeMinutes"
-          >
-            <b-form-input
-              id="cookTimeMinutes"
-              v-model="workingRecipe.cookTimeMinutes"
-              :class="{'is-invalid': isFieldInError('cookTimeMinutes')}"
-              type="number"
-            />
-          </b-form-group>
-        </b-col>
-        <b-col
-          md="12"
-        >
-          <TagEditor
-            :class="{'form-group': true, danger: isFieldInError('categories')}"
-            :tags="workingRecipe.categories"
-            :on-add-tag="addCategory"
-            :on-remove-tag="removeCategory"
-            field-name="categories"
-            label="Categories"
-          />
-        </b-col>
-      </b-form-row>
-      <EntityDetailsAuditInfo
-        v-if="sourceRecipe.id"
-        class="mb-3"
-        :entity="sourceRecipe"
+  <form
+    id="recipe-details-form"
+    name="recipe-details-form"
+    @keydown.ctrl.enter.prevent="saveClick()"
+  >
+    <b-form-row>
+      <b-col
+        md="12"
+        sm="6"
       />
-      <b-form-row>
-        <b-col
-          md="12"
+      <b-col
+        md="12"
+      >
+        <b-form-group
+          label="Name *"
+          label-for="name"
         >
-          <b-button-toolbar>
-            <b-button
-              class="mr-2"
-              variant="primary"
-              @click.stop.prevent="saveClick()"
-            >
-              Save
-            </b-button>
-            <b-button
-              v-if="isEditingMode"
-              :to="{name: 'new', params: {newRecipeSuggestion: getRecipeCopy()}}"
-              class="mr-2"
-            >
-              Copy
-            </b-button>
-            <b-button
-              v-if="isEditingMode"
-              :to="{name: 'view', params: {id: sourceRecipe.id}}"
-            >
-              Cancel
-            </b-button>
-            <b-button
-              v-if="isEditingMode"
-              class="ml-auto"
-              variant="danger"
-              @click.prevent="onRecipeDelete(workingRecipe.id)"
-            >
-              Delete
-            </b-button>
-          </b-button-toolbar>
-        </b-col>
-      </b-form-row>
-    </form>
-  </div>
+          <b-form-input
+            id="name"
+            v-model="workingRecipe.name"
+            required
+            :class="{'is-invalid': isFieldInError('name')}"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        md="12"
+      >
+        <b-form-group
+          label="Ingredients *"
+          label-for="ingredients"
+        >
+          <b-form-textarea
+            id="ingredients"
+            v-model="workingRecipe.ingredients"
+            required
+            rows="1"
+            :max-rows="Number.MAX_SAFE_INTEGER"
+            :class="{'is-invalid': isFieldInError('ingredients')}"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        md="12"
+      >
+        <b-form-group
+          label="Directions *"
+          label-for="directions"
+        >
+          <b-form-textarea
+            id="directions"
+            v-model="workingRecipe.directions"
+            required
+            rows="1"
+            :max-rows="Number.MAX_SAFE_INTEGER"
+            :class="{'is-invalid': isFieldInError('directions')}"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        sm="12"
+        md="6"
+      >
+        <b-form-group
+          label="Prep Time Minutes"
+          label-for="prepTimeMinutes"
+        >
+          <b-form-input
+            id="prepTimeMinutes"
+            v-model="workingRecipe.prepTimeMinutes"
+            :class="{'is-invalid': isFieldInError('prepTimeMinutes')}"
+            type="number"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        sm="12"
+        md="6"
+      >
+        <b-form-group
+          label="Cook Time Minutes"
+          label-for="cookTimeMinutes"
+        >
+          <b-form-input
+            id="cookTimeMinutes"
+            v-model="workingRecipe.cookTimeMinutes"
+            :class="{'is-invalid': isFieldInError('cookTimeMinutes')}"
+            type="number"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col
+        md="12"
+      >
+        <TagEditor
+          :class="{'form-group': true, danger: isFieldInError('categories')}"
+          :tags="workingRecipe.categories"
+          :on-add-tag="addCategory"
+          :on-remove-tag="removeCategory"
+          field-name="categories"
+          label="Categories"
+        />
+      </b-col>
+    </b-form-row>
+    <EntityDetailsAuditInfo
+      v-if="sourceRecipe.id"
+      class="mb-3"
+      :entity="sourceRecipe"
+    />
+    <b-form-row>
+      <b-col
+        md="12"
+      >
+        <b-button-toolbar>
+          <b-button
+            class="mr-2"
+            variant="primary"
+            @click.stop.prevent="saveClick()"
+          >
+            Save
+          </b-button>
+          <b-button
+            v-if="!isCreateMode"
+            :to="{name: 'new', params: {newRecipeSuggestion: getCopy()}}"
+            class="mr-2"
+          >
+            Copy
+          </b-button>
+          <b-button
+            v-if="!isCreateMode"
+            :to="{name: 'view', params: {id: sourceRecipe.id}}"
+          >
+            Cancel
+          </b-button>
+          <b-button
+            v-if="!isCreateMode"
+            class="ml-auto"
+            variant="danger"
+            @click.prevent="onRecipeDelete(workingRecipe.id)"
+          >
+            Delete
+          </b-button>
+        </b-button-toolbar>
+      </b-col>
+    </b-form-row>
+  </form>
 </template>
 
 <script>
@@ -232,9 +152,7 @@ import { mapActions } from 'vuex';
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import TagEditor from './TagEditor.vue';
 import { SaveRecipeRequest } from '../models/recipesApiModels';
-import { SaveImageRequest, DeleteImageRequest } from '../models/imagesApiModels';
 import trimAndTitleCase from '../util/trimAndTitleCase';
-import webApi from '../webApi';
 
 export default {
   components: {
@@ -263,17 +181,8 @@ export default {
       required: false,
       default: () => {},
     },
-    sourceImages: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
-    onImageUpload: {
-      type: Function,
-      required: true,
-    },
-    onImageDelete: {
-      type: Function,
+    isCreateMode: {
+      type: Boolean,
       required: true,
     },
   },
@@ -285,22 +194,16 @@ export default {
       isRecipeDirty: false,
     };
   },
-  computed: {
-    isEditingMode() {
-      return this.workingRecipe.id > 0;
-    },
-  },
   watch: {
     sourceRecipe() {
       this.reset();
     },
-    sourceImages() {
-      this.carouselIndex = Math.min(this.carouselIndex, this.sourceImages.length - 1);
-    },
     workingRecipe: {
       handler() {
         const changedValues = Object.keys(this.workingRecipe)
-          .map(key => this.workingRecipe[key] === this.sourceRecipe[key])
+          // Loose comparison so numbers and strings of numbers are equal.
+          // eslint-disable-next-line eqeqeq
+          .map(key => this.workingRecipe[key] == this.sourceRecipe[key])
           .filter(value => value === false);
 
         const isDirty = changedValues.length > 0;
@@ -319,9 +222,6 @@ export default {
     ...mapActions({
       setValidationErrorMessages: 'app/setValidationErrorMessages',
     }),
-    imageUrl(id) {
-      return webApi.images.url(id);
-    },
     reset() {
       this.workingRecipe = Object.assign({}, this.sourceRecipe);
       this.isRecipeDirty = false;
@@ -358,43 +258,8 @@ export default {
 
       this.onRecipeSave(sendableRecipe);
     },
-    getRecipeCopy() {
+    getCopy() {
       return Object.assign({}, this.workingRecipe, { images: [] });
-    },
-    uploadImageClick() {
-      if (this.uploadFile === null) {
-        return;
-      }
-
-      const fileSizeLimit = 30000000;
-
-      function toMiB(bytes) {
-        const mb = bytes / (1024 * 1024);
-        return Math.round(mb * 100) / 100;
-      }
-
-      if (this.uploadFile.size > fileSizeLimit) {
-        this.setValidationErrorMessages({
-          errorMessages: [`Your file (${toMiB(this.uploadFile.size)} MB) exceeds the limit (${toMiB(fileSizeLimit)} MB).`],
-          fieldNames: ['upload'],
-        });
-
-        return;
-      }
-
-      const request = new SaveImageRequest();
-      request.recipeId = this.sourceRecipe.id;
-      request.file = this.uploadFile;
-
-      this.onImageUpload(request);
-    },
-    deleteImageClick() {
-      const imageId = this.sourceImages[this.carouselIndex];
-
-      const request = new DeleteImageRequest();
-      request.id = imageId;
-
-      this.onImageDelete(request);
     },
   },
 };

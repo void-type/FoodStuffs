@@ -9,7 +9,11 @@
         <SelectSidebar :route-name="'view'" />
       </b-col>
       <b-col>
-        <RecipeViewer :recipe="sourceRecipe" />
+        <h1>{{ sourceRecipe.name }}</h1>
+        <RecipeViewer
+          class="mt-4"
+          :recipe="sourceRecipe"
+        />
       </b-col>
     </b-row>
   </b-container>

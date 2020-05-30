@@ -9,15 +9,22 @@
         <SelectSidebar :route-name="'view'" />
       </b-col>
       <b-col>
+        <h1>{{ isCreateMode ? 'New' : 'Edit' }} Recipe</h1>
+        <RecipeImageEditor
+          v-if="!isCreateMode"
+          class="mt-4"
+          :is-field-in-error="isFieldInError"
+          :source-images="sourceImages"
+          :on-image-upload="onImageUpload"
+          :on-image-delete="onImageDelete"
+        />
         <RecipeEditor
           :is-field-in-error="isFieldInError"
           :source-recipe="sourceRecipe"
           :on-recipe-save="onRecipeSave"
           :on-recipe-delete="onRecipeDelete"
           :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
-          :source-images="sourceImages"
-          :on-image-upload="onImageUpload"
-          :on-image-delete="onImageDelete"
+          :is-create-mode="isCreateMode"
         />
       </b-col>
     </b-row>
@@ -29,13 +36,16 @@ import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import router from '../router';
 import { GetRecipeResponse } from '../models/recipesApiModels';
+import { SaveImageRequest } from '../models/imagesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
+import RecipeImageEditor from '../viewComponents/RecipeImageEditor.vue';
 
 export default {
   components: {
     SelectSidebar,
     RecipeEditor,
+    RecipeImageEditor,
   },
   props: {
     id: {
@@ -59,7 +69,11 @@ export default {
   computed: {
     ...mapGetters({
       isFieldInError: 'app/isFieldInError',
+      listRequest: 'recipes/listRequest',
     }),
+    isCreateMode() {
+      return this.sourceRecipe.id <= 0;
+    },
   },
   watch: {
     id() {
@@ -140,7 +154,11 @@ export default {
     onRecipeDirtyStateChange(value) {
       this.isRecipeDirty = value;
     },
-    onImageUpload(request) {
+    onImageUpload(file) {
+      const request = new SaveImageRequest();
+      request.recipeId = this.id;
+      request.file = file;
+
       webApi.images.upload(
         request,
         (data) => {
