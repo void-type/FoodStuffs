@@ -112,7 +112,14 @@ export default {
   },
   watch: {
     sourceImages() {
-      this.carouselIndex = Math.min(this.carouselIndex, this.sourceImages.length - 1);
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(value, max));
+      }
+
+      const min = 0;
+      const max = this.sourceImages.length - 1;
+
+      this.carouselIndex = clamp(this.carouselIndex, min, max);
     },
   },
   methods: {
