@@ -171,9 +171,7 @@ export default {
     //     next(false);
     //   }
     // }
-    if (this.sourceRecipe !== null) {
-      this.addToRecent(this.sourceRecipe);
-    }
+    this.addToRecent(this.sourceRecipe);
     next();
   },
 };
