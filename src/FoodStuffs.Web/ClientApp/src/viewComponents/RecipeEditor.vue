@@ -216,7 +216,7 @@
               v-if="isEditingMode"
               class="ml-auto"
               variant="danger"
-              @click.prevent="onDelete(workingRecipe.id)"
+              @click.prevent="onRecipeDelete(workingRecipe.id)"
             >
               Delete
             </b-button>
@@ -242,32 +242,37 @@ export default {
     TagEditor,
   },
   props: {
+    isFieldInError: {
+      type: Function,
+      required: true,
+    },
     sourceRecipe: {
       type: Object,
       required: true,
+    },
+    onRecipeSave: {
+      type: Function,
+      required: true,
+    },
+    onRecipeDelete: {
+      type: Function,
+      required: true,
+    },
+    onRecipeDirtyStateChange: {
+      type: Function,
+      required: false,
+      default: () => {},
     },
     sourceImages: {
       type: Array,
       required: false,
       default: () => [],
     },
-    isFieldInError: {
+    onImageUpload: {
       type: Function,
       required: true,
     },
-    onSave: {
-      type: Function,
-      required: true,
-    },
-    onDelete: {
-      type: Function,
-      required: true,
-    },
-    onUploadImage: {
-      type: Function,
-      required: true,
-    },
-    onDeleteImage: {
+    onImageDelete: {
       type: Function,
       required: true,
     },
@@ -277,6 +282,7 @@ export default {
       workingRecipe: new SaveRecipeRequest(),
       uploadFile: null,
       carouselIndex: 0,
+      isRecipeDirty: false,
     };
   },
   computed: {
@@ -291,6 +297,20 @@ export default {
     sourceImages() {
       this.carouselIndex = Math.min(this.carouselIndex, this.sourceImages.length - 1);
     },
+    workingRecipe: {
+      handler() {
+        const changedValues = Object.keys(this.workingRecipe)
+          .map(key => this.workingRecipe[key] === this.sourceRecipe[key])
+          .filter(value => value === false);
+
+        const isDirty = changedValues.length > 0;
+        this.isRecipeDirty = isDirty;
+      },
+      deep: true,
+    },
+    isRecipeDirty(newValue) {
+      this.onRecipeDirtyStateChange(newValue);
+    },
   },
   created() {
     this.reset();
@@ -303,24 +323,30 @@ export default {
       return webApi.images.url(id);
     },
     reset() {
-      Object.assign(this.workingRecipe, this.sourceRecipe);
+      this.workingRecipe = Object.assign({}, this.sourceRecipe);
+      this.isRecipeDirty = false;
     },
     addCategory(tag) {
       const categoryName = trimAndTitleCase(tag);
 
-      const categoryDoesNotExist = this.workingRecipe.categories
+      const categories = this.workingRecipe.categories.slice();
+
+      const categoryDoesNotExist = categories
         .map(value => value.toUpperCase())
         .indexOf(categoryName.toUpperCase()) < 0;
 
       if (categoryDoesNotExist && categoryName.length > 0) {
-        this.workingRecipe.categories.push(categoryName);
+        categories.push(categoryName);
+        this.workingRecipe.categories = categories;
       }
     },
     removeCategory(categoryName) {
-      const categoryIndex = this.workingRecipe.categories.indexOf(categoryName);
+      const categories = this.workingRecipe.categories.slice();
+      const categoryIndex = categories.indexOf(categoryName);
 
       if (categoryIndex > -1) {
-        this.workingRecipe.categories.splice(categoryIndex, 1);
+        categories.splice(categoryIndex, 1);
+        this.workingRecipe.categories = categories;
       }
     },
     saveClick() {
@@ -330,7 +356,7 @@ export default {
         sendableRecipe[key] = this.workingRecipe[key];
       });
 
-      this.onSave(sendableRecipe);
+      this.onRecipeSave(sendableRecipe);
     },
     getRecipeCopy() {
       return Object.assign({}, this.workingRecipe, { images: [] });
@@ -360,7 +386,7 @@ export default {
       request.recipeId = this.sourceRecipe.id;
       request.file = this.uploadFile;
 
-      this.onUploadImage(request);
+      this.onImageUpload(request);
     },
     deleteImageClick() {
       const imageId = this.sourceImages[this.carouselIndex];
@@ -368,7 +394,7 @@ export default {
       const request = new DeleteImageRequest();
       request.id = imageId;
 
-      this.onDeleteImage(request);
+      this.onImageDelete(request);
     },
   },
 };

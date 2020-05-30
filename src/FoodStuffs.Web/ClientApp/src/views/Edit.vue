@@ -10,13 +10,14 @@
       </b-col>
       <b-col>
         <RecipeEditor
-          :source-recipe="sourceRecipe"
-          :source-images="sourceImages"
           :is-field-in-error="isFieldInError"
-          :on-save="onSave"
-          :on-delete="onDelete"
-          :on-upload-image="uploadImage"
-          :on-delete-image="deleteImage"
+          :source-recipe="sourceRecipe"
+          :on-recipe-save="onRecipeSave"
+          :on-recipe-delete="onRecipeDelete"
+          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
+          :source-images="sourceImages"
+          :on-image-upload="onImageUpload"
+          :on-image-delete="onImageDelete"
         />
       </b-col>
     </b-row>
@@ -52,6 +53,7 @@ export default {
     return {
       sourceRecipe: new GetRecipeResponse(),
       sourceImages: new GetRecipeResponse().images,
+      isRecipeDirty: false,
     };
   },
   computed: {
@@ -75,10 +77,12 @@ export default {
       removeFromRecent: 'recipes/removeFromRecent',
       setListResponse: 'recipes/setListResponse',
     }),
-    setSources(getRecipeResponse) {
-      const { images, ...recipe } = getRecipeResponse;
-      this.sourceRecipe = recipe;
-      this.sourceImages = images;
+    fetchImageIds(id) {
+      webApi.recipes.get(
+        id,
+        (data) => { this.sourceImages = data.images; },
+        response => this.setApiFailureMessages(response),
+      );
     },
     fetchRecipesList() {
       webApi.recipes.list(
@@ -99,7 +103,12 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    onSave(recipe) {
+    setSources(getRecipeResponse) {
+      const { images, ...recipe } = getRecipeResponse;
+      this.sourceRecipe = recipe;
+      this.sourceImages = images;
+    },
+    onRecipeSave(recipe) {
       webApi.recipes.save(
         recipe,
         (data) => {
@@ -115,7 +124,7 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    onDelete(id) {
+    onRecipeDelete(id) {
       webApi.recipes.delete(
         id,
         (data) => {
@@ -128,7 +137,10 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    uploadImage(request) {
+    onRecipeDirtyStateChange(value) {
+      this.isRecipeDirty = value;
+    },
+    onImageUpload(request) {
       webApi.images.upload(
         request,
         (data) => {
@@ -138,7 +150,7 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    deleteImage(request) {
+    onImageDelete(request) {
       webApi.images.delete(
         request,
         (data) => {
@@ -148,31 +160,32 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    fetchImageIds(id) {
-      webApi.recipes.get(
-        id,
-        (data) => { this.sourceImages = data.images; },
-        response => this.setApiFailureMessages(response),
-      );
+    async beforeRouteChange(next) {
+      if (this.isRecipeDirty) {
+        const answer = await this.$bvModal.msgBoxConfirm(
+          'Do you really want to leave?',
+          {
+            title: 'You have unsaved changes.',
+            okTitle: 'Yes',
+            cancelTitle: 'No',
+          },
+        );
+
+        if (answer !== true) {
+          next(false);
+          return;
+        }
+      }
+
+      this.addToRecent(this.sourceRecipe);
+      next();
     },
   },
-  beforeRouteUpdate(to, from, next) {
-    this.addToRecent(this.sourceRecipe);
-    next();
+  async beforeRouteUpdate(to, from, next) {
+    await this.beforeRouteChange(next);
   },
-  beforeRouteLeave(to, from, next) {
-    // TODO: find out if the child is dirty
-    // const dirty = JSON.stringify(this.sourceRecipe) !== JSON.stringify(this.workingRecipe);
-
-    // if (dirty) {
-    //   const answer = window.confirm('Do you really want to leave? you have unsaved changes!');
-
-    //   if (!answer) {
-    //     next(false);
-    //   }
-    // }
-    this.addToRecent(this.sourceRecipe);
-    next();
+  async beforeRouteLeave(to, from, next) {
+    await this.beforeRouteChange(next);
   },
 };
 </script>

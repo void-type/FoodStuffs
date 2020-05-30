@@ -72,6 +72,11 @@ footer {
   flex-shrink: 0;
 }
 
+// Modal background
+.modal-content {
+  background: $body-bg;
+}
+
 // Button animation
 input[type="button"].btn,
 input[type="submit"].btn,
