@@ -189,8 +189,6 @@ export default {
   data() {
     return {
       workingRecipe: new SaveRecipeRequest(),
-      uploadFile: null,
-      carouselIndex: 0,
       isRecipeDirty: false,
     };
   },
