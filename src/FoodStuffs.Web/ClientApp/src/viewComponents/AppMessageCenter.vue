@@ -1,22 +1,24 @@
 <template>
-  <b-alert
-    v-if="messages.length > 0"
+  <div
     v-message-center-scroll="onScroll"
-    show
-    :variant="messageIsError ? 'danger' : 'success'"
-    class="shadow"
-    dismissible
-    @dismissed="clearMessages()"
   >
-    <ul>
-      <li
-        v-for="message in messages"
-        :key="message"
-      >
-        {{ message }}
-      </li>
-    </ul>
-  </b-alert>
+    <b-alert
+      :show="messages.length > 0"
+      :variant="messageIsError ? 'danger' : 'success'"
+      class="shadow"
+      dismissible
+      @dismissed="clearMessages()"
+    >
+      <ul>
+        <li
+          v-for="message in messages"
+          :key="message"
+        >
+          {{ message }}
+        </li>
+      </ul>
+    </b-alert>
+  </div>
 </template>
 
 <script>
@@ -67,7 +69,7 @@ div.alert {
   }
 }
 
-div.alert.fixed-alert {
+div.fixed-alert {
   position: fixed;
   top: 0;
   z-index: 999;
