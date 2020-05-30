@@ -138,7 +138,20 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    onRecipeDelete(id) {
+    async onRecipeDelete(id) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        'Do you really want to delete this recipe?',
+        {
+          title: 'Delete recipe.',
+          okTitle: 'Yes',
+          cancelTitle: 'No',
+        },
+      );
+
+      if (answer !== true) {
+        return;
+      }
+
       webApi.recipes.delete(
         id,
         (data) => {
@@ -168,7 +181,20 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    onImageDelete(request) {
+    async onImageDelete(request) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        'Do you really want to delete this image?',
+        {
+          title: 'Delete image.',
+          okTitle: 'Yes',
+          cancelTitle: 'No',
+        },
+      );
+
+      if (answer !== true) {
+        return;
+      }
+
       webApi.images.delete(
         request,
         (data) => {
