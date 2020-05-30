@@ -40,5 +40,6 @@ export default [
     name: 'search',
     path: '/search',
     component: Search,
+    props: route => ({ query: route.query }),
   },
 ];

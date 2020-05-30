@@ -3,18 +3,23 @@
     class="text-center no-print"
   >
     <b-pagination
+      id="pagination-page"
       :value="listResponse.page"
       :total-rows="listResponse.totalCount"
+      name="pagination-page"
       :per-page="listResponse.take"
       align="center"
       @change="changePage"
     />
     <label
       class="sr-only"
+      for="pagination-take"
     >Pagination Take Amount</label>
     <b-form-select
+      id="pagination-take"
       :value="listRequest.take"
       :options="takeOptions"
+      name="pagination-take"
       class="small-input"
       type="number"
       @change="changeTake"

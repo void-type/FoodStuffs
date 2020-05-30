@@ -19,7 +19,7 @@
           >
             <b-form-input
               id="nameSearch"
-              v-model="workingRequest.nameSearch"
+              v-model="workingRequest.name"
               name="nameSearch"
             />
           </b-input-group>
@@ -34,7 +34,7 @@
           >
             <b-form-input
               id="categorySearch"
-              v-model="workingRequest.categorySearch"
+              v-model="workingRequest.category"
               name="categorySearch"
             />
           </b-input-group>
@@ -77,10 +77,17 @@ export default {
     EntityTableControls,
     EntityTablePager,
   },
+  props: {
+    query: {
+      type: Object,
+      required: false,
+      default: () => {},
+    },
+  },
   data() {
     return {
       workingRequest: new ListRecipesRequest(),
-      tableSortBy: null,
+      tableSortBy: new ListRecipesRequest().sort,
       tableSortDesc: false,
     };
   },
@@ -111,11 +118,15 @@ export default {
     },
   },
   created() {
-    this.workingRequest = Object.assign({}, this.listRequest);
-
-    if (this.listResponse.count === 0) {
-      this.fetchList();
+    if (Object.keys(this.query).length !== 0) {
+      const defaultRequest = new ListRecipesRequest();
+      this.workingRequest = Object.assign(defaultRequest, this.query);
+    } else {
+      this.workingRequest = this.listRequest;
     }
+    // TODO: there is bug in b-pagination that misses the page number from a URL navigation.
+    // To replicate, go to page 2, hit F5, note page number is 1 with content of 2
+    this.fetchList();
   },
   methods: {
     ...mapActions({
@@ -124,6 +135,8 @@ export default {
       setListRequest: 'recipes/setListRequest',
     }),
     fetchList() {
+      router.replace({ query: this.workingRequest }).catch(() => {});
+
       webApi.recipes.list(
         this.workingRequest,
         data => this.setListResponse(data),

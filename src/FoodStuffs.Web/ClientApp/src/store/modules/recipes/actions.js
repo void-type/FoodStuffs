@@ -6,6 +6,10 @@ export default {
     context.commit('SET_LIST_REQUEST', request);
   },
   addToRecent(context, recipe) {
+    if (recipe === null) {
+      return;
+    }
+
     const recentRecipes = context.state.recent.slice();
 
     const indexOfCurrentInRecents = recentRecipes

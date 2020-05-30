@@ -20,8 +20,8 @@ export class GetRecipeResponse {
 
 export class ListRecipesRequest {
   constructor() {
-    this.categorySearch = '';
-    this.nameSearch = '';
+    this.category = '';
+    this.name = '';
     this.sort = 'name';
     this.isPagingEnabled = true;
     this.page = 1;

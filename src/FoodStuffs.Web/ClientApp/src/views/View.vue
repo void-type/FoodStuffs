@@ -9,14 +9,18 @@
         <SelectSidebar :route-name="'view'" />
       </b-col>
       <b-col>
-        <RecipeViewer :recipe="sourceRecipe" />
+        <h1>{{ sourceRecipe.name }}</h1>
+        <RecipeViewer
+          class="mt-4"
+          :recipe="sourceRecipe"
+        />
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import webApi from '../webApi';
 import { GetRecipeResponse } from '../models/recipesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
@@ -38,11 +42,6 @@ export default {
       sourceRecipe: new GetRecipeResponse(),
     };
   },
-  computed: {
-    ...mapGetters({
-      listResponse: 'recipes/listResponse',
-    }),
-  },
   watch: {
     id() {
       this.fetchRecipe(this.id);
@@ -50,28 +49,16 @@ export default {
   },
   created() {
     this.fetchRecipe(this.id);
-
-    if (this.listResponse.count === 0) {
-      this.fetchRecipesList();
-    }
   },
   methods: {
     ...mapActions({
       setApiFailureMessages: 'app/setApiFailureMessages',
       addToRecent: 'recipes/addToRecent',
-      setListResponse: 'recipes/setListResponse',
     }),
     fetchRecipe(id) {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => this.setApiFailureMessages(response),
-      );
-    },
-    fetchRecipesList() {
-      webApi.recipes.list(
-        this.listRequest,
-        data => this.setListResponse(data),
         response => this.setApiFailureMessages(response),
       );
     },

@@ -9,13 +9,22 @@
         <SelectSidebar :route-name="'view'" />
       </b-col>
       <b-col>
-        <RecipeEditor
-          :source-recipe="sourceRecipe"
+        <h1>{{ isCreateMode ? 'New' : 'Edit' }} Recipe</h1>
+        <RecipeImageEditor
+          v-if="!isCreateMode"
+          class="mt-4"
           :is-field-in-error="isFieldInError"
-          :on-save="onSave"
-          :on-delete="onDelete"
-          :on-upload-image="uploadImage"
-          :on-delete-image="deleteImage"
+          :source-images="sourceImages"
+          :on-image-upload="onImageUpload"
+          :on-image-delete="onImageDelete"
+        />
+        <RecipeEditor
+          :is-field-in-error="isFieldInError"
+          :source-recipe="sourceRecipe"
+          :on-recipe-save="onRecipeSave"
+          :on-recipe-delete="onRecipeDelete"
+          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
+          :is-create-mode="isCreateMode"
         />
       </b-col>
     </b-row>
@@ -27,13 +36,16 @@ import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import router from '../router';
 import { GetRecipeResponse } from '../models/recipesApiModels';
+import { SaveImageRequest } from '../models/imagesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
+import RecipeImageEditor from '../viewComponents/RecipeImageEditor.vue';
 
 export default {
   components: {
     SelectSidebar,
     RecipeEditor,
+    RecipeImageEditor,
   },
   props: {
     id: {
@@ -50,13 +62,18 @@ export default {
   data() {
     return {
       sourceRecipe: new GetRecipeResponse(),
+      sourceImages: new GetRecipeResponse().images,
+      isRecipeDirty: false,
     };
   },
   computed: {
     ...mapGetters({
       isFieldInError: 'app/isFieldInError',
-      listResponse: 'recipes/listResponse',
+      listRequest: 'recipes/listRequest',
     }),
+    isCreateMode() {
+      return this.sourceRecipe.id <= 0;
+    },
   },
   watch: {
     id() {
@@ -65,10 +82,6 @@ export default {
   },
   created() {
     this.fetchRecipe(this.id);
-
-    if (this.listResponse.count === 0) {
-      this.fetchRecipesList();
-    }
   },
   methods: {
     ...mapActions({
@@ -78,6 +91,13 @@ export default {
       removeFromRecent: 'recipes/removeFromRecent',
       setListResponse: 'recipes/setListResponse',
     }),
+    fetchImageIds(id) {
+      webApi.recipes.get(
+        id,
+        (data) => { this.sourceImages = data.images; },
+        response => this.setApiFailureMessages(response),
+      );
+    },
     fetchRecipesList() {
       webApi.recipes.list(
         this.listRequest,
@@ -87,16 +107,22 @@ export default {
     },
     fetchRecipe(id) {
       if (this.id === 0) {
-        this.sourceRecipe = this.newRecipeSuggestion || new GetRecipeResponse();
+        this.setSources(this.newRecipeSuggestion || new GetRecipeResponse());
         return;
       }
+
       webApi.recipes.get(
         id,
-        (data) => { this.sourceRecipe = data; },
+        (data) => { this.setSources(data); },
         response => this.setApiFailureMessages(response),
       );
     },
-    onSave(recipe) {
+    setSources(getRecipeResponse) {
+      const { images, ...recipe } = getRecipeResponse;
+      this.sourceRecipe = recipe;
+      this.sourceImages = images;
+    },
+    onRecipeSave(recipe) {
       webApi.recipes.save(
         recipe,
         (data) => {
@@ -112,12 +138,25 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    onDelete(id) {
+    async onRecipeDelete(id) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        'Do you really want to delete this recipe?',
+        {
+          title: 'Delete recipe.',
+          okTitle: 'Yes',
+          cancelTitle: 'No',
+        },
+      );
+
+      if (answer !== true) {
+        return;
+      }
+
       webApi.recipes.delete(
         id,
         (data) => {
           this.removeFromRecent(this.id);
-          this.sourceRecipe = new GetRecipeResponse();
+          this.setSources(new GetRecipeResponse());
           this.fetchRecipesList();
           router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);
@@ -125,46 +164,72 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
-    uploadImage(request) {
+    onRecipeDirtyStateChange(value) {
+      this.isRecipeDirty = value;
+    },
+    onImageUpload(file) {
+      const request = new SaveImageRequest();
+      request.recipeId = this.id;
+      request.file = file;
+
       webApi.images.upload(
         request,
         (data) => {
           this.setSuccessMessage(data.message);
-          this.fetchRecipe(this.id);
+          this.fetchImageIds(this.id);
         },
         response => this.setApiFailureMessages(response),
       );
     },
-    deleteImage(request) {
+    async onImageDelete(request) {
+      const answer = await this.$bvModal.msgBoxConfirm(
+        'Do you really want to delete this image?',
+        {
+          title: 'Delete image.',
+          okTitle: 'Yes',
+          cancelTitle: 'No',
+        },
+      );
+
+      if (answer !== true) {
+        return;
+      }
+
       webApi.images.delete(
         request,
         (data) => {
           this.setSuccessMessage(data.message);
-          this.fetchRecipe(this.id);
+          this.fetchImageIds(this.id);
         },
         response => this.setApiFailureMessages(response),
       );
     },
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.addToRecent(this.sourceRecipe);
-    next();
-  },
-  beforeRouteLeave(to, from, next) {
-    // TODO: find out if the child is dirty
-    // const dirty = JSON.stringify(this.sourceRecipe) !== JSON.stringify(this.workingRecipe);
+    async beforeRouteChange(next) {
+      if (this.isRecipeDirty) {
+        const answer = await this.$bvModal.msgBoxConfirm(
+          'Do you really want to leave?',
+          {
+            title: 'You have unsaved changes.',
+            okTitle: 'Yes',
+            cancelTitle: 'No',
+          },
+        );
 
-    // if (dirty) {
-    //   const answer = window.confirm('Do you really want to leave? you have unsaved changes!');
+        if (answer !== true) {
+          next(false);
+          return;
+        }
+      }
 
-    //   if (!answer) {
-    //     next(false);
-    //   }
-    // }
-    if (this.sourceRecipe !== null) {
       this.addToRecent(this.sourceRecipe);
-    }
-    next();
+      next();
+    },
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.beforeRouteChange(next);
+  },
+  async beforeRouteLeave(to, from, next) {
+    await this.beforeRouteChange(next);
   },
 };
 </script>
