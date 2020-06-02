@@ -27,4 +27,12 @@ export default {
       })
       .catch(error => failure(error.response));
   },
+  getVersion(success, failure) {
+    axios.get('/api/app/version')
+      .then((response) => {
+        setHeaders(response);
+        success(response.data);
+      })
+      .catch(error => failure(error.response));
+  },
 };

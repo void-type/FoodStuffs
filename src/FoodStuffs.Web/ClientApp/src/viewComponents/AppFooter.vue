@@ -2,7 +2,7 @@
   <footer class="no-print">
     <div>
       <a href="https://github.com/void-type/foodstuffs">
-        FoodStuffs is open source!</a>
+        FoodStuffs {{ version }} is open source!</a>
     </div>
     <div>
       Logo icon made by <a
@@ -17,7 +17,33 @@
 </template>
 
 <script>
+import webApi from '../webApi';
+
 export default {
+  data() {
+    return {
+      version: null,
+      showAbout: false,
+    };
+  },
+  created() {
+    webApi.app.getVersion(
+      (data) => { this.setVersion(data); },
+      () => {},
+    );
+  },
+  methods: {
+    setVersion(data) {
+      let version = `v${data.version}`;
+
+      if (data.isPublicRelease === false) {
+        const gitCommitId = data.gitCommitId.slice(0, 10);
+        version += `-g${gitCommitId}`;
+      }
+
+      this.version = version;
+    },
+  },
 };
 </script>
 
