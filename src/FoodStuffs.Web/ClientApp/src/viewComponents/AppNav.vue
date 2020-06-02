@@ -14,20 +14,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
-  computed: {
-    ...mapGetters({
-      recipesListRequest: 'recipes/listRequest',
-    }),
-    searchQuery() {
-      return {
-        name: this.recipesListRequest.name,
-        category: this.recipesListRequest.category,
-      };
-    },
-  },
 };
 </script>
 
