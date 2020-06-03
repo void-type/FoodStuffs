@@ -1,12 +1,12 @@
-﻿using System;
+﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;

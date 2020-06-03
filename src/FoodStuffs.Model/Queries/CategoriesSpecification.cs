@@ -1,6 +1,6 @@
-﻿using System;
+﻿using FoodStuffs.Model.Data.Models;
+using System;
 using System.Linq.Expressions;
-using FoodStuffs.Model.Data.Models;
 using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Queries

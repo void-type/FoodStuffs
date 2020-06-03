@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Queries;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Domain.RuleValidator;

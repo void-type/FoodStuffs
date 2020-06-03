@@ -7,16 +7,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Data;
-using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Logging;
+using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
-using VoidCore.Model.Auth;
-using VoidCore.Model.Time;
 using VoidCore.EntityFramework;
+using VoidCore.Model.Auth;
 using VoidCore.Model.Configuration;
-using VoidCore.AspNet.ClientApp;
+using VoidCore.Model.Time;
 
 namespace FoodStuffs.Web
 {

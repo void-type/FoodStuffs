@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using FoodStuffs.Model.Events.Recipes;
+﻿using FoodStuffs.Model.Events.Recipes;
+using System.Linq;
 using Xunit;
 
 namespace FoodStuffs.Test.Model.Events
