@@ -15,5 +15,8 @@ export default {
   SET_USER(state, user) {
     state.user = user;
   },
+  SET_INITIALIZED(state, isInitialized) {
+    state.initialized = isInitialized;
+  },
 };
 /* eslint-enable no-param-reassign */

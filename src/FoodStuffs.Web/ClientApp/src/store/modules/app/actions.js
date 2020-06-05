@@ -34,6 +34,7 @@ export default {
   setApplicationInfo(context, data) {
     context.commit('SET_APPLICATION_NAME', data.applicationName);
     context.commit('SET_USER', data.user);
+    context.commit('SET_INITIALIZED', true);
   },
   setErrorMessage(context, message) {
     context.commit('SET_MESSAGE_IS_ERROR', true);

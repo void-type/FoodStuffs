@@ -2,6 +2,9 @@ export default {
   applicationName(state) {
     return state.applicationName;
   },
+  isInitialized(state) {
+    return state.initialized;
+  },
   isFieldInError: state => fieldName => state.fieldsInError
     .map(errorField => errorField.toLowerCase())
     .indexOf(fieldName.toLowerCase()) > -1,
