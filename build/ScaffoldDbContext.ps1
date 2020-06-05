@@ -1,8 +1,5 @@
 ﻿. ./util.ps1
 
-dotnet tool install --global dotnet-ef
-dotnet tool update --global dotnet-ef
-
 Push-Location -Path "$webProjectFolder"
 
 $contextDirectory = "Data/EntityFramework"
