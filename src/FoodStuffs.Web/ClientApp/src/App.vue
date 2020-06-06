@@ -122,7 +122,7 @@ h6,
   }
 
   div {
-    background-color: white;
+    background-color: $white;
   }
 
   button,
@@ -136,7 +136,7 @@ h6,
   h2,
   h3,
   h4 {
-    color: black;
+    color: $black;
   }
 }
 </style>

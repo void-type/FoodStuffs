@@ -45,8 +45,15 @@
           <b-carousel-slide
             v-for="image in recipe.images"
             :key="image"
-            :img-src="imageUrl(image)"
-          />
+          >
+            <template v-slot:img>
+              <b-img
+                fluid
+                rounded
+                :src="imageUrl(image)"
+              />
+            </template>
+          </b-carousel-slide>
         </b-carousel>
       </b-col>
     </b-row>
