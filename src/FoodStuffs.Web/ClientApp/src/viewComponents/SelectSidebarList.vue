@@ -5,22 +5,33 @@
     <template
       v-slot:header
     >
-      <h5 class="mb-0">
-        {{ title }}
-      </h5>
-    </template>
-    <b-list-group
-      flush
-    >
-      <b-list-group-item
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        button
-        @click="viewRecipe(recipe)"
+      <div
+        v-b-toggle="`collapse-${title}`"
       >
-        {{ recipe.name }}
-      </b-list-group-item>
-    </b-list-group>
+        <span
+          class="h5 mb-0"
+        >
+          {{ title }}
+        </span>
+      </div>
+    </template>
+    <b-collapse
+      :id="`collapse-${title}`"
+      visible
+    >
+      <b-list-group
+        flush
+      >
+        <b-list-group-item
+          v-for="recipe in recipes"
+          :key="recipe.id"
+          button
+          @click="viewRecipe(recipe)"
+        >
+          {{ recipe.name }}
+        </b-list-group-item>
+      </b-list-group>
+    </b-collapse>
   </b-card>
 </template>
 
