@@ -1,6 +1,8 @@
 <template>
   <b-container>
-    <h1>Search Recipes</h1>
+    <h1 class="mt-4">
+      Search Recipes
+    </h1>
     <EntityTableControls
       :clear-search="clearSearch"
       :init-search="startSearch"

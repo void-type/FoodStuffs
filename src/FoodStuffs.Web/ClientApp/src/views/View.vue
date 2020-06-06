@@ -4,11 +4,13 @@
       <b-col
         md="12"
         lg="3"
-        class="no-print"
+        class="no-print mt-4"
       >
         <SelectSidebar :route-name="'view'" />
       </b-col>
-      <b-col>
+      <b-col
+        class="mt-4"
+      >
         <h1>{{ sourceRecipe.name }}</h1>
         <RecipeViewer
           class="mt-4"
