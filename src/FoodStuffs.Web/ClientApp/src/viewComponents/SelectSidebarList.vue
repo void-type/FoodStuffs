@@ -1,23 +1,16 @@
 <template>
-  <b-card
-    no-body
+  <div
+    class="card mt-2"
   >
-    <template
-      v-slot:header
+    <b-card-header
+      class="h5 mb-0 hover"
+      @click="toggleSidebarVisible"
     >
-      <div
-        v-b-toggle="`collapse-${title}`"
-      >
-        <span
-          class="h5 mb-0"
-        >
-          {{ title }}
-        </span>
-      </div>
-    </template>
+      {{ title }}
+    </b-card-header>
     <b-collapse
       :id="`collapse-${title}`"
-      visible
+      :visible="isSidebarVisible"
     >
       <b-list-group
         flush
@@ -32,10 +25,11 @@
         </b-list-group-item>
       </b-list-group>
     </b-collapse>
-  </b-card>
+  </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import router from '../router';
 
 export default {
@@ -54,7 +48,50 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      isScreenLarge: false,
+    };
+  },
+  computed: {
+    ...mapGetters({
+      isSidebarVisibleSetting: 'sidebar/sidebarVisible',
+    }),
+    isSidebarVisible() {
+      return this.isSidebarVisibleSetting || this.isScreenLarge;
+    },
+  },
+  created() {
+    this.setIsScreenLarge();
+
+    // Initialize sidebars as collapsed on small screens.
+    if (this.isSidebarVisibleSetting === null) {
+      this.setSidebarVisibleSetting(this.isScreenLarge);
+    }
+
+    window.addEventListener('resize', this.setIsScreenLarge);
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.setIsScreenLarge);
+  },
   methods: {
+    ...mapActions({
+      setSidebarVisibleSetting: 'sidebar/setSidebarVisible',
+    }),
+    toggleSidebarVisible() {
+      if (this.isScreenLarge) {
+        return;
+      }
+
+      this.setSidebarVisibleSetting(!this.isSidebarVisibleSetting);
+    },
+    setIsScreenLarge() {
+      const width = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+
+      this.isScreenLarge = width >= 992;
+    },
     viewRecipe(recipe) {
       router.push({ name: this.routeName, params: { id: recipe.id } }).catch(() => {});
     },
@@ -63,4 +100,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../style/theme";
+
+@include media-breakpoint-down(md) {
+  .hover:hover {
+    background-color: $gray-200;
+    cursor: pointer;
+  }
+}
 </style>
