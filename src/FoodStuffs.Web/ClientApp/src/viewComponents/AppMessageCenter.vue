@@ -5,7 +5,7 @@
     <b-alert
       :show="messages.length > 0"
       :variant="messageIsError ? 'danger' : 'success'"
-      class="shadow"
+      class="shadow mb-0"
       dismissible
       @dismissed="clearMessages()"
     >
