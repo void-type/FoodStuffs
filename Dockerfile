@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.300 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /app
 
 # Install Node in the build container
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
   && apt-get update \
   && apt-get install -y nodejs
 

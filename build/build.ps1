@@ -9,8 +9,6 @@ param(
   [switch] $SkipPublish
 )
 
-. ./util.ps1
-
 $nodeModes = @{
   "Release" = "production";
   "Debug"   = "development"
@@ -20,6 +18,13 @@ $nodeModes = @{
 Remove-Item -Path "../artifacts" -Recurse -ErrorAction SilentlyContinue
 Remove-Item -Path "../coverage" -Recurse -ErrorAction SilentlyContinue
 Remove-Item -Path "../testResults" -Recurse -ErrorAction SilentlyContinue
+
+# Restore local dotnet tools
+Push-Location -Path "../"
+dotnet tool restore
+Pop-Location
+
+. ./util.ps1
 
 # Lint, test and build client
 if (-not $SkipClient) {
@@ -47,9 +52,6 @@ if (-not $SkipClient) {
 
 # Build solution
 Push-Location -Path "../"
-
-# Restore local dotnet tools
-dotnet tool restore
 
 if (-not $SkipFormat) {
   dotnet format --check
@@ -99,3 +101,5 @@ if (-not $SkipPublish) {
   Stop-OnError
   Pop-Location
 }
+
+Write-Host "`nBuilt $projectName $projectVersion`n"
