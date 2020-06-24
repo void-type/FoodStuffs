@@ -19,7 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import progressBar from './util/progressBar';
+import plugins from './util/plugins';
 import initializeStore from './models/initializeStore';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
@@ -45,8 +45,7 @@ export default {
     },
   },
   mounted() {
-    progressBar.setupProgressBarHooks(this.$Progress);
-
+    plugins.setup(this);
     initializeStore();
   },
 };
@@ -107,6 +106,11 @@ h6,
 .h5,
 .h6 {
   color: $primary;
+}
+
+// Hover table cursor
+table.table-hover {
+  cursor: pointer;
 }
 
 // Printable screens

@@ -175,7 +175,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-table.table-hover {
-  cursor: pointer;
-}
 </style>
