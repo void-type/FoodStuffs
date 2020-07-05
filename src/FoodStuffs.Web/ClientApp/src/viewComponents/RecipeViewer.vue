@@ -28,6 +28,8 @@
           </b-form-checkbox>
         </b-button-toolbar>
       </b-col>
+    </b-row>
+    <b-row>
       <b-col
         v-if="showImage"
         cols="12"

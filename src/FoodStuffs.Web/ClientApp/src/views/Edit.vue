@@ -129,6 +129,7 @@ export default {
         recipe,
         (data) => {
           if (this.id === 0) {
+            this.isRecipeDirty = false;
             router.push({ name: 'edit', params: { id: data.id } }).catch(() => {});
           } else {
             this.fetchRecipe(this.id);
