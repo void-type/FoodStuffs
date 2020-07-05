@@ -13,7 +13,6 @@
           />
           <b-input-group-append>
             <b-button
-              class="ml-2"
               @click.prevent="addTagClick()"
             >
               Add

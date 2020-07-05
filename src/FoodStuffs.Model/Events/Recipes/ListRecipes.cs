@@ -38,7 +38,8 @@ namespace FoodStuffs.Model.Events.Recipes
                 var pagedSearch = new RecipesSearchSpecification(
                     criteria: searchCriteria,
                     paginationOptions: paginationOptions,
-                    sort: request.Sort);
+                    sortBy: request.SortBy,
+                    sortDesc: request.SortDesc);
 
                 var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
 
@@ -71,11 +72,12 @@ namespace FoodStuffs.Model.Events.Recipes
 
         public class Request
         {
-            public Request(string nameSearch, string categorySearch, string sort, bool isPagingEnabled, int page, int take)
+            public Request(string nameSearch, string categorySearch, string sortBy, bool sortDesc, bool isPagingEnabled, int page, int take)
             {
                 NameSearch = nameSearch;
                 CategorySearch = categorySearch;
-                Sort = sort;
+                SortBy = sortBy;
+                SortDesc = sortDesc;
                 IsPagingEnabled = isPagingEnabled;
                 Page = page;
                 Take = take;
@@ -83,7 +85,8 @@ namespace FoodStuffs.Model.Events.Recipes
 
             public string NameSearch { get; }
             public string CategorySearch { get; }
-            public string Sort { get; }
+            public string SortBy { get; }
+            public bool SortDesc { get; }
             public bool IsPagingEnabled { get; }
             public int Page { get; }
             public int Take { get; }
@@ -112,7 +115,7 @@ namespace FoodStuffs.Model.Events.Recipes
                 Logger.Info(
                     $"RequestNameSearch: {request.NameSearch}",
                     $"RequestCategorySearch: {request.CategorySearch}",
-                    $"RequestSort: {request.Sort}",
+                    $"RequestSort: {request.SortBy}",
                     $"RequestIsPagingEnabled: {request.IsPagingEnabled}",
                     $"RequestPage: {request.Page}",
                     $"RequestTake: {request.Take}"

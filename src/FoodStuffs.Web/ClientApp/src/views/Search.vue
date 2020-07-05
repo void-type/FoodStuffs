@@ -46,8 +46,8 @@
     <b-table
       :items="listResponse.items"
       :fields="tableFields"
-      :sort-by.sync="tableSortBy"
-      :sort-desc.sync="tableSortDesc"
+      :sort-by.sync="workingRequest.sortBy"
+      :sort-desc.sync="workingRequest.sortDesc"
       sort-icon-left
       no-local-sorting
       show-empty
@@ -89,8 +89,6 @@ export default {
   data() {
     return {
       workingRequest: new ListRecipesRequest(),
-      tableSortBy: new ListRecipesRequest().sort,
-      tableSortDesc: false,
     };
   },
   computed: {
@@ -167,8 +165,7 @@ export default {
       router.push({ name: 'view', params: { id: recipe.id } });
     },
     tableSortChanged() {
-      this.workingRequest.sort = `${this.tableSortBy}${this.tableSortDesc ? 'Desc' : ''}`;
-      this.fetchList();
+      this.startSearch();
     },
   },
 };

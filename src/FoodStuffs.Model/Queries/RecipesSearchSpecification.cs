@@ -13,25 +13,32 @@ namespace FoodStuffs.Model.Queries
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
         }
 
-        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string sort = null) : this(criteria)
+        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string sortBy = null, bool sortDesc = false) : this(criteria)
         {
             ApplyPaging(paginationOptions);
 
-            switch (sort)
+            switch (sortBy)
             {
                 case "name":
-                    ApplyOrderBy(recipe => recipe.Name);
+                    ApplyOrderByWithDescendingFlag(recipe => recipe.Name, sortDesc);
                     AddThenBy(recipe => recipe.Id);
                     break;
 
-                case "nameDesc":
-                    ApplyOrderByDescending(recipe => recipe.Name);
-                    AddThenByDescending(recipe => recipe.Id);
-                    break;
-
                 default:
-                    ApplyOrderBy(recipe => recipe.Id);
+                    ApplyOrderByDescending(recipe => recipe.Id);
                     break;
+            }
+        }
+
+        private void ApplyOrderByWithDescendingFlag(Expression<Func<Recipe, object>> sortPropertySelector, bool isDesc)
+        {
+            if (isDesc)
+            {
+                ApplyOrderByDescending(sortPropertySelector);
+            }
+            else
+            {
+                ApplyOrderBy(sortPropertySelector);
             }
         }
     }

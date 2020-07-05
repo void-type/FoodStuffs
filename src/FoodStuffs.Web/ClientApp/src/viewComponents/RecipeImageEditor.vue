@@ -1,84 +1,94 @@
 <template>
-  <form
-    id="recipe-images-form"
-    name="recipe-images-form"
-  >
+  <form>
     <b-form-row>
       <b-col
-        sm="12"
-        md="6"
+        cols="12"
       >
         <b-form-group
           label="Images"
-          label-for="upload"
+          label-for="image-editor"
         >
-          <b-form-file
-            id="upload"
-            v-model="uploadFile"
-            :state="isFieldInError('upload') ? false : null"
-            name="upload"
-            class="text-nowrap text-truncate"
-            placeholder="Drop file or click to browse..."
-            drop-placeholder="Drop file here..."
-          />
-        </b-form-group>
-        <b-form-group>
-          <b-button-toolbar>
-            <b-button
-              id="uploadImage"
-              variant="primary"
-              name="uploadImage"
-              :disabled="uploadFile === null"
-              @click.stop.prevent="uploadImageClick()"
-            >
-              Upload
-            </b-button>
-            <b-button
-              id="deleteImage"
-              class="ml-auto"
-              variant="danger"
-              name="deleteImage"
-              :disabled="!(sourceImages.length > 0)"
-              @click.stop.prevent="deleteImageClick()"
-            >
-              Delete
-            </b-button>
-          </b-button-toolbar>
-        </b-form-group>
-      </b-col>
-      <b-col
-        sm="12"
-        md="6"
-      >
-        <b-form-group>
-          <b-carousel
-            v-if="sourceImages.length > 0"
-            id="image-carousel"
-            v-model="carouselIndex"
-            :interval="0"
-            no-animation
-            controls
-            indicators
-            class="mt-2 mb-2"
-          >
-            <b-carousel-slide
-              v-for="image in sourceImages"
-              :key="image"
-            >
-              <template v-slot:img>
-                <b-img
-                  fluid
-                  rounded
-                  :src="imageUrl(image)"
-                />
-              </template>
-            </b-carousel-slide>
-          </b-carousel>
           <b-card
-            v-else
-            class="text-center p-5"
+            id="image-editor"
           >
-            No images.
+            <b-form-row>
+              <b-col
+                sm="12"
+                md="6"
+              >
+                <b-form-group
+                  label="Upload"
+                  label-for="upload"
+                >
+                  <b-form-file
+                    id="upload"
+                    v-model="uploadFile"
+                    :state="isFieldInError('upload') ? false : null"
+                    name="upload"
+                    class="text-nowrap text-truncate"
+                    placeholder="Drop file or click to browse..."
+                    drop-placeholder="Drop file here..."
+                  />
+                </b-form-group>
+                <b-form-group>
+                  <b-button-toolbar>
+                    <b-button
+                      id="uploadImage"
+                      variant="primary"
+                      name="uploadImage"
+                      :disabled="uploadFile === null"
+                      @click.stop.prevent="uploadImageClick()"
+                    >
+                      Upload
+                    </b-button>
+                  </b-button-toolbar>
+                </b-form-group>
+              </b-col>
+              <b-col
+                sm="12"
+                md="6"
+              >
+                <b-carousel
+                  v-if="sourceImages.length > 0"
+                  id="image-carousel"
+                  v-model="carouselIndex"
+                  :interval="0"
+                  no-animation
+                  controls
+                  indicators
+                >
+                  <b-carousel-slide
+                    v-for="imageId in sourceImages"
+                    :key="imageId"
+                  >
+                    <template v-slot:img>
+                      <b-button
+                        id="deleteImage"
+                        class="imageDeleteButton"
+                        size="sm"
+                        variant="danger"
+                        name="deleteImage"
+                        :v-if="sourceImages.length > 0"
+                        @click.stop.prevent="deleteImageClick(imageId)"
+                      >
+                        ✖
+                      </b-button>
+                      <b-img
+                        fluid
+                        rounded
+                        :src="imageUrl(imageId)"
+                      />
+                    </template>
+                  </b-carousel-slide>
+                </b-carousel>
+                <b-card
+                  v-else
+                  class="text-center p-5"
+                >
+                  No images.
+                </b-card>
+              </b-col>
+            </b-form-row>
           </b-card>
         </b-form-group>
       </b-col>
@@ -133,8 +143,8 @@ export default {
     ...mapActions({
       setValidationErrorMessages: 'app/setValidationErrorMessages',
     }),
-    imageUrl(id) {
-      return webApi.images.url(id);
+    imageUrl(imageId) {
+      return webApi.images.url(imageId);
     },
     uploadImageClick() {
       if (this.uploadFile === null) {
@@ -159,9 +169,7 @@ export default {
 
       this.onImageUpload(this.uploadFile);
     },
-    deleteImageClick() {
-      const imageId = this.sourceImages[this.carouselIndex];
-
+    deleteImageClick(imageId) {
       const request = new DeleteImageRequest();
       request.id = imageId;
 
@@ -172,4 +180,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.imageDeleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 0;
+  z-index: 999;
+}
 </style>
