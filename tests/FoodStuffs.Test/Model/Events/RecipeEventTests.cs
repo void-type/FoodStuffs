@@ -45,7 +45,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, null, true, 2, 1));
+                .Handle(new ListRecipes.Request(null, null, null, false, true, 2, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -61,7 +61,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, null, false, 0, 0));
+                .Handle(new ListRecipes.Request(null, null, null, false, false, 0, 0));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Value.Count);
@@ -79,7 +79,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, "nameDesc", true, 1, 1));
+                .Handle(new ListRecipes.Request(null, null, "name", true, true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -96,7 +96,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, "name", true, 1, 1));
+                .Handle(new ListRecipes.Request(null, null, "name", false, true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -113,7 +113,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request("recipe2", null, null, true, 1, 2));
+                .Handle(new ListRecipes.Request("recipe2", null, null, false, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -130,7 +130,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, "cat", null, true, 1, 4));
+                .Handle(new ListRecipes.Request(null, "cat", null, false, true, 1, 4));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(2, result.Value.Count);
@@ -149,7 +149,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request("nothing matches", null, null, true, 1, 2));
+                .Handle(new ListRecipes.Request("nothing matches", null, null, false, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(0, result.Value.Count);
@@ -163,7 +163,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, "nothing matches", null, true, 1, 2));
+                .Handle(new ListRecipes.Request(null, "nothing matches", null, false, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(0, result.Value.Count);
