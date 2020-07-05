@@ -12,6 +12,15 @@
         class="mt-4"
       >
         <h1>{{ isCreateMode ? 'New' : 'Edit' }} Recipe</h1>
+        <RecipeEditor
+          class="mt-4"
+          :is-field-in-error="isFieldInError"
+          :source-recipe="sourceRecipe"
+          :on-recipe-save="onRecipeSave"
+          :on-recipe-delete="onRecipeDelete"
+          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
+          :is-create-mode="isCreateMode"
+        />
         <RecipeImageEditor
           v-if="!isCreateMode"
           class="mt-4"
@@ -19,14 +28,6 @@
           :source-images="sourceImages"
           :on-image-upload="onImageUpload"
           :on-image-delete="onImageDelete"
-        />
-        <RecipeEditor
-          :is-field-in-error="isFieldInError"
-          :source-recipe="sourceRecipe"
-          :on-recipe-save="onRecipeSave"
-          :on-recipe-delete="onRecipeDelete"
-          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
-          :is-create-mode="isCreateMode"
         />
       </b-col>
     </b-row>
