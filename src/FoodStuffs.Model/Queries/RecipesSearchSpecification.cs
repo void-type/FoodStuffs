@@ -20,25 +20,13 @@ namespace FoodStuffs.Model.Queries
             switch (sortBy)
             {
                 case "name":
-                    ApplyOrderByWithDescendingFlag(recipe => recipe.Name, sortDesc);
+                    ApplyOrderBy(recipe => recipe.Name, sortDesc);
                     AddThenBy(recipe => recipe.Id);
                     break;
 
                 default:
                     ApplyOrderByDescending(recipe => recipe.Id);
                     break;
-            }
-        }
-
-        private void ApplyOrderByWithDescendingFlag(Expression<Func<Recipe, object>> sortPropertySelector, bool isDesc)
-        {
-            if (isDesc)
-            {
-                ApplyOrderByDescending(sortPropertySelector);
-            }
-            else
-            {
-                ApplyOrderBy(sortPropertySelector);
             }
         }
     }
