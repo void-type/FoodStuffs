@@ -22,7 +22,8 @@ export class ListRecipesRequest {
   constructor() {
     this.category = '';
     this.name = '';
-    this.sort = 'name';
+    this.sortBy = 'name';
+    this.sortDesc = false;
     this.isPagingEnabled = true;
     this.page = 1;
     this.take = options.paginationTakeOptions[0].value;
