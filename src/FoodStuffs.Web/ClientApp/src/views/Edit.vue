@@ -21,11 +21,12 @@
           :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
           :is-create-mode="isCreateMode"
         />
-        <RecipeImageEditor
+        <RecipeImageManager
           v-if="!isCreateMode"
           class="mt-4"
           :is-field-in-error="isFieldInError"
           :source-images="sourceImages"
+          :suggested-image-id="suggestedImageId"
           :on-image-upload="onImageUpload"
           :on-image-delete="onImageDelete"
         />
@@ -42,13 +43,13 @@ import { GetRecipeResponse } from '../models/recipesApiModels';
 import { SaveImageRequest } from '../models/imagesApiModels';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
-import RecipeImageEditor from '../viewComponents/RecipeImageEditor.vue';
+import RecipeImageManager from '../viewComponents/RecipeImageManager.vue';
 
 export default {
   components: {
     SelectSidebar,
     RecipeEditor,
-    RecipeImageEditor,
+    RecipeImageManager,
   },
   props: {
     id: {
@@ -67,6 +68,7 @@ export default {
       sourceRecipe: new GetRecipeResponse(),
       sourceImages: new GetRecipeResponse().images,
       isRecipeDirty: false,
+      suggestedImageId: -1,
     };
   },
   computed: {
@@ -94,13 +96,6 @@ export default {
       removeFromRecent: 'recipes/removeFromRecent',
       setListResponse: 'recipes/setListResponse',
     }),
-    fetchImageIds(id) {
-      webApi.recipes.get(
-        id,
-        (data) => { this.sourceImages = data.images; },
-        response => this.setApiFailureMessages(response),
-      );
-    },
     fetchRecipesList() {
       webApi.recipes.list(
         this.listRequest,
@@ -120,9 +115,17 @@ export default {
         response => this.setApiFailureMessages(response),
       );
     },
+    fetchImageIds(id) {
+      webApi.recipes.get(
+        id,
+        (data) => { this.sourceImages = data.images; },
+        response => this.setApiFailureMessages(response),
+      );
+    },
     setSources(getRecipeResponse) {
       const { images, ...recipe } = getRecipeResponse;
       this.sourceRecipe = recipe;
+      this.suggestedImageId = -1;
       this.sourceImages = images;
     },
     onRecipeSave(recipe) {
@@ -180,6 +183,7 @@ export default {
         request,
         (data) => {
           this.setSuccessMessage(data.message);
+          this.suggestedImageId = data.id;
           this.fetchImageIds(this.id);
         },
         response => this.setApiFailureMessages(response),

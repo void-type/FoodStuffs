@@ -112,6 +112,11 @@ export default {
       required: false,
       default: () => [],
     },
+    suggestedImageId: {
+      type: Number,
+      required: false,
+      default: -1,
+    },
     onImageUpload: {
       type: Function,
       required: true,
@@ -128,15 +133,14 @@ export default {
     };
   },
   watch: {
-    sourceImages() {
+    sourceImages(sourceImages) {
       function clamp(value, min, max) {
         return Math.max(min, Math.min(value, max));
       }
 
-      const min = 0;
-      const max = this.sourceImages.length - 1;
-
-      this.carouselIndex = clamp(this.carouselIndex, min, max);
+      const suggestedImageIndex = sourceImages.indexOf(this.suggestedImageId);
+      const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : this.carouselIndex;
+      this.$nextTick(() => { this.carouselIndex = clamp(newIndex, 0, sourceImages.length - 1); });
     },
   },
   methods: {
