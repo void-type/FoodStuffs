@@ -46,8 +46,8 @@
     <b-table
       :items="listResponse.items"
       :fields="tableFields"
-      :sort-by.sync="workingRequest.sortBy"
-      :sort-desc.sync="workingRequest.sortDesc"
+      :sort-by="workingRequest.sortBy"
+      :sort-desc="workingRequest.sortDesc"
       sort-icon-left
       no-local-sorting
       show-empty
@@ -118,13 +118,24 @@ export default {
     },
   },
   created() {
+    function numberOrDefault(value, defaultValue) {
+      const number = Number(value);
+      return !Number.isNaN(number) ? number : defaultValue;
+    }
+
     if (Object.keys(this.query).length !== 0) {
-      this.workingRequest = Object.assign(new ListRecipesRequest(), this.query);
+      const defaultRequest = new ListRecipesRequest();
+
+      this.workingRequest = {
+        ...defaultRequest,
+        ...this.query,
+        sortDesc: JSON.parse(this.query.sortDesc) === true,
+        page: numberOrDefault(this.query.page, defaultRequest.page),
+        take: numberOrDefault(this.query.take, defaultRequest.take),
+      };
     } else {
       this.workingRequest = this.listRequest;
     }
-    // TODO: there is bug in b-pagination that misses the page number from a URL navigation.
-    // To replicate, go to page 2, hit F5, note page number is 1 with content of 2
     this.fetchList();
   },
   methods: {
@@ -166,8 +177,13 @@ export default {
     showDetails(recipe) {
       router.push({ name: 'view', params: { id: recipe.id } });
     },
-    tableSortChanged() {
-      this.startSearch();
+    tableSortChanged(table) {
+      this.workingRequest = {
+        ...this.workingRequest,
+        sortBy: table.sortBy,
+        sortDesc: table.sortDesc,
+      };
+      this.fetchList();
     },
   },
 };
