@@ -40,6 +40,13 @@ export default [
     name: 'search',
     path: '/search',
     component: Search,
-    props: route => ({ query: route.query }),
+    props: route => ({
+      query: {
+        ...route.query,
+        sortDesc: Boolean(route.query.sortDesc),
+        page: Number(route.query.page),
+        take: Number(route.query.take),
+      },
+    }),
   },
 ];

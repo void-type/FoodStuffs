@@ -4,10 +4,10 @@
   >
     <b-pagination
       id="pagination-page"
-      :value="listResponse.page"
-      :total-rows="listResponse.totalCount"
+      :value="page"
+      :total-rows="totalCount"
       name="pagination-page"
-      :per-page="listResponse.take"
+      :per-page="take"
       align="center"
       @change="changePage"
     />
@@ -49,9 +49,23 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      page: 1,
+      take: options.paginationTakeOptions[0].value,
+      totalCount: 0,
+    };
+  },
   computed: {
     takeOptions() {
       return options.paginationTakeOptions;
+    },
+  },
+  watch: {
+    listResponse(response) {
+      this.take = response.take;
+      this.totalCount = response.totalCount;
+      this.$nextTick(() => { this.page = response.page; });
     },
   },
 };

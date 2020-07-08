@@ -119,8 +119,7 @@ export default {
   },
   created() {
     if (Object.keys(this.query).length !== 0) {
-      const defaultRequest = new ListRecipesRequest();
-      this.workingRequest = Object.assign(defaultRequest, this.query);
+      this.workingRequest = Object.assign(new ListRecipesRequest(), this.query);
     } else {
       this.workingRequest = this.listRequest;
     }
