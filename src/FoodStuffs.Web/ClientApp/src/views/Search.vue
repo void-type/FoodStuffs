@@ -143,7 +143,10 @@ export default {
       );
     },
     clearSearch() {
-      this.workingRequest = new ListRecipesRequest();
+      this.workingRequest = {
+        ...new ListRecipesRequest(),
+        take: this.workingRequest.take,
+      };
       this.fetchList();
     },
     startSearch() {
