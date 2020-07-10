@@ -1,6 +1,8 @@
-﻿-- Requirements: A target database and sql server login.
+﻿-- Requirements:
+-- *  A blank target database.
+-- *  A SQL Login and DB User with DbReader + DbWriter permissions.
 -- This script will create the necessary tables and an initial app user.
--- This script will destroy any data within the database and reset the database to a new condition.
+-- Warning: This script will destroy any data within the database and reset the database to a new condition!
 
 SET ANSI_NULLS ON
 GO
