@@ -99,6 +99,7 @@
 <script>
 import { mapActions } from 'vuex';
 import { DeleteImageRequest } from '../models/imagesApiModels';
+import { clamp } from '../models/formatters';
 import webApi from '../webApi';
 
 export default {
@@ -134,10 +135,6 @@ export default {
   },
   watch: {
     sourceImages(sourceImages) {
-      function clamp(value, min, max) {
-        return Math.max(min, Math.min(value, max));
-      }
-
       const suggestedImageIndex = sourceImages.indexOf(this.suggestedImageId);
       const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : this.carouselIndex;
       this.$nextTick(() => { this.carouselIndex = clamp(newIndex, 0, sourceImages.length - 1); });

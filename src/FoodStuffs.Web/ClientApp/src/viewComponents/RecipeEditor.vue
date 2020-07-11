@@ -63,14 +63,14 @@
         md="6"
       >
         <b-form-group
-          label="Prep Time Minutes"
+          label="Prep Time Hours/Minutes"
           label-for="prepTimeMinutes"
         >
-          <b-form-input
+          <RecipeTimeSpanEditor
             id="prepTimeMinutes"
             v-model="workingRecipe.prepTimeMinutes"
-            :class="{'is-invalid': isFieldInError('prepTimeMinutes')}"
-            type="number"
+            :is-invalid="isFieldInError('prepTimeMinutes')"
+            show-preview
           />
         </b-form-group>
       </b-col>
@@ -79,14 +79,14 @@
         md="6"
       >
         <b-form-group
-          label="Cook Time Minutes"
+          label="Cook Time Hours/Minutes"
           label-for="cookTimeMinutes"
         >
-          <b-form-input
+          <RecipeTimeSpanEditor
             id="cookTimeMinutes"
             v-model="workingRecipe.cookTimeMinutes"
-            :class="{'is-invalid': isFieldInError('cookTimeMinutes')}"
-            type="number"
+            :is-invalid="isFieldInError('cookTimeMinutes')"
+            show-preview
           />
         </b-form-group>
       </b-col>
@@ -149,14 +149,16 @@
 
 <script>
 import { mapActions } from 'vuex';
-import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
-import TagEditor from './TagEditor.vue';
 import { SaveRecipeRequest } from '../models/recipesApiModels';
 import trimAndTitleCase from '../util/trimAndTitleCase';
+import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
+import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
+import TagEditor from './TagEditor.vue';
 
 export default {
   components: {
     EntityDetailsAuditInfo,
+    RecipeTimeSpanEditor,
     TagEditor,
   },
   props: {

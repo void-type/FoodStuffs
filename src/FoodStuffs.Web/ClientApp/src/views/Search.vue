@@ -69,6 +69,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { ListRecipesRequest } from '../models/recipesApiModels';
+import { numberOrDefault } from '../models/formatters';
 import webApi from '../webApi';
 import router from '../router';
 import EntityTableControls from '../viewComponents/EntityTableControls.vue';
@@ -118,11 +119,6 @@ export default {
     },
   },
   created() {
-    function numberOrDefault(value, defaultValue) {
-      const number = Number(value);
-      return !Number.isNaN(number) ? number : defaultValue;
-    }
-
     if (Object.keys(this.query).length !== 0) {
       const defaultRequest = new ListRecipesRequest();
 

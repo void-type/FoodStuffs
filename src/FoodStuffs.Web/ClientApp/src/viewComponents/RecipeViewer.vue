@@ -86,11 +86,11 @@
     >
       Stats
     </h3>
-    <div v-if="recipe.prepTimeMinutes !== null">
-      Prep Time: {{ recipe.prepTimeMinutes }} minutes
+    <div v-if="recipe.prepTimeMinutes > 0">
+      Prep Time: {{ recipe.prepTimeMinutes | TimeSpan }}
     </div>
-    <div v-if="recipe.cookTimeMinutes !== null">
-      Cook Time: {{ recipe.cookTimeMinutes }} minutes
+    <div v-if="recipe.cookTimeMinutes > 0">
+      Cook Time: {{ recipe.cookTimeMinutes | TimeSpan }}
     </div>
     <div v-if="recipe.categories.length > 0">
       Categories: {{ recipe.categories.join(', ') }}
@@ -105,12 +105,18 @@
 </template>
 
 <script>
-import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import webApi from '../webApi';
+import RecipeTimeSpan from '../models/RecipeTimeSpan';
+import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 
 export default {
   components: {
     EntityDetailsAuditInfo,
+  },
+  filters: {
+    TimeSpan(value) {
+      return new RecipeTimeSpan(value).toString();
+    },
   },
   props: {
     recipe: {
