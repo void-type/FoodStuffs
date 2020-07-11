@@ -62,6 +62,7 @@ export default {
 .navbar-dark .navbar-brand {
   color: $secondary;
   font-weight: 600;
+  font-size: 1.5em;
 }
 
 .logo img {

@@ -1,40 +1,41 @@
 <template>
   <div>
-    <div>
-      <b-form-group
-        :label="label"
-        :label-for="fieldName"
-      >
-        <b-input-group>
-          <b-form-input
-            :id="fieldName"
-            v-model="newTag"
-            :disabled="false"
-          />
-          <b-input-group-append>
-            <b-button
-              @click.prevent="addTagClick()"
-            >
-              Add
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </div>
+    <b-form-group
+      :label="label"
+      :label-for="fieldName"
+    >
+      <b-input-group>
+        <b-form-input
+          :id="fieldName"
+          v-model="newTag"
+          :disabled="false"
+        />
+        <b-input-group-append>
+          <b-button
+            @click.prevent="addTagClick()"
+          >
+            Add
+          </b-button>
+        </b-input-group-append>
+      </b-input-group>
 
-    <div class="tags">
-      <b-button
-        v-for="tag in tags"
-        :key="tag"
-        @click="removeTagClick(tag)"
-      >
-        {{ tag }}
-        <span
-          class="remove-tag"
+      <div class="tags mt-2">
+        <b-button
+          v-for="tag in tags"
+          :key="tag"
+          class="mr-2 mb-2"
+          size="sm"
+          variant="outline-secondary"
+          @click="removeTagClick(tag)"
         >
-          ✖</span>
-      </b-button>
-    </div>
+          {{ tag }}
+          <span
+            class="ml-2"
+          >
+            ✖</span>
+        </b-button>
+      </div>
+    </b-form-group>
   </div>
 </template>
 
@@ -80,22 +81,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
+@import "../style/theme.scss";
 
 .tags {
-  display: flex;
-  flex-flow: wrap;
-
-  & > .btn {
-    margin-top: 0.5rem;
-
-    &:not(last) {
-      margin-right: 0.5rem;
-    }
-
-    & .remove-tag {
-      margin-left: 0.5rem;
-    }
+  .btn {
+    color: $body-color;
+    border-color: $gray-400;
   }
 }
 </style>

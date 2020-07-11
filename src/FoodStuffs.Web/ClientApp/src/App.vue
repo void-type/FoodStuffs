@@ -76,20 +76,20 @@ footer {
   background: $body-bg;
 }
 
-// Button animation
+Button animation
 input[type="button"].btn,
 input[type="submit"].btn,
 button.btn,
 a.btn,
 .btn {
-  box-shadow: $btn-box-shadow;
-  position: relative;
+  // box-shadow: $btn-box-shadow;
+  // position: relative;
   min-width: 5rem;
 
-  &:active:not(:disabled) {
-    box-shadow: $btn-active-box-shadow;
-    top: 3px;
-  }
+  // &:active:not(:disabled) {
+  //   box-shadow: $btn-active-box-shadow;
+  //   top: 3px;
+  // }
 }
 
 // Colored headings
