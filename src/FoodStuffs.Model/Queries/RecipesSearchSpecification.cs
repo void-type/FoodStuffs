@@ -17,15 +17,15 @@ namespace FoodStuffs.Model.Queries
         {
             ApplyPaging(paginationOptions);
 
-            switch (sortBy)
+            switch (sortBy?.ToLower())
             {
                 case "name":
-                    ApplyOrderBy(recipe => recipe.Name, sortDesc);
-                    AddThenBy(recipe => recipe.Id);
+                    AddOrderBy(recipe => recipe.Name, sortDesc);
+                    AddOrderBy(recipe => recipe.Id);
                     break;
 
                 default:
-                    ApplyOrderByDescending(recipe => recipe.Id);
+                    AddOrderBy(recipe => recipe.Id, true);
                     break;
             }
         }

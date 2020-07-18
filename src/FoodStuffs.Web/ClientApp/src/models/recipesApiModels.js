@@ -22,7 +22,7 @@ export class ListRecipesRequest {
   constructor() {
     this.category = '';
     this.name = '';
-    this.sortBy = 'name';
+    this.sortBy = '';
     this.sortDesc = false;
     this.isPagingEnabled = true;
     this.page = 1;
