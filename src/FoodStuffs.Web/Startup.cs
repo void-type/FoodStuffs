@@ -3,6 +3,7 @@ using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +14,7 @@ using VoidCore.AspNet.Data;
 using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
-using VoidCore.EntityFramework;
+using VoidCore.Domain.Guards;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Configuration;
 using VoidCore.Model.Time;
@@ -65,7 +66,14 @@ namespace FoodStuffs.Web
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
             // TODO: how can we make this a singleton (pool?) and then make domain events singletons.
-            services.AddSqlServerDbContext<FoodStuffsContext>(connectionStrings["FoodStuffs"]);
+            var connectionString = connectionStrings["FoodStuffs"];
+            connectionString.EnsureNotNullOrEmpty(nameof(connectionString), "Connection string not found in application configuration.");
+
+            services.AddDbContextPool<FoodStuffsContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
             // Auto-register Domain Events
