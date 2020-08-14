@@ -14,7 +14,7 @@
         class="logo"
       >
         <img
-          src="/img/logo.svg"
+          src="img/logo.svg"
           alt="logo"
           class="d-inline-block align-top"
         >

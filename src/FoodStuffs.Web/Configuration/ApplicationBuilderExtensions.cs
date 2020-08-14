@@ -8,30 +8,49 @@ namespace FoodStuffs.Web.Configuration
     {
         public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment)
         {
-            // Disable in development because Vue tools extension injects a script.
-            if (!environment.IsDevelopment())
+            app.UseContentSecurityPolicy(options =>
             {
-                app.UseContentSecurityPolicy(options =>
-                {
-                    options.Defaults
-                        .AllowSelf();
+                options.BaseUri
+                    .AllowSelf();
 
+                options.FrameAncestors
+                    .AllowNone();
+
+                options.Defaults
+                    .AllowSelf();
+
+                options.Objects
+                    .AllowNone();
+
+                options.Images
+                    .AllowSelf()
+
+                    // Bootstrap and other webpacked assets are loaded from inline data.
+                    .Allow("data:");
+
+                if (!environment.IsDevelopment())
+                {
+                    // In production we will supply hashes for unsafe styles
                     options.Styles
                         .AllowSelf()
 
-                        // Add the inline styling from error and forbidden.
-                        .AllowHash("sha256", "qZf1DVNyfsB5Tl6kG5RGHR8i3XXliXpcIMDN3VN3esQ=")
-
                         // Add the Vue-Progressbar hash because it applies inline styling.
                         .AllowHash("sha256", "DNQ8Cm24tOHANsjo3O93DpqGvfN0qkQZsMZIt0PmA2o=");
-
-                    options.Images
+                }
+                else
+                {
+                    // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
+                    options.Scripts
                         .AllowSelf()
+                        .AllowUnsafeEval();
 
-                        // Add data images for compiled image assets, such as the app logo.
-                        .Allow("data:");
-                });
-            }
+                    options.Styles
+                        .AllowSelf()
+                        .AllowUnsafeInline();
+                }
+            });
+
+            app.UseXContentTypeOptionsNoSniff();
 
             return app.UseXFrameOptions(options => options.Deny());
         }
