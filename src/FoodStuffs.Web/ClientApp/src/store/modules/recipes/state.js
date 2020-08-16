@@ -3,5 +3,5 @@ import { ListRecipesRequest, ListRecipesResponse } from '../../../models/recipes
 export default {
   listResponse: new ListRecipesResponse(),
   listRequest: new ListRecipesRequest(),
-  recent: [],
+  recentRecipes: [],
 };

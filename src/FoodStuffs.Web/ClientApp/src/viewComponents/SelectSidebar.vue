@@ -34,7 +34,7 @@ export default {
     ...mapGetters({
       listResponse: 'recipes/listResponse',
       listRequest: 'recipes/listRequest',
-      recentRecipes: 'recipes/recent',
+      recentRecipes: 'recipes/recentRecipes',
     }),
     searchedRecipes() {
       const recentIds = this.recentRecipes

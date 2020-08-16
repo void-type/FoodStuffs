@@ -6,8 +6,8 @@ export default {
   SET_LIST_REQUEST(state, listRequest) {
     state.listRequest = listRequest;
   },
-  SET_RECENT_RECIPES(state, recent) {
-    state.recent = recent;
+  SET_RECENT_RECIPES(state, recentRecipes) {
+    state.recentRecipes = recentRecipes;
   },
 };
 /* eslint-enable no-param-reassign */

@@ -10,7 +10,7 @@ export default {
       return;
     }
 
-    const recentRecipes = context.state.recent.slice();
+    const recentRecipes = context.state.recentRecipes.slice();
 
     const indexOfCurrentInRecents = recentRecipes
       .map(recentRecipe => recentRecipe.id)
@@ -33,7 +33,7 @@ export default {
     context.commit('SET_RECENT_RECIPES', recentRecipes);
   },
   removeFromRecent(context, id) {
-    const recentRecipes = context.state.recent.slice();
+    const recentRecipes = context.state.recentRecipes.slice();
 
     const indexOfCurrentInRecents = recentRecipes
       .map(recentRecipe => recentRecipe.id)

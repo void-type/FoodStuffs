@@ -6,7 +6,7 @@ import sidebar from './modules/sidebar';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
     app,
@@ -14,3 +14,18 @@ export default new Vuex.Store({
     sidebar,
   },
 });
+
+// Setup localStorage of recent recipes.
+const storedRecentRecipes = localStorage.getItem('recentRecipes');
+
+if (storedRecentRecipes) {
+  store.commit('recipes/SET_RECENT_RECIPES', JSON.parse(storedRecentRecipes));
+}
+
+store.subscribe((mutation, state) => {
+  if (mutation.type === 'recipes/SET_RECENT_RECIPES') {
+    localStorage.setItem('recentRecipes', JSON.stringify(state.recipes.recentRecipes));
+  }
+});
+
+export default store;

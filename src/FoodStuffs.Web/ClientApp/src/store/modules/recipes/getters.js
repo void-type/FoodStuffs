@@ -5,7 +5,7 @@ export default {
   listRequest(state) {
     return state.listRequest;
   },
-  recent(state) {
-    return state.recent;
+  recentRecipes(state) {
+    return state.recentRecipes;
   },
 };
