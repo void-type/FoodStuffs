@@ -18,8 +18,7 @@
         <b-list-group-item
           v-for="recipe in recipes"
           :key="recipe.id"
-          button
-          @click="viewRecipe(recipe)"
+          :to="{ name: routeName, params: { id: recipe.id } }"
         >
           {{ recipe.name }}
         </b-list-group-item>

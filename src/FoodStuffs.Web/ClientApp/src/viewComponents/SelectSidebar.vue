@@ -1,16 +1,16 @@
 <template>
   <div>
     <SelectSidebarList
-      v-if="recent.length > 0"
-      :recipes="recent"
+      v-if="recentRecipes.length > 0"
+      :recipes="recentRecipes"
       :title="'Recent'"
       :route-name="routeName"
     />
     <SelectSidebarList
-      :recipes="listResponse.items"
+      :recipes="searchedRecipes"
       :title="'Recipes'"
-      class="mt-2"
       :route-name="routeName"
+      class="mt-2"
     />
   </div>
 </template>
@@ -34,8 +34,15 @@ export default {
     ...mapGetters({
       listResponse: 'recipes/listResponse',
       listRequest: 'recipes/listRequest',
-      recent: 'recipes/recent',
+      recentRecipes: 'recipes/recent',
     }),
+    searchedRecipes() {
+      const recentIds = this.recentRecipes
+        .map(r => r.id);
+
+      return this.listResponse.items
+        .filter(r => !recentIds.includes(r.id));
+    },
   },
   created() {
     if (this.listResponse.count === 0) {
