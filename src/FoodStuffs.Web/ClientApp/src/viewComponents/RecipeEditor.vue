@@ -2,7 +2,7 @@
   <form
     id="recipe-details-form"
     name="recipe-details-form"
-    @keydown.ctrl.enter.prevent="saveClick()"
+    @keydown.ctrl.enter.stop.prevent="saveClick()"
   >
     <b-form-row>
       <b-col
@@ -137,7 +137,7 @@
             v-if="!isCreateMode"
             class="ml-auto"
             variant="danger"
-            @click.prevent="onRecipeDelete(workingRecipe.id)"
+            @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
           >
             Delete
           </b-button>

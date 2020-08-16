@@ -3,6 +3,7 @@
     <b-form-group
       :label="label"
       :label-for="fieldName"
+      @keydown.enter.stop.prevent="addTagClick()"
     >
       <b-input-group>
         <b-form-input
@@ -12,7 +13,7 @@
         />
         <b-input-group-append>
           <b-button
-            @click.prevent="addTagClick()"
+            @click.stop.prevent="addTagClick()"
           >
             Add
           </b-button>
