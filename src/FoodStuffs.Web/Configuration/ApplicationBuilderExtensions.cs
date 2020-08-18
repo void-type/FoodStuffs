@@ -16,13 +16,13 @@ namespace FoodStuffs.Web.Configuration
                 options.FrameAncestors
                     .AllowNone();
 
-                options.Defaults
+                options.DefaultSources
                     .AllowSelf();
 
-                options.Objects
+                options.ObjectSources
                     .AllowNone();
 
-                options.Images
+                options.ImageSources
                     .AllowSelf()
 
                     // Bootstrap and other webpacked assets are loaded from inline data.
@@ -31,7 +31,7 @@ namespace FoodStuffs.Web.Configuration
                 if (!environment.IsDevelopment())
                 {
                     // In production we will supply hashes for unsafe styles
-                    options.Styles
+                    options.StyleSources
                         .AllowSelf()
 
                         // Add the Vue-Progressbar hash because it applies inline styling.
@@ -40,11 +40,11 @@ namespace FoodStuffs.Web.Configuration
                 else
                 {
                     // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
-                    options.Scripts
+                    options.ScriptSources
                         .AllowSelf()
                         .AllowUnsafeEval();
 
-                    options.Styles
+                    options.StyleSources
                         .AllowSelf()
                         .AllowUnsafeInline();
                 }
