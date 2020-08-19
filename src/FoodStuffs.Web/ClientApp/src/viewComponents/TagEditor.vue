@@ -3,13 +3,13 @@
     <b-form-group
       :label="label"
       :label-for="fieldName"
-      @keydown.enter.stop.prevent="addTagClick()"
     >
       <b-input-group>
         <b-form-input
           :id="fieldName"
           v-model="newTag"
           :disabled="false"
+          @keydown.stop.prevent.enter="addTagClick()"
         />
         <b-input-group-append>
           <b-button

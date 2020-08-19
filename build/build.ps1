@@ -26,7 +26,7 @@ Pop-Location
 
 . ./util.ps1
 
-# Lint, test and build client
+# Lint and build client
 if (-not $SkipClient) {
   Push-Location -Path "$webClientProjectFolder"
   npm install
@@ -38,11 +38,6 @@ if (-not $SkipClient) {
 
   if (-not $SkipOutdated) {
     npm audit --production
-  }
-
-  if (-not $SkipTest) {
-    npm run test:unit
-    Stop-OnError
   }
 
   npm run build -- --mode "$($nodeModes[$Configuration])"

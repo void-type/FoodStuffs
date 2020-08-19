@@ -39,8 +39,8 @@
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '../webApi';
 import router from '../router';
-import { GetRecipeResponse } from '../models/recipesApiModels';
-import { SaveImageRequest } from '../models/imagesApiModels';
+import GetRecipeResponse from '../models/api/recipes/GetRecipeResponse';
+import SaveImageRequest from '../models/api/images/SaveImageRequest';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
 import RecipeImageManager from '../viewComponents/RecipeImageManager.vue';
@@ -99,8 +99,8 @@ export default {
     fetchRecipesList() {
       webApi.recipes.list(
         this.listRequest,
-        data => this.setListResponse(data),
-        response => this.setApiFailureMessages(response),
+        (data) => this.setListResponse(data),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     fetchRecipe(id) {
@@ -112,14 +112,14 @@ export default {
       webApi.recipes.get(
         id,
         (data) => { this.setSources(data); },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     fetchImageIds(id) {
       webApi.recipes.get(
         id,
         (data) => { this.sourceImages = data.images; },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     setSources(getRecipeResponse) {
@@ -142,7 +142,7 @@ export default {
           this.fetchRecipesList();
           this.setSuccessMessage(data.message);
         },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     async onRecipeDelete(id) {
@@ -168,7 +168,7 @@ export default {
           router.push({ name: 'search' }).catch(() => {});
           this.setSuccessMessage(data.message);
         },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     onRecipeDirtyStateChange(value) {
@@ -186,7 +186,7 @@ export default {
           this.suggestedImageId = data.id;
           this.fetchImageIds(this.id);
         },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     async onImageDelete(request) {
@@ -209,7 +209,7 @@ export default {
           this.setSuccessMessage(data.message);
           this.fetchImageIds(this.id);
         },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     async beforeRouteChange(next) {

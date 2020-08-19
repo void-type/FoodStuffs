@@ -43,7 +43,7 @@ export default class RecipeTimeSpan {
       stringify(this.toHours(), this.hourUnit()),
       stringify(this.toMinutes(), this.minuteUnit()),
     ]
-      .filter(v => v !== null)
+      .filter((v) => v !== null)
       .join(' and ');
   }
 }

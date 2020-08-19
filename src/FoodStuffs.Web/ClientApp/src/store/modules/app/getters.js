@@ -5,8 +5,8 @@ export default {
   isInitialized(state) {
     return state.initialized;
   },
-  isFieldInError: state => fieldName => state.fieldsInError
-    .map(errorField => errorField.toLowerCase())
+  isFieldInError: (state) => (fieldName) => state.fieldsInError
+    .map((errorField) => errorField.toLowerCase())
     .indexOf(fieldName.toLowerCase()) > -1,
   messageIsError(state) {
     return state.messageIsError;
@@ -17,5 +17,5 @@ export default {
   user(state) {
     return state.user;
   },
-  userIsAuthorizedAs: state => policy => state.user.authorizedAs.includes(policy),
+  userIsAuthorizedAs: (state) => (policy) => state.user.authorizedAs.includes(policy),
 };

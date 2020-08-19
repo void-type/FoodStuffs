@@ -13,7 +13,7 @@ export default {
     const recentRecipes = context.state.recentRecipes.slice();
 
     const indexOfCurrentInRecents = recentRecipes
-      .map(recentRecipe => recentRecipe.id)
+      .map((recentRecipe) => recentRecipe.id)
       .indexOf(recipe.id);
 
     const recipeListItem = {
@@ -36,7 +36,7 @@ export default {
     const recentRecipes = context.state.recentRecipes.slice();
 
     const indexOfCurrentInRecents = recentRecipes
-      .map(recentRecipe => recentRecipe.id)
+      .map((recentRecipe) => recentRecipe.id)
       .indexOf(id);
 
     if (indexOfCurrentInRecents > -1) {

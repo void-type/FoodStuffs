@@ -19,7 +19,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import plugins from './util/plugins';
 import initializeStore from './models/initializeStore';
 import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
 import AppHeader from './viewComponents/AppHeader.vue';
@@ -45,7 +44,6 @@ export default {
     },
   },
   mounted() {
-    plugins.setup(this);
     initializeStore();
   },
 };
@@ -76,8 +74,7 @@ footer {
   background: $body-bg;
 }
 
-Button animation
-input[type="button"].btn,
+Button animation input[type="button"].btn,
 input[type="submit"].btn,
 button.btn,
 a.btn,

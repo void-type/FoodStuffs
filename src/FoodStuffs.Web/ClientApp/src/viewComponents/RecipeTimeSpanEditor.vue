@@ -38,7 +38,8 @@ export default {
     },
     value: {
       type: Number,
-      required: true,
+      required: false,
+      default: 0,
     },
     isInvalid: {
       type: Boolean,

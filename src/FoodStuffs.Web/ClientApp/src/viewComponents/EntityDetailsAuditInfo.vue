@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import dateHelpers from '../util/dateHelpers';
+import { dateTimeForView } from '../models/dateHelpers';
 
 export default {
   filters: {
-    dateFilter: dateHelpers.dateTimeForView,
+    dateFilter: dateTimeForView,
   },
   props: {
     entity: {

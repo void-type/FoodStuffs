@@ -2,6 +2,9 @@ const path = require('path');
 
 module.exports = {
   outputDir: '../wwwroot',
+  configureWebpack: {
+    devtool: 'cheap-module-source-map',
+  },
   chainWebpack: (config) => {
     config
       .plugin('html')

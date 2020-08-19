@@ -24,7 +24,7 @@
 <script>
 import { mapActions } from 'vuex';
 import webApi from '../webApi';
-import { GetRecipeResponse } from '../models/recipesApiModels';
+import GetRecipeResponse from '../models/api/recipes/GetRecipeResponse';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeViewer from '../viewComponents/RecipeViewer.vue';
 
@@ -61,7 +61,7 @@ export default {
       webApi.recipes.get(
         id,
         (data) => { this.sourceRecipe = data; },
-        response => this.setApiFailureMessages(response),
+        (response) => this.setApiFailureMessages(response),
       );
     },
   },

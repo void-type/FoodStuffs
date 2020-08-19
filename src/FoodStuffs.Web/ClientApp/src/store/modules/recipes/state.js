@@ -1,4 +1,5 @@
-import { ListRecipesRequest, ListRecipesResponse } from '../../../models/recipesApiModels';
+import ListRecipesResponse from '../../../models/api/recipes/ListRecipesResponse';
+import ListRecipesRequest from '../../../models/api/recipes/ListRecipesRequest';
 
 export default {
   listResponse: new ListRecipesResponse(),

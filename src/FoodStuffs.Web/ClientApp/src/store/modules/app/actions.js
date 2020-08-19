@@ -1,4 +1,4 @@
-import downloadHelpers from '../../../util/downloadHelpers';
+import { decodeDownloadFailureData } from '../../../models/downloadHelpers';
 
 export default {
   setApiFailureMessages(context, response) {
@@ -9,7 +9,7 @@ export default {
 
     const data = (response.request.responseType !== 'arraybuffer')
       ? response.data
-      : downloadHelpers.decodeDownloadFailureData(response);
+      : decodeDownloadFailureData(response);
 
     if (response.status === 401 || response.status === 403) {
       context.dispatch('setErrorMessage', 'You are not authorized for this server endpoint.');
@@ -19,8 +19,8 @@ export default {
       context.dispatch('setErrorMessage', data.message);
     } else if (data.items !== undefined) {
       context.dispatch('setValidationErrorMessages', {
-        errorMessages: data.items.map(item => item.message),
-        fieldNames: data.items.map(item => item.uiHandle),
+        errorMessages: data.items.map((item) => item.message),
+        fieldNames: data.items.map((item) => item.uiHandle),
       });
     } else {
       context.dispatch('setErrorMessage', 'Something went wrong. Try refreshing your browser or contact the administrator.');
@@ -52,7 +52,7 @@ export default {
     }
 
     context.commit('SET_MESSAGE_IS_ERROR', true);
-    context.commit('SET_FIELDS_IN_ERROR', fieldNames.filter(s => !isNullOrEmpty(s)));
-    context.commit('SET_MESSAGES', errorMessages.filter(s => !isNullOrEmpty(s)));
+    context.commit('SET_FIELDS_IN_ERROR', fieldNames.filter((s) => !isNullOrEmpty(s)));
+    context.commit('SET_MESSAGES', errorMessages.filter((s) => !isNullOrEmpty(s)));
   },
 };

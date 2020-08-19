@@ -38,18 +38,18 @@ export default {
     }),
     searchedRecipes() {
       const recentIds = this.recentRecipes
-        .map(r => r.id);
+        .map((r) => r.id);
 
       return this.listResponse.items
-        .filter(r => !recentIds.includes(r.id));
+        .filter((r) => !recentIds.includes(r.id));
     },
   },
   created() {
     if (this.listResponse.count === 0) {
       webApi.recipes.list(
         this.listRequest,
-        data => this.setListResponse(data),
-        response => this.setApiFailureMessages(response),
+        (data) => this.setListResponse(data),
+        (response) => this.setApiFailureMessages(response),
       );
     }
   },

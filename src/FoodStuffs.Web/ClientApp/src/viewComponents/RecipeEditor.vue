@@ -149,8 +149,8 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { SaveRecipeRequest } from '../models/recipesApiModels';
-import trimAndTitleCase from '../util/trimAndTitleCase';
+import SaveRecipeRequest from '../models/api/recipes/SaveRecipeRequest';
+import { trimAndTitleCase } from '../models/formatters';
 import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
@@ -203,8 +203,8 @@ export default {
         const changedValues = Object.keys(this.workingRecipe)
           // Loose comparison so numbers and strings of numbers are equal.
           // eslint-disable-next-line eqeqeq
-          .map(key => this.workingRecipe[key] == this.sourceRecipe[key])
-          .filter(value => value === false);
+          .map((key) => this.workingRecipe[key] == this.sourceRecipe[key])
+          .filter((value) => value === false);
 
         const isDirty = changedValues.length > 0;
         this.isRecipeDirty = isDirty;
@@ -223,7 +223,7 @@ export default {
       setValidationErrorMessages: 'app/setValidationErrorMessages',
     }),
     reset() {
-      this.workingRecipe = Object.assign({}, this.sourceRecipe);
+      this.workingRecipe = { ...this.sourceRecipe };
       this.isRecipeDirty = false;
     },
     addCategory(tag) {
@@ -232,7 +232,7 @@ export default {
       const categories = this.workingRecipe.categories.slice();
 
       const categoryDoesNotExist = categories
-        .map(value => value.toUpperCase())
+        .map((value) => value.toUpperCase())
         .indexOf(categoryName.toUpperCase()) < 0;
 
       if (categoryDoesNotExist && categoryName.length > 0) {
@@ -259,7 +259,7 @@ export default {
       this.onRecipeSave(sendableRecipe);
     },
     getCopy() {
-      return Object.assign({}, this.workingRecipe, { images: [] });
+      return { ...this.workingRecipe, images: [] };
     },
   },
 };

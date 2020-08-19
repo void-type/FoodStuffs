@@ -98,7 +98,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { DeleteImageRequest } from '../models/imagesApiModels';
+import DeleteImageRequest from '../models/api/images/DeleteImageRequest';
 import { clamp } from '../models/formatters';
 import webApi from '../webApi';
 

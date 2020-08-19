@@ -68,7 +68,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { ListRecipesRequest } from '../models/recipesApiModels';
+import ListRecipesRequest from '../models/api/recipes/ListRecipesRequest';
 import { numberOrDefault } from '../models/formatters';
 import webApi from '../webApi';
 import router from '../router';
@@ -105,7 +105,7 @@ export default {
         },
         {
           key: 'categories',
-          formatter: value => value.join(', '),
+          formatter: (value) => value.join(', '),
         },
       ];
     },
@@ -113,7 +113,7 @@ export default {
   watch: {
     workingRequest: {
       handler(request) {
-        this.setListRequest(Object.assign({}, request));
+        this.setListRequest({ ...request });
       },
       deep: true,
     },
@@ -145,8 +145,8 @@ export default {
 
       webApi.recipes.list(
         this.workingRequest,
-        data => this.setListResponse(data),
-        response => this.setApiFailureMessages(response),
+        (data) => this.setListResponse(data),
+        (response) => this.setApiFailureMessages(response),
       );
     },
     clearSearch() {

@@ -10,3 +10,12 @@ export function numberOrDefault(value, defaultValue = 0) {
 export function toInt(value) {
   return Math.floor(numberOrDefault(value), 0);
 }
+
+export function trimAndTitleCase(value) {
+  return value
+    .trim()
+    .split(' ')
+    .filter((word) => word.length > 0)
+    .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+    .join(' ');
+}

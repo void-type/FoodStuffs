@@ -19,12 +19,12 @@ export default {
         },
       },
     )
-      .then(response => success(response.data))
-      .catch(error => failure(error.response));
+      .then((response) => success(response.data))
+      .catch((error) => failure(error.response));
   },
   delete(request, success, failure) {
     axios.delete('/api/images', { params: request })
-      .then(response => success(response.data))
-      .catch(error => failure(error.response));
+      .then((response) => success(response.data))
+      .catch((error) => failure(error.response));
   },
 };

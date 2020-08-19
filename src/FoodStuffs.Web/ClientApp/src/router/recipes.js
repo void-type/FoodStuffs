@@ -8,7 +8,7 @@ function newRecipeProps(route) {
     return oldRecipe;
   }
 
-  const newRecipe = Object.assign({}, oldRecipe, { id: 0 }, { name: `${oldRecipe.name} Copy` });
+  const newRecipe = { ...oldRecipe, id: 0, name: `${oldRecipe.name} Copy` };
 
   return { newRecipeSuggestion: newRecipe };
 }
@@ -18,7 +18,7 @@ export default [
     name: 'view',
     path: '/view/:id',
     component: View,
-    props: route => ({
+    props: (route) => ({
       id: +route.params.id,
     }),
   },
@@ -26,7 +26,7 @@ export default [
     name: 'edit',
     path: '/edit/:id',
     component: Edit,
-    props: route => ({
+    props: (route) => ({
       id: +route.params.id,
     }),
   },
@@ -40,6 +40,6 @@ export default [
     name: 'search',
     path: '/search',
     component: Search,
-    props: route => ({ query: route.query }),
+    props: (route) => ({ query: route.query }),
   },
 ];

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import options from '../util/options';
+import { paginationTakeOptions } from '../models/options';
 
 export default {
   props: {
@@ -52,13 +52,13 @@ export default {
   data() {
     return {
       page: 1,
-      take: options.paginationTakeOptions[0].value,
+      take: paginationTakeOptions[0].value,
       totalCount: 0,
     };
   },
   computed: {
     takeOptions() {
-      return options.paginationTakeOptions;
+      return paginationTakeOptions;
     },
   },
   watch: {
