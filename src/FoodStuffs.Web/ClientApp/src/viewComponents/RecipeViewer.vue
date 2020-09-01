@@ -96,7 +96,7 @@
       Categories: {{ recipe.categories.join(', ') }}
     </div>
     <div>
-      <EntityDetailsAuditInfo
+      <EntityAuditInfo
         class="mt-3"
         :entity="recipe"
       />
@@ -107,11 +107,11 @@
 <script>
 import webApi from '../webApi';
 import RecipeTimeSpan from '../models/RecipeTimeSpan';
-import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
+import EntityAuditInfo from './EntityAuditInfo.vue';
 
 export default {
   components: {
-    EntityDetailsAuditInfo,
+    EntityAuditInfo,
   },
   filters: {
     TimeSpan(value) {

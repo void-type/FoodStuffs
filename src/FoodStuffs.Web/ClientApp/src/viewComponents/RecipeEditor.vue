@@ -103,7 +103,7 @@
         />
       </b-col>
     </b-form-row>
-    <EntityDetailsAuditInfo
+    <EntityAuditInfo
       v-if="sourceRecipe.id"
       class="mb-3"
       :entity="sourceRecipe"
@@ -151,13 +151,13 @@
 import { mapActions } from 'vuex';
 import SaveRecipeRequest from '../models/api/recipes/SaveRecipeRequest';
 import { trimAndTitleCase } from '../models/formatters';
-import EntityDetailsAuditInfo from './EntityDetailsAuditInfo.vue';
+import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 
 export default {
   components: {
-    EntityDetailsAuditInfo,
+    EntityAuditInfo,
     RecipeTimeSpanEditor,
     TagEditor,
   },

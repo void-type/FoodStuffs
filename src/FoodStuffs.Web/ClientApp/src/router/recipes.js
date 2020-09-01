@@ -1,7 +1,3 @@
-const View = () => import(/* webpackChunkName: "recipes" */ '../views/View.vue');
-const Edit = () => import(/* webpackChunkName: "recipes" */ '../views/Edit.vue');
-const Search = () => import(/* webpackChunkName: "recipes" */ '../views/Search.vue');
-
 function newRecipeProps(route) {
   const oldRecipe = route.params.newRecipeSuggestion;
   if (oldRecipe === undefined || oldRecipe === null) {
@@ -17,7 +13,7 @@ export default [
   {
     name: 'view',
     path: '/view/:id',
-    component: View,
+    component: () => import(/* webpackChunkName: "recipes" */ '../views/View.vue'),
     props: (route) => ({
       id: +route.params.id,
     }),
@@ -25,7 +21,7 @@ export default [
   {
     name: 'edit',
     path: '/edit/:id',
-    component: Edit,
+    component: () => import(/* webpackChunkName: "recipes" */ '../views/Edit.vue'),
     props: (route) => ({
       id: +route.params.id,
     }),
@@ -33,13 +29,13 @@ export default [
   {
     name: 'new',
     path: '/new',
-    component: Edit,
+    component: () => import(/* webpackChunkName: "recipes" */ '../views/Edit.vue'),
     props: newRecipeProps,
   },
   {
     name: 'search',
     path: '/search',
-    component: Search,
+    component: () => import(/* webpackChunkName: "recipes" */ '../views/Search.vue'),
     props: (route) => ({ query: route.query }),
   },
 ];
