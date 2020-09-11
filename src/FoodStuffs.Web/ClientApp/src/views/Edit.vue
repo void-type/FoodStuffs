@@ -27,8 +27,10 @@
           :is-field-in-error="isFieldInError"
           :source-images="sourceImages"
           :suggested-image-id="suggestedImageId"
+          :pinned-image-id="pinnedImageId"
           :on-image-upload="onImageUpload"
           :on-image-delete="onImageDelete"
+          :on-image-pin="onImagePin"
         />
       </b-col>
     </b-row>
@@ -41,6 +43,7 @@ import webApi from '../webApi';
 import router from '../router';
 import GetRecipeResponse from '../models/api/recipes/GetRecipeResponse';
 import SaveImageRequest from '../models/api/images/SaveImageRequest';
+import PinImageRequest from '../models/api/recipes/PinImageRequest';
 import SelectSidebar from '../viewComponents/SelectSidebar.vue';
 import RecipeEditor from '../viewComponents/RecipeEditor.vue';
 import RecipeImageManager from '../viewComponents/RecipeImageManager.vue';
@@ -69,6 +72,7 @@ export default {
       sourceImages: new GetRecipeResponse().images,
       isRecipeDirty: false,
       suggestedImageId: -1,
+      pinnedImageId: null,
     };
   },
   computed: {
@@ -118,15 +122,21 @@ export default {
     fetchImageIds(id) {
       webApi.recipes.get(
         id,
-        (data) => { this.sourceImages = data.images; },
+        (data) => {
+          this.setImageSources(data);
+        },
         (response) => this.setApiFailureMessages(response),
       );
     },
     setSources(getRecipeResponse) {
-      const { images, ...recipe } = getRecipeResponse;
-      this.sourceRecipe = recipe;
+      this.setImageSources(getRecipeResponse);
       this.suggestedImageId = -1;
+      this.sourceRecipe = getRecipeResponse;
+    },
+    setImageSources(getRecipeResponse) {
+      const { images, pinnedImageId } = getRecipeResponse;
       this.sourceImages = images;
+      this.pinnedImageId = pinnedImageId;
     },
     onRecipeSave(recipe) {
       webApi.recipes.save(
@@ -204,6 +214,20 @@ export default {
       }
 
       webApi.images.delete(
+        request,
+        (data) => {
+          this.setSuccessMessage(data.message);
+          this.fetchImageIds(this.id);
+        },
+        (response) => this.setApiFailureMessages(response),
+      );
+    },
+    onImagePin(imageId) {
+      const request = new PinImageRequest();
+      request.imageId = imageId;
+      request.recipeId = this.id;
+
+      webApi.recipes.pinImage(
         request,
         (data) => {
           this.setSuccessMessage(data.message);

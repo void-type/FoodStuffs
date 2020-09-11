@@ -21,4 +21,9 @@ export default {
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },
+  pinImage(request, success, failure) {
+    axios.post('/api/recipes/pinImage', request)
+      .then((response) => success(response.data))
+      .catch((error) => failure(error.response));
+  },
 };

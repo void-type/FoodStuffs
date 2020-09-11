@@ -30,10 +30,10 @@
           @click="removeTagClick(tag)"
         >
           {{ tag }}
-          <span
+          <font-awesome-icon
+            icon="times"
             class="ml-2"
-          >
-            ✖</span>
+          />
         </b-button>
       </div>
     </b-form-group>
@@ -41,7 +41,16 @@
 </template>
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+library.add(faTimes);
+
 export default {
+  components: {
+    FontAwesomeIcon,
+  },
   props: {
     label: {
       type: String,

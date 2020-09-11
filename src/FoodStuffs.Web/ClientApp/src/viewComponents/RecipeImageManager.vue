@@ -63,15 +63,28 @@
                   >
                     <template v-slot:img>
                       <b-button
+                        id="pinImage"
+                        class="imagePinButton"
+                        size="sm"
+                        variant="secondary"
+                        name="pinImage"
+                        title="Pin image"
+                        :v-if="sourceImages.length > 0 && imageId != pinnedImageId"
+                        @click.stop.prevent="pinImageClick(imageId)"
+                      >
+                        <font-awesome-icon icon="thumbtack" />
+                      </b-button>
+                      <b-button
                         id="deleteImage"
                         class="imageDeleteButton"
                         size="sm"
                         variant="danger"
                         name="deleteImage"
+                        title="Delete image"
                         :v-if="sourceImages.length > 0"
                         @click.stop.prevent="deleteImageClick(imageId)"
                       >
-                        ✖
+                        <font-awesome-icon icon="times" />
                       </b-button>
                       <b-img
                         fluid
@@ -98,11 +111,19 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTimes, faThumbtack } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import DeleteImageRequest from '../models/api/images/DeleteImageRequest';
 import { clamp } from '../models/formatters';
 import webApi from '../webApi';
 
+library.add(faTimes, faThumbtack);
+
 export default {
+  components: {
+    FontAwesomeIcon,
+  },
   props: {
     isFieldInError: {
       type: Function,
@@ -118,11 +139,20 @@ export default {
       required: false,
       default: -1,
     },
+    pinnedImageId: {
+      type: Number,
+      required: false,
+      default: null,
+    },
     onImageUpload: {
       type: Function,
       required: true,
     },
     onImageDelete: {
+      type: Function,
+      required: true,
+    },
+    onImagePin: {
       type: Function,
       required: true,
     },
@@ -176,6 +206,9 @@ export default {
 
       this.onImageDelete(request);
     },
+    pinImageClick(imageId) {
+      this.onImagePin(imageId);
+    },
   },
 };
 </script>
@@ -185,6 +218,14 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  min-width: 0;
+  z-index: 999;
+}
+
+.imagePinButton {
+  position: absolute;
+  top: 0;
+  left: 0;
   min-width: 0;
   z-index: 999;
 }
