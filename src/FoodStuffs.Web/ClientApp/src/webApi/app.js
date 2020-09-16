@@ -4,10 +4,6 @@ function setHeaders(response) {
   const csrfTokenHeaderName = response.data.antiforgeryTokenHeaderName;
   const csrfToken = response.data.antiforgeryToken;
 
-  axios.defaults.headers.get = {
-    Pragma: 'no-cache',
-  };
-
   const headers = {
     [csrfTokenHeaderName]: csrfToken,
     'X-Requested-With': 'XMLHttpRequest',
@@ -20,6 +16,11 @@ function setHeaders(response) {
 
 export default {
   getInfo(success, failure) {
+    // Set the get header to be no-cache for all requests.
+    axios.defaults.headers.get = {
+      Pragma: 'no-cache',
+    };
+
     axios.get('/api/app/info')
       .then((response) => {
         setHeaders(response);
