@@ -6,31 +6,44 @@
       variant="primary"
     >
       <b-navbar-toggle
-        class="mr-3"
-        target="nav_collapse"
+        target="nav-collapse"
       />
-      <router-link
+
+      <b-navbar-brand
+        class="d-flex align-items-center"
         :to="'/'"
-        class="logo"
       >
-        <img
-          src="img/logo.svg"
-          alt="logo"
-          class="d-inline-block align-top"
+        <div
+          class="logo"
         >
-        <b-navbar-brand>{{ brand }}</b-navbar-brand>
-      </router-link>
+          <img
+            src="img/logo.svg"
+            alt="logo"
+          >
+        </div>
+        {{ brand }}
+      </b-navbar-brand>
+
       <b-collapse
-        id="nav_collapse"
+        id="nav-collapse"
         is-nav
       >
         <slot name="navItems" />
-        <b-nav-text
-          :title="userRoles"
+
+        <b-navbar-nav
           class="ml-auto"
         >
-          {{ user.login }}
-        </b-nav-text>
+          <b-nav-item-dropdown
+            :text="user.login"
+            right
+          >
+            <b-dropdown-item
+              disabled
+            >
+              Roles: {{ userRoles }}
+            </b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
       </b-collapse>
     </b-navbar>
   </header>
@@ -62,11 +75,11 @@ export default {
 .navbar-dark .navbar-brand {
   color: $secondary;
   font-weight: 600;
-  font-size: 1.5em;
 }
 
 .logo img {
-  max-height: 2.5em;
-  margin-right: 0.5em;
+  max-height: 40px;
+  max-width: auto;
+  margin-right: 1rem;
 }
 </style>
