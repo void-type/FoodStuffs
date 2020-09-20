@@ -230,6 +230,7 @@ export default {
         request,
         (data) => {
           this.setSuccessMessage(data.message);
+          this.suggestedImageId = imageId;
           this.fetchImageIds(this.id);
         },
         (response) => this.setApiFailureMessages(response),
