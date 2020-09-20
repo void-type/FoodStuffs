@@ -36,7 +36,7 @@
         class="text-center mt-3"
       >
         <b-carousel
-          v-if="recipe.images.length > 0"
+          v-if="images.length > 0"
           id="image-carousel"
           v-model="carouselIndex"
           :interval="0"
@@ -45,7 +45,7 @@
           indicators
         >
           <b-carousel-slide
-            v-for="image in recipe.images"
+            v-for="image in images"
             :key="image"
           >
             <template v-slot:img>
@@ -129,6 +129,23 @@ export default {
       showImage: true,
       carouselIndex: 0,
     };
+  },
+  computed: {
+    images() {
+      const { pinnedImageId } = this.recipe;
+      const recipeImages = this.recipe.images;
+
+      if (pinnedImageId != null && recipeImages.includes(pinnedImageId)) {
+        const images = recipeImages
+          .filter((i) => i !== pinnedImageId);
+
+        images.unshift(pinnedImageId);
+
+        return images;
+      }
+
+      return recipeImages;
+    },
   },
   methods: {
     imageUrl(id) {

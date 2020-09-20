@@ -64,6 +64,11 @@ namespace FoodStuffs.Web.Data.EntityFramework
                     .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Image_Recipe");
+
+                entity.HasOne<Recipe>()
+                    .WithOne(d => d.PinnedImage)
+                    .HasForeignKey<Recipe>(d => d.PinnedImageId)
+                    .HasConstraintName("FK_Recipe_PinnedImage");
             });
 
             modelBuilder.Entity<Recipe>(entity =>

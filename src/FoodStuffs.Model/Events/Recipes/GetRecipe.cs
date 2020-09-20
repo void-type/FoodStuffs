@@ -39,6 +39,7 @@ namespace FoodStuffs.Model.Events.Recipes
                        createdOn: r.CreatedOn,
                        modifiedBy: r.ModifiedBy,
                        modifiedOn: r.ModifiedOn,
+                       pinnedImageId: r.PinnedImageId,
                        categories: r.CategoryRecipe.Select(cr => cr.Category.Name).OrderBy(n => n),
                        images: r.Image.Select(i => i.Id)));
             }
@@ -57,7 +58,7 @@ namespace FoodStuffs.Model.Events.Recipes
         public class RecipeDto
         {
             public RecipeDto(int id, string name, string ingredients, string directions, int? cookTimeMinutes, int? prepTimeMinutes,
-                string createdBy, DateTime createdOn, string modifiedBy, DateTime modifiedOn, IEnumerable<string> categories, IEnumerable<int> images)
+                string createdBy, DateTime createdOn, string modifiedBy, DateTime modifiedOn, int? pinnedImageId, IEnumerable<string> categories, IEnumerable<int> images)
             {
                 Id = id;
                 Name = name;
@@ -69,6 +70,7 @@ namespace FoodStuffs.Model.Events.Recipes
                 CreatedOn = createdOn;
                 ModifiedBy = modifiedBy;
                 ModifiedOn = modifiedOn;
+                PinnedImageId = pinnedImageId;
                 Categories = categories;
                 Images = images;
             }
@@ -83,6 +85,7 @@ namespace FoodStuffs.Model.Events.Recipes
             public DateTime CreatedOn { get; }
             public string ModifiedBy { get; }
             public DateTime ModifiedOn { get; }
+            public int? PinnedImageId { get; }
             public IEnumerable<string> Categories { get; }
             public IEnumerable<int> Images { get; }
         }

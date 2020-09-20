@@ -63,25 +63,25 @@
                   >
                     <template v-slot:img>
                       <b-button
+                        v-if="sourceImages.length > 0 && imageId != pinnedImageId"
                         id="pinImage"
                         class="imagePinButton"
                         size="sm"
                         variant="secondary"
                         name="pinImage"
                         title="Pin image"
-                        :v-if="sourceImages.length > 0 && imageId != pinnedImageId"
                         @click.stop.prevent="pinImageClick(imageId)"
                       >
                         <font-awesome-icon icon="thumbtack" />
                       </b-button>
                       <b-button
+                        v-if="sourceImages.length > 0"
                         id="deleteImage"
                         class="imageDeleteButton"
                         size="sm"
                         variant="danger"
                         name="deleteImage"
                         title="Delete image"
-                        :v-if="sourceImages.length > 0"
                         @click.stop.prevent="deleteImageClick(imageId)"
                       >
                         <font-awesome-icon icon="times" />

@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Queries;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images
 {
-    public class DeleteImage
+    public class PinImage
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -23,21 +22,12 @@ namespace FoodStuffs.Model.Events.Images
 
             public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                var byId = new ImagesByIdWithRecipesSpecification(request.Id);
-
-                return await _data.Images.Get(byId, cancellationToken)
+                return await _data.Images.Get(new ImagesByIdWithRecipesSpecification(request.Id), cancellationToken)
                     .ToResultAsync(new ImageNotFoundFailure())
-                    .TeeOnSuccessAsync(async i =>
-                    {
-                        if (i.Recipe.PinnedImageId == i.Id)
-                        {
-                            i.Recipe.PinnedImageId = null;
-                            await _data.Recipes.Update(i.Recipe, cancellationToken);
-                        }
-                    })
-                    .TeeOnSuccessAsync(i => _data.Blobs.Remove(new Blob { Id = i.Id }, cancellationToken))
-                    .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
-                    .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id));
+                    .SelectAsync(i => i.Recipe)
+                    .TeeOnSuccessAsync(r => r.PinnedImageId = request.Id)
+                    .TeeOnSuccessAsync(r => _data.Recipes.Update(r, cancellationToken))
+                    .SelectAsync(r => EntityMessage.Create("Image pinned.", request.Id));
             }
         }
 
@@ -58,6 +48,7 @@ namespace FoodStuffs.Model.Events.Images
             protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
             {
                 Logger.Info($"RequestImageId: {request.Id}");
+
                 base.OnBoth(request, result);
             }
         }

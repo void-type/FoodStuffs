@@ -18,22 +18,27 @@ namespace FoodStuffs.Web.Controllers.Api
         private readonly SaveImage.Logger _saveLogger;
         private readonly DeleteImage.Handler _deleteHandler;
         private readonly DeleteImage.Logger _deleteLogger;
+        private readonly PinImage.Handler _pinHandler;
+        private readonly PinImage.Logger _pinLogger;
 
         public ImagesController(GetImage.Handler getHandler, GetImage.Logger getLogger,
             DeleteImage.Handler deleteHandler, DeleteImage.Logger deleteLogger,
-            SaveImage.Handler updateHandler, SaveImage.Logger updateLogger
+            SaveImage.Handler saveHandler, SaveImage.Logger saveLogger,
+            PinImage.Handler pinHandler, PinImage.Logger pinLogger
             )
         {
             _getHandler = getHandler;
             _getLogger = getLogger;
-            _saveHandler = updateHandler;
-            _saveLogger = updateLogger;
+            _saveHandler = saveHandler;
+            _saveLogger = saveLogger;
             _deleteHandler = deleteHandler;
             _deleteLogger = deleteLogger;
+            _pinHandler = pinHandler;
+            _pinLogger = pinLogger;
         }
 
-        [HttpGet]
         [Route("{id}")]
+        [HttpGet]
         public async Task<IActionResult> Get(int id)
         {
             var request = new GetImage.Request(id);
@@ -66,6 +71,16 @@ namespace FoodStuffs.Web.Controllers.Api
 
             return await _deleteHandler
                 .AddPostProcessor(_deleteLogger)
+                .Handle(request)
+                .MapAsync(HttpResponder.Respond);
+        }
+
+        [Route("pin")]
+        [HttpPost]
+        public async Task<IActionResult> Pin([FromBody] PinImage.Request request)
+        {
+            return await _pinHandler
+                .AddPostProcessor(_pinLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }

@@ -6,6 +6,7 @@ export default class GetRecipeResponse {
     this.directions = '';
     this.cookTimeMinutes = null;
     this.prepTimeMinutes = null;
+    this.pinnedImageId = null;
     this.categories = [];
     this.images = [];
     this.createdOn = new Date();
