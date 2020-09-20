@@ -125,5 +125,44 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(result.IsFailed);
             Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));
         }
+
+        [Fact]
+        public async Task PinImage_pins_image_to_recipe()
+        {
+            await using var context = Deps.FoodStuffsContext("pin image success").Seed();
+            var data = context.FoodStuffsData();
+
+            var recipe = context.Recipe
+                .Include(r => r.Image)
+                .AsNoTracking()
+                .First(r => r.Name == "Recipe1");
+
+            var image = recipe.Image.First();
+
+            var request = new PinImage.Request(image.Id);
+
+            var result = await new PinImage.Handler(data).Handle(request);
+
+            Assert.True(result.IsSuccess);
+
+            var imageId = result.Value.Id;
+            var pinnedImageId = context.Recipe.Where(r => r.Id == image.RecipeId).First().PinnedImageId;
+
+            Assert.Equal(image.Id, pinnedImageId);
+        }
+
+        [Fact]
+        public async Task PinImage_fails_if_image_not_found()
+        {
+            await using var context = Deps.FoodStuffsContext().Seed();
+            var data = context.FoodStuffsData();
+
+            var request = new PinImage.Request(-5);
+
+            var result = await new PinImage.Handler(data).Handle(request);
+
+            Assert.True(result.IsFailed);
+            Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));
+        }
     }
 }
