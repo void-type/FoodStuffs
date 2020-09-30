@@ -2,6 +2,8 @@
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = "Medium")]
 param()
 
+Push-Location $PSScriptRoot
+
 . ./util.ps1
 
 if (-not (Test-Path -Path "../artifacts")) {
@@ -20,5 +22,6 @@ try {
     Remove-Item -Path "$iisDirectoryStaging\app_offline.htm"
   }
 } finally {
+  Pop-Location
   Pop-Location
 }

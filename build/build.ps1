@@ -14,6 +14,8 @@ $nodeModes = @{
   "Debug"   = "development"
 }
 
+Push-Location $PSScriptRoot
+
 # Clean the artifacts folders
 Remove-Item -Path "../artifacts" -Recurse -ErrorAction SilentlyContinue
 Remove-Item -Path "../coverage" -Recurse -ErrorAction SilentlyContinue
@@ -96,5 +98,7 @@ if (-not $SkipPublish) {
   Stop-OnError
   Pop-Location
 }
+
+Pop-Location
 
 Write-Host "`nBuilt $projectName $projectVersion`n"

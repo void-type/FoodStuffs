@@ -1,4 +1,6 @@
-﻿. ./util.ps1
+﻿Push-Location $PSScriptRoot
+
+. ./util.ps1
 
 Push-Location -Path "$webProjectFolder"
 
@@ -21,5 +23,7 @@ Write-Host "Within $dataModelsFolder, update namespaces."
 Write-Host "Within $contextName, add using for models namespace."
 Write-Host "Within $contextName, remove all ctors but the DbContextOptions one."
 Write-Host "Within $contextName, remove the OnConfiguring method as it contains sensitive information."
+
+Pop-Location
 
 Pop-Location
