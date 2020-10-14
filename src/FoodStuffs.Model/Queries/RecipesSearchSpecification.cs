@@ -11,6 +11,7 @@ namespace FoodStuffs.Model.Queries
         public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria) : base(criteria)
         {
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
+            AddInclude(nameof(Recipe.Image));
         }
 
         public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string sortBy = null, bool sortDesc = false) : this(criteria)

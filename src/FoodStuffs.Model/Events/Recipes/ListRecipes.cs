@@ -94,16 +94,18 @@ namespace FoodStuffs.Model.Events.Recipes
 
         public class RecipeListItemDto
         {
-            public RecipeListItemDto(int id, string name, IEnumerable<string> categories)
+            public RecipeListItemDto(int id, string name, IEnumerable<string> categories, int? imageId)
             {
                 Id = id;
                 Name = name;
                 Categories = categories;
+                ImageId = imageId;
             }
 
             public int Id { get; }
             public string Name { get; }
             public IEnumerable<string> Categories { get; }
+            public int? ImageId { get; }
         }
 
         public class Logger : ItemSetEventLogger<Request, RecipeListItemDto>
