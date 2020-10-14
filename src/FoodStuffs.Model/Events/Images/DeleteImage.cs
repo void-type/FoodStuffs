@@ -8,9 +8,12 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Images
 {
-    public class DeleteImage
+    public static class DeleteImage
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -32,12 +35,12 @@ namespace FoodStuffs.Model.Events.Images
                         if (i.Recipe.PinnedImageId == i.Id)
                         {
                             i.Recipe.PinnedImageId = null;
-                            await _data.Recipes.Update(i.Recipe, cancellationToken);
+                            await _data.Recipes.Update(i.Recipe, cancellationToken).ConfigureAwait(false);
                         }
                     })
                     .TeeOnSuccessAsync(i => _data.Blobs.Remove(new Blob { Id = i.Id }, cancellationToken))
                     .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
-                    .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id));
+                    .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id)).ConfigureAwait(false);
             }
         }
 

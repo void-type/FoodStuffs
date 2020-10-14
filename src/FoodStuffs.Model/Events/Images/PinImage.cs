@@ -7,9 +7,12 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Images
 {
-    public class PinImage
+    public static class PinImage
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -20,14 +23,14 @@ namespace FoodStuffs.Model.Events.Images
                 _data = data;
             }
 
-            public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
-                return await _data.Images.Get(new ImagesByIdWithRecipesSpecification(request.Id), cancellationToken)
+                return _data.Images.Get(new ImagesByIdWithRecipesSpecification(request.Id), cancellationToken)
                     .ToResultAsync(new ImageNotFoundFailure())
                     .SelectAsync(i => i.Recipe)
                     .TeeOnSuccessAsync(r => r.PinnedImageId = request.Id)
                     .TeeOnSuccessAsync(r => _data.Recipes.Update(r, cancellationToken))
-                    .SelectAsync(r => EntityMessage.Create("Image pinned.", request.Id));
+                    .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Id));
             }
         }
 

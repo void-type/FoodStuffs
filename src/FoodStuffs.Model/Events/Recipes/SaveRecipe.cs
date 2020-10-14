@@ -12,9 +12,12 @@ using VoidCore.Domain.RuleValidator;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Recipes
 {
-    public class SaveRecipe
+    public static class SaveRecipe
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -29,7 +32,8 @@ namespace FoodStuffs.Model.Events.Recipes
             {
                 var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
 
-                var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken);
+                var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken)
+                    .ConfigureAwait(false);
 
                 if (maybeRecipe.HasValue)
                 {
@@ -37,17 +41,19 @@ namespace FoodStuffs.Model.Events.Recipes
                         .Tee(r => Transfer(request, r))
                         .TeeAsync(r => _data.Recipes.Update(r, cancellationToken))
                         .TeeAsync(r => ManageCategories(request, r, cancellationToken))
-                        .MapAsync(r => Ok(EntityMessage.Create("Recipe updated.", r.Id)));
+                        .MapAsync(r => Ok(EntityMessage.Create("Recipe updated.", r.Id)))
+                        .ConfigureAwait(false);
                 }
 
                 return await new Recipe()
                     .Tee(r => Transfer(request, r))
                     .TeeAsync(r => _data.Recipes.Add(r, cancellationToken))
                     .TeeAsync(r => ManageCategories(request, r, cancellationToken))
-                    .MapAsync(r => Ok(EntityMessage.Create("Recipe added.", r.Id)));
+                    .MapAsync(r => Ok(EntityMessage.Create("Recipe added.", r.Id)))
+                    .ConfigureAwait(false);
             }
 
-            private void Transfer(Request request, Recipe recipe)
+            private static void Transfer(Request request, Recipe recipe)
             {
                 recipe.Name = request.Name;
                 recipe.Ingredients = request.Ingredients;
@@ -66,19 +72,23 @@ namespace FoodStuffs.Model.Events.Recipes
                 var categoriesThatMatchRequestedSpec = new CategoriesSpecification(
                     c => requested.Contains(c.Name.ToLower().Trim()));
 
-                var categoriesExist = (await _data.Categories.List(categoriesThatMatchRequestedSpec, cancellationToken))
+                var categoriesExist = (await _data.Categories
+                    .List(categoriesThatMatchRequestedSpec, cancellationToken)
+                    .ConfigureAwait(false))
                     .Select(c => c.Name.ToLower().Trim());
 
                 // Add categories that don't exist
                 await requested
                     .Where(n => !categoriesExist.Contains(n))
                     .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) })
-                    .TeeAsync(r => _data.Categories.AddRange(r, cancellationToken));
+                    .TeeAsync(r => _data.Categories.AddRange(r, cancellationToken))
+                    .ConfigureAwait(false);
 
                 // Remove relations that are no longer needed
                 await recipe.CategoryRecipe
                     .Where(r => !requested.Contains(r.Category.Name.ToLower().Trim()))
-                    .TeeAsync(r => _data.CategoryRecipes.RemoveRange(r, cancellationToken));
+                    .TeeAsync(r => _data.CategoryRecipes.RemoveRange(r, cancellationToken))
+                    .ConfigureAwait(false);
 
                 // Add relations that don't exist
                 await _data.Categories
@@ -92,7 +102,8 @@ namespace FoodStuffs.Model.Events.Recipes
                            RecipeId = recipe.Id,
                            CategoryId = c.Id
                        }))
-                    .TeeAsync(r => _data.CategoryRecipes.AddRange(r, cancellationToken));
+                    .TeeAsync(r => _data.CategoryRecipes.AddRange(r, cancellationToken))
+                    .ConfigureAwait(false);
             }
         }
 

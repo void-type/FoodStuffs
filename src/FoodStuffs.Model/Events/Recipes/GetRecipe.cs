@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 using VoidCore.Domain;
 using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
+using VoidCore.Model.Responses;
+
+// Allow single file events
+#pragma warning disable CA1034
 
 namespace FoodStuffs.Model.Events.Recipes
 {
-    public class GetRecipe
+    public static class GetRecipe
     {
         public class Handler : EventHandlerAbstract<Request, RecipeDto>
         {
@@ -22,11 +26,11 @@ namespace FoodStuffs.Model.Events.Recipes
                 _data = data;
             }
 
-            public override async Task<IResult<RecipeDto>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override Task<IResult<RecipeDto>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
 
-                return await _data.Recipes.Get(byId, cancellationToken)
+                return _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
                     .SelectAsync(r => new RecipeDto(
                        id: r.Id,

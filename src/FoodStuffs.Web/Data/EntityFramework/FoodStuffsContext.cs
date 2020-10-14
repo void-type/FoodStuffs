@@ -10,12 +10,12 @@ namespace FoodStuffs.Web.Data.EntityFramework
         {
         }
 
-        public virtual DbSet<Blob> Blob { get; set; }
-        public virtual DbSet<Category> Category { get; set; }
-        public virtual DbSet<CategoryRecipe> CategoryRecipe { get; set; }
-        public virtual DbSet<Image> Image { get; set; }
-        public virtual DbSet<Recipe> Recipe { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Blob>? Blob { get; set; }
+        public virtual DbSet<Category>? Category { get; set; }
+        public virtual DbSet<CategoryRecipe>? CategoryRecipe { get; set; }
+        public virtual DbSet<Image>? Image { get; set; }
+        public virtual DbSet<Recipe>? Recipe { get; set; }
+        public virtual DbSet<User>? User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

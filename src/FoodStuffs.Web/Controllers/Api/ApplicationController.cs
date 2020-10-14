@@ -22,9 +22,9 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [HttpGet]
         [Route("info")]
-        public async Task<IActionResult> GetInfo()
+        public Task<IActionResult> GetInfo()
         {
-            return await _getHandler
+            return _getHandler
                 .AddPostProcessor(_getLogger)
                 .Handle(new GetWebClientInfo.Request())
                 .MapAsync(HttpResponder.Respond);

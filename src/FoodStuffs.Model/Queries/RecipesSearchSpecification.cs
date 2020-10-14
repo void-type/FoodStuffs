@@ -14,13 +14,13 @@ namespace FoodStuffs.Model.Queries
             AddInclude(nameof(Recipe.Image));
         }
 
-        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string sortBy = null, bool sortDesc = false) : this(criteria)
+        public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null, bool sortDesc = false) : this(criteria)
         {
             ApplyPaging(paginationOptions);
 
-            switch (sortBy?.ToLower())
+            switch (sortBy?.ToUpperInvariant())
             {
-                case "name":
+                case "NAME":
                     AddOrderBy(recipe => recipe.Name, sortDesc);
                     AddOrderBy(recipe => recipe.Id);
                     break;

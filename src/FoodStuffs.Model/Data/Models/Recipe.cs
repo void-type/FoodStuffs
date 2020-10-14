@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
 namespace FoodStuffs.Model.Data.Models
 {
     public partial class Recipe

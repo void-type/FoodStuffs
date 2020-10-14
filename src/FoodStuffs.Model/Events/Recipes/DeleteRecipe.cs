@@ -9,9 +9,12 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Recipes
 {
-    public class DeleteRecipe
+    public static class DeleteRecipe
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -22,11 +25,11 @@ namespace FoodStuffs.Model.Events.Recipes
                 _data = data;
             }
 
-            public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
 
-                return await _data.Recipes.Get(byId, cancellationToken)
+                return _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
                     .TeeOnSuccessAsync(r => RemoveImages(r, cancellationToken))
                     .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipe, cancellationToken))
@@ -40,8 +43,8 @@ namespace FoodStuffs.Model.Events.Recipes
                 // Optimization: don't bring the whole blob into RAM.
                 var blobs = images.Select(i => new Blob { Id = i.Id });
 
-                await _data.Blobs.RemoveRange(blobs, cancellationToken);
-                await _data.Images.RemoveRange(images, cancellationToken);
+                await _data.Blobs.RemoveRange(blobs, cancellationToken).ConfigureAwait(false);
+                await _data.Images.RemoveRange(images, cancellationToken).ConfigureAwait(false);
             }
         }
 

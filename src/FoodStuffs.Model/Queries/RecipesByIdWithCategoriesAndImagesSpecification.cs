@@ -9,7 +9,7 @@ namespace FoodStuffs.Model.Queries
         {
             AddCriteria(r => r.Id == id);
             AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
-            AddInclude($"{nameof(Recipe.Image)}");
+            AddInclude(nameof(Recipe.Image));
         }
     }
 }
