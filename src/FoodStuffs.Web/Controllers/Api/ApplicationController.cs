@@ -45,23 +45,11 @@ namespace FoodStuffs.Web.Controllers.Api
         }
     }
 
-    internal class AppVersion
-    {
-        public string Version { get; }
-        public bool IsPublicRelease { get; }
-        public bool IsPrerelease { get; }
-        public string GitCommitId { get; }
-        public DateTime GitCommitDate { get; }
-        public string AssemblyConfiguration { get; }
-
-        public AppVersion(string version, bool isPublicRelease, bool isPrerelease, string gitCommitId, DateTime gitCommitDate, string assemblyConfiguration)
-        {
-            Version = version;
-            IsPublicRelease = isPublicRelease;
-            IsPrerelease = isPrerelease;
-            GitCommitId = gitCommitId;
-            GitCommitDate = gitCommitDate;
-            AssemblyConfiguration = assemblyConfiguration;
-        }
-    }
+    internal record AppVersion(
+        string? Version,
+        bool IsPublicRelease,
+        bool IsPrerelease,
+        string GitCommitId,
+        DateTime GitCommitDate,
+        string AssemblyConfiguration);
 }

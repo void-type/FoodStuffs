@@ -47,11 +47,11 @@ namespace FoodStuffs.Test.Model
 
         public static FoodStuffsContext Seed(this FoodStuffsContext context)
         {
-            var category1 = context.Category.Add(new Category { Name = "Category1" }).Entity.Id;
-            var category2 = context.Category.Add(new Category { Name = "Category2" }).Entity.Id;
-            var category3 = context.Category.Add(new Category { Name = "Category3" }).Entity.Id;
+            var category1 = context.Categories.Add(new Category { Name = "Category1" }).Entity.Id;
+            var category2 = context.Categories.Add(new Category { Name = "Category2" }).Entity.Id;
+            var category3 = context.Categories.Add(new Category { Name = "Category3" }).Entity.Id;
 
-            var recipe1 = context.Recipe.Add(new Recipe
+            var recipe1 = context.Recipes.Add(new Recipe
             {
                 Name = "Recipe1",
                 Ingredients = "ing",
@@ -64,7 +64,7 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "12"
             }).Entity.Id;
 
-            var recipe2 = context.Recipe.Add(new Recipe
+            var recipe2 = context.Recipes.Add(new Recipe
             {
                 Name = "Recipe2",
                 CookTimeMinutes = 2,
@@ -75,7 +75,7 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "11"
             }).Entity.Id;
 
-            context.Recipe.Add(new Recipe
+            context.Recipes.Add(new Recipe
             {
                 Name = "Recipe3",
                 CookTimeMinutes = 2,
@@ -86,9 +86,9 @@ namespace FoodStuffs.Test.Model
                 ModifiedBy = "11"
             });
 
-            context.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category1 });
-            context.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category2 });
-            context.CategoryRecipe.Add(new CategoryRecipe { RecipeId = recipe2, CategoryId = category3 });
+            context.CategoryRecipes.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category1 });
+            context.CategoryRecipes.Add(new CategoryRecipe { RecipeId = recipe1, CategoryId = category2 });
+            context.CategoryRecipes.Add(new CategoryRecipe { RecipeId = recipe2, CategoryId = category3 });
 
             var file = new SimpleFile("seeded file content", "some file.txt");
 
@@ -110,9 +110,9 @@ namespace FoodStuffs.Test.Model
                 ModifiedOn = new DateTime(2019, 11, 8),
             };
 
-            context.Image.AddRange(image1, image2);
+            context.Images.AddRange(image1, image2);
 
-            context.Blob.AddRange(
+            context.Blobs.AddRange(
                 new Blob
                 {
                     Bytes = file.Content.AsBytes,

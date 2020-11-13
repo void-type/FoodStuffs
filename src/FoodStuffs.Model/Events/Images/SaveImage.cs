@@ -59,17 +59,7 @@ namespace FoodStuffs.Model.Events.Images
             }
         }
 
-        public class Request
-        {
-            public Request(int recipeId, byte[] fileContent)
-            {
-                RecipeId = recipeId;
-                FileContent = fileContent;
-            }
-
-            public int RecipeId { get; }
-            public byte[] FileContent { get; }
-        }
+        public record Request(int RecipeId, byte[] FileContent);
 
         public class Logger : EntityMessageEventLogger<Request, int>
         {

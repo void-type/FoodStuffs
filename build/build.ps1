@@ -61,12 +61,6 @@ if (-not $SkipOutdated) {
   dotnet outdated
 }
 
-# Run Analyzers through building debug
-if ($Configuration -ne "Debug") {
-  dotnet build --configuration "Debug" --no-restore #-warnaserror
-  Stop-OnError
-}
-
 dotnet build --configuration "$Configuration" --no-restore
 Stop-OnError
 Pop-Location
@@ -84,18 +78,17 @@ if (-not $SkipTest) {
 
   Stop-OnError
 
-  New-Item -ItemType Directory -Path "../../" -Name "coverage"
-  Move-Item -Path "../../testResults/*/coverage.cobertura.xml" -Destination "../../coverage/coverage.cobertura.xml"
-
-  Pop-Location
-
   if (-not $SkipTestReport) {
     # Generate code coverage report
-    Push-Location -Path "../coverage"
-    dotnet reportgenerator "-reports:coverage.cobertura*.xml" "-targetdir:." "-reporttypes:HtmlInline_AzurePipelines"
+    dotnet reportgenerator `
+      "-reports:../../testResults/*/coverage.cobertura.xml" `
+      "-targetdir:../../coverage" `
+      "-reporttypes:HtmlInline_AzurePipelines"
+
     Stop-OnError
-    Pop-Location
   }
+
+  Pop-Location
 }
 
 if (-not $SkipPublish) {

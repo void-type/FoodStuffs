@@ -48,10 +48,10 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 return recipes
                     .Select(r => new RecipeListItemDto(
-                        id: r.Id,
-                        name: r.Name,
-                        categories: r.CategoryRecipe.Select(cr => cr.Category.Name).OrderBy(n => n),
-                        imageId: r.PinnedImageId ?? (r.Image.Count > 0 ? r.Image.Select(i => i.Id).FirstOrDefault() : (int?)null)))
+                        Id: r.Id,
+                        Name: r.Name,
+                        Categories: r.CategoryRecipes.Select(cr => cr.Category.Name).OrderBy(n => n),
+                        ImageId: r.PinnedImageId ?? (r.Images.Count > 0 ? r.Images.Select(i => i.Id).FirstOrDefault() : (int?)null)))
                     .ToItemSet(paginationOptions, totalCount)
                     .Map(Ok);
             }
@@ -67,50 +67,27 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 if (!string.IsNullOrWhiteSpace(request.CategorySearch))
                 {
-                    searchCriteria.Add(recipe => recipe.CategoryRecipe.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
+                    searchCriteria.Add(recipe => recipe.CategoryRecipes.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
                 }
 
                 return searchCriteria.ToArray();
             }
         }
 
-        public class Request
-        {
-            public Request(string? nameSearch, string? categorySearch, string? sortBy, bool sortDesc, bool isPagingEnabled, int page, int take)
-            {
-                NameSearch = nameSearch;
-                CategorySearch = categorySearch;
-                SortBy = sortBy;
-                SortDesc = sortDesc;
-                IsPagingEnabled = isPagingEnabled;
-                Page = page;
-                Take = take;
-            }
+        public record Request(
+            string? NameSearch,
+            string? CategorySearch,
+            string? SortBy,
+            bool SortDesc,
+            bool IsPagingEnabled,
+            int Page,
+            int Take);
 
-            public string? NameSearch { get; }
-            public string? CategorySearch { get; }
-            public string? SortBy { get; }
-            public bool SortDesc { get; }
-            public bool IsPagingEnabled { get; }
-            public int Page { get; }
-            public int Take { get; }
-        }
-
-        public class RecipeListItemDto
-        {
-            public RecipeListItemDto(int id, string name, IEnumerable<string> categories, int? imageId)
-            {
-                Id = id;
-                Name = name;
-                Categories = categories;
-                ImageId = imageId;
-            }
-
-            public int Id { get; }
-            public string Name { get; }
-            public IEnumerable<string> Categories { get; }
-            public int? ImageId { get; }
-        }
+        public record RecipeListItemDto(
+            int Id,
+            string Name,
+            IEnumerable<string> Categories,
+            int? ImageId);
 
         public class Logger : ItemSetEventLogger<Request, RecipeListItemDto>
         {

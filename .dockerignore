@@ -1,12 +1,13 @@
-.vscode/
-bin/
-obj/
-out/
-**/*.Web/wwwroot/
+/.vscode/
 /artifacts/
 /coverage/
-node_modules/
+/docs/
+/testResults/
+**/bin/
+**/obj/
+**/out/
+**/*.Web/wwwroot/
+**/node_modules/
 
-app[Ss]ettings.*.json
-LICENSE.txt
-README.md
+**/app[Ss]ettings.*.json
+**/README.md

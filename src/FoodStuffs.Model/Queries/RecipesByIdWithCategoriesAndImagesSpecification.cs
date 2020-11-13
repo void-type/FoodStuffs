@@ -8,8 +8,8 @@ namespace FoodStuffs.Model.Queries
         public RecipesByIdWithCategoriesAndImagesSpecification(int id) : base()
         {
             AddCriteria(r => r.Id == id);
-            AddInclude($"{nameof(Recipe.CategoryRecipe)}.{nameof(CategoryRecipe.Category)}");
-            AddInclude(nameof(Recipe.Image));
+            AddInclude($"{nameof(Recipe.CategoryRecipes)}.{nameof(CategoryRecipe.Category)}");
+            AddInclude(nameof(Recipe.Images));
         }
     }
 }

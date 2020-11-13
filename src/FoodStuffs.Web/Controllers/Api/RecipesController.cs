@@ -41,13 +41,13 @@ namespace FoodStuffs.Web.Controllers.Api
         public async Task<IActionResult> List(string? name = null, string? category = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
             var request = new ListRecipes.Request(
-                nameSearch: name,
-                categorySearch: category,
-                sortBy: sortBy,
-                sortDesc: sortDesc,
-                isPagingEnabled: isPagingEnabled,
-                page: page,
-                take: take);
+                NameSearch: name,
+                CategorySearch: category,
+                SortBy: sortBy,
+                SortDesc: sortDesc,
+                IsPagingEnabled: isPagingEnabled,
+                Page: page,
+                Take: take);
 
             // Cancel long-running queries
             using var cts = new CancellationTokenSource()

@@ -44,15 +44,7 @@ namespace FoodStuffs.Model.Events.Images
             }
         }
 
-        public class Request
-        {
-            public Request(int id)
-            {
-                Id = id;
-            }
-
-            public int Id { get; }
-        }
+        public record Request(int Id);
 
         public class Logger : EntityMessageEventLogger<Request, int>
         {

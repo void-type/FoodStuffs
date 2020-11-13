@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildDebug",
-            "program": "${workspaceFolder}/src/FoodStuffs.Web/bin/Debug/netcoreapp3.1/FoodStuffs.Web.dll",
+            "program": "${workspaceFolder}/src/FoodStuffs.Web/bin/Debug/net5.0/FoodStuffs.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/FoodStuffs.Web",
             "console": "internalConsole",

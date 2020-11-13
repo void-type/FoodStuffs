@@ -1,6 +1,8 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
+#nullable disable
+
 namespace FoodStuffs.Web.Data.EntityFramework
 {
     public partial class FoodStuffsContext : DbContext
@@ -10,17 +12,19 @@ namespace FoodStuffs.Web.Data.EntityFramework
         {
         }
 
-        public virtual DbSet<Blob>? Blob { get; set; }
-        public virtual DbSet<Category>? Category { get; set; }
-        public virtual DbSet<CategoryRecipe>? CategoryRecipe { get; set; }
-        public virtual DbSet<Image>? Image { get; set; }
-        public virtual DbSet<Recipe>? Recipe { get; set; }
-        public virtual DbSet<User>? User { get; set; }
+        public virtual DbSet<Blob> Blobs { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<CategoryRecipe> CategoryRecipes { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
+        public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Blob>(entity =>
             {
+                entity.ToTable("Blob");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Bytes).IsRequired();
@@ -33,6 +37,8 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<Category>(entity =>
             {
+                entity.ToTable("Category");
+
                 entity.Property(e => e.Name).IsRequired();
             });
 
@@ -40,14 +46,16 @@ namespace FoodStuffs.Web.Data.EntityFramework
             {
                 entity.HasKey(e => new { e.RecipeId, e.CategoryId });
 
+                entity.ToTable("CategoryRecipe");
+
                 entity.HasOne(d => d.Category)
-                    .WithMany(p => p.CategoryRecipe)
+                    .WithMany(p => p.CategoryRecipes)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CategoryRecipe_Category");
 
                 entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.CategoryRecipe)
+                    .WithMany(p => p.CategoryRecipes)
                     .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CategoryRecipe_Recipe");
@@ -55,12 +63,14 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<Image>(entity =>
             {
+                entity.ToTable("Image");
+
                 entity.Property(e => e.CreatedBy).IsRequired();
 
                 entity.Property(e => e.ModifiedBy).IsRequired();
 
                 entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.Image)
+                    .WithMany(p => p.Images)
                     .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Image_Recipe");
@@ -73,6 +83,8 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<Recipe>(entity =>
             {
+                entity.ToTable("Recipe");
+
                 entity.Property(e => e.CreatedBy).IsRequired();
 
                 entity.Property(e => e.Directions).IsRequired();
@@ -86,6 +98,8 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
             modelBuilder.Entity<User>(entity =>
             {
+                entity.ToTable("User");
+
                 entity.Property(e => e.FirstName).IsRequired();
 
                 entity.Property(e => e.LastName).IsRequired();
@@ -94,7 +108,7 @@ namespace FoodStuffs.Web.Data.EntityFramework
                     .IsRequired()
                     .HasMaxLength(128)
                     .IsUnicode(false)
-                    .IsFixedLength();
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.Salt).IsRequired();
 

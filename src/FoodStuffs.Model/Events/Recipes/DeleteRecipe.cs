@@ -32,14 +32,14 @@ namespace FoodStuffs.Model.Events.Recipes
                 return _data.Recipes.Get(byId, cancellationToken)
                     .ToResultAsync(new RecipeNotFoundFailure())
                     .TeeOnSuccessAsync(r => RemoveImages(r, cancellationToken))
-                    .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipe, cancellationToken))
+                    .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipes, cancellationToken))
                     .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
                     .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
             }
 
             private async Task RemoveImages(Recipe recipe, CancellationToken cancellationToken)
             {
-                var images = recipe.Image;
+                var images = recipe.Images;
                 // Optimization: don't bring the whole blob into RAM.
                 var blobs = images.Select(i => new Blob { Id = i.Id });
 
@@ -48,15 +48,7 @@ namespace FoodStuffs.Model.Events.Recipes
             }
         }
 
-        public class Request
-        {
-            public Request(int id)
-            {
-                Id = id;
-            }
-
-            public int Id { get; }
-        }
+        public record Request(int Id);
 
         public class Logger : EntityMessageEventLogger<Request, int>
         {

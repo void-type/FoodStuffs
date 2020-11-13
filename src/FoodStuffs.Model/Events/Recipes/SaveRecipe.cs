@@ -85,7 +85,7 @@ namespace FoodStuffs.Model.Events.Recipes
                     .ConfigureAwait(false);
 
                 // Remove relations that are no longer needed
-                await recipe.CategoryRecipe
+                await recipe.CategoryRecipes
                     .Where(r => !requested.Contains(r.Category.Name.ToLower().Trim()))
                     .TeeAsync(r => _data.CategoryRecipes.RemoveRange(r, cancellationToken))
                     .ConfigureAwait(false);
@@ -94,7 +94,7 @@ namespace FoodStuffs.Model.Events.Recipes
                 await _data.Categories
                     .List(categoriesThatMatchRequestedSpec, cancellationToken)
                     .MapAsync(categories => categories
-                       .Where(c => !recipe.CategoryRecipe
+                       .Where(c => !recipe.CategoryRecipes
                           .Select(r => r.Category.Name.ToLower().Trim())
                           .Contains(c.Name.ToLower().Trim()))
                        .Select(c => new CategoryRecipe
@@ -107,27 +107,14 @@ namespace FoodStuffs.Model.Events.Recipes
             }
         }
 
-        public class Request
-        {
-            public Request(int id, string name, string ingredients, string directions, int? cookTimeMinutes, int? prepTimeMinutes, IEnumerable<string> categories)
-            {
-                Id = id;
-                Name = name;
-                Ingredients = ingredients;
-                Directions = directions;
-                CookTimeMinutes = cookTimeMinutes;
-                PrepTimeMinutes = prepTimeMinutes;
-                Categories = categories;
-            }
-
-            public int Id { get; }
-            public string Name { get; }
-            public string Ingredients { get; }
-            public string Directions { get; }
-            public int? CookTimeMinutes { get; }
-            public int? PrepTimeMinutes { get; }
-            public IEnumerable<string> Categories { get; }
-        }
+        public record Request(
+            int Id,
+            string Name,
+            string Ingredients,
+            string Directions,
+            int? CookTimeMinutes,
+            int? PrepTimeMinutes,
+            IEnumerable<string> Categories);
 
         public class RequestValidator : RuleValidatorAbstract<Request>
         {
