@@ -18,7 +18,7 @@ namespace FoodStuffs.Test.Model
         static Deps()
         {
             var userAccessorMock = new Mock<ICurrentUserAccessor>();
-            userAccessorMock.Setup(a => a.User).Returns(new DomainUser("SingleUser", new string[0]));
+            userAccessorMock.Setup(a => a.User).Returns(new DomainUser("SingleUser", Array.Empty<string>()));
             CurrentUserAccessor = userAccessorMock.Object;
 
             DateTimeServiceEarly = new DiscreteDateTimeService(new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc));

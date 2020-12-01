@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var recipes = await data.Recipes.ListAll(default);
-            var recipeToFind = recipes.First();
+            var recipeToFind = recipes[0];
 
             var result = await new GetRecipe.Handler(data)
                 .Handle(new GetRecipe.Request(recipeToFind.Id));
@@ -243,7 +243,7 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var existingRecipeId = (await data.Recipes.ListAll(default)).First().Id;
+            var existingRecipeId = (await data.Recipes.ListAll(default))[0].Id;
 
             var result = await new SaveRecipe.Handler(data)
                 .Handle(new SaveRecipe.Request(existingRecipeId, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));

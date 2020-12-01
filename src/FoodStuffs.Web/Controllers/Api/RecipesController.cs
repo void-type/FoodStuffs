@@ -38,7 +38,7 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public async Task<IActionResult> List(string? name = null, string? category = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
+        public Task<IActionResult> List(string? name = null, string? category = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
             var request = new ListRecipes.Request(
                 NameSearch: name,
@@ -53,11 +53,10 @@ namespace FoodStuffs.Web.Controllers.Api
             using var cts = new CancellationTokenSource()
                 .Tee(c => c.CancelAfter(5000));
 
-            return await _listHandler
+            return _listHandler
                 .AddPostProcessor(_listLogger)
                 .Handle(request, cts.Token)
-                .MapAsync(HttpResponder.Respond)
-                .ConfigureAwait(false);
+                .MapAsync(HttpResponder.Respond);
         }
 
         [HttpGet]
