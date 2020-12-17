@@ -61,7 +61,6 @@ namespace FoodStuffs.Web
             services.AddSingleton<IWebAppVariables, WebAppVariables>();
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
-            // TODO: how can we make this a singleton (pool?) and then make domain events singletons.
             const string connectionStringName = "FoodStuffs";
             var connectionString = _config.GetConnectionString(connectionStringName)
                 .EnsureNotNullOrEmpty(connectionStringName, "Connection string not found in application configuration.");
