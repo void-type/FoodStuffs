@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /app
 
 # Install Node in the build container
@@ -32,11 +32,10 @@ RUN dotnet restore
 COPY ./ ./
 
 # Build the app
-RUN cd ./build/ && \
-  pwsh ./build.ps1
+RUN pwsh ./build/build.ps1
 
 # Copy output from the build container to the run container
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 ARG env="Production"
 WORKDIR /app
 COPY --from=build-env /app/artifacts .

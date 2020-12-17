@@ -8,9 +8,12 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Messages;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Images
 {
-    public class SaveImage
+    public static class SaveImage
     {
         public class Handler : EventHandlerAbstract<Request, EntityMessage<int>>
         {
@@ -30,7 +33,7 @@ namespace FoodStuffs.Model.Events.Images
                 // 3. edit the client-side upload validation in the recipeedit.vue file.
 
                 var recipeResult = await _data.Recipes.Get(new RecipesByIdSpecification(request.RecipeId), cancellationToken)
-                    .ToResultAsync(new RecipeNotFoundFailure());
+                    .ToResultAsync(new RecipeNotFoundFailure()).ConfigureAwait(false);
 
                 if (recipeResult.IsFailed)
                 {
@@ -42,7 +45,7 @@ namespace FoodStuffs.Model.Events.Images
                     RecipeId = recipeResult.Value.Id
                 };
 
-                await _data.Images.Add(image, cancellationToken);
+                await _data.Images.Add(image, cancellationToken).ConfigureAwait(false);
 
                 var blob = new Blob
                 {
@@ -50,23 +53,13 @@ namespace FoodStuffs.Model.Events.Images
                     Bytes = request.FileContent
                 };
 
-                await _data.Blobs.Add(blob, cancellationToken);
+                await _data.Blobs.Add(blob, cancellationToken).ConfigureAwait(false);
 
                 return Ok(EntityMessage.Create("Image uploaded.", image.Id));
             }
         }
 
-        public class Request
-        {
-            public Request(int recipeId, byte[] fileContent)
-            {
-                RecipeId = recipeId;
-                FileContent = fileContent;
-            }
-
-            public int RecipeId { get; }
-            public byte[] FileContent { get; }
-        }
+        public record Request(int RecipeId, byte[] FileContent);
 
         public class Logger : EntityMessageEventLogger<Request, int>
         {

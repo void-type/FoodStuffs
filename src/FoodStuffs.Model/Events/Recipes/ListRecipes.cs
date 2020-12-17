@@ -12,9 +12,12 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Collections;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Recipes
 {
-    public class ListRecipes
+    public static class ListRecipes
     {
         public class Handler : EventHandlerAbstract<Request, IItemSet<RecipeListItemDto>>
         {
@@ -33,7 +36,7 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 var allSearch = new RecipesSearchSpecification(searchCriteria);
 
-                var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
+                var totalCount = await _data.Recipes.Count(allSearch, cancellationToken).ConfigureAwait(false);
 
                 var pagedSearch = new RecipesSearchSpecification(
                     criteria: searchCriteria,
@@ -41,18 +44,19 @@ namespace FoodStuffs.Model.Events.Recipes
                     sortBy: request.SortBy,
                     sortDesc: request.SortDesc);
 
-                var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
+                var recipes = await _data.Recipes.List(pagedSearch, cancellationToken).ConfigureAwait(false);
 
                 return recipes
-                    .Select(recipe => new RecipeListItemDto(
-                        id: recipe.Id,
-                        name: recipe.Name,
-                        categories: recipe.CategoryRecipe.Select(cr => cr.Category.Name).OrderBy(n => n)))
+                    .Select(r => new RecipeListItemDto(
+                        Id: r.Id,
+                        Name: r.Name,
+                        Categories: r.CategoryRecipes.Select(cr => cr.Category.Name).OrderBy(n => n),
+                        ImageId: r.PinnedImageId ?? (r.Images.Count > 0 ? r.Images.Select(i => i.Id).FirstOrDefault() : (int?)null)))
                     .ToItemSet(paginationOptions, totalCount)
                     .Map(Ok);
             }
 
-            private Expression<Func<Recipe, bool>>[] GetSearchCriteria(Request request)
+            private static Expression<Func<Recipe, bool>>[] GetSearchCriteria(Request request)
             {
                 var searchCriteria = new List<Expression<Func<Recipe, bool>>>();
 
@@ -63,48 +67,27 @@ namespace FoodStuffs.Model.Events.Recipes
 
                 if (!string.IsNullOrWhiteSpace(request.CategorySearch))
                 {
-                    searchCriteria.Add(recipe => recipe.CategoryRecipe.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
+                    searchCriteria.Add(recipe => recipe.CategoryRecipes.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
                 }
 
                 return searchCriteria.ToArray();
             }
         }
 
-        public class Request
-        {
-            public Request(string nameSearch, string categorySearch, string sortBy, bool sortDesc, bool isPagingEnabled, int page, int take)
-            {
-                NameSearch = nameSearch;
-                CategorySearch = categorySearch;
-                SortBy = sortBy;
-                SortDesc = sortDesc;
-                IsPagingEnabled = isPagingEnabled;
-                Page = page;
-                Take = take;
-            }
+        public record Request(
+            string? NameSearch,
+            string? CategorySearch,
+            string? SortBy,
+            bool SortDesc,
+            bool IsPagingEnabled,
+            int Page,
+            int Take);
 
-            public string NameSearch { get; }
-            public string CategorySearch { get; }
-            public string SortBy { get; }
-            public bool SortDesc { get; }
-            public bool IsPagingEnabled { get; }
-            public int Page { get; }
-            public int Take { get; }
-        }
-
-        public class RecipeListItemDto
-        {
-            public RecipeListItemDto(int id, string name, IEnumerable<string> categories)
-            {
-                Id = id;
-                Name = name;
-                Categories = categories;
-            }
-
-            public int Id { get; }
-            public string Name { get; }
-            public IEnumerable<string> Categories { get; }
-        }
+        public record RecipeListItemDto(
+            int Id,
+            string Name,
+            IEnumerable<string> Categories,
+            int? ImageId);
 
         public class Logger : ItemSetEventLogger<Request, RecipeListItemDto>
         {

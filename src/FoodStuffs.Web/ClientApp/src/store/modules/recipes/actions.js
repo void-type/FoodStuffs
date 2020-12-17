@@ -16,9 +16,9 @@ export default {
       .map((recentRecipe) => recentRecipe.id)
       .indexOf(recipe.id);
 
+    // TODO: update these recipes if edited, these can get out of sync
     const recipeListItem = {
-      id: recipe.id,
-      name: recipe.name,
+      ...recipe,
     };
 
     if (indexOfCurrentInRecents > -1) {

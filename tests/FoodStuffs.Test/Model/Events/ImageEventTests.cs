@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var image = context.Image
+            var image = context.Images
                 .Include(a => a.Blob)
                 .First();
 
@@ -52,7 +52,7 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var recipe = context.Recipe.First(r => r.Name == "Recipe2");
+            var recipe = context.Recipes.First(r => r.Name == "Recipe2");
 
             var myFile = new SimpleFile("my file content", "myFile.txt");
 
@@ -62,7 +62,7 @@ namespace FoodStuffs.Test.Model.Events
 
             Assert.True(result.IsSuccess);
 
-            var image = context.Image.Include(a => a.Blob).First(a => a.Id == result.Value.Id);
+            var image = context.Images.Include(a => a.Blob).First(a => a.Id == result.Value.Id);
 
             Assert.Equal(myFile.Content.AsBytes, image.Blob.Bytes);
             Assert.Equal(recipe.Id, image.RecipeId);
@@ -94,13 +94,13 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext("delete images success");
             var data = context.FoodStuffsData();
 
-            var recipe = context.Recipe
-                .Include(r => r.Image)
+            var recipe = context.Recipes
+                .Include(r => r.Images)
                 .ThenInclude(r => r.Blob)
                 .AsNoTracking()
                 .First(r => r.Name == "Recipe1");
 
-            var image = recipe.Image.First();
+            var image = recipe.Images.First();
 
             var request = new DeleteImage.Request(image.Id);
 
@@ -108,8 +108,8 @@ namespace FoodStuffs.Test.Model.Events
 
             Assert.True(result.IsSuccess);
 
-            Assert.Empty(context.Image.Where(a => a.Id == image.Id).AsNoTracking().ToList());
-            Assert.Empty(context.Blob.Where(b => b.Id == image.Blob.Id).AsNoTracking().ToList());
+            Assert.Empty(context.Images.Where(a => a.Id == image.Id).AsNoTracking().ToList());
+            Assert.Empty(context.Blobs.Where(b => b.Id == image.Blob.Id).AsNoTracking().ToList());
         }
 
         [Fact]
@@ -132,12 +132,12 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext("pin image success").Seed();
             var data = context.FoodStuffsData();
 
-            var recipe = context.Recipe
-                .Include(r => r.Image)
+            var recipe = context.Recipes
+                .Include(r => r.Images)
                 .AsNoTracking()
                 .First(r => r.Name == "Recipe1");
 
-            var image = recipe.Image.First();
+            var image = recipe.Images.First();
 
             var request = new PinImage.Request(image.Id);
 
@@ -146,7 +146,7 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(result.IsSuccess);
 
             var imageId = result.Value.Id;
-            var pinnedImageId = context.Recipe.Where(r => r.Id == image.RecipeId).First().PinnedImageId;
+            var pinnedImageId = context.Recipes.Where(r => r.Id == image.RecipeId).First().PinnedImageId;
 
             Assert.Equal(image.Id, pinnedImageId);
         }

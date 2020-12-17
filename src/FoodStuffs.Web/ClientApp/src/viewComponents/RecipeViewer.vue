@@ -53,6 +53,7 @@
                 fluid
                 rounded
                 :src="imageUrl(image)"
+                img
               />
             </template>
           </b-carousel-slide>

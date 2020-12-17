@@ -5,7 +5,9 @@
 [![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
 [![ReleaseVersion](https://img.shields.io/github/release/void-type/FoodStuffs.svg)](https://github.com/void-type/FoodStuffs/releases)
 
-A web application for managing recipes based on .Net Core 3.1 and Vue.js 2.6.
+A web application for managing recipes.
+
+FoodStuffs is based on ASP.NET 5 and Vue.js 2.6.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
@@ -35,9 +37,9 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 ### Get some tools
 
-* [.Net Core SDK ^3.1.100](https://www.microsoft.com/net/download)
-* [Node ^10.15.0](https://nodejs.org/en/)
-* [Docker ^18.00 (optional)](https://docker.com)
+* [.NET SDK](https://www.microsoft.com/net/download)
+* [Node](https://nodejs.org/en/)
+* [Docker (optional)](https://docker.com)
 
 ### Local build
 
@@ -52,7 +54,7 @@ There are [VSCode](https://code.visualstudio.com/) tasks for each script. The bu
 
 ### Docker multi-stage build
 
-You don't need .Net or Node locally to run this application in [Docker](https://www.docker.com/).
+You don't need .NET or Node locally to run this application in [Docker](https://www.docker.com/).
 
 ```powershell
 docker build

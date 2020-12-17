@@ -7,9 +7,12 @@ using VoidCore.Domain.Events;
 using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Files;
 
+// Allow single file events
+#pragma warning disable CA1034
+
 namespace FoodStuffs.Model.Events.Images
 {
-    public class GetImage
+    public static class GetImage
     {
         public class Handler : EventHandlerAbstract<Request, SimpleFile>
         {
@@ -20,25 +23,17 @@ namespace FoodStuffs.Model.Events.Images
                 _data = data;
             }
 
-            public override async Task<IResult<SimpleFile>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override Task<IResult<SimpleFile>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new ImagesByIdWithBlobsSpecification(request.Id);
 
-                return await _data.Images.Get(byId, cancellationToken)
+                return _data.Images.Get(byId, cancellationToken)
                     .ToResultAsync(new ImageNotFoundFailure())
                     .SelectAsync(r => new SimpleFile(r.Blob.Bytes, $"{r.Id}"));
             }
         }
 
-        public class Request
-        {
-            public Request(int id)
-            {
-                Id = id;
-            }
-
-            public int Id { get; }
-        }
+        public record Request(int Id);
 
         public class Logger : SimpleFileEventLogger<Request>
         {

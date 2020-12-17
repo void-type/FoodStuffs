@@ -72,23 +72,23 @@ if (-not $SkipTest) {
   dotnet test `
     --configuration "$Configuration" `
     --no-build `
-    --logger 'trx' `
     --results-directory '../../testResults' `
-    /p:Exclude="[xunit.*]*%2c[$projectName.Test]*%2c[*]ThisAssembly" `
-    /p:CollectCoverage=true `
-    /p:CoverletOutputFormat=cobertura `
-    /p:CoverletOutput="../../coverage/coverage.cobertura.xml"
+    --logger 'trx' `
+    --collect:"XPlat Code Coverage"
 
   Stop-OnError
-  Pop-Location
 
   if (-not $SkipTestReport) {
     # Generate code coverage report
-    Push-Location -Path "../coverage"
-    dotnet reportgenerator "-reports:coverage.cobertura*.xml" "-targetdir:." "-reporttypes:HtmlInline_AzurePipelines"
+    dotnet reportgenerator `
+      "-reports:../../testResults/*/coverage.cobertura.xml" `
+      "-targetdir:../../coverage" `
+      "-reporttypes:HtmlInline_AzurePipelines"
+
     Stop-OnError
-    Pop-Location
   }
+
+  Pop-Location
 }
 
 if (-not $SkipPublish) {

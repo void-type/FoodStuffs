@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
-using VoidCore.AspNet.Data;
 using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
@@ -46,13 +45,10 @@ namespace FoodStuffs.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Settings
-            services.AddSettingsSingleton<ApplicationSettings>(_config, true);
-            var connectionStrings = services.AddSettingsSingleton<ConnectionStringsSettings>(_config);
+            services.AddSettingsSingleton<ApplicationSettings>(_config, true).Validate();
 
             // Infrastructure
-            services.AddControllers()
-            // TODO: Try the built-in JSON support when it supports constructors.
-                .AddNewtonsoftJson();
+            services.AddControllers();
             services.AddSpaSecurityServices(_env);
             services.AddApiExceptionFilter();
 
@@ -65,14 +61,11 @@ namespace FoodStuffs.Web
             services.AddSingleton<IWebAppVariables, WebAppVariables>();
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
-            // TODO: how can we make this a singleton (pool?) and then make domain events singletons.
-            var connectionString = connectionStrings["FoodStuffs"];
-            connectionString.EnsureNotNullOrEmpty(nameof(connectionString), "Connection string not found in application configuration.");
+            const string connectionStringName = "FoodStuffs";
+            var connectionString = _config.GetConnectionString(connectionStringName)
+                .EnsureNotNullOrEmpty(connectionStringName, "Connection string not found in application configuration.");
 
-            services.AddDbContextPool<FoodStuffsContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
+            services.AddDbContextPool<FoodStuffsContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 

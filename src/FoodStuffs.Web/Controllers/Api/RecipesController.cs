@@ -38,44 +38,42 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("list")]
         [HttpGet]
-        public async Task<IActionResult> List(string name = null, string category = null, string sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
+        public Task<IActionResult> List(string? name = null, string? category = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
             var request = new ListRecipes.Request(
-                nameSearch: name,
-                categorySearch: category,
-                sortBy: sortBy,
-                sortDesc: sortDesc,
-                isPagingEnabled: isPagingEnabled,
-                page: page,
-                take: take);
+                NameSearch: name,
+                CategorySearch: category,
+                SortBy: sortBy,
+                SortDesc: sortDesc,
+                IsPagingEnabled: isPagingEnabled,
+                Page: page,
+                Take: take);
 
             // Cancel long-running queries
             using var cts = new CancellationTokenSource()
                 .Tee(c => c.CancelAfter(5000));
 
-            var result = await _listHandler
+            return _listHandler
                 .AddPostProcessor(_listLogger)
                 .Handle(request, cts.Token)
                 .MapAsync(HttpResponder.Respond);
-
-            return result;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int id)
+        public Task<IActionResult> Get(int id)
         {
             var request = new GetRecipe.Request(id);
 
-            return await _getHandler
+            return _getHandler
                 .AddPostProcessor(_getLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] SaveRecipe.Request request)
+        public Task<IActionResult> Save([FromBody] SaveRecipe.Request request)
         {
-            return await _saveHandler
+            return _saveHandler
                 .AddRequestValidator(_saveValidator)
                 .AddPostProcessor(_saveLogger)
                 .Handle(request)
@@ -83,11 +81,11 @@ namespace FoodStuffs.Web.Controllers.Api
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public Task<IActionResult> Delete(int id)
         {
             var request = new DeleteRecipe.Request(id);
 
-            return await _deleteHandler
+            return _deleteHandler
                 .AddPostProcessor(_deleteLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 using VoidCore.Domain;
+using VoidCore.Domain.Guards;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
@@ -39,11 +40,11 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("{id}")]
         [HttpGet]
-        public async Task<IActionResult> Get(int id)
+        public Task<IActionResult> Get(int id)
         {
             var request = new GetImage.Request(id);
 
-            return await _getHandler
+            return _getHandler
                 .AddPostProcessor(_getLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.RespondWithFile);
@@ -53,7 +54,10 @@ namespace FoodStuffs.Web.Controllers.Api
         public async Task<IActionResult> Upload(int recipeId, IFormFile file)
         {
             await using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
+            await file
+                .EnsureNotNull(nameof(file))
+                .CopyToAsync(memoryStream)
+                .ConfigureAwait(false);
             var content = memoryStream.ToArray();
 
             var request = new SaveImage.Request(recipeId, content);
@@ -61,15 +65,16 @@ namespace FoodStuffs.Web.Controllers.Api
             return await _saveHandler
                 .AddPostProcessor(_saveLogger)
                 .Handle(request)
-                .MapAsync(HttpResponder.Respond);
+                .MapAsync(HttpResponder.Respond)
+                .ConfigureAwait(false);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public Task<IActionResult> Delete(int id)
         {
             var request = new DeleteImage.Request(id);
 
-            return await _deleteHandler
+            return _deleteHandler
                 .AddPostProcessor(_deleteLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
@@ -77,9 +82,9 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [Route("pin")]
         [HttpPost]
-        public async Task<IActionResult> Pin([FromBody] PinImage.Request request)
+        public Task<IActionResult> Pin([FromBody] PinImage.Request request)
         {
-            return await _pinHandler
+            return _pinHandler
                 .AddPostProcessor(_pinLogger)
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);

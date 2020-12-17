@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace FoodStuffs.Model.Data.Models
 {
     public partial class Recipe
     {
         public Recipe()
         {
-            CategoryRecipe = new HashSet<CategoryRecipe>();
-            Image = new HashSet<Image>();
+            CategoryRecipes = new HashSet<CategoryRecipe>();
+            Images = new HashSet<Image>();
         }
 
         public int Id { get; set; }
@@ -24,7 +26,7 @@ namespace FoodStuffs.Model.Data.Models
         public int? PinnedImageId { get; set; }
 
         public virtual Image PinnedImage { get; set; }
-        public virtual ICollection<CategoryRecipe> CategoryRecipe { get; set; }
-        public virtual ICollection<Image> Image { get; set; }
+        public virtual ICollection<CategoryRecipe> CategoryRecipes { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
     }
 }

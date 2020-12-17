@@ -9,7 +9,7 @@ using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
 {
-    public class Program
+    public static class Program
     {
         public static int Main(string[] args)
         {
@@ -43,7 +43,7 @@ namespace FoodStuffs.Web
                 {
                     var configurationDefaults = new Dictionary<string, string>
                     {
-                        {"Serilog:WriteTo:0:Args:path", Defaults.FilePath<Program>()}
+                        {"Serilog:WriteTo:0:Args:path", Defaults.FilePath<Startup>()}
                     };
 
                     config.AddInMemoryCollection(configurationDefaults);

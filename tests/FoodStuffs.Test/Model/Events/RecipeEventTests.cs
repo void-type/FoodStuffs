@@ -16,7 +16,7 @@ namespace FoodStuffs.Test.Model.Events
             var data = context.FoodStuffsData();
 
             var recipes = await data.Recipes.ListAll(default);
-            var recipeToFind = recipes.First();
+            var recipeToFind = recipes[0];
 
             var result = await new GetRecipe.Handler(data)
                 .Handle(new GetRecipe.Request(recipeToFind.Id));
@@ -179,15 +179,15 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext("delete images");
             var data = context.FoodStuffsData();
 
-            var recipeToDelete = context.Recipe
-                .Include(r => r.Image)
+            var recipeToDelete = context.Recipes
+                .Include(r => r.Images)
                 .ThenInclude(r => r.Blob)
                 .AsNoTracking()
                 .First(r => r.Name == "Recipe1");
 
-            Assert.True(recipeToDelete.Image.Any());
-            Assert.True(recipeToDelete.Image.Select(i => i.Blob).Any());
-            Assert.Equal(recipeToDelete.Image.Count, recipeToDelete.Image.Select(i => i.Blob).Count());
+            Assert.True(recipeToDelete.Images.Any());
+            Assert.True(recipeToDelete.Images.Select(i => i.Blob).Any());
+            Assert.Equal(recipeToDelete.Images.Count, recipeToDelete.Images.Select(i => i.Blob).Count());
 
             var result = await new DeleteRecipe.Handler(data)
                 .Handle(new DeleteRecipe.Request(recipeToDelete.Id));
@@ -196,10 +196,10 @@ namespace FoodStuffs.Test.Model.Events
 
             Assert.Equal(recipeToDelete.Id, result.Value.Id);
 
-            var imageIds = recipeToDelete.Image.Select(i => i.Id);
+            var imageIds = recipeToDelete.Images.Select(i => i.Id);
 
-            Assert.False(context.Image.Any(i => imageIds.Contains(i.Id)));
-            Assert.False(context.Blob.Any(b => imageIds.Contains(b.Id)));
+            Assert.False(context.Images.Any(i => imageIds.Contains(i.Id)));
+            Assert.False(context.Blobs.Any(b => imageIds.Contains(b.Id)));
         }
 
         [Fact]
@@ -231,10 +231,10 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(maybeRecipe.HasValue);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, maybeRecipe.Value.CreatedOn);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, maybeRecipe.Value.ModifiedOn);
-            Assert.DoesNotContain("Category1", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
-            Assert.Contains("Category2", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
-            Assert.Contains("Category3", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
-            Assert.Contains("Category4", maybeRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
+            Assert.DoesNotContain("Category1", maybeRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
+            Assert.Contains("Category2", maybeRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
+            Assert.Contains("Category3", maybeRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
+            Assert.Contains("Category4", maybeRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
         }
 
         [Fact]
@@ -243,7 +243,7 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var existingRecipeId = (await data.Recipes.ListAll(default)).First().Id;
+            var existingRecipeId = (await data.Recipes.ListAll(default))[0].Id;
 
             var result = await new SaveRecipe.Handler(data)
                 .Handle(new SaveRecipe.Request(existingRecipeId, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
@@ -255,10 +255,10 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(updatedRecipe.HasValue);
             Assert.Equal(Deps.DateTimeServiceEarly.Moment, updatedRecipe.Value.CreatedOn);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.Value.ModifiedOn);
-            Assert.DoesNotContain("Category1", updatedRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
-            Assert.Contains("Category2", updatedRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
-            Assert.Contains("Category3", updatedRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
-            Assert.Contains("Category4", updatedRecipe.Value.CategoryRecipe.Select(cr => cr.Category.Name));
+            Assert.DoesNotContain("Category1", updatedRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
+            Assert.Contains("Category2", updatedRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
+            Assert.Contains("Category3", updatedRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
+            Assert.Contains("Category4", updatedRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
         }
     }
 }
