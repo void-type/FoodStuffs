@@ -48,9 +48,7 @@ namespace FoodStuffs.Web
             services.AddSettingsSingleton<ApplicationSettings>(_config, true).Validate();
 
             // Infrastructure
-            services.AddControllers()
-            // TODO: Try the built-in JSON support when it supports constructors.
-                .AddNewtonsoftJson();
+            services.AddControllers();
             services.AddSpaSecurityServices(_env);
             services.AddApiExceptionFilter();
 
