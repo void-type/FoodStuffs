@@ -114,10 +114,6 @@ namespace FoodStuffs.Web.Data.EntityFramework
 
                 entity.Property(e => e.UserName).IsRequired();
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
