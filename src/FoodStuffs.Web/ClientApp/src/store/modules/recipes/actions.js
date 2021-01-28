@@ -6,6 +6,8 @@ export default {
     context.commit('SET_LIST_REQUEST', request);
   },
   addToRecent(context, recipe) {
+    const limit = 3;
+
     if (recipe === null) {
       return;
     }
@@ -24,13 +26,14 @@ export default {
     if (indexOfCurrentInRecents > -1) {
       recentRecipes.splice(indexOfCurrentInRecents, 1);
     }
+
     if (recipe.id > 0) {
       recentRecipes.unshift(recipeListItem);
     }
-    if (recentRecipes.length > 3) {
-      recentRecipes.pop();
-    }
-    context.commit('SET_RECENT_RECIPES', recentRecipes);
+
+    const limitedRecipes = recentRecipes.slice(0, limit);
+
+    context.commit('SET_RECENT_RECIPES', limitedRecipes);
   },
   removeFromRecent(context, id) {
     const recentRecipes = context.state.recentRecipes.slice();
