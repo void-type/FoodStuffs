@@ -68,12 +68,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ListRecipesRequest from '../models/api/recipes/ListRecipesRequest';
-import { numberOrDefault } from '../models/formatters';
-import webApi from '../webApi';
-import router from '../router';
-import EntityTableControls from '../viewComponents/EntityTableControls.vue';
-import EntityTablePager from '../viewComponents/EntityTablePager.vue';
+import ListRecipesRequest from '@/models/api/recipes/ListRecipesRequest';
+import { numberOrDefault } from '@/models/formatters';
+import webApi from '@/webApi';
+import router from '@/router';
+import EntityTableControls from '@/viewComponents/EntityTableControls.vue';
+import EntityTablePager from '@/viewComponents/EntityTablePager.vue';
 
 export default {
   components: {

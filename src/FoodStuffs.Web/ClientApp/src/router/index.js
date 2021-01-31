@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '../store';
+import store from '@/store';
+import Home from '@/views/Home.vue';
 import recipes from './recipes';
-import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 

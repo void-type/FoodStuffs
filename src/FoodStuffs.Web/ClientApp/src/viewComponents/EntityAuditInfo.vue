@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { dateTimeForView } from '../models/dateHelpers';
+import { dateTimeForView } from '@/models/dateHelpers';
 
 export default {
   filters: {

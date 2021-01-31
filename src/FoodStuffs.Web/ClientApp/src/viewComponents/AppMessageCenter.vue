@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
+@import "@/style/theme";
 
 div.alert {
   color: $body-color;

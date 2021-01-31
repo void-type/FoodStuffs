@@ -46,7 +46,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import webApi from '../webApi';
+import webApi from '@/webApi';
 
 export default {
   computed: {

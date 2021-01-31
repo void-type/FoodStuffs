@@ -19,11 +19,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import initializeStore from './models/initializeStore';
-import AppMessageCenter from './viewComponents/AppMessageCenter.vue';
-import AppHeader from './viewComponents/AppHeader.vue';
-import AppNav from './viewComponents/AppNav.vue';
-import AppFooter from './viewComponents/AppFooter.vue';
+import initializeStore from '@/models/initializeStore';
+import AppMessageCenter from '@/viewComponents/AppMessageCenter.vue';
+import AppHeader from '@/viewComponents/AppHeader.vue';
+import AppNav from '@/viewComponents/AppNav.vue';
+import AppFooter from '@/viewComponents/AppFooter.vue';
 
 export default {
   components: {
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./style/theme";
+@import "@/style/theme";
 
 // Sticky footer
 html,

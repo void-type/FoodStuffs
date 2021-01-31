@@ -1,4 +1,4 @@
-import { decodeDownloadFailureData } from '../../../models/downloadHelpers';
+import { decodeDownloadFailureData } from '@/models/downloadHelpers';
 
 export default {
   setApiFailureMessages(context, response) {

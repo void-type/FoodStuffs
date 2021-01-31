@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import RecipeTimeSpan from '../models/RecipeTimeSpan';
+import RecipeTimeSpan from '@/models/RecipeTimeSpan';
 
 export default {
   props: {

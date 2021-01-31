@@ -23,10 +23,10 @@
 
 <script>
 import { mapActions } from 'vuex';
-import webApi from '../webApi';
-import GetRecipeResponse from '../models/api/recipes/GetRecipeResponse';
-import SelectSidebar from '../viewComponents/SelectSidebar.vue';
-import RecipeViewer from '../viewComponents/RecipeViewer.vue';
+import webApi from '@/webApi';
+import GetRecipeResponse from '@/models/api/recipes/GetRecipeResponse';
+import SelectSidebar from '@/viewComponents/SelectSidebar.vue';
+import RecipeViewer from '@/viewComponents/RecipeViewer.vue';
 
 export default {
   components: {

@@ -29,7 +29,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import router from '../router';
+import router from '@/router';
 
 export default {
   props: {
@@ -99,7 +99,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
+@import "@/style/theme";
 
 @include media-breakpoint-down(md) {
   .hover:hover {

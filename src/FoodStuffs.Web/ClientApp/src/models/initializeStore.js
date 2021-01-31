@@ -1,5 +1,5 @@
-import store from '../store';
-import webApi from '../webApi';
+import store from '@/store';
+import webApi from '@/webApi';
 
 export default function initializeStore() {
   webApi.app.getInfo(

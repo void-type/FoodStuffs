@@ -39,14 +39,14 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import webApi from '../webApi';
-import router from '../router';
-import GetRecipeResponse from '../models/api/recipes/GetRecipeResponse';
-import SaveImageRequest from '../models/api/images/SaveImageRequest';
-import PinImageRequest from '../models/api/images/PinImageRequest';
-import SelectSidebar from '../viewComponents/SelectSidebar.vue';
-import RecipeEditor from '../viewComponents/RecipeEditor.vue';
-import RecipeImageManager from '../viewComponents/RecipeImageManager.vue';
+import webApi from '@/webApi';
+import router from '@/router';
+import GetRecipeResponse from '@/models/api/recipes/GetRecipeResponse';
+import SaveImageRequest from '@/models/api/images/SaveImageRequest';
+import PinImageRequest from '@/models/api/images/PinImageRequest';
+import SelectSidebar from '@/viewComponents/SelectSidebar.vue';
+import RecipeEditor from '@/viewComponents/RecipeEditor.vue';
+import RecipeImageManager from '@/viewComponents/RecipeImageManager.vue';
 
 export default {
   components: {

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { paginationTakeOptions } from '../models/options';
+import { paginationTakeOptions } from '@/models/options';
 
 export default {
   props: {

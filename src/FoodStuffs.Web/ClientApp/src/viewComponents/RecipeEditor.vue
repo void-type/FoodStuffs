@@ -149,8 +149,8 @@
 
 <script>
 import { mapActions } from 'vuex';
-import SaveRecipeRequest from '../models/api/recipes/SaveRecipeRequest';
-import { trimAndTitleCase } from '../models/formatters';
+import SaveRecipeRequest from '@/models/api/recipes/SaveRecipeRequest';
+import { trimAndTitleCase } from '@/models/formatters';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';

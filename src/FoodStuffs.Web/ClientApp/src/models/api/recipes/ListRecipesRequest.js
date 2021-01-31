@@ -1,4 +1,4 @@
-import { paginationTakeOptions } from '../../options';
+import { paginationTakeOptions } from '@/models/options';
 
 export default class ListRecipesRequest {
   constructor() {

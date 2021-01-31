@@ -114,9 +114,9 @@ import { mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import DeleteImageRequest from '../models/api/images/DeleteImageRequest';
-import { clamp } from '../models/formatters';
-import webApi from '../webApi';
+import DeleteImageRequest from '@/models/api/images/DeleteImageRequest';
+import { clamp } from '@/models/formatters';
+import webApi from '@/webApi';
 
 library.add(faTimes, faThumbtack);
 

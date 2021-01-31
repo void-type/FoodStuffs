@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import webApi from '../webApi';
+import webApi from '@/webApi';
 
 export default {
   data() {

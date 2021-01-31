@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../style/theme";
+@import "@/style/theme";
 
 .navbar-dark .navbar-brand {
   color: $secondary;

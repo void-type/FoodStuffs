@@ -3,9 +3,9 @@ import Vue from 'vue';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 import VueProgressBar from 'vue-progressbar';
-import App from './App.vue';
-import router from './router';
-import store from './store';
+import App from '@/App.vue';
+import router from '@/router';
+import store from '@/store';
 
 Vue.use(BootstrapVue);
 

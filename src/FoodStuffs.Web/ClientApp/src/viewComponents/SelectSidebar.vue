@@ -17,7 +17,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import webApi from '../webApi';
+import webApi from '@/webApi';
 import SelectSidebarList from './SelectSidebarList.vue';
 
 export default {

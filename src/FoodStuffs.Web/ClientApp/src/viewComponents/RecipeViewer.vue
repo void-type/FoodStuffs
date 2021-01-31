@@ -106,8 +106,8 @@
 </template>
 
 <script>
-import webApi from '../webApi';
-import RecipeTimeSpan from '../models/RecipeTimeSpan';
+import webApi from '@/webApi';
+import RecipeTimeSpan from '@/models/RecipeTimeSpan';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 
 export default {
