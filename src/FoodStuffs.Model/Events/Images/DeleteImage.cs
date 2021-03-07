@@ -24,11 +24,11 @@ namespace FoodStuffs.Model.Events.Images
                 _data = data;
             }
 
-            public override async Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
+            public override Task<IResult<EntityMessage<int>>> Handle(Request request, CancellationToken cancellationToken = default)
             {
                 var byId = new ImagesByIdWithRecipesSpecification(request.Id);
 
-                return await _data.Images.Get(byId, cancellationToken)
+                return _data.Images.Get(byId, cancellationToken)
                     .ToResultAsync(new ImageNotFoundFailure())
                     .TeeOnSuccessAsync(async i =>
                     {
@@ -40,7 +40,7 @@ namespace FoodStuffs.Model.Events.Images
                     })
                     .TeeOnSuccessAsync(i => _data.Blobs.Remove(new Blob { Id = i.Id }, cancellationToken))
                     .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
-                    .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id)).ConfigureAwait(false);
+                    .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id));
             }
         }
 
