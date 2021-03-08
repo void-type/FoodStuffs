@@ -1,8 +1,8 @@
 # FoodStuffs
 
-[![License](https://img.shields.io/github/license/void-type/FoodStuffs.svg)](https://github.com/void-type/FoodStuffs/blob/master/LICENSE.txt)
-[![Build Status](https://img.shields.io/azure-devops/build/void-type/FoodStuffs/4.svg)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
-[![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=master)
+[![License](https://img.shields.io/github/license/void-type/FoodStuffs.svg)](https://github.com/void-type/FoodStuffs/blob/main/LICENSE.txt)
+[![Build Status](https://img.shields.io/azure-devops/build/void-type/FoodStuffs/4.svg)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=main)
+[![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/FoodStuffs/4.svg)](https://dev.azure.com/void-type/FoodStuffs/_build/latest?definitionId=4&branchName=main)
 [![ReleaseVersion](https://img.shields.io/github/release/void-type/FoodStuffs.svg)](https://github.com/void-type/FoodStuffs/releases)
 
 A web application for managing recipes.
