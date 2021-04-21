@@ -1,15 +1,15 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using VoidCore.Domain;
-using VoidCore.Domain.Events;
-using VoidCore.Model.Logging;
+using VoidCore.Model.Events;
+using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
 // Allow single file events
@@ -89,22 +89,34 @@ namespace FoodStuffs.Model.Events.Recipes
             IEnumerable<string> Categories,
             int? ImageId);
 
-        public class Logger : ItemSetEventLogger<Request, RecipeListItemDto>
+        public class RequestLogger : RequestLoggerAbstract<Request>
         {
-            public Logger(ILoggingService logger) : base(logger) { }
+            public RequestLogger(ILogger<RequestLogger> logger) : base(logger) { }
 
-            protected override void OnBoth(Request request, IResult<IItemSet<RecipeListItemDto>> result)
+            public override void Log(Request request)
             {
-                Logger.Info(
-                    $"RequestNameSearch: {request.NameSearch}",
-                    $"RequestCategorySearch: {request.CategorySearch}",
-                    $"RequestSort: {request.SortBy}",
-                    $"RequestIsPagingEnabled: {request.IsPagingEnabled}",
-                    $"RequestPage: {request.Page}",
-                    $"RequestTake: {request.Take}"
-                );
+                Logger.LogInformation("Requested. NameSearch: {NameSearch} RequestCategorySearch: {CategorySearch} RequestSort: {SortBy} RequestIsPagingEnabled: {IsPagingEnabled} RequestPage: {Page} RequestTake: {Take}",
+                    request.NameSearch,
+                    request.CategorySearch,
+                    request.SortBy,
+                    request.IsPagingEnabled,
+                    request.Page,
+                    request.Take);
+            }
+        }
 
-                base.OnBoth(request, result);
+        public class ResponseLogger : ItemSetEventLogger<Request, RecipeListItemDto>
+        {
+            public ResponseLogger(ILogger<ResponseLogger> logger) : base(logger) { }
+        }
+
+        public class Pipeline : EventPipelineAbstract<Request, IItemSet<RecipeListItemDto>>
+        {
+            public Pipeline(Handler handler, RequestLogger requestLogger, ResponseLogger responseLogger)
+            {
+                InnerHandler = handler
+                    .AddRequestLogger(requestLogger)
+                    .AddPostProcessor(responseLogger);
             }
         }
     }

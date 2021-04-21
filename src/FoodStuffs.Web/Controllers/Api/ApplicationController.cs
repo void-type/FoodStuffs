@@ -4,28 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
-using VoidCore.Domain;
+using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
     [ApiRoute("app")]
     public class ApplicationController : ControllerBase
     {
-        private readonly GetWebClientInfo.Handler _getHandler;
-        private readonly GetWebClientInfo.Logger _getLogger;
+        private readonly GetWebClientInfo.Pipeline _getPipeline;
 
-        public ApplicationController(GetWebClientInfo.Handler getHandler, GetWebClientInfo.Logger getLogger)
+        public ApplicationController(GetWebClientInfo.Pipeline getPipeline)
         {
-            _getHandler = getHandler;
-            _getLogger = getLogger;
+            _getPipeline = getPipeline;
         }
 
         [HttpGet]
         [Route("info")]
         public Task<IActionResult> GetInfo()
         {
-            return _getHandler
-                .AddPostProcessor(_getLogger)
+            return _getPipeline
                 .Handle(new GetWebClientInfo.Request())
                 .MapAsync(HttpResponder.Respond);
         }

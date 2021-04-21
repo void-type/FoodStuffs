@@ -1,13 +1,13 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using VoidCore.Domain;
-using VoidCore.Domain.Events;
-using VoidCore.Model.Logging;
+using VoidCore.Model.Events;
+using VoidCore.Model.Functional;
 using VoidCore.Model.Responses;
 
 // Allow single file events
@@ -66,14 +66,38 @@ namespace FoodStuffs.Model.Events.Recipes
             IEnumerable<string> Categories,
             IEnumerable<int> Images);
 
-        public class Logger : FallibleEventLogger<Request, RecipeDto>
+        public class RequestLogger : RequestLoggerAbstract<Request>
         {
-            public Logger(ILoggingService logger) : base(logger) { }
+            public RequestLogger(ILogger<RequestLogger> logger) : base(logger) { }
 
-            protected override void OnBoth(Request request, IResult<RecipeDto> result)
+            public override void Log(Request request)
             {
-                Logger.Info($"RequestRecipeId: {request.Id}");
-                base.OnBoth(request, result);
+                Logger.LogInformation("Requested. RecipeId: {RecipeId}",
+                    request.Id);
+            }
+        }
+
+        public class ResponseLogger : FallibleEventLoggerAbstract<Request, RecipeDto>
+        {
+            public ResponseLogger(ILogger<ResponseLogger> logger) : base(logger) { }
+
+            protected override void OnSuccess(Request request, RecipeDto response)
+            {
+                Logger.LogInformation("Responded with {ResponseType}. RecipeId: {RecipeId}",
+                    nameof(RecipeDto),
+                    response.Id);
+
+                base.OnSuccess(request, response);
+            }
+        }
+
+        public class Pipeline : EventPipelineAbstract<Request, RecipeDto>
+        {
+            public Pipeline(Handler handler, RequestLogger requestLogger, ResponseLogger responseLogger)
+            {
+                InnerHandler = handler
+                    .AddRequestLogger(requestLogger)
+                    .AddPostProcessor(responseLogger);
             }
         }
     }

@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Events.Recipes;
-using FoodStuffs.Model.Queries;
+﻿using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Events.Recipes;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

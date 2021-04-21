@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VoidCore.Model.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace FoodStuffs.Web.Controllers
 {
     public class HomeController : ControllerBase
     {
-        private readonly ILoggingService _logger;
+        private readonly ILogger _logger;
 
-        public HomeController(ILoggingService logger)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
@@ -17,7 +17,7 @@ namespace FoodStuffs.Web.Controllers
         [Route("/error")]
         public IActionResult Error()
         {
-            _logger.Info("Error page requested.");
+            _logger.LogInformation("Error page requested.");
             return File("error.html", "text/html");
         }
 
@@ -25,14 +25,14 @@ namespace FoodStuffs.Web.Controllers
         [Route("/forbidden")]
         public IActionResult Forbidden()
         {
-            _logger.Info("Forbidden page requested.");
+            _logger.LogInformation("Forbidden page requested.");
             return File("forbidden.html", "text/html");
         }
 
         [Route("/")]
         public IActionResult Index()
         {
-            _logger.Info("Home page requested.");
+            _logger.LogInformation("Home page requested.");
             return File("app.html", "text/html");
         }
     }

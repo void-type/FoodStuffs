@@ -1,10 +1,10 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
-using VoidCore.Domain;
-using VoidCore.Domain.Events;
-using VoidCore.Model.Logging;
+using VoidCore.Model.Events;
+using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 // Allow single file events
@@ -36,15 +36,29 @@ namespace FoodStuffs.Model.Events.Images
 
         public record Request(int Id);
 
-        public class Logger : EntityMessageEventLogger<Request, int>
+        public class RequestLogger : RequestLoggerAbstract<Request>
         {
-            public Logger(ILoggingService logger) : base(logger) { }
+            public RequestLogger(ILogger<RequestLogger> logger) : base(logger) { }
 
-            protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
+            public override void Log(Request request)
             {
-                Logger.Info($"RequestImageId: {request.Id}");
+                Logger.LogInformation("Requested. ImageId: {ImageId}",
+                    request.Id);
+            }
+        }
 
-                base.OnBoth(request, result);
+        public class ResponseLogger : EntityMessageEventLogger<Request, int>
+        {
+            public ResponseLogger(ILogger<ResponseLogger> logger) : base(logger) { }
+        }
+
+        public class Pipeline : EventPipelineAbstract<Request, EntityMessage<int>>
+        {
+            public Pipeline(Handler handler, RequestLogger requestLogger, ResponseLogger responseLogger)
+            {
+                InnerHandler = handler
+                    .AddRequestLogger(requestLogger)
+                    .AddPostProcessor(responseLogger);
             }
         }
     }

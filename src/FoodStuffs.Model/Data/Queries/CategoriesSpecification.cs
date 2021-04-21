@@ -3,7 +3,7 @@ using System;
 using System.Linq.Expressions;
 using VoidCore.Model.Data;
 
-namespace FoodStuffs.Model.Queries
+namespace FoodStuffs.Model.Data.Queries
 {
     public class CategoriesSpecification : QuerySpecificationAbstract<Category>
     {

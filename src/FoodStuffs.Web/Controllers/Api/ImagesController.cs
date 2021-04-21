@@ -5,37 +5,26 @@ using System.IO;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
-using VoidCore.Domain;
-using VoidCore.Domain.Guards;
+using VoidCore.Model.Functional;
+using VoidCore.Model.Guards;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
     [ApiRoute("images")]
     public class ImagesController : ControllerBase
     {
-        private readonly GetImage.Handler _getHandler;
-        private readonly GetImage.Logger _getLogger;
-        private readonly SaveImage.Handler _saveHandler;
-        private readonly SaveImage.Logger _saveLogger;
-        private readonly DeleteImage.Handler _deleteHandler;
-        private readonly DeleteImage.Logger _deleteLogger;
-        private readonly PinImage.Handler _pinHandler;
-        private readonly PinImage.Logger _pinLogger;
+        private readonly GetImage.Pipeline _getPipeline;
+        private readonly DeleteImage.Pipeline _deletePipeline;
+        private readonly SaveImage.Pipeline _savePipeline;
+        private readonly PinImage.Pipeline _pinPipeline;
 
-        public ImagesController(GetImage.Handler getHandler, GetImage.Logger getLogger,
-            DeleteImage.Handler deleteHandler, DeleteImage.Logger deleteLogger,
-            SaveImage.Handler saveHandler, SaveImage.Logger saveLogger,
-            PinImage.Handler pinHandler, PinImage.Logger pinLogger
-            )
+        public ImagesController(GetImage.Pipeline getPipeline, DeleteImage.Pipeline deletePipeline,
+            SaveImage.Pipeline savePipeline, PinImage.Pipeline pinPipeline)
         {
-            _getHandler = getHandler;
-            _getLogger = getLogger;
-            _saveHandler = saveHandler;
-            _saveLogger = saveLogger;
-            _deleteHandler = deleteHandler;
-            _deleteLogger = deleteLogger;
-            _pinHandler = pinHandler;
-            _pinLogger = pinLogger;
+            _getPipeline = getPipeline;
+            _deletePipeline = deletePipeline;
+            _savePipeline = savePipeline;
+            _pinPipeline = pinPipeline;
         }
 
         [Route("{id}")]
@@ -44,8 +33,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var request = new GetImage.Request(id);
 
-            return _getHandler
-                .AddPostProcessor(_getLogger)
+            return _getPipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.RespondWithFile);
         }
@@ -62,8 +50,7 @@ namespace FoodStuffs.Web.Controllers.Api
 
             var request = new SaveImage.Request(recipeId, content);
 
-            return await _saveHandler
-                .AddPostProcessor(_saveLogger)
+            return await _savePipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond)
                 .ConfigureAwait(false);
@@ -74,8 +61,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var request = new DeleteImage.Request(id);
 
-            return _deleteHandler
-                .AddPostProcessor(_deleteLogger)
+            return _deletePipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }
@@ -84,8 +70,7 @@ namespace FoodStuffs.Web.Controllers.Api
         [HttpPost]
         public Task<IActionResult> Pin([FromBody] PinImage.Request request)
         {
-            return _pinHandler
-                .AddPostProcessor(_pinLogger)
+            return _pinPipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }

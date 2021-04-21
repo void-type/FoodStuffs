@@ -7,6 +7,10 @@ namespace FoodStuffs.Web.Data.EntityFramework
 {
     public partial class FoodStuffsContext : DbContext
     {
+        public FoodStuffsContext()
+        {
+        }
+
         public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options)
             : base(options)
         {
@@ -18,6 +22,14 @@ namespace FoodStuffs.Web.Data.EntityFramework
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Name=FoodStuffs");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

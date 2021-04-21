@@ -3,21 +3,20 @@ using FoodStuffs.Model.Data.Models;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Data;
-using VoidCore.Model.Logging;
 using VoidCore.Model.Time;
 
 namespace FoodStuffs.Web.Data.EntityFramework
 {
     public class FoodStuffsEfData : IFoodStuffsData
     {
-        public FoodStuffsEfData(FoodStuffsContext context, ILoggingStrategy loggingStrategy, IDateTimeService now, ICurrentUserAccessor currentUserAccessor)
+        public FoodStuffsEfData(FoodStuffsContext context, IDateTimeService now, ICurrentUserAccessor currentUserAccessor)
         {
-            Blobs = new EfWritableRepository<Blob>(context, loggingStrategy);
-            Categories = new EfWritableRepository<Category>(context, loggingStrategy);
-            CategoryRecipes = new EfWritableRepository<CategoryRecipe>(context, loggingStrategy);
-            Images = new EfWritableRepository<Image>(context, loggingStrategy).AddAuditability(now, currentUserAccessor);
-            Recipes = new EfWritableRepository<Recipe>(context, loggingStrategy).AddAuditability(now, currentUserAccessor);
-            Users = new EfWritableRepository<User>(context, loggingStrategy);
+            Blobs = new EfWritableRepository<Blob>(context);
+            Categories = new EfWritableRepository<Category>(context);
+            CategoryRecipes = new EfWritableRepository<CategoryRecipe>(context);
+            Images = new EfWritableRepository<Image>(context).AddAuditability(now, currentUserAccessor);
+            Recipes = new EfWritableRepository<Recipe>(context).AddAuditability(now, currentUserAccessor);
+            Users = new EfWritableRepository<User>(context);
         }
 
         public IWritableRepository<Blob> Blobs { get; }

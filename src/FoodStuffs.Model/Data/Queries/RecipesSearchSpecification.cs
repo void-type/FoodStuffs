@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using VoidCore.Model.Data;
 using VoidCore.Model.Responses.Collections;
 
-namespace FoodStuffs.Model.Queries
+namespace FoodStuffs.Model.Data.Queries
 {
     public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
     {

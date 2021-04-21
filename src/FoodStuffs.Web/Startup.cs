@@ -3,7 +3,6 @@ using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data.EntityFramework;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +12,6 @@ using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
-using VoidCore.Domain.Guards;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Configuration;
 using VoidCore.Model.Time;
@@ -38,14 +36,16 @@ namespace FoodStuffs.Web
                 .UseSecurityHeaders(_env)
                 .UseStaticFiles()
                 .UseRouting()
+                .UseRequestLoggingScope()
                 .UseSerilogRequestLogging()
+                .UseCurrentUserLogging()
                 .UseSpaEndpoints();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             // Settings
-            services.AddSettingsSingleton<ApplicationSettings>(_config, true).Validate();
+            services.AddSettingsSingleton<WebApplicationSettings>(_config, true).Validate();
 
             // Infrastructure
             services.AddControllers();
@@ -56,21 +56,15 @@ namespace FoodStuffs.Web
 
             // Dependencies
             services.AddHttpContextAccessor();
-            services.AddWebLoggingAdapters();
             services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
-            services.AddSingleton<IWebAppVariables, WebAppVariables>();
             services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
-            const string connectionStringName = "FoodStuffs";
-            var connectionString = _config.GetConnectionString(connectionStringName)
-                .EnsureNotNullOrEmpty(connectionStringName, "Connection string not found in application configuration.");
-
-            services.AddDbContextPool<FoodStuffsContext>(options => options.UseSqlServer(connectionString));
-
+            _config.GetRequiredConnectionString<FoodStuffsContext>();
+            services.AddDbContext<FoodStuffsContext>();
             services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
             // Auto-register Domain Events
-            services.FindAndRegisterDomainEvents(
+            services.AddDomainEvents(
                 ServiceLifetime.Scoped,
                 typeof(GetWebClientInfo).Assembly,
                 typeof(IFoodStuffsData).Assembly);

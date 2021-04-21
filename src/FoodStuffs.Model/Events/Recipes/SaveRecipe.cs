@@ -1,16 +1,16 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Queries;
+using FoodStuffs.Model.Data.Queries;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using VoidCore.Domain;
-using VoidCore.Domain.Events;
-using VoidCore.Domain.RuleValidator;
-using VoidCore.Model.Logging;
+using VoidCore.Model.Events;
+using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
+using VoidCore.Model.RuleValidator;
 
 // Allow single file events
 #pragma warning disable CA1034
@@ -137,14 +137,30 @@ namespace FoodStuffs.Model.Events.Recipes
             }
         }
 
-        public class Logger : EntityMessageEventLogger<Request, int>
+        public class RequestLogger : RequestLoggerAbstract<Request>
         {
-            public Logger(ILoggingService logger) : base(logger) { }
+            public RequestLogger(ILogger<RequestLogger> logger) : base(logger) { }
 
-            protected override void OnBoth(Request request, IResult<EntityMessage<int>> result)
+            public override void Log(Request request)
             {
-                Logger.Info($"RequestRecipeId: {request.Id}");
-                base.OnBoth(request, result);
+                Logger.LogInformation("Requested. RecipeId: {RecipeId}",
+                    request.Id);
+            }
+        }
+
+        public class ResponseLogger : EntityMessageEventLogger<Request, int>
+        {
+            public ResponseLogger(ILogger<ResponseLogger> logger) : base(logger) { }
+        }
+
+        public class Pipeline : EventPipelineAbstract<Request, EntityMessage<int>>
+        {
+            public Pipeline(Handler handler, RequestLogger requestLogger, RequestValidator validator, ResponseLogger responseLogger)
+            {
+                InnerHandler = handler
+                    .AddRequestLogger(requestLogger)
+                    .AddRequestValidator(validator)
+                    .AddPostProcessor(responseLogger);
             }
         }
     }

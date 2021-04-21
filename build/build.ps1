@@ -51,7 +51,10 @@ if (-not $SkipClient) {
 Push-Location -Path "../"
 
 if (-not $SkipFormat) {
-  dotnet format --check
+  dotnet format --check --fix-whitespace --fix-style warn
+  if($LASTEXITCODE -ne 0) {
+    Write-Error 'Please run formatter: dotnet format --fix-whitespace --fix-style warn.'
+  }
   Stop-OnError
 }
 

@@ -14,12 +14,5 @@ if (-not (Test-Path -Path $settingsFile)) {
 
 dotnet ef dbcontext scaffold Name=$shortAppName Microsoft.EntityFrameworkCore.SqlServer --force --context-dir "$contextDirectory" --context "$contextName" --output-dir "../$dataModelsFolder"
 
-if ($LASTEXITCODE -eq 0) {
-  Write-Host "Within $dataModelsFolder, update namespaces."
-  Write-Host "Within $contextName, add using for models namespace."
-  Write-Host "Within $contextName, remove all ctors but the DbContextOptions one."
-  Write-Host "Within $contextName, remove the OnConfiguring method as it contains sensitive information."
-}
-
 Pop-Location
 Pop-Location

@@ -4,8 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
-using System.Collections.Generic;
-using VoidCore.AspNet.Logging;
 
 namespace FoodStuffs.Web
 {
@@ -23,7 +21,7 @@ namespace FoodStuffs.Web
 
             try
             {
-                Log.Information("Starting web host.");
+                Log.Information("Starting host.");
                 host.Run();
                 return 0;
             }
@@ -34,24 +32,17 @@ namespace FoodStuffs.Web
             }
             finally
             {
+                Log.Information("Stopping host.");
                 Log.CloseAndFlush();
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    var configurationDefaults = new Dictionary<string, string>
-                    {
-                        {"Serilog:WriteTo:0:Args:path", Defaults.FilePath<Startup>()}
-                    };
-
-                    config.AddInMemoryCollection(configurationDefaults);
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.UseSerilog();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+                webBuilder.UseSerilog();
+            });
     }
 }

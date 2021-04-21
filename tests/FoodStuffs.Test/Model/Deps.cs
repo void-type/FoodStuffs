@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using VoidCore.Model.Auth;
-using VoidCore.Model.Logging;
 using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Time;
 
@@ -40,9 +39,7 @@ namespace FoodStuffs.Test.Model
 
         public static FoodStuffsEfData FoodStuffsData(this FoodStuffsContext context)
         {
-            var loggingStrategyMock = new Mock<ILoggingStrategy>();
-            loggingStrategyMock.Setup(x => x.Log(It.IsAny<string[]>())).Returns("test request");
-            return new FoodStuffsEfData(context, loggingStrategyMock.Object, DateTimeServiceLate, CurrentUserAccessor);
+            return new FoodStuffsEfData(context, DateTimeServiceLate, CurrentUserAccessor);
         }
 
         public static FoodStuffsContext Seed(this FoodStuffsContext context)

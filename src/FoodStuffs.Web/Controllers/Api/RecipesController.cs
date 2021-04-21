@@ -4,36 +4,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
-using VoidCore.Domain;
+using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
     [ApiRoute("recipes")]
     public class RecipesController : ControllerBase
     {
-        private readonly GetRecipe.Handler _getHandler;
-        private readonly GetRecipe.Logger _getLogger;
-        private readonly ListRecipes.Handler _listHandler;
-        private readonly ListRecipes.Logger _listLogger;
-        private readonly SaveRecipe.Handler _saveHandler;
-        private readonly SaveRecipe.RequestValidator _saveValidator;
-        private readonly SaveRecipe.Logger _saveLogger;
-        private readonly DeleteRecipe.Handler _deleteHandler;
-        private readonly DeleteRecipe.Logger _deleteLogger;
+        private readonly GetRecipe.Pipeline _getPipeline;
+        private readonly ListRecipes.Pipeline _listPipeline;
+        private readonly DeleteRecipe.Pipeline _deletePipeline;
+        private readonly SaveRecipe.Pipeline _savePipeline;
 
-        public RecipesController(GetRecipe.Handler getHandler, GetRecipe.Logger getLogger,
-            ListRecipes.Handler listHandler, ListRecipes.Logger listLogger, DeleteRecipe.Handler deleteHandler, DeleteRecipe.Logger deleteLogger,
-            SaveRecipe.Handler updateHandler, SaveRecipe.RequestValidator updateValidator, SaveRecipe.Logger updateLogger)
+        public RecipesController(GetRecipe.Pipeline getPipeline, ListRecipes.Pipeline listPipeline,
+            DeleteRecipe.Pipeline deletePipeline, SaveRecipe.Pipeline savePipeline)
         {
-            _getHandler = getHandler;
-            _getLogger = getLogger;
-            _listHandler = listHandler;
-            _listLogger = listLogger;
-            _saveHandler = updateHandler;
-            _saveValidator = updateValidator;
-            _saveLogger = updateLogger;
-            _deleteHandler = deleteHandler;
-            _deleteLogger = deleteLogger;
+            _getPipeline = getPipeline;
+            _listPipeline = listPipeline;
+            _deletePipeline = deletePipeline;
+            _savePipeline = savePipeline;
         }
 
         [Route("list")]
@@ -53,8 +42,7 @@ namespace FoodStuffs.Web.Controllers.Api
             using var cts = new CancellationTokenSource()
                 .Tee(c => c.CancelAfter(5000));
 
-            return _listHandler
-                .AddPostProcessor(_listLogger)
+            return _listPipeline
                 .Handle(request, cts.Token)
                 .MapAsync(HttpResponder.Respond);
         }
@@ -64,8 +52,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var request = new GetRecipe.Request(id);
 
-            return _getHandler
-                .AddPostProcessor(_getLogger)
+            return _getPipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }
@@ -73,9 +60,7 @@ namespace FoodStuffs.Web.Controllers.Api
         [HttpPost]
         public Task<IActionResult> Save([FromBody] SaveRecipe.Request request)
         {
-            return _saveHandler
-                .AddRequestValidator(_saveValidator)
-                .AddPostProcessor(_saveLogger)
+            return _savePipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }
@@ -85,8 +70,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             var request = new DeleteRecipe.Request(id);
 
-            return _deleteHandler
-                .AddPostProcessor(_deleteLogger)
+            return _deletePipeline
                 .Handle(request)
                 .MapAsync(HttpResponder.Respond);
         }
