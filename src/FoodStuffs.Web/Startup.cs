@@ -39,6 +39,7 @@ namespace FoodStuffs.Web
                 .UseRequestLoggingScope()
                 .UseSerilogRequestLogging()
                 .UseCurrentUserLogging()
+                .UseSwaggerAndUi(_env)
                 .UseSpaEndpoints();
         }
 
@@ -68,6 +69,8 @@ namespace FoodStuffs.Web
                 ServiceLifetime.Scoped,
                 typeof(GetWebClientInfo).Assembly,
                 typeof(IFoodStuffsData).Assembly);
+
+            services.AddSwaggerWithCsp(_env);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace FoodStuffs.Web.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         [Route("/error")]
         public IActionResult Error()
         {
@@ -22,6 +23,7 @@ namespace FoodStuffs.Web.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         [Route("/forbidden")]
         public IActionResult Forbidden()
         {
@@ -29,7 +31,7 @@ namespace FoodStuffs.Web.Controllers
             return File("forbidden.html", "text/html");
         }
 
-        [Route("/")]
+        [HttpGet]
         public IActionResult Index()
         {
             _logger.LogInformation("Home page requested.");
