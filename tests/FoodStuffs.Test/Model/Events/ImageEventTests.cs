@@ -20,9 +20,9 @@ namespace FoodStuffs.Test.Model.Events
                 .Include(a => a.Blob)
                 .First();
 
-            var request = new GetImage.Request(image.Id);
+            var request = new GetImageRequest(image.Id);
 
-            var result = await new GetImage.Handler(data).Handle(request);
+            var result = await new GetImageHandler(data).Handle(request);
 
             Assert.True(result.IsSuccess);
 
@@ -38,9 +38,9 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var request = new GetImage.Request(-5);
+            var request = new GetImageRequest(-5);
 
-            var result = await new GetImage.Handler(data).Handle(request);
+            var result = await new GetImageHandler(data).Handle(request);
 
             Assert.True(result.IsFailed);
             Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));
@@ -102,9 +102,9 @@ namespace FoodStuffs.Test.Model.Events
 
             var image = recipe.Images.First();
 
-            var request = new DeleteImage.Request(image.Id);
+            var request = new DeleteImageRequest(image.Id);
 
-            var result = await new DeleteImage.Handler(data).Handle(request);
+            var result = await new DeleteImageHandler(data).Handle(request);
 
             Assert.True(result.IsSuccess);
 
@@ -118,9 +118,9 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var request = new DeleteImage.Request(-5);
+            var request = new DeleteImageRequest(-5);
 
-            var result = await new DeleteImage.Handler(data).Handle(request);
+            var result = await new DeleteImageHandler(data).Handle(request);
 
             Assert.True(result.IsFailed);
             Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));

@@ -20,6 +20,7 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [HttpGet]
         [Route("info")]
+        [ProducesResponseType(typeof(GetWebClientInfo.WebClientInfo), 200)]
         public Task<IActionResult> GetInfo()
         {
             return _getPipeline
@@ -29,6 +30,7 @@ namespace FoodStuffs.Web.Controllers.Api
 
         [HttpGet]
         [Route("version")]
+        [ProducesResponseType(typeof(AppVersion), 200)]
         public IActionResult GetVersion()
         {
             return new AppVersion(
