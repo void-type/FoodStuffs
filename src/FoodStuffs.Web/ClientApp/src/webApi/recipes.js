@@ -17,7 +17,7 @@ export default {
       .catch((error) => failure(error.response));
   },
   delete(id, success, failure) {
-    axios.delete(`/api/recipes/${id}`, { params: { id } })
+    axios.delete(`/api/recipes/${id}`)
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },

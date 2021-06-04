@@ -114,7 +114,6 @@ import { mapActions } from 'vuex';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import DeleteImageRequest from '@/models/api/images/DeleteImageRequest';
 import { clamp } from '@/models/formatters';
 import webApi from '@/webApi';
 
@@ -201,10 +200,7 @@ export default {
       this.onImageUpload(this.uploadFile);
     },
     deleteImageClick(imageId) {
-      const request = new DeleteImageRequest();
-      request.id = imageId;
-
-      this.onImageDelete(request);
+      this.onImageDelete(imageId);
     },
     pinImageClick(imageId) {
       this.onImagePin(imageId);

@@ -175,8 +175,9 @@ export default {
           this.removeFromRecent(this.id);
           this.setSources(new GetRecipeResponse());
           this.fetchRecipesList();
-          router.push({ name: 'search' }).catch(() => {});
-          this.setSuccessMessage(data.message);
+          router.push({ name: 'search' })
+            .then(() => this.setSuccessMessage(data.message))
+            .catch(() => {});
         },
         (response) => this.setApiFailureMessages(response),
       );
@@ -199,7 +200,7 @@ export default {
         (response) => this.setApiFailureMessages(response),
       );
     },
-    async onImageDelete(request) {
+    async onImageDelete(imageId) {
       const answer = await this.$bvModal.msgBoxConfirm(
         'Do you really want to delete this image?',
         {
@@ -214,7 +215,7 @@ export default {
       }
 
       webApi.images.delete(
-        request,
+        imageId,
         (data) => {
           this.setSuccessMessage(data.message);
           this.fetchImageIds(this.id);

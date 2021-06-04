@@ -85,6 +85,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// Delete an image.
         /// </summary>
         /// <param name="id">Id of the image</param>
+        [Route("{id}")]
         [HttpDelete]
         [ProducesResponseType(typeof(EntityMessage<int>), 200)]
         [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]

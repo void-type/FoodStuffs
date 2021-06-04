@@ -22,8 +22,8 @@ export default {
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },
-  delete(request, success, failure) {
-    axios.delete('/api/images', { params: request })
+  delete(id, success, failure) {
+    axios.delete(`/api/images/${id}`)
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },

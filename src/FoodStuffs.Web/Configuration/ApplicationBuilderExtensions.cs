@@ -49,6 +49,7 @@ namespace FoodStuffs.Web.Configuration
                 {
                     // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
                     options.ScriptSources
+                        .AllowUnsafeInline()
                         .AllowUnsafeEval();
 
                     options.StyleSources
