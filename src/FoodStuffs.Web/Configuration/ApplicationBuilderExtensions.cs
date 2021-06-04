@@ -40,18 +40,10 @@ namespace FoodStuffs.Web.Configuration
                     .Allow("data:");
 
                 options.ScriptSources
-                    .AllowSelf()
-                    // Add the Swagger UI scripts
-                    .AllowNonce();
+                    .AllowSelf();
 
                 options.StyleSources
-                    .AllowSelf()
-                    // Add the Swagger UI scripts
-                    .AllowNonce()
-                    // Add the Vue-Progressbar hash because it applies inline styling.
-                    .AllowHash("sha256", "DNQ8Cm24tOHANsjo3O93DpqGvfN0qkQZsMZIt0PmA2o=")
-                    // Add the Font-Awesome hash because it applied inline styling.
-                    .AllowHash("sha256", "UTjtaAWWTyzFjRKbltk24jHijlTbP20C1GUYaWPqg7E=");
+                    .AllowSelf();
 
                 if (environment.IsDevelopment())
                 {
@@ -61,6 +53,20 @@ namespace FoodStuffs.Web.Configuration
 
                     options.StyleSources
                         .AllowUnsafeInline();
+                }
+                else
+                {
+                    options.ScriptSources
+                        // Add the Swagger UI scripts
+                        .AllowNonce();
+
+                    options.StyleSources
+                        // Add the Swagger UI scripts
+                        .AllowNonce()
+                        // Add the Vue-Progressbar hash because it applies inline styling.
+                        .AllowHash("sha256", "DNQ8Cm24tOHANsjo3O93DpqGvfN0qkQZsMZIt0PmA2o=")
+                        // Add the Font-Awesome hash because it applied inline styling.
+                        .AllowHash("sha256", "UTjtaAWWTyzFjRKbltk24jHijlTbP20C1GUYaWPqg7E=");
                 }
             });
 

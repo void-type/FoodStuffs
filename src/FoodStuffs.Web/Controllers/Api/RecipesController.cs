@@ -25,7 +25,6 @@ namespace FoodStuffs.Web.Controllers.Api
             _savePipeline = savePipeline;
         }
 
-        [Route("list")]
         [HttpGet]
         public Task<IActionResult> List(string? name = null, string? category = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
         {
@@ -47,6 +46,7 @@ namespace FoodStuffs.Web.Controllers.Api
                 .MapAsync(HttpResponder.Respond);
         }
 
+        [Route("{id}")]
         [HttpGet]
         public Task<IActionResult> Get(int id)
         {
@@ -65,6 +65,7 @@ namespace FoodStuffs.Web.Controllers.Api
                 .MapAsync(HttpResponder.Respond);
         }
 
+        [Route("{id}")]
         [HttpDelete]
         public Task<IActionResult> Delete(int id)
         {

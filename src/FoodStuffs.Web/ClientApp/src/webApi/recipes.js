@@ -2,12 +2,12 @@ import axios from 'axios';
 
 export default {
   list(params, success, failure) {
-    axios.get('/api/recipes/list', { params })
+    axios.get('/api/recipes', { params })
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },
   get(id, success, failure) {
-    axios.get('/api/recipes', { params: { id } })
+    axios.get(`/api/recipes/${id}`)
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },
@@ -17,7 +17,7 @@ export default {
       .catch((error) => failure(error.response));
   },
   delete(id, success, failure) {
-    axios.delete('/api/recipes', { params: { id } })
+    axios.delete(`/api/recipes/${id}`, { params: { id } })
       .then((response) => success(response.data))
       .catch((error) => failure(error.response));
   },
