@@ -8,16 +8,27 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Web.Controllers.Api
 {
+    /// <summary>
+    /// Application metadata.
+    /// </summary>
     [ApiRoute("app")]
     public class ApplicationController : ControllerBase
     {
         private readonly GetWebClientInfo.Pipeline _getPipeline;
 
+        /// <summary>
+        /// Construct a new controller.
+        /// </summary>
+        /// <param name="getPipeline"></param>
         public ApplicationController(GetWebClientInfo.Pipeline getPipeline)
         {
             _getPipeline = getPipeline;
         }
 
+        /// <summary>
+        /// Get information to bootstrap the SPA client like application name and user data.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("info")]
         [ProducesResponseType(typeof(GetWebClientInfo.WebClientInfo), 200)]
@@ -28,6 +39,10 @@ namespace FoodStuffs.Web.Controllers.Api
                 .MapAsync(HttpResponder.Respond);
         }
 
+        /// <summary>
+        /// Get the version of the application.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("version")]
         [ProducesResponseType(typeof(AppVersion), 200)]
