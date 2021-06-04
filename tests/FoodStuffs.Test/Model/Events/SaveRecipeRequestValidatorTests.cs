@@ -13,8 +13,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(" \n")]
         public void Recipe_invalid_when_directions_empty(string directions)
         {
-            var recipe = new SaveRecipe.Request(0, "null", "null", directions, 10, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", "null", directions, 10, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsFailed);
@@ -26,8 +26,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         public void Recipe_valid_when_directions_not_empty(string directions)
         {
-            var recipe = new SaveRecipe.Request(0, "null", "null", directions, 10, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", "null", directions, 10, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsSuccess);
@@ -39,8 +39,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(" \n")]
         public void Recipe_invalid_when_ingredients_empty(string ingredients)
         {
-            var recipe = new SaveRecipe.Request(0, "null", ingredients, "null", 10, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", ingredients, "null", 10, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsFailed);
@@ -52,8 +52,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         public void Recipe_valid_when_ingredients_not_empty(string ingredients)
         {
-            var recipe = new SaveRecipe.Request(0, "null", ingredients, "null", 10, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", ingredients, "null", 10, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsSuccess);
@@ -65,8 +65,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(" \n")]
         public void Recipe_invalid_when_name_empty(string recipeName)
         {
-            var recipe = new SaveRecipe.Request(0, recipeName, "null", "null", 10, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, recipeName, "null", "null", 10, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsFailed);
@@ -78,8 +78,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         public void Recipe_valid_when_name_not_empty(string recipeName)
         {
-            var recipe = new SaveRecipe.Request(0, recipeName, "null", "null", 10, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, recipeName, "null", "null", 10, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsSuccess);
@@ -90,8 +90,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(-1000)]
         public void Recipe_invalid_when_cook_time_negative(int? time)
         {
-            var recipe = new SaveRecipe.Request(0, "null", "null", "null", time, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", "null", "null", time, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsFailed);
@@ -105,8 +105,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(1000)]
         public void Recipe_valid_when_cook_time_null_or_positive(int? time)
         {
-            var recipe = new SaveRecipe.Request(0, "null", "null", "null", time, 10, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", "null", "null", time, 10, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsSuccess);
@@ -117,8 +117,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(-1000)]
         public void Recipe_invalid_when_prep_time_negative(int? time)
         {
-            var recipe = new SaveRecipe.Request(0, "null", "null", "null", 10, time, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", "null", "null", 10, time, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsFailed);
@@ -132,8 +132,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData(1000)]
         public void Recipe_valid_when_prep_time_null_or_positive(int? time)
         {
-            var recipe = new SaveRecipe.Request(0, "null", "null", "null", 10, time, Array.Empty<string>());
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, "null", "null", "null", 10, time, Array.Empty<string>());
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsSuccess);
@@ -144,8 +144,8 @@ namespace FoodStuffs.Test.Model.Events
         [InlineData("Really Long_Name! @ llsla;lad;lsf asdflk;asdfjkl;jkl;asd")]
         public void Recipe_is_valid_with_name_ingredients_directions_at_minimum(string testString)
         {
-            var recipe = new SaveRecipe.Request(0, testString, testString, testString, null, null, null);
-            var validator = new SaveRecipe.RequestValidator();
+            var recipe = new SaveRecipeRequest(0, testString, testString, testString, null, null, null);
+            var validator = new SaveRecipeRequestValidator();
             var result = validator.Validate(recipe);
 
             Assert.True(result.IsSuccess);

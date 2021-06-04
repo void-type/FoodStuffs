@@ -20,8 +20,8 @@ namespace FoodStuffs.Web.Controllers.Api
     {
         private readonly GetImagePipeline _getPipeline;
         private readonly DeleteImagePipeline _deletePipeline;
-        private readonly SaveImage.Pipeline _savePipeline;
-        private readonly PinImage.Pipeline _pinPipeline;
+        private readonly SaveImagePipeline _savePipeline;
+        private readonly PinImagePipeline _pinPipeline;
 
         /// <summary>
         /// Construct a new controller.
@@ -31,7 +31,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <param name="savePipeline"></param>
         /// <param name="pinPipeline"></param>
         public ImagesController(GetImagePipeline getPipeline, DeleteImagePipeline deletePipeline,
-            SaveImage.Pipeline savePipeline, PinImage.Pipeline pinPipeline)
+            SaveImagePipeline savePipeline, PinImagePipeline pinPipeline)
         {
             _getPipeline = getPipeline;
             _deletePipeline = deletePipeline;
@@ -42,7 +42,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <summary>
         /// Get an image.
         /// </summary>
-        /// <param name="id">The Id of the image to download.</param>
+        /// <param name="id">The Id of the image to download</param>
         [Route("{id}")]
         [HttpGet]
         [ProducesResponseType(typeof(FileContentResult), 200)]
@@ -73,7 +73,7 @@ namespace FoodStuffs.Web.Controllers.Api
                 .ConfigureAwait(false);
             var content = memoryStream.ToArray();
 
-            var request = new SaveImage.Request(recipeId, content);
+            var request = new SaveImageRequest(recipeId, content);
 
             return await _savePipeline
                 .Handle(request)
@@ -84,7 +84,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <summary>
         /// Delete an image.
         /// </summary>
-        /// <param name="id">Id of the image</param>
+        /// <param name="id">ID of the image</param>
         [Route("{id}")]
         [HttpDelete]
         [ProducesResponseType(typeof(EntityMessage<int>), 200)]
@@ -101,12 +101,12 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <summary>
         /// Pin an image for a recipe. This image will be the default image for the recipe.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">The request containing which image to pin</param>
         [Route("pin")]
         [HttpPost]
         [ProducesResponseType(typeof(EntityMessage<int>), 200)]
         [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-        public Task<IActionResult> Pin([FromBody] PinImage.Request request)
+        public Task<IActionResult> Pin([FromBody] PinImageRequest request)
         {
             return _pinPipeline
                 .Handle(request)

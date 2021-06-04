@@ -1,4 +1,4 @@
-using VoidCore.Model.Events;
+﻿using VoidCore.Model.Events;
 using VoidCore.Model.Responses.Files;
 
 namespace FoodStuffs.Model.Events.Images

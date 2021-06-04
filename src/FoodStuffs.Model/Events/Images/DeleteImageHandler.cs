@@ -7,9 +7,6 @@ using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
-// Allow single file events
-#pragma warning disable CA1034
-
 namespace FoodStuffs.Model.Events.Images
 {
     public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, EntityMessage<int>>

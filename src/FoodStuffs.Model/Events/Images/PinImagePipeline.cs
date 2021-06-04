@@ -3,9 +3,9 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images
 {
-    public class DeleteImagePipeline : EventPipelineAbstract<DeleteImageRequest, EntityMessage<int>>
+    public class PinImagePipeline : EventPipelineAbstract<PinImageRequest, EntityMessage<int>>
     {
-        public DeleteImagePipeline(DeleteImageHandler handler, DeleteImageRequestLogger requestLogger, DeleteImageResponseLogger responseLogger)
+        public PinImagePipeline(PinImageHandler handler, PinImageRequestLogger requestLogger, PinImageResponseLogger responseLogger)
         {
             InnerHandler = handler
                 .AddRequestLogger(requestLogger)

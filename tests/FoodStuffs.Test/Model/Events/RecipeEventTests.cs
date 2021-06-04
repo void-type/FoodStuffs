@@ -18,8 +18,8 @@ namespace FoodStuffs.Test.Model.Events
             var recipes = await data.Recipes.ListAll(default);
             var recipeToFind = recipes[0];
 
-            var result = await new GetRecipe.Handler(data)
-                .Handle(new GetRecipe.Request(recipeToFind.Id));
+            var result = await new GetRecipeHandler(data)
+                .Handle(new GetRecipeRequest(recipeToFind.Id));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(recipeToFind.Id, result.Value.Id);
@@ -32,8 +32,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new GetRecipe.Handler(data)
-                .Handle(new GetRecipe.Request(-22));
+            var result = await new GetRecipeHandler(data)
+                .Handle(new GetRecipeRequest(-22));
 
             Assert.True(result.IsFailed);
         }
@@ -44,8 +44,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, null, false, true, 2, 1));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest(null, null, null, false, true, 2, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -60,8 +60,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, null, false, false, 0, 0));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest(null, null, null, false, false, 0, 0));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Value.Count);
@@ -78,8 +78,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, "name", true, true, 1, 1));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest(null, null, "name", true, true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -95,8 +95,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, null, "name", false, true, 1, 1));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest(null, null, "name", false, true, 1, 1));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -112,8 +112,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request("recipe2", null, null, false, true, 1, 2));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest("recipe2", null, null, false, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(1, result.Value.Count);
@@ -129,8 +129,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, "cat", null, false, true, 1, 4));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest(null, "cat", null, false, true, 1, 4));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(2, result.Value.Count);
@@ -148,8 +148,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request("nothing matches", null, null, false, true, 1, 2));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest("nothing matches", null, null, false, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(0, result.Value.Count);
@@ -162,8 +162,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new ListRecipes.Handler(data)
-                .Handle(new ListRecipes.Request(null, "nothing matches", null, false, true, 1, 2));
+            var result = await new ListRecipesHandler(data)
+                .Handle(new ListRecipesRequest(null, "nothing matches", null, false, true, 1, 2));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(0, result.Value.Count);
@@ -189,8 +189,8 @@ namespace FoodStuffs.Test.Model.Events
             Assert.True(recipeToDelete.Images.Select(i => i.Blob).Any());
             Assert.Equal(recipeToDelete.Images.Count, recipeToDelete.Images.Select(i => i.Blob).Count());
 
-            var result = await new DeleteRecipe.Handler(data)
-                .Handle(new DeleteRecipe.Request(recipeToDelete.Id));
+            var result = await new DeleteRecipeHandler(data)
+                .Handle(new DeleteRecipeRequest(recipeToDelete.Id));
 
             Assert.True(result.IsSuccess);
 
@@ -208,8 +208,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new DeleteRecipe.Handler(data)
-                .Handle(new DeleteRecipe.Request(-22));
+            var result = await new DeleteRecipeHandler(data)
+                .Handle(new DeleteRecipeRequest(-22));
 
             Assert.True(result.IsFailed);
         }
@@ -220,8 +220,8 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var result = await new SaveRecipe.Handler(data)
-                .Handle(new SaveRecipe.Request(0, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
+            var result = await new SaveRecipeHandler(data)
+                .Handle(new SaveRecipeRequest(0, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
 
             Assert.True(result.IsSuccess);
             Assert.True(result.Value.Id > 0);
@@ -245,8 +245,8 @@ namespace FoodStuffs.Test.Model.Events
 
             var existingRecipeId = (await data.Recipes.ListAll(default))[0].Id;
 
-            var result = await new SaveRecipe.Handler(data)
-                .Handle(new SaveRecipe.Request(existingRecipeId, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
+            var result = await new SaveRecipeHandler(data)
+                .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
 
             Assert.True(result.IsSuccess);
             Assert.Equal(existingRecipeId, result.Value.Id);

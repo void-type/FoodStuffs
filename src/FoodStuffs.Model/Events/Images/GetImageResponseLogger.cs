@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using VoidCore.Model.Responses.Files;
 
 namespace FoodStuffs.Model.Events.Images

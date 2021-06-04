@@ -56,9 +56,9 @@ namespace FoodStuffs.Test.Model.Events
 
             var myFile = new SimpleFile("my file content", "myFile.txt");
 
-            var request = new SaveImage.Request(recipe.Id, myFile.Content.AsBytes);
+            var request = new SaveImageRequest(recipe.Id, myFile.Content.AsBytes);
 
-            var result = await new SaveImage.Handler(data).Handle(request);
+            var result = await new SaveImageHandler(data).Handle(request);
 
             Assert.True(result.IsSuccess);
 
@@ -77,9 +77,9 @@ namespace FoodStuffs.Test.Model.Events
 
             var myFile = new SimpleFile("my file content", "myFile.txt");
 
-            var request = new SaveImage.Request(-5, myFile.Content.AsBytes);
+            var request = new SaveImageRequest(-5, myFile.Content.AsBytes);
 
-            var result = await new SaveImage.Handler(data).Handle(request);
+            var result = await new SaveImageHandler(data).Handle(request);
 
             Assert.True(result.IsFailed);
             Assert.Contains(typeof(RecipeNotFoundFailure), result.Failures.Select(f => f.GetType()));
@@ -139,9 +139,9 @@ namespace FoodStuffs.Test.Model.Events
 
             var image = recipe.Images.First();
 
-            var request = new PinImage.Request(image.Id);
+            var request = new PinImageRequest(image.Id);
 
-            var result = await new PinImage.Handler(data).Handle(request);
+            var result = await new PinImageHandler(data).Handle(request);
 
             Assert.True(result.IsSuccess);
 
@@ -157,9 +157,9 @@ namespace FoodStuffs.Test.Model.Events
             await using var context = Deps.FoodStuffsContext().Seed();
             var data = context.FoodStuffsData();
 
-            var request = new PinImage.Request(-5);
+            var request = new PinImageRequest(-5);
 
-            var result = await new PinImage.Handler(data).Handle(request);
+            var result = await new PinImageHandler(data).Handle(request);
 
             Assert.True(result.IsFailed);
             Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));

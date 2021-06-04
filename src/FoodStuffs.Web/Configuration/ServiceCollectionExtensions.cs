@@ -24,9 +24,6 @@ namespace FoodStuffs.Web.Configuration
 
             services.AddSwaggerGen(c =>
             {
-                // Use fully-qualified object names due to same-named request objects
-                c.CustomSchemaIds(x => x.FullName?.Replace("+", string.Empty));
-
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
