@@ -55,7 +55,16 @@
       class="mt-4"
       @row-clicked="showDetails"
       @sort-changed="tableSortChanged"
-    />
+    >
+      <template #cell(name)="data">
+        <router-link
+          class="table-link"
+          :to="{ name: 'view', params: { id: data.item.id } }"
+        >
+          {{ data.value }}
+        </router-link>
+      </template>
+    </b-table>
     <EntityTablePager
       :list-response="listResponse"
       :list-request="listRequest"
@@ -186,4 +195,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/style/theme";
+
+.table-link {
+  color: $body-color;
+}
 </style>
