@@ -1,9 +1,9 @@
-Push-Location $PSScriptRoot
+Push-Location -Path "$PSScriptRoot/../"
+. ./build/util.ps1
 
-. ./util.ps1
+try {
+  dotnet watch run --project "$webProjectFolder" --configuration "Debug" --launch-profile 'Kestrel (Development)'
 
-Push-Location -Path "$webProjectFolder"
-dotnet watch run --configuration "Debug" --launch-profile 'Kestrel (Development)'
-Pop-Location
-
-Pop-Location
+} finally {
+  Pop-Location
+}

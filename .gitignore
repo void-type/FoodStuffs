@@ -267,6 +267,3 @@ __pycache__/
 # App
 appsettings.*.json
 !appsettings.example.json
-
-#Test Coverage files
-coverage/
