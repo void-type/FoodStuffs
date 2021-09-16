@@ -38,6 +38,6 @@ RUN pwsh ./build/build.ps1
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 ARG env="Production"
 WORKDIR /app
-COPY --from=build-env /app/artifacts .
+COPY --from=build-env /app/artifacts/dist/release .
 ENV ASPNETCORE_ENVIRONMENT=$env
 ENTRYPOINT ["dotnet", "FoodStuffs.Web.dll"]/./

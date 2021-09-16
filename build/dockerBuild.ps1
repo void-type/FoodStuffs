@@ -1,11 +1,12 @@
-Push-Location $PSScriptRoot
+Push-Location -Path "$PSScriptRoot/../"
+. ./build/util.ps1
 
-. ./util.ps1
+try {
+  dotnet tool restore
+  $projectVersion = (dotnet nbgv get-version -f json | ConvertFrom-Json).NuGetPackageVersion
 
-Push-Location ../
+  docker build -t "$($projectName.ToLower()):$($projectVersion)" --pull .
 
-docker build -t "$($projectName.ToLower()):$($projectVersion)" --pull .
-
-Pop-Location
-
-Pop-Location
+} finally {
+  Pop-Location
+}
