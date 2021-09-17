@@ -78,7 +78,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <returns></returns>
         [Route("{id}")]
         [HttpGet]
-        [ProducesResponseType(typeof(IItemSet<GetRecipeResponse>), 200)]
+        [ProducesResponseType(typeof(GetRecipeResponse), 200)]
         [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
         public Task<IActionResult> Get(int id)
         {
@@ -95,7 +95,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <param name="request">The recipe to save</param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(IItemSet<EntityMessage<int>>), 200)]
+        [ProducesResponseType(typeof(EntityMessage<int>), 200)]
         [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
         public Task<IActionResult> Save([FromBody] SaveRecipeRequest request)
         {
@@ -111,7 +111,7 @@ namespace FoodStuffs.Web.Controllers.Api
         /// <returns></returns>
         [Route("{id}")]
         [HttpDelete]
-        [ProducesResponseType(typeof(IItemSet<EntityMessage<int>>), 200)]
+        [ProducesResponseType(typeof(EntityMessage<int>), 200)]
         [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
         public Task<IActionResult> Delete(int id)
         {
