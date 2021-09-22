@@ -8,11 +8,9 @@ function Stop-OnError {
 $shortAppName = "FoodStuffs"
 $projectName = "$shortAppName"
 
-$dataModelsFolder = "./src/$projectName.Model/Data/Models/"
-$testProjectFolder = "./tests/$projectName.Test"
-
 $webProjectFolder = "./src/$projectName.Web"
 $webClientProjectFolder = "$webProjectFolder/ClientApp"
+$testProjectFolder = "./tests/$projectName.Test"
 
 $iisDirectoryProduction = "\\server2\wwwroot\$($projectName)"
 $settingsDirectoryProduction = "\\server2\Servers\webAppSettings\$($projectName)"
