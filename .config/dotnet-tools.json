@@ -15,19 +15,19 @@
       ]
     },
     "dotnet-ef": {
-      "version": "5.0.9",
+      "version": "5.0.10",
       "commands": [
         "dotnet-ef"
       ]
     },
     "nbgv": {
-      "version": "3.4.231",
+      "version": "3.4.240",
       "commands": [
         "nbgv"
       ]
     },
     "dotnet-outdated-tool": {
-      "version": "3.2.0",
+      "version": "3.2.1",
       "commands": [
         "dotnet-outdated"
       ]

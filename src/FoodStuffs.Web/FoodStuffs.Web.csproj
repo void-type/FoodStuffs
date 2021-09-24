@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,9 +20,9 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
-    <PackageReference Include="VoidCore.AspNet" Version="7.0.16" />
-    <PackageReference Include="VoidCore.EntityFramework" Version="7.0.16" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+    <PackageReference Include="VoidCore.AspNet" Version="7.1.2" />
+    <PackageReference Include="VoidCore.EntityFramework" Version="7.1.2" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" />
     <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" /> -->
