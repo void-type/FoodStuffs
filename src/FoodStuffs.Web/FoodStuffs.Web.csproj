@@ -21,8 +21,8 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
-    <PackageReference Include="VoidCore.AspNet" Version="7.1.2" />
-    <PackageReference Include="VoidCore.EntityFramework" Version="7.1.2" />
+    <PackageReference Include="VoidCore.AspNet" Version="7.1.3" />
+    <PackageReference Include="VoidCore.EntityFramework" Version="7.1.3" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" />
     <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" /> -->
