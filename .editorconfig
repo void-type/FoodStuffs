@@ -265,6 +265,8 @@ dotnet_diagnostic.IDE0060.severity = warning
 dotnet_diagnostic.SCS0012.severity = none
 # False-positive, AntiForgery is set site-wide
 dotnet_diagnostic.SCS0016.severity = none
+# We don't need ConfigureAwait(false)
+dotnet_diagnostic.RCS1090.severity = none
 
 # Javascript and Vue
 [*.{js,jsx,ts,tsx,vue}]

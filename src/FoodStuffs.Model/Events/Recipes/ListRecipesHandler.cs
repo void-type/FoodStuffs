@@ -11,6 +11,8 @@ using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
+#pragma warning disable RCS1155
+
 namespace FoodStuffs.Model.Events.Recipes
 {
     public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItemSet<ListRecipesResponse>>

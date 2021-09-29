@@ -13,9 +13,9 @@ namespace FoodStuffs.Web.Configuration
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSwaggerWithCsp(this IServiceCollection services, IHostEnvironment _env)
+        public static IServiceCollection AddSwaggerWithCsp(this IServiceCollection services, IHostEnvironment env)
         {
-            if (_env.IsProduction())
+            if (env.IsProduction())
             {
                 return services;
             }

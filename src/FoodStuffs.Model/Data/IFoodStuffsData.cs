@@ -8,7 +8,6 @@ namespace FoodStuffs.Model.Data
     /// </summary>
     public interface IFoodStuffsData
     {
-        // TODO: private constructors for data entities.
         IWritableRepository<Blob> Blobs { get; }
         IWritableRepository<Category> Categories { get; }
         IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
