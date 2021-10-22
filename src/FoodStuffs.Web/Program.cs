@@ -22,6 +22,7 @@ namespace FoodStuffs.Web
             try
             {
                 Log.Information("Starting host.");
+                Log.Information("{Name} v{Version}", ThisAssembly.AssemblyTitle, ThisAssembly.AssemblyInformationalVersion);
                 host.Run();
                 return 0;
             }
