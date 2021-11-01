@@ -1,9 +1,19 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Web.Auth;
+using FoodStuffs.Web.Configuration;
+using FoodStuffs.Web.Data.EntityFramework;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Configuration;
+using VoidCore.AspNet.Logging;
+using VoidCore.AspNet.Routing;
+using VoidCore.AspNet.Security;
+using VoidCore.Model.Auth;
+using VoidCore.Model.Configuration;
+using VoidCore.Model.Time;
 
 namespace FoodStuffs.Web
 {
@@ -11,19 +21,64 @@ namespace FoodStuffs.Web
     {
         public static int Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            var builder = WebApplication.CreateBuilder(args);
 
-            var configuration = host.Services.GetRequiredService<IConfiguration>();
+            builder.WebHost.UseSerilog();
+
+            var env = builder.Environment;
+            var config = builder.Configuration;
+            var services = builder.Services;
 
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
+                .ReadFrom.Configuration(config)
                 .CreateLogger();
 
             try
             {
+                Log.Information("Configuring host for {Name} v{Version}", ThisAssembly.AssemblyTitle, ThisAssembly.AssemblyInformationalVersion);
+
+                // Settings
+                services.AddSettingsSingleton<WebApplicationSettings>(config, true).Validate();
+
+                // Infrastructure
+                services.AddControllers();
+                services.AddSpaSecurityServices(env);
+                services.AddApiExceptionFilter();
+
+                // Authorization
+
+                // Dependencies
+                services.AddHttpContextAccessor();
+                services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
+                services.AddSingleton<IDateTimeService, NowDateTimeService>();
+
+                config.GetRequiredConnectionString<FoodStuffsContext>();
+                services.AddDbContext<FoodStuffsContext>();
+                services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
+
+                // Auto-register Domain Events
+                services.AddDomainEvents(
+                    ServiceLifetime.Scoped,
+                    typeof(GetWebClientInfo).Assembly,
+                    typeof(IFoodStuffsData).Assembly);
+
+                services.AddSwaggerWithCsp(env);
+
+                var app = builder.Build();
+
+                app.UseSpaExceptionPage(env)
+                    .UseSecureTransport(env)
+                    .UseSecurityHeaders(env)
+                    .UseStaticFiles()
+                    .UseRouting()
+                    .UseRequestLoggingScope()
+                    .UseSerilogRequestLogging()
+                    .UseCurrentUserLogging()
+                    .UseSwaggerAndUi(env)
+                    .UseSpaEndpoints();
+
                 Log.Information("Starting host.");
-                Log.Information("{Name} v{Version}", ThisAssembly.AssemblyTitle, ThisAssembly.AssemblyInformationalVersion);
-                host.Run();
+                app.Run();
                 return 0;
             }
             catch (Exception ex)
@@ -37,13 +92,5 @@ namespace FoodStuffs.Web
                 Log.CloseAndFlush();
             }
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) => Host
-            .CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-                webBuilder.UseSerilog();
-            });
     }
 }

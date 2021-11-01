@@ -64,6 +64,8 @@ namespace FoodStuffs.Test.Model
             var recipe2 = context.Recipes.Add(new Recipe
             {
                 Name = "Recipe2",
+                Ingredients = "some",
+                Directions = "some",
                 CookTimeMinutes = 2,
                 PrepTimeMinutes = 2,
                 CreatedOn = DateTimeServiceEarly.Moment,
@@ -75,6 +77,8 @@ namespace FoodStuffs.Test.Model
             context.Recipes.Add(new Recipe
             {
                 Name = "Recipe3",
+                Ingredients = "some",
+                Directions = "some",
                 CookTimeMinutes = 2,
                 PrepTimeMinutes = 2,
                 CreatedOn = DateTimeServiceEarly.Moment,

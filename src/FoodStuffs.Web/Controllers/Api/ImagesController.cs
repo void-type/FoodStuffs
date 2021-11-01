@@ -68,7 +68,7 @@ namespace FoodStuffs.Web.Controllers.Api
         {
             await using var memoryStream = new MemoryStream();
             await file
-                .EnsureNotNull(nameof(file))
+                .EnsureNotNull()
                 .CopyToAsync(memoryStream)
                 .ConfigureAwait(false);
             var content = memoryStream.ToArray();
