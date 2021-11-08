@@ -12,17 +12,17 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0-rc.2.21480.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="VoidCore.AspNet" Version="8.0.11-g0c83ff4f71" />
-    <PackageReference Include="VoidCore.EntityFramework" Version="8.0.11-g0c83ff4f71" />
+    <PackageReference Include="VoidCore.AspNet" Version="8.0.12" />
+    <PackageReference Include="VoidCore.EntityFramework" Version="8.0.12" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" />
     <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" /> -->
