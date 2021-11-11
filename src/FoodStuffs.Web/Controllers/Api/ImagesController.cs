@@ -66,12 +66,17 @@ namespace FoodStuffs.Web.Controllers.Api
         [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
         public async Task<IActionResult> Upload(int recipeId, IFormFile file)
         {
-            await using var memoryStream = new MemoryStream();
-            await file
-                .EnsureNotNull()
-                .CopyToAsync(memoryStream)
-                .ConfigureAwait(false);
-            var content = memoryStream.ToArray();
+            byte[] content;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file
+                    .EnsureNotNull()
+                    .CopyToAsync(memoryStream)
+                    .ConfigureAwait(false);
+
+                content = memoryStream.ToArray();
+            }
 
             var request = new SaveImageRequest(recipeId, content);
 
