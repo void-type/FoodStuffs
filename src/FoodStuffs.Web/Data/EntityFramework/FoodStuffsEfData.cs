@@ -1,21 +1,19 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Auth;
 using VoidCore.Model.Data;
-using VoidCore.Model.Time;
 
 namespace FoodStuffs.Web.Data.EntityFramework
 {
     public class FoodStuffsEfData : IFoodStuffsData
     {
-        public FoodStuffsEfData(FoodStuffsContext context, IDateTimeService now, ICurrentUserAccessor currentUserAccessor)
+        public FoodStuffsEfData(FoodStuffsContext context)
         {
             Blobs = new EfWritableRepository<Blob>(context);
             Categories = new EfWritableRepository<Category>(context);
             CategoryRecipes = new EfWritableRepository<CategoryRecipe>(context);
-            Images = new EfWritableRepository<Image>(context).AddAuditability(now, currentUserAccessor);
-            Recipes = new EfWritableRepository<Recipe>(context).AddAuditability(now, currentUserAccessor);
+            Images = new EfWritableRepository<Image>(context);
+            Recipes = new EfWritableRepository<Recipe>(context);
             Users = new EfWritableRepository<User>(context);
         }
 

@@ -7,15 +7,6 @@ namespace FoodStuffs.Web.Data.EntityFramework
 {
     public partial class FoodStuffsContext : DbContext
     {
-        public FoodStuffsContext()
-        {
-        }
-
-        public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options)
-            : base(options)
-        {
-        }
-
         public virtual DbSet<Blob> Blobs { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<CategoryRecipe> CategoryRecipes { get; set; }

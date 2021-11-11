@@ -253,7 +253,6 @@ namespace FoodStuffs.Test.Model.Events
 
             var updatedRecipe = await data.Recipes.Get(new RecipesByIdWithCategoriesAndImagesSpecification(existingRecipeId), default);
             Assert.True(updatedRecipe.HasValue);
-            Assert.Equal(Deps.DateTimeServiceEarly.Moment, updatedRecipe.Value.CreatedOn);
             Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.Value.ModifiedOn);
             Assert.DoesNotContain("Category1", updatedRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));
             Assert.Contains("Category2", updatedRecipe.Value.CategoryRecipes.Select(cr => cr.Category.Name));

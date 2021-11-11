@@ -20,8 +20,11 @@ namespace FoodStuffs.Test.Model
             userAccessorMock.Setup(a => a.User).Returns(new DomainUser("SingleUser", Array.Empty<string>()));
             CurrentUserAccessor = userAccessorMock.Object;
 
-            DateTimeServiceEarly = new DiscreteDateTimeService(new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc));
-            DateTimeServiceLate = new DiscreteDateTimeService(new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc));
+            var early = new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc);
+            var late = new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc);
+
+            DateTimeServiceEarly = new DiscreteDateTimeService(early, new DateTimeOffset(early));
+            DateTimeServiceLate = new DiscreteDateTimeService(late, new DateTimeOffset(late));
         }
 
         public static readonly IDateTimeService DateTimeServiceEarly;
@@ -33,13 +36,15 @@ namespace FoodStuffs.Test.Model
             return new FoodStuffsContext(
                 new DbContextOptionsBuilder<FoodStuffsContext>()
                 .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
-                .Options
+                .Options,
+                DateTimeServiceLate,
+                CurrentUserAccessor
             );
         }
 
         public static FoodStuffsEfData FoodStuffsData(this FoodStuffsContext context)
         {
-            return new FoodStuffsEfData(context, DateTimeServiceLate, CurrentUserAccessor);
+            return new FoodStuffsEfData(context);
         }
 
         public static FoodStuffsContext Seed(this FoodStuffsContext context)
