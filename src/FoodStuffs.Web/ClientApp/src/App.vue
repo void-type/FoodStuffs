@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    @keydown.stop.prevent.esc="clearMessages()"
+  >
     <vue-progress-bar />
     <AppHeader
       :brand="applicationName"
@@ -18,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import initializeStore from '@/models/initializeStore';
 import AppMessageCenter from '@/viewComponents/AppMessageCenter.vue';
 import AppHeader from '@/viewComponents/AppHeader.vue';
@@ -36,6 +39,11 @@ export default {
     ...mapGetters({
       applicationName: 'app/applicationName',
       user: 'app/user',
+    }),
+  },
+  methods: {
+    ...mapActions({
+      clearMessages: 'app/clearMessages',
     }),
   },
   watch: {

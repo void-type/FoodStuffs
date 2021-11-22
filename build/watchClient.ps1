@@ -2,7 +2,7 @@ Push-Location -Path "$PSScriptRoot/../"
 . ./build/util.ps1
 Pop-Location
 
-Push-Location -Path "$webClientProjectFolder"
+Push-Location -Path "$PSScriptRoot/../$webClientProjectFolder"
 
 try {
   npm install
