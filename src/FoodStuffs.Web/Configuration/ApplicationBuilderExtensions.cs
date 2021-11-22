@@ -15,7 +15,7 @@ namespace FoodStuffs.Web.Configuration
 
             return app
                 .UseSwagger()
-                .UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "API v1"));
+                .UseSwaggerUI(c => c.DocumentTitle = environment.ApplicationName + " API");
         }
 
         public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment)
