@@ -98,6 +98,7 @@ export default {
       setApiFailureMessages: 'app/setApiFailureMessages',
       addToRecent: 'recipes/addToRecent',
       removeFromRecent: 'recipes/removeFromRecent',
+      updateRecent: 'recipes/updateRecent',
       setListResponse: 'recipes/setListResponse',
     }),
     fetchRecipesList() {
@@ -149,8 +150,9 @@ export default {
             this.fetchRecipe(this.id);
           }
 
-          this.fetchRecipesList();
           this.setSuccessMessage(data.message);
+          this.fetchRecipesList();
+          this.updateRecent(recipe);
         },
         (response) => this.setApiFailureMessages(response),
       );
@@ -196,6 +198,7 @@ export default {
           this.setSuccessMessage(data.message);
           this.suggestedImageId = data.id;
           this.fetchImageIds(this.id);
+          this.fetchRecipesList();
         },
         (response) => this.setApiFailureMessages(response),
       );
@@ -219,6 +222,7 @@ export default {
         (data) => {
           this.setSuccessMessage(data.message);
           this.fetchImageIds(this.id);
+          this.fetchRecipesList();
         },
         (response) => this.setApiFailureMessages(response),
       );
@@ -233,6 +237,7 @@ export default {
           this.setSuccessMessage(data.message);
           this.suggestedImageId = imageId;
           this.fetchImageIds(this.id);
+          this.fetchRecipesList();
         },
         (response) => this.setApiFailureMessages(response),
       );
