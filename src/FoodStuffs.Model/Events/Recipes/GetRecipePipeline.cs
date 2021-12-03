@@ -1,14 +1,13 @@
 ﻿using VoidCore.Model.Events;
 
-namespace FoodStuffs.Model.Events.Recipes
+namespace FoodStuffs.Model.Events.Recipes;
+
+public class GetRecipePipeline : EventPipelineAbstract<GetRecipeRequest, GetRecipeResponse>
 {
-    public class GetRecipePipeline : EventPipelineAbstract<GetRecipeRequest, GetRecipeResponse>
+    public GetRecipePipeline(GetRecipeHandler handler, GetRecipeRequestLogger requestLogger, GetRecipeResponseLogger responseLogger)
     {
-        public GetRecipePipeline(GetRecipeHandler handler, GetRecipeRequestLogger requestLogger, GetRecipeResponseLogger responseLogger)
-        {
-            InnerHandler = handler
-                .AddRequestLogger(requestLogger)
-                .AddPostProcessor(responseLogger);
-        }
+        InnerHandler = handler
+            .AddRequestLogger(requestLogger)
+            .AddPostProcessor(responseLogger);
     }
 }

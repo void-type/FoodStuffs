@@ -114,6 +114,9 @@ csharp_style_pattern_local_over_anonymous_function = true:suggestion
 csharp_style_throw_expression = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
+# File-scoped namespace declarations
+csharp_style_namespace_declarations=file_scoped:warning
+
 # Code block preferences
 csharp_prefer_braces = true:warning
 

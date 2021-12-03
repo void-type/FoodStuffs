@@ -8,37 +8,36 @@ using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Model.Events.Recipes
+namespace FoodStuffs.Model.Events.Recipes;
+
+public class DeleteRecipeHandler : EventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
 {
-    public class DeleteRecipeHandler : EventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
+    private readonly IFoodStuffsData _data;
+
+    public DeleteRecipeHandler(IFoodStuffsData data)
     {
-        private readonly IFoodStuffsData _data;
+        _data = data;
+    }
 
-        public DeleteRecipeHandler(IFoodStuffsData data)
-        {
-            _data = data;
-        }
+    public override Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
+    {
+        var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
 
-        public override Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
-        {
-            var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
+        return _data.Recipes.Get(byId, cancellationToken)
+            .ToResultAsync(new RecipeNotFoundFailure())
+            .TeeOnSuccessAsync(r => RemoveImages(r, cancellationToken))
+            .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipes, cancellationToken))
+            .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
+            .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
+    }
 
-            return _data.Recipes.Get(byId, cancellationToken)
-                .ToResultAsync(new RecipeNotFoundFailure())
-                .TeeOnSuccessAsync(r => RemoveImages(r, cancellationToken))
-                .TeeOnSuccessAsync(r => _data.CategoryRecipes.RemoveRange(r.CategoryRecipes, cancellationToken))
-                .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
-                .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
-        }
+    private async Task RemoveImages(Recipe recipe, CancellationToken cancellationToken)
+    {
+        var images = recipe.Images;
+        // Optimization: don't bring the whole blob into RAM.
+        var blobs = images.Select(i => new Blob { Id = i.Id });
 
-        private async Task RemoveImages(Recipe recipe, CancellationToken cancellationToken)
-        {
-            var images = recipe.Images;
-            // Optimization: don't bring the whole blob into RAM.
-            var blobs = images.Select(i => new Blob { Id = i.Id });
-
-            await _data.Blobs.RemoveRange(blobs, cancellationToken).ConfigureAwait(false);
-            await _data.Images.RemoveRange(images, cancellationToken).ConfigureAwait(false);
-        }
+        await _data.Blobs.RemoveRange(blobs, cancellationToken).ConfigureAwait(false);
+        await _data.Images.RemoveRange(images, cancellationToken).ConfigureAwait(false);
     }
 }

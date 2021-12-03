@@ -1,12 +1,11 @@
 ﻿using System;
 using VoidCore.Model.Auth;
 
-namespace FoodStuffs.Web.Auth
-{
-    public class SingleUserAccessor : ICurrentUserAccessor
-    {
-        private static readonly DomainUser _singleUser = new("SingleUser", Array.Empty<string>());
+namespace FoodStuffs.Web.Auth;
 
-        public DomainUser User => _singleUser;
-    }
+public class SingleUserAccessor : ICurrentUserAccessor
+{
+    private static readonly DomainUser _singleUser = new("SingleUser", Array.Empty<string>());
+
+    public DomainUser User => _singleUser;
 }

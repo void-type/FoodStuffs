@@ -3,10 +3,9 @@ using System;
 using System.Linq.Expressions;
 using VoidCore.Model.Data;
 
-namespace FoodStuffs.Model.Data.Queries
+namespace FoodStuffs.Model.Data.Queries;
+
+public class CategoriesSpecification : QuerySpecificationAbstract<Category>
 {
-    public class CategoriesSpecification : QuerySpecificationAbstract<Category>
-    {
-        public CategoriesSpecification(params Expression<Func<Category, bool>>[] criteria) : base(criteria) { }
-    }
+    public CategoriesSpecification(params Expression<Func<Category, bool>>[] criteria) : base(criteria) { }
 }

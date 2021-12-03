@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Model.Events.Images
+namespace FoodStuffs.Model.Events.Images;
+
+public class DeleteImageResponseLogger : EntityMessageEventLogger<DeleteImageRequest, int>
 {
-    public class DeleteImageResponseLogger : EntityMessageEventLogger<DeleteImageRequest, int>
-    {
-        public DeleteImageResponseLogger(ILogger<DeleteImageResponseLogger> logger) : base(logger) { }
-    }
+    public DeleteImageResponseLogger(ILogger<DeleteImageResponseLogger> logger) : base(logger) { }
 }

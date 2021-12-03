@@ -2,7 +2,6 @@
 
 #nullable disable
 
-namespace FoodStuffs.Model.Data.Models
-{
-    public partial class Recipe : IAuditable { }
-}
+namespace FoodStuffs.Model.Data.Models;
+
+public partial class Recipe : IAuditable { }

@@ -10,112 +10,111 @@ using VoidCore.Model.Guards;
 using VoidCore.Model.Responses.Collections;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Web.Controllers.Api
+namespace FoodStuffs.Web.Controllers.Api;
+
+/// <summary>
+/// Manage images.
+/// </summary>
+[ApiRoute("images")]
+public class ImagesController : ControllerBase
 {
+    private readonly GetImagePipeline _getPipeline;
+    private readonly DeleteImagePipeline _deletePipeline;
+    private readonly SaveImagePipeline _savePipeline;
+    private readonly PinImagePipeline _pinPipeline;
+
     /// <summary>
-    /// Manage images.
+    /// Construct a new controller.
     /// </summary>
-    [ApiRoute("images")]
-    public class ImagesController : ControllerBase
+    /// <param name="getPipeline"></param>
+    /// <param name="deletePipeline"></param>
+    /// <param name="savePipeline"></param>
+    /// <param name="pinPipeline"></param>
+    public ImagesController(GetImagePipeline getPipeline, DeleteImagePipeline deletePipeline,
+        SaveImagePipeline savePipeline, PinImagePipeline pinPipeline)
     {
-        private readonly GetImagePipeline _getPipeline;
-        private readonly DeleteImagePipeline _deletePipeline;
-        private readonly SaveImagePipeline _savePipeline;
-        private readonly PinImagePipeline _pinPipeline;
+        _getPipeline = getPipeline;
+        _deletePipeline = deletePipeline;
+        _savePipeline = savePipeline;
+        _pinPipeline = pinPipeline;
+    }
 
-        /// <summary>
-        /// Construct a new controller.
-        /// </summary>
-        /// <param name="getPipeline"></param>
-        /// <param name="deletePipeline"></param>
-        /// <param name="savePipeline"></param>
-        /// <param name="pinPipeline"></param>
-        public ImagesController(GetImagePipeline getPipeline, DeleteImagePipeline deletePipeline,
-            SaveImagePipeline savePipeline, PinImagePipeline pinPipeline)
+    /// <summary>
+    /// Get an image.
+    /// </summary>
+    /// <param name="id">The Id of the image to download</param>
+    [Route("{id}")]
+    [HttpGet]
+    [ProducesResponseType(typeof(FileContentResult), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public Task<IActionResult> Get(int id)
+    {
+        var request = new GetImageRequest(id);
+
+        return _getPipeline
+            .Handle(request)
+            .MapAsync(HttpResponder.RespondWithFile);
+    }
+
+    /// <summary>
+    /// Upload an image using a multi-part form file.
+    /// </summary>
+    /// <param name="recipeId">The Id of the recipe the image is of</param>
+    /// <param name="file">The file to upload</param>
+    [HttpPost]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> Upload(int recipeId, IFormFile file)
+    {
+        byte[] content;
+
+        using (var memoryStream = new MemoryStream())
         {
-            _getPipeline = getPipeline;
-            _deletePipeline = deletePipeline;
-            _savePipeline = savePipeline;
-            _pinPipeline = pinPipeline;
-        }
-
-        /// <summary>
-        /// Get an image.
-        /// </summary>
-        /// <param name="id">The Id of the image to download</param>
-        [Route("{id}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(FileContentResult), 200)]
-        [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-        public Task<IActionResult> Get(int id)
-        {
-            var request = new GetImageRequest(id);
-
-            return _getPipeline
-                .Handle(request)
-                .MapAsync(HttpResponder.RespondWithFile);
-        }
-
-        /// <summary>
-        /// Upload an image using a multi-part form file.
-        /// </summary>
-        /// <param name="recipeId">The Id of the recipe the image is of</param>
-        /// <param name="file">The file to upload</param>
-        [HttpPost]
-        [ProducesResponseType(typeof(EntityMessage<int>), 200)]
-        [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-        public async Task<IActionResult> Upload(int recipeId, IFormFile file)
-        {
-            byte[] content;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await file
-                    .EnsureNotNull()
-                    .CopyToAsync(memoryStream)
-                    .ConfigureAwait(false);
-
-                content = memoryStream.ToArray();
-            }
-
-            var request = new SaveImageRequest(recipeId, content);
-
-            return await _savePipeline
-                .Handle(request)
-                .MapAsync(HttpResponder.Respond)
+            await file
+                .EnsureNotNull()
+                .CopyToAsync(memoryStream)
                 .ConfigureAwait(false);
+
+            content = memoryStream.ToArray();
         }
 
-        /// <summary>
-        /// Delete an image.
-        /// </summary>
-        /// <param name="id">ID of the image</param>
-        [Route("{id}")]
-        [HttpDelete]
-        [ProducesResponseType(typeof(EntityMessage<int>), 200)]
-        [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-        public Task<IActionResult> Delete(int id)
-        {
-            var request = new DeleteImageRequest(id);
+        var request = new SaveImageRequest(recipeId, content);
 
-            return _deletePipeline
-                .Handle(request)
-                .MapAsync(HttpResponder.Respond);
-        }
+        return await _savePipeline
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond)
+            .ConfigureAwait(false);
+    }
 
-        /// <summary>
-        /// Pin an image for a recipe. This image will be the default image for the recipe.
-        /// </summary>
-        /// <param name="request">The request containing which image to pin</param>
-        [Route("pin")]
-        [HttpPost]
-        [ProducesResponseType(typeof(EntityMessage<int>), 200)]
-        [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-        public Task<IActionResult> Pin([FromBody] PinImageRequest request)
-        {
-            return _pinPipeline
-                .Handle(request)
-                .MapAsync(HttpResponder.Respond);
-        }
+    /// <summary>
+    /// Delete an image.
+    /// </summary>
+    /// <param name="id">ID of the image</param>
+    [Route("{id}")]
+    [HttpDelete]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public Task<IActionResult> Delete(int id)
+    {
+        var request = new DeleteImageRequest(id);
+
+        return _deletePipeline
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Pin an image for a recipe. This image will be the default image for the recipe.
+    /// </summary>
+    /// <param name="request">The request containing which image to pin</param>
+    [Route("pin")]
+    [HttpPost]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public Task<IActionResult> Pin([FromBody] PinImageRequest request)
+    {
+        return _pinPipeline
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
     }
 }

@@ -1,11 +1,10 @@
 ﻿using VoidCore.Model.Functional;
 
-namespace FoodStuffs.Model.Events
+namespace FoodStuffs.Model.Events;
+
+public class ImageNotFoundFailure : Failure
 {
-    public class ImageNotFoundFailure : Failure
+    public ImageNotFoundFailure() : base(errorMessage: "Image not found.", uiHandle: "imageId")
     {
-        public ImageNotFoundFailure() : base(errorMessage: "Image not found.", uiHandle: "imageId")
-        {
-        }
     }
 }

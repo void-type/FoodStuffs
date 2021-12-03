@@ -1,4 +1,3 @@
-﻿namespace FoodStuffs.Model.Events.Recipes
-{
-    public record DeleteRecipeRequest(int Id);
-}
+﻿namespace FoodStuffs.Model.Events.Recipes;
+
+public record DeleteRecipeRequest(int Id);

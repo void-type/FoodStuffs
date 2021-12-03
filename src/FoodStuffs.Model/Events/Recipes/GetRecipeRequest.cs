@@ -1,4 +1,3 @@
-﻿namespace FoodStuffs.Model.Events.Recipes
-{
-    public record GetRecipeRequest(int Id);
-}
+﻿namespace FoodStuffs.Model.Events.Recipes;
+
+public record GetRecipeRequest(int Id);
