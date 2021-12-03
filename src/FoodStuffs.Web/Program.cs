@@ -15,81 +15,73 @@ using VoidCore.Model.Auth;
 using VoidCore.Model.Configuration;
 using VoidCore.Model.Time;
 
-namespace FoodStuffs.Web;
+var builder = WebApplication.CreateBuilder(args);
 
-public static class Program
+builder.WebHost.UseSerilog();
+
+var env = builder.Environment;
+var config = builder.Configuration;
+var services = builder.Services;
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(config)
+    .CreateLogger();
+
+try
 {
-    public static int Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+    Log.Information("Configuring host for {Name} v{Version}", ThisAssembly.AssemblyTitle, ThisAssembly.AssemblyInformationalVersion);
 
-        builder.WebHost.UseSerilog();
+    // Settings
+    services.AddSettingsSingleton<WebApplicationSettings>(config, true).Validate();
 
-        var env = builder.Environment;
-        var config = builder.Configuration;
-        var services = builder.Services;
+    // Infrastructure
+    services.AddControllers();
+    services.AddSpaSecurityServices(env);
+    services.AddApiExceptionFilter();
 
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(config)
-            .CreateLogger();
+    // Authorization
 
-        try
-        {
-            Log.Information("Configuring host for {Name} v{Version}", ThisAssembly.AssemblyTitle, ThisAssembly.AssemblyInformationalVersion);
+    // Dependencies
+    services.AddHttpContextAccessor();
+    services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
+    services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
-            // Settings
-            services.AddSettingsSingleton<WebApplicationSettings>(config, true).Validate();
+    config.GetRequiredConnectionString<FoodStuffsContext>();
+    services.AddDbContext<FoodStuffsContext>();
+    services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
-            // Infrastructure
-            services.AddControllers();
-            services.AddSpaSecurityServices(env);
-            services.AddApiExceptionFilter();
+    // Auto-register Domain Events
+    services.AddDomainEvents(
+        ServiceLifetime.Scoped,
+        typeof(GetWebClientInfo).Assembly,
+        typeof(IFoodStuffsData).Assembly);
 
-            // Authorization
+    services.AddSwaggerWithCsp(env);
 
-            // Dependencies
-            services.AddHttpContextAccessor();
-            services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
-            services.AddSingleton<IDateTimeService, NowDateTimeService>();
+    var app = builder.Build();
 
-            config.GetRequiredConnectionString<FoodStuffsContext>();
-            services.AddDbContext<FoodStuffsContext>();
-            services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
+    app.UseSpaExceptionPage(env)
+        .UseSecureTransport(env)
+        .UseSecurityHeaders(env)
+        .UseStaticFiles()
+        .UseRouting()
+        .UseRequestLoggingScope()
+        .UseSerilogRequestLogging()
+        .UseCurrentUserLogging()
+        .UseSwaggerAndUi(env)
+        .UseSpaEndpoints();
 
-            // Auto-register Domain Events
-            services.AddDomainEvents(
-                ServiceLifetime.Scoped,
-                typeof(GetWebClientInfo).Assembly,
-                typeof(IFoodStuffsData).Assembly);
-
-            services.AddSwaggerWithCsp(env);
-
-            var app = builder.Build();
-
-            app.UseSpaExceptionPage(env)
-                .UseSecureTransport(env)
-                .UseSecurityHeaders(env)
-                .UseStaticFiles()
-                .UseRouting()
-                .UseRequestLoggingScope()
-                .UseSerilogRequestLogging()
-                .UseCurrentUserLogging()
-                .UseSwaggerAndUi(env)
-                .UseSpaEndpoints();
-
-            Log.Information("Starting host.");
-            app.Run();
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(ex, "Host terminated unexpectedly.");
-            return 1;
-        }
-        finally
-        {
-            Log.Information("Stopping host.");
-            Log.CloseAndFlush();
-        }
-    }
+    Log.Information("Starting host.");
+    app.Run();
+    return 0;
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly.");
+    return 1;
+}
+finally
+{
+    Log.Information("Stopping host.");
+    Log.CloseAndFlush();
 }
