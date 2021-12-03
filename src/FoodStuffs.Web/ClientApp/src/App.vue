@@ -41,11 +41,6 @@ export default {
       user: 'app/user',
     }),
   },
-  methods: {
-    ...mapActions({
-      clearMessages: 'app/clearMessages',
-    }),
-  },
   watch: {
     applicationName(newApplicationName) {
       document.title = newApplicationName;
@@ -53,6 +48,11 @@ export default {
   },
   mounted() {
     initializeStore();
+  },
+  methods: {
+    ...mapActions({
+      clearMessages: 'app/clearMessages',
+    }),
   },
 };
 </script>
