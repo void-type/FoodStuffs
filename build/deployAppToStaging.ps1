@@ -2,12 +2,15 @@
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = "Medium")]
 param()
 
-Push-Location -Path "$PSScriptRoot/../"
-. ./build/util.ps1
-
-$releaseFolder = './artifacts/dist/release'
+$originalLocation = Get-Location
+$projectRoot = "$PSScriptRoot/../"
 
 try {
+  Set-Location -Path $projectRoot
+  . ./build/util.ps1
+
+  $releaseFolder = './artifacts/dist/release'
+
   if (-not (Test-Path -Path $releaseFolder)) {
     throw 'No artifacts to deploy. Run build.ps1 before deploying.'
   }
@@ -21,5 +24,5 @@ try {
   }
 
 } finally {
-  Pop-Location
+  Set-Location $originalLocation
 }

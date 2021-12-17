@@ -14,10 +14,25 @@ $nodeModes = @{
   'Debug'   = 'development'
 }
 
-Push-Location -Path "$PSScriptRoot/../"
-. ./build/util.ps1
+function Stop-OnError([string]$errorMessage) {
+  if ($LASTEXITCODE -eq 0) {
+    return
+  }
+
+  if (-not [string]::IsNullOrWhiteSpace($errorMessage)) {
+    Write-Error $errorMessage
+  }
+
+  exit $LASTEXITCODE
+}
+
+$originalLocation = Get-Location
+$projectRoot = "$PSScriptRoot/../"
 
 try {
+  Set-Location -Path $projectRoot
+  . ./build/util.ps1
+
   # Clean the artifacts folders
   Remove-Item -Path './artifacts' -Recurse -ErrorAction SilentlyContinue
 
@@ -26,7 +41,7 @@ try {
 
   # Lint and build client
   if (-not $SkipClient) {
-    Push-Location -Path "$webClientProjectFolder"
+    Set-Location -Path $webClientProjectFolder
     npm install
 
     if (-not $SkipFormat) {
@@ -40,16 +55,14 @@ try {
 
     npm run build -- --mode "$($nodeModes[$Configuration])"
     Stop-OnError
-    Pop-Location
   }
 
   # Build solution
+  Set-Location -Path $projectRoot
+
   if (-not $SkipFormat) {
     dotnet format --verify-no-changes
-    if ($LASTEXITCODE -ne 0) {
-      Write-Error 'Please run formatter: dotnet format.'
-    }
-    Stop-OnError
+    Stop-OnError 'Please run formatter: dotnet format.'
   }
 
   dotnet restore
@@ -69,7 +82,6 @@ try {
       --results-directory './artifacts/testResults' `
       --logger 'trx' `
       --collect:'XPlat Code Coverage'
-
     Stop-OnError
 
     if (-not $SkipTestReport) {
@@ -78,7 +90,6 @@ try {
         '-reports:./artifacts/testResults/*/coverage.cobertura.xml' `
         '-targetdir:./artifacts/testCoverage' `
         '-reporttypes:HtmlInline_AzurePipelines'
-
       Stop-OnError
     }
   }
@@ -93,5 +104,5 @@ try {
   Write-Output "`nBuilt $projectName $projectVersion`n"
 
 } finally {
-  Pop-Location
+  Set-Location $originalLocation
 }

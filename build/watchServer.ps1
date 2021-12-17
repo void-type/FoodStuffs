@@ -1,9 +1,12 @@
-Push-Location -Path "$PSScriptRoot/../"
-. ./build/util.ps1
+$originalLocation = Get-Location
+$projectRoot = "$PSScriptRoot/../"
 
 try {
+  Set-Location -Path $projectRoot
+  . ./build/util.ps1
+  
   dotnet watch run --project "$webProjectFolder" --configuration 'Debug' --launch-profile 'Kestrel (Development)'
 
 } finally {
-  Pop-Location
+  Set-Location $originalLocation
 }
