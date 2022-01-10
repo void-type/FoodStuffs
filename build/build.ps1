@@ -38,11 +38,13 @@ try {
 
   # Restore local dotnet tools
   dotnet tool restore
+  Stop-OnError
 
   # Lint and build client
   if (-not $SkipClient) {
     Set-Location -Path $webClientProjectFolder
     npm install
+    Stop-OnError
 
     if (-not $SkipFormat) {
       npm run lint
@@ -50,7 +52,9 @@ try {
     }
 
     if (-not $SkipOutdated) {
+      npm outdated
       npm audit --production
+      Stop-OnError
     }
 
     npm run build -- --mode "$($nodeModes[$Configuration])"
@@ -66,9 +70,12 @@ try {
   }
 
   dotnet restore
+  Stop-OnError
 
   if (-not $SkipOutdated) {
     dotnet outdated
+    dotnet list package --vulnerable --include-transitive
+    Stop-OnError
   }
 
   dotnet build --configuration "$Configuration" --no-restore
