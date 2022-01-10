@@ -40,7 +40,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import webApi from '@/webApi';
-import router from '@/router';
 import GetRecipeResponse from '@/models/api/recipes/GetRecipeResponse';
 import SaveImageRequest from '@/models/api/images/SaveImageRequest';
 import PinImageRequest from '@/models/api/images/PinImageRequest';
@@ -145,7 +144,7 @@ export default {
         (data) => {
           if (this.id === 0) {
             this.isRecipeDirty = false;
-            router.push({ name: 'edit', params: { id: data.id } }).catch(() => {});
+            this.$router.push({ name: 'edit', params: { id: data.id } }).catch(() => {});
           } else {
             this.fetchRecipe(this.id);
           }
@@ -177,7 +176,7 @@ export default {
           this.removeFromRecent(this.id);
           this.setSources(new GetRecipeResponse());
           this.fetchRecipesList();
-          router.push({ name: 'search' })
+          this.$router.push({ name: 'search' })
             .then(() => this.setSuccessMessage(data.message))
             .catch(() => {});
         },

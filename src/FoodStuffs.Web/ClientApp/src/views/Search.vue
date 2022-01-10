@@ -80,7 +80,6 @@ import { mapActions, mapGetters } from 'vuex';
 import ListRecipesRequest from '@/models/api/recipes/ListRecipesRequest';
 import { numberOrDefault } from '@/models/formatters';
 import webApi from '@/webApi';
-import router from '@/router';
 import EntityTableControls from '@/viewComponents/EntityTableControls.vue';
 import EntityTablePager from '@/viewComponents/EntityTablePager.vue';
 
@@ -150,7 +149,7 @@ export default {
       setListRequest: 'recipes/setListRequest',
     }),
     fetchList() {
-      router.replace({ query: this.workingRequest }).catch(() => {});
+      this.$router.replace({ query: this.workingRequest }).catch(() => {});
 
       webApi.recipes.list(
         this.workingRequest,
@@ -180,7 +179,7 @@ export default {
       this.fetchList();
     },
     showDetails(recipe) {
-      router.push({ name: 'view', params: { id: recipe.id } });
+      this.$router.push({ name: 'view', params: { id: recipe.id } });
     },
     tableSortChanged(table) {
       this.workingRequest = {
