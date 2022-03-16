@@ -16,16 +16,16 @@ using VoidCore.Model.Configuration;
 using VoidCore.Model.Time;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.WebHost.UseSerilog();
-
 var env = builder.Environment;
 var config = builder.Configuration;
 var services = builder.Services;
 
+// Logging
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(config)
     .CreateLogger();
+
+builder.Host.UseSerilog();
 
 try
 {
@@ -60,6 +60,7 @@ try
 
     var app = builder.Build();
 
+    // Middleware pipeline
     app.UseSpaExceptionPage(env)
         .UseSecureTransport(env)
         .UseSecurityHeaders(env)

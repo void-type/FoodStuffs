@@ -25,7 +25,7 @@ COPY ./src/FoodStuffs.Web/ClientApp/package.json ./src/FoodStuffs.Web/ClientApp/
 COPY ./src/FoodStuffs.Web/ClientApp/package-lock.json ./src/FoodStuffs.Web/ClientApp/
 
 # Restore dependencies.
-RUN cd ./src/FoodStuffs.Web/ClientApp && npm install
+RUN cd ./src/FoodStuffs.Web/ClientApp && npm install --no-audit
 RUN dotnet restore
 
 # Copy everything to the build container

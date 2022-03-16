@@ -43,7 +43,7 @@ try {
   # Lint and build client
   if (-not $SkipClient) {
     Set-Location -Path $webClientProjectFolder
-    npm install
+    npm install --no-audit
     Stop-OnError
 
     if (-not $SkipFormat) {

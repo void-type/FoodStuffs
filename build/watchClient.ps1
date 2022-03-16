@@ -7,7 +7,7 @@ try {
 
   Set-Location -Path $webClientProjectFolder
 
-  npm install
+  npm install --no-audit
   npm run build -- --watch --mode "development"
 
 } finally {
