@@ -7,7 +7,7 @@
 
 A web application for managing recipes.
 
-FoodStuffs is based on ASP.NET 6 and Vue.js 2.6.
+FoodStuffs is based on ASP.NET Core 6 and Vue.js 2.6.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
@@ -32,25 +32,32 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 ### Make a Database
 
-1. Build a SQL Server database using the migration scripts in /build/sql
-2. Create and setup an appsettings.{environment}.json file.
+1. Build a SQL Server database by running the migration scripts in /build/sql in order by date.
 
-### Get some tools
+### Local build (production and development)
+
+Install the following tools:
 
 * [.NET SDK](https://www.microsoft.com/net/download)
 * [Node](https://nodejs.org/en/)
-* [Docker (optional)](https://docker.com)
 
-### Local build
-
-See the /build folder for scripts used to test and build this project. Run build.ps1 to make a production build.
-
-```powershell
-cd build
-./build.ps1
-```
+See the /build folder for scripts used to test and build this project.
 
 There are [VSCode](https://code.visualstudio.com/) tasks for each script. The build task (ctrl + shift + b) performs the standard CI build.
+
+Run build.ps1 to make a production build.
+
+```powershell
+./build/build.ps1
+```
+
+Use the deployment/setup scripts as templates to deploy to your environment.
+
+```powershell
+./build/setupWebServer.ps1
+
+./build/deployAppToProduction.ps1
+```
 
 ### Docker multi-stage build
 
