@@ -3,8 +3,8 @@ $projectRoot = "$PSScriptRoot/../"
 
 try {
   Set-Location -Path $projectRoot
-  . ./build/util.ps1
-  
+  . ./build/buildSettings.ps1
+
   dotnet watch run --project "$webProjectFolder" --configuration 'Debug' --launch-profile 'Kestrel (Development)'
 
 } finally {

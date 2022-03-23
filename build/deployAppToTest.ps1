@@ -7,7 +7,7 @@ $projectRoot = "$PSScriptRoot/../"
 
 try {
   Set-Location -Path $projectRoot
-  . ./build/util.ps1
+  . ./build/buildSettings.ps1
 
   $releaseFolder = './artifacts/dist/release'
 
@@ -15,12 +15,12 @@ try {
     throw 'No artifacts to deploy. Run build.ps1 before deploying.'
   }
 
-  if ($PSCmdlet.ShouldProcess("$iisDirectoryStaging", "Deploy $shortAppName to Staging.")) {
-    New-Item -Path "$iisDirectoryStaging\app_offline.htm"
+  if ($PSCmdlet.ShouldProcess("$iisDirectoryTest", "Deploy $shortAppName to Test.")) {
+    New-Item -Path "$iisDirectoryTest\app_offline.htm" -Force
     Start-Sleep 5
-    ROBOCOPY "$releaseFolder" "$iisDirectoryStaging" /MIR /XF "$iisDirectoryStaging\app_offline.htm"
-    Copy-Item -Path "$settingsDirectoryStaging\*" -Include "*.Staging.json" -Recurse -Destination $iisDirectoryStaging
-    Remove-Item -Path "$iisDirectoryStaging\app_offline.htm"
+    ROBOCOPY "$releaseFolder" "$iisDirectoryTest" /MIR /XF "$iisDirectoryTest\app_offline.htm"
+    Copy-Item -Path "$settingsDirectoryTest\*" -Include "*.Test.json" -Recurse -Destination $iisDirectoryTest
+    Remove-Item -Path "$iisDirectoryTest\app_offline.htm"
   }
 
 } finally {

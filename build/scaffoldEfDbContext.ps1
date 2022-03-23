@@ -3,7 +3,7 @@ $projectRoot = "$PSScriptRoot/../"
 
 try {
   Set-Location -Path $projectRoot
-  . ./build/util.ps1
+  . ./build/buildSettings.ps1
 
   $contextDirectory = "Data/EntityFramework"
   $dataModelsFolder = "../$projectName.Model/Data/Models/"

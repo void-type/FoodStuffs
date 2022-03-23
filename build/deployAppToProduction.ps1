@@ -7,7 +7,7 @@ $projectRoot = "$PSScriptRoot/../"
 
 try {
   Set-Location -Path $projectRoot
-  . ./build/util.ps1
+  . ./build/buildSettings.ps1
 
   $releaseFolder = './artifacts/dist/release'
 
@@ -16,7 +16,7 @@ try {
   }
 
   if ($PSCmdlet.ShouldProcess("$iisDirectoryProduction", "Deploy $shortAppName to Production.")) {
-    New-Item -Path "$iisDirectoryProduction\app_offline.htm"
+    New-Item -Path "$iisDirectoryProduction\app_offline.htm" -Force
     Start-Sleep 5
     ROBOCOPY "$releaseFolder" "$iisDirectoryProduction" /MIR /XF "$iisDirectoryProduction\app_offline.htm"
     Copy-Item -Path "$settingsDirectoryProduction\*" -Include "*.Production.json" -Recurse -Destination $iisDirectoryProduction
