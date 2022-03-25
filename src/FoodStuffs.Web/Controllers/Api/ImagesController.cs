@@ -18,40 +18,20 @@ namespace FoodStuffs.Web.Controllers.Api;
 [ApiRoute("images")]
 public class ImagesController : ControllerBase
 {
-    private readonly GetImagePipeline _getPipeline;
-    private readonly DeleteImagePipeline _deletePipeline;
-    private readonly SaveImagePipeline _savePipeline;
-    private readonly PinImagePipeline _pinPipeline;
-
-    /// <summary>
-    /// Construct a new controller.
-    /// </summary>
-    /// <param name="getPipeline"></param>
-    /// <param name="deletePipeline"></param>
-    /// <param name="savePipeline"></param>
-    /// <param name="pinPipeline"></param>
-    public ImagesController(GetImagePipeline getPipeline, DeleteImagePipeline deletePipeline,
-        SaveImagePipeline savePipeline, PinImagePipeline pinPipeline)
-    {
-        _getPipeline = getPipeline;
-        _deletePipeline = deletePipeline;
-        _savePipeline = savePipeline;
-        _pinPipeline = pinPipeline;
-    }
-
     /// <summary>
     /// Get an image.
     /// </summary>
+    /// <param name="getPipeline"></param>
     /// <param name="id">The Id of the image to download</param>
     [Route("{id}")]
     [HttpGet]
     [ProducesResponseType(typeof(FileContentResult), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Get(int id)
+    public Task<IActionResult> Get([FromServices] GetImagePipeline getPipeline, int id)
     {
         var request = new GetImageRequest(id);
 
-        return _getPipeline
+        return getPipeline
             .Handle(request)
             .MapAsync(HttpResponder.RespondWithFile);
     }
@@ -59,12 +39,13 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Upload an image using a multi-part form file.
     /// </summary>
+    /// <param name="savePipeline"></param>
     /// <param name="recipeId">The Id of the recipe the image is of</param>
     /// <param name="file">The file to upload</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> Upload(int recipeId, IFormFile file)
+    public async Task<IActionResult> Upload([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
     {
         byte[] content;
 
@@ -80,7 +61,7 @@ public class ImagesController : ControllerBase
 
         var request = new SaveImageRequest(recipeId, content);
 
-        return await _savePipeline
+        return await savePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond)
             .ConfigureAwait(false);
@@ -89,16 +70,17 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Delete an image.
     /// </summary>
+    /// <param name="deletePipeline"></param>
     /// <param name="id">ID of the image</param>
     [Route("{id}")]
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Delete(int id)
+    public Task<IActionResult> Delete([FromServices] DeleteImagePipeline deletePipeline, int id)
     {
         var request = new DeleteImageRequest(id);
 
-        return _deletePipeline
+        return deletePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -106,14 +88,15 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Pin an image for a recipe. This image will be the default image for the recipe.
     /// </summary>
+    /// <param name="pinPipeline"></param>
     /// <param name="request">The request containing which image to pin</param>
     [Route("pin")]
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Pin([FromBody] PinImageRequest request)
+    public Task<IActionResult> Pin([FromServices] PinImagePipeline pinPipeline, [FromBody] PinImageRequest request)
     {
-        return _pinPipeline
+        return pinPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

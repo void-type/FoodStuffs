@@ -14,17 +14,6 @@ namespace FoodStuffs.Web.Controllers.Api;
 [ApiRoute("app")]
 public class ApplicationController : ControllerBase
 {
-    private readonly GetWebClientInfo.Pipeline _getPipeline;
-
-    /// <summary>
-    /// Construct a new controller.
-    /// </summary>
-    /// <param name="getPipeline"></param>
-    public ApplicationController(GetWebClientInfo.Pipeline getPipeline)
-    {
-        _getPipeline = getPipeline;
-    }
-
     /// <summary>
     /// Get information to bootstrap the SPA client like application name and user data.
     /// </summary>
@@ -32,9 +21,9 @@ public class ApplicationController : ControllerBase
     [HttpGet]
     [Route("info")]
     [ProducesResponseType(typeof(GetWebClientInfo.WebClientInfo), 200)]
-    public Task<IActionResult> GetInfo()
+    public Task<IActionResult> GetInfo([FromServices] GetWebClientInfo.Pipeline getPipeline)
     {
-        return _getPipeline
+        return getPipeline
             .Handle(new GetWebClientInfo.Request())
             .MapAsync(HttpResponder.Respond);
     }
