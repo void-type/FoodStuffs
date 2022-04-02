@@ -1,4 +1,6 @@
-﻿namespace FoodStuffs.Model.Events.Recipes;
+﻿using VoidCore.Model.Responses.Collections;
+
+namespace FoodStuffs.Model.Events.Recipes;
 
 public record ListRecipesRequest(
     string? NameSearch,
@@ -7,4 +9,4 @@ public record ListRecipesRequest(
     bool SortDesc,
     bool IsPagingEnabled,
     int Page,
-    int Take);
+    int Take) : IPaginatedRequest;

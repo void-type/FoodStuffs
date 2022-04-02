@@ -3,7 +3,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VoidCore.Model" Version="8.1.15" />
+    <PackageReference Include="VoidCore.Model" Version="8.2.1" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" /> -->
   </ItemGroup>

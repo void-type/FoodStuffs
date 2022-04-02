@@ -11,8 +11,6 @@ using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
-#pragma warning disable RCS1155
-
 namespace FoodStuffs.Model.Events.Recipes;
 
 public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItemSet<ListRecipesResponse>>
@@ -26,7 +24,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
     public override async Task<IResult<IItemSet<ListRecipesResponse>>> Handle(ListRecipesRequest request, CancellationToken cancellationToken = default)
     {
-        var paginationOptions = new PaginationOptions(request.Page, request.Take, request.IsPagingEnabled);
+        var paginationOptions = request.GetPaginationOptions();
 
         var searchCriteria = GetSearchCriteria(request);
 
@@ -47,7 +45,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
                 Id: r.Id,
                 Name: r.Name,
                 Categories: r.CategoryRecipes.Select(cr => cr.Category.Name).OrderBy(n => n),
-                ImageId: r.PinnedImageId ?? (r.Images.Count > 0 ? r.Images.Select(i => i.Id).FirstOrDefault() : (int?)null)))
+                ImageId: r.PinnedImageId ?? r.Images.FirstOrDefault()?.Id))
             .ToItemSet(paginationOptions, totalCount)
             .Map(Ok);
     }
@@ -55,6 +53,9 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
     private static Expression<Func<Recipe, bool>>[] GetSearchCriteria(ListRecipesRequest request)
     {
         var searchCriteria = new List<Expression<Func<Recipe, bool>>>();
+
+        // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
+#pragma warning disable RCS1155
 
         if (!string.IsNullOrWhiteSpace(request.NameSearch))
         {
@@ -65,6 +66,8 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
         {
             searchCriteria.Add(recipe => recipe.CategoryRecipes.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
         }
+
+#pragma warning restore RCS1155
 
         return searchCriteria.ToArray();
     }
