@@ -1,18 +1,17 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
-
-#nullable disable
+using System.Collections.Generic;
 
 namespace FoodStuffs.Web.Data.EntityFramework;
 
 public partial class FoodStuffsContext : DbContext
 {
-    public virtual DbSet<Blob> Blobs { get; set; }
-    public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<CategoryRecipe> CategoryRecipes { get; set; }
-    public virtual DbSet<Image> Images { get; set; }
-    public virtual DbSet<Recipe> Recipes { get; set; }
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Blob> Blobs { get; set; } = null!;
+    public virtual DbSet<Category> Categories { get; set; } = null!;
+    public virtual DbSet<Image> Images { get; set; } = null!;
+    public virtual DbSet<Ingredient> Ingredients { get; set; } = null!;
+    public virtual DbSet<Recipe> Recipes { get; set; } = null!;
+    public virtual DbSet<User> Users { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -30,8 +29,6 @@ public partial class FoodStuffsContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.Property(e => e.Bytes).IsRequired();
-
             entity.HasOne(d => d.Image)
                 .WithOne(p => p.Blob)
                 .HasForeignKey<Blob>(d => d.Id)
@@ -41,81 +38,63 @@ public partial class FoodStuffsContext : DbContext
         modelBuilder.Entity<Category>(entity =>
         {
             entity.ToTable("Category");
-
-            entity.Property(e => e.Name).IsRequired();
-        });
-
-        modelBuilder.Entity<CategoryRecipe>(entity =>
-        {
-            entity.HasKey(e => new { e.RecipeId, e.CategoryId });
-
-            entity.ToTable("CategoryRecipe");
-
-            entity.HasOne(d => d.Category)
-                .WithMany(p => p.CategoryRecipes)
-                .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CategoryRecipe_Category");
-
-            entity.HasOne(d => d.Recipe)
-                .WithMany(p => p.CategoryRecipes)
-                .HasForeignKey(d => d.RecipeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CategoryRecipe_Recipe");
         });
 
         modelBuilder.Entity<Image>(entity =>
         {
             entity.ToTable("Image");
 
-            entity.Property(e => e.CreatedBy).IsRequired();
-
-            entity.Property(e => e.ModifiedBy).IsRequired();
-
             entity.HasOne(d => d.Recipe)
                 .WithMany(p => p.Images)
                 .HasForeignKey(d => d.RecipeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Image_Recipe");
+        });
 
-            entity.HasOne<Recipe>()
-                .WithOne(d => d.PinnedImage)
-                .HasForeignKey<Recipe>(d => d.PinnedImageId)
-                .HasConstraintName("FK_Recipe_PinnedImage");
+        modelBuilder.Entity<Ingredient>(entity =>
+        {
+            entity.ToTable("Ingredient");
+
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+            entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Recipe)
+                .WithMany(p => p.Ingredients)
+                .HasForeignKey(d => d.RecipeId)
+                .HasConstraintName("FK_Ingredient_Recipe");
         });
 
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.ToTable("Recipe");
 
-            entity.Property(e => e.CreatedBy).IsRequired();
+            entity.HasOne(d => d.PinnedImage)
+                .WithMany()
+                .HasForeignKey(d => d.PinnedImageId)
+                .HasConstraintName("FK_Recipe_PinnedImage");
 
-            entity.Property(e => e.Directions).IsRequired();
+            entity.HasMany(d => d.Categories)
+                .WithMany(p => p.Recipes)
+                .UsingEntity<Dictionary<string, object>>(
+                    "CategoryRecipe",
+                    l => l.HasOne<Category>().WithMany().HasForeignKey("CategoryId").HasConstraintName("FK_CategoryRecipe_Category"),
+                    r => r.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId").HasConstraintName("FK_CategoryRecipe_Recipe"),
+                    j =>
+                    {
+                        j.HasKey("RecipeId", "CategoryId");
 
-            entity.Property(e => e.Ingredients).IsRequired();
-
-            entity.Property(e => e.ModifiedBy).IsRequired();
-
-            entity.Property(e => e.Name).IsRequired();
+                        j.ToTable("CategoryRecipe");
+                    });
         });
 
         modelBuilder.Entity<User>(entity =>
         {
             entity.ToTable("User");
 
-            entity.Property(e => e.FirstName).IsRequired();
-
-            entity.Property(e => e.LastName).IsRequired();
-
             entity.Property(e => e.Password)
-                .IsRequired()
                 .HasMaxLength(128)
                 .IsUnicode(false)
-                .IsFixedLength(true);
-
-            entity.Property(e => e.Salt).IsRequired();
-
-            entity.Property(e => e.UserName).IsRequired();
+                .IsFixedLength();
         });
     }
 }

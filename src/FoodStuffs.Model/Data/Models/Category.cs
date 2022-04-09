@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 
-#nullable disable
-
 namespace FoodStuffs.Model.Data.Models;
 
 public partial class Category
 {
     public Category()
     {
-        CategoryRecipes = new HashSet<CategoryRecipe>();
+        Recipes = new HashSet<Recipe>();
     }
 
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public virtual ICollection<CategoryRecipe> CategoryRecipes { get; set; }
+    public virtual ICollection<Recipe> Recipes { get; set; }
 }

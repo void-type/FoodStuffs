@@ -102,6 +102,10 @@ public class ImageEventTests
 
         var image = recipe.Images.First();
 
+        // For testing, we need to pull in all entities so EF can cascade delete.
+        // In prod, SQL Server will do the cascading without needing to bring them into memory.
+        var blobs = context.Blobs.ToList();
+
         var request = new DeleteImageRequest(image.Id);
 
         var result = await new DeleteImageHandler(data).Handle(request);

@@ -10,7 +10,7 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
 {
     public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria) : base(criteria)
     {
-        AddInclude($"{nameof(Recipe.CategoryRecipes)}.{nameof(CategoryRecipe.Category)}");
+        AddInclude(nameof(Recipe.Categories));
         AddInclude(nameof(Recipe.Images));
     }
 

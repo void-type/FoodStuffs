@@ -22,7 +22,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new RecipesByIdWithCategoriesAndImagesSpecification(request.Id);
+        var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
 
         var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken)
             .ConfigureAwait(false);
@@ -48,7 +48,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
     private static void Transfer(SaveRecipeRequest request, Recipe recipe)
     {
         recipe.Name = request.Name;
-        recipe.Ingredients = request.Ingredients;
+        recipe.Ingredients_Old = request.Ingredients;
         recipe.Directions = request.Directions;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
@@ -56,45 +56,52 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
     private async Task ManageCategories(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
     {
-        var requested = request.Categories
+        var requestedCategoryNames = request.Categories
             .Where(n => !string.IsNullOrWhiteSpace(n))
             .Select(n => n.ToLower().Trim())
             .ToArray();
 
         var categoriesThatMatchRequestedSpec = new CategoriesSpecification(
-            c => requested.Contains(c.Name.ToLower().Trim()));
+            c => requestedCategoryNames.Contains(c.Name.ToLower().Trim()));
 
-        var categoriesExist = (await _data.Categories
+        // Get categories that exist
+        var existingCategories = await _data.Categories
             .List(categoriesThatMatchRequestedSpec, cancellationToken)
-            .ConfigureAwait(false))
+            .ConfigureAwait(false);
+
+        var existingCategoryNames = existingCategories
             .Select(c => c.Name.ToLower().Trim());
 
-        // Add categories that don't exist
-        await requested
-            .Where(n => !categoriesExist.Contains(n))
+        // Create categories that don't exist
+        var newCategories = await requestedCategoryNames
+            .Where(n => !existingCategoryNames.Contains(n))
             .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) })
             .TeeAsync(r => _data.Categories.AddRange(r, cancellationToken))
             .ConfigureAwait(false);
 
-        // Remove relations that are no longer needed
-        await recipe.CategoryRecipes
-            .Where(r => !requested.Contains(r.Category.Name.ToLower().Trim()))
-            .TeeAsync(r => _data.CategoryRecipes.RemoveRange(r, cancellationToken))
-            .ConfigureAwait(false);
+        var finalCategories = existingCategories.Concat(newCategories);
 
-        // Add relations that don't exist
-        await _data.Categories
-            .List(categoriesThatMatchRequestedSpec, cancellationToken)
-            .MapAsync(categories => categories
-               .Where(c => !recipe.CategoryRecipes
-                  .Select(r => r.Category.Name.ToLower().Trim())
-                  .Contains(c.Name.ToLower().Trim()))
-               .Select(c => new CategoryRecipe
-               {
-                   RecipeId = recipe.Id,
-                   CategoryId = c.Id
-               }))
-            .TeeAsync(r => _data.CategoryRecipes.AddRange(r, cancellationToken))
-            .ConfigureAwait(false);
+        var finalCategoryIds = finalCategories.Select(c => c.Id);
+        var currentCategoryIds = recipe.Categories.Select(c => c.Id);
+
+        // Remove relations that are no longer needed
+        var categoriesToRemove = recipe.Categories
+            .Where(c => !finalCategoryIds.Contains(c.Id));
+
+        foreach (var category in categoriesToRemove)
+        {
+            recipe.Categories.Remove(category);
+        }
+
+        // Add relations that are missing
+        var categoriesToAdd = finalCategories
+            .Where(c => !currentCategoryIds.Contains(c.Id));
+
+        foreach (var category in categoriesToAdd)
+        {
+            recipe.Categories.Add(category);
+        }
+
+        await _data.Recipes.Update(recipe, cancellationToken);
     }
 }

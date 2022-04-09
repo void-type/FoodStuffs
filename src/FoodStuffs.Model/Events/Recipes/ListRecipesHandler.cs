@@ -44,7 +44,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
             .Select(r => new ListRecipesResponse(
                 Id: r.Id,
                 Name: r.Name,
-                Categories: r.CategoryRecipes.Select(cr => cr.Category.Name).OrderBy(n => n),
+                Categories: r.Categories.Select(c => c.Name).OrderBy(n => n),
                 ImageId: r.PinnedImageId ?? r.Images.FirstOrDefault()?.Id))
             .ToItemSet(paginationOptions, totalCount)
             .Map(Ok);
@@ -64,7 +64,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
         if (!string.IsNullOrWhiteSpace(request.CategorySearch))
         {
-            searchCriteria.Add(recipe => recipe.CategoryRecipes.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
+            searchCriteria.Add(recipe => recipe.Categories.Any(c => c.Name.ToLower().Contains(request.CategorySearch.ToLower())));
         }
 
 #pragma warning restore RCS1155

@@ -11,7 +11,6 @@ public class FoodStuffsEfData : IFoodStuffsData
     {
         Blobs = new EfWritableRepository<Blob>(context);
         Categories = new EfWritableRepository<Category>(context);
-        CategoryRecipes = new EfWritableRepository<CategoryRecipe>(context);
         Images = new EfWritableRepository<Image>(context);
         Recipes = new EfWritableRepository<Recipe>(context);
         Users = new EfWritableRepository<User>(context);
@@ -19,7 +18,6 @@ public class FoodStuffsEfData : IFoodStuffsData
 
     public IWritableRepository<Blob> Blobs { get; }
     public IWritableRepository<Category> Categories { get; }
-    public IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
     public IWritableRepository<Image> Images { get; }
     public IWritableRepository<Recipe> Recipes { get; }
     public IWritableRepository<User> Users { get; }

@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +31,6 @@ public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, Entit
                     await _data.Recipes.Update(i.Recipe, cancellationToken).ConfigureAwait(false);
                 }
             })
-            .TeeOnSuccessAsync(i => _data.Blobs.Remove(new Blob { Id = i.Id }, cancellationToken))
             .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
             .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id));
     }
