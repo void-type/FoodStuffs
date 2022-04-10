@@ -1,4 +1,11 @@
-﻿SET ANSI_NULLS ON
+﻿-- Migration process:
+-- Run part 1
+-- Export Recipes table as csv
+-- Run ps1 to migrate ingredients
+-- Run the generated sql script
+-- Run part 2
+
+SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON

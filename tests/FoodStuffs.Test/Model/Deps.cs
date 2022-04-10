@@ -56,7 +56,6 @@ public static class Deps
         var recipe1 = context.Recipes.Add(new Recipe
         {
             Name = "Recipe1",
-            Ingredients_Old = "ing",
             Directions = "dir",
             CookTimeMinutes = 21,
             PrepTimeMinutes = 2,
@@ -66,13 +65,13 @@ public static class Deps
             ModifiedBy = "12"
         }).Entity;
 
+        recipe1.Ingredients.Add(new Ingredient { Name = "ing", Quantity = 1, Order = 1 });
         recipe1.Categories.Add(category1);
         recipe1.Categories.Add(category2);
 
         var recipe2 = context.Recipes.Add(new Recipe
         {
             Name = "Recipe2",
-            Ingredients_Old = "some",
             Directions = "some",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
@@ -82,12 +81,12 @@ public static class Deps
             ModifiedBy = "11"
         }).Entity;
 
+        recipe1.Ingredients.Add(new Ingredient { Name = "ing", Quantity = 1, Order = 1 });
         recipe2.Categories.Add(category3);
 
-        context.Recipes.Add(new Recipe
+        var recipe3 = context.Recipes.Add(new Recipe
         {
             Name = "Recipe3",
-            Ingredients_Old = "some",
             Directions = "some",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
@@ -95,7 +94,9 @@ public static class Deps
             ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",
             ModifiedBy = "11"
-        });
+        }).Entity;
+
+        recipe3.Ingredients.Add(new Ingredient { Name = "some", Quantity = 1, Order = 1 });
 
         var file = new SimpleFile("seeded file content", "some file.txt");
 

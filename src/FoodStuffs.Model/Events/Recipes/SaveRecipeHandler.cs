@@ -22,86 +22,81 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new RecipesByIdWithCategoriesSpecification(request.Id);
+        var byId = new RecipesByIdWithCategoriesAndIngredientsSpecification(request.Id);
 
         var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken)
             .ConfigureAwait(false);
 
+        var recipeToEdit = maybeRecipe.Unwrap(() => new Recipe());
+
+        Transfer(request, recipeToEdit);
+
         if (maybeRecipe.HasValue)
         {
-            return await maybeRecipe.Value
-                .Tee(r => Transfer(request, r))
-                .TeeAsync(r => _data.Recipes.Update(r, cancellationToken))
-                .TeeAsync(r => ManageCategories(request, r, cancellationToken))
-                .MapAsync(r => Ok(EntityMessage.Create("Recipe updated.", r.Id)))
+            await _data.Recipes.Update(recipeToEdit, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        else
+        {
+            await _data.Recipes.Add(recipeToEdit, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        return await new Recipe()
-            .Tee(r => Transfer(request, r))
-            .TeeAsync(r => _data.Recipes.Add(r, cancellationToken))
-            .TeeAsync(r => ManageCategories(request, r, cancellationToken))
-            .MapAsync(r => Ok(EntityMessage.Create("Recipe added.", r.Id)))
-            .ConfigureAwait(false);
+        return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));
     }
 
     private static void Transfer(SaveRecipeRequest request, Recipe recipe)
     {
         recipe.Name = request.Name;
-        recipe.Ingredients_Old = request.Ingredients;
         recipe.Directions = request.Directions;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
+
+        ManageIngredients(request, recipe);
+        ManageCategories(request, recipe);
     }
 
-    private async Task ManageCategories(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
+    private static void ManageIngredients(SaveRecipeRequest request, Recipe recipe)
     {
-        var requestedCategoryNames = request.Categories
+        recipe.Ingredients.Clear();
+
+        foreach (var ingredient in request.Ingredients)
+        {
+            recipe.Ingredients.Add(new Ingredient
+            {
+                Name = ingredient.Name,
+                Quantity = ingredient.Quantity,
+                Order = ingredient.Order,
+                IsCategory = ingredient.IsCategory,
+            });
+        }
+    }
+
+    private static void ManageCategories(SaveRecipeRequest request, Recipe recipe)
+    {
+        var requested = request.Categories
             .Where(n => !string.IsNullOrWhiteSpace(n))
             .Select(n => n.ToLower().Trim())
             .ToArray();
 
-        var categoriesThatMatchRequestedSpec = new CategoriesSpecification(
-            c => requestedCategoryNames.Contains(c.Name.ToLower().Trim()));
-
-        // Get categories that exist
-        var existingCategories = await _data.Categories
-            .List(categoriesThatMatchRequestedSpec, cancellationToken)
-            .ConfigureAwait(false);
+        var existingCategories = recipe.Categories
+            .Where(c => requested.Contains(c.Name.ToLower().Trim()));
 
         var existingCategoryNames = existingCategories
             .Select(c => c.Name.ToLower().Trim());
 
         // Create categories that don't exist
-        var newCategories = await requestedCategoryNames
+        var newCategories = requested
             .Where(n => !existingCategoryNames.Contains(n))
-            .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) })
-            .TeeAsync(r => _data.Categories.AddRange(r, cancellationToken))
-            .ConfigureAwait(false);
+            .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) });
 
         var finalCategories = existingCategories.Concat(newCategories);
 
-        var finalCategoryIds = finalCategories.Select(c => c.Id);
-        var currentCategoryIds = recipe.Categories.Select(c => c.Id);
+        recipe.Categories.Clear();
 
-        // Remove relations that are no longer needed
-        var categoriesToRemove = recipe.Categories
-            .Where(c => !finalCategoryIds.Contains(c.Id));
-
-        foreach (var category in categoriesToRemove)
-        {
-            recipe.Categories.Remove(category);
-        }
-
-        // Add relations that are missing
-        var categoriesToAdd = finalCategories
-            .Where(c => !currentCategoryIds.Contains(c.Id));
-
-        foreach (var category in categoriesToAdd)
+        foreach (var category in finalCategories)
         {
             recipe.Categories.Add(category);
         }
-
-        await _data.Recipes.Update(recipe, cancellationToken);
     }
 }

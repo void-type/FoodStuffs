@@ -226,7 +226,7 @@ public class RecipeEventTests
         var data = context.FoodStuffsData();
 
         var result = await new SaveRecipeHandler(data)
-            .Handle(new SaveRecipeRequest(0, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
+            .Handle(new SaveRecipeRequest(0, "New", "New", null, 20, new[] { new SaveRecipeRequestIngredient("New", 1, 1, false) }, new[] { "Category2", "Category3", "Category4" }));
 
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.Id > 0);
@@ -251,7 +251,7 @@ public class RecipeEventTests
         var existingRecipeId = (await data.Recipes.ListAll(default))[0].Id;
 
         var result = await new SaveRecipeHandler(data)
-            .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", "New", null, 20, new[] { "Category2", "Category3", "Category4" }));
+            .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", null, 20, new[] { new SaveRecipeRequestIngredient("New", 1, 1, false) }, new[] { "Category2", "Category3", "Category4" }));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(existingRecipeId, result.Value.Id);

@@ -2,7 +2,7 @@ export default class GetRecipeResponse {
   constructor() {
     this.id = 0;
     this.name = '';
-    this.ingredients = '';
+    this.ingredients = [];
     this.directions = '';
     this.cookTimeMinutes = null;
     this.prepTimeMinutes = null;

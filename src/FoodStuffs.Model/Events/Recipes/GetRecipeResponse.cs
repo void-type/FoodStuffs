@@ -16,4 +16,4 @@ public record GetRecipeResponse(
     int? PinnedImageId,
     IEnumerable<string> Categories,
     IEnumerable<int> Images,
-    string Ingredients);
+    IEnumerable<GetRecipeResponseIngredient> Ingredients);

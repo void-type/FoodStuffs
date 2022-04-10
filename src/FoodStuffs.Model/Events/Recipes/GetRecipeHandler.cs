@@ -36,6 +36,6 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
                PinnedImageId: r.PinnedImageId,
                Categories: r.Categories.Select(c => c.Name).OrderBy(n => n),
                Images: r.Images.Select(i => i.Id),
-               Ingredients: string.Join('\n', r.Ingredients.Select(i => i.Name))));
+               Ingredients: r.Ingredients.Select(i => new GetRecipeResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))));
     }
 }

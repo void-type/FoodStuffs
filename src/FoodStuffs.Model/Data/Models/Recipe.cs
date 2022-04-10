@@ -15,7 +15,6 @@ public partial class Recipe
     public int Id { get; set; }
     public string Name { get; set; } = null!;
     public string Directions { get; set; } = null!;
-    public string Ingredients_Old { get; set; } = null!;
     public int? PrepTimeMinutes { get; set; }
     public int? CookTimeMinutes { get; set; }
     public string CreatedBy { get; set; } = null!;
