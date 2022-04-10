@@ -1,4 +1,4 @@
-namespace FoodStuffs.Model.Events.Recipes;
+﻿namespace FoodStuffs.Model.Events.Recipes;
 
 public record SaveRecipeRequestIngredient(
     string Name,

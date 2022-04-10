@@ -65,11 +65,8 @@
     >
       Ingredients
     </h3>
-    <b-form-textarea
-      plaintext
-      rows="1"
-      :max-rows="Number.MAX_SAFE_INTEGER"
-      :value="recipe.ingredients"
+    <RecipeViewerIngredients
+      :ingredients="recipe.ingredients"
     />
     <h3
       class="mt-3"
@@ -109,10 +106,12 @@
 import webApi from '@/webApi';
 import RecipeTimeSpan from '@/models/RecipeTimeSpan';
 import EntityAuditInfo from './EntityAuditInfo.vue';
+import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
 
 export default {
   components: {
     EntityAuditInfo,
+    RecipeViewerIngredients,
   },
   filters: {
     TimeSpan(value) {

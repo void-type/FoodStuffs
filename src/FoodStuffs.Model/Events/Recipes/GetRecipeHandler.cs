@@ -34,8 +34,12 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
                ModifiedBy: r.ModifiedBy,
                ModifiedOn: r.ModifiedOn,
                PinnedImageId: r.PinnedImageId,
-               Categories: r.Categories.Select(c => c.Name).OrderBy(n => n),
+               Categories: r.Categories
+                .Select(c => c.Name)
+                .OrderBy(n => n),
                Images: r.Images.Select(i => i.Id),
-               Ingredients: r.Ingredients.Select(i => new GetRecipeResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))));
+               Ingredients: r.Ingredients
+                .Select(i => new GetRecipeResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
+                .OrderBy(i => i.Order)));
     }
 }
