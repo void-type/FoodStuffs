@@ -13,10 +13,5 @@
       ]
     },
     "lib": ["ES2021"]
-  },
-  "references": [
-    {
-      "path": "./tsconfig.vite-config.json"
-    }
-  ]
+  }
 }

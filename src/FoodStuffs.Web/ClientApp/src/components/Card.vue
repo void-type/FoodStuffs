@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps({
-  card: Object,
-  showIngredients: Boolean,
-  onCardClick: Function
+  card: { type: Object, required: true },
+  showIngredients: { type: Boolean, required: true },
+  onCardClick: { type: Function, required: true }
 });
 </script>
 

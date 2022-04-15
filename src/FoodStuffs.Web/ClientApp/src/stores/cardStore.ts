@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia';
 
-interface Card {
+export interface Card {
   id: number,
   name: string,
   ingredients: string[]
   active: boolean
 }
 
-interface Pantry {
+export interface Pantry {
   [key: string]: number
 }
 
-interface CardStoreState {
+export interface CardStoreState {
   cards: Card[],
   pantry: Pantry
 }

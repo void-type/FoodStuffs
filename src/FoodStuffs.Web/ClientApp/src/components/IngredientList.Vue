@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
 defineProps({
-  title: String,
-  ingredients: Array,
-  onClear: Function,
-  onIngredientClick: Function
+  title: { type: String, required: true },
+  ingredients: { type: Object as PropType<[string, number][]>, required: true },
+  onClear: { type: Function as PropType<((payload: MouseEvent) => void)>, required: true },
+  onIngredientClick: { type: Function, required: true }
 });
 </script>
 
