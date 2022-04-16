@@ -48,8 +48,9 @@ try {
 
     if (-not $SkipFormat) {
       npm run lint
-      npm run format
       Stop-OnError
+      npm run format | Out-Null
+      Stop-OnError "Formatting the client failed."
     }
 
     if (-not $SkipOutdated) {
