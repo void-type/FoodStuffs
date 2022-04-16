@@ -53,6 +53,29 @@
             }
         },
         {
+            "label": "format",
+            "command": "./format.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "group": "test",
+            "problemMatcher": [
+                "$node-sass",
+                "$eslint-compact",
+                "$msCompile"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "never",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "build"
+            }
+        },
+        {
             "label": "testServer",
             "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipClient -SkipPublish",
             "options": {
