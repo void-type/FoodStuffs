@@ -48,6 +48,7 @@ try {
 
     if (-not $SkipFormat) {
       npm run lint
+      npm run format
       Stop-OnError
     }
 

@@ -1,83 +1,140 @@
 import { defineStore } from 'pinia';
 
-export interface Card {
-  id: number,
-  name: string,
-  ingredients: string[]
-  active: boolean
+export interface CardIngredient {
+  name: string;
+  quantity: number;
 }
 
-export interface Pantry {
-  [key: string]: number
+export interface Card {
+  id: number;
+  name: string;
+  ingredients: CardIngredient[];
+  active: boolean;
 }
 
 export interface CardStoreState {
-  cards: Card[],
-  pantry: Pantry
+  cards: Card[];
+  pantry: Record<string, number>;
+}
+
+function countIngredients(acc: Record<string, number>, curr: CardIngredient) {
+  const { name } = curr;
+
+  if (!acc[name]) {
+    acc[name] = 0;
+  }
+
+  acc[name] += curr.quantity;
+  return acc;
+}
+
+function addCount(dict: Record<string, number>, key: string | number, count = 1) {
+  if (!dict[key]) {
+    // eslint-disable-next-line no-param-reassign
+    dict[key] = 0;
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  dict[key] += count;
+}
+
+function subtractCount(dict: Record<string, number>, key: string | number, count = 1) {
+  if (!dict[key]) {
+    return;
+  }
+
+  // eslint-disable-next-line no-param-reassign
+  dict[key] -= count;
+
+  if (dict[key] < 1) {
+    // eslint-disable-next-line no-param-reassign
+    delete dict[key];
+  }
 }
 
 export const useCardStore = defineStore('cards', {
-  state: (): CardStoreState => {
-    return {
-      cards: [
-        {
-          id: 1,
-          name: 'Burgers',
-          ingredients: ['Beef', 'Buns', 'Ketchup'],
-          active: false,
-        },
-        {
-          id: 2,
-          name: 'Brats',
-          ingredients: ['Sausage', 'Buns', 'Mustard'],
-          active: false,
-        },
-        {
-          id: 3,
-          name: 'Mac N Cheese',
-          ingredients: ['Mac', 'Cheese'],
-          active: false,
-        },
-        {
-          id: 4,
-          name: 'Curry',
-          ingredients: ['Chicken', 'Curry sauce', 'Rice'],
-          active: false,
-        },
-        {
-          id: 5,
-          name: 'Meatloaf',
-          ingredients: ['Beef', 'Crackers', 'Ketchup', 'Egg'],
-          active: false,
-        },
-        {
-          id: 6,
-          name: 'Sandwich',
-          ingredients: ['Lunch meat', 'Buns', 'Mustard', 'Cheese', 'Lettuce'],
-          active: false,
-        },
-      ],
-      pantry: {},
-    }
-  },
+  state: (): CardStoreState => ({
+    cards: [
+      {
+        id: 1,
+        name: 'Burgers',
+        ingredients: [
+          { name: 'Beef', quantity: 2 },
+          { name: 'Buns', quantity: 2 },
+          { name: 'Ketchup', quantity: 1 },
+        ],
+        active: false,
+      },
+      {
+        id: 2,
+        name: 'Brats',
+        ingredients: [
+          { name: 'Sausage', quantity: 1 },
+          { name: 'Buns', quantity: 1 },
+          { name: 'Mustard', quantity: 3 },
+        ],
+        active: false,
+      },
+      {
+        id: 3,
+        name: 'Mac N Cheese',
+        ingredients: [
+          { name: 'Mac', quantity: 1 },
+          { name: 'Cheese', quantity: 1 },
+        ],
+        active: false,
+      },
+      {
+        id: 4,
+        name: 'Curry',
+        ingredients: [
+          { name: 'Chicken', quantity: 1 },
+          { name: 'Curry sauce', quantity: 1 },
+          { name: 'Rice', quantity: 1 },
+        ],
+        active: false,
+      },
+      {
+        id: 5,
+        name: 'Meatloaf',
+        ingredients: [
+          { name: 'Beef', quantity: 3 },
+          { name: 'Crackers', quantity: 1 },
+          { name: 'Ketchup', quantity: 1 },
+          { name: 'Egg', quantity: 1 },
+        ],
+        active: false,
+      },
+      {
+        id: 6,
+        name: 'Sandwich',
+        ingredients: [
+          { name: 'Lunch meat', quantity: 1 },
+          { name: 'Buns', quantity: 2 },
+          { name: 'Mustard', quantity: 1 },
+          { name: 'Cheese', quantity: 1 },
+          { name: 'Lettuce', quantity: 1 },
+        ],
+        active: false,
+      },
+    ],
+    pantry: {},
+  }),
 
   getters: {
-    getCards: (state) => state.cards
-      .sort((a, b) => a.name.localeCompare(b.name)),
+    getCards: (state) => state.cards.sort((a, b) => a.name.localeCompare(b.name)),
 
     getPantry: (state) => Object.entries(state.pantry),
 
     getShoppingList: (state) => {
       const ingredientCounts = state.cards
-        .filter(card => card.active == true)
-        .flatMap((c: { ingredients: string[]; }) => c.ingredients)
-        .sort()
-        .reduce(countInstances, {});
+        .filter((card) => card.active === true)
+        .flatMap((c) => c.ingredients)
+        .reduce(countIngredients, {});
 
-      Object.entries(state.pantry)
-        .forEach(([ingredient, quantity]) => {
-          subtractCount(ingredientCounts, ingredient, quantity);
-        });
+      Object.entries(state.pantry).forEach(([ingredient, quantity]) => {
+        subtractCount(ingredientCounts, ingredient, quantity);
+      });
 
       return Object.entries(ingredientCounts);
     },
@@ -85,8 +142,8 @@ export const useCardStore = defineStore('cards', {
 
   actions: {
     toggleCard(id: number) {
-      const card = this.cards.find(c => c.id === id);
-      if (card == undefined) {
+      const card = this.cards.find((c) => c.id === id);
+      if (typeof card === 'undefined') {
         return;
       }
       card.active = !card.active;
@@ -105,36 +162,10 @@ export const useCardStore = defineStore('cards', {
     },
 
     clearShoppingList() {
-      this.cards.forEach(c => c.active = false);
+      this.cards.forEach((c) => {
+        // eslint-disable-next-line no-param-reassign
+        c.active = false;
+      });
     },
   },
 });
-
-function countInstances(acc: { [x: string]: number; }, curr: string | number) {
-  if (!acc[curr]) {
-    acc[curr] = 0;
-  }
-
-  acc[curr]++;
-  return acc;
-}
-
-function addCount(dict: Record<string, number>, key: string | number, count = 1) {
-  if (!dict[key]) {
-    dict[key] = 0;
-  }
-
-  dict[key] += count;
-}
-
-function subtractCount(dict: Record<string, number>, key: string | number, count = 1) {
-  if (!dict[key]) {
-    return;
-  }
-
-  dict[key] -= count;
-
-  if (dict[key] < 1) {
-    delete (dict[key]);
-  }
-}

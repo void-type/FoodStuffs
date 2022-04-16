@@ -1,24 +1,33 @@
 <script setup lang="ts">
+import type { Card } from '@/stores/cardStore';
+import type { PropType } from 'vue';
+
 defineProps({
-  card: { type: Object, required: true },
+  card: { type: Object as PropType<Card>, required: true },
   showIngredients: { type: Boolean, required: true },
-  onCardClick: { type: Function, required: true }
+  onCardClick: { type: Function, required: true },
 });
 </script>
 
 <template>
   <div class="card-outer">
-    <div :class="{ 'card-inner': true, 'active': card.active }" @click="onCardClick(card.id)">
+    <div
+      :class="{ 'card-inner': true, active: card.active }"
+      @keyup="onCardClick()"
+      @click="onCardClick(card.id)"
+    >
       <h3>{{ card.name }}</h3>
       <ul v-if="showIngredients">
-        <li v-for="ingredient in card.ingredients" :key="ingredient">{{ ingredient }}</li>
+        <li v-for="ingredient in card.ingredients" :key="ingredient.name">
+          {{ ingredient.quantity }}x {{ ingredient.name }}
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import "@/App";
+@import '@/App';
 
 .card-outer {
   padding: 0.5rem;

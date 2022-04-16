@@ -1,29 +1,33 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import type { PropType } from 'vue';
 
 defineProps({
   title: { type: String, required: true },
   ingredients: { type: Object as PropType<[string, number][]>, required: true },
-  onClear: { type: Function as PropType<((payload: MouseEvent) => void)>, required: true },
-  onIngredientClick: { type: Function, required: true }
+  onClear: { type: Function, required: true },
+  onIngredientClick: { type: Function, required: true },
 });
 </script>
 
 <template>
   <div class="list">
     <h2>{{ title }}</h2>
-    <button class="btn btn-success" @click="onClear">Clear</button>
+    <button class="btn btn-success" @click="onClear()">Clear</button>
     <ul>
       <li
-          v-for="[ingredient, quantity] in ingredients"
-          :key="ingredient"
-          @click="onIngredientClick(ingredient)">{{ quantity }}x {{ ingredient }}</li>
+        v-for="[ingredient, quantity] in ingredients"
+        :key="ingredient"
+        @keyup.enter="onIngredientClick(ingredient)"
+        @click="onIngredientClick(ingredient)"
+      >
+        {{ quantity }}x {{ ingredient }}
+      </li>
     </ul>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import "@/App";
+@import '@/App';
 
 .list {
   flex: 1;

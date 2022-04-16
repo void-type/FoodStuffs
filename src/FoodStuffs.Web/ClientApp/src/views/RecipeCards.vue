@@ -1,54 +1,55 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useCardStore } from '@/stores/cardStore';
 import IngredientList from '@/components/IngredientList.vue';
 import Card from '@/components/Card.vue';
-import { useCardStore } from '@/stores/cardStore';
 
 const cardStore = useCardStore();
 
-const getActiveCards = computed(() => cardStore.getCards
-  .filter(c => c.active));
+const getActiveCards = computed(() => cardStore.getCards.filter((c) => c.active));
 
-const getInactiveCards = computed(() => cardStore.getCards
-  .filter(c => !c.active));
-
+const getInactiveCards = computed(() => cardStore.getCards.filter((c) => !c.active));
 </script>
 
 <template>
   <div class="area">
     <IngredientList
-                    title="Shopping list"
-                    :ingredients="cardStore.getShoppingList"
-                    :onClear="cardStore.clearShoppingList"
-                    :onIngredientClick="cardStore.addToPantry" />
+      title="Shopping list"
+      :ingredients="cardStore.getShoppingList"
+      :on-clear="cardStore.clearShoppingList"
+      :on-ingredient-click="cardStore.addToPantry"
+    />
     <IngredientList
-                    title="Pantry"
-                    :ingredients="cardStore.getPantry"
-                    :onClear="cardStore.clearPantry"
-                    :onIngredientClick="cardStore.removeFromPantry" />
+      title="Pantry"
+      :ingredients="cardStore.getPantry"
+      :on-clear="cardStore.clearPantry"
+      :on-ingredient-click="cardStore.removeFromPantry"
+    />
   </div>
 
   <div class="area">
     <Card
-          v-for="card in getActiveCards"
-          :key="card.id"
-          :card="card"
-          :onCardClick="cardStore.toggleCard"
-          :showIngredients="true" />
+      v-for="card in getActiveCards"
+      :key="card.id"
+      :card="card"
+      :on-card-click="cardStore.toggleCard"
+      :show-ingredients="true"
+    />
   </div>
 
   <div class="area">
     <Card
-          v-for="card in getInactiveCards"
-          :key="card.id"
-          :card="card"
-          :onCardClick="cardStore.toggleCard"
-          :showIngredients="false" />
+      v-for="card in getInactiveCards"
+      :key="card.id"
+      :card="card"
+      :on-card-click="cardStore.toggleCard"
+      :show-ingredients="false"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
-@import "../App";
+@import '../App';
 
 .area {
   display: flex;
