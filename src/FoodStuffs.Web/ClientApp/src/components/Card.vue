@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Card } from '@/stores/cardStore';
 import type { PropType } from 'vue';
+import type { Card } from '@/stores/cards';
 
 defineProps({
   card: { type: Object as PropType<Card>, required: true },
@@ -27,7 +27,7 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-@import '@/App';
+@import '@/style/cards';
 
 .card-outer {
   padding: 0.5rem;

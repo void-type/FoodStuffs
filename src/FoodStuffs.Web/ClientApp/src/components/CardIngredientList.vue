@@ -27,7 +27,7 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-@import '@/App';
+@import '@/style/cards';
 
 .list {
   flex: 1;

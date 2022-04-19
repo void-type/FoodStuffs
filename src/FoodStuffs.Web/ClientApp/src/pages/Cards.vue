@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useCardStore } from '@/stores/cardStore';
-import IngredientList from '@/components/IngredientList.vue';
+import { useCardStore } from '@/stores/cards';
+import IngredientList from '@/components/CardIngredientList.vue';
 import Card from '@/components/Card.vue';
 
 const cardStore = useCardStore();
 
 const getActiveCards = computed(() => cardStore.getCards.filter((c) => c.active));
-
 const getInactiveCards = computed(() => cardStore.getCards.filter((c) => !c.active));
 </script>
 
@@ -49,8 +48,6 @@ const getInactiveCards = computed(() => cardStore.getCards.filter((c) => !c.acti
 </template>
 
 <style scoped lang="scss">
-@import '../App';
-
 .area {
   display: flex;
   flex-wrap: wrap;

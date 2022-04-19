@@ -12,7 +12,7 @@ export interface Card {
   active: boolean;
 }
 
-export interface CardStoreState {
+interface CardStoreState {
   cards: Card[];
   pantry: Record<string, number>;
 }
@@ -28,7 +28,7 @@ function countIngredients(acc: Record<string, number>, curr: CardIngredient) {
   return acc;
 }
 
-function addCount(dict: Record<string, number>, key: string | number, count = 1) {
+function addCount(dict: Record<string, number>, key: string, count = 1) {
   if (!dict[key]) {
     // eslint-disable-next-line no-param-reassign
     dict[key] = 0;
@@ -38,7 +38,7 @@ function addCount(dict: Record<string, number>, key: string | number, count = 1)
   dict[key] += count;
 }
 
-function subtractCount(dict: Record<string, number>, key: string | number, count = 1) {
+function subtractCount(dict: Record<string, number>, key: string, count = 1) {
   if (!dict[key]) {
     return;
   }
@@ -52,72 +52,74 @@ function subtractCount(dict: Record<string, number>, key: string | number, count
   }
 }
 
+const testCards = [
+  {
+    id: 1,
+    name: 'Burgers',
+    ingredients: [
+      { name: 'Beef', quantity: 2 },
+      { name: 'Buns', quantity: 2 },
+      { name: 'Ketchup', quantity: 1 },
+    ],
+    active: false,
+  },
+  {
+    id: 2,
+    name: 'Brats',
+    ingredients: [
+      { name: 'Sausage', quantity: 1 },
+      { name: 'Buns', quantity: 1 },
+      { name: 'Mustard', quantity: 3 },
+    ],
+    active: false,
+  },
+  {
+    id: 3,
+    name: 'Mac N Cheese',
+    ingredients: [
+      { name: 'Mac', quantity: 1 },
+      { name: 'Cheese', quantity: 1 },
+    ],
+    active: false,
+  },
+  {
+    id: 4,
+    name: 'Curry',
+    ingredients: [
+      { name: 'Chicken', quantity: 1 },
+      { name: 'Curry sauce', quantity: 1 },
+      { name: 'Rice', quantity: 1 },
+    ],
+    active: false,
+  },
+  {
+    id: 5,
+    name: 'Meatloaf',
+    ingredients: [
+      { name: 'Beef', quantity: 3 },
+      { name: 'Crackers', quantity: 1 },
+      { name: 'Ketchup', quantity: 1 },
+      { name: 'Egg', quantity: 1 },
+    ],
+    active: false,
+  },
+  {
+    id: 6,
+    name: 'Sandwich',
+    ingredients: [
+      { name: 'Lunch meat', quantity: 1 },
+      { name: 'Buns', quantity: 2 },
+      { name: 'Mustard', quantity: 1 },
+      { name: 'Cheese', quantity: 1 },
+      { name: 'Lettuce', quantity: 1 },
+    ],
+    active: false,
+  },
+];
+
 export const useCardStore = defineStore('cards', {
   state: (): CardStoreState => ({
-    cards: [
-      {
-        id: 1,
-        name: 'Burgers',
-        ingredients: [
-          { name: 'Beef', quantity: 2 },
-          { name: 'Buns', quantity: 2 },
-          { name: 'Ketchup', quantity: 1 },
-        ],
-        active: false,
-      },
-      {
-        id: 2,
-        name: 'Brats',
-        ingredients: [
-          { name: 'Sausage', quantity: 1 },
-          { name: 'Buns', quantity: 1 },
-          { name: 'Mustard', quantity: 3 },
-        ],
-        active: false,
-      },
-      {
-        id: 3,
-        name: 'Mac N Cheese',
-        ingredients: [
-          { name: 'Mac', quantity: 1 },
-          { name: 'Cheese', quantity: 1 },
-        ],
-        active: false,
-      },
-      {
-        id: 4,
-        name: 'Curry',
-        ingredients: [
-          { name: 'Chicken', quantity: 1 },
-          { name: 'Curry sauce', quantity: 1 },
-          { name: 'Rice', quantity: 1 },
-        ],
-        active: false,
-      },
-      {
-        id: 5,
-        name: 'Meatloaf',
-        ingredients: [
-          { name: 'Beef', quantity: 3 },
-          { name: 'Crackers', quantity: 1 },
-          { name: 'Ketchup', quantity: 1 },
-          { name: 'Egg', quantity: 1 },
-        ],
-        active: false,
-      },
-      {
-        id: 6,
-        name: 'Sandwich',
-        ingredients: [
-          { name: 'Lunch meat', quantity: 1 },
-          { name: 'Buns', quantity: 2 },
-          { name: 'Mustard', quantity: 1 },
-          { name: 'Cheese', quantity: 1 },
-          { name: 'Lettuce', quantity: 1 },
-        ],
-        active: false,
-      },
-    ],
+    cards: testCards,
     pantry: {},
   }),
 
