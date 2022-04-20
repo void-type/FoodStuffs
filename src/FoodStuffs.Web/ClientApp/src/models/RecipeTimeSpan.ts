@@ -1,14 +1,16 @@
-import { toInt } from './formatters.ts.bak';
+import { toInt } from './formatters';
 
-function pluralizeUnit(value, single, plural) {
+function pluralizeUnit(value: number, single: string, plural: string) {
   return value === 1 ? single : plural;
 }
 
-function stringify(value, unit) {
-  return value !== 0 ? `${value} ${unit}` : null;
+function stringify(value: number, unit: string) {
+  return value !== 0 ? `${value} ${unit}` : '';
 }
 
 export default class RecipeTimeSpan {
+  public totalMinutes: number;
+
   constructor(minutes = 0, hours = 0) {
     const totalMinutes = toInt(minutes) + toInt(hours) * 60;
     this.totalMinutes = Math.max(totalMinutes, 0);
@@ -18,20 +20,16 @@ export default class RecipeTimeSpan {
     return toInt(this.totalMinutes / 60);
   }
 
-  hourUnit() {
+  getHourUnit() {
     return pluralizeUnit(this.toHours(), 'hour', 'hours');
-  }
-
-  minuteUnit() {
-    return pluralizeUnit(this.toMinutes(), 'minute', 'minutes');
   }
 
   toMinutes() {
     return this.totalMinutes % 60;
   }
 
-  totalMinutes() {
-    return this.totalMinutes;
+  getMinuteUnit() {
+    return pluralizeUnit(this.toMinutes(), 'minute', 'minutes');
   }
 
   toString() {
@@ -40,8 +38,8 @@ export default class RecipeTimeSpan {
     }
 
     return [
-      stringify(this.toHours(), this.hourUnit()),
-      stringify(this.toMinutes(), this.minuteUnit()),
+      stringify(this.toHours(), this.getHourUnit()),
+      stringify(this.toMinutes(), this.getMinuteUnit()),
     ]
       .filter((v) => v !== null)
       .join(' and ');

@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-function getFormattedMoment(value: Date, formatString: string) {
+function getFormattedMoment(value: Date | string, formatString: string) {
   const instant = moment(value);
   if (instant.isValid() === false) {
     return null;
@@ -8,7 +8,7 @@ function getFormattedMoment(value: Date, formatString: string) {
   return instant.format(formatString);
 }
 
-const formats = {
+const formatStrings = {
   apiDate: 'YYYY-MM-DD',
   apiDateTime: 'YYYY-MM-DDTHH:mm:ss',
   viewDate: 'L',
@@ -16,17 +16,17 @@ const formats = {
 };
 
 export function dateForApi(value: Date) {
-  return getFormattedMoment(value, formats.apiDate);
+  return getFormattedMoment(value, formatStrings.apiDate);
 }
 
 export function dateTimeForApi(value: Date) {
-  return getFormattedMoment(value, formats.apiDateTime);
+  return getFormattedMoment(value, formatStrings.apiDateTime);
 }
 
 export function dateForView(value: Date) {
-  return getFormattedMoment(value, formats.viewDate);
+  return getFormattedMoment(value, formatStrings.viewDate);
 }
 
 export function dateTimeForView(value: Date) {
-  return getFormattedMoment(value, formats.viewDateTime);
+  return getFormattedMoment(value, formatStrings.viewDateTime);
 }

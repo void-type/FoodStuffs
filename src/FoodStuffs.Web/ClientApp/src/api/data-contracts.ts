@@ -132,3 +132,40 @@ export interface WebClientInfo {
   applicationName?: string | null;
   user?: DomainUser;
 }
+
+export interface ImagesCreateParams {
+  /**
+   * The Id of the recipe the image is of
+   * @format int32
+   */
+  recipeId?: number;
+}
+
+export interface RecipesListParams {
+  /** Name contains (case-insensitive) */
+  name?: string;
+
+  /** Category names contain (case-insensitive) */
+  category?: string;
+
+  /** Field name to sort by (case-insensitive). Options are: name. Default is ID */
+  sortBy?: string;
+
+  /** True for descending sort */
+  sortDesc?: boolean;
+
+  /** False for all results */
+  isPagingEnabled?: boolean;
+
+  /**
+   * The page of results to retrieve
+   * @format int32
+   */
+  page?: number;
+
+  /**
+   * How many items in a page
+   * @format int32
+   */
+  take?: number;
+}

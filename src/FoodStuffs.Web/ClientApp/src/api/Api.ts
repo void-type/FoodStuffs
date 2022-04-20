@@ -13,18 +13,19 @@ import type {
   AppVersion,
   GetRecipeResponse,
   IFailureIItemSet,
+  ImagesCreateParams,
   Int32EntityMessage,
   ListRecipesResponseIItemSet,
   PinImageRequest,
+  RecipesListParams,
   SaveRecipeRequest,
   WebClientInfo,
 } from './data-contracts';
-import { ContentType, HttpClient } from './http-client';
-import type { RequestParams } from './http-client';
+import { ContentType, HttpClient, type RequestParams } from './http-client';
 
 export class Api<
   SecurityDataType = unknown
-  > extends HttpClient<SecurityDataType> {
+> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -32,6 +33,7 @@ export class Api<
    * @name AppInfoList
    * @summary Get information to bootstrap the SPA client like application name and user data.
    * @request GET:/api/app/info
+   * @response `200` `WebClientInfo` Success
    */
   appInfoList = (params: RequestParams = {}) =>
     this.request<WebClientInfo, any>({
@@ -47,6 +49,7 @@ export class Api<
    * @name AppVersionList
    * @summary Get the version of the application.
    * @request GET:/api/app/version
+   * @response `200` `AppVersion` Success
    */
   appVersionList = (params: RequestParams = {}) =>
     this.request<AppVersion, any>({
@@ -62,6 +65,8 @@ export class Api<
    * @name ImagesDetail
    * @summary Get an image.
    * @request GET:/api/images/{id}
+   * @response `200` `File` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   imagesDetail = (id: number, params: RequestParams = {}) =>
     this.request<File, IFailureIItemSet>({
@@ -77,6 +82,8 @@ export class Api<
    * @name ImagesDelete
    * @summary Delete an image.
    * @request DELETE:/api/images/{id}
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   imagesDelete = (id: number, params: RequestParams = {}) =>
     this.request<Int32EntityMessage, IFailureIItemSet>({
@@ -92,10 +99,12 @@ export class Api<
    * @name ImagesCreate
    * @summary Upload an image using a multi-part form file.
    * @request POST:/api/images
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   imagesCreate = (
+    query: ImagesCreateParams,
     data: { file?: File },
-    query?: { recipeId?: number },
     params: RequestParams = {}
   ) =>
     this.request<Int32EntityMessage, IFailureIItemSet>({
@@ -114,6 +123,8 @@ export class Api<
    * @name ImagesPinCreate
    * @summary Pin an image for a recipe. This image will be the default image for the recipe.
    * @request POST:/api/images/pin
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   imagesPinCreate = (data: PinImageRequest, params: RequestParams = {}) =>
     this.request<Int32EntityMessage, IFailureIItemSet>({
@@ -131,19 +142,10 @@ export class Api<
    * @name RecipesList
    * @summary Search for recipes using the following criteria. All are optional and some have defaults.
    * @request GET:/api/recipes
+   * @response `200` `ListRecipesResponseIItemSet` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
-  recipesList = (
-    query?: {
-      name?: string;
-      category?: string;
-      sortBy?: string;
-      sortDesc?: boolean;
-      isPagingEnabled?: boolean;
-      page?: number;
-      take?: number;
-    },
-    params: RequestParams = {}
-  ) =>
+  recipesList = (query: RecipesListParams, params: RequestParams = {}) =>
     this.request<ListRecipesResponseIItemSet, IFailureIItemSet>({
       path: `/api/recipes`,
       method: 'GET',
@@ -158,6 +160,8 @@ export class Api<
    * @name RecipesCreate
    * @summary Save a recipe. Will update if found, otherwise a new recipe will be created.
    * @request POST:/api/recipes
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   recipesCreate = (data: SaveRecipeRequest, params: RequestParams = {}) =>
     this.request<Int32EntityMessage, IFailureIItemSet>({
@@ -175,6 +179,8 @@ export class Api<
    * @name RecipesDetail
    * @summary Get a recipe.
    * @request GET:/api/recipes/{id}
+   * @response `200` `GetRecipeResponse` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   recipesDetail = (id: number, params: RequestParams = {}) =>
     this.request<GetRecipeResponse, IFailureIItemSet>({
@@ -190,6 +196,8 @@ export class Api<
    * @name RecipesDelete
    * @summary Delete a recipe.
    * @request DELETE:/api/recipes/{id}
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
    */
   recipesDelete = (id: number, params: RequestParams = {}) =>
     this.request<Int32EntityMessage, IFailureIItemSet>({
