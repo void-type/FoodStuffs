@@ -1,5 +1,19 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { onMounted, watch } from 'vue';
 import { RouterView } from 'vue-router';
+import initializeStore from './models/initializeStore';
+import useAppStore from './stores/app';
+
+const appStore = useAppStore();
+
+onMounted(() => initializeStore());
+
+const { applicationName } = storeToRefs(appStore);
+
+watch(applicationName, (newApplicationName) => {
+  document.title = newApplicationName;
+});
 </script>
 
 <template>
@@ -21,8 +35,6 @@ import { RouterView } from 'vue-router';
 </template>
 
 <style lang="scss">
-@import '@/style/theme';
-
 // Sticky footer
 html,
 body,

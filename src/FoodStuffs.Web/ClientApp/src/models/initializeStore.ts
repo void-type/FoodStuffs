@@ -1,9 +1,9 @@
 import { Api } from '@/api/Api';
 import useAppStore from '@/stores/app';
 
-const appStore = useAppStore();
-
 export default function initializeStore() {
+  const appStore = useAppStore();
+
   new Api()
     .appInfoList()
     .then((response) => appStore.setApplicationInfo(response.data))

@@ -12,7 +12,7 @@ defineProps({
 <template>
   <div class="list">
     <h2>{{ title }}</h2>
-    <button class="btn btn-success" @click="onClear()">Clear</button>
+    <button class="btn btn-primary" @click="onClear()">Clear</button>
     <ul>
       <li
         v-for="[ingredient, quantity] in ingredients"
@@ -27,7 +27,7 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-@import '@/style/cards';
+@import '@/styles/cards';
 
 .list {
   flex: 1;

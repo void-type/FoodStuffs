@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import useAppStore from '@/stores/app';
+import { nextTick } from 'vue';
 
 function newRecipeProps(route: RouteLocationNormalized) {
   const oldRecipe = route.params;
@@ -64,11 +65,17 @@ const router = createRouter({
   ],
 });
 
-const appStore = useAppStore();
-
 router.beforeEach((to, from, next) => {
+  const appStore = useAppStore();
   appStore.clearMessages();
   next();
+});
+
+router.afterEach(() => {
+  nextTick(() => {
+    const appStore = useAppStore();
+    document.title = appStore.applicationName;
+  });
 });
 
 export default router;

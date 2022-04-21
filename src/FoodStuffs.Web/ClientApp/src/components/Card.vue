@@ -30,7 +30,7 @@ new Api().appVersionList().then((x) => console.log(x.data));
 </template>
 
 <style scoped lang="scss">
-@import '@/style/cards';
+@import '@/styles/cards';
 
 .card-outer {
   padding: 0.5rem;
