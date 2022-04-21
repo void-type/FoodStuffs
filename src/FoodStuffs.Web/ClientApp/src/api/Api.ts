@@ -23,9 +23,7 @@ import type {
 } from './data-contracts';
 import { ContentType, HttpClient, type RequestParams } from './http-client';
 
-export class Api<
-  SecurityDataType = unknown
-> extends HttpClient<SecurityDataType> {
+export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -102,11 +100,7 @@ export class Api<
    * @response `200` `Int32EntityMessage` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
-  imagesCreate = (
-    query: ImagesCreateParams,
-    data: { file?: File },
-    params: RequestParams = {}
-  ) =>
+  imagesCreate = (query: ImagesCreateParams, data: { file?: File }, params: RequestParams = {}) =>
     this.request<Int32EntityMessage, IFailureIItemSet>({
       path: `/api/images`,
       method: 'POST',
