@@ -1,6 +1,6 @@
-import type { DomainUser, IFailureIItemSet, WebClientInfo } from '@/api/data-contracts';
-import type { HttpResponse } from '@/api/http-client';
 import { defineStore } from 'pinia';
+import type { AppVersion, DomainUser, IFailureIItemSet, WebClientInfo } from '@/api/data-contracts';
+import type { HttpResponse } from '@/api/http-client';
 
 interface AppStoreState {
   applicationName: string;
@@ -9,6 +9,7 @@ interface AppStoreState {
   messages: Array<string>;
   user: DomainUser;
   isInitialized: boolean;
+  version: string;
 }
 
 interface UserMessage {
@@ -26,6 +27,7 @@ export const useAppStore = defineStore('app', {
       authorizedAs: [],
     },
     isInitialized: false,
+    version: '',
   }),
 
   getters: {
@@ -74,6 +76,17 @@ export const useAppStore = defineStore('app', {
       this.applicationName = data.applicationName || '';
       this.user = data.user || { login: '', authorizedAs: [] };
       this.isInitialized = true;
+    },
+
+    setVersionInfo(data: AppVersion) {
+      let version = `v${data.version}`;
+
+      if (data.isPublicRelease === false && data.gitCommitId) {
+        const gitCommitId = data.gitCommitId.slice(0, 10);
+        version += `-g${gitCommitId}`;
+      }
+
+      this.version = version;
     },
 
     setErrorMessage(message: string) {

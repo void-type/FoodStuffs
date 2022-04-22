@@ -1,4 +1,4 @@
-import { toInt } from './formatters';
+import { toInt } from '@/models/formatters';
 
 function pluralizeUnit(value: number, single: string, plural: string) {
   return value === 1 ? single : plural;

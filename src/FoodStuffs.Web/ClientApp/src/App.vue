@@ -1,37 +1,55 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
+import { mapActions, storeToRefs } from 'pinia';
 import { onMounted, watch } from 'vue';
 import { RouterView } from 'vue-router';
-import initializeStore from './models/initializeStore';
-import useAppStore from './stores/app';
+import { Api } from '@/api/Api';
+import useAppStore from '@/stores/appStore';
+import AppHeader from '@/components/AppHeader.vue';
+import AppNav from '@/components/AppNav.vue';
+import AppFooter from '@/components/AppFooter.vue';
 
 const appStore = useAppStore();
 
-onMounted(() => initializeStore());
-
 const { applicationName } = storeToRefs(appStore);
 
+const { clearMessages } = mapActions(useAppStore, {
+  clearMessages: 'clearMessages',
+});
+
+onMounted(() => {
+  new Api()
+    .appInfoList()
+    .then((response) => appStore.setApplicationInfo(response.data))
+    .catch((response) => appStore.setApiFailureMessages(response));
+
+  new Api()
+    .appVersionList()
+    .then((response) => appStore.setVersionInfo(response.data))
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    .catch(() => {});
+});
+
+// TODO: fix how titles are set using router
 watch(applicationName, (newApplicationName) => {
   document.title = newApplicationName;
 });
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">
-      <img
-        src="https://avatars1.githubusercontent.com/u/3291875?s=88&v=4"
-        width="30"
-        height="30"
-        class="d-inline-block align-top mr-1"
-        alt=""
-      />void-type</a
-    >
-  </nav>
-
-  <main>
-    <RouterView />
-  </main>
+  <!-- TODO: add a skip nav link -->
+  <div id="app" @keydown.stop.prevent.esc="clearMessages()">
+    <vue-progress-bar />
+    <AppHeader>
+      <template #navItems>
+        <AppNav />
+      </template>
+    </AppHeader>
+    <AppMessageCenter class="no-print" />
+    <main>
+      <RouterView />
+    </main>
+    <AppFooter />
+  </div>
 </template>
 
 <style lang="scss">

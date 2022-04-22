@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useCardStore } from '@/stores/cards';
+import { useCardStore } from '@/stores/cardStore';
 import IngredientList from '@/components/CardIngredientList.vue';
 import Card from '@/components/Card.vue';
 
 const cardStore = useCardStore();
 
-const getActiveCards = computed(() => cardStore.getCards.filter((c) => c.active));
-const getInactiveCards = computed(() => cardStore.getCards.filter((c) => !c.active));
+const activeCards = computed(() => cardStore.getCards({ active: true }));
+const inactiveCards = computed(() => cardStore.getCards({ active: false }));
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const getInactiveCards = computed(() => cardStore.getCards.filter((c) => !c.acti
 
   <div class="area">
     <Card
-      v-for="card in getActiveCards"
+      v-for="card in activeCards"
       :key="card.id"
       :card="card"
       :on-card-click="cardStore.toggleCard"
@@ -38,7 +38,7 @@ const getInactiveCards = computed(() => cardStore.getCards.filter((c) => !c.acti
 
   <div class="area">
     <Card
-      v-for="card in getInactiveCards"
+      v-for="card in inactiveCards"
       :key="card.id"
       :card="card"
       :on-card-click="cardStore.toggleCard"

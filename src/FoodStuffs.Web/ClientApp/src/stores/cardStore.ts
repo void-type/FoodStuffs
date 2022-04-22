@@ -17,6 +17,10 @@ interface CardStoreState {
   pantry: Record<string, number>;
 }
 
+export interface CardQuery {
+  active: boolean;
+}
+
 function countIngredients(acc: Record<string, number>, curr: CardIngredient) {
   const { name } = curr;
 
@@ -124,7 +128,10 @@ export const useCardStore = defineStore('cards', {
   }),
 
   getters: {
-    getCards: (state) => state.cards.sort((a, b) => a.name.localeCompare(b.name)),
+    getCards: (state) => (query: CardQuery) =>
+      state.cards
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .filter((c) => (query.active !== null ? c.active === query.active : true)),
 
     getPantry: (state) => Object.entries(state.pantry),
 

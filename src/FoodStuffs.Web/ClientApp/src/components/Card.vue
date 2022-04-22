@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import type { Card } from '@/stores/cards';
-import { Api } from '@/api/Api';
+import type { Card } from '@/stores/cardStore';
 
 defineProps({
   card: { type: Object as PropType<Card>, required: true },
   showIngredients: { type: Boolean, required: true },
   onCardClick: { type: Function, required: true },
 });
-
-new Api().appVersionList().then((x) => console.log(x.data));
 </script>
 
 <template>

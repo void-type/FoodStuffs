@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router';
-import Home from '@/pages/Home.vue';
-import useAppStore from '@/stores/app';
 import { nextTick } from 'vue';
+import useAppStore from '@/stores/appStore';
+import Home from '@/pages/Home.vue';
 
 function newRecipeProps(route: RouteLocationNormalized) {
   const oldRecipe = route.params;

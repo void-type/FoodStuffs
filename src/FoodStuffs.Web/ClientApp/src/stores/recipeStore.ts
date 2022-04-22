@@ -1,9 +1,9 @@
+import { defineStore } from 'pinia';
 import type {
   ListRecipesResponse,
   ListRecipesResponseIItemSet,
   RecipesListParams,
 } from '@/api/data-contracts';
-import { defineStore } from 'pinia';
 
 interface RecipeStoreState {
   listResponse: ListRecipesResponseIItemSet;
