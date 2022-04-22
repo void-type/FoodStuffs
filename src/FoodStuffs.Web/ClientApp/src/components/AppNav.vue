@@ -1,10 +1,10 @@
 <template>
-  <ul class="navbar-nav">
+  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li class="nav-item">
-      <a :to="{ name: 'search' }" class="nav-link" target="_self">Search</a>
+      <router-link :to="{ name: 'search' }" class="nav-link">Search</router-link>
     </li>
     <li class="nav-item">
-      <a :to="{ name: 'new' }" class="nav-link" target="_self">New</a>
+      <router-link :to="{ name: 'new' }" class="nav-link">New</router-link>
     </li>
   </ul>
 </template>

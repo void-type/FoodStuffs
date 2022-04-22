@@ -69,7 +69,7 @@ export const useAppStore = defineStore('app', {
     clearMessages() {
       this.messageIsError = false;
       this.fieldsInError = [];
-      this.messages = [];
+      this.messages.length = 0;
     },
 
     setApplicationInfo(data: WebClientInfo) {

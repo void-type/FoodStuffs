@@ -1,67 +1,62 @@
+<script setup lang="ts">
+// import type { DirectiveBinding } from 'vue';
+import { storeToRefs, mapActions } from 'pinia';
+import useAppStore from '@/stores/appStore';
+
+const appStore = useAppStore();
+
+// function onScroll(event: Event, element: Element) {
+//   const isFixed = window.scrollY > 58;
+//   element.classList.toggle('fixed-alert', isFixed);
+// }
+
+// const vMessageCenterScroll = {
+//   mounted(el: Element, binding: DirectiveBinding) {
+//     function f() {
+//       if (binding.value(onScroll, el)) {
+//         window.removeEventListener('scroll', f);
+//       }
+//     }
+
+//     window.addEventListener('scroll', f);
+//   },
+// };
+
+const { messages, messageIsError } = storeToRefs(appStore);
+const { clearMessages } = mapActions(useAppStore, { clearMessages: 'clearMessages' });
+</script>
+
 <template>
-  <div
-    v-message-center-scroll="onScroll"
-  >
-    <b-alert
-      :show="messages.length > 0"
-      :variant="messageIsError ? 'danger' : 'success'"
-      class="shadow mb-0"
-      dismissible
-      @dismissed="clearMessages()"
+  <div v-message-center-scroll>
+    <div
+      v-show="messages.length > 0"
+      :class="{
+        alert: true,
+        'alert-dismissible': true,
+        shadow: true,
+        'mb-0': true,
+        'alert-danger': messageIsError,
+        'alert-success': !messageIsError,
+      }"
     >
       <ul>
-        <li
-          v-for="message in messages"
-          :key="message"
-        >
+        <li v-for="(message, id) in messages" :key="id">
           {{ message }}
         </li>
       </ul>
-    </b-alert>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        @click="clearMessages()"
+      ></button>
+    </div>
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
-import Vue from 'vue';
-
-Vue.directive('message-center-scroll', {
-  inserted(el, binding) {
-    function f(evt) {
-      if (binding.value(evt, el)) {
-        window.removeEventListener('scroll', f);
-      }
-    }
-
-    window.addEventListener('scroll', f);
-  },
-});
-
-export default {
-  computed: {
-    ...mapGetters('app', [
-      'messages',
-      'messageIsError',
-    ]),
-  },
-  methods: {
-    ...mapActions('app', [
-      'clearMessages',
-    ]),
-    onScroll(event, element) {
-      const isFixed = window.scrollY > 56;
-      element.classList.toggle('fixed-alert', isFixed);
-    },
-  },
-};
-</script>
-
 <style lang="scss" scoped>
-@import "@/style/theme";
-
 div.alert {
-  color: $body-color;
-
   ul {
     text-align: center;
     list-style: none;

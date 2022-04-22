@@ -7,6 +7,7 @@ import useAppStore from '@/stores/appStore';
 import AppHeader from '@/components/AppHeader.vue';
 import AppNav from '@/components/AppNav.vue';
 import AppFooter from '@/components/AppFooter.vue';
+import AppMessageCenter from '@/components/AppMessageCenter.vue';
 
 const appStore = useAppStore();
 
@@ -38,6 +39,7 @@ watch(applicationName, (newApplicationName) => {
 <template>
   <!-- TODO: add a skip nav link -->
   <div id="app" @keydown.stop.prevent.esc="clearMessages()">
+  <!-- TODO: bind this to the API -->
     <vue-progress-bar />
     <AppHeader>
       <template #navItems>
