@@ -39,7 +39,7 @@ watch(applicationName, (newApplicationName) => {
 <template>
   <!-- TODO: add a skip nav link -->
   <div id="app" @keydown.stop.prevent.esc="clearMessages()">
-  <!-- TODO: bind this to the API -->
+    <!-- TODO: bind this to the API -->
     <vue-progress-bar />
     <AppHeader>
       <template #navItems>

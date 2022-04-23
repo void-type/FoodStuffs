@@ -1,4 +1,4 @@
-import { toInt } from '@/models/formatters';
+import FormatHelpers from '@/models/FormatHelpers';
 
 function pluralizeUnit(value: number, single: string, plural: string) {
   return value === 1 ? single : plural;
@@ -12,12 +12,12 @@ export default class RecipeTimeSpan {
   public totalMinutes: number;
 
   constructor(minutes = 0, hours = 0) {
-    const totalMinutes = toInt(minutes) + toInt(hours) * 60;
+    const totalMinutes = FormatHelpers.toInt(minutes) + FormatHelpers.toInt(hours) * 60;
     this.totalMinutes = Math.max(totalMinutes, 0);
   }
 
   toHours() {
-    return toInt(this.totalMinutes / 60);
+    return FormatHelpers.toInt(this.totalMinutes / 60);
   }
 
   getHourUnit() {
