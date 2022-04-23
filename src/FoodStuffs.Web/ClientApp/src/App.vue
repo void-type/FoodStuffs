@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { mapActions, storeToRefs } from 'pinia';
-import { onMounted, watch } from 'vue';
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
@@ -11,16 +10,16 @@ import AppMessageCenter from '@/components/AppMessageCenter.vue';
 
 const appStore = useAppStore();
 
-const { applicationName } = storeToRefs(appStore);
-
-const { clearMessages } = mapActions(useAppStore, {
-  clearMessages: 'clearMessages',
-});
+const { clearMessages } = appStore;
 
 onMounted(() => {
   new Api()
     .appInfoList()
-    .then((response) => appStore.setApplicationInfo(response.data))
+    .then((response) => {
+      appStore.setApplicationInfo(response.data);
+      // TODO: call router set title
+      document.title = appStore.applicationName;
+    })
     .catch((response) => appStore.setApiFailureMessages(response));
 
   new Api()
@@ -28,11 +27,6 @@ onMounted(() => {
     .then((response) => appStore.setVersionInfo(response.data))
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     .catch(() => {});
-});
-
-// TODO: fix how titles are set using router
-watch(applicationName, (newApplicationName) => {
-  document.title = newApplicationName;
 });
 </script>
 

@@ -71,6 +71,7 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+// TODO: update route names
 router.afterEach(() => {
   nextTick(() => {
     const appStore = useAppStore();
