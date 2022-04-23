@@ -1,26 +1,26 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
 import AppHeader from '@/components/AppHeader.vue';
 import AppNav from '@/components/AppNav.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
+import setTitle from '@/router/setTitle';
 
 const appStore = useAppStore();
 
 const { clearMessages } = appStore;
 
+const route = useRoute();
+
 onMounted(() => {
-  new Api()
-    .appInfoList()
-    .then((response) => {
-      appStore.setApplicationInfo(response.data);
-      // TODO: call router set title
-      document.title = appStore.applicationName;
-    })
-    .catch((response) => appStore.setApiFailureMessages(response));
+  new Api().appInfoList().then((response) => {
+    appStore.setApplicationInfo(response.data);
+    setTitle(route);
+  });
+  // .catch((response) => appStore.setApiFailureMessages(response));
 
   new Api()
     .appVersionList()

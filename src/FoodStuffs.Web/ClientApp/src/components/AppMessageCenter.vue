@@ -6,6 +6,22 @@ import useAppStore from '@/stores/appStore';
 const appStore = useAppStore();
 const { messages, messageIsError } = storeToRefs(appStore);
 const { clearMessages } = appStore;
+const messageCenterDiv = reactive(ref<HTMLDivElement | null>());
+
+// We need an element the same height as the message center to ensure smooth scrolling
+// when the center is fixed to the top of the page.
+const messageCenterHeight = computed(() => {
+  const element = messageCenterDiv.value;
+
+  if (element == null || typeof element === 'undefined') {
+    return 0;
+  }
+
+  const styles = window.getComputedStyle(element);
+  const margin = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
+
+  return Math.ceil(element.offsetHeight + margin);
+});
 
 // Get the initial offset for the top of the message center
 let messageCenterTop = 0;
@@ -23,22 +39,6 @@ const vMessageCenterScroll: Directive = {
     window.addEventListener('scroll', onScroll);
   },
 };
-
-// We need an element the same height as the message center to ensure smooth scrolling
-// when the center is fixed to the top of the page.
-const messageCenterDiv = reactive(ref<HTMLDivElement | null>());
-const messageCenterHeight = computed(() => {
-  const element = messageCenterDiv.value;
-
-  if (element == null || typeof element === 'undefined') {
-    return 0;
-  }
-
-  const styles = window.getComputedStyle(element);
-  const margin = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
-
-  return Math.ceil(element.offsetHeight + margin);
-});
 </script>
 
 <template>

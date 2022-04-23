@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vu
 import { nextTick } from 'vue';
 import useAppStore from '@/stores/appStore';
 import Home from '@/pages/Home.vue';
+import setTitle from './setTitle';
 
 function newRecipeProps(route: RouteLocationNormalized) {
   const oldRecipe = route.params;
@@ -24,6 +25,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Home,
+      meta: { title: 'Home' },
     },
     {
       name: 'view',
@@ -32,6 +34,7 @@ const router = createRouter({
       props: (route) => ({
         id: +route.params.id,
       }),
+      meta: { title: 'View' },
     },
     {
       name: 'edit',
@@ -40,27 +43,32 @@ const router = createRouter({
       props: (route) => ({
         id: +route.params.id,
       }),
+      meta: { title: 'Edit' },
     },
     {
       name: 'new',
       path: '/new',
       component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue'),
       props: newRecipeProps,
+      meta: { title: 'New' },
     },
     {
       name: 'search',
       path: '/search',
       component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Search.vue'),
       props: (route) => ({ query: route.query }),
+      meta: { title: 'Search' },
     },
     {
       path: '/cards',
       name: 'cards',
       component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Cards.vue'),
+      meta: { title: 'Cards' },
     },
     {
       path: '/:pathMatch(.*)*',
       redirect: { name: 'home' },
+      meta: { title: 'Home' },
     },
   ],
 });
@@ -71,12 +79,8 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-// TODO: update route names
-router.afterEach(() => {
-  nextTick(() => {
-    const appStore = useAppStore();
-    document.title = appStore.applicationName;
-  });
+router.afterEach((to) => {
+  nextTick(() => setTitle(to));
 });
 
 export default router;

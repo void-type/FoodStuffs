@@ -29,7 +29,7 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div id="nav-collapse" class="navbar-collapse collapse" style="display: none">
+        <div id="navbarSupportedContent" class="navbar-collapse collapse">
           <slot name="navItems"></slot>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
