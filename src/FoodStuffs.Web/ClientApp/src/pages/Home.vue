@@ -1,56 +1,59 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useCardStore } from '@/stores/cardStore';
-import IngredientList from '@/components/CardIngredientList.vue';
-import Card from '@/components/Card.vue';
+import { Api } from '@/api/Api';
+import ApiHelpers from '@/models/ApiHelpers';
+import useAppStore from '@/stores/appStore';
+import useRecipeStore from '@/stores/recipeStore';
+import { storeToRefs } from 'pinia';
+import { computed, onMounted } from 'vue';
 
-const cardStore = useCardStore();
+const appStore = useAppStore();
+const recipeStore = useRecipeStore();
 
-const activeCards = computed(() => cardStore.getCards({ active: true }));
-const inactiveCards = computed(() => cardStore.getCards({ active: false }));
+const { listResponse, listRequest } = storeToRefs(recipeStore);
+
+const recipes = computed(() => listResponse.value.items?.slice(0, 12));
+
+const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
+
+onMounted(() => {
+  new Api()
+    .recipesList(listRequest.value)
+    .then((response) => recipeStore.setListResponse(response.data))
+    .catch((response) => appStore.setApiFailureMessages(response));
+});
 </script>
 
 <template>
-  <div class="area">
-    <IngredientList
-      title="Shopping list"
-      :ingredients="cardStore.getShoppingList"
-      :on-clear="cardStore.clearShoppingList"
-      :on-ingredient-click="cardStore.addToPantry"
-    />
-    <IngredientList
-      title="Pantry"
-      :ingredients="cardStore.getPantry"
-      :on-clear="cardStore.clearPantry"
-      :on-ingredient-click="cardStore.removeFromPantry"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in activeCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="true"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in inactiveCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="false"
-    />
+  <div class="container">
+    <div class="row mt-3">
+      <div v-for="recipe in recipes" :key="recipe.id" class="col-lg-4 mt-3">
+        <div no-body class="card overflow-hidden">
+          <router-link class="card-link" :to="{ name: 'view', params: { id: recipe.id } }">
+            <div v-if="recipe.imageId != null">
+              <img
+                class="card-img"
+                fluid
+                :src="imageUrl(recipe.imageId)"
+                :alt="`image of ${recipe.name}`"
+              />
+            </div>
+            <div class="p-3">
+              <h4 class="card-title">
+                {{ recipe.name }}
+              </h4>
+              <p class="card-text">
+                {{ (recipe?.categories || []).join(', ') }}
+              </p>
+            </div>
+          </router-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped lang="scss">
-.area {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0.5rem;
+<style lang="scss" scoped>
+.card-link {
+  text-decoration: none;
 }
 </style>

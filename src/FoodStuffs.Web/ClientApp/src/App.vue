@@ -7,7 +7,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppNav from '@/components/AppNav.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
-import setTitle from '@/router/setTitle';
+import RouterHelpers from '@/models/RouterHelpers';
 
 const appStore = useAppStore();
 
@@ -16,11 +16,13 @@ const { clearMessages } = appStore;
 const route = useRoute();
 
 onMounted(() => {
-  new Api().appInfoList().then((response) => {
-    appStore.setApplicationInfo(response.data);
-    setTitle(route);
-  });
-  // .catch((response) => appStore.setApiFailureMessages(response));
+  new Api()
+    .appInfoList()
+    .then((response) => {
+      appStore.setApplicationInfo(response.data);
+      RouterHelpers.setTitle(route);
+    })
+    .catch((response) => appStore.setApiFailureMessages(response));
 
   new Api()
     .appVersionList()

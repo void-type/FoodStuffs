@@ -4,9 +4,7 @@ import { computed } from 'vue';
 import useAppStore from '@/stores/appStore';
 
 const appStore = useAppStore();
-
 const { applicationName, user } = storeToRefs(appStore);
-
 const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 </script>
 

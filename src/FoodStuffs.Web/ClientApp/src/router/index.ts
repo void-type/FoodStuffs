@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vu
 import { nextTick } from 'vue';
 import useAppStore from '@/stores/appStore';
 import Home from '@/pages/Home.vue';
-import setTitle from './setTitle';
+import RouterHelpers from '@/models/RouterHelpers';
 
 function newRecipeProps(route: RouteLocationNormalized) {
   const oldRecipe = route.params;
@@ -80,7 +80,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to) => {
-  nextTick(() => setTitle(to));
+  nextTick(() => RouterHelpers.setTitle(to));
 });
 
 export default router;

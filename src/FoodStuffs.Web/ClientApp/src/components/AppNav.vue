@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li class="nav-item">
@@ -8,7 +10,5 @@
     </li>
   </ul>
 </template>
-
-<script setup lang="ts"></script>
 
 <style lang="scss" scoped></style>
