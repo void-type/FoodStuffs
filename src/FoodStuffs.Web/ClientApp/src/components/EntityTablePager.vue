@@ -39,6 +39,9 @@ watch(props.listResponse, (response) => {
 
 <template>
   <div class="text-center no-print">
+    <nav aria-label="Table pagination">
+      <ul class="pagination"></ul>
+    </nav>
     <b-pagination
       id="pagination-page"
       :value="page"
@@ -48,7 +51,7 @@ watch(props.listResponse, (response) => {
       align="center"
       @change="changePage"
     />
-    <label class="sr-only" for="pagination-take">Pagination Take Amount</label>
+    <label class="sr-only" for="pagination-take">Page size</label>
     <b-form-select
       id="pagination-take"
       :value="listRequest.take"

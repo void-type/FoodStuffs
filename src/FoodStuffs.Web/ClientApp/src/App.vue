@@ -33,7 +33,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- TODO: add a skip nav link -->
   <div id="app" @keydown.stop.prevent.esc="clearMessages()">
     <!-- TODO: bind this to the API -->
     <vue-progress-bar />
@@ -43,7 +42,7 @@ onMounted(() => {
       </template>
     </AppHeader>
     <AppMessageCenter class="no-print" />
-    <main>
+    <main id="main">
       <RouterView />
     </main>
     <AppFooter />
