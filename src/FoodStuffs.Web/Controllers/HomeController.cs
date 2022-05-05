@@ -7,6 +7,7 @@ namespace FoodStuffs.Web.Controllers;
 /// <summary>
 /// Home controller.
 /// </summary>
+[ApiExplorerSettings(IgnoreApi = true)]
 public class HomeController : ControllerBase
 {
     private readonly ILogger _logger;
