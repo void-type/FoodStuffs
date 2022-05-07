@@ -50,6 +50,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+@import '@/styles/theme';
+@import 'bootstrap/scss/bootstrap';
+
 // Sticky footer
 html,
 body,

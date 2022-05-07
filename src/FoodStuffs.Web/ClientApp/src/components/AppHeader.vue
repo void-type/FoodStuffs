@@ -50,6 +50,8 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 </template>
 
 <style lang="scss" scoped>
+@import '@/styles/theme';
+
 .navbar-dark .navbar-brand {
   color: $secondary;
   font-weight: 600;

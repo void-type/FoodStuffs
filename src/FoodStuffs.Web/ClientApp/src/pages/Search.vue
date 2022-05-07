@@ -1,50 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useCardStore } from '@/stores/cardStore';
-import IngredientList from '@/components/CardIngredientList.vue';
-import Card from '@/components/Card.vue';
+import useRecipeStore from '@/stores/recipeStore';
+import EntityTablePager from '../components/EntityTablePager.vue';
 
-const cardStore = useCardStore();
+const recipeStore = useRecipeStore();
 
-const activeCards = computed(() => cardStore.getCards({ active: true }));
-const inactiveCards = computed(() => cardStore.getCards({ active: false }));
+function changePage(page: number | null) {
+  console.log(page);
+}
+
+function changeTake(take: number | null) {
+  console.log(take);
+}
 </script>
 
 <template>
-  <div class="area">
-    <IngredientList
-      title="Shopping list"
-      :ingredients="cardStore.getShoppingList"
-      :on-clear="cardStore.clearShoppingList"
-      :on-ingredient-click="cardStore.addToPantry"
-    />
-    <IngredientList
-      title="Pantry"
-      :ingredients="cardStore.getPantry"
-      :on-clear="cardStore.clearPantry"
-      :on-ingredient-click="cardStore.removeFromPantry"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in activeCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="true"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in inactiveCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="false"
-    />
-  </div>
+  <EntityTablePager
+    :list-response="recipeStore.listResponse"
+    :list-request="recipeStore.listRequest"
+    :on-change-page="changePage"
+    :on-change-take="changeTake"
+  />
 </template>
 
 <style scoped lang="scss">

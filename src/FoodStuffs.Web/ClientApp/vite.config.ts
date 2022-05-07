@@ -19,15 +19,5 @@ export default defineConfig({
     },
     outDir: '../wwwroot',
     emptyOutDir: true,
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `
-              @import "@/styles/theme";
-              @import "bootstrap/scss/bootstrap";
-            `,
-      },
-    },
-  },
+  }
 });

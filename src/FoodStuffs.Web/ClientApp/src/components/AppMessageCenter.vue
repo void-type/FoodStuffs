@@ -31,7 +31,7 @@ const { clearMessages } = appStore;
 </template>
 
 <style lang="scss" scoped>
-div#message-center {
+#message-center {
   z-index: 999;
 
   ul {

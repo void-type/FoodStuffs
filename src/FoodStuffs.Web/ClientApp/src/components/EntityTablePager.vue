@@ -13,12 +13,12 @@ const props = defineProps({
     type: Object as PropType<IPaginatedRequest>,
     required: true,
   },
-  changePage: {
-    type: Function,
+  onChangePage: {
+    type: Function as PropType<(page: number | null) => void>,
     required: true,
   },
-  changeTake: {
-    type: Function,
+  onChangeTake: {
+    type: Function as PropType<(take: number | null) => void>,
     required: true,
   },
 });
@@ -27,6 +27,14 @@ const takeOptions = Choices.paginationTake;
 const page = ref(1);
 const take = ref(takeOptions[0].value || 30);
 const totalCount = ref(0);
+
+function changeTakeLocal(event: Event) {
+  const { value } = event.target as HTMLSelectElement;
+
+  const num = Number(value);
+
+  return Number.isNaN(num) ? null : num;
+}
 
 watch(props.listResponse, (response) => {
   take.value = response.take || 10;
@@ -39,7 +47,7 @@ watch(props.listResponse, (response) => {
 
 <template>
   <div class="text-center no-print">
-    <nav aria-label="Table pagination">
+    <!-- <nav aria-label="Table pagination">
       <ul class="pagination"></ul>
     </nav>
     <b-pagination
@@ -50,9 +58,8 @@ watch(props.listResponse, (response) => {
       :per-page="take"
       align="center"
       @change="changePage"
-    />
-    <label class="sr-only" for="pagination-take">Page size</label>
-    <b-form-select
+    /> -->
+    <!-- <b-form-select
       id="pagination-take"
       :value="listRequest.take"
       :options="takeOptions"
@@ -60,12 +67,31 @@ watch(props.listResponse, (response) => {
       class="small-input"
       type="number"
       @change="changeTake"
-    />
+    /> -->
+
+    <label class="sr-only" for="pagination-take"
+      >Page size
+      <select
+        id="pagination-take"
+        name="pagination-take"
+        class="form-select"
+        :value="listRequest.take + ''"
+        @change="changeTakeLocal"
+      >
+        <option
+          v-for="takeOption in takeOptions"
+          :key="takeOption.value || undefined"
+          :value="takeOption.value"
+        >
+          {{ takeOption.text }}
+        </option>
+      </select>
+    </label>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.small-input {
+#pagination-take {
   max-width: 5em;
 }
 </style>
