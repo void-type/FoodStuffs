@@ -8,6 +8,9 @@
   <ItemGroup>
     <Content Remove="ClientApp\**" CopyToPublishDirectory="Never" />
     <Content Remove="appsettings.*.json" CopyToPublishDirectory="Never" />
+    <!-- Don't watch the wwwroot folder because it causes Vite watch to crash -->
+    <Content Remove="wwwroot\**" />
+    <Content Include="wwwroot\**" Watch="false" />
   </ItemGroup>
 
   <ItemGroup>

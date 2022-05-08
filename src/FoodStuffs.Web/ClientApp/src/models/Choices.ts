@@ -15,7 +15,7 @@ export default class Choices {
       },
       {
         text: 'All',
-        value: null,
+        value: -1,
       },
     ];
   }
