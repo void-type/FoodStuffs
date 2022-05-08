@@ -5,6 +5,7 @@ import type {
   RecipesListParams,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
+import ListRecipesRequest from '@/models/ListRecipesRequest';
 
 interface RecipeStoreState {
   listResponse: ListRecipesResponseIItemSet;
@@ -22,15 +23,7 @@ export const useRecipeStore = defineStore('recipes', {
       take: Choices.paginationTake[0].value,
       totalCount: 0,
     },
-    listRequest: {
-      name: '',
-      category: '',
-      sortBy: '',
-      sortDesc: false,
-      isPagingEnabled: true,
-      page: 1,
-      take: Choices.paginationTake[0].value,
-    },
+    listRequest: new ListRecipesRequest(),
     recentRecipes: [],
   }),
 

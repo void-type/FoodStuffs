@@ -16,10 +16,12 @@ const recipes = computed(() => listResponse.value.items?.slice(0, 12));
 const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
 
 onMounted(() => {
-  new Api()
-    .recipesList(listRequest.value)
-    .then((response) => recipeStore.setListResponse(response.data))
-    .catch((response) => appStore.setApiFailureMessages(response));
+  if (listResponse.value.count === 0) {
+    new Api()
+      .recipesList(listRequest.value)
+      .then((response) => recipeStore.setListResponse(response.data))
+      .catch((response) => appStore.setApiFailureMessages(response));
+  }
 });
 </script>
 
