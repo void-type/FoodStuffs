@@ -9,6 +9,7 @@ import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
+import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '../components/EntityTablePager.vue';
 
 const props = defineProps({
@@ -109,6 +110,53 @@ onMounted(() => {
 <template>
   <div class="container">
     <h1 class="mt-4">Search Recipes</h1>
+    <EntityTableControls :clear-search="clearSearch" :init-search="startSearch" class="mt-4">
+      <template #searchControls>
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <div class="input-group mb-2">
+              <span class="input-group-text">Name contains</span>
+              <input
+                id="nameSearch"
+                v-model="listRequest.name"
+                class="form-control"
+                name="nameSearch"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="input-group mb-2">
+              <span class="input-group-text">Categories contain</span>
+              <input
+                id="categorySearch"
+                v-model="listRequest.category"
+                class="form-control"
+                name="categorySearch"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
+    </EntityTableControls>
+    <!-- <b-table
+      :items="listResponse.items"
+      :fields="tableFields"
+      :sort-by="listRequest.sortBy"
+      :sort-desc="listRequest.sortDesc"
+      sort-icon-left
+      no-local-sorting
+      show-empty
+      hover
+      class="mt-4"
+      @row-clicked="showDetails"
+      @sort-changed="tableSortChanged"
+    >
+      <template #cell(name)="data">
+        <router-link class="table-link" :to="{ name: 'view', params: { id: data.item.id } }">
+          {{ data.value }}
+        </router-link>
+      </template>
+    </b-table> -->
     <EntityTablePager
       :list-request="recipeStore.listRequest"
       :total-count="toInt(recipeStore.listResponse.totalCount)"

@@ -17,7 +17,7 @@ defineProps({
     <div class="row">
       <div class="col-12">
         <div class="btn-toolbar" role="toolbar">
-          <button class="btn btn-primary mr-1" type="button" @click.stop.prevent="initSearch()">
+          <button class="btn btn-primary me-1" type="button" @click.stop.prevent="initSearch()">
             Search
           </button>
           <button class="btn btn-secondary" type="button" @click.stop.prevent="clearSearch()">

@@ -13,8 +13,12 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  limit: {
+    type: Number,
+    required: true,
+    default: () => 7,
+  },
   onChangePage: {
-    // TODO: these type declarations throw lint errors
     // eslint-disable-next-line no-unused-vars
     type: Function as PropType<(page: number) => void>,
     required: true,
@@ -53,7 +57,7 @@ const isPrevDisabled = computed(() => currentPage.value < 2);
 const isNextDisabled = computed(() => currentPage.value > pageCount.value - 1);
 
 const pageRange = computed(() => {
-  const limit = 7;
+  const { limit } = props;
   const limitHalf = Math.floor(limit / 2);
   const totalPages = pageCount.value;
   const current = currentPage.value;
