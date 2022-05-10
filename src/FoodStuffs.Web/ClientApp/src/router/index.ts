@@ -1,22 +1,18 @@
-import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router';
-import { nextTick } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
 import useAppStore from '@/stores/appStore';
 import Home from '@/pages/Home.vue';
 import RouterHelpers from '@/models/RouterHelpers';
 
-function newRecipeProps(route: RouteLocationNormalized) {
-  const oldRecipe = route.params;
-  if (oldRecipe === undefined || oldRecipe === null) {
-    return oldRecipe;
-  }
-
-  const newRecipe = { ...oldRecipe, id: 0, name: `${oldRecipe.name} Copy` };
-
-  return { newRecipeSuggestion: newRecipe };
-}
-
 const router = createRouter({
-  scrollBehavior: () => ({ left: 0, top: 0 }),
+  scrollBehavior: (to) => {
+    if (to.hash) {
+      document.getElementById(to.hash.slice(1))?.focus();
+      return { el: to.hash };
+    }
+
+    document.getElementById('app-template')?.focus();
+    return { left: 0, top: 0 };
+  },
   history: createWebHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
@@ -49,7 +45,7 @@ const router = createRouter({
       name: 'new',
       path: '/new',
       component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue'),
-      props: newRecipeProps,
+      props: RouterHelpers.newRecipeProps,
       meta: { title: 'New' },
     },
     {
@@ -80,7 +76,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to) => {
-  nextTick(() => RouterHelpers.setTitle(to));
+  RouterHelpers.setTitle(to);
 });
 
 export default router;

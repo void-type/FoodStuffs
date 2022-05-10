@@ -33,7 +33,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app" @keydown.stop.prevent.esc="clearMessages()">
+  <div id="app-template" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
+    <div class="container-lg visually-hidden-focusable">
+      <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
+        >Skip to main content</router-link
+      >
+    </div>
     <!-- TODO: bind this to the API -->
     <vue-progress-bar />
     <AppHeader>
@@ -42,7 +47,7 @@ onMounted(() => {
       </template>
     </AppHeader>
     <AppMessageCenter class="no-print" />
-    <main id="main">
+    <main id="main" tabindex="-1">
       <RouterView />
     </main>
     <AppFooter />
@@ -56,10 +61,11 @@ onMounted(() => {
 // Sticky footer
 html,
 body,
-#app {
+#app,
+#app-template {
   height: 100%;
 }
-#app {
+#app-template {
   display: flex;
   flex-direction: column;
 }

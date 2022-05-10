@@ -48,6 +48,7 @@ function clearSearch() {
   recipeStore.setListRequest({
     ...new ListRecipesRequest(),
     take: listRequest.value.take,
+    isPagingEnabled: listRequest.value.isPagingEnabled,
   });
 
   fetchList();
@@ -108,7 +109,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container-lg">
     <h1 class="mt-4">Search Recipes</h1>
     <EntityTableControls :clear-search="clearSearch" :init-search="startSearch" class="mt-4">
       <template #searchControls>
