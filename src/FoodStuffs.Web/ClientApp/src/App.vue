@@ -24,17 +24,13 @@ onMounted(() => {
     })
     .catch((response) => appStore.setApiFailureMessages(response));
 
-  new Api()
-    .appVersionList()
-    .then((response) => appStore.setVersionInfo(response.data))
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    .catch(() => {});
+  new Api().appVersionList().then((response) => appStore.setVersionInfo(response.data));
 });
 </script>
 
 <template>
   <div id="app-template" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
-    <div class="container-lg visually-hidden-focusable">
+    <div class="container-xl visually-hidden-focusable">
       <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
         >Skip to main content</router-link
       >

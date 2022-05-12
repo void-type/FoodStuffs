@@ -8,6 +8,9 @@
     <li class="nav-item">
       <router-link :to="{ name: 'new' }" class="nav-link">New</router-link>
     </li>
+    <li class="nav-item">
+      <router-link :to="{ name: 'cards' }" class="nav-link">Cards</router-link>
+    </li>
   </ul>
 </template>
 

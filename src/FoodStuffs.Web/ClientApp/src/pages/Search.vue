@@ -7,7 +7,7 @@ import ListRecipesRequest from '@/models/ListRecipesRequest';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { onMounted, type PropType } from 'vue';
+import { onMounted, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '../components/EntityTablePager.vue';
@@ -27,21 +27,13 @@ const router = useRouter();
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 
 function fetchList() {
-  router
-    .replace({
-      query: {
-        ...listRequest.value,
-        sortDesc: String(listRequest.value.sortDesc),
-        isPagingEnabled: String(listRequest.value.isPagingEnabled),
-      },
-    })
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    .catch(() => {});
-
-  new Api()
-    .recipesList(listRequest.value)
-    .then((response) => recipeStore.setListResponse(response.data))
-    .catch((response) => appStore.setApiFailureMessages(response));
+  router.push({
+    query: {
+      ...listRequest.value,
+      sortDesc: String(listRequest.value.sortDesc),
+      isPagingEnabled: String(listRequest.value.isPagingEnabled),
+    },
+  });
 }
 
 function clearSearch() {
@@ -105,6 +97,15 @@ onMounted(() => {
   }
 
   fetchList();
+});
+
+watch(listRequest, () => {
+  // TODO: make these methods async
+  // TODO: there might be a bug that sets the query take to something invalid and we end up with lots of pages.
+  new Api()
+    .recipesList(listRequest.value)
+    .then((response) => recipeStore.setListResponse(response.data))
+    .catch((response) => appStore.setApiFailureMessages(response));
 });
 </script>
 
