@@ -75,9 +75,23 @@ function showDetails(recipe: ListRecipesResponse) {
   router.push({ name: 'view', params: { id: recipe.id } });
 }
 
-function tableSortChanged(sortBy: string, sortDesc: boolean) {
+function sortChanged(columnName: string) {
+  // 1st click asc
+  let sortBy = columnName;
+  let sortDesc = false;
+
+  if (columnName === listRequest.value.sortBy) {
+    if (listRequest.value.sortDesc !== true) {
+      // 2nd click desc
+      sortDesc = true;
+    } else {
+      // 3rd click turn off sorting
+      sortBy = '';
+    }
+  }
+
   recipeStore.setListRequest({
-    ...listResponse.value,
+    ...listRequest.value,
     sortBy,
     sortDesc,
   });
@@ -140,6 +154,35 @@ watch(listRequest, () => {
         </div>
       </template>
     </EntityTableControls>
+    <table class="table text-start mt-4">
+      <thead>
+        <tr class="table-light">
+          <th class="clickable" scope="col" @click="sortChanged('name')">
+            Name
+            <i
+              v-if="listRequest.sortBy !== 'name' && !listRequest.sortDesc"
+              class="bi-caret-up-fill hideOrderBy"
+            ></i>
+            <i
+              v-if="listRequest.sortBy !== 'name' && listRequest.sortDesc"
+              class="bi-caret-down-fill hideOrderBy"
+            ></i>
+            <i
+              v-if="listRequest.sortBy === 'name' && !listRequest.sortDesc"
+              class="bi-caret-up-fill"
+            ></i>
+            <i
+              v-if="listRequest.sortBy === 'name' && listRequest.sortDesc"
+              class="bi-caret-down-fill"
+            ></i>
+          </th>
+          <th scope="col">Categories</th>
+        </tr>
+      </thead>
+      <tbody>
+        <slot></slot>
+      </tbody>
+    </table>
     <!-- <b-table
       :items="listResponse.items"
       :fields="tableFields"
