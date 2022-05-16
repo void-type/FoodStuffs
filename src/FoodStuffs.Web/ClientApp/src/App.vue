@@ -102,11 +102,6 @@ h6,
   color: $primary;
 }
 
-// Hover table cursor
-table.table-hover {
-  cursor: pointer;
-}
-
 // Printable screens
 @media screen {
   .print-only {

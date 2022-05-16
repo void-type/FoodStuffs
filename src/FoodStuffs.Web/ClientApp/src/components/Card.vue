@@ -13,7 +13,7 @@ defineProps({
   <div class="card-outer">
     <div
       :class="{ 'card-inner': true, active: card.active }"
-      @keyup="onCardClick()"
+      @keydown.enter="onCardClick()"
       @click="onCardClick(card.id)"
     >
       <h3>{{ card.name }}</h3>

@@ -157,24 +157,15 @@ watch(listRequest, () => {
     <table class="table text-start mt-4">
       <thead>
         <tr class="table-light">
-          <th class="clickable" scope="col" @click="sortChanged('name')">
+          <th
+            class="sortable"
+            scope="col"
+            tabindex="0"
+            @click="sortChanged('name')"
+            @keyup.enter.stop.prevent="sortChanged('name')"
+          >
             Name
-            <i
-              v-if="listRequest.sortBy !== 'name' && !listRequest.sortDesc"
-              class="bi-caret-up-fill hideOrderBy"
-            ></i>
-            <i
-              v-if="listRequest.sortBy !== 'name' && listRequest.sortDesc"
-              class="bi-caret-down-fill hideOrderBy"
-            ></i>
-            <i
-              v-if="listRequest.sortBy === 'name' && !listRequest.sortDesc"
-              class="bi-caret-up-fill"
-            ></i>
-            <i
-              v-if="listRequest.sortBy === 'name' && listRequest.sortDesc"
-              class="bi-caret-down-fill"
-            ></i>
+            <i v-if="listRequest.sortBy === 'name'">{{ listRequest.sortDesc ? 'down' : 'up' }}</i>
           </th>
           <th scope="col">Categories</th>
         </tr>
@@ -212,4 +203,13 @@ watch(listRequest, () => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+// Hover table cursor
+table.table-hover tbody {
+  cursor: pointer;
+}
+
+table th.sortable {
+  cursor: pointer;
+}
+</style>

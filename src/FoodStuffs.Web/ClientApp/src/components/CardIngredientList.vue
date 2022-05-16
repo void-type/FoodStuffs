@@ -17,7 +17,7 @@ defineProps({
       <li
         v-for="[ingredient, quantity] in ingredients"
         :key="ingredient"
-        @keyup.enter="onIngredientClick(ingredient)"
+        @keydown.enter="onIngredientClick(ingredient)"
         @click="onIngredientClick(ingredient)"
       >
         {{ quantity }}x {{ ingredient }}
