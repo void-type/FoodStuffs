@@ -35,8 +35,6 @@ onMounted(() => {
         >Skip to main content</router-link
       >
     </div>
-    <!-- TODO: bind this to the API -->
-    <vue-progress-bar />
     <AppHeader>
       <template #navItems>
         <AppNav />

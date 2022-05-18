@@ -63,11 +63,7 @@ public static class ApplicationBuilderExtensions
 
                 options.StyleSources
                     // Add the Swagger UI scripts
-                    .AllowNonce()
-                    // Add the Vue-Progressbar hash because it applies inline styling.
-                    .AllowHash("sha256", "DNQ8Cm24tOHANsjo3O93DpqGvfN0qkQZsMZIt0PmA2o=")
-                    // Add the Font-Awesome hash because it applied inline styling.
-                    .AllowHash("sha256", "UTjtaAWWTyzFjRKbltk24jHijlTbP20C1GUYaWPqg7E=");
+                    .AllowNonce();
             }
         });
 
