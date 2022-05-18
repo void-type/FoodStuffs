@@ -28,11 +28,7 @@ const { listResponse, listRequest } = storeToRefs(recipeStore);
 
 function fetchList() {
   router.push({
-    query: {
-      ...listRequest.value,
-      sortDesc: String(listRequest.value.sortDesc),
-      isPagingEnabled: String(listRequest.value.isPagingEnabled),
-    },
+    query: recipeStore.currentQueryParams,
   });
 }
 
@@ -57,6 +53,7 @@ function startSearch() {
 
 function changePage(page: number) {
   recipeStore.setListRequest({ ...recipeStore.listRequest, page });
+
   fetchList();
 }
 
@@ -71,11 +68,7 @@ function changeTake(take: number) {
   fetchList();
 }
 
-function showDetails(recipe: ListRecipesResponse) {
-  router.push({ name: 'view', params: { id: recipe.id } });
-}
-
-function sortChanged(columnName: string) {
+function changeSort(columnName: string) {
   // 1st click asc
   let sortBy = columnName;
   let sortDesc = false;
@@ -99,14 +92,18 @@ function sortChanged(columnName: string) {
   fetchList();
 }
 
+function showDetails(recipe: ListRecipesResponse) {
+  router.push({ name: 'view', params: { id: recipe.id } });
+}
+
 onMounted(() => {
   if (Object.keys(props.query).length !== 0) {
     recipeStore.setListRequest({
       ...new ListRecipesRequest(),
       ...props.query,
       sortDesc: JSON.parse(String(props.query.sortDesc?.valueOf())) === true,
-      page: toNumber(Number(props.query.take), 1),
-      take: toNumber(Number(props.query.page), Choices.paginationTake[0].value),
+      page: toNumber(Number(props.query.page), 1),
+      take: toNumber(Number(props.query.take), Choices.paginationTake[0].value),
     });
   }
 
@@ -114,8 +111,6 @@ onMounted(() => {
 });
 
 watch(listRequest, () => {
-  // TODO: make these methods async
-  // TODO: there might be a bug that sets the query take to something invalid and we end up with lots of pages.
   new Api()
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
@@ -154,45 +149,37 @@ watch(listRequest, () => {
         </div>
       </template>
     </EntityTableControls>
-    <table class="table text-start mt-4">
+    <table class="table table-hover text-start mt-4">
       <thead>
-        <tr class="table-light">
+        <tr class="">
           <th
             class="sortable"
             scope="col"
             tabindex="0"
-            @click="sortChanged('name')"
-            @keyup.enter.stop.prevent="sortChanged('name')"
+            @click="changeSort('name')"
+            @keyup.enter.stop.prevent="changeSort('name')"
           >
             Name
-            <i v-if="listRequest.sortBy === 'name'">{{ listRequest.sortDesc ? 'down' : 'up' }}</i>
+            <i v-if="listRequest.sortBy === 'name'">{{ listRequest.sortDesc ? '▼' : '▲' }}</i>
+            <span v-if="listRequest.sortBy === 'name'" class="visually-hidden"
+              >({{ listRequest.sortDesc ? 'Descending' : 'Ascending' }} sort)</span
+            >
+            <span v-else class="visually-hidden">(Not sorted)</span>
           </th>
           <th scope="col">Categories</th>
         </tr>
       </thead>
       <tbody>
-        <slot></slot>
+        <tr v-for="recipe in listResponse.items" :key="recipe.id" @click="showDetails(recipe)">
+          <td>
+            <router-link class="table-link" :to="{ name: 'view', params: { id: recipe.id } }">{{
+              recipe.name
+            }}</router-link>
+          </td>
+          <td>{{ recipe?.categories?.join(', ') }}</td>
+        </tr>
       </tbody>
     </table>
-    <!-- <b-table
-      :items="listResponse.items"
-      :fields="tableFields"
-      :sort-by="listRequest.sortBy"
-      :sort-desc="listRequest.sortDesc"
-      sort-icon-left
-      no-local-sorting
-      show-empty
-      hover
-      class="mt-4"
-      @row-clicked="showDetails"
-      @sort-changed="tableSortChanged"
-    >
-      <template #cell(name)="data">
-        <router-link class="table-link" :to="{ name: 'view', params: { id: data.item.id } }">
-          {{ data.value }}
-        </router-link>
-      </template>
-    </b-table> -->
     <EntityTablePager
       :list-request="recipeStore.listRequest"
       :total-count="toInt(recipeStore.listResponse.totalCount)"
@@ -204,12 +191,21 @@ watch(listRequest, () => {
 </template>
 
 <style scoped lang="scss">
+@import '@/styles/theme';
+
 // Hover table cursor
 table.table-hover tbody {
   cursor: pointer;
 }
 
-table th.sortable {
+table th.sortable:hover {
   cursor: pointer;
+  --bs-table-accent-bg: var(--bs-table-hover-bg);
+  color: var(--bs-table-hover-color);
+}
+
+.table-link {
+  color: $body-color;
+  text-decoration: none;
 }
 </style>

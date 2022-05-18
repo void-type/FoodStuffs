@@ -1,9 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import useRecipeStore from '@/stores/recipeStore';
+
+const recipeStore = useRecipeStore();
+</script>
 
 <template>
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li class="nav-item">
-      <router-link :to="{ name: 'search' }" class="nav-link">Search</router-link>
+      <router-link :to="{ name: 'search', query: recipeStore.currentQueryParams }" class="nav-link"
+        >Search</router-link
+      >
     </li>
     <li class="nav-item">
       <router-link :to="{ name: 'new' }" class="nav-link">New</router-link>

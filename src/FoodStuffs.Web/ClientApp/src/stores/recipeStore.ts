@@ -27,7 +27,15 @@ export const useRecipeStore = defineStore('recipes', {
     recentRecipes: [],
   }),
 
-  getters: {},
+  getters: {
+    currentQueryParams(state) {
+      return {
+        ...state.listRequest,
+        sortDesc: String(state.listRequest.sortDesc),
+        isPagingEnabled: String(state.listRequest.isPagingEnabled),
+      };
+    },
+  },
 
   actions: {
     setListResponse(data: ListRecipesResponseIItemSet) {
