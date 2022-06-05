@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Api } from '@/api/Api';
 import ApiHelpers from '@/models/ApiHelpers';
 import useAppStore from '@/stores/appStore';

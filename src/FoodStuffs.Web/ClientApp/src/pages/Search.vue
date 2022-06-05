@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Api } from '@/api/Api';
 import type { ListRecipesResponse } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
@@ -190,7 +190,7 @@ watch(listRequest, () => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/theme';
 
 // Hover table cursor

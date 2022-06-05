@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Choices from '@/models/Choices';
 import { toInt } from '@/models/FormatHelpers';
 import type IPaginatedRequest from '@/models/IPaginatedRequest';

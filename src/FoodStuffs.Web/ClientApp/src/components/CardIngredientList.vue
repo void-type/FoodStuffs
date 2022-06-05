@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { PropType } from 'vue';
 
 defineProps({
@@ -26,7 +26,7 @@ defineProps({
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/cards';
 
 .list {

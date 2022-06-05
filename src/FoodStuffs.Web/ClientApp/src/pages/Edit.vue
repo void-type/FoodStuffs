@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed } from 'vue';
 import { useCardStore } from '@/stores/cardStore';
 import IngredientList from '@/components/CardIngredientList.vue';
@@ -47,7 +47,7 @@ const inactiveCards = computed(() => cardStore.getCards({ active: false }));
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .area {
   display: flex;
   flex-wrap: wrap;
