@@ -1,11 +1,5 @@
 <script lang="ts" setup>
-// import { library } from '@fortawesome/fontawesome-svg-core';
-// import { faTimes } from '@fortawesome/free-solid-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
 import type { PropType } from 'vue';
-
-// library.add(faTimes);
 
 const props = defineProps({
   label: {

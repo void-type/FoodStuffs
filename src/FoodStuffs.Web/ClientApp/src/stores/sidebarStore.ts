@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia';
 
 interface SidebarStoreState {
-  sidebarVisible: boolean | null;
+  isSidebarVisibleSetting: boolean | null;
 }
 
 export const useSidebarStore = defineStore('sidebar', {
   state: (): SidebarStoreState => ({
-    sidebarVisible: null,
+    isSidebarVisibleSetting: null,
   }),
 
   getters: {},
 
   actions: {
-    setSidebarVisible(value: boolean) {
-      this.sidebarVisible = value;
+    setSidebarVisibleSetting(value: boolean) {
+      this.isSidebarVisibleSetting = value;
     },
   },
 });

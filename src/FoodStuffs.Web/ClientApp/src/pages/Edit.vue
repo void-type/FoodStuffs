@@ -1,56 +1,9 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useCardStore } from '@/stores/cardStore';
-import IngredientList from '@/components/CardIngredientList.vue';
-import Card from '@/components/Card.vue';
-
-const cardStore = useCardStore();
-
-const activeCards = computed(() => cardStore.getCards({ active: true }));
-const inactiveCards = computed(() => cardStore.getCards({ active: false }));
+import SelectSidebar from '@/components/SelectSidebar.vue';
 </script>
 
 <template>
-  <div class="area">
-    <IngredientList
-      title="Shopping list"
-      :ingredients="cardStore.getShoppingList"
-      :on-clear="cardStore.clearShoppingList"
-      :on-ingredient-click="cardStore.addToPantry"
-    />
-    <IngredientList
-      title="Pantry"
-      :ingredients="cardStore.getPantry"
-      :on-clear="cardStore.clearPantry"
-      :on-ingredient-click="cardStore.removeFromPantry"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in activeCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="true"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in inactiveCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="false"
-    />
-  </div>
+  <SelectSidebar :route-name="'view'" />
 </template>
 
-<style lang="scss" scoped>
-.area {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0.5rem;
-}
-</style>
+<style lang="scss" scoped></style>
