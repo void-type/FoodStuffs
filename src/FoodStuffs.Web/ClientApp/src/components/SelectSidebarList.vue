@@ -64,7 +64,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', setIsScreenLarge);
 });
-// TODO: collapsing elements
 </script>
 
 <template>
@@ -77,11 +76,7 @@ onUnmounted(() => {
     >
       {{ title }}
     </h5>
-    <div
-      :id="`collapse-${title}`"
-      class="collapse"
-      :data-bs-toggle="isSidebarVisible === true ? 'true' : null"
-    >
+    <div :class="{ 'vt-collapsable': true, 'vt-collapsed': !isSidebarVisible }">
       <div class="list-group list-group-flush">
         <div
           v-for="recipe in recipes"
@@ -105,6 +100,15 @@ onUnmounted(() => {
   .hover:hover {
     background-color: $gray-200;
     cursor: pointer;
+  }
+}
+
+// TODO: collapsing elements
+.vt-collapsable {
+  &.vt-collapsed {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.55s ease;
   }
 }
 </style>
