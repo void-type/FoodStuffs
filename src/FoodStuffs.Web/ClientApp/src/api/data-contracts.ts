@@ -29,7 +29,6 @@ export interface GetRecipeResponse {
   /** @format int32 */
   id?: number;
   name?: string | null;
-  ingredients?: string | null;
   directions?: string | null;
 
   /** @format int32 */
@@ -50,6 +49,18 @@ export interface GetRecipeResponse {
   pinnedImageId?: number | null;
   categories?: string[] | null;
   images?: number[] | null;
+  ingredients?: GetRecipeResponseIngredient[] | null;
+}
+
+export interface GetRecipeResponseIngredient {
+  name?: string | null;
+
+  /** @format int32 */
+  quantity?: number;
+
+  /** @format int32 */
+  order?: number;
+  isCategory?: boolean;
 }
 
 export interface IFailure {
@@ -115,7 +126,6 @@ export interface SaveRecipeRequest {
   /** @format int32 */
   id?: number;
   name?: string | null;
-  ingredients?: string | null;
   directions?: string | null;
 
   /** @format int32 */
@@ -123,7 +133,19 @@ export interface SaveRecipeRequest {
 
   /** @format int32 */
   prepTimeMinutes?: number | null;
+  ingredients?: SaveRecipeRequestIngredient[] | null;
   categories?: string[] | null;
+}
+
+export interface SaveRecipeRequestIngredient {
+  name?: string | null;
+
+  /** @format int32 */
+  quantity?: number;
+
+  /** @format int32 */
+  order?: number;
+  isCategory?: boolean;
 }
 
 export interface WebClientInfo {
