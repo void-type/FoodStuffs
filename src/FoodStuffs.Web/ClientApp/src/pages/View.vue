@@ -1,56 +1,64 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useCardStore } from '@/stores/cardStore';
-import IngredientList from '@/components/CardIngredientList.vue';
-import Card from '@/components/Card.vue';
+import { reactive } from 'vue';
+import GetRecipeResponse from '@/models/api/recipes/GetRecipeResponse';
+import SelectSidebar from '@/viewComponents/SelectSidebar.vue';
+import RecipeViewer from '@/viewComponents/RecipeViewer.vue';
 
-const cardStore = useCardStore();
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
+});
 
-const activeCards = computed(() => cardStore.getCards({ active: true }));
-const inactiveCards = computed(() => cardStore.getCards({ active: false }));
+const sourceRecipe = reactive(new GetRecipeResponse());
+
+//   watch: {
+//     id() {
+//       this.fetchRecipe(this.id);
+//     },
+//   },
+//   created() {
+//     this.fetchRecipe(this.id);
+//   },
+//   methods: {
+//     ...mapActions({
+//       setApiFailureMessages: 'app/setApiFailureMessages',
+//       addToRecent: 'recipes/addToRecent',
+//     }),
+//     fetchRecipe(id) {
+//       webApi.recipes.get(
+//         id,
+//         (data) => {
+//           this.sourceRecipe = data;
+//         },
+//         (response) => this.setApiFailureMessages(response)
+//       );
+//     },
+//   },
+//   beforeRouteUpdate(to, from, next) {
+//     this.addToRecent(this.sourceRecipe);
+//     next();
+//   },
+//   beforeRouteLeave(to, from, next) {
+//     this.addToRecent(this.sourceRecipe);
+//     next();
+//   },
+// };
 </script>
 
 <template>
-  <div class="area">
-    <IngredientList
-      title="Shopping list"
-      :ingredients="cardStore.getShoppingList"
-      :on-clear="cardStore.clearShoppingList"
-      :on-ingredient-click="cardStore.addToPantry"
-    />
-    <IngredientList
-      title="Pantry"
-      :ingredients="cardStore.getPantry"
-      :on-clear="cardStore.clearPantry"
-      :on-ingredient-click="cardStore.removeFromPantry"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in activeCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="true"
-    />
-  </div>
-
-  <div class="area">
-    <Card
-      v-for="card in inactiveCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="false"
-    />
-  </div>
+  <b-container>
+    <b-row>
+      <b-col md="12" lg="3" class="no-print mt-4">
+        <SelectSidebar :route-name="'view'" />
+      </b-col>
+      <b-col class="mt-4">
+        <h1>{{ sourceRecipe.name }}</h1>
+        <RecipeViewer class="mt-4" :recipe="sourceRecipe" />
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
-<style lang="scss" scoped>
-.area {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0.5rem;
-}
-</style>
+<style lang="scss" scoped></style>
