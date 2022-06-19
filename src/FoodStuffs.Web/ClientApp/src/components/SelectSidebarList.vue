@@ -60,14 +60,13 @@ onUnmounted(() => {
 
 <template>
   <div class="card mt-2">
-    {{ isSidebarVisible === true ? 'true' : '' }}
-    <h5
-      class="card-title mb-0 hover"
+    <div
+      class="card-header h5 mb-0 hover"
       @click="toggleSidebarVisible"
       @keydown.enter="toggleSidebarVisible"
     >
       {{ title }}
-    </h5>
+    </div>
     <div :class="{ 'vt-collapsable': true, 'vt-collapsed': !isSidebarVisible }">
       <div class="list-group list-group-flush">
         <router-link

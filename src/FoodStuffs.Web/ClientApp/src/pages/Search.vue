@@ -119,7 +119,7 @@ watch(listRequest, () => {
 </script>
 
 <template>
-  <div class="container-lg">
+  <div class="container-xxl">
     <h1 class="mt-4">Search Recipes</h1>
     <EntityTableControls :clear-search="clearSearch" :init-search="startSearch" class="mt-4">
       <template #searchControls>
@@ -202,5 +202,10 @@ table th.sortable:hover {
   cursor: pointer;
   --bs-table-accent-bg: var(--bs-table-hover-bg);
   color: var(--bs-table-hover-color);
+}
+
+.table-link {
+  color: unset;
+  text-decoration: none;
 }
 </style>

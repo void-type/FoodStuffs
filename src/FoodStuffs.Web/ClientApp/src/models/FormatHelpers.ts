@@ -19,3 +19,7 @@ export function trimAndTitleCase(value: string) {
     .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
     .join(' ');
 }
+
+export function isNil(value: string | null | undefined) {
+  return value === null || value === undefined || value === '';
+}

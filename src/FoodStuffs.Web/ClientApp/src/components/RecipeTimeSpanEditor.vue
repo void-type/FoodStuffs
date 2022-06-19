@@ -58,7 +58,7 @@ function onMinutesInput(event: Event) {
 <template>
   <div class="text-center">
     <div class="input-group">
-      <label class="sr-only" for="`${id}-hours`"
+      <label class="visually-hidden" for="`${id}-hours`"
         >Hours
         <input
           :id="`${id}-hours`"
@@ -69,7 +69,7 @@ function onMinutesInput(event: Event) {
           @change="onHoursInput"
         />
       </label>
-      <label class="sr-only" for="`${id}-minutes`"
+      <label class="visually-hidden" for="`${id}-minutes`"
         >Minutes
         <input
           :id="`${id}-minutes`"

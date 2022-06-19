@@ -10,7 +10,7 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 
 <template>
   <header class="navbar navbar-dark bg-primary navbar-expand-md shadow">
-    <nav class="container-xl flex-wrap flex-md-nowrap">
+    <nav class="container-xxl">
       <router-link :to="{ name: 'home' }" class="navbar-brand">
         <img src="/img/logo.svg" alt="logo" class="d-inline-block align-text-top" />
         {{ applicationName }}
@@ -19,14 +19,14 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
+        data-bs-target="#navbar-menu"
+        aria-controls="navbar-menu"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div id="navbarSupportedContent" class="navbar-collapse collapse">
+      <div id="navbar-menu" class="navbar-collapse collapse">
         <slot name="navItems"></slot>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item dropdown">

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { AppVersion, DomainUser, IFailureIItemSet, WebClientInfo } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
+import { isNil } from '@/models/FormatHelpers';
 
 interface AppStoreState {
   applicationName: string;
@@ -103,7 +104,7 @@ export const useAppStore = defineStore('app', {
 
     setValidationErrorMessages(failureSet: IFailureIItemSet) {
       function notEmpty(value: string | null | undefined): value is string {
-        return value !== null && value !== undefined && value !== '';
+        return !isNil(value);
       }
       const failures = failureSet.items || [];
       const fieldNames = failures.map((item) => item.uiHandle);

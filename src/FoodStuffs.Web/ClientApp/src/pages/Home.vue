@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container-lg">
+  <div class="container-xxl">
     <div class="row mt-3">
       <div v-for="recipe in recipes" :key="recipe.id" class="col-lg-4 mt-3">
         <div no-body class="card overflow-hidden">

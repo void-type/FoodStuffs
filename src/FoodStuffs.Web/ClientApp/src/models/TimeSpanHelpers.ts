@@ -1,7 +1,7 @@
-import { toInt } from './FormatHelpers';
+import { isNil, toInt } from './FormatHelpers';
 
 function stringifyUnit(value: number, unitSingle: string, unitPlural = '') {
-  const unit = value === 1 || unitPlural === '' ? unitSingle : unitPlural;
+  const unit = value === 1 || isNil(unitPlural) ? unitSingle : unitPlural;
   return value !== 0 ? `${value} ${unit}` : '';
 }
 

@@ -3,6 +3,7 @@ import { ref, computed, defineProps, type PropType, onMounted, watch } from 'vue
 import type bootstrap from 'bootstrap';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import ApiHelpers from '@/models/ApiHelpers';
+import { isNil } from '@/models/FormatHelpers';
 import { toTimeSpanString } from '@/models/TimeSpanHelpers';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
@@ -87,16 +88,24 @@ onMounted(() => {
     </div>
     <div class="row">
       <div v-if="showImage" class="col-12 text-center mt-3">
-        <div v-if="images.length > 0" id="image-carousel" class="carousel slide">
-          <ol class="carousel-indicators d-print-none">
-            <li
+        <div
+          v-if="images.length > 0"
+          id="image-carousel"
+          class="carousel slide"
+          data-bs-interval="false"
+        >
+          <div class="carousel-indicators d-print-none">
+            <button
               v-for="(image, i) in images"
               :key="image"
-              data-target="#image-carousel"
-              :data-slide-to="i"
+              data-bs-target="#image-carousel"
+              :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
-            ></li>
-          </ol>
+              :aria-current="i === carouselIndex"
+              aria-label="Show image {{i}}"
+              type="button"
+            ></button>
+          </div>
           <div class="carousel-inner">
             <div
               v-for="(image, i) in images"
@@ -106,37 +115,48 @@ onMounted(() => {
               <img class="img-fluid rounded" :src="imageUrl(image)" alt="" />
             </div>
           </div>
-          <a
+          <button
             class="carousel-control-prev d-print-none"
-            href="#image-carousel"
-            role="button"
-            data-slide="prev"
+            type="button"
+            data-bs-target="#image-carousel"
+            data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
             class="carousel-control-next d-print-none"
-            href="#image-carousel"
-            role="button"
-            data-slide="next"
+            type="button"
+            data-bs-target="#image-carousel"
+            data-bs-slide="next"
           >
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
       </div>
     </div>
-    <h3 class="mt-3">Ingredients</h3>
-    <RecipeViewerIngredients :ingredients="recipe.ingredients || []" />
-    <h3 class="mt-3">Directions</h3>
-    <b-form-textarea
-      plaintext
-      rows="1"
-      :max-rows="Number.MAX_SAFE_INTEGER"
-      :value="recipe.directions"
+    <h3 v-if="(recipe.ingredients?.length || []) > 0" class="mt-3">Ingredients</h3>
+    <RecipeViewerIngredients
+      v-if="(recipe.ingredients?.length || []) > 0"
+      :ingredients="recipe.ingredients || []"
     />
-    <h3 class="mt-3">Stats</h3>
+    <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
+    <div v-if="!isNil(recipe.directions)" class="form-control-plaintext">
+      {{ recipe.directions }}
+    </div>
+    <h3
+      v-if="
+        recipe.prepTimeMinutes ||
+        0 > 0 ||
+        recipe.cookTimeMinutes ||
+        0 > 0 ||
+        (recipe.categories || []).length > 0
+      "
+      class="mt-3"
+    >
+      Stats
+    </h3>
     <div v-if="recipe.prepTimeMinutes || 0 > 0">
       Prep Time: {{ timeSpanFormat(recipe.prepTimeMinutes) }}
     </div>
@@ -153,8 +173,25 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-textarea {
-  overflow: hidden !important;
-  resize: none;
+// TODO: fix how these are injected.
+@import '@/styles/theme';
+@import 'bootstrap/scss/bootstrap';
+
+div.form-control-plaintext {
+  white-space: pre-wrap;
+}
+
+div.carousel-item {
+  background-color: $gray-600;
+
+  img {
+    max-height: 350px;
+  }
+}
+
+@media print {
+  div.carousel-item {
+    background-color: unset;
+  }
 }
 </style>

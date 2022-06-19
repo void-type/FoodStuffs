@@ -30,12 +30,13 @@ onMounted(() => {
 
 <template>
   <div id="app-template" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
-    <div class="container-xl visually-hidden-focusable">
+    <!-- TODO: the focus shows up on the page on load as a blue line -->
+    <div class="container-xxl visually-hidden-focusable">
       <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
         >Skip to main content</router-link
       >
     </div>
-    <AppHeader>
+    <AppHeader class="d-print-none">
       <template #navItems>
         <AppNav />
       </template>

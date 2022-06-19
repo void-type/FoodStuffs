@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, watch, computed } from 'vue';
+import { onMounted, watch, computed, reactive } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
+import SelectSidebar from '@/components/SelectSidebar.vue';
+import RecipeViewer from '@/components/RecipeViewer.vue';
 
 const props = defineProps({
   id: {
@@ -16,18 +18,19 @@ const props = defineProps({
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 
-let sourceRecipeBase: GetRecipeResponse | null = null;
-const sourceRecipe = computed(() => sourceRecipeBase);
+const data = reactive({
+  sourceRecipe: null as GetRecipeResponse | null,
+});
 
 function fetchRecipe() {
   new Api()
     .recipesDetail(props.id)
     .then((response) => {
-      sourceRecipeBase = response.data;
+      data.sourceRecipe = response.data;
     })
     .catch((response) => {
       appStore.setApiFailureMessages(response);
-      sourceRecipeBase = null;
+      data.sourceRecipe = null;
     });
 }
 
@@ -43,25 +46,25 @@ onMounted(() => {
 });
 
 onBeforeRouteUpdate((to, from, next) => {
-  recipeStore.addToRecent(sourceRecipe.value);
+  recipeStore.addToRecent(data.sourceRecipe);
   next();
 });
 
 onBeforeRouteLeave((to, from, next) => {
-  recipeStore.addToRecent(sourceRecipe.value);
+  recipeStore.addToRecent(data.sourceRecipe);
   next();
 });
 </script>
 
 <template>
-  <div class="container-lg">
+  <div class="container-xxl">
     <div class="row">
       <div class="col-md-12 col-lg-3 d-print-none mt-4">
         <SelectSidebar :route-name="'view'" />
       </div>
-      <div v-if="sourceRecipe !== null" class="col mt-4">
-        <h1>{{ sourceRecipe.name }}</h1>
-        <RecipeViewer class="mt-4" :recipe="sourceRecipe" />
+      <div v-if="data.sourceRecipe !== null" class="col-md-12 col-lg-9 mt-4">
+        <h1>{{ data.sourceRecipe.name }}</h1>
+        <RecipeViewer class="mt-4" :recipe="data.sourceRecipe" />
       </div>
     </div>
   </div>
