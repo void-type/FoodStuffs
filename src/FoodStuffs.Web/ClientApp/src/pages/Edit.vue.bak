@@ -233,7 +233,7 @@ export default {
       <b-col
         md="12"
         lg="3"
-        class="no-print mt-4"
+        class="d-print-none mt-4"
       >
         <SelectSidebar :route-name="'view'" />
       </b-col>

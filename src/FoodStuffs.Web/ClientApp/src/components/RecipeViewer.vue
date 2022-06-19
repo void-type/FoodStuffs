@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { ref, computed, defineProps, type PropType } from 'vue';
+import { ref, computed, defineProps, type PropType, onMounted, watch } from 'vue';
+import type bootstrap from 'bootstrap';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import ApiHelpers from '@/models/ApiHelpers';
-import RecipeTimeSpan from '@/models/RecipeTimeSpan';
+import { toTimeSpanString } from '@/models/TimeSpanHelpers';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
 
@@ -36,52 +37,96 @@ function imageUrl(id: number) {
   return ApiHelpers.imageUrl(id);
 }
 
-function timeSpanFormat(minutes: number | null | undefined) {
-  if (minutes === null || minutes === undefined) {
-    return '';ssssssssssssss
+function timeSpanFormat(totalMinutes: number | null | undefined) {
+  if (totalMinutes === null || totalMinutes === undefined) {
+    return '';
   }
 
-  return new RecipeTimeSpan(minutes).toString();
+  return toTimeSpanString(totalMinutes);
 }
+
+watch(
+  () => props.recipe,
+  () => {
+    carouselIndex.value = 0;
+  }
+);
+
+onMounted(() => {
+  const carouselElement = document.getElementById('image-carousel');
+
+  if (carouselElement !== null) {
+    carouselElement.addEventListener('slid.bs.carousel', (event) => {
+      const carouselEvent = event as unknown as bootstrap.Carousel.Event;
+      carouselIndex.value = carouselEvent.to;
+    });
+  }
+});
 </script>
 
 <template>
   <div v-if="recipe.name" class="viewer">
-    <b-row class="no-print">
-      <b-col cols="12">
-        <b-button-toolbar>
-          <b-button
+    <div class="row d-print-none">
+      <div class="col-12">
+        <div class="btn-toolbar" role="toolbar">
+          <router-link
             :to="{ name: 'edit', params: { id: recipe.id } }"
-            class="mr-2"
-            variant="primary"
+            class="btn btn-primary me-2"
+            type="button"
           >
             Edit
-          </b-button>
-          <b-form-checkbox id="showImage" v-model="showImage" name="showImage" class="mt-2" switch>
-            Image
-          </b-form-checkbox>
-        </b-button-toolbar>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col v-if="showImage" cols="12" class="text-center mt-3">
-        <b-carousel
-          v-if="images.length > 0"
-          id="image-carousel"
-          v-model="carouselIndex"
-          :interval="0"
-          no-animation
-          controls
-          indicators
-        >
-          <b-carousel-slide v-for="image in images" :key="image">
-            <template #img>
-              <b-img fluid rounded :src="imageUrl(image)" img />
-            </template>
-          </b-carousel-slide>
-        </b-carousel>
-      </b-col>
-    </b-row>
+          </router-link>
+          <div class="form-check form-switch mt-2">
+            <label class="form-check-label" for="showImage">
+              <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
+              Image</label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div v-if="showImage" class="col-12 text-center mt-3">
+        <div v-if="images.length > 0" id="image-carousel" class="carousel slide">
+          <ol class="carousel-indicators d-print-none">
+            <li
+              v-for="(image, i) in images"
+              :key="image"
+              data-target="#image-carousel"
+              :data-slide-to="i"
+              :class="{ active: i === carouselIndex }"
+            ></li>
+          </ol>
+          <div class="carousel-inner">
+            <div
+              v-for="(image, i) in images"
+              :key="image"
+              :class="{ 'carousel-item': true, active: i === carouselIndex }"
+            >
+              <img class="img-fluid rounded" :src="imageUrl(image)" alt="" />
+            </div>
+          </div>
+          <a
+            class="carousel-control-prev d-print-none"
+            href="#image-carousel"
+            role="button"
+            data-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a
+            class="carousel-control-next d-print-none"
+            href="#image-carousel"
+            role="button"
+            data-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
     <h3 class="mt-3">Ingredients</h3>
     <RecipeViewerIngredients :ingredients="recipe.ingredients || []" />
     <h3 class="mt-3">Directions</h3>
@@ -111,15 +156,5 @@ function timeSpanFormat(minutes: number | null | undefined) {
 textarea {
   overflow: hidden !important;
   resize: none;
-}
-
-// Don't print carousel controls.
-@media print {
-  #image-carousel ::v-deep {
-    & a,
-    ol {
-      display: none;
-    }
-  }
 }
 </style>

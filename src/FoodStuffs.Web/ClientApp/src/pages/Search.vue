@@ -151,7 +151,7 @@ watch(listRequest, () => {
     </EntityTableControls>
     <table class="table table-hover text-start mt-4">
       <thead>
-        <tr class="">
+        <tr>
           <th
             class="sortable"
             scope="col"
@@ -202,10 +202,5 @@ table th.sortable:hover {
   cursor: pointer;
   --bs-table-accent-bg: var(--bs-table-hover-bg);
   color: var(--bs-table-hover-color);
-}
-
-.table-link {
-  color: $body-color;
-  text-decoration: none;
 }
 </style>

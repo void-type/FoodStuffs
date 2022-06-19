@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { reactive } from 'vue';
-import GetRecipeResponse from '@/models/api/recipes/GetRecipeResponse';
-import SelectSidebar from '@/viewComponents/SelectSidebar.vue';
-import RecipeViewer from '@/viewComponents/RecipeViewer.vue';
+import { onMounted, watch, computed } from 'vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+import type { GetRecipeResponse } from '@/api/data-contracts';
+import { Api } from '@/api/Api';
+import useAppStore from '@/stores/appStore';
+import useRecipeStore from '@/stores/recipeStore';
 
 const props = defineProps({
   id: {
@@ -11,54 +13,58 @@ const props = defineProps({
   },
 });
 
-const sourceRecipe = reactive(new GetRecipeResponse());
+const appStore = useAppStore();
+const recipeStore = useRecipeStore();
 
-//   watch: {
-//     id() {
-//       this.fetchRecipe(this.id);
-//     },
-//   },
-//   created() {
-//     this.fetchRecipe(this.id);
-//   },
-//   methods: {
-//     ...mapActions({
-//       setApiFailureMessages: 'app/setApiFailureMessages',
-//       addToRecent: 'recipes/addToRecent',
-//     }),
-//     fetchRecipe(id) {
-//       webApi.recipes.get(
-//         id,
-//         (data) => {
-//           this.sourceRecipe = data;
-//         },
-//         (response) => this.setApiFailureMessages(response)
-//       );
-//     },
-//   },
-//   beforeRouteUpdate(to, from, next) {
-//     this.addToRecent(this.sourceRecipe);
-//     next();
-//   },
-//   beforeRouteLeave(to, from, next) {
-//     this.addToRecent(this.sourceRecipe);
-//     next();
-//   },
-// };
+let sourceRecipeBase: GetRecipeResponse | null = null;
+const sourceRecipe = computed(() => sourceRecipeBase);
+
+function fetchRecipe() {
+  new Api()
+    .recipesDetail(props.id)
+    .then((response) => {
+      sourceRecipeBase = response.data;
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+      sourceRecipeBase = null;
+    });
+}
+
+watch(
+  () => props.id,
+  () => {
+    fetchRecipe();
+  }
+);
+
+onMounted(() => {
+  fetchRecipe();
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  recipeStore.addToRecent(sourceRecipe.value);
+  next();
+});
+
+onBeforeRouteLeave((to, from, next) => {
+  recipeStore.addToRecent(sourceRecipe.value);
+  next();
+});
 </script>
 
 <template>
-  <b-container>
-    <b-row>
-      <b-col md="12" lg="3" class="no-print mt-4">
+  <div class="container-lg">
+    <div class="row">
+      <div class="col-md-12 col-lg-3 d-print-none mt-4">
         <SelectSidebar :route-name="'view'" />
-      </b-col>
-      <b-col class="mt-4">
+      </div>
+      <div v-if="sourceRecipe !== null" class="col mt-4">
         <h1>{{ sourceRecipe.name }}</h1>
         <RecipeViewer class="mt-4" :recipe="sourceRecipe" />
-      </b-col>
-    </b-row>
-  </b-container>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

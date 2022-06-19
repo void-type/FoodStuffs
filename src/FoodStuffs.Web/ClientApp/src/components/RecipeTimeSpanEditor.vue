@@ -1,6 +1,15 @@
 <script lang="ts" setup>
-import RecipeTimeSpan from '@/models/RecipeTimeSpan';
+import {
+  clampHours,
+  clampMinutes,
+  getTotalMinutes,
+  toTimeSpanString,
+} from '@/models/TimeSpanHelpers';
 import { computed, getCurrentInstance } from 'vue';
+
+// Expose emit function
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const emit = getCurrentInstance()?.emit || (() => {});
 
 const props = defineProps({
   id: {
@@ -30,20 +39,19 @@ defineEmits<{
   (e: 'input', totalMinutes: number): void;
 }>();
 
-const timeSpan = computed(() => new RecipeTimeSpan(props.value));
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const emit = getCurrentInstance()?.emit || (() => {});
+const hours = computed(() => clampHours(props.value));
+const minutes = computed(() => clampMinutes(props.value));
 
 function onHoursInput(event: Event) {
-  const newValue = Number((event.target as HTMLInputElement).value);
-  const ts = new RecipeTimeSpan(timeSpan.value.toMinutes(), newValue);
-  emit('input', ts.totalMinutes);
+  const newHours = Number((event.target as HTMLInputElement).value);
+  const totalMinutes = getTotalMinutes(minutes.value, newHours);
+  emit('input', totalMinutes);
 }
+
 function onMinutesInput(event: Event) {
-  const newValue = Number((event.target as HTMLInputElement).value);
-  const ts = new RecipeTimeSpan(newValue, timeSpan.value.toHours());
-  emit('input', ts.totalMinutes);
+  const newMinutes = Number((event.target as HTMLInputElement).value);
+  const totalMinutes = getTotalMinutes(newMinutes, hours.value);
+  emit('input', totalMinutes);
 }
 </script>
 
@@ -54,7 +62,7 @@ function onMinutesInput(event: Event) {
         >Hours
         <input
           :id="`${id}-hours`"
-          :value="timeSpan.toHours()"
+          :value="hours"
           :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
           type="number"
           min="0"
@@ -65,7 +73,7 @@ function onMinutesInput(event: Event) {
         >Minutes
         <input
           :id="`${id}-minutes`"
-          :value="timeSpan.toMinutes()"
+          :value="minutes"
           :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
           type="number"
           min="-1"
@@ -73,14 +81,10 @@ function onMinutesInput(event: Event) {
         />
       </label>
     </div>
-    <small :class="{ hidden: !(showPreview && timeSpan.totalMinutes > 0) }">
-      {{ timeSpan.toString() }}
+    <small :class="{ invisible: !(showPreview && value > 0) }">
+      {{ toTimeSpanString(value) }}
     </small>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.hidden {
-  visibility: hidden;
-}
-</style>
+<style lang="scss" scoped></style>

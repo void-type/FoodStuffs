@@ -18,11 +18,11 @@ const formattedIngredients = computed(() => {
 
 <template>
   <div>
-    <div v-for="(ing, id) in formattedIngredients" :key="id">
-      <h4 v-if="ing.isCategory">
-        {{ ing.name }}
+    <div v-for="(ingredient, id) in formattedIngredients" :key="id">
+      <h4 v-if="ingredient.isCategory">
+        {{ ingredient.name }}
       </h4>
-      <div v-else>{{ ing.quantity }} {{ ing.name }}</div>
+      <div v-else>{{ ingredient.quantity }} {{ ingredient.name }}</div>
     </div>
   </div>
 </template>

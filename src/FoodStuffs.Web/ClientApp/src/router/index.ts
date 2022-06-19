@@ -32,22 +32,22 @@ const router = createRouter({
       }),
       meta: { title: 'View' },
     },
-    {
-      name: 'edit',
-      path: '/edit/:id',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue'),
-      props: (route) => ({
-        id: +route.params.id,
-      }),
-      meta: { title: 'Edit' },
-    },
-    {
-      name: 'new',
-      path: '/new',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue'),
-      props: RouterHelpers.newRecipeProps,
-      meta: { title: 'New' },
-    },
+    // {
+    //   name: 'edit',
+    //   path: '/edit/:id',
+    //   component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue.bak'),
+    //   props: (route) => ({
+    //     id: +route.params.id,
+    //   }),
+    //   meta: { title: 'Edit' },
+    // },
+    // {
+    //   name: 'new',
+    //   path: '/new',
+    //   component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue.bak'),
+    //   props: RouterHelpers.newRecipeProps,
+    //   meta: { title: 'New' },
+    // },
     {
       name: 'search',
       path: '/search',

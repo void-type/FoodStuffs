@@ -40,7 +40,7 @@ onMounted(() => {
         <AppNav />
       </template>
     </AppHeader>
-    <AppMessageCenter class="no-print" />
+    <AppMessageCenter class="d-print-none" />
     <main id="main" tabindex="-1">
       <RouterView />
     </main>
@@ -101,17 +101,7 @@ h6,
 }
 
 // Printable screens
-@media screen {
-  .print-only {
-    display: none;
-  }
-}
-
 @media print {
-  .no-print {
-    display: none;
-  }
-
   div {
     background-color: $white;
   }

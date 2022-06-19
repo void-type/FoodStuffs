@@ -25,7 +25,6 @@ const inactiveCards = computed(() => cardStore.getCards({ active: false }));
       :on-ingredient-click="cardStore.removeFromPantry"
     />
   </div>
-
   <div class="area">
     <Card
       v-for="card in activeCards"
@@ -35,7 +34,6 @@ const inactiveCards = computed(() => cardStore.getCards({ active: false }));
       :show-ingredients="true"
     />
   </div>
-
   <div class="area">
     <Card
       v-for="card in inactiveCards"

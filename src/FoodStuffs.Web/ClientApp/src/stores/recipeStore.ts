@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type {
+  GetRecipeResponse,
   ListRecipesResponse,
   ListRecipesResponseIItemSet,
   RecipesListParams,
@@ -46,7 +47,7 @@ export const useRecipeStore = defineStore('recipes', {
       this.listRequest = data;
     },
 
-    addToRecent(recipe: ListRecipesResponse) {
+    addToRecent(recipe: GetRecipeResponse | null) {
       const limit = 3;
 
       if (recipe === null) {
@@ -90,7 +91,7 @@ export const useRecipeStore = defineStore('recipes', {
       this.recentRecipes = recentRecipes;
     },
 
-    updateRecent(recipe: ListRecipesResponse) {
+    updateRecent(recipe: GetRecipeResponse | null) {
       if (recipe === null) {
         return;
       }

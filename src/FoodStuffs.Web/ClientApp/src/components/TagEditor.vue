@@ -56,7 +56,7 @@ function removeTagClick(tag: string) {
           <button
             v-for="tag in tags"
             :key="tag"
-            class="btn btn-sm btn-outline-secondary me-2 mb-2"
+            class="btn btn-sm btn-secondary me-2 mb-2"
             @click="removeTagClick(tag)"
           >
             {{ tag }}
@@ -68,14 +68,4 @@ function removeTagClick(tag: string) {
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import '@/styles/theme.scss';
-@import 'bootstrap/scss/bootstrap';
-
-.tags {
-  .btn {
-    color: $body-color;
-    border-color: $gray-400;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

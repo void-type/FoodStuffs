@@ -3,7 +3,6 @@ import { ref, computed, onMounted, onUnmounted, type PropType } from 'vue';
 import { storeToRefs } from 'pinia';
 import useSidebarStore from '@/stores/sidebarStore';
 import type { ListRecipesResponse } from '@/api/data-contracts';
-import { useRouter } from 'vue-router';
 
 const props = defineProps({
   recipes: {
@@ -43,13 +42,6 @@ function setIsScreenLarge() {
   isScreenLarge.value = width >= 992;
 }
 
-const router = useRouter();
-
-function viewRecipe(id: number | undefined) {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  router.push({ name: props.routeName, params: { id } }).catch(() => {});
-}
-
 onMounted(() => {
   setIsScreenLarge();
 
@@ -78,15 +70,14 @@ onUnmounted(() => {
     </h5>
     <div :class="{ 'vt-collapsable': true, 'vt-collapsed': !isSidebarVisible }">
       <div class="list-group list-group-flush">
-        <div
+        <router-link
           v-for="recipe in recipes"
           :key="recipe.id"
           class="list-group-item"
-          @click="viewRecipe(recipe.id)"
-          @keydown.enter="viewRecipe(recipe.id)"
+          :to="{ name: props.routeName, params: { id: recipe.id } }"
         >
           {{ recipe.name }}
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
