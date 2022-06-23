@@ -30,16 +30,17 @@ onMounted(() => {
     <div class="row mt-3">
       <div v-for="recipe in recipes" :key="recipe.id" class="col-lg-4 mt-3">
         <div no-body class="card overflow-hidden">
-          <router-link class="card-link" :to="{ name: 'view', params: { id: recipe.id } }">
-            <div v-if="recipe.imageId != null">
-              <img
-                class="card-img"
-                fluid
-                :src="imageUrl(recipe.imageId)"
-                :alt="`image of ${recipe.name}`"
-              />
-            </div>
-            <div class="p-3">
+          <router-link
+            class="card-link text-center p-3"
+            :to="{ name: 'view', params: { id: recipe.id } }"
+          >
+            <img
+              v-if="recipe.imageId != null"
+              class="img-fluid rounded"
+              :src="imageUrl(recipe.imageId)"
+              :alt="`image of ${recipe.name}`"
+            />
+            <div class="mt-3">
               <h4 class="card-title">
                 {{ recipe.name }}
               </h4>
@@ -55,8 +56,23 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+@import '@/styles/theme.scss';
+@import 'bootstrap/scss/bootstrap';
+
+.card {
+  outline: $gray-500 1px solid;
+
+  &:hover {
+    background-color: $gray-200;
+  }
+}
+
 .card-link {
   text-decoration: none;
   color: unset;
+
+  & > img {
+    max-height: 350px;
+  }
 }
 </style>

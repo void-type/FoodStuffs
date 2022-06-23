@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, defineProps, type PropType, onMounted, watch } from 'vue';
+import { ref, computed, type PropType, onMounted, watch } from 'vue';
 import type bootstrap from 'bootstrap';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -112,7 +112,11 @@ onMounted(() => {
               :key="image"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
-              <img class="img-fluid rounded" :src="imageUrl(image)" alt="" />
+              <img
+                class="img-fluid rounded"
+                :src="imageUrl(image)"
+                :alt="`image ${i} of ${recipe.name}`"
+              />
             </div>
           </div>
           <button
@@ -181,8 +185,12 @@ div.form-control-plaintext {
   white-space: pre-wrap;
 }
 
+.image-carousel {
+  outline: $gray-500 1px solid;
+}
+
 div.carousel-item {
-  background-color: $gray-300;
+  // background-color: $gray-300;
 
   img {
     max-height: 350px;
