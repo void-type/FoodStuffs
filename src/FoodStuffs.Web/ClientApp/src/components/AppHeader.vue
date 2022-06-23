@@ -11,8 +11,8 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 <template>
   <header class="navbar navbar-dark bg-primary navbar-expand-md shadow">
     <nav class="container-xxl">
-      <router-link :to="{ name: 'home' }" class="navbar-brand">
-        <img src="/img/logo.svg" alt="logo" class="d-inline-block align-text-top" />
+      <router-link :to="{ name: 'home' }" class="navbar-brand text-secondary">
+        <img src="/img/logo.svg" alt="logo" class="d-inline-block align-text-top me-3" />
         {{ applicationName }}
       </router-link>
       <button
@@ -52,14 +52,8 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 <style lang="scss" scoped>
 @import '@/styles/theme';
 
-.navbar-dark .navbar-brand {
-  color: $secondary;
-  font-weight: 600;
-}
-
 .navbar-brand > img {
   max-height: 30px;
   max-width: auto;
-  margin-right: 1rem;
 }
 </style>

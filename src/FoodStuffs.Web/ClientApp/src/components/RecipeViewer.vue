@@ -142,7 +142,7 @@ onMounted(() => {
       :ingredients="recipe.ingredients || []"
     />
     <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
-    <div v-if="!isNil(recipe.directions)" class="form-control-plaintext">
+    <div v-if="!isNil(recipe.directions)" class="form-control-plaintext p-0">
       {{ recipe.directions }}
     </div>
     <h3
@@ -182,7 +182,7 @@ div.form-control-plaintext {
 }
 
 div.carousel-item {
-  background-color: $gray-600;
+  background-color: $gray-300;
 
   img {
     max-height: 350px;

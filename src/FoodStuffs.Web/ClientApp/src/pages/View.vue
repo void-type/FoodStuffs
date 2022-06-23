@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, watch, computed, reactive } from 'vue';
+import { onMounted, watch, reactive } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { Api } from '@/api/Api';
@@ -59,12 +59,12 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <div class="row">
-      <div class="col-md-12 col-lg-3 d-print-none mt-4">
-        <SelectSidebar :route-name="'view'" />
-      </div>
       <div v-if="data.sourceRecipe !== null" class="col-md-12 col-lg-9 mt-4">
         <h1>{{ data.sourceRecipe.name }}</h1>
         <RecipeViewer class="mt-4" :recipe="data.sourceRecipe" />
+      </div>
+      <div class="col-md-12 col-lg-3 d-print-none mt-4">
+        <SelectSidebar :route-name="'view'" />
       </div>
     </div>
   </div>

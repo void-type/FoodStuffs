@@ -29,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app-template" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
+  <div id="app-inner" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
     <!-- TODO: the focus shows up on the page on load as a blue line -->
     <div class="container-xxl visually-hidden-focusable">
       <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
@@ -57,10 +57,10 @@ onMounted(() => {
 html,
 body,
 #app,
-#app-template {
+#app-inner {
   height: 100%;
 }
-#app-template {
+#app-inner {
   display: flex;
   flex-direction: column;
 }
