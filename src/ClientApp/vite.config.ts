@@ -17,7 +17,7 @@ export default defineConfig({
         app: './app.html',
       },
     },
-    outDir: '../wwwroot',
+    outDir: '../FoodStuffs.Web/wwwroot',
     emptyOutDir: true,
     sourcemap: true,
   },

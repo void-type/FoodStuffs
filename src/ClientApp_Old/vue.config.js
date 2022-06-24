@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  outputDir: '../wwwroot',
+  outputDir: '../FoodStuffs.Web/wwwroot',
   configureWebpack: {
     devtool: 'cheap-module-source-map',
   },

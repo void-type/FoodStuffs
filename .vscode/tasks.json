@@ -30,7 +30,7 @@
             }
         },
         {
-            "label": "buildDebug",
+            "label": "build-debug",
             "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipTest -SkipPublish",
             "options": {
                 "cwd": "./build"
@@ -74,13 +74,12 @@
             }
         },
         {
-            "label": "testServer",
+            "label": "test-server",
             "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipClient -SkipPublish",
             "options": {
                 "cwd": "./build"
             },
             "type": "shell",
-            "group": "test",
             "problemMatcher": "$msCompile",
             "presentation": {
                 "echo": true,
@@ -89,11 +88,29 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false,
-                "group": "test"
+                "group": "build"
             }
         },
         {
-            "label": "watchClient",
+            "label": "test-watch-server",
+            "command": "./watchServerTest.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "watch"
+            }
+        },
+        {
+            "label": "watch-client",
             "command": "./watchClient.ps1",
             "options": {
                 "cwd": "./build"
@@ -114,7 +131,7 @@
             }
         },
         {
-            "label": "watchServer",
+            "label": "watch-server",
             "command": "./watchServer.ps1",
             "options": {
                 "cwd": "./build"
@@ -123,25 +140,6 @@
             "problemMatcher": [
                 "$msCompile"
             ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "watch"
-            }
-        },
-        {
-            "label": "watchServerTest",
-            "command": "./watchServerTest.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": "$msCompile",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
