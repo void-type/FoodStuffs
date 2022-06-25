@@ -13,10 +13,10 @@ defineProps({
 
 <template>
   <form class="mt-4" @submit.stop.prevent @keydown.enter.stop.prevent="initSearch()">
-    <slot name="searchControls" />
+    <slot name="searchForm" />
     <div class="row">
       <div class="col-12">
-        <div class="btn-toolbar" role="toolbar">
+        <div class="btn-toolbar">
           <button class="btn btn-primary me-1" type="button" @click.stop.prevent="initSearch()">
             Search
           </button>

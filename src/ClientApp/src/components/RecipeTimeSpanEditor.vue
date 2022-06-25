@@ -58,28 +58,24 @@ function onMinutesInput(event: Event) {
 <template>
   <div class="text-center">
     <div class="input-group">
-      <label class="visually-hidden" for="`${id}-hours`"
-        >Hours
-        <input
-          :id="`${id}-hours`"
-          :value="hours"
-          :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
-          type="number"
-          min="0"
-          @change="onHoursInput"
-        />
-      </label>
-      <label class="visually-hidden" for="`${id}-minutes`"
-        >Minutes
-        <input
-          :id="`${id}-minutes`"
-          :value="minutes"
-          :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
-          type="number"
-          min="-1"
-          @change="onMinutesInput"
-        />
-      </label>
+      <label class="visually-hidden" for="`${id}-hours`">Hours</label>
+      <input
+        :id="`${id}-hours`"
+        :value="hours"
+        :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
+        type="number"
+        min="0"
+        @change="onHoursInput"
+      />
+      <label class="visually-hidden" for="`${id}-minutes`">Minutes</label>
+      <input
+        :id="`${id}-minutes`"
+        :value="minutes"
+        :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
+        type="number"
+        min="-1"
+        @change="onMinutesInput"
+      />
     </div>
     <small :class="{ invisible: !(showPreview && value > 0) }">
       {{ toTimeSpanString(value) }}

@@ -122,7 +122,7 @@ watch(listRequest, () => {
   <div class="container-xxl">
     <h1 class="mt-4">Search recipes</h1>
     <EntityTableControls :clear-search="clearSearch" :init-search="startSearch" class="mt-4">
-      <template #searchControls>
+      <template #searchForm>
         <div class="row">
           <div class="col-12 col-md-6">
             <div class="input-group mb-2">

@@ -1,0 +1,255 @@
+<script lang="ts" setup>
+import { ref, watch, type PropType, type Ref } from 'vue';
+import { clamp } from '@/models/FormatHelpers';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import useAppStore from '@/stores/appStore';
+import ApiHelpers from '@/models/ApiHelpers';
+import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+
+const props = defineProps({
+  isFieldInError: {
+    type: Function,
+    required: true,
+  },
+  sourceImages: {
+    type: Array as PropType<Array<number>>,
+    required: false,
+    default: () => [],
+  },
+  suggestedImageId: {
+    type: Number,
+    required: false,
+    default: -1,
+  },
+  pinnedImageId: {
+    type: Number,
+    required: false,
+    default: null,
+  },
+  onImageUpload: {
+    type: Function,
+    required: true,
+  },
+  onImageDelete: {
+    type: Function,
+    required: true,
+  },
+  onImagePin: {
+    type: Function,
+    required: true,
+  },
+});
+
+const appStore = useAppStore();
+
+const uploadFile: Ref<File | null> = ref(null);
+const carouselIndex = ref(0);
+
+watch(
+  () => props.sourceImages,
+  () => {
+    const suggestedImageIndex = props.sourceImages.indexOf(props.suggestedImageId);
+    const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
+    carouselIndex.value = clamp(newIndex, 0, props.sourceImages.length - 1);
+  }
+);
+
+function imageUrl(imageId: number) {
+  return ApiHelpers.imageUrl(imageId);
+}
+
+function uploadImageClick() {
+  if (uploadFile.value === null) {
+    return;
+  }
+
+  const fileSizeLimit = 30000000;
+
+  function toMiB(bytes: number) {
+    const mb = bytes / (1024 * 1024);
+    return Math.round(mb * 100) / 100;
+  }
+
+  if (uploadFile.value.size > fileSizeLimit) {
+    const sizeMiB = toMiB(uploadFile.value.size);
+    const limitMiB = toMiB(fileSizeLimit);
+
+    appStore.setValidationErrorMessages([
+      {
+        message: `Your file (${sizeMiB} MB) exceeds the limit (${limitMiB} MB).`,
+        uiHandle: 'upload',
+      },
+    ]);
+
+    return;
+  }
+
+  props.onImageUpload(uploadFile.value);
+}
+
+function uploadFileChange(event: Event | DragEvent) {
+  const files =
+    (event as HTMLInputEvent)?.target?.files ||
+    (event as DragEvent)?.dataTransfer?.files ||
+    new FileList();
+
+  if (files.length < 1) {
+    return;
+  }
+
+  // eslint-disable-next-line prefer-destructuring
+  uploadFile.value = files[0];
+}
+
+function deleteImageClick(imageId: number) {
+  props.onImageDelete(imageId);
+}
+
+function pinImageClick(imageId: number) {
+  props.onImagePin(imageId);
+}
+</script>
+
+<template>
+  <div class="form">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <label for="upload" class="form-label">Upload image</label>
+                <input
+                  id="upload"
+                  type="file"
+                  name="upload"
+                  :class="{
+                    'form-control': true,
+                    'text-nowrap': true,
+                    'text-truncate': true,
+                    'is-invalid': isFieldInError('upload'),
+                  }"
+                  placeholder="Drop file or click to browse..."
+                  @drop="uploadFileChange"
+                  @change="uploadFileChange"
+                />
+                <div class="btn-toolbar mt-3">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    :disabled="uploadFile === null"
+                    @click.stop.prevent="uploadImageClick()"
+                  >
+                    Upload
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div
+                v-if="sourceImages.length > 0"
+                id="image-carousel mt-3"
+                class="carousel slide"
+                data-bs-interval="false"
+              >
+                <div class="carousel-indicators d-print-none">
+                  <button
+                    v-for="(imageId, i) in sourceImages"
+                    :key="imageId"
+                    data-bs-target="#image-carousel"
+                    :data-bs-slide-to="i"
+                    :class="{ active: i === carouselIndex }"
+                    :aria-current="i === carouselIndex"
+                    aria-label="Show image {{i}}"
+                    type="button"
+                  ></button>
+                </div>
+                <div class="carousel-inner">
+                  <div
+                    v-for="(imageId, i) in sourceImages"
+                    :key="imageId"
+                    :class="{ 'carousel-item': true, active: i === carouselIndex }"
+                  >
+                    <button
+                      v-if="sourceImages.length > 0 && imageId != pinnedImageId"
+                      class="btn btn-secondary btn-sm image-button image-button-pin"
+                      title="Pin image"
+                      @click.stop.prevent="pinImageClick(imageId)"
+                    >
+                      <font-awesome-icon icon="thumbtack" />
+                    </button>
+                    <button
+                      v-if="sourceImages.length > 0"
+                      class="btn btn-danger btn-sm image-button image-button-delete"
+                      title="Delete image"
+                      @click.stop.prevent="deleteImageClick(imageId)"
+                    >
+                      <font-awesome-icon icon="times" />
+                    </button>
+                    <img class="img-fluid rounded" :src="imageUrl(imageId)" :alt="`image ${i}`" />
+                  </div>
+                </div>
+                <button
+                  class="carousel-control-prev d-print-none"
+                  type="button"
+                  data-bs-target="#image-carousel"
+                  data-bs-slide="prev"
+                >
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button
+                  class="carousel-control-next d-print-none"
+                  type="button"
+                  data-bs-target="#image-carousel"
+                  data-bs-slide="next"
+                >
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+              <div v-else class="card text-center p-5">No images.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+// TODO: fix how these are injected.
+@import '@/styles/theme';
+@import 'bootstrap/scss/bootstrap';
+
+.image-carousel {
+  outline: $gray-500 1px solid;
+}
+
+div.carousel-item {
+  img {
+    max-height: 350px;
+  }
+}
+
+@media print {
+  div.carousel-item {
+    background-color: unset;
+  }
+}
+
+.image-button {
+  position: absolute;
+  top: 0;
+  min-width: 0;
+  z-index: 999;
+
+  .image-button-delete {
+    right: 0;
+  }
+
+  .image-button-pin {
+    left: 0;
+  }
+}
+</style>

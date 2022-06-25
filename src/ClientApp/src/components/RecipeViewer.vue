@@ -7,6 +7,7 @@ import { isNil } from '@/models/FormatHelpers';
 import { toTimeSpanString } from '@/models/TimeSpanHelpers';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
+import RecipeImageManager from './RecipeImageManager.vue';
 
 const props = defineProps({
   recipe: {
@@ -69,7 +70,7 @@ onMounted(() => {
   <div v-if="recipe.name" class="viewer">
     <div class="row d-print-none">
       <div class="col-12">
-        <div class="btn-toolbar" role="toolbar">
+        <div class="btn-toolbar">
           <router-link
             :to="{ name: 'edit', params: { id: recipe.id } }"
             class="btn btn-primary me-2"
@@ -78,10 +79,8 @@ onMounted(() => {
             Edit
           </router-link>
           <div class="form-check form-switch mt-2">
-            <label class="form-check-label" for="showImage">
-              <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
-              Image</label
-            >
+            <label class="form-check-label" for="showImage">Image</label>
+            <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
           </div>
         </div>
       </div>
@@ -96,8 +95,8 @@ onMounted(() => {
         >
           <div class="carousel-indicators d-print-none">
             <button
-              v-for="(image, i) in images"
-              :key="image"
+              v-for="(imageId, i) in images"
+              :key="imageId"
               data-bs-target="#image-carousel"
               :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
@@ -108,13 +107,13 @@ onMounted(() => {
           </div>
           <div class="carousel-inner">
             <div
-              v-for="(image, i) in images"
-              :key="image"
+              v-for="(imageId, i) in images"
+              :key="imageId"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
               <img
                 class="img-fluid rounded"
-                :src="imageUrl(image)"
+                :src="imageUrl(imageId)"
                 :alt="`image ${i} of ${recipe.name}`"
               />
             </div>
@@ -173,6 +172,15 @@ onMounted(() => {
     <div>
       <EntityAuditInfo class="mt-3" :entity="recipe" />
     </div>
+    <RecipeImageManager
+      :is-field-in-error="() => {}"
+      :source-images="[1, 2, 3]"
+      :suggested-image-id="2"
+      :pinned-image-id="2"
+      :on-image-upload="() => {}"
+      :on-image-delete="() => {}"
+      :on-image-pin="() => {}"
+    />
   </div>
 </template>
 
@@ -190,8 +198,6 @@ div.form-control-plaintext {
 }
 
 div.carousel-item {
-  // background-color: $gray-300;
-
   img {
     max-height: 350px;
   }

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import useAppStore from '@/stores/appStore';
-import Home from '@/pages/Home.vue';
 import RouterHelpers from '@/models/RouterHelpers';
 
 const router = createRouter({
@@ -20,13 +19,13 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/AppHome.vue'),
       meta: { title: 'Home' },
     },
     {
       name: 'view',
       path: '/view/:id',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/View.vue'),
+      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeView.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -35,7 +34,7 @@ const router = createRouter({
     {
       name: 'edit',
       path: '/edit/:id',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue'),
+      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeEdit.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -44,21 +43,21 @@ const router = createRouter({
     {
       name: 'new',
       path: '/new',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Edit.vue'),
+      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeEdit.vue'),
       props: RouterHelpers.newRecipeProps,
       meta: { title: 'New' },
     },
     {
       name: 'search',
       path: '/search',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Search.vue'),
+      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeSearch.vue'),
       props: (route) => ({ query: route.query }),
       meta: { title: 'Search' },
     },
     {
       path: '/cards',
       name: 'cards',
-      component: () => import(/* webpackChunkName: "recipes" */ '@/pages/Cards.vue'),
+      component: () => import(/* webpackChunkName: "meal" */ '@/pages/MealCards.vue'),
       meta: { title: 'Cards' },
     },
     {

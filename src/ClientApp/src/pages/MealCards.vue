@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useCardStore } from '@/stores/cardStore';
 import IngredientList from '@/components/CardIngredientList.vue';
-import Card from '@/components/Card.vue';
+import Card from '@/components/MealCard.vue';
 
 const cardStore = useCardStore();
 

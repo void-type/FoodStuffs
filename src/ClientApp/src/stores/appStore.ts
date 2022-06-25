@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia';
-import type { AppVersion, DomainUser, IFailureIItemSet, WebClientInfo } from '@/api/data-contracts';
+import type {
+  AppVersion,
+  DomainUser,
+  IFailureIItemSet,
+  IFailure,
+  WebClientInfo,
+} from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import { isNil } from '@/models/FormatHelpers';
 
@@ -58,7 +64,7 @@ export const useAppStore = defineStore('app', {
       } else {
         const failureSet = response.data as IFailureIItemSet;
         if (failureSet !== undefined && failureSet !== null) {
-          this.setValidationErrorMessages(failureSet);
+          this.setValidationErrorMessages(failureSet.items || []);
         } else {
           this.setErrorMessage(
             'Something went wrong. Try refreshing your browser or contact the administrator.'
@@ -102,11 +108,10 @@ export const useAppStore = defineStore('app', {
       this.messages = [message];
     },
 
-    setValidationErrorMessages(failureSet: IFailureIItemSet) {
+    setValidationErrorMessages(failures: IFailure[]) {
       function notEmpty(value: string | null | undefined): value is string {
         return !isNil(value);
       }
-      const failures = failureSet.items || [];
       const fieldNames = failures.map((item) => item.uiHandle);
       const messages = failures.map((item) => item.message);
 

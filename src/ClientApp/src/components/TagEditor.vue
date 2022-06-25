@@ -39,31 +39,29 @@ function removeTagClick(tag: string) {
 <template>
   <div>
     <div class="mb-3">
-      <label :for="fieldName" class="form-label"
-        >{{ label }}
-        <div class="input-group">
-          <input
-            :id="fieldName"
-            v-model="newTag"
-            :name="fieldName"
-            class="form-control"
-            :disabled="false"
-            @keydown.stop.prevent.enter="addTagClick()"
-          />
-          <button class="btn btn-secondary" type="button">Add</button>
-        </div>
-        <div class="tags mt-2">
-          <button
-            v-for="tag in tags"
-            :key="tag"
-            class="btn btn-sm btn-secondary me-2 mb-2"
-            @click="removeTagClick(tag)"
-          >
-            {{ tag }}
-            <span class="ms-2">✕</span>
-          </button>
-        </div>
-      </label>
+      <label :for="fieldName" class="form-label">{{ label }}</label>
+      <div class="input-group">
+        <input
+          :id="fieldName"
+          v-model="newTag"
+          :name="fieldName"
+          class="form-control"
+          :disabled="false"
+          @keydown.stop.prevent.enter="addTagClick()"
+        />
+        <button class="btn btn-secondary" type="button">Add</button>
+      </div>
+      <div class="tags mt-2">
+        <button
+          v-for="tag in tags"
+          :key="tag"
+          class="btn btn-sm btn-secondary me-2 mb-2"
+          @click="removeTagClick(tag)"
+        >
+          {{ tag }}
+          <span class="ms-2">✕</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
