@@ -92,7 +92,7 @@
             }
         },
         {
-            "label": "test-watch-server",
+            "label": "watch-test-server",
             "command": "./watchServerTest.ps1",
             "options": {
                 "cwd": "./build"
@@ -150,5 +150,10 @@
                 "group": "watch"
             }
         },
+        {
+            "label": "watch-dev",
+            "dependsOn": ["watch-client", "watch-server"],
+            "problemMatcher": []
+        }
     ]
 }
