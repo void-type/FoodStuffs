@@ -19,13 +19,13 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/AppHome.vue'),
+      component: () => import('@/pages/AppHome.vue'),
       meta: { title: 'Home' },
     },
     {
       name: 'view',
       path: '/view/:id',
-      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeView.vue'),
+      component: () => import('@/pages/RecipeView.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -34,7 +34,7 @@ const router = createRouter({
     {
       name: 'edit',
       path: '/edit/:id',
-      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeEdit.vue'),
+      component: () => import('@/pages/RecipeEdit.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -43,21 +43,21 @@ const router = createRouter({
     {
       name: 'new',
       path: '/new',
-      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeEdit.vue'),
+      component: () => import('@/pages/RecipeEdit.vue'),
       props: RouterHelpers.newRecipeProps,
       meta: { title: 'New' },
     },
     {
       name: 'search',
       path: '/search',
-      component: () => import(/* webpackChunkName: "recipe" */ '@/pages/RecipeSearch.vue'),
+      component: () => import('@/pages/RecipeSearch.vue'),
       props: (route) => ({ query: route.query }),
       meta: { title: 'Search' },
     },
     {
       path: '/cards',
       name: 'cards',
-      component: () => import(/* webpackChunkName: "meal" */ '@/pages/MealCards.vue'),
+      component: () => import('@/pages/MealCards.vue'),
       meta: { title: 'Cards' },
     },
     {

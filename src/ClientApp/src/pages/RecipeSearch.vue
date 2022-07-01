@@ -10,7 +10,7 @@ import { storeToRefs } from 'pinia';
 import { onMounted, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
-import EntityTablePager from '../components/EntityTablePager.vue';
+import EntityTablePager from '@/components/EntityTablePager.vue';
 
 const props = defineProps({
   query: {

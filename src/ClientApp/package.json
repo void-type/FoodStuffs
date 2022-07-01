@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "watch": "vue-tsc --noEmit && vite build --watch --mode 'development'",
+    "watch": "vue-tsc --noEmit && vite build --watch --mode development",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "format": "prettier . --write",
