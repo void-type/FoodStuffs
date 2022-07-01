@@ -56,5 +56,14 @@ ALTER TABLE [CategoryRecipe] DROP CONSTRAINT FK_CategoryRecipe_Recipe
 ALTER TABLE [CategoryRecipe] WITH CHECK ADD CONSTRAINT [FK_CategoryRecipe_Recipe] FOREIGN KEY([RecipeId]) REFERENCES [Recipe] ([Id]) ON DELETE CASCADE
 GO
 
+ALTER TABLE [dbo].[Recipe] ADD IsForMealPlanning [bit] NULL
+GO
+
+UPDATE [dbo].[Recipe] SET IsForMealPlanning = 0
+GO
+
+ALTER TABLE [dbo].[Recipe] ALTER COLUMN IsForMealPlanning [bit] NOT NULL
+GO
+
 SET ANSI_PADDING OFF
 GO

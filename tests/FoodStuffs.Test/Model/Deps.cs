@@ -75,6 +75,7 @@ public static class Deps
             Directions = "some",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
+            IsForMealPlanning = true,
             CreatedOn = DateTimeServiceEarly.Moment,
             ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",

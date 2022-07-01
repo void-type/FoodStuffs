@@ -34,6 +34,7 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
                ModifiedBy: r.ModifiedBy,
                ModifiedOn: r.ModifiedOn,
                PinnedImageId: r.PinnedImageId,
+               IsForMealPlanning: r.IsForMealPlanning,
                Categories: r.Categories
                 .Select(c => c.Name)
                 .OrderBy(n => n),

@@ -14,6 +14,7 @@ public record GetRecipeResponse(
     string ModifiedBy,
     DateTime ModifiedOn,
     int? PinnedImageId,
+    bool IsForMealPlanning,
     IEnumerable<string> Categories,
     IEnumerable<int> Images,
     IEnumerable<GetRecipeResponseIngredient> Ingredients);

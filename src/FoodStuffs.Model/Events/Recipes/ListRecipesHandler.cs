@@ -69,6 +69,11 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
 #pragma warning restore RCS1155
 
+        if (request.IsForMealPlanning is not null)
+        {
+            searchCriteria.Add(recipe => recipe.IsForMealPlanning == request.IsForMealPlanning);
+        }
+
         return searchCriteria.ToArray();
     }
 }

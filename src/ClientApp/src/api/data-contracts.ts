@@ -47,6 +47,7 @@ export interface GetRecipeResponse {
 
   /** @format int32 */
   pinnedImageId?: number | null;
+  isForMealPlanning?: boolean;
   categories?: string[] | null;
   images?: number[] | null;
   ingredients?: GetRecipeResponseIngredient[] | null;
@@ -133,6 +134,7 @@ export interface SaveRecipeRequest {
 
   /** @format int32 */
   prepTimeMinutes?: number | null;
+  isForMealPlanning?: boolean;
   ingredients?: SaveRecipeRequestIngredient[] | null;
   categories?: string[] | null;
 }
@@ -169,6 +171,9 @@ export interface RecipesListParams {
 
   /** Category names contain (case-insensitive) */
   category?: string;
+
+  /** If the recipes should be enabled for meal planning */
+  isForMealPlanning?: boolean;
 
   /** Field name to sort by (case-insensitive). Options are: name. Default is ID */
   sortBy?: string;

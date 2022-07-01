@@ -51,6 +51,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         recipe.Directions = request.Directions;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
+        recipe.IsForMealPlanning = request.IsForMealPlanning;
 
         ManageIngredients(request, recipe);
         ManageCategories(request, recipe);

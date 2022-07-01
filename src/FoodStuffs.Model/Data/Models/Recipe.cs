@@ -22,6 +22,7 @@ public partial class Recipe
     public string ModifiedBy { get; set; } = null!;
     public DateTime ModifiedOn { get; set; }
     public int? PinnedImageId { get; set; }
+    public bool IsForMealPlanning { get; set; }
 
     public virtual Image? PinnedImage { get; set; }
     public virtual ICollection<Image> Images { get; set; }

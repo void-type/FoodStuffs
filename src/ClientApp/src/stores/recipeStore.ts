@@ -30,8 +30,10 @@ export const useRecipeStore = defineStore('recipes', {
 
   getters: {
     currentQueryParams(state) {
+      // Query params need to be string or number
       return {
         ...state.listRequest,
+        isForMealPlanning: String(state.listRequest.isForMealPlanning),
         sortDesc: String(state.listRequest.sortDesc),
         isPagingEnabled: String(state.listRequest.isPagingEnabled),
       };

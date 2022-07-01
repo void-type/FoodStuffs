@@ -6,6 +6,8 @@ export default class ListRecipesRequest implements RecipesListParams {
 
   public category = '';
 
+  public isForMealPlanning = false;
+
   public sortBy = '';
 
   public sortDesc = false;

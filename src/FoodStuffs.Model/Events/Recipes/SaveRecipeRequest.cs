@@ -8,5 +8,6 @@ public record SaveRecipeRequest(
     string Directions,
     int? CookTimeMinutes,
     int? PrepTimeMinutes,
+    bool IsForMealPlanning,
     IEnumerable<SaveRecipeRequestIngredient> Ingredients,
     IEnumerable<string> Categories);
