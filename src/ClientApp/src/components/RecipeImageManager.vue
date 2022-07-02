@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ref, watch, type PropType, type Ref } from 'vue';
 import { clamp } from '@/models/FormatHelpers';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTimes, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import useAppStore from '@/stores/appStore';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -11,7 +13,7 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  sourceImages: {
+  imageIds: {
     type: Array as PropType<Array<number>>,
     required: false,
     default: () => [],
@@ -42,15 +44,18 @@ const props = defineProps({
 
 const appStore = useAppStore();
 
+library.add(faTimes, faThumbtack);
+
 const uploadFile: Ref<File | null> = ref(null);
 const carouselIndex = ref(0);
+const uniqueId = crypto.randomUUID();
 
 watch(
-  () => props.sourceImages,
+  () => props.imageIds,
   () => {
-    const suggestedImageIndex = props.sourceImages.indexOf(props.suggestedImageId);
+    const suggestedImageIndex = props.imageIds.indexOf(props.suggestedImageId);
     const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
-    carouselIndex.value = clamp(newIndex, 0, props.sourceImages.length - 1);
+    carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
   }
 );
 
@@ -111,106 +116,101 @@ function pinImageClick(imageId: number) {
 </script>
 
 <template>
-  <div class="form">
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-12 col-md-6">
-                <label for="upload" class="form-label">Upload image</label>
-                <input
-                  id="upload"
-                  type="file"
-                  name="upload"
-                  :class="{
-                    'form-control': true,
-                    'text-nowrap': true,
-                    'text-truncate': true,
-                    'is-invalid': isFieldInError('upload'),
-                  }"
-                  placeholder="Drop file or click to browse..."
-                  @drop="uploadFileChange"
-                  @change="uploadFileChange"
-                />
-                <div class="btn-toolbar mt-3">
-                  <button
-                    class="btn btn-primary"
-                    type="button"
-                    :disabled="uploadFile === null"
-                    @click.stop.prevent="uploadImageClick()"
-                  >
-                    Upload
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div
-                v-if="sourceImages.length > 0"
-                id="image-carousel mt-3"
-                class="carousel slide"
-                data-bs-interval="false"
-              >
-                <div class="carousel-indicators d-print-none">
-                  <button
-                    v-for="(imageId, i) in sourceImages"
-                    :key="imageId"
-                    data-bs-target="#image-carousel"
-                    :data-bs-slide-to="i"
-                    :class="{ active: i === carouselIndex }"
-                    :aria-current="i === carouselIndex"
-                    aria-label="Show image {{i}}"
-                    type="button"
-                  ></button>
-                </div>
-                <div class="carousel-inner">
-                  <div
-                    v-for="(imageId, i) in sourceImages"
-                    :key="imageId"
-                    :class="{ 'carousel-item': true, active: i === carouselIndex }"
-                  >
-                    <button
-                      v-if="sourceImages.length > 0 && imageId != pinnedImageId"
-                      class="btn btn-secondary btn-sm image-button image-button-pin"
-                      title="Pin image"
-                      @click.stop.prevent="pinImageClick(imageId)"
-                    >
-                      <font-awesome-icon icon="thumbtack" />
-                    </button>
-                    <button
-                      v-if="sourceImages.length > 0"
-                      class="btn btn-danger btn-sm image-button image-button-delete"
-                      title="Delete image"
-                      @click.stop.prevent="deleteImageClick(imageId)"
-                    >
-                      <font-awesome-icon icon="times" />
-                    </button>
-                    <img class="img-fluid rounded" :src="imageUrl(imageId)" :alt="`image ${i}`" />
-                  </div>
-                </div>
-                <button
-                  class="carousel-control-prev d-print-none"
-                  type="button"
-                  data-bs-target="#image-carousel"
-                  data-bs-slide="prev"
-                >
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button
-                  class="carousel-control-next d-print-none"
-                  type="button"
-                  data-bs-target="#image-carousel"
-                  data-bs-slide="next"
-                >
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
-              </div>
-              <div v-else class="card text-center p-5">No images.</div>
-            </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <label :for="`upload-${uniqueId}`" class="form-label">Upload image</label>
+          <input
+            :id="`upload-${uniqueId}`"
+            type="file"
+            :class="{
+              'form-control': true,
+              'text-nowrap': true,
+              'text-truncate': true,
+              'is-invalid': isFieldInError('upload'),
+            }"
+            placeholder="Drop file or click to browse..."
+            @drop="uploadFileChange"
+            @change="uploadFileChange"
+          />
+          <div class="btn-toolbar mt-3">
+            <button
+              class="btn btn-primary"
+              type="button"
+              :disabled="uploadFile === null"
+              @click.stop.prevent="uploadImageClick()"
+            >
+              Upload
+            </button>
           </div>
+        </div>
+        <div class="col-12 col-md-6 mt-3 mt-md-0 text-center">
+          <div
+            v-if="imageIds.length > 0"
+            :id="`image-carousel-${uniqueId}`"
+            class="carousel slide"
+            data-bs-interval="false"
+          >
+            <div class="carousel-indicators d-print-none">
+              <button
+                v-for="(imageId, i) in imageIds"
+                :key="imageId"
+                :data-bs-target="`#image-carousel-${uniqueId}`"
+                :data-bs-slide-to="i"
+                :class="{ active: i === carouselIndex }"
+                :aria-current="i === carouselIndex"
+                aria-label="Show image {{i}}"
+                type="button"
+              ></button>
+            </div>
+            <div class="carousel-inner">
+              <div
+                v-for="(imageId, i) in imageIds"
+                :key="imageId"
+                :class="{ 'carousel-item': true, active: i === carouselIndex }"
+              >
+                <button
+                  v-if="imageIds.length > 0 && imageId != pinnedImageId"
+                  class="btn btn-secondary btn-sm image-button image-button-pin"
+                  title="Pin image"
+                  @click.stop.prevent="pinImageClick(imageId)"
+                >
+                  <span class="visually-hidden">Pin image</span>
+                  <font-awesome-icon icon="thumbtack" />
+                </button>
+                <button
+                  v-if="imageIds.length > 0"
+                  class="btn btn-danger btn-sm image-button image-button-delete"
+                  title="Delete image"
+                  @click.stop.prevent="deleteImageClick(imageId)"
+                >
+                  <span class="visually-hidden">Delete image</span>
+                  <font-awesome-icon icon="times" />
+                </button>
+                <img class="img-fluid rounded" :src="imageUrl(imageId)" :alt="`image ${i}`" />
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev d-print-none"
+              type="button"
+              :data-bs-target="`#image-carousel-${uniqueId}`"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next d-print-none"
+              type="button"
+              :data-bs-target="`#image-carousel-${uniqueId}`"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <div v-else class="card text-center p-5">No images.</div>
         </div>
       </div>
     </div>
@@ -222,7 +222,7 @@ function pinImageClick(imageId: number) {
 @import '@/styles/theme';
 @import 'bootstrap/scss/bootstrap';
 
-.image-carousel {
+div[class^='image-carousel-'] {
   outline: $gray-500 1px solid;
 }
 
@@ -244,11 +244,11 @@ div.carousel-item {
   min-width: 0;
   z-index: 999;
 
-  .image-button-delete {
+  &.image-button-delete {
     right: 0;
   }
 
-  .image-button-pin {
+  &.image-button-pin {
     left: 0;
   }
 }

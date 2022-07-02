@@ -17,10 +17,10 @@ const props = defineProps({
 });
 
 const showImage = ref(true);
-
 const carouselIndex = ref(0);
+const uniqueId = crypto.randomUUID();
 
-const images = computed(() => {
+const imageIds = computed(() => {
   const { pinnedImageId } = props.recipe;
   const recipeImages = props.recipe.images || [];
 
@@ -88,16 +88,16 @@ onMounted(() => {
     <div class="row">
       <div v-if="showImage" class="col-12 text-center mt-3">
         <div
-          v-if="images.length > 0"
-          id="image-carousel"
+          v-if="imageIds.length > 0"
+          :id="`image-carousel-${uniqueId}`"
           class="carousel slide"
           data-bs-interval="false"
         >
           <div class="carousel-indicators d-print-none">
             <button
-              v-for="(imageId, i) in images"
+              v-for="(imageId, i) in imageIds"
               :key="imageId"
-              data-bs-target="#image-carousel"
+              :data-bs-target="`#image-carousel-${uniqueId}`"
               :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
@@ -107,7 +107,7 @@ onMounted(() => {
           </div>
           <div class="carousel-inner">
             <div
-              v-for="(imageId, i) in images"
+              v-for="(imageId, i) in imageIds"
               :key="imageId"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
@@ -121,7 +121,7 @@ onMounted(() => {
           <button
             class="carousel-control-prev d-print-none"
             type="button"
-            data-bs-target="#image-carousel"
+            :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -130,13 +130,14 @@ onMounted(() => {
           <button
             class="carousel-control-next d-print-none"
             type="button"
-            data-bs-target="#image-carousel"
+            :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="next"
           >
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
         </div>
+        <div v-else class="card text-center p-5">No images.</div>
       </div>
     </div>
     <h3 v-if="(recipe.ingredients?.length || []) > 0" class="mt-3">Ingredients</h3>
@@ -174,7 +175,7 @@ onMounted(() => {
     </div>
     <RecipeImageManager
       :is-field-in-error="() => {}"
-      :source-images="[1, 2, 3]"
+      :image-ids="[1, 2, 3]"
       :suggested-image-id="2"
       :pinned-image-id="2"
       :on-image-upload="() => {}"
