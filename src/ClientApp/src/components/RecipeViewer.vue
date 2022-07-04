@@ -86,6 +86,16 @@ onMounted(() => {
       </div>
     </div>
     <div class="row">
+      <RecipeImageManager
+        :is-field-in-error="() => {}"
+        :image-ids="[1, 2, 3]"
+        :suggested-image-id="2"
+        :pinned-image-id="2"
+        :on-image-upload="() => {}"
+        :on-image-delete="() => {}"
+        :on-image-pin="() => {}"
+        class="mt-3"
+      />
       <div v-if="showImage" class="col-12 text-center mt-3">
         <div
           v-if="imageIds.length > 0"
@@ -173,15 +183,6 @@ onMounted(() => {
     <div>
       <EntityAuditInfo class="mt-3" :entity="recipe" />
     </div>
-    <RecipeImageManager
-      :is-field-in-error="() => {}"
-      :image-ids="[1, 2, 3]"
-      :suggested-image-id="2"
-      :pinned-image-id="2"
-      :on-image-upload="() => {}"
-      :on-image-delete="() => {}"
-      :on-image-pin="() => {}"
-    />
   </div>
 </template>
 
