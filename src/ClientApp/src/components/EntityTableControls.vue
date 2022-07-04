@@ -12,12 +12,12 @@ defineProps({
 </script>
 
 <template>
-  <form class="mt-4" @submit.stop.prevent @keydown.enter.stop.prevent="initSearch()">
+  <form @submit.stop.prevent @keydown.enter.stop.prevent="initSearch()">
     <slot name="searchForm" />
     <div class="row">
       <div class="col-12">
         <div class="btn-toolbar">
-          <button class="btn btn-primary me-1" type="button" @click.stop.prevent="initSearch()">
+          <button class="btn btn-primary me-2" type="button" @click.stop.prevent="initSearch()">
             Search
           </button>
           <button class="btn btn-secondary" type="button" @click.stop.prevent="clearSearch()">

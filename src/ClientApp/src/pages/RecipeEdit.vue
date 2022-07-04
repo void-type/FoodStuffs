@@ -263,12 +263,15 @@ export default {
 <style lang="scss" scoped></style> -->
 
 <script lang="ts" setup>
-import { onMounted, watch, computed } from 'vue';
+import { onMounted, watch, reactive } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
+import SelectSidebar from '@/components/SelectSidebar.vue';
+import RecipeViewer from '@/components/RecipeViewer.vue';
+import RecipeImageManager from '@/components/RecipeImageManager.vue';
 
 const props = defineProps({
   id: {
@@ -280,18 +283,19 @@ const props = defineProps({
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 
-let sourceRecipeBase: GetRecipeResponse | null = null;
-const sourceRecipe = computed(() => sourceRecipeBase);
+const data = reactive({
+  sourceRecipe: null as GetRecipeResponse | null,
+});
 
 function fetchRecipe() {
   new Api()
     .recipesDetail(props.id)
     .then((response) => {
-      sourceRecipeBase = response.data;
+      data.sourceRecipe = response.data;
     })
     .catch((response) => {
       appStore.setApiFailureMessages(response);
-      sourceRecipeBase = null;
+      data.sourceRecipe = null;
     });
 }
 
@@ -307,12 +311,12 @@ onMounted(() => {
 });
 
 onBeforeRouteUpdate((to, from, next) => {
-  recipeStore.addToRecent(sourceRecipe.value);
+  recipeStore.addToRecent(data.sourceRecipe);
   next();
 });
 
 onBeforeRouteLeave((to, from, next) => {
-  recipeStore.addToRecent(sourceRecipe.value);
+  recipeStore.addToRecent(data.sourceRecipe);
   next();
 });
 </script>
@@ -320,12 +324,21 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <div class="row">
+      <h1 class="mt-4 mb-0">{{ data.sourceRecipe?.name || 'Loading...' }}</h1>
+      <div class="col-md-12 col-lg-9 mt-4">
+        <RecipeImageManager
+          :is-field-in-error="() => {}"
+          :image-ids="[1, 2, 3]"
+          :suggested-image-id="2"
+          :pinned-image-id="2"
+          :on-image-upload="() => {}"
+          :on-image-delete="() => {}"
+          :on-image-pin="() => {}"
+        />
+        <RecipeViewer v-if="data.sourceRecipe !== null" class="mt-3" :recipe="data.sourceRecipe" />
+      </div>
       <div class="col-md-12 col-lg-3 d-print-none mt-4">
         <SelectSidebar :route-name="'view'" />
-      </div>
-      <div v-if="sourceRecipe !== null" class="col mt-4">
-        <h1>{{ sourceRecipe.name }}</h1>
-        <RecipeViewer class="mt-4" :recipe="sourceRecipe" />
       </div>
     </div>
   </div>

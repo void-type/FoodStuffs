@@ -59,7 +59,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="card mt-2">
+  <div class="card">
     <div
       class="card-header h5 mb-0 hover"
       @click="toggleSidebarVisible"
@@ -67,7 +67,7 @@ onUnmounted(() => {
     >
       {{ title }}
     </div>
-    <div :class="{ 'vt-collapsable': true, 'vt-collapsed': !isSidebarVisible }">
+    <div :class="{ 'vt-collapsed': !isSidebarVisible }">
       <div class="list-group list-group-flush">
         <router-link
           v-for="recipe in recipes"
@@ -93,12 +93,9 @@ onUnmounted(() => {
   }
 }
 
-// TODO: collapsing elements
-.vt-collapsable {
-  &.vt-collapsed {
-    height: 0;
-    overflow: hidden;
-    transition: height 0.55s ease;
-  }
+.vt-collapsed {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.55s ease;
 }
 </style>

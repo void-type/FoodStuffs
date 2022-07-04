@@ -172,7 +172,7 @@ function pinImageClick(imageId: number) {
               >
                 <button
                   v-if="imageIds.length > 0 && imageId != pinnedImageId"
-                  class="btn btn-secondary btn-sm image-button image-button-pin"
+                  class="btn btn-secondary btn-sm image-button image-button-pin d-print-none"
                   title="Pin image"
                   @click.stop.prevent="pinImageClick(imageId)"
                 >
@@ -181,7 +181,7 @@ function pinImageClick(imageId: number) {
                 </button>
                 <button
                   v-if="imageIds.length > 0"
-                  class="btn btn-danger btn-sm image-button image-button-delete"
+                  class="btn btn-danger btn-sm image-button image-button-delete d-print-none"
                   title="Delete image"
                   @click.stop.prevent="deleteImageClick(imageId)"
                 >
@@ -218,7 +218,6 @@ function pinImageClick(imageId: number) {
 </template>
 
 <style lang="scss" scoped>
-// TODO: fix how these are injected.
 @import '@/styles/theme';
 @import 'bootstrap/scss/bootstrap';
 
@@ -229,12 +228,6 @@ div[class^='image-carousel-'] {
 div.carousel-item {
   img {
     max-height: 350px;
-  }
-}
-
-@media print {
-  div.carousel-item {
-    background-color: unset;
   }
 }
 

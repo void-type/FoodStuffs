@@ -4,7 +4,7 @@ import { Api } from '@/api/Api';
 import { onMounted, computed } from 'vue';
 import useAppStore from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
-import SelectSidebarList from './SelectSidebarList.vue';
+import SelectSidebarList from '@/components/SelectSidebarList.vue';
 
 defineProps({
   routeName: {
@@ -40,13 +40,9 @@ onMounted(() => {
       :recipes="recentRecipes"
       :title="'Recent'"
       :route-name="routeName"
+      class="mb-3"
     />
-    <SelectSidebarList
-      :recipes="searchedRecipes"
-      :title="'Recipes'"
-      :route-name="routeName"
-      class="mt-2"
-    />
+    <SelectSidebarList :recipes="searchedRecipes" :title="'Recipes'" :route-name="routeName" />
   </div>
 </template>
 

@@ -30,7 +30,6 @@ onMounted(() => {
 
 <template>
   <div id="app-inner" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
-    <!-- TODO: the focus shows up on the page on load as a blue line -->
     <div class="container-xxl visually-hidden-focusable">
       <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
         >Skip to main content</router-link
@@ -42,7 +41,7 @@ onMounted(() => {
       </template>
     </AppHeader>
     <AppMessageCenter class="d-print-none" />
-    <main id="main" tabindex="-1">
+    <main id="main" class="mb-4" tabindex="-1">
       <RouterView />
     </main>
     <AppFooter />

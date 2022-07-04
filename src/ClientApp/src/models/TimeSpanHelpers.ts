@@ -1,4 +1,4 @@
-import { isNil, toInt } from './FormatHelpers';
+import { isNil, toInt } from '@/models/FormatHelpers';
 
 function stringifyUnit(value: number, unitSingle: string, unitPlural = '') {
   const unit = value === 1 || isNil(unitPlural) ? unitSingle : unitPlural;

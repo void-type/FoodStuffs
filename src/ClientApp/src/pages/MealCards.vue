@@ -11,37 +11,40 @@ const inactiveCards = computed(() => cardStore.getCards({ active: false }));
 </script>
 
 <template>
-  <div class="area">
-    <IngredientList
-      title="Shopping list"
-      :ingredients="cardStore.getShoppingList"
-      :on-clear="cardStore.clearShoppingList"
-      :on-ingredient-click="cardStore.addToPantry"
-    />
-    <IngredientList
-      title="Pantry"
-      :ingredients="cardStore.getPantry"
-      :on-clear="cardStore.clearPantry"
-      :on-ingredient-click="cardStore.removeFromPantry"
-    />
-  </div>
-  <div class="area">
-    <Card
-      v-for="card in activeCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="true"
-    />
-  </div>
-  <div class="area">
-    <Card
-      v-for="card in inactiveCards"
-      :key="card.id"
-      :card="card"
-      :on-card-click="cardStore.toggleCard"
-      :show-ingredients="false"
-    />
+  <div class="container-xxl">
+    <h1 class="mt-4 mb-0">Cards</h1>
+    <div class="area">
+      <IngredientList
+        title="Shopping list"
+        :ingredients="cardStore.getShoppingList"
+        :on-clear="cardStore.clearShoppingList"
+        :on-ingredient-click="cardStore.addToPantry"
+      />
+      <IngredientList
+        title="Pantry"
+        :ingredients="cardStore.getPantry"
+        :on-clear="cardStore.clearPantry"
+        :on-ingredient-click="cardStore.removeFromPantry"
+      />
+    </div>
+    <div class="area mt-3">
+      <Card
+        v-for="card in activeCards"
+        :key="card.id"
+        :card="card"
+        :on-card-click="cardStore.toggleCard"
+        :show-ingredients="true"
+      />
+    </div>
+    <div class="area mt-3">
+      <Card
+        v-for="card in inactiveCards"
+        :key="card.id"
+        :card="card"
+        :on-card-click="cardStore.toggleCard"
+        :show-ingredients="false"
+      />
+    </div>
   </div>
 </template>
 
@@ -49,6 +52,5 @@ const inactiveCards = computed(() => cardStore.getCards({ active: false }));
 .area {
   display: flex;
   flex-wrap: wrap;
-  padding: 0.5rem;
 }
 </style>

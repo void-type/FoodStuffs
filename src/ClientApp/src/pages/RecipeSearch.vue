@@ -120,12 +120,12 @@ watch(listRequest, () => {
 
 <template>
   <div class="container-xxl">
-    <h1 class="mt-4">Search recipes</h1>
+    <h1 class="mt-4 mb-0">Search recipes</h1>
     <EntityTableControls :clear-search="clearSearch" :init-search="startSearch" class="mt-4">
       <template #searchForm>
         <div class="row">
           <div class="col-12 col-md-6">
-            <div class="input-group mb-2">
+            <div class="input-group mb-3">
               <span class="input-group-text">Name contains</span>
               <input
                 id="nameSearch"
@@ -136,7 +136,7 @@ watch(listRequest, () => {
             </div>
           </div>
           <div class="col-12 col-md-6">
-            <div class="input-group mb-2">
+            <div class="input-group mb-3">
               <span class="input-group-text">Categories contain</span>
               <input
                 id="categorySearch"
@@ -185,7 +185,7 @@ watch(listRequest, () => {
       :total-count="toInt(recipeStore.listResponse.totalCount)"
       :on-change-page="changePage"
       :on-change-take="changeTake"
-      class="mt-4"
+      class="mt-3"
     />
   </div>
 </template>

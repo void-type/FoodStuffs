@@ -5,9 +5,8 @@ import type { GetRecipeResponse } from '@/api/data-contracts';
 import ApiHelpers from '@/models/ApiHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import { toTimeSpanString } from '@/models/TimeSpanHelpers';
-import EntityAuditInfo from './EntityAuditInfo.vue';
-import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
-import RecipeImageManager from './RecipeImageManager.vue';
+import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
+import RecipeViewerIngredients from '@/components/RecipeViewerIngredients.vue';
 
 const props = defineProps({
   recipe: {
@@ -67,36 +66,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="recipe.name" class="viewer">
-    <div class="row d-print-none">
-      <div class="col-12">
+  <div>
+    <div class="row">
+      <div class="col-12 d-print-none mt-4">
         <div class="btn-toolbar">
           <router-link
             :to="{ name: 'edit', params: { id: recipe.id } }"
-            class="btn btn-primary me-2"
+            class="btn btn-primary me-3"
             type="button"
           >
             Edit
           </router-link>
           <div class="form-check form-switch mt-2">
-            <label class="form-check-label" for="showImage">Image</label>
+            <label class="form-check-label" for="showImage">Show image</label>
             <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <RecipeImageManager
-        :is-field-in-error="() => {}"
-        :image-ids="[1, 2, 3]"
-        :suggested-image-id="2"
-        :pinned-image-id="2"
-        :on-image-upload="() => {}"
-        :on-image-delete="() => {}"
-        :on-image-pin="() => {}"
-        class="mt-3"
-      />
-      <div v-if="showImage" class="col-12 text-center mt-3">
+      <div
+        v-if="showImage"
+        :class="{
+          'col-12': true,
+          'text-center': true,
+          'mt-4': true,
+          'd-print-none': !(imageIds.length > 0),
+        }"
+      >
         <div
           v-if="imageIds.length > 0"
           :id="`image-carousel-${uniqueId}`"
@@ -187,7 +182,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-// TODO: fix how these are injected.
 @import '@/styles/theme';
 @import 'bootstrap/scss/bootstrap';
 
@@ -202,12 +196,6 @@ div.form-control-plaintext {
 div.carousel-item {
   img {
     max-height: 350px;
-  }
-}
-
-@media print {
-  div.carousel-item {
-    background-color: unset;
   }
 }
 </style>
