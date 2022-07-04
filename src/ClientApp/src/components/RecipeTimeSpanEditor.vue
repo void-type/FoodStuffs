@@ -8,8 +8,11 @@ import {
 import { computed, getCurrentInstance } from 'vue';
 
 // Expose emit function
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const emit = getCurrentInstance()?.emit || (() => {});
+const emit =
+  getCurrentInstance()?.emit ||
+  (() => {
+    /* do nothing */
+  });
 
 const props = defineProps({
   id: {

@@ -173,7 +173,7 @@ export interface RecipesListParams {
   category?: string;
 
   /** If the recipes should be enabled for meal planning */
-  isForMealPlanning?: boolean;
+  isForMealPlanning?: boolean | null;
 
   /** Field name to sort by (case-insensitive). Options are: name. Default is ID */
   sortBy?: string;

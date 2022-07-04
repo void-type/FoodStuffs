@@ -120,6 +120,7 @@ onMounted(() => {
                 class="img-fluid rounded"
                 :src="imageUrl(imageId)"
                 :alt="`image ${i} of ${recipe.name}`"
+                :loading="i > 1 ? 'lazy' : 'eager'"
               />
             </div>
           </div>

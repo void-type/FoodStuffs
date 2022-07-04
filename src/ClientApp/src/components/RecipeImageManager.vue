@@ -11,7 +11,10 @@ import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 const props = defineProps({
   isFieldInError: {
     type: Function,
-    required: true,
+    required: false,
+    default: () => {
+      /* do nothing */
+    },
   },
   imageIds: {
     type: Array as PropType<Array<number>>,
@@ -19,12 +22,12 @@ const props = defineProps({
     default: () => [],
   },
   suggestedImageId: {
-    type: Number,
+    type: Number as PropType<number | null>,
     required: false,
-    default: -1,
+    default: null,
   },
   pinnedImageId: {
-    type: Number,
+    type: Number as PropType<number | null>,
     required: false,
     default: null,
   },
@@ -53,7 +56,8 @@ const uniqueId = crypto.randomUUID();
 watch(
   () => props.imageIds,
   () => {
-    const suggestedImageIndex = props.imageIds.indexOf(props.suggestedImageId);
+    const suggestedImageIndex =
+      props.suggestedImageId === null ? -1 : props.imageIds.indexOf(props.suggestedImageId);
     const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
     carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
   }
@@ -188,7 +192,12 @@ function pinImageClick(imageId: number) {
                   <span class="visually-hidden">Delete image</span>
                   <font-awesome-icon icon="times" />
                 </button>
-                <img class="img-fluid rounded" :src="imageUrl(imageId)" :alt="`image ${i}`" />
+                <img
+                  class="img-fluid rounded"
+                  :src="imageUrl(imageId)"
+                  :alt="`image ${i}`"
+                  :loading="i > 1 ? 'lazy' : 'eager'"
+                />
               </div>
             </div>
             <button

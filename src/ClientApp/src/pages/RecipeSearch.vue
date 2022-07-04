@@ -126,24 +126,32 @@ watch(listRequest, () => {
         <div class="row">
           <div class="col-12 col-md-6">
             <div class="input-group mb-3">
-              <span class="input-group-text">Name contains</span>
-              <input
-                id="nameSearch"
-                v-model="listRequest.name"
-                class="form-control"
-                name="nameSearch"
-              />
+              <label for="nameSearch" class="input-group-text">Name contains</label>
+              <input id="nameSearch" v-model="listRequest.name" class="form-control" />
             </div>
           </div>
           <div class="col-12 col-md-6">
             <div class="input-group mb-3">
-              <span class="input-group-text">Categories contain</span>
-              <input
-                id="categorySearch"
-                v-model="listRequest.category"
-                class="form-control"
-                name="categorySearch"
-              />
+              <label for="categorySearch" class="input-group-text">Categories contain</label>
+              <input id="categorySearch" v-model="listRequest.category" class="form-control" />
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="isForMealPlanning">For meal planning</label>
+              <select
+                id="isForMealPlanning"
+                v-model="listRequest.isForMealPlanning"
+                class="form-select"
+              >
+                <option
+                  v-for="option in Choices.boolean"
+                  :key="option.value?.toString()"
+                  :value="option.value"
+                >
+                  {{ option.text }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
