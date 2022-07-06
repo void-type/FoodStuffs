@@ -7,6 +7,7 @@ import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SelectSidebar from '@/components/SelectSidebar.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
+import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 
 const props = defineProps({
   id: {
@@ -19,12 +20,12 @@ const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 
 const data = reactive({
-  sourceRecipe: null as GetRecipeResponse | null,
+  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse | null,
 });
 
-function fetchRecipe() {
+function fetchRecipe(id: number) {
   new Api()
-    .recipesDetail(props.id)
+    .recipesDetail(id)
     .then((response) => {
       data.sourceRecipe = response.data;
     })
@@ -36,13 +37,13 @@ function fetchRecipe() {
 
 watch(
   () => props.id,
-  () => {
-    fetchRecipe();
+  (newValue) => {
+    fetchRecipe(newValue);
   }
 );
 
 onMounted(() => {
-  fetchRecipe();
+  fetchRecipe(props.id);
 });
 
 onBeforeRouteUpdate((to, from, next) => {

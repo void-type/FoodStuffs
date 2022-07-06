@@ -1,4 +1,244 @@
-<!-- <script lang="ts" setup>
+<script lang="ts" setup>
+import { onMounted, watch, reactive, computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
+import type { GetRecipeResponse, SaveRecipeRequest } from '@/api/data-contracts';
+import { Api } from '@/api/Api';
+import useAppStore from '@/stores/appStore';
+import useRecipeStore from '@/stores/recipeStore';
+import SelectSidebar from '@/components/SelectSidebar.vue';
+import RecipeImageManager from '@/components/RecipeImageManager.vue';
+import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
+
+const props = defineProps({
+  id: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  newRecipeSuggestion: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+});
+
+const appStore = useAppStore();
+const recipeStore = useRecipeStore();
+const router = useRouter();
+
+const data = reactive({
+  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse | null,
+  sourceImages: [] as Array<number>,
+  isRecipeDirty: false,
+  suggestedImageId: -1,
+  pinnedImageId: null as number | null,
+});
+
+const { isFieldInError } = appStore;
+const { listRequest } = storeToRefs(recipeStore);
+
+const isCreateMode = computed(() => data.sourceRecipe?.id || 0 <= 0);
+
+function fetchRecipe(id: number) {
+  if (props.id === 0) {
+    setSources(props.newRecipeSuggestion || new GetRecipeResponseClass());
+    return;
+  }
+
+  new Api()
+    .recipesDetail(id)
+    .then((response) => {
+      setSources(response.data);
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+      data.sourceRecipe = null;
+    });
+}
+
+function fetchRecipesList() {
+  new Api()
+    .recipesList(listRequest.value)
+    .then((response) => recipeStore.setListResponse(response.data))
+    .catch((response) => appStore.setApiFailureMessages(response));
+}
+
+function fetchImageIds(id: number) {
+  new Api()
+    .recipesDetail(id)
+    .then((response) => {
+      setImageSources(response.data);
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+    });
+}
+
+function setSources(getRecipeResponse: GetRecipeResponse) {
+  setImageSources(getRecipeResponse);
+  data.suggestedImageId = -1;
+  data.sourceRecipe = getRecipeResponse;
+}
+
+function setImageSources(getRecipeResponse: GetRecipeResponse) {
+  const { images, pinnedImageId } = getRecipeResponse;
+  data.sourceImages = images || [];
+  data.pinnedImageId = pinnedImageId || -1;
+}
+
+function onRecipeSave(recipe: SaveRecipeRequest) {
+  new Api()
+    .recipesCreate(recipe)
+    .then((response) => {
+      if (props.id === 0) {
+        data.isRecipeDirty = false;
+        router.push({ name: 'edit', params: { id: response.data.id } }).catch(() => {});
+      } else {
+        fetchRecipe(props.id);
+      }
+
+      if (response.data.message) {
+        appStore.setSuccessMessage(response.data.message);
+      }
+      fetchRecipesList();
+      recipeStore.updateRecent(recipe);
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+    });
+}
+
+async function onRecipeDelete(id: number) {
+  // TODO: pop a modal
+  const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
+    title: 'Delete recipe.',
+    okTitle: 'Yes',
+    cancelTitle: 'No',
+  });
+
+  if (answer !== true) {
+    return;
+  }
+
+  new Api()
+    .recipesDelete(id)
+    .then((response) => {
+      recipeStore.removeFromRecent(props.id);
+      setSources(new GetRecipeResponseClass());
+      fetchRecipesList();
+      router
+        .push({ name: 'search' })
+        .then(() => {
+          if (response.data.message) {
+            appStore.setSuccessMessage(response.data.message);
+          }
+        })
+        .catch(() => {});
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+    });
+}
+
+function onRecipeDirtyStateChange(value: boolean) {
+  data.isRecipeDirty = value;
+}
+
+function onImageUpload(file) {
+  const request = new SaveImageRequest();
+  request.recipeId = this.id;
+  request.file = file;
+
+  webApi.images.upload(
+    request,
+    (data) => {
+      this.setSuccessMessage(data.message);
+      this.suggestedImageId = data.id;
+      this.fetchImageIds(this.id);
+      this.fetchRecipesList();
+    },
+    (response) => this.setApiFailureMessages(response)
+  );
+}
+
+async function onImageDelete(imageId) {
+  const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this image?', {
+    title: 'Delete image.',
+    okTitle: 'Yes',
+    cancelTitle: 'No',
+  });
+
+  if (answer !== true) {
+    return;
+  }
+
+  webApi.images.delete(
+    imageId,
+    (data) => {
+      this.setSuccessMessage(data.message);
+      this.fetchImageIds(this.id);
+      this.fetchRecipesList();
+    },
+    (response) => this.setApiFailureMessages(response)
+  );
+}
+
+function onImagePin(imageId) {
+  const request = new PinImageRequest();
+  request.id = imageId;
+
+  webApi.images.pin(
+    request,
+    (data) => {
+      this.setSuccessMessage(data.message);
+      this.suggestedImageId = imageId;
+      this.fetchImageIds(this.id);
+      this.fetchRecipesList();
+    },
+    (response) => this.setApiFailureMessages(response)
+  );
+}
+
+async function beforeRouteChange(next) {
+  if (this.isRecipeDirty) {
+    const answer = await this.$bvModal.msgBoxConfirm('Do you really want to leave?', {
+      title: 'You have unsaved changes.',
+      okTitle: 'Yes',
+      cancelTitle: 'No',
+    });
+
+    if (answer !== true) {
+      next(false);
+      return;
+    }
+  }
+
+  this.addToRecent(this.sourceRecipe);
+  next();
+}
+
+watch(
+  () => props.id,
+  (newValue) => {
+    fetchRecipe(newValue);
+  }
+);
+
+onMounted(() => {
+  fetchRecipe(props.id);
+});
+
+onBeforeRouteUpdate(async (to, from, next) => {
+  await beforeRouteChange(next);
+});
+
+onBeforeRouteLeave(async (to, from, next) => {
+  await beforeRouteChange(next);
+});
+</script>
+
+<script lang="ts" setup>
 import { mapGetters, mapActions } from 'vuex';
 import Api from '@/api/Api';
 import type { GetRecipeResponse, SaveImageRequest, PinImageRequest } from '@/api/data-contracts';
@@ -6,42 +246,6 @@ import SelectSidebar from '@/viewComponents/SelectSidebar.vue';
 import RecipeEditor from '@/viewComponents/RecipeEditor.vue';
 import RecipeImageManager from '@/viewComponents/RecipeImageManager.vue';
 
-export default {
-  components: {
-    SelectSidebar,
-    RecipeEditor,
-    RecipeImageManager,
-  },
-  props: {
-    id: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
-    newRecipeSuggestion: {
-      type: Object,
-      required: false,
-      default: null,
-    },
-  },
-  data() {
-    return {
-      sourceRecipe: new GetRecipeResponse(),
-      sourceImages: new GetRecipeResponse().images,
-      isRecipeDirty: false,
-      suggestedImageId: -1,
-      pinnedImageId: null,
-    };
-  },
-  computed: {
-    ...mapGetters({
-      isFieldInError: 'app/isFieldInError',
-      listRequest: 'recipes/listRequest',
-    }),
-    isCreateMode() {
-      return this.sourceRecipe.id <= 0;
-    },
-  },
   watch: {
     id() {
       this.fetchRecipe(this.id);
@@ -259,67 +463,6 @@ export default {
     </b-row>
   </b-container>
 </template>
-
-<style lang="scss" scoped></style> -->
-
-<script lang="ts" setup>
-import { onMounted, watch, reactive } from 'vue';
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
-import type { GetRecipeResponse } from '@/api/data-contracts';
-import { Api } from '@/api/Api';
-import useAppStore from '@/stores/appStore';
-import useRecipeStore from '@/stores/recipeStore';
-import SelectSidebar from '@/components/SelectSidebar.vue';
-import RecipeViewer from '@/components/RecipeViewer.vue';
-import RecipeImageManager from '@/components/RecipeImageManager.vue';
-
-const props = defineProps({
-  id: {
-    type: Number,
-    required: true,
-  },
-});
-
-const appStore = useAppStore();
-const recipeStore = useRecipeStore();
-
-const data = reactive({
-  sourceRecipe: null as GetRecipeResponse | null,
-});
-
-function fetchRecipe() {
-  new Api()
-    .recipesDetail(props.id)
-    .then((response) => {
-      data.sourceRecipe = response.data;
-    })
-    .catch((response) => {
-      appStore.setApiFailureMessages(response);
-      data.sourceRecipe = null;
-    });
-}
-
-watch(
-  () => props.id,
-  () => {
-    fetchRecipe();
-  }
-);
-
-onMounted(() => {
-  fetchRecipe();
-});
-
-onBeforeRouteUpdate((to, from, next) => {
-  recipeStore.addToRecent(data.sourceRecipe);
-  next();
-});
-
-onBeforeRouteLeave((to, from, next) => {
-  recipeStore.addToRecent(data.sourceRecipe);
-  next();
-});
-</script>
 
 <template>
   <div class="container-xxl">

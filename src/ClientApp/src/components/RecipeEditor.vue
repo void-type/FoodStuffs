@@ -2,7 +2,7 @@
 import SaveRecipeRequestClass from '@/models/SaveRecipeRequestClass';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { trimAndTitleCase } from '@/models/FormatHelpers';
-import { onMounted, ref, watch, type PropType, type Ref } from 'vue';
+import { computed, onMounted, ref, watch, type PropType, type Ref } from 'vue';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
@@ -38,17 +38,20 @@ const props = defineProps({
 });
 
 const workingRecipe: Ref<SaveRecipeRequestClass> = ref(new SaveRecipeRequestClass());
-const isRecipeDirty = ref(false);
 
 function reset() {
-  workingRecipe.value = { ...props.sourceRecipe };
-  isRecipeDirty.value = false;
+  workingRecipe.value = {
+    ...new SaveRecipeRequestClass(),
+    ...props.sourceRecipe,
+  };
+
+  // isRecipeDirty should be false
 }
 
 function addCategory(tag: string) {
   const categoryName = trimAndTitleCase(tag);
 
-  const categories = workingRecipe.value.categories.slice();
+  const categories = workingRecipe.value.categories?.slice() || [];
 
   const categoryDoesNotExist =
     categories.map((value) => value.toUpperCase()).indexOf(categoryName.toUpperCase()) < 0;
@@ -60,7 +63,7 @@ function addCategory(tag: string) {
 }
 
 function removeCategory(categoryName: string) {
-  const categories = workingRecipe.value.categories.slice();
+  const categories = workingRecipe.value.categories?.slice() || [];
   const categoryIndex = categories.indexOf(categoryName);
 
   if (categoryIndex > -1) {
@@ -70,17 +73,12 @@ function removeCategory(categoryName: string) {
 }
 
 function saveClick() {
-  const sendableRecipe = new SaveRecipeRequestClass();
-
-  Object.keys(sendableRecipe).forEach((key) => {
-    sendableRecipe[key] = workingRecipe[key];
-  });
-
+  const sendableRecipe: SaveRecipeRequestClass = JSON.parse(JSON.stringify(workingRecipe.value));
   props.onRecipeSave(sendableRecipe);
 }
 
 function getCopy() {
-  return { ...workingRecipe, images: [] };
+  return { ...workingRecipe.value };
 }
 
 watch(
@@ -90,20 +88,15 @@ watch(
   }
 );
 
-// Probably just use a computed
-watch(
-  () => workingRecipe.value,
-  () => {
-    const wRecipe = workingRecipe.value;
-    const changedValues = Object.keys(wRecipe)
+const isRecipeDirty = computed(() => {
+  return (
+    Object.entries(workingRecipe.value).find(
       // Loose comparison so numbers and strings of numbers are equal.
-      .map((key) => wRecipe[key] == props.sourceRecipe[key])
-      .filter((value) => value === false);
-
-    const isDirty = changedValues.length > 0;
-    isRecipeDirty.value = isDirty;
-  }
-);
+      // eslint-disable-next-line eqeqeq
+      ([key, value]) => value != props.sourceRecipe[key as keyof GetRecipeResponse]
+    ) === undefined
+  );
+});
 
 watch(
   () => isRecipeDirty,
@@ -159,6 +152,15 @@ onMounted(() => {
           />
         </b-form-group>
       </b-col>
+      <b-col md="12">
+        <b-form-group label="For meal planning" label-for="isForMealPlanning">
+          <b-form-checkbox
+            id="isForMealPlanning"
+            v-model="workingRecipe.isForMealPlanning"
+            :class="{ 'is-invalid': isFieldInError('isForMealPlanning') }"
+          />
+        </b-form-group>
+      </b-col>
       <b-col sm="12" md="6">
         <b-form-group label="Prep Time Hours/Minutes" label-for="prepTimeMinutes">
           <RecipeTimeSpanEditor
@@ -182,7 +184,7 @@ onMounted(() => {
       <b-col md="12">
         <TagEditor
           :class="{ 'form-group': true, danger: isFieldInError('categories') }"
-          :tags="workingRecipe.categories"
+          :tags="workingRecipe.categories || []"
           :on-add-tag="addCategory"
           :on-remove-tag="removeCategory"
           field-name="categories"
