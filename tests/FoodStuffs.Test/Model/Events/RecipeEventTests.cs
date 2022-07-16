@@ -1,8 +1,6 @@
 ﻿using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Recipes;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace FoodStuffs.Test.Model.Events;

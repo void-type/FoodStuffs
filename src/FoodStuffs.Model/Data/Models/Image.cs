@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FoodStuffs.Model.Data.Models;
+﻿namespace FoodStuffs.Model.Data.Models;
 
 public partial class Image
 {

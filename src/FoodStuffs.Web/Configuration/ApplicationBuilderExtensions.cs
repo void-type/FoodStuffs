@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using VoidCore.AspNet.Security;
+﻿using VoidCore.AspNet.Security;
 
 namespace FoodStuffs.Web.Configuration;
 

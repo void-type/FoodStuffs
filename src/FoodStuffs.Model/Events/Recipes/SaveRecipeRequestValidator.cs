@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using VoidCore.Model.Functional;
+﻿using VoidCore.Model.Functional;
 using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.Recipes;

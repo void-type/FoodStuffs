@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.IO;
+﻿using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using System.Text;
 using VoidCore.AspNet.Security;

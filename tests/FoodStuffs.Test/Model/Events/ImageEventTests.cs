@@ -1,8 +1,6 @@
 ﻿using FoodStuffs.Model.Events;
 using FoodStuffs.Model.Events.Images;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using VoidCore.Model.Responses.Files;
 using Xunit;
 

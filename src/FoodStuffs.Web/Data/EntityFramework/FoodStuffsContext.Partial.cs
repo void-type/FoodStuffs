@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Time;

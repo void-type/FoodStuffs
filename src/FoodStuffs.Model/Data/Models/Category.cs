@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FoodStuffs.Model.Data.Models;
+﻿namespace FoodStuffs.Model.Data.Models;
 
 public partial class Category
 {

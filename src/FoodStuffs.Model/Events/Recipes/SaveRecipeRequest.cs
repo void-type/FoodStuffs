@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FoodStuffs.Model.Events.Recipes;
+﻿namespace FoodStuffs.Model.Events.Recipes;
 
 public record SaveRecipeRequest(
     int Id,

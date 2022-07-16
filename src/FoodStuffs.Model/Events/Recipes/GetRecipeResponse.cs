@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FoodStuffs.Model.Events.Recipes;
+﻿namespace FoodStuffs.Model.Events.Recipes;
 
 public record GetRecipeResponse(
     int Id,

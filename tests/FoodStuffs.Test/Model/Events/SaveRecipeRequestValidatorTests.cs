@@ -1,6 +1,4 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
-using System;
-using System.Linq;
 using Xunit;
 
 namespace FoodStuffs.Test.Model.Events;

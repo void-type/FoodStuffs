@@ -1,6 +1,5 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace FoodStuffs.Web.Data.EntityFramework;
 

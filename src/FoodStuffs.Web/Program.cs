@@ -2,10 +2,7 @@
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using FoodStuffs.Web.Data.EntityFramework;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
