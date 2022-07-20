@@ -132,7 +132,7 @@
             }
         },
         {
-            "label": "watch-client",
+            "label": "watch-web-client",
             "command": "./watchClient.ps1",
             "options": {
                 "cwd": "./build"
@@ -153,8 +153,8 @@
             }
         },
         {
-            "label": "watch-server",
-            "command": "./watchServer.ps1",
+            "label": "watch-web-server",
+            "command": "./watchWeb.ps1",
             "options": {
                 "cwd": "./build"
             },
@@ -173,8 +173,8 @@
             }
         },
         {
-            "label": "watch-dev",
-            "dependsOn": ["watch-client", "watch-server"],
+            "label": "watch-web",
+            "dependsOn": ["watch-web-client", "watch-web-server"],
             "problemMatcher": []
         }
     ]

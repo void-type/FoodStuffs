@@ -16,7 +16,7 @@ param (
 
   [Parameter()]
   [string]
-  $PhysicalPath = 'G:\DeployedApps\apps\foodstuffs'
+  $PhysicalPath = 'G:\DeployedApps\apps\FoodStuffs'
 )
 
 $PhysicalPath = (Resolve-Path $PhysicalPath).Path
