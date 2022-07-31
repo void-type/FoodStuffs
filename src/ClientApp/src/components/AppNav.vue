@@ -5,7 +5,7 @@ const recipeStore = useRecipeStore();
 </script>
 
 <template>
-  <ul class="navbar-nav me-auto">
+  <ul class="navbar-nav">
     <li class="nav-item">
       <router-link :to="{ name: 'search', query: recipeStore.currentQueryParams }" class="nav-link"
         >Search</router-link

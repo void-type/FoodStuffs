@@ -9,10 +9,16 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 </script>
 
 <template>
-  <header class="navbar navbar-dark bg-primary navbar-expand-md shadow">
+  <header class="navbar navbar-expand-md navbar-dark bg-primary shadow">
     <nav class="container-xxl">
       <router-link :to="{ name: 'home' }" class="navbar-brand text-secondary">
-        <img src="/img/logo.svg" alt="logo" class="d-inline-block align-text-top me-3" />
+        <img
+          src="/img/logo.svg"
+          alt="logo"
+          class="d-inline-block align-text-top"
+          width="24"
+          height="24"
+        />
         {{ applicationName }}
       </router-link>
       <button
@@ -49,11 +55,4 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
   </header>
 </template>
 
-<style lang="scss" scoped>
-@import '@/styles/theme';
-
-.navbar-brand > img {
-  max-height: 30px;
-  max-width: auto;
-}
-</style>
+<style lang="scss" scoped></style>
