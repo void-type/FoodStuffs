@@ -37,4 +37,11 @@ const props = defineProps({
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.list-group,
+.list-group-item:not(.active),
+.card {
+  background-color: inherit;
+  color: inherit;
+}
+</style>

@@ -7,6 +7,8 @@ import { isNil } from '@/models/FormatHelpers';
 import { toTimeSpanString } from '@/models/TimeSpanHelpers';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RecipeViewerIngredients from '@/components/RecipeViewerIngredients.vue';
+import useAppStore from '@/stores/appStore';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps({
   recipe: {
@@ -14,6 +16,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+const appStore = useAppStore();
+const { useDarkMode } = storeToRefs(appStore);
 
 const showImage = ref(true);
 const carouselIndex = ref(0);
@@ -152,7 +157,10 @@ onMounted(() => {
       :ingredients="recipe.ingredients || []"
     />
     <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
-    <div v-if="!isNil(recipe.directions)" class="form-control-plaintext p-0">
+    <div
+      v-if="!isNil(recipe.directions)"
+      :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
+    >
       {{ recipe.directions }}
     </div>
     <h3

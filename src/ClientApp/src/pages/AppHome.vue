@@ -59,10 +59,21 @@ onMounted(() => {
 @import 'bootstrap/scss/bootstrap';
 
 .card {
+  background-color: inherit;
+  color: inherit;
   outline: $gray-500 1px solid;
 
   &:hover {
     background-color: $gray-200;
+  }
+}
+
+body.bg-dark .card:hover {
+  background-color: $gray-800;
+
+  .card-text,
+  .card-title {
+    color: inherit;
   }
 }
 

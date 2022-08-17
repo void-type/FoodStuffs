@@ -111,7 +111,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
 
 async function onRecipeDelete(id: number) {
   // TODO: pop a modal
-  const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
+  const answer = await $bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
     title: 'Delete recipe.',
     okTitle: 'Yes',
     cancelTitle: 'No',
@@ -238,7 +238,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 </script>
 
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import { mapGetters, mapActions } from 'vuex';
 import Api from '@/api/Api';
 import type { GetRecipeResponse, SaveImageRequest, PinImageRequest } from '@/api/data-contracts';
@@ -429,7 +429,7 @@ import RecipeImageManager from '@/viewComponents/RecipeImageManager.vue';
     await this.beforeRouteChange(next);
   },
 };
-</script>
+</script> -->
 
 <template>
   <b-container>

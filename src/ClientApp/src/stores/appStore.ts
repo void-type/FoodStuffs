@@ -17,7 +17,33 @@ interface AppStoreState {
   user: DomainUser;
   isInitialized: boolean;
   version: string;
+  useDarkMode: boolean;
 }
+
+const settingKeyEnableDarkMode = 'enableDarkMode';
+const initialDarkModeSetting = localStorage.getItem(settingKeyEnableDarkMode) !== null;
+
+function setDarkMode(setting: boolean) {
+  const { body } = document;
+
+  if (setting) {
+    body.classList.add('bg-dark');
+    body.classList.add('text-light');
+    body.classList.remove('bg-light');
+    body.classList.remove('text-dark');
+
+    localStorage.setItem(settingKeyEnableDarkMode, 'true');
+  } else {
+    body.classList.remove('bg-dark');
+    body.classList.remove('text-light');
+    body.classList.add('bg-light');
+    body.classList.add('text-dark');
+
+    localStorage.removeItem(settingKeyEnableDarkMode);
+  }
+}
+
+setDarkMode(initialDarkModeSetting);
 
 interface UserMessage {
   message: string;
@@ -35,6 +61,7 @@ export const useAppStore = defineStore('app', {
     },
     isInitialized: false,
     version: '',
+    useDarkMode: initialDarkModeSetting,
   }),
 
   getters: {
@@ -119,6 +146,8 @@ export const useAppStore = defineStore('app', {
       this.fieldsInError = fieldNames.filter(notEmpty);
       this.messages = messages.filter(notEmpty);
     },
+
+    setDarkMode,
   },
 });
 

@@ -24,6 +24,7 @@ const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
 
+const { useDarkMode } = storeToRefs(appStore);
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 
 function fetchList() {
@@ -157,7 +158,15 @@ watch(listRequest, () => {
         </div>
       </template>
     </EntityTableControls>
-    <table class="table table-hover text-start mt-4">
+    <table
+      :class="{
+        table: true,
+        'table-hover': true,
+        'text-start': true,
+        'mt-4': true,
+        'table-dark': useDarkMode,
+      }"
+    >
       <thead>
         <tr>
           <th

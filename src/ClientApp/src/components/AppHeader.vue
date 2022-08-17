@@ -1,11 +1,16 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import useAppStore from '@/stores/appStore';
 
 const appStore = useAppStore();
-const { applicationName, user } = storeToRefs(appStore);
+const { applicationName, user, useDarkMode } = storeToRefs(appStore);
 const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
+
+watch(
+  () => [useDarkMode.value],
+  () => appStore.setDarkMode(useDarkMode.value)
+);
 </script>
 
 <template>
@@ -47,6 +52,17 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
             >
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li class="dropdown-item">Roles: {{ userRoles }}</li>
+              <li class="dropdown-item">
+                <div class="form-check form-switch mt-4" title="Toggle dark mode">
+                  <label class="form-check-label" for="useDarkMode">🌙</label>
+                  <input
+                    id="useDarkMode"
+                    v-model="useDarkMode"
+                    class="form-check-input"
+                    type="checkbox"
+                  />
+                </div>
+              </li>
             </ul>
           </li>
         </ul>
