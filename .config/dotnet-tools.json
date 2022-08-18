@@ -9,13 +9,13 @@
       ]
     },
     "dotnet-ef": {
-      "version": "6.0.6",
+      "version": "6.0.8",
       "commands": [
         "dotnet-ef"
       ]
     },
     "nbgv": {
-      "version": "3.5.107",
+      "version": "3.5.109",
       "commands": [
         "nbgv"
       ]
