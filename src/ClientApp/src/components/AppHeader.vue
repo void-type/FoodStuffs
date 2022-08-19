@@ -53,7 +53,7 @@ watch(
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li class="dropdown-item">Roles: {{ userRoles }}</li>
               <li class="dropdown-item">
-                <div class="form-check form-switch mt-4" title="Toggle dark mode">
+                <div class="form-check form-switch" title="Toggle dark mode">
                   <label class="form-check-label" for="useDarkMode">🌙</label>
                   <input
                     id="useDarkMode"

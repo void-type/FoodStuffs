@@ -27,7 +27,7 @@ onMounted(() => {
   <div class="container-xxl">
     <div class="row">
       <div v-for="(recipe, i) in listResponse.items" :key="recipe.id" class="col-lg-4 mt-3">
-        <div no-body class="card overflow-hidden">
+        <div no-body class="card card-hover overflow-hidden">
           <router-link
             class="card-link text-center p-3"
             :to="{ name: 'view', params: { id: recipe.id } }"
@@ -54,35 +54,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import '@/styles/theme.scss';
-@import 'bootstrap/scss/bootstrap';
-
-.card {
-  background-color: inherit;
-  color: inherit;
-  outline: $gray-500 1px solid;
-
-  &:hover {
-    background-color: $gray-200;
-  }
-}
-
-body.bg-dark .card:hover {
-  background-color: $gray-800;
-
-  .card-text,
-  .card-title {
-    color: inherit;
-  }
-}
-
-.card-link {
-  text-decoration: none;
-  color: unset;
-
-  & > img {
-    max-height: 350px;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

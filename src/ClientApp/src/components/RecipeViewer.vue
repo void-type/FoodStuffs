@@ -191,20 +191,11 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
-@import 'bootstrap/scss/bootstrap';
-
 div.form-control-plaintext {
   white-space: pre-wrap;
 }
 
-.image-carousel {
-  outline: $gray-500 1px solid;
-}
-
-div.carousel-item {
-  img {
-    max-height: 350px;
-  }
+div.carousel-item img {
+  max-height: 350px;
 }
 </style>

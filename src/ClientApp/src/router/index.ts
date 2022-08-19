@@ -55,10 +55,10 @@ const router = createRouter({
       meta: { title: 'Search' },
     },
     {
-      path: '/cards',
-      name: 'cards',
+      name: 'meal-cards',
+      path: '/meal-cards',
       component: () => import('@/pages/MealCards.vue'),
-      meta: { title: 'Cards' },
+      meta: { title: 'Meal Cards' },
     },
     {
       path: '/:pathMatch(.*)*',

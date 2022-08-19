@@ -21,14 +21,14 @@ const props = defineProps({
 
 <template>
   <div class="card">
-    <div class="card-header h5 mb-0">
+    <h5 class="card-header">
       {{ title }}
-    </div>
+    </h5>
     <div class="list-group list-group-flush">
       <router-link
         v-for="recipe in recipes"
         :key="recipe.id"
-        class="list-group-item"
+        class="list-group-item card-hover"
         :to="{ name: props.routeName, params: { id: recipe.id } }"
       >
         {{ recipe.name }}
@@ -37,11 +37,4 @@ const props = defineProps({
   </div>
 </template>
 
-<style lang="scss" scoped>
-.list-group,
-.list-group-item:not(.active),
-.card {
-  background-color: inherit;
-  color: inherit;
-}
-</style>
+<style lang="scss" scoped></style>

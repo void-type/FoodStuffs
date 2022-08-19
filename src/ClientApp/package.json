@@ -17,7 +17,7 @@
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.0",
     "moment": "^2.29.4",
-    "pinia": "^2.0.18",
+    "pinia": "^2.0.19",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3"
   },

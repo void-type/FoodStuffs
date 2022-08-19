@@ -22,7 +22,6 @@ const { version } = storeToRefs(appStore);
 
 <style lang="scss" scoped>
 footer {
-  border-top: 1px solid;
   padding: 1em 0rem;
   text-align: center;
 }
