@@ -34,7 +34,7 @@ const router = createRouter({
     {
       name: 'edit',
       path: '/edit/:id',
-      component: () => import('@/pages/RecipeView.vue'),
+      component: () => import('@/pages/RecipeEdit.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -43,7 +43,7 @@ const router = createRouter({
     {
       name: 'new',
       path: '/new',
-      component: () => import('@/pages/RecipeView.vue'),
+      component: () => import('@/pages/RecipeEdit.vue'),
       props: RouterHelpers.newRecipeProps,
       meta: { title: 'New' },
     },
