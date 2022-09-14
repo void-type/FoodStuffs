@@ -13,6 +13,7 @@ import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SelectSidebar from '@/components/SelectSidebar.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
+import RecipeEditor from '@/components/RecipeEditor.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 
 const props = defineProps({
@@ -31,9 +32,10 @@ const props = defineProps({
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
+const webApi = new Api();
 
 const data = reactive({
-  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse | null,
+  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse,
   sourceImages: [] as Array<number>,
   isRecipeDirty: false,
   suggestedImageId: -1,
@@ -63,26 +65,26 @@ function fetchRecipe(id: number) {
     return;
   }
 
-  new Api()
+  webApi
     .recipesDetail(id)
     .then((response) => {
       setSources(response.data);
     })
     .catch((response) => {
       appStore.setApiFailureMessages(response);
-      data.sourceRecipe = null;
+      data.sourceRecipe = new GetRecipeResponseClass();
     });
 }
 
 function fetchRecipesList() {
-  new Api()
+  webApi
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
     .catch((response) => appStore.setApiFailureMessages(response));
 }
 
 function fetchImageIds(id: number) {
-  new Api()
+  webApi
     .recipesDetail(id)
     .then((response) => {
       setImageSources(response.data);
@@ -93,7 +95,7 @@ function fetchImageIds(id: number) {
 }
 
 function onRecipeSave(recipe: SaveRecipeRequest) {
-  new Api()
+  webApi
     .recipesCreate(recipe)
     .then((response) => {
       if (props.id === 0) {
@@ -116,17 +118,17 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
 
 async function onRecipeDelete(id: number) {
   // TODO: pop a modal
-  const answer = await $bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
-    title: 'Delete recipe.',
-    okTitle: 'Yes',
-    cancelTitle: 'No',
-  });
+  // const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
+  //   title: 'Delete recipe.',
+  //   okTitle: 'Yes',
+  //   cancelTitle: 'No',
+  // });
 
-  if (answer !== true) {
-    return;
-  }
+  // if (answer !== true) {
+  //   return;
+  // }
 
-  new Api()
+  webApi
     .recipesDelete(id)
     .then((response) => {
       recipeStore.removeFromRecent(props.id);
@@ -148,7 +150,7 @@ function onRecipeDirtyStateChange(value: boolean) {
 }
 
 function onImageUpload(file: File) {
-  new Api()
+  webApi
     .imagesCreate({ recipeId: props.id }, { file })
     .then((response) => {
       if (response.data.message) {
@@ -164,56 +166,61 @@ function onImageUpload(file: File) {
 }
 
 async function onImageDelete(imageId: number) {
-  const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this image?', {
-    title: 'Delete image.',
-    okTitle: 'Yes',
-    cancelTitle: 'No',
-  });
+  // TODO: pop a modal
+  // const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this image?', {
+  //   title: 'Delete image.',
+  //   okTitle: 'Yes',
+  //   cancelTitle: 'No',
+  // });
 
-  if (answer !== true) {
-    return;
-  }
+  // if (answer !== true) {
+  //   return;
+  // }
 
-  webApi.images.delete(
-    imageId,
-    (response) => {
-      appStore.setSuccessMessage(response.data.message);
+  webApi
+    .imagesDelete(imageId)
+    .then((response) => {
+      if (response.data.message) {
+        appStore.setSuccessMessage(response.data.message);
+      }
       fetchImageIds(props.id);
       fetchRecipesList();
-    },
-    (response) => appStore.setApiFailureMessages(response)
-  );
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+    });
 }
 
 function onImagePin(imageId: number) {
-  const request = new PinImageRequest();
-  request.id = imageId;
-
-  webApi.images.pin(
-    request,
-    (response) => {
-      appStore.setSuccessMessage(response.data.message);
+  webApi
+    .imagesPinCreate({ id: imageId })
+    .then((response) => {
+      if (response.data.message) {
+        appStore.setSuccessMessage(response.data.message);
+      }
       data.suggestedImageId = imageId;
       fetchImageIds(props.id);
       fetchRecipesList();
-    },
-    (response) => appStore.setApiFailureMessages(response)
-  );
+    })
+    .catch((response) => {
+      appStore.setApiFailureMessages(response);
+    });
 }
 
 async function beforeRouteChange(next: NavigationGuardNext) {
-  if (data.isRecipeDirty) {
-    const answer = await this.$bvModal.msgBoxConfirm('Do you really want to leave?', {
-      title: 'You have unsaved changes.',
-      okTitle: 'Yes',
-      cancelTitle: 'No',
-    });
+  // TODO: pop a modal
+  // if (data.isRecipeDirty) {
+  //   const answer = await this.$bvModal.msgBoxConfirm('Do you really want to leave?', {
+  //     title: 'You have unsaved changes.',
+  //     okTitle: 'Yes',
+  //     cancelTitle: 'No',
+  //   });
 
-    if (answer !== true) {
-      next(false);
-      return;
-    }
-  }
+  //   if (answer !== true) {
+  //     next(false);
+  //     return;
+  //   }
+  // }
 
   recipeStore.addToRecent(data.sourceRecipe);
   next();
@@ -240,15 +247,11 @@ onBeforeRouteLeave(async (to, from, next) => {
 </script>
 
 <template>
-  <b-container>
-    <b-row>
-      <b-col md="12" lg="3" class="d-print-none mt-4">
-        <SelectSidebar :route-name="'view'" />
-      </b-col>
-      <b-col class="mt-4">
-        <h1>{{ isCreateMode ? 'New' : 'Edit' }} Recipe</h1>
+  <div class="container-xxl">
+    <div class="row">
+      <h1 class="mt-4 mb-0">{{ data.sourceRecipe.name || 'Loading...' }}</h1>
+      <div class="col-md-12 col-lg-9 mt-4">
         <RecipeEditor
-          class="mt-4"
           :is-field-in-error="isFieldInError"
           :source-recipe="data.sourceRecipe"
           :on-recipe-save="onRecipeSave"
@@ -267,29 +270,9 @@ onBeforeRouteLeave(async (to, from, next) => {
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
         />
-      </b-col>
-    </b-row>
-  </b-container>
-</template>
-
-<template>
-  <div class="container-xxl">
-    <div class="row">
-      <h1 class="mt-4 mb-0">{{ data.sourceRecipe?.name || 'Loading...' }}</h1>
-      <div class="col-md-12 col-lg-9 mt-4">
-        <RecipeImageManager
-          :is-field-in-error="() => {}"
-          :image-ids="[1, 2, 3]"
-          :suggested-image-id="2"
-          :pinned-image-id="2"
-          :on-image-upload="() => {}"
-          :on-image-delete="() => {}"
-          :on-image-pin="() => {}"
-        />
-        <RecipeViewer v-if="data.sourceRecipe !== null" class="mt-3" :recipe="data.sourceRecipe" />
       </div>
       <div class="col-md-12 col-lg-3 d-print-none mt-4">
-        <SelectSidebar :route-name="'view'" />
+        <SelectSidebar :route-name="'edit'" />
       </div>
     </div>
   </div>

@@ -73,7 +73,7 @@ onMounted(() => {
 <template>
   <div>
     <div class="row">
-      <div class="col-12 d-print-none mt-4">
+      <div class="col-12 d-print-none">
         <div class="btn-toolbar">
           <router-link
             :to="{ name: 'edit', params: { id: recipe.id } }"

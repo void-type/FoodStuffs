@@ -7,7 +7,6 @@ import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SelectSidebar from '@/components/SelectSidebar.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
-import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 
 const props = defineProps({
   id: {
@@ -20,7 +19,7 @@ const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 
 const data = reactive({
-  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse | null,
+  sourceRecipe: null as GetRecipeResponse | null,
 });
 
 function fetchRecipe(id: number) {
@@ -61,7 +60,7 @@ onBeforeRouteLeave((to, from, next) => {
   <div class="container-xxl">
     <div class="row">
       <h1 class="mt-4 mb-0">{{ data.sourceRecipe?.name || 'Loading...' }}</h1>
-      <div class="col-md-12 col-lg-9">
+      <div class="col-md-12 col-lg-9 mt-4">
         <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" />
       </div>
       <div class="col-md-12 col-lg-3 d-print-none mt-4">
