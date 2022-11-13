@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
@@ -21,6 +22,14 @@ public class GetImageHandler : EventHandlerAbstract<GetImageRequest, SimpleFile>
 
         return _data.Images.Get(byId, cancellationToken)
             .ToResultAsync(new ImageNotFoundFailure())
-            .SelectAsync(r => new SimpleFile(r.Blob.Bytes, $"{r.Id}"));
+            .ThenAsync(ValidateBlobIsNotNull)
+            .SelectAsync(r => new SimpleFile(r.Blob!.Bytes, $"{r.Id}"));
+    }
+
+    private static IResult<Image> ValidateBlobIsNotNull(Image r)
+    {
+        return r.Blob is not null ?
+            Result.Ok(r) :
+            Result.Fail<Image>(new ImageNotFoundFailure());
     }
 }

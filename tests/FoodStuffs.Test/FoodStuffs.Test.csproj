@@ -20,6 +20,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FoodStuffs.Model\FoodStuffs.Model.csproj" />
-    <ProjectReference Include="..\..\src\FoodStuffs.Web\FoodStuffs.Web.csproj" />
   </ItemGroup>
 </Project>

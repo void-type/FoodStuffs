@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Web.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data.EntityFramework;
+using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using VoidCore.Model.Auth;

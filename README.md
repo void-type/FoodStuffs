@@ -32,6 +32,8 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 ### Make a Database
 
+This project uses Entity Framework Database First.
+
 1. Build a SQL Server database by running the migration scripts in /build/sql in order by date.
 
 ### Local build (production and development)

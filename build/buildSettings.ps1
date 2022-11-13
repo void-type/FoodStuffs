@@ -3,6 +3,7 @@ $projectName = "$shortAppName"
 
 $webProjectFolder = "./src/$projectName.Web"
 $webClientProjectFolder = "./src/ClientApp"
+$modelProjectFolder = "./src/$projectName.Model"
 $testProjectFolder = "./tests/$projectName.Test"
 
 $iisDirectoryProduction = "\\server2\DeployedApps\apps\$projectName"

@@ -1,7 +1,8 @@
 ﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
-using FoodStuffs.Web.Data.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
@@ -44,7 +45,7 @@ try
     services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
     config.GetRequiredConnectionString<FoodStuffsContext>();
-    services.AddDbContext<FoodStuffsContext>();
+    services.AddDbContext<FoodStuffsContext>(options => options.UseSqlServer("Name=FoodStuffs"));
     services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
     // Auto-register Domain Events

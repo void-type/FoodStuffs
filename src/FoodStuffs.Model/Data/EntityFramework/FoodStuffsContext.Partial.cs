@@ -3,7 +3,7 @@ using VoidCore.EntityFramework;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Time;
 
-namespace FoodStuffs.Web.Data.EntityFramework;
+namespace FoodStuffs.Model.Data.EntityFramework;
 
 public partial class FoodStuffsContext
 {
