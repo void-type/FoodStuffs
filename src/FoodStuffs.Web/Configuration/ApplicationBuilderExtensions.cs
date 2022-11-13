@@ -43,6 +43,9 @@ public static class ApplicationBuilderExtensions
             options.StyleSources
                 .AllowSelf();
 
+            options.FrameAncestors
+                .AllowNone();
+
             if (environment.IsDevelopment())
             {
                 // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
@@ -67,6 +70,6 @@ public static class ApplicationBuilderExtensions
 
         app.UseXContentTypeOptionsNoSniff();
 
-        return app.UseXFrameOptions(options => options.Deny());
+        return app;
     }
 }
