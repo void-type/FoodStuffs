@@ -34,7 +34,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 This project uses Entity Framework Database First.
 
-1. Build a SQL Server database by running the migration scripts in /build/sql in order by date.
+Build a SQL Server database by running the migration scripts in /build/sql in order by date.
 
 ### Local build (production and development)
 
@@ -52,6 +52,8 @@ Run build.ps1 to make a production build.
 ```powershell
 ./build/build.ps1
 ```
+
+### IIS Deployment
 
 Use the deployment/setup scripts as templates to deploy to your environment.
 
