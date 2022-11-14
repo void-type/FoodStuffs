@@ -21,8 +21,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
     {
         var byId = new RecipesByIdWithCategoriesAndIngredientsSpecification(request.Id);
 
-        var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken)
-            .ConfigureAwait(false);
+        var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken);
 
         var recipeToEdit = maybeRecipe.Unwrap(() => new Recipe());
 
@@ -30,13 +29,11 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
         if (maybeRecipe.HasValue)
         {
-            await _data.Recipes.Update(recipeToEdit, cancellationToken)
-                .ConfigureAwait(false);
+            await _data.Recipes.Update(recipeToEdit, cancellationToken);
         }
         else
         {
-            await _data.Recipes.Add(recipeToEdit, cancellationToken)
-                .ConfigureAwait(false);
+            await _data.Recipes.Add(recipeToEdit, cancellationToken);
         }
 
         return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));

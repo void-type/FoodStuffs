@@ -25,7 +25,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
         var allSearch = new RecipesSearchSpecification(searchCriteria);
 
-        var totalCount = await _data.Recipes.Count(allSearch, cancellationToken).ConfigureAwait(false);
+        var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
 
         var pagedSearch = new RecipesSearchSpecification(
             criteria: searchCriteria,
@@ -33,7 +33,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
             sortBy: request.SortBy,
             sortDesc: request.SortDesc);
 
-        var recipes = await _data.Recipes.List(pagedSearch, cancellationToken).ConfigureAwait(false);
+        var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
 
         return recipes
             .Select(r => new ListRecipesResponse(

@@ -26,7 +26,7 @@ public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, Entit
                 if (i.Recipe.PinnedImageId == i.Id)
                 {
                     i.Recipe.PinnedImageId = null;
-                    await _data.Recipes.Update(i.Recipe, cancellationToken).ConfigureAwait(false);
+                    await _data.Recipes.Update(i.Recipe, cancellationToken);
                 }
             })
             .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))

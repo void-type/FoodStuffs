@@ -25,7 +25,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         // 3. edit the client-side upload validation in the recipeedit.vue file.
 
         var recipeResult = await _data.Recipes.Get(new RecipesByIdSpecification(request.RecipeId), cancellationToken)
-            .ToResultAsync(new RecipeNotFoundFailure()).ConfigureAwait(false);
+            .ToResultAsync(new RecipeNotFoundFailure());
 
         if (recipeResult.IsFailed)
         {
@@ -37,7 +37,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
             RecipeId = recipeResult.Value.Id
         };
 
-        await _data.Images.Add(image, cancellationToken).ConfigureAwait(false);
+        await _data.Images.Add(image, cancellationToken);
 
         var blob = new Blob
         {
@@ -45,7 +45,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
             Bytes = request.FileContent
         };
 
-        await _data.Blobs.Add(blob, cancellationToken).ConfigureAwait(false);
+        await _data.Blobs.Add(blob, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.Id));
     }
