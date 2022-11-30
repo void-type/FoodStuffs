@@ -116,7 +116,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
     });
 }
 
-async function onRecipeDelete(id: number) {
+function onRecipeDelete(id: number) {
   // TODO: pop a modal
   // const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
   //   title: 'Delete recipe.',
@@ -165,7 +165,7 @@ function onImageUpload(file: File) {
     .catch((response) => appStore.setApiFailureMessages(response));
 }
 
-async function onImageDelete(imageId: number) {
+function onImageDelete(imageId: number) {
   // TODO: pop a modal
   // const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this image?', {
   //   title: 'Delete image.',
@@ -207,7 +207,7 @@ function onImagePin(imageId: number) {
     });
 }
 
-async function beforeRouteChange(next: NavigationGuardNext) {
+function beforeRouteChange(next: NavigationGuardNext) {
   // TODO: pop a modal
   // if (data.isRecipeDirty) {
   //   const answer = await this.$bvModal.msgBoxConfirm('Do you really want to leave?', {
@@ -276,6 +276,7 @@ onBeforeRouteLeave(async (to, from, next) => {
       </div>
     </div>
   </div>
+  <AppModal ref="recipe-edit-modal" />
 </template>
 
 <style lang="scss" scoped></style>
