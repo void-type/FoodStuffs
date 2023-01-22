@@ -29,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app-inner" tabindex="-1" @keydown.stop.prevent.esc="clearMessages()">
+  <div id="app-inner" tabindex="-1">
     <div class="container-xxl visually-hidden-focusable">
       <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
         >Skip to main content</router-link
@@ -42,7 +42,7 @@ onMounted(() => {
     </AppHeader>
     <AppMessageCenter class="d-print-none" />
     <main id="main" class="mb-4" tabindex="-1">
-      <RouterView />
+      <RouterView @keydown.stop.prevent.esc="clearMessages()" />
     </main>
     <AppFooter class="mt-2" />
   </div>
@@ -77,24 +77,6 @@ button.btn,
 a.btn,
 .btn {
   min-width: 5rem;
-}
-
-.bg-light {
-  // Colored headings
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  .h1,
-  .h2,
-  .h3,
-  .h4,
-  .h5,
-  .h6 {
-    color: $primary;
-  }
 }
 
 footer {
@@ -141,6 +123,21 @@ body.bg-dark {
         background-color: inherit;
         color: inherit;
       }
+    }
+  }
+
+  .form-control,
+  .form-select {
+    background-color: $dark;
+    color: $light;
+  }
+
+  .form-check-input {
+    background-color: $dark;
+    border-color: $light;
+
+    &:checked {
+      background-color: $primary;
     }
   }
 }
