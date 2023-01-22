@@ -11,7 +11,13 @@ defineProps({
 
 <template>
   <div>
-    <div class="card card-hover" @keydown.enter="onCardClick()" @click="onCardClick(card.id)">
+    <div
+      class="card card-hover"
+      tabindex="0"
+      role="button"
+      @keydown.enter="onCardClick()"
+      @click="onCardClick(card.id)"
+    >
       <div class="card-body">
         <h5 class="card-title mb-0">{{ card.name }}</h5>
         <ul v-if="showIngredients" class="mt-3 mb-0">

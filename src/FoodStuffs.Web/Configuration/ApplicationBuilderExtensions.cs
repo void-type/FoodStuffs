@@ -55,6 +55,10 @@ public static class ApplicationBuilderExtensions
 
                 options.StyleSources
                     .AllowUnsafeInline();
+
+                // .NET hot reloading uses web sockets
+                options.Custom("default-src")
+                    .Allow("wss:");
             }
             else
             {

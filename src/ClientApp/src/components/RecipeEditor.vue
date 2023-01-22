@@ -109,11 +109,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <form
-    id="recipe-details-form"
-    name="recipe-details-form"
-    @keydown.ctrl.enter.stop.prevent="saveClick()"
-  >
+  <form id="recipe-details-form" name="recipe-details-form">
     <b-form-row>
       <b-col md="12" sm="6" />
       <b-col md="12">

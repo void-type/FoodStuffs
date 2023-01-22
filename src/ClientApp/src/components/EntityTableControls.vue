@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <form @submit.stop.prevent @keydown.enter.stop.prevent="initSearch()">
+  <form>
     <slot name="searchForm" />
     <div class="row">
       <div class="col-12">

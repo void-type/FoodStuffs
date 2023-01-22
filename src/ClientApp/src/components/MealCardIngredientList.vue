@@ -20,6 +20,8 @@ defineProps({
         <li
           v-for="[ingredient, quantity] in ingredients"
           :key="ingredient"
+          tabindex="0"
+          role="button"
           class="list-group-item card-hover"
           @keydown.enter="onIngredientClick(ingredient)"
           @click="onIngredientClick(ingredient)"
