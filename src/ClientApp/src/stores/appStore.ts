@@ -8,6 +8,7 @@ import type {
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import { isNil } from '@/models/FormatHelpers';
+import type { ModalParameters } from '@/models/ModalParameters';
 
 interface AppStoreState {
   applicationName: string;
@@ -18,6 +19,8 @@ interface AppStoreState {
   isInitialized: boolean;
   version: string;
   useDarkMode: boolean;
+  modalIsActive: boolean;
+  modalParameters: ModalParameters;
 }
 
 const settingKeyEnableDarkMode = 'enableDarkMode';
@@ -62,6 +65,13 @@ export const useAppStore = defineStore('app', {
     isInitialized: false,
     version: '',
     useDarkMode: initialDarkModeSetting,
+    modalIsActive: false,
+    modalParameters: {
+      title: '',
+      description: '',
+      okAction: undefined,
+      cancelAction: undefined,
+    },
   }),
 
   getters: {
@@ -148,6 +158,25 @@ export const useAppStore = defineStore('app', {
     },
 
     setDarkMode,
+
+    showModal(modalParameters: ModalParameters) {
+      if (this.modalIsActive) {
+        return;
+      }
+
+      this.modalIsActive = true;
+      this.modalParameters = modalParameters;
+    },
+
+    hideModal() {
+      this.modalIsActive = false;
+      this.modalParameters = {
+        title: '',
+        description: '',
+        okAction: undefined,
+        cancelAction: undefined,
+      };
+    },
   },
 });
 

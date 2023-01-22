@@ -8,6 +8,7 @@ import AppNav from '@/components/AppNav.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
 import RouterHelpers from '@/models/RouterHelpers';
+import AppModal from './components/AppModal.vue';
 
 const appStore = useAppStore();
 
@@ -44,6 +45,7 @@ onMounted(() => {
     <main id="main" class="mb-4" tabindex="-1">
       <RouterView @keydown.stop.prevent.esc="clearMessages()" />
     </main>
+    <AppModal />
     <AppFooter class="mt-2" />
   </div>
 </template>

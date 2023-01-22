@@ -44,8 +44,6 @@ function reset() {
     ...new SaveRecipeRequestClass(),
     ...props.sourceRecipe,
   };
-
-  // isRecipeDirty should be false
 }
 
 function addCategory(tag: string) {

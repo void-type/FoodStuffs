@@ -15,6 +15,7 @@ import SelectSidebar from '@/components/SelectSidebar.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
+import type { ModalParameters } from '@/models/ModalParameters';
 
 const props = defineProps({
   id: {
@@ -117,32 +118,31 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
 }
 
 function onRecipeDelete(id: number) {
-  // TODO: pop a modal
-  // const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this recipe?', {
-  //   title: 'Delete recipe.',
-  //   okTitle: 'Yes',
-  //   cancelTitle: 'No',
-  // });
-
-  // if (answer !== true) {
-  //   return;
-  // }
-
-  webApi
-    .recipesDelete(id)
-    .then((response) => {
-      recipeStore.removeFromRecent(props.id);
-      setSources(new GetRecipeResponseClass());
-      fetchRecipesList();
-      router.push({ name: 'search', query: recipeStore.currentQueryParams }).then(() => {
-        if (response.data.message) {
-          appStore.setSuccessMessage(response.data.message);
-        }
+  function deleteRecipe() {
+    webApi
+      .recipesDelete(id)
+      .then((response) => {
+        recipeStore.removeFromRecent(props.id);
+        setSources(new GetRecipeResponseClass());
+        fetchRecipesList();
+        router.push({ name: 'search', query: recipeStore.currentQueryParams }).then(() => {
+          if (response.data.message) {
+            appStore.setSuccessMessage(response.data.message);
+          }
+        });
+      })
+      .catch((response) => {
+        appStore.setApiFailureMessages(response);
       });
-    })
-    .catch((response) => {
-      appStore.setApiFailureMessages(response);
-    });
+  }
+
+  const parameters: ModalParameters = {
+    title: 'Delete recipe',
+    description: 'Do you really want to delete this recipe?',
+    okAction: deleteRecipe,
+  };
+
+  appStore.showModal(parameters);
 }
 
 function onRecipeDirtyStateChange(value: boolean) {
@@ -166,29 +166,28 @@ function onImageUpload(file: File) {
 }
 
 function onImageDelete(imageId: number) {
-  // TODO: pop a modal
-  // const answer = await this.$bvModal.msgBoxConfirm('Do you really want to delete this image?', {
-  //   title: 'Delete image.',
-  //   okTitle: 'Yes',
-  //   cancelTitle: 'No',
-  // });
+  function deleteImage() {
+    webApi
+      .imagesDelete(imageId)
+      .then((response) => {
+        if (response.data.message) {
+          appStore.setSuccessMessage(response.data.message);
+        }
+        fetchImageIds(props.id);
+        fetchRecipesList();
+      })
+      .catch((response) => {
+        appStore.setApiFailureMessages(response);
+      });
+  }
 
-  // if (answer !== true) {
-  //   return;
-  // }
+  const parameters: ModalParameters = {
+    title: 'Delete image',
+    description: 'Do you really want to delete this image?',
+    okAction: deleteImage,
+  };
 
-  webApi
-    .imagesDelete(imageId)
-    .then((response) => {
-      if (response.data.message) {
-        appStore.setSuccessMessage(response.data.message);
-      }
-      fetchImageIds(props.id);
-      fetchRecipesList();
-    })
-    .catch((response) => {
-      appStore.setApiFailureMessages(response);
-    });
+  appStore.showModal(parameters);
 }
 
 function onImagePin(imageId: number) {
@@ -208,22 +207,27 @@ function onImagePin(imageId: number) {
 }
 
 function beforeRouteChange(next: NavigationGuardNext) {
-  // TODO: pop a modal
-  // if (data.isRecipeDirty) {
-  //   const answer = await this.$bvModal.msgBoxConfirm('Do you really want to leave?', {
-  //     title: 'You have unsaved changes.',
-  //     okTitle: 'Yes',
-  //     cancelTitle: 'No',
-  //   });
+  function changeRoute() {
+    recipeStore.addToRecent(data.sourceRecipe);
+    next();
+  }
 
-  //   if (answer !== true) {
-  //     next(false);
-  //     return;
-  //   }
-  // }
+  function cancelRouteChange() {
+    next(false);
+  }
 
-  recipeStore.addToRecent(data.sourceRecipe);
-  next();
+  if (data.isRecipeDirty) {
+    const parameters: ModalParameters = {
+      title: 'Unsaved changes',
+      description: 'You have unsaved changes. Do you really want to leave?',
+      okAction: changeRoute,
+      cancelAction: cancelRouteChange,
+    };
+
+    appStore.showModal(parameters);
+  } else {
+    changeRoute();
+  }
 }
 
 watch(

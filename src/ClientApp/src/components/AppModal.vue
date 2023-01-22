@@ -1,70 +1,91 @@
 <script lang="ts" setup>
-import { onMounted, reactive } from 'vue';
+import useAppStore from '@/stores/appStore';
+import { watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { Modal } from 'bootstrap';
 
-// TODO: finish implementing from here: https://stackabuse.com/how-to-create-a-confirmation-dialogue-in-vue-js/
-const data = reactive({
-  id: 'app-modal',
-  title: '',
-  description: '',
-  // eslint-disable-next-line no-unused-vars
-  resolvePromise: undefined as unknown as (value?: unknown) => void | undefined,
-  // eslint-disable-next-line no-unused-vars
-  rejectPromise: undefined as unknown as (reason?: unknown) => void | undefined,
-});
+const appStore = useAppStore();
+const { modalIsActive, modalParameters } = storeToRefs(appStore);
 
-function show(options: { title: string; description: string }) {
-  data.title = options.title;
-  data.description = options.description;
+const modalControllerOptions: Modal.Options = {
+  backdrop: 'static',
+  keyboard: false,
+  focus: true,
+};
 
-  return new Promise((resolve, reject) => {
-    data.resolvePromise = resolve;
-    data.rejectPromise = reject;
-  });
+function getModal() {
+  return Modal.getOrCreateInstance('#app-modal', modalControllerOptions);
 }
 
-onMounted(() => {
-  const modal = document.getElementById(data.id);
-  const button = document.getElementById(`${data.id}-cancel-button`);
+function okAction() {
+  modalIsActive.value = false;
+  const action = modalParameters.value.okAction;
 
-  modal?.addEventListener('shown.bs.modal', () => {
-    button?.focus();
-  });
+  if (action) {
+    action();
+    // prevent duplicate firings
+    modalParameters.value.okAction = undefined;
+  }
+}
+
+function cancelAction() {
+  modalIsActive.value = false;
+  const action = modalParameters.value.cancelAction;
+
+  if (action) {
+    action();
+    // prevent duplicate firings
+    modalParameters.value.cancelAction = undefined;
+  }
+}
+
+watch(modalIsActive, (isActive) => {
+  if (isActive) {
+    getModal().show();
+  } else {
+    getModal().hide();
+  }
 });
 </script>
 
 <template>
   <Teleport to="body">
     <div
-      id="{{id}}"
+      id="app-modal"
       class="modal fade"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
       tabindex="-1"
-      aria-labelledby="recipe-delete-modal"
+      aria-labelledby="app-modal-title"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 id="recipe-delete-modal" class="modal-title">{{ data.title }}</h5>
+            <h5 id="app-modal-title" class="modal-title">{{ modalParameters.title }}</h5>
             <button
               type="button"
               class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
+              aria-label="Cancel"
+              @click="cancelAction()"
             ></button>
           </div>
-          <div class="modal-body">{{ data.description }}</div>
+          <div class="modal-body">{{ modalParameters.description }}</div>
           <div class="modal-footer">
             <button
-              :id="`${data.id}-cancel-button`"
+              id="app-modal-cancel-button"
               type="button"
               class="btn btn-secondary"
-              data-bs-dismiss="modal"
+              @click="cancelAction()"
             >
-              No
+              Cancel
             </button>
-            <button type="button" class="btn btn-primary" @click="okAction()">Yes</button>
+            <button
+              id="app-modal-ok-button"
+              type="button"
+              class="btn btn-primary"
+              @click="okAction()"
+            >
+              OK
+            </button>
           </div>
         </div>
       </div>
