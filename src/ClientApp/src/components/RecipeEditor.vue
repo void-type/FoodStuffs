@@ -110,72 +110,67 @@ onMounted(() => {
 
 <template>
   <form id="recipe-details-form" name="recipe-details-form">
-    <b-form-row>
-      <b-col md="12" sm="6" />
-      <b-col md="12">
-        <b-form-group label="Name *" label-for="name">
-          <b-form-input
-            id="name"
-            v-model="workingRecipe.name"
-            required
-            :class="{ 'is-invalid': isFieldInError('name') }"
-          />
-        </b-form-group>
-      </b-col>
-      <b-col md="12">
-        <b-form-group label="Ingredients *" label-for="ingredients">
-          <b-form-textarea
-            id="ingredients"
-            v-model="workingRecipe.ingredients"
-            required
-            rows="1"
-            :max-rows="Number.MAX_SAFE_INTEGER"
-            :class="{ 'is-invalid': isFieldInError('ingredients') }"
-          />
-        </b-form-group>
-      </b-col>
-      <b-col md="12">
-        <b-form-group label="Directions *" label-for="directions">
-          <b-form-textarea
-            id="directions"
-            v-model="workingRecipe.directions"
-            required
-            rows="1"
-            :max-rows="Number.MAX_SAFE_INTEGER"
-            :class="{ 'is-invalid': isFieldInError('directions') }"
-          />
-        </b-form-group>
-      </b-col>
-      <b-col md="12">
-        <b-form-group label="For meal planning" label-for="isForMealPlanning">
-          <b-form-checkbox
-            id="isForMealPlanning"
-            v-model="workingRecipe.isForMealPlanning"
-            :class="{ 'is-invalid': isFieldInError('isForMealPlanning') }"
-          />
-        </b-form-group>
-      </b-col>
-      <b-col sm="12" md="6">
-        <b-form-group label="Prep Time Hours/Minutes" label-for="prepTimeMinutes">
-          <RecipeTimeSpanEditor
-            id="prepTimeMinutes"
-            v-model="workingRecipe.prepTimeMinutes"
-            :is-invalid="isFieldInError('prepTimeMinutes')"
-            show-preview
-          />
-        </b-form-group>
-      </b-col>
-      <b-col sm="12" md="6">
-        <b-form-group label="Cook Time Hours/Minutes" label-for="cookTimeMinutes">
-          <RecipeTimeSpanEditor
-            id="cookTimeMinutes"
-            v-model="workingRecipe.cookTimeMinutes"
-            :is-invalid="isFieldInError('cookTimeMinutes')"
-            show-preview
-          />
-        </b-form-group>
-      </b-col>
-      <b-col md="12">
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label for="name" class="form-label">Name *</label>
+        <input
+          id="name"
+          v-model="workingRecipe.name"
+          required
+          type="text"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
+        />
+      </div>
+      <div class="col-md-12 mb-3">
+        <label for="ingredients" class="form-label">Ingredients *</label>
+        <!-- TODO: make ingredient editor -->
+        <textarea
+          id="ingredients"
+          v-model="workingRecipe.ingredients"
+          required
+          rows="1"
+          :max-rows="Number.MAX_SAFE_INTEGER"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
+        />
+      </div>
+      <div class="col-md-12 mb-3">
+        <label for="directions" class="form-label">Directions *</label>
+        <textarea
+          id="directions"
+          v-model="workingRecipe.directions"
+          required
+          rows="1"
+          :max-rows="Number.MAX_SAFE_INTEGER"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
+        />
+      </div>
+      <div class="col-md-12 mb-3">
+        <label for="isForMealPlanning" class="form-label">For meal planning</label>
+        <b-form-checkbox
+          id="isForMealPlanning"
+          v-model="workingRecipe.isForMealPlanning"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('isForMealPlanning') }"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
+        <RecipeTimeSpanEditor
+          id="prepTimeMinutes"
+          v-model="workingRecipe.prepTimeMinutes"
+          :is-invalid="isFieldInError('prepTimeMinutes')"
+          show-preview
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="cookTimeMinutes" class="form-label">Cook Time Hours/Minutes</label>
+        <RecipeTimeSpanEditor
+          id="cookTimeMinutes"
+          v-model="workingRecipe.cookTimeMinutes"
+          :is-invalid="isFieldInError('cookTimeMinutes')"
+          show-preview
+        />
+      </div>
+      <div class="col-md-12 mb-3">
         <TagEditor
           :class="{ 'form-group': true, danger: isFieldInError('categories') }"
           :tags="workingRecipe.categories || []"
@@ -184,19 +179,19 @@ onMounted(() => {
           field-name="categories"
           label="Categories"
         />
-      </b-col>
-    </b-form-row>
+      </div>
+    </div>
     <EntityAuditInfo v-if="sourceRecipe.id" class="mb-3" :entity="sourceRecipe" />
-    <b-form-row>
-      <b-col md="12">
+    <div class="row">
+      <div class="col-md-12 mb-3">
         <b-button-toolbar>
-          <b-button class="mr-2" variant="primary" @click.stop.prevent="saveClick()">
+          <b-button class="me-2" variant="primary" @click.stop.prevent="saveClick()">
             Save
           </b-button>
           <b-button
             v-if="!isCreateMode"
             :to="{ name: 'new', params: { newRecipeSuggestion: getCopy() } }"
-            class="mr-2"
+            class="me-2"
           >
             Copy
           </b-button>
@@ -205,15 +200,15 @@ onMounted(() => {
           </b-button>
           <b-button
             v-if="!isCreateMode"
-            class="ml-auto"
+            class="ms-auto"
             variant="danger"
             @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
           >
             Delete
           </b-button>
         </b-button-toolbar>
-      </b-col>
-    </b-form-row>
+      </div>
+    </div>
   </form>
 </template>
 
