@@ -15,6 +15,8 @@ public partial class FoodStuffsContext
     {
         _dateTimeService = dateTimeService;
         _currentUserAccessor = currentUserAccessor;
+
+        ChangeTracker.LazyLoadingEnabled = false;
     }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
