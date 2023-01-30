@@ -59,8 +59,6 @@
             },
             "type": "shell",
             "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
                 "$msCompile"
             ],
             "presentation": {
@@ -81,8 +79,26 @@
             },
             "type": "shell",
             "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
+                "$msCompile"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "build"
+            }
+        },
+        {
+            "label": "generate-api-client",
+            "command": "./generateApiClient.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "problemMatcher": [
                 "$msCompile"
             ],
             "presentation": {

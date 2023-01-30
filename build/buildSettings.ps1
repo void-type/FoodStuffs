@@ -2,12 +2,12 @@ $shortAppName = "FoodStuffs"
 $projectName = "$shortAppName"
 
 $webProjectFolder = "./src/$projectName.Web"
-$webClientProjectFolder = "./src/ClientApp"
 $modelProjectFolder = "./src/$projectName.Model"
-$testProjectFolder = "./tests/$projectName.Test"
-
+$webClientProjectFolder = "./src/ClientApp"
 $iisDirectoryProduction = "\\server2\DeployedApps\apps\$projectName"
 $settingsDirectoryProduction = "\\server2\Servers\AppConfigs\$projectName"
+
+$testProjectFolder = "./tests/$projectName.Test"
 
 $iisDirectoryTest = "\\server2\DeployedApps\apps\$($projectName)-Test"
 $settingsDirectoryTest = "$settingsDirectoryProduction"
