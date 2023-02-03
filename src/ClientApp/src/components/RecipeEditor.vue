@@ -75,10 +75,6 @@ function saveClick() {
   props.onRecipeSave(sendableRecipe);
 }
 
-function getCopy() {
-  return { ...workingRecipe.value };
-}
-
 watch(
   () => props.sourceRecipe,
   () => {
@@ -121,9 +117,9 @@ onMounted(() => {
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
         />
       </div>
-      <div class="col-md-12 mb-3">
+      <!-- TODO: make ingredient editor -->
+      <!-- <div class="col-md-12 mb-3">
         <label for="ingredients" class="form-label">Ingredients *</label>
-        <!-- TODO: make ingredient editor -->
         <textarea
           id="ingredients"
           v-model="workingRecipe.ingredients"
@@ -143,14 +139,16 @@ onMounted(() => {
           :max-rows="Number.MAX_SAFE_INTEGER"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
         />
-      </div>
+      </div> -->
       <div class="col-md-12 mb-3">
-        <label for="isForMealPlanning" class="form-label">For meal planning</label>
-        <b-form-checkbox
+        <input
           id="isForMealPlanning"
           v-model="workingRecipe.isForMealPlanning"
+          class="form-check-input"
+          type="checkbox"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('isForMealPlanning') }"
         />
+        <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
       </div>
       <div class="col-md-6">
         <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
@@ -184,29 +182,28 @@ onMounted(() => {
     <EntityAuditInfo v-if="sourceRecipe.id" class="mb-3" :entity="sourceRecipe" />
     <div class="row">
       <div class="col-md-12 mb-3">
-        <b-button-toolbar>
-          <b-button class="me-2" variant="primary" @click.stop.prevent="saveClick()">
-            Save
-          </b-button>
-          <b-button
-            v-if="!isCreateMode"
-            :to="{ name: 'new', params: { newRecipeSuggestion: getCopy() } }"
-            class="me-2"
-          >
-            Copy
-          </b-button>
-          <b-button v-if="!isCreateMode" :to="{ name: 'view', params: { id: sourceRecipe.id } }">
-            Cancel
-          </b-button>
-          <b-button
-            v-if="!isCreateMode"
-            class="ms-auto"
-            variant="danger"
-            @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
-          >
-            Delete
-          </b-button>
-        </b-button-toolbar>
+        <button class="btn btn-primary me-2" @click.stop.prevent="saveClick()">Save</button>
+        <router-link
+          v-if="!isCreateMode"
+          :to="{ name: 'new', params: { id: sourceRecipe.id, copy: 'true' } }"
+          class="btn me-2"
+        >
+          Copy
+        </router-link>
+        <router-link
+          v-if="!isCreateMode"
+          class="btn"
+          :to="{ name: 'view', params: { id: sourceRecipe.id } }"
+        >
+          Cancel
+        </router-link>
+        <button
+          v-if="!isCreateMode"
+          class="btn btn-danger ms-auto"
+          @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
+        >
+          Delete
+        </button>
       </div>
     </div>
   </form>

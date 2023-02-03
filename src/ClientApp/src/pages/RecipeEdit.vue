@@ -23,11 +23,19 @@ const props = defineProps({
     required: false,
     default: 0,
   },
-  newRecipeSuggestion: {
-    type: Object,
+  copy: {
+    type: Number,
     required: false,
-    default: null,
+    default: 0,
   },
+});
+
+const data = reactive({
+  sourceRecipe: { ...new GetRecipeResponseClass(), name: 'Loading...' } as GetRecipeResponse,
+  sourceImages: [] as Array<number>,
+  isRecipeDirty: false,
+  suggestedImageId: -1,
+  pinnedImageId: null as number | null,
 });
 
 const appStore = useAppStore();
@@ -35,18 +43,12 @@ const recipeStore = useRecipeStore();
 const router = useRouter();
 const webApi = new Api();
 
-const data = reactive({
-  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse,
-  sourceImages: [] as Array<number>,
-  isRecipeDirty: false,
-  suggestedImageId: -1,
-  pinnedImageId: null as number | null,
-});
-
 const { isFieldInError } = appStore;
 const { listRequest } = storeToRefs(recipeStore);
 
-const isCreateMode = computed(() => (data.sourceRecipe?.id || 0) <= 0);
+const isCopyMode = computed(() => (props.copy || 0) > 0);
+const isNewMode = computed(() => !isCopyMode.value && (props.id || 0) <= 0);
+const isCreateMode = computed(() => isCopyMode.value || isNewMode.value);
 
 function setImageSources(getRecipeResponse: GetRecipeResponse) {
   const { images, pinnedImageId } = getRecipeResponse;
@@ -55,16 +57,29 @@ function setImageSources(getRecipeResponse: GetRecipeResponse) {
 }
 
 function setSources(getRecipeResponse: GetRecipeResponse) {
-  setImageSources(getRecipeResponse);
+  if (isCopyMode.value === true) {
+    data.sourceRecipe = {
+      ...getRecipeResponse,
+      id: 0,
+      name: `${getRecipeResponse.name} Copy`,
+      pinnedImageId: null,
+      images: [],
+    };
+  } else {
+    data.sourceRecipe = getRecipeResponse;
+  }
+
+  setImageSources(data.sourceRecipe);
   data.suggestedImageId = -1;
-  data.sourceRecipe = getRecipeResponse;
 }
 
-function fetchRecipe(id: number) {
-  if (props.id === 0) {
-    setSources(props.newRecipeSuggestion || new GetRecipeResponseClass());
+function fetchRecipe() {
+  if (isNewMode.value) {
+    setSources({ ...new GetRecipeResponseClass() });
     return;
   }
+
+  const id = isCopyMode.value ? props.copy : props.id;
 
   webApi
     .recipesDetail(id)
@@ -103,7 +118,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
         data.isRecipeDirty = false;
         router.push({ name: 'edit', params: { id: response.data.id } });
       } else {
-        fetchRecipe(props.id);
+        fetchRecipe();
       }
 
       if (response.data.message) {
@@ -231,14 +246,14 @@ function beforeRouteChange(next: NavigationGuardNext) {
 }
 
 watch(
-  () => props.id,
-  (newValue) => {
-    fetchRecipe(newValue);
+  () => [props.id],
+  () => {
+    fetchRecipe();
   }
 );
 
 onMounted(() => {
-  fetchRecipe(props.id);
+  fetchRecipe();
 });
 
 onBeforeRouteUpdate(async (to, from, next) => {
@@ -253,7 +268,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 <template>
   <div class="container-xxl">
     <div class="row">
-      <h1 class="mt-4 mb-0">{{ data.sourceRecipe.name || 'Loading...' }}</h1>
+      <h1 class="mt-4 mb-0">{{ isNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
       <div class="col-md-12 col-lg-9 mt-4">
         <RecipeEditor
           :is-field-in-error="isFieldInError"
