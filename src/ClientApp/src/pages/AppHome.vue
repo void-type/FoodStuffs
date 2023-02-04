@@ -25,9 +25,13 @@ onMounted(() => {
 
 <template>
   <div class="container-xxl">
-    <div class="row">
-      <div v-for="(recipe, i) in listResponse.items" :key="recipe.id" class="col-lg-4 mt-3">
-        <div no-body class="card card-hover overflow-hidden">
+    <div class="grid mt-4">
+      <div
+        v-for="(recipe, i) in listResponse.items"
+        :key="recipe.id"
+        class="g-col-sm-12 g-col-md-6 g-col-lg-4"
+      >
+        <div class="card card-hover overflow-hidden">
           <router-link
             class="card-link text-center p-3"
             :to="{ name: 'view', params: { id: recipe.id } }"
