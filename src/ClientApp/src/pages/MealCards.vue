@@ -11,6 +11,7 @@ const inactiveCards = computed(() => cardStore.getCards({ active: false }));
 </script>
 
 <template>
+  <!-- Use grid and gap here -->
   <div class="container-xxl">
     <h1 class="mt-4 mb-0">Meal Cards</h1>
     <div class="row mt-4">

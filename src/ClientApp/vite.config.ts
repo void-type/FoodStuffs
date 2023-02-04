@@ -21,6 +21,9 @@ export default defineConfig(({ command, mode }) => {
       outDir: '../FoodStuffs.Web/wwwroot',
       emptyOutDir: true,
       sourcemap: mode === 'development',
+    },
+    watch: {
+      include: './src/**'
     }
   };
 });

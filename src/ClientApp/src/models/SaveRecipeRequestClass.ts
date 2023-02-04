@@ -5,7 +5,7 @@ export default class SaveRecipeRequestClass implements SaveRecipeRequest {
 
   public name: string | null = '';
 
-  public directions: string | null = '';
+  public directions = '';
 
   public cookTimeMinutes: number | null = null;
 

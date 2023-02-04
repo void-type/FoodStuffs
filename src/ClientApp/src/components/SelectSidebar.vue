@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
-import { Api } from '@/api/Api';
 import { onMounted, computed } from 'vue';
 import useAppStore from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
 import SelectSidebarList from '@/components/SelectSidebarList.vue';
+import ApiHelpers from '@/models/ApiHelpers';
 
 defineProps({
   routeName: {
@@ -15,6 +15,7 @@ defineProps({
 
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
+const api = ApiHelpers.client;
 
 const { listResponse, listRequest, recentRecipes } = storeToRefs(recipeStore);
 
@@ -25,7 +26,7 @@ const searchedRecipes = computed(() => {
 
 onMounted(() => {
   if (listResponse.value.count === 0) {
-    new Api()
+    api()
       .recipesList(listRequest.value)
       .then((response) => recipeStore.setListResponse(response.data))
       .catch((response) => appStore.setApiFailureMessages(response));

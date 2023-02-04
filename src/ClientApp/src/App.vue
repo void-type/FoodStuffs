@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
 import AppHeader from '@/components/AppHeader.vue';
 import AppNav from '@/components/AppNav.vue';
@@ -9,23 +8,33 @@ import AppFooter from '@/components/AppFooter.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
 import RouterHelpers from '@/models/RouterHelpers';
 import AppModal from './components/AppModal.vue';
+import ApiHelpers from './models/ApiHelpers';
 
 const appStore = useAppStore();
+const route = useRoute();
+const api = ApiHelpers.client;
 
 const { clearMessages } = appStore;
 
-const route = useRoute();
-
 onMounted(() => {
-  new Api()
+  api()
     .appInfoList()
     .then((response) => {
       appStore.setApplicationInfo(response.data);
       RouterHelpers.setTitle(route);
+
+      if (response.data.antiforgeryToken) {
+        ApiHelpers.setHeader(
+          response.data.antiforgeryTokenHeaderName || 'X-Csrf-Token',
+          response.data.antiforgeryToken
+        );
+      }
     })
     .catch((response) => appStore.setApiFailureMessages(response));
 
-  new Api().appVersionList().then((response) => appStore.setVersionInfo(response.data));
+  api()
+    .appVersionList()
+    .then((response) => appStore.setVersionInfo(response.data));
 });
 </script>
 

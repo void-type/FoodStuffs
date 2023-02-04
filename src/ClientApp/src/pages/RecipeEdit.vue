@@ -8,7 +8,6 @@ import {
   type NavigationGuardNext,
 } from 'vue-router';
 import type { GetRecipeResponse, SaveRecipeRequest } from '@/api/data-contracts';
-import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SelectSidebar from '@/components/SelectSidebar.vue';
@@ -16,6 +15,7 @@ import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 import type { ModalParameters } from '@/models/ModalParameters';
+import ApiHelpers from '@/models/ApiHelpers';
 
 const props = defineProps({
   id: {
@@ -31,7 +31,7 @@ const props = defineProps({
 });
 
 const data = reactive({
-  sourceRecipe: { ...new GetRecipeResponseClass(), name: 'Loading...' } as GetRecipeResponse,
+  sourceRecipe: { ...new GetRecipeResponseClass() } as GetRecipeResponse,
   sourceImages: [] as Array<number>,
   isRecipeDirty: false,
   suggestedImageId: -1,
@@ -41,14 +41,15 @@ const data = reactive({
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
-const webApi = new Api();
+const api = ApiHelpers.client;
 
 const { isFieldInError } = appStore;
 const { listRequest } = storeToRefs(recipeStore);
 
-const isCopyMode = computed(() => (props.copy || 0) > 0);
-const isNewMode = computed(() => !isCopyMode.value && (props.id || 0) <= 0);
-const isCreateMode = computed(() => isCopyMode.value || isNewMode.value);
+const isEditMode = computed(() => (props.id || 0) > 0);
+const isCreateMode = computed(() => !isEditMode.value);
+const isCreateCopyMode = computed(() => isCreateMode.value && (props.copy || 0) > 0);
+const isCreateNewMode = computed(() => isCreateMode.value && !isCreateCopyMode.value);
 
 function setImageSources(getRecipeResponse: GetRecipeResponse) {
   const { images, pinnedImageId } = getRecipeResponse;
@@ -57,13 +58,13 @@ function setImageSources(getRecipeResponse: GetRecipeResponse) {
 }
 
 function setSources(getRecipeResponse: GetRecipeResponse) {
-  if (isCopyMode.value === true) {
+  if (isCreateCopyMode.value === true) {
     data.sourceRecipe = {
       ...getRecipeResponse,
       id: 0,
-      name: `${getRecipeResponse.name} Copy`,
-      pinnedImageId: null,
+      name: `${getRecipeResponse.name} copy`,
       images: [],
+      pinnedImageId: null,
     };
   } else {
     data.sourceRecipe = getRecipeResponse;
@@ -74,14 +75,14 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
 }
 
 function fetchRecipe() {
-  if (isNewMode.value) {
-    setSources({ ...new GetRecipeResponseClass() });
+  if (isCreateNewMode.value) {
+    setSources(new GetRecipeResponseClass());
     return;
   }
 
-  const id = isCopyMode.value ? props.copy : props.id;
+  const id = isCreateCopyMode.value ? props.copy : props.id;
 
-  webApi
+  api()
     .recipesDetail(id)
     .then((response) => {
       setSources(response.data);
@@ -93,14 +94,14 @@ function fetchRecipe() {
 }
 
 function fetchRecipesList() {
-  webApi
+  api()
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
     .catch((response) => appStore.setApiFailureMessages(response));
 }
 
 function fetchImageIds(id: number) {
-  webApi
+  api()
     .recipesDetail(id)
     .then((response) => {
       setImageSources(response.data);
@@ -111,7 +112,8 @@ function fetchImageIds(id: number) {
 }
 
 function onRecipeSave(recipe: SaveRecipeRequest) {
-  webApi
+  // Add CSRF token to api header.
+  api()
     .recipesCreate(recipe)
     .then((response) => {
       if (props.id === 0) {
@@ -134,7 +136,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
 
 function onRecipeDelete(id: number) {
   function deleteRecipe() {
-    webApi
+    api()
       .recipesDelete(id)
       .then((response) => {
         recipeStore.removeFromRecent(props.id);
@@ -165,7 +167,7 @@ function onRecipeDirtyStateChange(value: boolean) {
 }
 
 function onImageUpload(file: File) {
-  webApi
+  api()
     .imagesCreate({ recipeId: props.id }, { file })
     .then((response) => {
       if (response.data.message) {
@@ -182,7 +184,7 @@ function onImageUpload(file: File) {
 
 function onImageDelete(imageId: number) {
   function deleteImage() {
-    webApi
+    api()
       .imagesDelete(imageId)
       .then((response) => {
         if (response.data.message) {
@@ -206,7 +208,7 @@ function onImageDelete(imageId: number) {
 }
 
 function onImagePin(imageId: number) {
-  webApi
+  api()
     .imagesPinCreate({ id: imageId })
     .then((response) => {
       if (response.data.message) {
@@ -268,19 +270,10 @@ onBeforeRouteLeave(async (to, from, next) => {
 <template>
   <div class="container-xxl">
     <div class="row">
-      <h1 class="mt-4 mb-0">{{ isNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
+      <h1 class="mt-4 mb-0">{{ isCreateNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
       <div class="col-md-12 col-lg-9 mt-4">
-        <RecipeEditor
-          :is-field-in-error="isFieldInError"
-          :source-recipe="data.sourceRecipe"
-          :on-recipe-save="onRecipeSave"
-          :on-recipe-delete="onRecipeDelete"
-          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
-          :is-create-mode="isCreateMode"
-        />
         <RecipeImageManager
-          v-if="!isCreateMode"
-          class="mt-4"
+          v-if="isEditMode"
           :is-field-in-error="isFieldInError"
           :source-images="data.sourceImages"
           :suggested-image-id="data.suggestedImageId"
@@ -288,6 +281,15 @@ onBeforeRouteLeave(async (to, from, next) => {
           :on-image-upload="onImageUpload"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
+        />
+        <RecipeEditor
+          class="mt-4"
+          :is-field-in-error="isFieldInError"
+          :source-recipe="data.sourceRecipe"
+          :on-recipe-save="onRecipeSave"
+          :on-recipe-delete="onRecipeDelete"
+          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
+          :is-edit-mode="isEditMode"
         />
       </div>
       <div class="col-md-12 col-lg-3 d-print-none mt-4">

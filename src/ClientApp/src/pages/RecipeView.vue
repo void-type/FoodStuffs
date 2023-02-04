@@ -2,11 +2,11 @@
 import { onMounted, watch, reactive } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
-import { Api } from '@/api/Api';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SelectSidebar from '@/components/SelectSidebar.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
+import ApiHelpers from '@/models/ApiHelpers';
 
 const props = defineProps({
   id: {
@@ -17,13 +17,14 @@ const props = defineProps({
 
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
+const api = ApiHelpers.client;
 
 const data = reactive({
   sourceRecipe: null as GetRecipeResponse | null,
 });
 
 function fetchRecipe(id: number) {
-  new Api()
+  api()
     .recipesDetail(id)
     .then((response) => {
       data.sourceRecipe = response.data;
@@ -59,7 +60,7 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <div class="row">
-      <h1 class="mt-4 mb-0">{{ data.sourceRecipe?.name || 'Loading...' }}</h1>
+      <h1 class="mt-4 mb-0">{{ data.sourceRecipe?.name }}</h1>
       <div class="col-md-12 col-lg-9 mt-4">
         <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" />
       </div>

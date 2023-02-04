@@ -3,6 +3,7 @@ import SaveRecipeRequestClass from '@/models/SaveRecipeRequestClass';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { trimAndTitleCase } from '@/models/FormatHelpers';
 import { computed, onMounted, ref, watch, type PropType, type Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
@@ -31,19 +32,37 @@ const props = defineProps({
       /* do nothing */
     },
   },
-  isCreateMode: {
+  isEditMode: {
     type: Boolean,
     required: true,
   },
 });
 
+const router = useRouter();
+
 const workingRecipe: Ref<SaveRecipeRequestClass> = ref(new SaveRecipeRequestClass());
 
 function reset() {
-  workingRecipe.value = {
-    ...new SaveRecipeRequestClass(),
-    ...props.sourceRecipe,
+  const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
+
+  const newWorkingClass = new SaveRecipeRequestClass();
+
+  const validProperties = Object.keys(newWorkingClass);
+
+  // Remove properties that aren't in the request class.
+  Object.keys(sourceCopy).forEach((key) => {
+    if (!validProperties.includes(key)) {
+      delete sourceCopy[key];
+    }
+  });
+
+  const newWorking: SaveRecipeRequestClass = {
+    ...newWorkingClass,
+    ...sourceCopy,
+    directions: props.sourceRecipe.directions || '',
   };
+
+  workingRecipe.value = newWorking;
 }
 
 function addCategory(tag: string) {
@@ -71,8 +90,7 @@ function removeCategory(categoryName: string) {
 }
 
 function saveClick() {
-  const sendableRecipe: SaveRecipeRequestClass = JSON.parse(JSON.stringify(workingRecipe.value));
-  props.onRecipeSave(sendableRecipe);
+  props.onRecipeSave(workingRecipe.value);
 }
 
 watch(
@@ -128,27 +146,16 @@ onMounted(() => {
           :max-rows="Number.MAX_SAFE_INTEGER"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
         />
-      </div>
+      </div> -->
       <div class="col-md-12 mb-3">
         <label for="directions" class="form-label">Directions *</label>
         <textarea
           id="directions"
           v-model="workingRecipe.directions"
           required
-          rows="1"
-          :max-rows="Number.MAX_SAFE_INTEGER"
+          rows="10"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
         />
-      </div> -->
-      <div class="col-md-12 mb-3">
-        <input
-          id="isForMealPlanning"
-          v-model="workingRecipe.isForMealPlanning"
-          class="form-check-input"
-          type="checkbox"
-          :class="{ 'form-control': true, 'is-invalid': isFieldInError('isForMealPlanning') }"
-        />
-        <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
       </div>
       <div class="col-md-6">
         <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
@@ -178,40 +185,50 @@ onMounted(() => {
           label="Categories"
         />
       </div>
+      <div class="col-md-12 mb-3">
+        <div class="form-check">
+          <input
+            id="isForMealPlanning"
+            v-model="workingRecipe.isForMealPlanning"
+            class="form-check-input"
+            type="checkbox"
+            :class="{ 'is-invalid': isFieldInError('isForMealPlanning') }"
+          />
+          <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
+        </div>
+      </div>
     </div>
     <EntityAuditInfo v-if="sourceRecipe.id" class="mb-3" :entity="sourceRecipe" />
-    <div class="row">
-      <div class="col-md-12 mb-3">
-        <button class="btn btn-primary me-2" @click.stop.prevent="saveClick()">Save</button>
-        <router-link
-          v-if="!isCreateMode"
-          :to="{ name: 'new', params: { id: sourceRecipe.id, copy: 'true' } }"
-          class="btn me-2"
-        >
-          Copy
-        </router-link>
-        <router-link
-          v-if="!isCreateMode"
-          class="btn"
-          :to="{ name: 'view', params: { id: sourceRecipe.id } }"
-        >
-          Cancel
-        </router-link>
-        <button
-          v-if="!isCreateMode"
-          class="btn btn-danger ms-auto"
-          @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
-        >
-          Delete
-        </button>
-      </div>
+    <div class="w-100 mb-3 d-flex">
+      <button class="btn btn-primary me-2" @click.stop.prevent="saveClick()">Save</button>
+      <button
+        v-if="isEditMode"
+        class="btn btn-secondary me-2"
+        @click="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
+      >
+        <!-- TODO: copy sometimes takes me to edit with a categories query string. -->
+        Copy
+      </button>
+      <button
+        v-if="isEditMode"
+        class="btn btn-secondary me-2"
+        @click="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
+      >
+        Cancel
+      </button>
+      <button
+        v-if="isEditMode"
+        class="btn btn-danger d-inline ms-auto"
+        @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
+      >
+        Delete
+      </button>
     </div>
   </form>
 </template>
 
 <style lang="scss" scoped>
 textarea {
-  overflow: hidden !important;
-  resize: none;
+  resize: vertical;
 }
 </style>

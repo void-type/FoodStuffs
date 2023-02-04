@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { Api } from '@/api/Api';
 import type { ListRecipesResponse } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import { toInt, toNumber } from '@/models/FormatHelpers';
@@ -11,6 +10,7 @@ import { onMounted, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
+import ApiHelpers from '@/models/ApiHelpers';
 
 const props = defineProps({
   query: {
@@ -23,6 +23,7 @@ const props = defineProps({
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
+const api = ApiHelpers.client;
 
 const { useDarkMode } = storeToRefs(appStore);
 const { listResponse, listRequest } = storeToRefs(recipeStore);
@@ -112,7 +113,7 @@ onMounted(() => {
 });
 
 watch(listRequest, () => {
-  new Api()
+  api()
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
     .catch((response) => appStore.setApiFailureMessages(response));

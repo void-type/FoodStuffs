@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { Api } from '@/api/Api';
 import ApiHelpers from '@/models/ApiHelpers';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
@@ -8,6 +7,7 @@ import { onMounted } from 'vue';
 
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
+const api = ApiHelpers.client;
 
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 
@@ -15,7 +15,7 @@ const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
 
 onMounted(() => {
   if (listResponse.value.count === 0) {
-    new Api()
+    api()
       .recipesList(listRequest.value)
       .then((response) => recipeStore.setListResponse(response.data))
       .catch((response) => appStore.setApiFailureMessages(response));

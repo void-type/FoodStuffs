@@ -151,7 +151,7 @@ onMounted(() => {
         <div v-else class="card text-center p-5">No images.</div>
       </div>
     </div>
-    <h3 v-if="(recipe.ingredients?.length || []) > 0" class="mt-3">Ingredients</h3>
+    <h3 v-if="(recipe.ingredients?.length || []) > 0" class="mt-4">Ingredients</h3>
     <RecipeViewerIngredients
       v-if="(recipe.ingredients?.length || []) > 0"
       :ingredients="recipe.ingredients || []"
