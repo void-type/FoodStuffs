@@ -73,6 +73,7 @@ body,
 #app-inner {
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 }
 main {
   flex: 1 0 auto;

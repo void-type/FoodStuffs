@@ -69,7 +69,6 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
   } else {
     data.sourceRecipe = getRecipeResponse;
   }
-
   setImageSources(data.sourceRecipe);
   data.suggestedImageId = -1;
 }
@@ -100,9 +99,9 @@ function fetchRecipesList() {
     .catch((response) => appStore.setApiFailureMessages(response));
 }
 
-function fetchImageIds(id: number) {
+function fetchImageIds(recipeId: number) {
   api()
-    .recipesDetail(id)
+    .recipesDetail(recipeId)
     .then((response) => {
       setImageSources(response.data);
     })
@@ -274,8 +273,8 @@ onBeforeRouteLeave(async (to, from, next) => {
       <div class="col-md-12 col-lg-9 mt-4">
         <RecipeImageManager
           v-if="isEditMode"
+          :image-ids="data.sourceImages"
           :is-field-in-error="isFieldInError"
-          :source-images="data.sourceImages"
           :suggested-image-id="data.suggestedImageId"
           :pinned-image-id="data.pinnedImageId"
           :on-image-upload="onImageUpload"

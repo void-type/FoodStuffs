@@ -2,6 +2,7 @@ import { Api } from '../api/Api';
 import type { ApiConfig } from '../api/http-client';
 
 const defaultHeaders: Record<string, string> = {};
+
 export default class ApiHelpers {
   static setHeader(headerName: string, headerValue: string) {
     defaultHeaders[headerName] = headerValue;

@@ -88,8 +88,9 @@ onMounted(() => {
           </div>
         </div>
       </div>
+    </div>
+    <div v-if="showImage" class="row mb-5">
       <div
-        v-if="showImage"
         :class="{
           'col-12': true,
           'text-center': true,

@@ -37,8 +37,8 @@ function fetchRecipe(id: number) {
 
 watch(
   () => props.id,
-  (newValue) => {
-    fetchRecipe(newValue);
+  () => {
+    fetchRecipe(props.id);
   }
 );
 

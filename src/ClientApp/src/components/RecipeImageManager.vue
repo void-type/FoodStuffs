@@ -9,16 +9,9 @@ import ApiHelpers from '@/models/ApiHelpers';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 
 const props = defineProps({
-  isFieldInError: {
-    type: Function,
-    required: false,
-    default: () => {
-      /* do nothing */
-    },
-  },
   imageIds: {
     type: Array as PropType<Array<number>>,
-    required: false,
+    required: true,
     default: () => [],
   },
   suggestedImageId: {
@@ -42,6 +35,13 @@ const props = defineProps({
   onImagePin: {
     type: Function,
     required: true,
+  },
+  isFieldInError: {
+    type: Function,
+    required: false,
+    default: () => {
+      /* do nothing */
+    },
   },
 });
 
@@ -235,7 +235,7 @@ div.carousel-item img {
   position: absolute;
   top: 0;
   min-width: 0;
-  z-index: 999;
+  z-index: 2;
 
   &.image-button-delete {
     right: 0;

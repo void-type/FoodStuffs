@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
+import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
 
 const props = defineProps({
   isFieldInError: {
@@ -59,6 +60,7 @@ function reset() {
   const newWorking: SaveRecipeRequestClass = {
     ...newWorkingClass,
     ...sourceCopy,
+    ingredients: props.sourceRecipe.ingredients || [],
     directions: props.sourceRecipe.directions || '',
   };
 
@@ -112,8 +114,8 @@ const isRecipeDirty = computed(() => {
 
 watch(
   () => isRecipeDirty,
-  (newValue) => {
-    props.onRecipeDirtyStateChange(newValue);
+  () => {
+    props.onRecipeDirtyStateChange(isRecipeDirty);
   }
 );
 
@@ -147,6 +149,9 @@ onMounted(() => {
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
         />
       </div> -->
+      <div class="col-md-12 mb-3">
+        <RecipeViewerIngredients :ingredients="workingRecipe.ingredients" />
+      </div>
       <div class="col-md-12 mb-3">
         <label for="directions" class="form-label">Directions *</label>
         <textarea

@@ -13,7 +13,7 @@ export default class SaveRecipeRequestClass implements SaveRecipeRequest {
 
   public isForMealPlanning = false;
 
-  public ingredients: SaveRecipeRequestIngredient[] | null = [];
+  public ingredients: SaveRecipeRequestIngredient[] = [];
 
   public categories: string[] | null = [];
 }
