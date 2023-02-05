@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
-import RecipeViewerIngredients from './RecipeViewerIngredients.vue';
+import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
 
 const props = defineProps({
   isFieldInError: {
@@ -137,20 +137,9 @@ onMounted(() => {
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
         />
       </div>
-      <!-- TODO: make ingredient editor -->
-      <!-- <div class="col-md-12 mb-3">
-        <label for="ingredients" class="form-label">Ingredients *</label>
-        <textarea
-          id="ingredients"
-          v-model="workingRecipe.ingredients"
-          required
-          rows="1"
-          :max-rows="Number.MAX_SAFE_INTEGER"
-          :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
-        />
-      </div> -->
       <div class="col-md-12 mb-3">
-        <RecipeViewerIngredients :ingredients="workingRecipe.ingredients" />
+        <label for="ingredients">Ingredients</label>
+        <RecipeEditorIngredients v-model="workingRecipe.ingredients" />
       </div>
       <div class="col-md-12 mb-3">
         <label for="directions" class="form-label">Directions *</label>

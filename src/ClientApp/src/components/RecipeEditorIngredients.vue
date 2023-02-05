@@ -1,19 +1,29 @@
 <script lang="ts" setup>
 import type { GetRecipeResponseIngredient } from '@/api/data-contracts';
-import { computed, type PropType } from 'vue';
+import { computed, reactive, type PropType } from 'vue';
 
 const props = defineProps({
-  ingredients: {
+  modelValue: {
     type: Object as PropType<Array<GetRecipeResponseIngredient>>,
     required: true,
   },
 });
 
+const emit = defineEmits(['update:modelValue']);
+// TODO: finish this editor
+const data = reactive({
+  ingredients: props.modelValue,
+});
+
 const formattedIngredients = computed(() => {
-  const ingredients = props.ingredients.slice();
+  const ingredients = props.modelValue.slice();
   ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
   return ingredients;
 });
+
+function emitInput() {
+  emit('update:modelValue', data.ingredients);
+}
 </script>
 
 <template>
