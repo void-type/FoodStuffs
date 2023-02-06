@@ -5,14 +5,7 @@ import {
   getTotalMinutes,
   toTimeSpanString,
 } from '@/models/TimeSpanHelpers';
-import { computed, getCurrentInstance } from 'vue';
-
-// Expose emit function
-const emit =
-  getCurrentInstance()?.emit ||
-  (() => {
-    /* do nothing */
-  });
+import { computed, type PropType } from 'vue';
 
 const props = defineProps({
   id: {
@@ -20,9 +13,9 @@ const props = defineProps({
     required: false,
     default: null,
   },
-  value: {
-    type: Number,
-    required: false,
+  modelValue: {
+    type: Number as PropType<number | null>,
+    required: true,
     default: 0,
   },
   isInvalid: {
@@ -33,33 +26,30 @@ const props = defineProps({
   showPreview: {
     type: Boolean,
     required: false,
-    default: false,
+    default: true,
   },
 });
 
-defineEmits<{
-  // eslint-disable-next-line no-unused-vars
-  (e: 'input', totalMinutes: number): void;
-}>();
+const emit = defineEmits(['update:modelValue']);
 
-const hours = computed(() => clampHours(props.value));
-const minutes = computed(() => clampMinutes(props.value));
+const hours = computed(() => clampHours(props.modelValue || 0));
+const minutes = computed(() => clampMinutes(props.modelValue || 0));
 
 function onHoursInput(event: Event) {
   const newHours = Number((event.target as HTMLInputElement).value);
   const totalMinutes = getTotalMinutes(minutes.value, newHours);
-  emit('input', totalMinutes);
+  emit('update:modelValue', totalMinutes);
 }
 
 function onMinutesInput(event: Event) {
   const newMinutes = Number((event.target as HTMLInputElement).value);
   const totalMinutes = getTotalMinutes(newMinutes, hours.value);
-  emit('input', totalMinutes);
+  emit('update:modelValue', totalMinutes);
 }
 </script>
 
 <template>
-  <div class="text-center">
+  <div>
     <label class="visually-hidden" :for="`${id}-hours`">Hours</label>
     <label class="visually-hidden" :for="`${id}-minutes`">Minutes</label>
     <div class="input-group">
@@ -80,8 +70,8 @@ function onMinutesInput(event: Event) {
         @change="onMinutesInput"
       />
     </div>
-    <small :class="{ invisible: !(showPreview && value > 0) }">
-      {{ toTimeSpanString(value) }}
+    <small :class="{ invisible: !(showPreview && (modelValue || 0) > 0) }">
+      {{ toTimeSpanString(modelValue || 0) }}
     </small>
   </div>
 </template>

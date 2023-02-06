@@ -14,8 +14,6 @@ const appStore = useAppStore();
 const route = useRoute();
 const api = ApiHelpers.client;
 
-const { clearMessages } = appStore;
-
 onMounted(() => {
   api()
     .appInfoList()
@@ -52,7 +50,7 @@ onMounted(() => {
     </AppHeader>
     <AppMessageCenter class="d-print-none" />
     <main id="main" class="mb-4" tabindex="-1">
-      <RouterView @keydown.stop.prevent.esc="clearMessages()" />
+      <RouterView />
     </main>
     <AppModal />
     <AppFooter class="mt-2" />

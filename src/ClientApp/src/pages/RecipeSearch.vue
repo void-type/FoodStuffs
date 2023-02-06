@@ -122,89 +122,99 @@ watch(listRequest, () => {
 
 <template>
   <div class="container-xxl">
-    <h1 class="mt-4 mb-0">Search recipes</h1>
-    <EntityTableControls :clear-search="clearSearch" :init-search="startSearch" class="mt-4">
-      <template #searchForm>
-        <div class="row">
-          <div class="col-12 col-md-6">
-            <div class="input-group mb-3">
-              <label for="nameSearch" class="input-group-text">Name contains</label>
-              <input id="nameSearch" v-model="listRequest.name" class="form-control" />
-            </div>
-          </div>
-          <div class="col-12 col-md-6">
-            <div class="input-group mb-3">
-              <label for="categorySearch" class="input-group-text">Categories contain</label>
-              <input id="categorySearch" v-model="listRequest.category" class="form-control" />
-            </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="input-group mb-3">
-              <label class="input-group-text" for="isForMealPlanning">For meal planning</label>
-              <select
-                id="isForMealPlanning"
-                v-model="listRequest.isForMealPlanning"
-                class="form-select"
-              >
-                <option
-                  v-for="option in Choices.boolean"
-                  :key="option.value?.toString()"
-                  :value="option.value"
+    <h1 class="mt-4 mb-4">Search recipes</h1>
+    <div class="grid">
+      <div class="g-col-12 g-col-lg-3 d-print-none">
+        <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
+          <template #searchForm>
+            <div class="grid mb-3" style="--bs-gap: 1em">
+              <div class="g-col-12">
+                <label for="nameSearch" class="form-label">Name contains</label>
+                <input
+                  id="nameSearch"
+                  v-model="listRequest.name"
+                  class="form-control"
+                  @keydown.stop.prevent.enter="startSearch"
+                />
+              </div>
+              <div class="g-col-12">
+                <label for="categorySearch" class="form-label">Categories contain</label>
+                <input
+                  id="categorySearch"
+                  v-model="listRequest.category"
+                  class="form-control"
+                  @keydown.stop.prevent.enter="startSearch"
+                />
+              </div>
+              <div class="g-col-12">
+                <label class="form-label" for="isForMealPlanning">For meal planning</label>
+                <select
+                  id="isForMealPlanning"
+                  v-model="listRequest.isForMealPlanning"
+                  class="form-select"
+                  @change="startSearch"
                 >
-                  {{ option.text }}
-                </option>
-              </select>
+                  <option
+                    v-for="option in Choices.boolean"
+                    :key="option.value?.toString()"
+                    :value="option.value"
+                  >
+                    {{ option.text }}
+                  </option>
+                </select>
+              </div>
             </div>
-          </div>
-        </div>
-      </template>
-    </EntityTableControls>
-    <table
-      :class="{
-        table: true,
-        'table-hover': true,
-        'text-start': true,
-        'mt-4': true,
-        'table-dark': useDarkMode,
-      }"
-    >
-      <thead>
-        <tr>
-          <th
-            class="sortable"
-            scope="col"
-            tabindex="0"
-            @click="changeSort('name')"
-            @keyup.enter.stop.prevent="changeSort('name')"
-          >
-            Name
-            <i v-if="listRequest.sortBy === 'name'">{{ listRequest.sortDesc ? '▼' : '▲' }}</i>
-            <span v-if="listRequest.sortBy === 'name'" class="visually-hidden"
-              >({{ listRequest.sortDesc ? 'Descending' : 'Ascending' }} sort)</span
-            >
-            <span v-else class="visually-hidden">(Not sorted)</span>
-          </th>
-          <th scope="col">Categories</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="recipe in listResponse.items" :key="recipe.id" @click="showDetails(recipe)">
-          <td>
-            <router-link class="table-link" :to="{ name: 'view', params: { id: recipe.id } }">{{
-              recipe.name
-            }}</router-link>
-          </td>
-          <td>{{ recipe?.categories?.join(', ') }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <EntityTablePager
-      :list-request="recipeStore.listRequest"
-      :total-count="toInt(recipeStore.listResponse.totalCount)"
-      :on-change-page="changePage"
-      :on-change-take="changeTake"
-      class="mt-3"
-    />
+          </template>
+        </EntityTableControls>
+      </div>
+      <div class="g-col-12 g-col-lg-9">
+        <table
+          :class="{
+            table: true,
+            'table-hover': true,
+            'text-start': true,
+            'table-dark': useDarkMode,
+          }"
+        >
+          <thead>
+            <tr>
+              <th
+                class="sortable"
+                scope="col"
+                tabindex="0"
+                @click="changeSort('name')"
+                @keydown.stop.prevent.enter="changeSort('name')"
+              >
+                Name
+                <i v-if="listRequest.sortBy === 'name'">{{ listRequest.sortDesc ? '▼' : '▲' }}</i>
+                <span v-if="listRequest.sortBy === 'name'" class="visually-hidden"
+                  >({{ listRequest.sortDesc ? 'Descending' : 'Ascending' }} sort)</span
+                >
+                <span v-else class="visually-hidden">(Not sorted)</span>
+              </th>
+              <th scope="col">Categories</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="recipe in listResponse.items" :key="recipe.id" @click="showDetails(recipe)">
+              <td>
+                <router-link class="table-link" :to="{ name: 'view', params: { id: recipe.id } }">{{
+                  recipe.name
+                }}</router-link>
+              </td>
+              <td>{{ recipe?.categories?.join(', ') }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <EntityTablePager
+          :list-request="recipeStore.listRequest"
+          :total-count="toInt(recipeStore.listResponse.totalCount)"
+          :on-change-page="changePage"
+          :on-change-take="changeTake"
+          class="mt-4"
+        />
+      </div>
+    </div>
   </div>
 </template>
 

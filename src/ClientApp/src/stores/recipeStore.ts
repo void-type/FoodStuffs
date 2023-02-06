@@ -14,6 +14,10 @@ interface RecipeStoreState {
   recentRecipes: Array<ListRecipesResponse>;
 }
 
+function getRecentsFromLocalStorage() {
+  return JSON.parse(localStorage.getItem('recentRecipes') || '[]') as ListRecipesResponse[];
+}
+
 export const useRecipeStore = defineStore('recipes', {
   state: (): RecipeStoreState => ({
     listResponse: {
@@ -25,7 +29,7 @@ export const useRecipeStore = defineStore('recipes', {
       totalCount: 0,
     },
     listRequest: new ListRecipesRequest(),
-    recentRecipes: [],
+    recentRecipes: getRecentsFromLocalStorage(),
   }),
 
   getters: {
@@ -77,6 +81,7 @@ export const useRecipeStore = defineStore('recipes', {
       const limitedRecipes = recentRecipes.slice(0, limit);
 
       this.recentRecipes = limitedRecipes;
+      localStorage.setItem('recentRecipes', JSON.stringify(limitedRecipes));
     },
 
     removeFromRecent(id: number) {
@@ -91,6 +96,7 @@ export const useRecipeStore = defineStore('recipes', {
       }
 
       this.recentRecipes = recentRecipes;
+      localStorage.setItem('recentRecipes', JSON.stringify(recentRecipes));
     },
 
     updateRecent(recipe: GetRecipeResponse | null) {
@@ -115,6 +121,7 @@ export const useRecipeStore = defineStore('recipes', {
       recentRecipes[indexOfCurrentInRecents] = recipeListItem;
 
       this.recentRecipes = recentRecipes;
+      localStorage.setItem('recentRecipes', JSON.stringify(recentRecipes));
     },
   },
 });

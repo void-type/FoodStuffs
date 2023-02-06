@@ -268,9 +268,9 @@ onBeforeRouteLeave(async (to, from, next) => {
 
 <template>
   <div class="container-xxl">
-    <div class="row">
-      <h1 class="mt-4 mb-0">{{ isCreateNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
-      <div class="col-md-12 col-lg-9 mt-4">
+    <h1 class="mt-4 mb-4">{{ isCreateNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
+    <div class="grid">
+      <div class="g-col-12 g-col-lg-9">
         <RecipeImageManager
           v-if="isEditMode"
           :image-ids="data.sourceImages"
@@ -280,9 +280,9 @@ onBeforeRouteLeave(async (to, from, next) => {
           :on-image-upload="onImageUpload"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
+          class="mb-4"
         />
         <RecipeEditor
-          class="mt-4"
           :is-field-in-error="isFieldInError"
           :source-recipe="data.sourceRecipe"
           :on-recipe-save="onRecipeSave"
@@ -291,7 +291,7 @@ onBeforeRouteLeave(async (to, from, next) => {
           :is-edit-mode="isEditMode"
         />
       </div>
-      <div class="col-md-12 col-lg-3 d-print-none mt-4">
+      <div class="g-col-12 g-col-lg-3 d-print-none">
         <SelectSidebar :route-name="'edit'" />
       </div>
     </div>

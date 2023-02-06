@@ -32,6 +32,8 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
             return Fail(recipeResult.Failures);
         }
 
+        // TODO: compress image
+
         var image = new Image
         {
             RecipeId = recipeResult.Value.Id

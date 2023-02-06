@@ -10,10 +10,6 @@ import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
 
 const props = defineProps({
-  isFieldInError: {
-    type: Function,
-    required: true,
-  },
   sourceRecipe: {
     type: Object as PropType<GetRecipeResponse>,
     required: true,
@@ -35,6 +31,10 @@ const props = defineProps({
   },
   isEditMode: {
     type: Boolean,
+    required: true,
+  },
+  isFieldInError: {
+    type: Function,
     required: true,
   },
 });
@@ -126,8 +126,8 @@ onMounted(() => {
 
 <template>
   <form id="recipe-details-form" name="recipe-details-form">
-    <div class="row">
-      <div class="col-md-12 mb-3">
+    <div class="grid">
+      <div class="g-col-12">
         <label for="name" class="form-label">Name *</label>
         <input
           id="name"
@@ -137,39 +137,39 @@ onMounted(() => {
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
         />
       </div>
-      <div class="col-md-12 mb-3">
+      <div class="g-col-12">
         <label for="ingredients">Ingredients</label>
-        <RecipeEditorIngredients v-model="workingRecipe.ingredients" />
+        <RecipeEditorIngredients
+          v-model="workingRecipe.ingredients"
+          :is-field-in-error="isFieldInError"
+        />
       </div>
-      <div class="col-md-12 mb-3">
-        <label for="directions" class="form-label">Directions *</label>
+      <div class="g-col-12">
+        <label for="directions" class="form-label">Directions</label>
         <textarea
           id="directions"
           v-model="workingRecipe.directions"
-          required
           rows="10"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
         />
       </div>
-      <div class="col-md-6">
+      <div class="g-col-12 g-col-md-6">
         <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
         <RecipeTimeSpanEditor
           id="prepTimeMinutes"
           v-model="workingRecipe.prepTimeMinutes"
           :is-invalid="isFieldInError('prepTimeMinutes')"
-          show-preview
         />
       </div>
-      <div class="col-md-6">
+      <div class="g-col-12 g-col-md-6">
         <label for="cookTimeMinutes" class="form-label">Cook Time Hours/Minutes</label>
         <RecipeTimeSpanEditor
           id="cookTimeMinutes"
           v-model="workingRecipe.cookTimeMinutes"
           :is-invalid="isFieldInError('cookTimeMinutes')"
-          show-preview
         />
       </div>
-      <div class="col-md-12 mb-3">
+      <div class="g-col-12">
         <TagEditor
           :class="{ 'form-group': true, danger: isFieldInError('categories') }"
           :tags="workingRecipe.categories || []"
@@ -179,7 +179,7 @@ onMounted(() => {
           label="Categories"
         />
       </div>
-      <div class="col-md-12 mb-3">
+      <div class="g-col-12">
         <div class="form-check">
           <input
             id="isForMealPlanning"
@@ -191,32 +191,31 @@ onMounted(() => {
           <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
         </div>
       </div>
-    </div>
-    <EntityAuditInfo v-if="sourceRecipe.id" class="mb-3" :entity="sourceRecipe" />
-    <div class="w-100 mb-3 d-flex">
-      <button class="btn btn-primary me-2" @click.stop.prevent="saveClick()">Save</button>
-      <button
-        v-if="isEditMode"
-        class="btn btn-secondary me-2"
-        @click="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
-      >
-        <!-- TODO: copy sometimes takes me to edit with a categories query string. -->
-        Copy
-      </button>
-      <button
-        v-if="isEditMode"
-        class="btn btn-secondary me-2"
-        @click="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
-      >
-        Cancel
-      </button>
-      <button
-        v-if="isEditMode"
-        class="btn btn-danger d-inline ms-auto"
-        @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
-      >
-        Delete
-      </button>
+      <EntityAuditInfo v-if="sourceRecipe.id" class="g-col-12" :entity="sourceRecipe" />
+      <div class="btn-toolbar g-col-12">
+        <button class="btn btn-primary me-2" @click.stop.prevent="saveClick()">Save</button>
+        <button
+          v-if="isEditMode"
+          class="btn btn-secondary me-2"
+          @click.stop.prevent="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
+        >
+          Copy
+        </button>
+        <button
+          v-if="isEditMode"
+          class="btn btn-secondary me-2"
+          @click.stop.prevent="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
+        >
+          Cancel
+        </button>
+        <button
+          v-if="isEditMode"
+          class="btn btn-danger d-inline ms-auto"
+          @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
+        >
+          Delete
+        </button>
+      </div>
     </div>
   </form>
 </template>

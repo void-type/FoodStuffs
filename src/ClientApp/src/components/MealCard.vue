@@ -15,7 +15,7 @@ defineProps({
       class="card card-hover"
       tabindex="0"
       role="button"
-      @keydown.enter="onCardClick()"
+      @keydown.stop.prevent.enter="onCardClick()"
       @click="onCardClick(card.id)"
     >
       <div class="card-body">

@@ -11,14 +11,14 @@ defineProps({
 </script>
 
 <template>
-  <div v-if="entity !== null" class="row">
-    <div class="col-md-6">
+  <div v-if="entity !== null" class="grid">
+    <div class="g-col-12 g-col-md-6">
       <small
         >Created: {{ DateHelpers.dateTimeForView(entity.createdOn) }} by
         {{ entity.createdBy }}</small
       >
     </div>
-    <div class="col-md-6">
+    <div class="g-col-12 g-col-md-6">
       <small
         >Modified: {{ DateHelpers.dateTimeForView(entity.modifiedOn) }} by
         {{ entity.modifiedBy }}</small

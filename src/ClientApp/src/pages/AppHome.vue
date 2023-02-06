@@ -29,7 +29,7 @@ onMounted(() => {
       <div
         v-for="(recipe, i) in listResponse.items"
         :key="recipe.id"
-        class="g-col-sm-12 g-col-md-6 g-col-lg-4"
+        class="g-col-12 g-col-md-6 g-col-lg-4"
       >
         <div class="card card-hover overflow-hidden">
           <router-link

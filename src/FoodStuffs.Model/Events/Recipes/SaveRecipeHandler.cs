@@ -42,7 +42,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
     private static void Transfer(SaveRecipeRequest request, Recipe recipe)
     {
         recipe.Name = request.Name;
-        recipe.Directions = request.Directions;
+        recipe.Directions = request.Directions ?? string.Empty;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
         recipe.IsForMealPlanning = request.IsForMealPlanning;

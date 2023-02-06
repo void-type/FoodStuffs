@@ -122,8 +122,8 @@ function pinImageClick(imageId: number) {
 <template>
   <div class="card">
     <div class="card-body">
-      <div class="row">
-        <div class="col-12 col-md-6">
+      <div class="grid">
+        <div class="g-col-12 g-col-md-6">
           <label :for="`upload-${uniqueId}`" class="form-label">Upload image</label>
           <input
             :id="`upload-${uniqueId}`"
@@ -149,7 +149,7 @@ function pinImageClick(imageId: number) {
             </button>
           </div>
         </div>
-        <div class="col-12 col-md-6 mt-3 mt-md-0 text-center">
+        <div class="g-col-12 g-col-md-6 text-center">
           <div
             v-if="imageIds.length > 0"
             :id="`image-carousel-${uniqueId}`"

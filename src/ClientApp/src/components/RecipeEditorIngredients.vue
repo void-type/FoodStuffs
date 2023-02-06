@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import type { GetRecipeResponseIngredient } from '@/api/data-contracts';
-import { computed, reactive, type PropType } from 'vue';
+import { computed, reactive, watch, type PropType } from 'vue';
 
 const props = defineProps({
   modelValue: {
     type: Object as PropType<Array<GetRecipeResponseIngredient>>,
+    required: true,
+  },
+  isFieldInError: {
+    type: Function,
     required: true,
   },
 });
@@ -21,26 +25,61 @@ const formattedIngredients = computed(() => {
   return ingredients;
 });
 
-function emitInput() {
-  emit('update:modelValue', data.ingredients);
-}
+watch(
+  () => [data.ingredients],
+  () => emit('update:modelValue', data.ingredients)
+);
 </script>
 
 <template>
   <div>
+    <!-- TODO: finish ingredients editor. Need editor, new and delete buttons, sortable UX -->
     <div v-for="(ingredient, id) in formattedIngredients" :key="id">
-      <div v-if="ingredient.isCategory" class="fw-bold mt-1">
-        {{ ingredient.name }}
+      <div>
+        <label :for="`${id}-quantity`" class="form-label">Quantity</label>
+        <input
+          :id="`${id}-quantity`"
+          v-model="ingredient.quantity"
+          required
+          type="number"
+          min="1"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
+        />
       </div>
-      <div v-else>
-        <span class="ingredient-quantity">{{ ingredient.quantity }}x</span>{{ ingredient.name }}
+      <div>
+        <label :for="`${id}-name`" class="form-label">Name</label>
+        <input
+          :id="`${id}-name`"
+          v-model="ingredient.name"
+          required
+          type="text"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
+        />
+      </div>
+      <div class="form-check">
+        <input
+          :id="`${id}-isCategory`"
+          v-model="ingredient.isCategory"
+          class="form-check-input"
+          type="checkbox"
+          :class="{ 'is-invalid': isFieldInError('ingredients') }"
+        />
+        <label :for="`${id}-isCategory`" class="form-check-label">Is Category</label>
+      </div>
+      <div>
+        <!-- TODO: sortable UI -->
+        <label :for="`${id}-order`" class="form-label">Order</label>
+        <input
+          :id="`${id}-order`"
+          v-model="ingredient.order"
+          required
+          type="number"
+          min="1"
+          :class="{ 'form-control': true, 'is-invalid': isFieldInError('ingredients') }"
+        />
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.ingredient-quantity {
-  margin-right: 1em;
-}
-</style>
+<style lang="scss" scoped></style>
