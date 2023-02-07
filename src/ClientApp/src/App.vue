@@ -111,8 +111,16 @@ body.bg-dark {
     text-decoration: none;
     color: unset;
 
-    & > img {
-      max-height: 350px;
+    & > .img-fluid {
+      max-height: 16rem;
+    }
+
+    & > .img-placeholder {
+      height: 16rem;
+      width: 20rem;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 7rem;
     }
   }
 }
@@ -140,6 +148,16 @@ body.bg-dark {
   .form-select {
     background-color: $dark;
     color: $light;
+  }
+
+  .pagination {
+    --bs-pagination-color: unset;
+    --bs-pagination-bg: unset;
+    --bs-pagination-active-bg: unset;
+    --bs-pagination-disabled-bg: unset;
+    --bs-pagination-disabled-border-color: unset;
+    // TODO: sass vars don't work here.
+    --bs-pagination-active-color: #642b61;
   }
 
   .form-check-input {

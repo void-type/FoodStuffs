@@ -43,6 +43,7 @@ onMounted(() => {
               :alt="`image of ${recipe.name}`"
               :loading="i > 3 ? 'lazy' : 'eager'"
             />
+            <div v-else class="img-placeholder card">No image</div>
             <div class="mt-3">
               <h4 class="card-title">
                 {{ recipe.name }}

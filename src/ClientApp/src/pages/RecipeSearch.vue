@@ -166,6 +166,7 @@ watch(listRequest, () => {
             </div>
           </template>
         </EntityTableControls>
+        <!-- TODO: Put recent recipes here -->
       </div>
       <div class="g-col-12 g-col-lg-9">
         <table

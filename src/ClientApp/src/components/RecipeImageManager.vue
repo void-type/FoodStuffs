@@ -219,7 +219,7 @@ function pinImageClick(imageId: number) {
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-          <div v-else class="card text-center p-5">No images.</div>
+          <div v-else class="img-placeholder card">No image</div>
         </div>
       </div>
     </div>
@@ -228,7 +228,7 @@ function pinImageClick(imageId: number) {
 
 <style lang="scss" scoped>
 div.carousel-item img {
-  max-height: 350px;
+  max-height: 16rem;
 }
 
 .image-button {
@@ -244,5 +244,13 @@ div.carousel-item img {
   &.image-button-pin {
     left: 0;
   }
+}
+
+.img-placeholder {
+  height: 16rem;
+  width: 20rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 7rem;
 }
 </style>

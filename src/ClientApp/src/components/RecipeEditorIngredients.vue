@@ -14,7 +14,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
-// TODO: finish this editor
 const data = reactive({
   ingredients: props.modelValue,
 });
@@ -67,7 +66,6 @@ watch(
         <label :for="`${id}-isCategory`" class="form-check-label">Is Category</label>
       </div>
       <div>
-        <!-- TODO: sortable UI -->
         <label :for="`${id}-order`" class="form-label">Order</label>
         <input
           :id="`${id}-order`"
