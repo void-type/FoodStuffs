@@ -10,7 +10,8 @@ import {
 import type { GetRecipeResponse, SaveRecipeRequest } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
-import SelectSidebar from '@/components/SelectSidebar.vue';
+import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
+import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
@@ -85,6 +86,9 @@ function fetchRecipe() {
     .recipesDetail(id)
     .then((response) => {
       setSources(response.data);
+      if (isEditMode.value) {
+        recipeStore.queueRecent(response.data);
+      }
     })
     .catch((response) => {
       appStore.setApiFailureMessages(response);
@@ -292,7 +296,8 @@ onBeforeRouteLeave(async (to, from, next) => {
         />
       </div>
       <div class="g-col-12 g-col-lg-3 d-print-none">
-        <SelectSidebar :route-name="'edit'" />
+        <SidebarRecipeRecent :route-name="'edit'" class="mb-3" />
+        <SidebarRecipeResults :route-name="'edit'" />
       </div>
     </div>
   </div>

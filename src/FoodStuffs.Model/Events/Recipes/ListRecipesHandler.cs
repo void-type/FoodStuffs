@@ -19,6 +19,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
     public override async Task<IResult<IItemSet<ListRecipesResponse>>> Handle(ListRecipesRequest request, CancellationToken cancellationToken = default)
     {
+        // TODO: add random parameter for home page
         var paginationOptions = request.GetPaginationOptions();
 
         var searchCriteria = GetSearchCriteria(request);

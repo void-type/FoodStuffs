@@ -103,6 +103,7 @@ watch(
 );
 
 const isRecipeDirty = computed(() => {
+  // TODO: dirty detection seems broken
   return (
     Object.entries(workingRecipe.value).find(
       // Loose comparison so numbers and strings of numbers are equal.

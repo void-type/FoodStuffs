@@ -4,7 +4,8 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
-import SelectSidebar from '@/components/SelectSidebar.vue';
+import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
+import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
 import ApiHelpers from '@/models/ApiHelpers';
 
@@ -28,6 +29,7 @@ function fetchRecipe(id: number) {
     .recipesDetail(id)
     .then((response) => {
       data.sourceRecipe = response.data;
+      recipeStore.queueRecent(response.data);
     })
     .catch((response) => {
       appStore.setApiFailureMessages(response);
@@ -65,7 +67,8 @@ onBeforeRouteLeave((to, from, next) => {
         <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" />
       </div>
       <div class="g-col-12 g-col-lg-3 d-print-none mt-4">
-        <SelectSidebar :route-name="'view'" />
+        <SidebarRecipeRecent :route-name="'view'" class="mb-3" />
+        <SidebarRecipeResults :route-name="'view'" />
       </div>
     </div>
   </div>

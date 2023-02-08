@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import useAppStore from '@/stores/appStore';
 import ApiHelpers from '@/models/ApiHelpers';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
   imageIds: {
@@ -219,7 +220,7 @@ function pinImageClick(imageId: number) {
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-          <div v-else class="img-placeholder card">No image</div>
+          <ImagePlaceholder v-else />
         </div>
       </div>
     </div>
@@ -244,13 +245,5 @@ div.carousel-item img {
   &.image-button-pin {
     left: 0;
   }
-}
-
-.img-placeholder {
-  height: 16rem;
-  width: 20rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 7rem;
 }
 </style>

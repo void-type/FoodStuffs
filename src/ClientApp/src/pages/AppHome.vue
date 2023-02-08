@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import ImagePlaceholder from '@/components/ImagePlaceholder.vue';
 import ApiHelpers from '@/models/ApiHelpers';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
@@ -43,7 +44,7 @@ onMounted(() => {
               :alt="`image of ${recipe.name}`"
               :loading="i > 3 ? 'lazy' : 'eager'"
             />
-            <div v-else class="img-placeholder card">No image</div>
+            <ImagePlaceholder v-else />
             <div class="mt-3">
               <h4 class="card-title">
                 {{ recipe.name }}

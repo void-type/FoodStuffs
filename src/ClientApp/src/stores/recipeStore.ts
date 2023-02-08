@@ -123,6 +123,25 @@ export const useRecipeStore = defineStore('recipes', {
       this.recentRecipes = recentRecipes;
       localStorage.setItem('recentRecipes', JSON.stringify(recentRecipes));
     },
+
+    queueRecent(recipe: GetRecipeResponse | null) {
+      if (recipe === null) {
+        return;
+      }
+
+      localStorage.setItem('queuedRecentRecipe', JSON.stringify(recipe));
+    },
+
+    // Load any queuedRecentRecipe from storage in case the browser was closed.
+    loadQueuedRecipe() {
+      const queuedRecent = JSON.parse(
+        localStorage.getItem('queuedRecentRecipe') || 'null'
+      ) as GetRecipeResponse | null;
+
+      if (typeof queuedRecent !== 'undefined' || queuedRecent !== null) {
+        this.addToRecent(queuedRecent);
+      }
+    },
   },
 });
 

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { ListRecipesResponse } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
+import ApiHelpers from '@/models/ApiHelpers';
 import { toInt, toNumber } from '@/models/FormatHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 import useAppStore from '@/stores/appStore';
@@ -10,7 +11,7 @@ import { onMounted, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
-import ApiHelpers from '@/models/ApiHelpers';
+import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 
 const props = defineProps({
   query: {
@@ -166,7 +167,7 @@ watch(listRequest, () => {
             </div>
           </template>
         </EntityTableControls>
-        <!-- TODO: Put recent recipes here -->
+        <SidebarRecipeRecent :route-name="'view'" class="mt-4" />
       </div>
       <div class="g-col-12 g-col-lg-9">
         <table

@@ -3,7 +3,7 @@ import useRecipeStore from '@/stores/recipeStore';
 import { onMounted, computed } from 'vue';
 import useAppStore from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
-import SelectSidebarList from '@/components/SelectSidebarList.vue';
+import SelectSidebarList from '@/components/SidebarRecipeBase.vue';
 import ApiHelpers from '@/models/ApiHelpers';
 
 defineProps({
@@ -36,14 +36,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <SelectSidebarList
-      v-if="recentRecipes.length > 0"
-      :recipes="recentRecipes"
-      :title="'Recent'"
-      :route-name="routeName"
-      class="mb-3"
-    />
-    <SelectSidebarList :recipes="searchedRecipes" :title="'Recipes'" :route-name="routeName" />
+    <SelectSidebarList :recipes="searchedRecipes" title="Recipes" :route-name="routeName" />
   </div>
 </template>
 
