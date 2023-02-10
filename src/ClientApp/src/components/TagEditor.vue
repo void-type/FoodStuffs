@@ -48,14 +48,16 @@ function removeTagClick(tag: string) {
         :disabled="false"
         @keydown.stop.prevent.enter="addTagClick()"
       />
-      <button class="btn btn-secondary" type="button">Add</button>
+      <button class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick()">
+        Add
+      </button>
     </div>
     <div class="tags mt-2">
       <button
         v-for="tag in tags"
         :key="tag"
         class="btn btn-sm btn-secondary me-2 mb-2"
-        @click="removeTagClick(tag)"
+        @click.stop.prevent="removeTagClick(tag)"
       >
         {{ tag }}
         <span class="ms-2">✕</span>

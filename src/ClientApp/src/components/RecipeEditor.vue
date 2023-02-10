@@ -103,18 +103,24 @@ watch(
 );
 
 const isRecipeDirty = computed(() => {
-  // TODO: dirty detection seems broken
-  return (
+  // TODO: dirty detection seems broken due to arrays being proxies.
+  const isDirty =
     Object.entries(workingRecipe.value).find(
       // Loose comparison so numbers and strings of numbers are equal.
       // eslint-disable-next-line eqeqeq
-      ([key, value]) => value != props.sourceRecipe[key as keyof GetRecipeResponse]
-    ) === undefined
-  );
+      ([key, value]) => {
+        const source = props.sourceRecipe[key as keyof GetRecipeResponse];
+        const propChanged = value != source;
+        console.log(key, propChanged, value, source);
+        return propChanged;
+      }
+    ) !== undefined;
+  console.log('dirty ' + isDirty);
+  return isDirty;
 });
 
 watch(
-  () => isRecipeDirty,
+  isRecipeDirty,
   () => {
     props.onRecipeDirtyStateChange(isRecipeDirty);
   }
