@@ -9,6 +9,7 @@ import type {
 import type { HttpResponse } from '@/api/http-client';
 import { isNil } from '@/models/FormatHelpers';
 import type { ModalParameters } from '@/models/ModalParameters';
+import DarkModeHelpers from '@/models/DarkModeHelpers';
 
 interface AppStoreState {
   applicationName: string;
@@ -22,31 +23,6 @@ interface AppStoreState {
   modalIsActive: boolean;
   modalParameters: ModalParameters;
 }
-
-const settingKeyEnableDarkMode = 'enableDarkMode';
-const initialDarkModeSetting = localStorage.getItem(settingKeyEnableDarkMode) !== null;
-
-function setDarkMode(setting: boolean) {
-  const { body } = document;
-
-  if (setting) {
-    body.classList.add('bg-dark');
-    body.classList.add('text-light');
-    body.classList.remove('bg-light');
-    body.classList.remove('text-dark');
-
-    localStorage.setItem(settingKeyEnableDarkMode, 'true');
-  } else {
-    body.classList.remove('bg-dark');
-    body.classList.remove('text-light');
-    body.classList.add('bg-light');
-    body.classList.add('text-dark');
-
-    localStorage.removeItem(settingKeyEnableDarkMode);
-  }
-}
-
-setDarkMode(initialDarkModeSetting);
 
 interface UserMessage {
   message: string;
@@ -64,7 +40,7 @@ export const useAppStore = defineStore('app', {
     },
     isInitialized: false,
     version: '',
-    useDarkMode: initialDarkModeSetting,
+    useDarkMode: false,
     modalIsActive: false,
     modalParameters: {
       title: '',
@@ -157,7 +133,10 @@ export const useAppStore = defineStore('app', {
       this.messages = messages.filter(notEmpty);
     },
 
-    setDarkMode,
+    setDarkMode(setting: boolean) {
+      DarkModeHelpers.setDarkMode(setting);
+      this.useDarkMode = setting;
+    },
 
     showModal(modalParameters: ModalParameters) {
       if (this.modalIsActive) {

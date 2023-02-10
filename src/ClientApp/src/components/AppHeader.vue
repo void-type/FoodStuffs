@@ -2,15 +2,11 @@
 import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import useAppStore from '@/stores/appStore';
+import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 
 const appStore = useAppStore();
 const { applicationName, user, useDarkMode } = storeToRefs(appStore);
 const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
-
-watch(
-  () => [useDarkMode.value],
-  () => appStore.setDarkMode(useDarkMode.value)
-);
 </script>
 
 <template>
@@ -57,7 +53,8 @@ watch(
                   <label class="form-check-label" for="useDarkMode">🌙</label>
                   <input
                     id="useDarkMode"
-                    v-model="useDarkMode"
+                    :checked="useDarkMode"
+                    @change="(e) => appStore.setDarkMode((e as HTMLInputEvent).target?.checked === true)"
                     class="form-check-input"
                     type="checkbox"
                   />

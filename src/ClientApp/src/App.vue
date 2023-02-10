@@ -10,12 +10,17 @@ import RouterHelpers from '@/models/RouterHelpers';
 import AppModal from './components/AppModal.vue';
 import ApiHelpers from './models/ApiHelpers';
 import useRecipeStore from './stores/recipeStore';
+import DarkModeHelpers from './models/DarkModeHelpers';
 
 const appStore = useAppStore();
+const recipeStore = useRecipeStore();
 const route = useRoute();
 const api = ApiHelpers.client;
 
 onMounted(() => {
+  recipeStore.loadQueuedRecipe();
+  appStore.setDarkMode(DarkModeHelpers.getInitialDarkModeSetting());
+
   api()
     .appInfoList()
     .then((response) => {
@@ -34,8 +39,6 @@ onMounted(() => {
   api()
     .appVersionList()
     .then((response) => appStore.setVersionInfo(response.data));
-
-  useRecipeStore().loadQueuedRecipe();
 });
 </script>
 
@@ -140,7 +143,7 @@ body.bg-dark {
   .form-control,
   .form-select {
     background-color: var(--bs-dark);
-    color: var(--bs-light);
+    color: var(--bs-white);
   }
 
   .modal-content {
@@ -150,10 +153,8 @@ body.bg-dark {
   .pagination {
     --bs-pagination-color: unset;
     --bs-pagination-bg: unset;
-    --bs-pagination-active-bg: unset;
     --bs-pagination-disabled-bg: unset;
     --bs-pagination-disabled-border-color: unset;
-    --bs-pagination-active-color: var(--bs-primary);
   }
 
   .form-check-input {
