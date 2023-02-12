@@ -7,26 +7,22 @@
 
 A web application for managing recipes.
 
-FoodStuffs is based on ASP.NET Core 6 and Vue.js 2.6.
+FoodStuffs is based on ASP.NET Core 7 and Vue 3.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
 ## Features
 
-* Printer-friendly views.
 * Category tags on recipes.
-* Multi-image uploads for recipes.
+* Images for recipes.
 * Copy recipes.
-* Text search on recipe names and categories.
+* Search and pagination.
 * Recent history list.
-* Full logging on the server.
-* Bootstrap-Vue UI.
+* Unsaved change detection.
+* Responsive UI using Bootstrap grid.
+* Dark mode.
+* Printer-friendly views.
 * See screenshots [here](docs/screenshots.md).
-
-### Coming Soon™
-
-* Users and authentication
-* Side-by-side recipe viewing
 
 ## Build and Run FoodStuffs
 
