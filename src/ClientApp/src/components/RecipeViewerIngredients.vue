@@ -19,18 +19,14 @@ const formattedIngredients = computed(() => {
 <template>
   <div>
     <div v-for="(ingredient, id) in formattedIngredients" :key="id">
-      <div v-if="ingredient.isCategory" class="fw-bold mt-1">
+      <span v-if="ingredient.isCategory" class="fw-bold">
         {{ ingredient.name }}
-      </div>
+      </span>
       <div v-else>
-        <span class="ingredient-quantity">{{ ingredient.quantity }}x</span>{{ ingredient.name }}
+        <span>{{ ingredient.quantity }}x {{ ingredient.name }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.ingredient-quantity {
-  margin-right: 1em;
-}
-</style>
+<style lang="scss" scoped></style>

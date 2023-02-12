@@ -50,11 +50,11 @@ function onMinutesInput(event: Event) {
 
 <template>
   <div>
-    <label class="visually-hidden" :for="`${id}-hours`">Hours</label>
-    <label class="visually-hidden" :for="`${id}-minutes`">Minutes</label>
+    <label class="visually-hidden" :for="`hours-${id}`">Hours</label>
+    <label class="visually-hidden" :for="`minutes-${id}`">Minutes</label>
     <div class="input-group">
       <input
-        :id="`${id}-hours`"
+        :id="`hours-${id}`"
         :value="hours"
         :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
         type="number"
@@ -62,7 +62,7 @@ function onMinutesInput(event: Event) {
         @change="onHoursInput"
       />
       <input
-        :id="`${id}-minutes`"
+        :id="`minutes-${id}`"
         :value="minutes"
         :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
         type="number"

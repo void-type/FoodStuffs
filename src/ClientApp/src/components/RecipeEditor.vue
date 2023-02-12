@@ -44,6 +44,10 @@ const router = useRouter();
 const workingRecipe: Ref<SaveRecipeRequestClass> = ref(new SaveRecipeRequestClass());
 
 function reset() {
+  workingRecipe.value = getWorkingCopy(props.sourceRecipe);
+}
+
+function getWorkingCopy(source: GetRecipeResponse) {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
 
   const newWorkingClass = new SaveRecipeRequestClass();
@@ -64,7 +68,7 @@ function reset() {
     directions: props.sourceRecipe.directions || '',
   };
 
-  workingRecipe.value = newWorking;
+  return newWorking;
 }
 
 function addCategory(tag: string) {
@@ -103,28 +107,12 @@ watch(
 );
 
 const isRecipeDirty = computed(() => {
-  // TODO: dirty detection seems broken due to arrays being proxies.
-  const isDirty =
-    Object.entries(workingRecipe.value).find(
-      // Loose comparison so numbers and strings of numbers are equal.
-      // eslint-disable-next-line eqeqeq
-      ([key, value]) => {
-        const source = props.sourceRecipe[key as keyof GetRecipeResponse];
-        const propChanged = value != source;
-        console.log(key, propChanged, value, source);
-        return propChanged;
-      }
-    ) !== undefined;
-  console.log('dirty ' + isDirty);
-  return isDirty;
+  return JSON.stringify(workingRecipe.value) !== JSON.stringify(getWorkingCopy(props.sourceRecipe));
 });
 
-watch(
-  isRecipeDirty,
-  () => {
-    props.onRecipeDirtyStateChange(isRecipeDirty);
-  }
-);
+watch(isRecipeDirty, () => {
+  props.onRecipeDirtyStateChange(isRecipeDirty);
+});
 
 onMounted(() => {
   reset();
@@ -145,7 +133,7 @@ onMounted(() => {
         />
       </div>
       <div class="g-col-12">
-        <label for="ingredients">Ingredients</label>
+        <label for="ingredients" class="form-label">Ingredients</label>
         <RecipeEditorIngredients
           v-model="workingRecipe.ingredients"
           :is-field-in-error="isFieldInError"
