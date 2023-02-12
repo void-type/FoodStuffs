@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { GetRecipeResponseIngredient } from '@/api/data-contracts';
-import { computed, reactive, watch, type PropType } from 'vue';
+import { Collapse } from 'bootstrap';
+import { computed, nextTick, reactive, watch, type PropType } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -14,15 +15,46 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
+
 const data = reactive({
   ingredients: props.modelValue,
 });
 
 const formattedIngredients = computed(() => {
-  const ingredients = props.modelValue.slice();
+  const ingredients = data.ingredients.slice();
   ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
   return ingredients;
 });
+
+function newClick() {
+  const newLength = data.ingredients.push({
+    name: '',
+    quantity: 1,
+    order: Math.max(...data.ingredients.map((x) => x.order || -1)) + 1,
+    isCategory: false,
+  });
+
+  const newIndex = newLength - 1;
+  const element = `#ingredient-${newIndex}-accordion-collapse`;
+
+  nextTick(() => Collapse.getOrCreateInstance(element).show());
+}
+
+function deleteClick(id: number) {
+  data.ingredients.splice(id, 1);
+
+  const newIndex = Math.min(id, data.ingredients.length - 1);
+  const element = `#ingredient-${newIndex}-accordion-collapse`;
+
+  nextTick(() => Collapse.getOrCreateInstance(element).show());
+}
+
+watch(
+  () => [props.modelValue],
+  () => {
+    data.ingredients = props.modelValue;
+  }
+);
 
 watch(
   () => [data.ingredients],
@@ -32,7 +64,7 @@ watch(
 
 <template>
   <div>
-    <!-- TODO: finish ingredients editor. Need editor, new and delete buttons, sortable UX -->
+    <!-- TODO: sortable UX -->
     <div class="accordion" id="ingredient-accordion">
       <div class="accordion-item" v-for="(ingredient, id) in formattedIngredients" :key="id">
         <h2 class="accordion-header" :id="`ingredient-${id}-accordion-header`">
@@ -55,7 +87,7 @@ watch(
           :aria-labelledby="`ingredient-${id}-accordion-header`"
           data-bs-parent="#ingredient-accordion"
         >
-          <div class="grid p-3">
+          <div class="grid p-3" style="--bs-gap: 1em">
             <div class="g-col-12 g-col-md-12">
               <label :for="`ingredient-${id}-name`" class="form-label">Name</label>
               <input
@@ -69,7 +101,7 @@ watch(
                 }"
               />
             </div>
-            <div class="g-col-12 g-col-md-4">
+            <div v-if="!ingredient.isCategory" class="g-col-12 g-col-md-4">
               <label :for="`ingredient-${id}-quantity`" class="form-label">Quantity</label>
               <input
                 :id="`ingredient-${id}-quantity`"
@@ -111,9 +143,22 @@ watch(
                 >
               </div>
             </div>
+            <div class="btn-toolbar g-col-12">
+              <button
+                class="btn btn-danger btn-sm d-inline ms-auto"
+                @click.stop.prevent="deleteClick(id)"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="btn-toolbar">
+      <button class="btn btn-secondary btn-sm me-2 mt-3" @click.stop.prevent="newClick()">
+        New ingredient
+      </button>
     </div>
   </div>
 </template>
