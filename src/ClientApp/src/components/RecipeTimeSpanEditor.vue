@@ -32,20 +32,27 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const hours = computed(() => clampHours(props.modelValue || 0));
-const minutes = computed(() => clampMinutes(props.modelValue || 0));
+const hours = computed({
+  get() {
+    return clampHours(props.modelValue || 0);
+  },
+  set(value) {
+    const newHours = Number(value);
+    const totalMinutes = getTotalMinutes(minutes.value, newHours);
+    emit('update:modelValue', totalMinutes);
+  },
+});
 
-function onHoursInput(event: Event) {
-  const newHours = Number((event.target as HTMLInputElement).value);
-  const totalMinutes = getTotalMinutes(minutes.value, newHours);
-  emit('update:modelValue', totalMinutes);
-}
-
-function onMinutesInput(event: Event) {
-  const newMinutes = Number((event.target as HTMLInputElement).value);
-  const totalMinutes = getTotalMinutes(newMinutes, hours.value);
-  emit('update:modelValue', totalMinutes);
-}
+const minutes = computed({
+  get() {
+    return clampMinutes(props.modelValue || 0);
+  },
+  set(value) {
+    const newMinutes = Number(value);
+    const totalMinutes = getTotalMinutes(newMinutes, hours.value);
+    emit('update:modelValue', totalMinutes);
+  },
+});
 </script>
 
 <template>
@@ -55,19 +62,17 @@ function onMinutesInput(event: Event) {
     <div class="input-group">
       <input
         :id="`hours-${id}`"
-        :value="hours"
+        v-model="hours"
         :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
         type="number"
         min="0"
-        @change="onHoursInput"
       />
       <input
         :id="`minutes-${id}`"
-        :value="minutes"
+        v-model="minutes"
         :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
         type="number"
         min="-1"
-        @change="onMinutesInput"
       />
     </div>
     <small :class="{ invisible: !(showPreview && (modelValue || 0) > 0) }">
