@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { GetRecipeResponseIngredient } from '@/api/data-contracts';
 import { Collapse } from 'bootstrap';
-import { computed, nextTick, reactive, ref, watch, type PropType } from 'vue';
+import { nextTick, reactive, watch, type PropType } from 'vue';
 import { Sortable } from 'sortablejs-vue3';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
@@ -23,80 +23,93 @@ const data = reactive({
   ingredients: [] as GetRecipeResponseIngredient[],
 });
 
-function newClick() {
-  const newLength = data.ingredients.push({
+function onNewClick() {
+  const ingredients = copy(data.ingredients);
+
+  const newLength = ingredients.push({
     name: '',
     quantity: 1,
-    order: Math.max(...data.ingredients.map((x) => x.order || 0)) + 1,
+    order: Math.max(...ingredients.map((x) => x.order || 0)) + 1,
     isCategory: false,
   });
 
-  console.log('new', newLength);
+  data.ingredients = ingredients;
 
-  const newIndex = newLength - 1;
-  const element = `#ingredient-${newIndex}-accordion-collapse`;
+  showInAccordion(newLength - 1);
 
+  console.log('new', data.ingredients);
+}
+
+function onDeleteClick(index: number) {
+  const ingredients = copy(data.ingredients);
+  ingredients.splice(index, 1);
+  data.ingredients = ingredients;
+
+  const expandNextIndex = clamp(index, 0, ingredients.length - 1);
+  showInAccordion(expandNextIndex);
+}
+
+function onSortEnd(event: any) {
+  if (event.oldIndex === event.newIndex) {
+    return;
+  }
+
+  const ingredients = copy(data.ingredients);
+  const item = ingredients.splice(event.oldIndex, 1)[0];
+  ingredients.splice(event.newIndex, 0, item);
+  data.ingredients = ingredients;
+
+  console.log('sorted', data.ingredients);
+}
+
+function copy(ingredients: GetRecipeResponseIngredient[]) {
+  return JSON.parse(JSON.stringify(ingredients)) as GetRecipeResponseIngredient[];
+}
+
+function setOrderFromIndex(ingredients: GetRecipeResponseIngredient[]) {
+  ingredients.forEach((x, i) => (x.order = i + 1));
+}
+
+function showInAccordion(index: number) {
+  const element = `#ingredient-${index}-accordion-collapse`;
   nextTick(() => Collapse.getOrCreateInstance(element).show());
 }
 
-function deleteClick(index: number) {
-  console.log('delete', index);
+watch(props, () => {
+  const ingredients = copy(props.modelValue);
 
-  data.ingredients.splice(index, 1);
+  console.log('new props', ingredients);
 
-  const expandNextIndex = clamp(index, 0, data.ingredients.length - 1);
-  const element = `#ingredient-${expandNextIndex}-accordion-collapse`;
+  ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
+  setOrderFromIndex(ingredients);
 
-  nextTick(() => Collapse.getOrCreateInstance(element).show());
-}
-
-function copy(ingredientArray: GetRecipeResponseIngredient[]) {
-  return JSON.parse(JSON.stringify(ingredientArray)) as GetRecipeResponseIngredient[];
-}
-
-function setOrderFromIndex(ingredientArray: GetRecipeResponseIngredient[]) {
-  ingredientArray.forEach((x, i) => (x.order = i + 1));
-}
-
-function getSortableIngredients(ingredientArray: GetRecipeResponseIngredient[]) {
-  const sortedIngredients = copy(ingredientArray);
-  sortedIngredients.sort((a, b) => (a.order || 0) - (b.order || 0));
-  setOrderFromIndex(sortedIngredients);
-
-  return sortedIngredients;
-}
-
-watch(
-  () => [props.modelValue],
-  () => {
-    console.log('prop change', props.modelValue);
-
-    const sortableIngredients = getSortableIngredients(props.modelValue);
-
-    if (JSON.stringify(data.ingredients) !== JSON.stringify(sortableIngredients)) {
-      data.ingredients = sortableIngredients;
-    }
+  // Deep compare to prevent circular changes.
+  if (JSON.stringify(data.ingredients) !== JSON.stringify(ingredients)) {
+    data.ingredients = ingredients;
   }
-);
+});
 
-watch(
-  data,
-  (newValue) => {
-    console.log('data change', newValue.ingredients);
-    const valueCopy = copy(newValue.ingredients);
-    setOrderFromIndex(valueCopy);
-    emit('update:modelValue', valueCopy);
-  }
-);
+watch(data, (newValue) => {
+  const ingredients = newValue.ingredients;
+  setOrderFromIndex(ingredients);
+
+  console.log('new data', ingredients);
+
+  emit('update:modelValue', ingredients);
+});
 </script>
 
 <template>
   <div>
     <!-- TODO: --bs-accordion-btn-icon should be white for dark mode -->
     <div class="accordion" id="ingredient-accordion">
-      <Sortable :list="data.ingredients" item-key="order">
+      <Sortable
+        :list="data.ingredients"
+        item-key="order"
+        @end="onSortEnd"
+      >
         <template #item="{ element, index }">
-          <div class="accordion-item sortable-draggable">
+          <div class="accordion-item sortable-draggable" :key="element.order">
             <h2 class="accordion-header" :id="`ingredient-${index}-accordion-header`">
               <button
                 class="accordion-button collapsed"
@@ -176,7 +189,7 @@ watch(
                 <div class="btn-toolbar g-col-12">
                   <button
                     class="btn btn-danger btn-sm d-inline ms-auto"
-                    @click.stop.prevent="deleteClick(index)"
+                    @click.stop.prevent="onDeleteClick(index)"
                   >
                     Delete
                   </button>
@@ -188,7 +201,7 @@ watch(
       </Sortable>
     </div>
     <div class="btn-toolbar">
-      <button class="btn btn-secondary btn-sm me-2 mt-3" @click.stop.prevent="newClick()">
+      <button class="btn btn-secondary btn-sm me-2 mt-3" @click.stop.prevent="onNewClick()">
         New ingredient
       </button>
     </div>
