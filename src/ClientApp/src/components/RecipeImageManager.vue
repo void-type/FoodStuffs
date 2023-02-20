@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch, type PropType, type Ref } from 'vue';
 import { clamp } from '@/models/FormatHelpers';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTimes, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import useAppStore from '@/stores/appStore';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -47,8 +45,6 @@ const props = defineProps({
 });
 
 const appStore = useAppStore();
-
-library.add(faTimes, faThumbtack);
 
 const uploadFile: Ref<File | null> = ref(null);
 const carouselIndex = ref(0);
