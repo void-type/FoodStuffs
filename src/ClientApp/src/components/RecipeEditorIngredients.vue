@@ -90,7 +90,7 @@ watch(props, () => {
 });
 
 watch(data, (newValue) => {
-  const ingredients = newValue.ingredients;
+  const { ingredients } = newValue;
   setOrderFromIndex(ingredients);
 
   console.log('new data', ingredients);
@@ -102,15 +102,11 @@ watch(data, (newValue) => {
 <template>
   <div>
     <!-- TODO: --bs-accordion-btn-icon should be white for dark mode -->
-    <div class="accordion" id="ingredient-accordion">
-      <Sortable
-        :list="data.ingredients"
-        item-key="order"
-        @end="onSortEnd"
-      >
+    <div id="ingredient-accordion" class="accordion">
+      <Sortable :list="data.ingredients" item-key="order" @end="onSortEnd">
         <template #item="{ element, index }">
-          <div class="accordion-item sortable-draggable" :key="element.order">
-            <h2 class="accordion-header" :id="`ingredient-${index}-accordion-header`">
+          <div :key="element.order" class="accordion-item sortable-draggable">
+            <h2 :id="`ingredient-${index}-accordion-header`" class="accordion-header">
               <button
                 class="accordion-button collapsed"
                 type="button"

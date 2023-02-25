@@ -54,9 +54,9 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
                   <input
                     id="useDarkMode"
                     :checked="useDarkMode"
-                    @change="(e) => appStore.setDarkMode((e as HTMLInputEvent).target?.checked === true)"
                     class="form-check-input"
                     type="checkbox"
+                    @change="(e) => appStore.setDarkMode((e as HTMLInputEvent).target?.checked === true)"
                   />
                 </div>
               </li>

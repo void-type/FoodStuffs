@@ -2,7 +2,7 @@ const settingKeyEnableDarkMode = 'enableDarkMode';
 
 export default class DarkModeHelpers {
   static getInitialDarkModeSetting() {
-    var appPreference = localStorage.getItem(settingKeyEnableDarkMode);
+    const appPreference = localStorage.getItem(settingKeyEnableDarkMode);
 
     if (appPreference) {
       return appPreference == 'true';
