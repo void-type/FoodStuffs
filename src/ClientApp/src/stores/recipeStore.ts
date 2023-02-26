@@ -8,8 +8,19 @@ import type {
 import Choices from '@/models/Choices';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 
+// TODO: make a helper for this
 const settingsKeyRecentRecipes = 'recentRecipes';
 const settingsKeyQueuedRecentRecipe = 'queuedRecentRecipe';
+
+function storeRecents(recentRecipes: Array<ListRecipesResponse>) {
+  localStorage.setItem(settingsKeyRecentRecipes, JSON.stringify(recentRecipes));
+}
+
+function getRecentsFromLocalStorage() {
+  return JSON.parse(
+    localStorage.getItem(settingsKeyRecentRecipes) || '[]'
+  ) as ListRecipesResponse[];
+}
 
 interface RecipeStoreState {
   listResponse: ListRecipesResponseIItemSet;
@@ -143,15 +154,5 @@ export const useRecipeStore = defineStore('recipes', {
     },
   },
 });
-
-function storeRecents(recentRecipes: Array<ListRecipesResponse>) {
-  localStorage.setItem(settingsKeyRecentRecipes, JSON.stringify(recentRecipes));
-}
-
-function getRecentsFromLocalStorage() {
-  return JSON.parse(
-    localStorage.getItem(settingsKeyRecentRecipes) || '[]'
-  ) as ListRecipesResponse[];
-}
 
 export default useRecipeStore;

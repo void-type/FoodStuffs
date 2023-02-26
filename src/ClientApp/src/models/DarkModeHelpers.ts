@@ -5,7 +5,7 @@ export default class DarkModeHelpers {
     const appPreference = localStorage.getItem(settingKeyEnableDarkMode);
 
     if (appPreference) {
-      return appPreference == 'true';
+      return appPreference === 'true';
     }
 
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -16,6 +16,8 @@ export default class DarkModeHelpers {
   }
 
   static setDarkMode(setting: boolean) {
+    localStorage.setItem(settingKeyEnableDarkMode, setting.toString());
+
     const { body } = document;
 
     if (setting) {
@@ -23,15 +25,11 @@ export default class DarkModeHelpers {
       body.classList.add('text-light');
       body.classList.remove('bg-light');
       body.classList.remove('text-dark');
-
-      localStorage.setItem(settingKeyEnableDarkMode, 'true');
     } else {
       body.classList.remove('bg-dark');
       body.classList.remove('text-light');
       body.classList.add('bg-light');
       body.classList.add('text-dark');
-
-      localStorage.setItem(settingKeyEnableDarkMode, 'false');
     }
   }
 }

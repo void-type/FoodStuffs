@@ -43,11 +43,7 @@ const router = useRouter();
 
 const workingRecipe: Ref<SaveRecipeRequestClass> = ref(new SaveRecipeRequestClass());
 
-function reset() {
-  workingRecipe.value = getWorkingCopy(props.sourceRecipe);
-}
-
-function getWorkingCopy(source: GetRecipeResponse) {
+function getWorkingCopy() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
 
   const newWorkingClass = new SaveRecipeRequestClass();
@@ -69,6 +65,10 @@ function getWorkingCopy(source: GetRecipeResponse) {
   };
 
   return newWorking;
+}
+
+function reset() {
+  workingRecipe.value = getWorkingCopy();
 }
 
 function addCategory(tag: string) {
@@ -107,7 +107,7 @@ watch(
 );
 
 const isRecipeDirty = computed(() => {
-  return JSON.stringify(workingRecipe.value) !== JSON.stringify(getWorkingCopy(props.sourceRecipe));
+  return JSON.stringify(workingRecipe.value) !== JSON.stringify(getWorkingCopy());
 });
 
 watch(isRecipeDirty, () => {

@@ -23,6 +23,15 @@ const data = reactive({
   ingredients: [] as GetRecipeResponseIngredient[],
 });
 
+function copy(ingredients: GetRecipeResponseIngredient[]) {
+  return JSON.parse(JSON.stringify(ingredients)) as GetRecipeResponseIngredient[];
+}
+
+function showInAccordion(index: number) {
+  const element = `#ingredient-${index}-accordion-collapse`;
+  nextTick(() => Collapse.getOrCreateInstance(element).show());
+}
+
 function onNewClick() {
   const ingredients = copy(data.ingredients);
 
@@ -62,17 +71,11 @@ function onSortEnd(event: any) {
   console.log('sorted', data.ingredients);
 }
 
-function copy(ingredients: GetRecipeResponseIngredient[]) {
-  return JSON.parse(JSON.stringify(ingredients)) as GetRecipeResponseIngredient[];
-}
-
 function setOrderFromIndex(ingredients: GetRecipeResponseIngredient[]) {
-  ingredients.forEach((x, i) => (x.order = i + 1));
-}
-
-function showInAccordion(index: number) {
-  const element = `#ingredient-${index}-accordion-collapse`;
-  nextTick(() => Collapse.getOrCreateInstance(element).show());
+  ingredients.forEach((x, i) => {
+    // eslint-disable-next-line no-param-reassign
+    x.order = i + 1;
+  });
 }
 
 watch(props, () => {

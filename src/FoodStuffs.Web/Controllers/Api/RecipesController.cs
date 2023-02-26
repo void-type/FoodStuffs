@@ -35,8 +35,8 @@ public class RecipesController : ControllerBase
         var request = new ListRecipesRequest(
             NameSearch: name,
             CategorySearch: category,
-            SortBy: sortBy,
             IsForMealPlanning: isForMealPlanning,
+            SortBy: sortBy,
             SortDesc: sortDesc,
             IsPagingEnabled: isPagingEnabled,
             Page: page,

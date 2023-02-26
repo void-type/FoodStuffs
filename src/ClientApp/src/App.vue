@@ -18,8 +18,9 @@ const route = useRoute();
 const api = ApiHelpers.client;
 
 onMounted(() => {
-  recipeStore.loadQueuedRecipe();
   appStore.setDarkMode(DarkModeHelpers.getInitialDarkModeSetting());
+
+  recipeStore.loadQueuedRecipe();
 
   api()
     .appInfoList()

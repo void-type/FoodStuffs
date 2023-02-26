@@ -38,6 +38,7 @@ const hours = computed({
   },
   set(value) {
     const newHours = Number(value);
+    // eslint-disable-next-line no-use-before-define
     const totalMinutes = getTotalMinutes(minutes.value, newHours);
     emit('update:modelValue', totalMinutes);
   },

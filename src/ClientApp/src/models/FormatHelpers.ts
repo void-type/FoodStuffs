@@ -11,6 +11,15 @@ export function toInt(value: string | number | undefined | null, defaultValue = 
   return Math.floor(toNumber(value, defaultValue));
 }
 
+export function toNumberOrNull(value: string | number | undefined | null) {
+  if (value === null || typeof value === 'undefined' || value === '') {
+    return null;
+  }
+
+  const number = Number(value);
+  return !Number.isNaN(number) ? number : null;
+}
+
 export function trimAndTitleCase(value: string) {
   return value
     .trim()

@@ -49,7 +49,7 @@ try {
     if (-not $SkipFormat) {
       npm run lint
       Stop-OnError
-      npm run format | Out-Null
+      npm run format
       Stop-OnError "Formatting the client failed."
     }
 

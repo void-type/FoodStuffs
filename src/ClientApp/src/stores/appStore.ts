@@ -24,10 +24,6 @@ interface AppStoreState {
   modalParameters: ModalParameters;
 }
 
-interface UserMessage {
-  message: string;
-}
-
 export const useAppStore = defineStore('app', {
   state: (): AppStoreState => ({
     applicationName: '',
@@ -72,8 +68,8 @@ export const useAppStore = defineStore('app', {
       } else if (response.status === 404) {
         this.setErrorMessage('Server responded with endpoint not found.');
       } else if (response.status >= 500) {
-        const userMessage = response.error as UserMessage;
-        this.setErrorMessage(userMessage.message);
+        const userMessage = response.error as IFailure;
+        this.setErrorMessage(userMessage.message || '');
       } else {
         const failureSet = response.data as IFailureIItemSet;
         if (failureSet !== undefined && failureSet !== null) {

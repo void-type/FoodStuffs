@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import useAppStore from '@/stores/appStore';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 
