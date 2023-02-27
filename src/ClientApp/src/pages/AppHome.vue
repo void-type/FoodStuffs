@@ -42,7 +42,7 @@ onMounted(() => {
               class="img-fluid rounded"
               :src="imageUrl(recipe.imageId)"
               :alt="`image of ${recipe.name}`"
-              :loading="i > 3 ? 'lazy' : 'eager'"
+              :loading="i > 5 ? 'lazy' : 'eager'"
             />
             <ImagePlaceholder v-else />
             <div class="mt-3">

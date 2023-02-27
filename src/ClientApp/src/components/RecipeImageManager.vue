@@ -193,7 +193,7 @@ function pinImageClick(imageId: number) {
                   class="img-fluid rounded"
                   :src="imageUrl(imageId)"
                   :alt="`image ${i}`"
-                  :loading="i > 1 ? 'lazy' : 'eager'"
+                  :loading="i > 0 ? 'lazy' : 'eager'"
                 />
               </div>
             </div>
