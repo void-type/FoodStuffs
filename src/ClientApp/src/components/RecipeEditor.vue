@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import SaveRecipeRequestClass from '@/models/SaveRecipeRequestClass';
-import type { GetRecipeResponse } from '@/api/data-contracts';
+import WorkingRecipe from '@/models/WorkingRecipe';
+import type { GetRecipeResponse, GetRecipeResponseIngredient } from '@/api/data-contracts';
 import { trimAndTitleCase } from '@/models/FormatHelpers';
-import { computed, onMounted, ref, watch, type PropType, type Ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch, type PropType, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
+import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 
 const props = defineProps({
   sourceRecipe: {
@@ -41,12 +42,14 @@ const props = defineProps({
 
 const router = useRouter();
 
-const workingRecipe: Ref<SaveRecipeRequestClass> = ref(new SaveRecipeRequestClass());
+const data = reactive({
+  workingRecipe: new WorkingRecipe(),
+});
 
 function getWorkingCopy() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
 
-  const newWorkingClass = new SaveRecipeRequestClass();
+  const newWorkingClass = new WorkingRecipe();
 
   const validProperties = Object.keys(newWorkingClass);
 
@@ -57,10 +60,15 @@ function getWorkingCopy() {
     }
   });
 
-  const newWorking: SaveRecipeRequestClass = {
+  const ingredients = (props.sourceRecipe.ingredients || []).map((x) => ({
+    ...new WorkingRecipeIngredient(),
+    ...x,
+  }));
+
+  const newWorking: WorkingRecipe = {
     ...newWorkingClass,
     ...sourceCopy,
-    ingredients: props.sourceRecipe.ingredients || [],
+    ingredients,
     directions: props.sourceRecipe.directions || '',
   };
 
@@ -68,35 +76,35 @@ function getWorkingCopy() {
 }
 
 function reset() {
-  workingRecipe.value = getWorkingCopy();
+  data.workingRecipe = getWorkingCopy();
 }
 
 function addCategory(tag: string) {
   const categoryName = trimAndTitleCase(tag);
 
-  const categories = workingRecipe.value.categories?.slice() || [];
+  const categories = data.workingRecipe.categories?.slice() || [];
 
   const categoryDoesNotExist =
     categories.map((value) => value.toUpperCase()).indexOf(categoryName.toUpperCase()) < 0;
 
   if (categoryDoesNotExist && categoryName.length > 0) {
     categories.push(categoryName);
-    workingRecipe.value.categories = categories;
+    data.workingRecipe.categories = categories;
   }
 }
 
 function removeCategory(categoryName: string) {
-  const categories = workingRecipe.value.categories?.slice() || [];
+  const categories = data.workingRecipe.categories?.slice() || [];
   const categoryIndex = categories.indexOf(categoryName);
 
   if (categoryIndex > -1) {
     categories.splice(categoryIndex, 1);
-    workingRecipe.value.categories = categories;
+    data.workingRecipe.categories = categories;
   }
 }
 
 function saveClick() {
-  props.onRecipeSave(workingRecipe.value);
+  props.onRecipeSave(data.workingRecipe);
 }
 
 watch(
@@ -107,7 +115,7 @@ watch(
 );
 
 const isRecipeDirty = computed(() => {
-  return JSON.stringify(workingRecipe.value) !== JSON.stringify(getWorkingCopy());
+  return JSON.stringify(data.workingRecipe) !== JSON.stringify(getWorkingCopy());
 });
 
 watch(isRecipeDirty, () => {
@@ -126,7 +134,7 @@ onMounted(() => {
         <label for="name" class="form-label">Name *</label>
         <input
           id="name"
-          v-model="workingRecipe.name"
+          v-model="data.workingRecipe.name"
           required
           type="text"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
@@ -135,7 +143,7 @@ onMounted(() => {
       <div class="g-col-12">
         <label for="ingredients" class="form-label">Ingredients</label>
         <RecipeEditorIngredients
-          v-model="workingRecipe.ingredients"
+          v-model="data.workingRecipe.ingredients"
           :is-field-in-error="isFieldInError"
         />
       </div>
@@ -143,7 +151,7 @@ onMounted(() => {
         <label for="directions" class="form-label">Directions</label>
         <textarea
           id="directions"
-          v-model="workingRecipe.directions"
+          v-model="data.workingRecipe.directions"
           rows="10"
           :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
         />
@@ -152,7 +160,7 @@ onMounted(() => {
         <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
         <RecipeTimeSpanEditor
           id="prepTimeMinutes"
-          v-model="workingRecipe.prepTimeMinutes"
+          v-model="data.workingRecipe.prepTimeMinutes"
           :is-invalid="isFieldInError('prepTimeMinutes')"
         />
       </div>
@@ -160,14 +168,14 @@ onMounted(() => {
         <label for="cookTimeMinutes" class="form-label">Cook Time Hours/Minutes</label>
         <RecipeTimeSpanEditor
           id="cookTimeMinutes"
-          v-model="workingRecipe.cookTimeMinutes"
+          v-model="data.workingRecipe.cookTimeMinutes"
           :is-invalid="isFieldInError('cookTimeMinutes')"
         />
       </div>
       <div class="g-col-12">
         <TagEditor
           :class="{ 'form-group': true, danger: isFieldInError('categories') }"
-          :tags="workingRecipe.categories || []"
+          :tags="data.workingRecipe.categories || []"
           :on-add-tag="addCategory"
           :on-remove-tag="removeCategory"
           field-name="categories"
@@ -178,7 +186,7 @@ onMounted(() => {
         <div class="form-check">
           <input
             id="isForMealPlanning"
-            v-model="workingRecipe.isForMealPlanning"
+            v-model="data.workingRecipe.isForMealPlanning"
             class="form-check-input"
             type="checkbox"
             :class="{ 'is-invalid': isFieldInError('isForMealPlanning') }"
@@ -206,7 +214,7 @@ onMounted(() => {
         <button
           v-if="isEditMode"
           class="btn btn-danger d-inline ms-auto"
-          @click.stop.prevent="onRecipeDelete(workingRecipe.id)"
+          @click.stop.prevent="onRecipeDelete(data.workingRecipe.id)"
         >
           Delete
         </button>

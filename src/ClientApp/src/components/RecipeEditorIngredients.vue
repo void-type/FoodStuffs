@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import type { GetRecipeResponseIngredient } from '@/api/data-contracts';
 import { Collapse } from 'bootstrap';
 import { nextTick, reactive, watch, type PropType } from 'vue';
 import { Sortable } from 'sortablejs-vue3';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
+import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Array<GetRecipeResponseIngredient>>,
+    type: Object as PropType<Array<WorkingRecipeIngredient>>,
     required: true,
   },
   isFieldInError: {
@@ -20,22 +20,28 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const data = reactive({
-  ingredients: [] as GetRecipeResponseIngredient[],
+  ingredients: [] as WorkingRecipeIngredient[],
 });
 
-function copy(ingredients: GetRecipeResponseIngredient[]) {
-  return JSON.parse(JSON.stringify(ingredients)) as GetRecipeResponseIngredient[];
+function copy(ingredients: WorkingRecipeIngredient[]) {
+  return JSON.parse(JSON.stringify(ingredients)) as WorkingRecipeIngredient[];
 }
 
 function showInAccordion(index: number) {
-  const element = `#ingredient-${index}-accordion-collapse`;
-  nextTick(() => Collapse.getOrCreateInstance(element).show());
+  const safeIndex = clamp(index, 0, data.ingredients.length - 1);
+  const ingredient = data.ingredients[safeIndex];
+
+  if (ingredient) {
+    const element = `#ingredient-${ingredient.id}-accordion-collapse`;
+    nextTick(() => Collapse.getOrCreateInstance(element).show());
+  }
 }
 
 function onNewClick() {
   const ingredients = copy(data.ingredients);
 
   const newLength = ingredients.push({
+    ...new WorkingRecipeIngredient(),
     name: '',
     quantity: 1,
     order: Math.max(...ingredients.map((x) => x.order || 0)) + 1,
@@ -43,10 +49,7 @@ function onNewClick() {
   });
 
   data.ingredients = ingredients;
-
   showInAccordion(newLength - 1);
-
-  console.log('new', data.ingredients);
 }
 
 function onDeleteClick(index: number) {
@@ -54,8 +57,7 @@ function onDeleteClick(index: number) {
   ingredients.splice(index, 1);
   data.ingredients = ingredients;
 
-  const expandNextIndex = clamp(index, 0, ingredients.length - 1);
-  showInAccordion(expandNextIndex);
+  showInAccordion(index);
 }
 
 function onSortEnd(event: any) {
@@ -67,11 +69,9 @@ function onSortEnd(event: any) {
   const item = ingredients.splice(event.oldIndex, 1)[0];
   ingredients.splice(event.newIndex, 0, item);
   data.ingredients = ingredients;
-
-  console.log('sorted', data.ingredients);
 }
 
-function setOrderFromIndex(ingredients: GetRecipeResponseIngredient[]) {
+function setOrderFromIndex(ingredients: WorkingRecipeIngredient[]) {
   ingredients.forEach((x, i) => {
     // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
@@ -80,8 +80,6 @@ function setOrderFromIndex(ingredients: GetRecipeResponseIngredient[]) {
 
 watch(props, () => {
   const ingredients = copy(props.modelValue);
-
-  console.log('new props', ingredients);
 
   ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
   setOrderFromIndex(ingredients);
@@ -95,9 +93,6 @@ watch(props, () => {
 watch(data, (newValue) => {
   const { ingredients } = newValue;
   setOrderFromIndex(ingredients);
-
-  console.log('new data', ingredients);
-
   emit('update:modelValue', ingredients);
 });
 </script>
@@ -106,34 +101,34 @@ watch(data, (newValue) => {
   <div>
     <!-- TODO: --bs-accordion-btn-icon should be white for dark mode -->
     <div id="ingredient-accordion" class="accordion">
-      <Sortable :list="data.ingredients" item-key="order" @end="onSortEnd">
+      <Sortable :list="data.ingredients" item-key="id" @end="onSortEnd">
         <template #item="{ element, index }">
-          <div :key="element.order" class="accordion-item sortable-draggable">
-            <h2 :id="`ingredient-${index}-accordion-header`" class="accordion-header">
+          <div :key="element.id" class="accordion-item sortable-draggable">
+            <h2 :id="`ingredient-${element.id}-accordion-header`" class="accordion-header">
               <button
                 class="accordion-button collapsed"
                 type="button"
                 data-bs-toggle="collapse"
-                :data-bs-target="`#ingredient-${index}-accordion-collapse`"
+                :data-bs-target="`#ingredient-${element.id}-accordion-collapse`"
                 aria-expanded="false"
-                :aria-controls="`ingredient-${index}-accordion-collapse`"
+                :aria-controls="`ingredient-${element.id}-accordion-collapse`"
               >
-                <font-awesome-icon icon="fa-sort" class="me-2" />
+                <font-awesome-icon icon="fa-sort" class="text-muted me-3" />
                 <span v-if="element.isCategory" class="fw-bold">{{ element.name }}</span>
                 <span v-else>{{ element.quantity }}x {{ element.name }}</span>
               </button>
             </h2>
             <div
-              :id="`ingredient-${index}-accordion-collapse`"
+              :id="`ingredient-${element.id}-accordion-collapse`"
               class="accordion-collapse collapse"
-              :aria-labelledby="`ingredient-${index}-accordion-header`"
+              :aria-labelledby="`ingredient-${element.id}-accordion-header`"
               data-bs-parent="#ingredient-accordion"
             >
               <div class="grid p-3" style="--bs-gap: 1em">
                 <div class="g-col-12 g-col-md-12">
-                  <label :for="`ingredient-${index}-name`" class="form-label">Name</label>
+                  <label :for="`ingredient-${element.id}-name`" class="form-label">Name</label>
                   <input
-                    :id="`ingredient-${index}-name`"
+                    :id="`ingredient-${element.id}-name`"
                     v-model="element.name"
                     required
                     type="text"
@@ -144,24 +139,12 @@ watch(data, (newValue) => {
                   />
                 </div>
                 <div v-if="!element.isCategory" class="g-col-12 g-col-md-4">
-                  <label :for="`ingredient-${index}-quantity`" class="form-label">Quantity</label>
+                  <label :for="`ingredient-${element.id}-quantity`" class="form-label"
+                    >Quantity</label
+                  >
                   <input
-                    :id="`ingredient-${index}-quantity`"
+                    :id="`ingredient-${element.id}-quantity`"
                     v-model="element.quantity"
-                    required
-                    type="number"
-                    min="1"
-                    :class="{
-                      'form-control': true,
-                      'is-invalid': isFieldInError('ingredients'),
-                    }"
-                  />
-                </div>
-                <div class="g-col-12 g-col-md-4">
-                  <label :for="`ingredient-${index}-order`" class="form-label">Order</label>
-                  <input
-                    :id="`ingredient-${index}-order`"
-                    v-model="element.order"
                     required
                     type="number"
                     min="1"
@@ -174,13 +157,13 @@ watch(data, (newValue) => {
                 <div class="g-col-12">
                   <div class="form-check">
                     <input
-                      :id="`ingredient-${index}-isCategory`"
+                      :id="`ingredient-${element.id}-isCategory`"
                       v-model="element.isCategory"
                       class="form-check-input"
                       type="checkbox"
                       :class="{ 'is-invalid': isFieldInError('ingredients') }"
                     />
-                    <label :for="`ingredient-${index}-isCategory`" class="form-check-label"
+                    <label :for="`ingredient-${element.id}-isCategory`" class="form-check-label"
                       >Is Category</label
                     >
                   </div>

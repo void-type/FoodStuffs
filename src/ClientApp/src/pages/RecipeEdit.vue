@@ -32,8 +32,8 @@ const props = defineProps({
 });
 
 const data = reactive({
-  sourceRecipe: { ...new GetRecipeResponseClass() } as GetRecipeResponse,
-  sourceImages: [] as Array<number>,
+  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse,
+  sourceImages: [] as number[],
   isRecipeDirty: false,
   suggestedImageId: -1,
   pinnedImageId: null as number | null,
