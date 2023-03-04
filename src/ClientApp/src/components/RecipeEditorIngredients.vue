@@ -99,7 +99,6 @@ watch(data, (newValue) => {
 
 <template>
   <div>
-    <!-- TODO: --bs-accordion-btn-icon should be white for dark mode -->
     <div id="ingredient-accordion" class="accordion">
       <Sortable :list="data.ingredients" item-key="id" @end="onSortEnd">
         <template #item="{ element, index }">
