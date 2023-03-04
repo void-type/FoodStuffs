@@ -11,6 +11,7 @@ import AppModal from './components/AppModal.vue';
 import ApiHelpers from './models/ApiHelpers';
 import useRecipeStore from './stores/recipeStore';
 import DarkModeHelpers from './models/DarkModeHelpers';
+import RecipeStoreHelpers from './models/RecipeStoreHelpers';
 
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
@@ -20,7 +21,7 @@ const api = ApiHelpers.client;
 onMounted(() => {
   appStore.setDarkMode(DarkModeHelpers.getInitialDarkModeSetting());
 
-  recipeStore.loadQueuedRecipe();
+  recipeStore.addToRecent(RecipeStoreHelpers.getQueuedRecent());
 
   api()
     .appInfoList()

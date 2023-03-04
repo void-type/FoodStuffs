@@ -7,20 +7,7 @@ import type {
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
-
-// TODO: make a helper for this
-const settingsKeyRecentRecipes = 'recentRecipes';
-const settingsKeyQueuedRecentRecipe = 'queuedRecentRecipe';
-
-function storeRecents(recentRecipes: Array<ListRecipesResponse>) {
-  localStorage.setItem(settingsKeyRecentRecipes, JSON.stringify(recentRecipes));
-}
-
-function getRecentsFromLocalStorage() {
-  return JSON.parse(
-    localStorage.getItem(settingsKeyRecentRecipes) || '[]'
-  ) as ListRecipesResponse[];
-}
+import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 
 interface RecipeStoreState {
   listResponse: ListRecipesResponseIItemSet;
@@ -39,7 +26,7 @@ export const useRecipeStore = defineStore('recipes', {
       totalCount: 0,
     },
     listRequest: new ListRecipesRequest(),
-    recentRecipes: getRecentsFromLocalStorage(),
+    recentRecipes: RecipeStoreHelpers.getRecents(),
   }),
 
   getters: {
@@ -64,11 +51,11 @@ export const useRecipeStore = defineStore('recipes', {
     },
 
     addToRecent(recipe: GetRecipeResponse | null) {
-      const limit = 3;
-
-      if (recipe === null) {
+      if (recipe === null || typeof recipe === 'undefined') {
         return;
       }
+
+      const limit = 3;
 
       const recentRecipes = this.recentRecipes.slice();
 
@@ -91,7 +78,7 @@ export const useRecipeStore = defineStore('recipes', {
       const limitedRecipes = recentRecipes.slice(0, limit);
 
       this.recentRecipes = limitedRecipes;
-      storeRecents(this.recentRecipes);
+      RecipeStoreHelpers.storeRecents(this.recentRecipes);
     },
 
     removeFromRecent(id: number) {
@@ -106,7 +93,7 @@ export const useRecipeStore = defineStore('recipes', {
       }
 
       this.recentRecipes = recentRecipes;
-      storeRecents(this.recentRecipes);
+      RecipeStoreHelpers.storeRecents(this.recentRecipes);
     },
 
     updateRecent(recipe: GetRecipeResponse | null) {
@@ -131,26 +118,11 @@ export const useRecipeStore = defineStore('recipes', {
       recentRecipes[indexOfCurrentInRecents] = recipeListItem;
 
       this.recentRecipes = recentRecipes;
-      storeRecents(this.recentRecipes);
+      RecipeStoreHelpers.storeRecents(this.recentRecipes);
     },
 
     queueRecent(recipe: GetRecipeResponse | null) {
-      if (recipe === null) {
-        return;
-      }
-
-      localStorage.setItem(settingsKeyQueuedRecentRecipe, JSON.stringify(recipe));
-    },
-
-    // Load any queuedRecentRecipe from storage in case the browser was closed.
-    loadQueuedRecipe() {
-      const queuedRecent = JSON.parse(
-        localStorage.getItem(settingsKeyQueuedRecentRecipe) || 'null'
-      ) as GetRecipeResponse | null;
-
-      if (typeof queuedRecent !== 'undefined' || queuedRecent !== null) {
-        this.addToRecent(queuedRecent);
-      }
+      RecipeStoreHelpers.storeQueuedRecent(recipe);
     },
   },
 });
