@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import WorkingRecipe from '@/models/WorkingRecipe';
-import type { GetRecipeResponse, GetRecipeResponseIngredient } from '@/api/data-contracts';
+import type { GetRecipeResponse } from '@/api/data-contracts';
 import { trimAndTitleCase } from '@/models/FormatHelpers';
-import { computed, onMounted, reactive, ref, watch, type PropType, type Ref } from 'vue';
+import { computed, onMounted, reactive, watch, type PropType } from 'vue';
 import { useRouter } from 'vue-router';
+import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
-import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 
 const props = defineProps({
   sourceRecipe: {

@@ -3,8 +3,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VoidCore.EntityFramework" Version="9.0.9" />
-    <PackageReference Include="VoidCore.Model" Version="9.0.9" />
+    <PackageReference Include="VoidCore.EntityFramework" Version="9.1.5" />
+    <PackageReference Include="VoidCore.Model" Version="9.1.5" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" />
     <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" /> -->

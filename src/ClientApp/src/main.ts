@@ -12,7 +12,4 @@ library.add(faTimes, faThumbtack, faSort);
 
 const app = createApp(App);
 
-app
-  .use(createPinia())
-  .use(router)
-  .mount('#app');
+app.use(createPinia()).use(router).mount('#app');
