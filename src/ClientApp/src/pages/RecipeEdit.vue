@@ -115,12 +115,12 @@ function fetchImageIds(recipeId: number) {
 }
 
 function onRecipeSave(recipe: SaveRecipeRequest) {
-  // Add CSRF token to api header.
   api()
     .recipesCreate(recipe)
     .then((response) => {
+      data.isRecipeDirty = false;
+
       if (props.id === 0) {
-        data.isRecipeDirty = false;
         router.push({ name: 'edit', params: { id: response.data.id } });
       } else {
         fetchRecipe();
@@ -129,6 +129,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
       if (response.data.message) {
         appStore.setSuccessMessage(response.data.message);
       }
+
       fetchRecipesList();
       recipeStore.updateRecent(recipe);
     })

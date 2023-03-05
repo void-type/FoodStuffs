@@ -71,8 +71,8 @@ export const useAppStore = defineStore('app', {
         const userMessage = response.error as IFailure;
         this.setErrorMessage(userMessage.message || '');
       } else {
-        const failureSet = response.data as IFailureIItemSet;
-        if (failureSet !== undefined && failureSet !== null) {
+        const failureSet = response.error as IFailureIItemSet;
+        if (typeof failureSet !== 'undefined' && failureSet !== null) {
           this.setValidationErrorMessages(failureSet.items || []);
         } else {
           this.setErrorMessage(

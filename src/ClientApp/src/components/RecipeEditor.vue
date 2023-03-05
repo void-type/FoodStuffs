@@ -119,7 +119,7 @@ const isRecipeDirty = computed(() => {
 });
 
 watch(isRecipeDirty, () => {
-  props.onRecipeDirtyStateChange(isRecipeDirty);
+  props.onRecipeDirtyStateChange(isRecipeDirty.value);
 });
 
 onMounted(() => {
