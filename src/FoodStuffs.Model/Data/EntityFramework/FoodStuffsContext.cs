@@ -30,10 +30,7 @@ public partial class FoodStuffsContext : DbContext
                 .HasConstraintName("FK_Blob_Image");
         });
 
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.ToTable("Category");
-        });
+        modelBuilder.Entity<Category>(entity => entity.ToTable("Category"));
 
         modelBuilder.Entity<Image>(entity =>
         {

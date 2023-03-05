@@ -10,6 +10,7 @@ public partial class FoodStuffsContext
     private readonly IDateTimeService _dateTimeService;
     private readonly ICurrentUserAccessor _currentUserAccessor;
 
+#pragma warning disable CS8618
     public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options, IDateTimeService dateTimeService, ICurrentUserAccessor currentUserAccessor)
         : base(options)
     {
@@ -18,6 +19,7 @@ public partial class FoodStuffsContext
 
         ChangeTracker.LazyLoadingEnabled = false;
     }
+#pragma warning restore CS8618
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {

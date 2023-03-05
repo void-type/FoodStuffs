@@ -22,7 +22,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         // To change this, you will need both:
         // 1. a web.config with requestLimits maxAllowedContentLength="<byte size>"
         // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
-        // 3. edit the client-side upload validation in the recipeedit.vue file.
+        // 3. edit the client-side upload validation in the RecipeEdit.vue file.
 
         var recipeResult = await _data.Recipes.Get(new RecipesByIdSpecification(request.RecipeId), cancellationToken)
             .ToResultAsync(new RecipeNotFoundFailure());
@@ -31,8 +31,6 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         {
             return Fail(recipeResult.Failures);
         }
-
-        // TODO: compress image
 
         var image = new Image
         {
