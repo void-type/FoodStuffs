@@ -3,14 +3,22 @@ import useAppStore from '@/stores/appStore';
 import RouterHelpers from '@/models/RouterHelpers';
 
 const router = createRouter({
-  scrollBehavior: (to) => {
+  scrollBehavior(to, from, savedPosition) {
     if (to.hash) {
       document.getElementById(to.hash.slice(1))?.focus();
-      return { el: to.hash };
+      return {
+        el: to.hash,
+      };
     }
 
-    document.getElementById('app')?.focus();
-    return { left: 0, top: 0 };
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      document.getElementById('app')?.focus();
+      return {
+        el: '#app',
+      };
+    }
   },
   history: createWebHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',
