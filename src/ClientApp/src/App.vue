@@ -71,16 +71,15 @@ onMounted(() => {
 // Sticky footer
 html,
 body,
-#app,
-#app-inner {
+#app {
   height: 100%;
+  min-height: 100%;
 }
-#app-inner {
+#app {
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
 }
-main {
+#main {
   flex: 1 0 auto;
 }
 footer {
