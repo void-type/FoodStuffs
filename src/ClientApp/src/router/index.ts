@@ -9,7 +9,7 @@ const router = createRouter({
       return { el: to.hash };
     }
 
-    document.getElementById('app-template')?.focus();
+    document.getElementById('app')?.focus();
     return { left: 0, top: 0 };
   },
   history: createWebHistory(import.meta.env.BASE_URL),

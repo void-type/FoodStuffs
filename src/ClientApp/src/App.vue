@@ -45,24 +45,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app-inner" tabindex="-1">
-    <div class="container-xxl visually-hidden-focusable">
-      <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
-        >Skip to main content</router-link
-      >
-    </div>
-    <AppHeader class="d-print-none">
-      <template #navItems>
-        <AppNav />
-      </template>
-    </AppHeader>
-    <AppMessageCenter class="d-print-none" />
-    <main id="main" class="mb-4" tabindex="-1">
-      <RouterView />
-    </main>
-    <AppModal />
-    <AppFooter class="mt-2" />
+  <div class="container-xxl visually-hidden-focusable">
+    <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
+      >Skip to main content</router-link
+    >
   </div>
+  <AppHeader class="d-print-none">
+    <template #navItems>
+      <AppNav />
+    </template>
+  </AppHeader>
+  <AppMessageCenter class="d-print-none" />
+  <main id="main" class="mb-4" tabindex="-1">
+    <RouterView />
+  </main>
+  <AppModal />
+  <AppFooter class="mt-2" />
 </template>
 
 <style lang="scss">
