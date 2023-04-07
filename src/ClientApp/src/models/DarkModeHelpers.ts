@@ -23,12 +23,10 @@ export default class DarkModeHelpers {
     if (setting) {
       body.classList.add('bg-dark');
       body.classList.add('text-light');
-      body.classList.remove('bg-light');
       body.classList.remove('text-dark');
     } else {
       body.classList.remove('bg-dark');
       body.classList.remove('text-light');
-      body.classList.add('bg-light');
       body.classList.add('text-dark');
     }
   }

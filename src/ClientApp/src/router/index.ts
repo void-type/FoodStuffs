@@ -13,12 +13,13 @@ const router = createRouter({
 
     if (savedPosition) {
       return savedPosition;
-    } else {
-      document.getElementById('app')?.focus();
-      return {
-        el: '#app',
-      };
     }
+
+    document.getElementById('app')?.focus();
+
+    return {
+      el: '#app',
+    };
   },
   history: createWebHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',

@@ -79,7 +79,7 @@ body,
   display: flex;
   flex-direction: column;
 }
-#main {
+main {
   flex: 1 0 auto;
 }
 footer {
@@ -99,12 +99,6 @@ footer {
   border-top: var(--bs-gray-500) 1px solid;
 }
 
-body.bg-dark {
-  footer {
-    border-top: var(--bs-gray-800) 1px solid;
-  }
-}
-
 .card {
   &.card-hover:hover:not(.active),
   .card-hover:hover:not(.active) {
@@ -122,6 +116,9 @@ body.bg-dark {
 }
 
 body.bg-dark {
+  --bs-link-color: #{lighten($primary, 20%)};
+  --bs-link-hover-color: #{lighten($primary, 10%)};
+
   .card,
   .list-group,
   .list-group-item:not(.active) {
@@ -174,6 +171,10 @@ body.bg-dark {
     &:checked {
       background-color: var(--bs-primary);
     }
+  }
+
+  footer {
+    border-top: var(--bs-gray-800) 1px solid;
   }
 }
 
