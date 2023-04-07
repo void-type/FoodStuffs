@@ -60,6 +60,7 @@ function onDeleteClick(index: number) {
   showInAccordion(index);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onSortEnd(event: any) {
   if (event.oldIndex === event.newIndex) {
     return;
