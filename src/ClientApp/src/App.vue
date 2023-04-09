@@ -45,12 +45,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container-xxl visually-hidden-focusable">
+  <div id="skip-nav" class="container-xxl visually-hidden-focusable">
     <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
       >Skip to main content</router-link
     >
   </div>
-  <AppHeader class="d-print-none">
+  <AppHeader id="header" class="d-print-none">
     <template #navItems>
       <AppNav />
     </template>
@@ -60,7 +60,7 @@ onMounted(() => {
     <RouterView />
   </main>
   <AppModal />
-  <AppFooter class="mt-2" />
+  <AppFooter id="footer" class="mt-2" />
 </template>
 
 <style lang="scss">
@@ -70,20 +70,27 @@ onMounted(() => {
 
 // Sticky footer
 html,
-body,
-#app {
+body {
+  box-sizing: border-box;
   height: 100%;
-  min-height: 100%;
+  padding: 0;
+  margin: 0;
 }
 #app {
+  box-sizing: border-box;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
-main {
-  flex: 1 0 auto;
-}
-footer {
+#skip-nav,
+#header,
+#message-center,
+#footer {
+  flex-grow: 0;
   flex-shrink: 0;
+}
+#main {
+  flex-grow: 1;
 }
 
 // Minimum button width
