@@ -115,7 +115,17 @@ watch(
 );
 
 const isRecipeDirty = computed(() => {
-  return JSON.stringify(data.workingRecipe) !== JSON.stringify(getWorkingCopy());
+  const working = JSON.stringify(data.workingRecipe);
+  const source = JSON.stringify(getWorkingCopy());
+  const isDirty = working !== source;
+
+  // TODO: testing, found that ingredient guids are different
+  // if (isDirty) {
+  //   console.log('working', working);
+  //   console.log('source', source);
+  // }
+
+  return isDirty;
 });
 
 watch(isRecipeDirty, () => {

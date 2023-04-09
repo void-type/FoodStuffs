@@ -47,15 +47,17 @@ const api = ApiHelpers.client;
 const { isFieldInError } = appStore;
 const { listRequest } = storeToRefs(recipeStore);
 
+// Editing existing recipe
 const isEditMode = computed(() => (props.id || 0) > 0);
-const isCreateMode = computed(() => !isEditMode.value);
-const isCreateCopyMode = computed(() => isCreateMode.value && (props.copy || 0) > 0);
-const isCreateNewMode = computed(() => isCreateMode.value && !isCreateCopyMode.value);
+// Create copy of existing recipe
+const isCreateCopyMode = computed(() => !isEditMode.value && (props.copy || 0) > 0);
+// Create new recipe
+const isCreateNewMode = computed(() => !isEditMode.value && !isCreateCopyMode.value);
 
 function setImageSources(getRecipeResponse: GetRecipeResponse) {
   const { images, pinnedImageId } = getRecipeResponse;
   data.sourceImages = images || [];
-  data.pinnedImageId = pinnedImageId || -1;
+  data.pinnedImageId = pinnedImageId || null;
 }
 
 function setSources(getRecipeResponse: GetRecipeResponse) {
