@@ -42,11 +42,14 @@ const props = defineProps({
 
 const router = useRouter();
 
+// This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
+let workingRecipeInitial = '';
+
 const data = reactive({
   workingRecipe: new WorkingRecipe(),
 });
 
-function getWorkingCopy() {
+function reset() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
 
   const newWorkingClass = new WorkingRecipe();
@@ -72,11 +75,9 @@ function getWorkingCopy() {
     directions: props.sourceRecipe.directions || '',
   };
 
-  return newWorking;
-}
+  workingRecipeInitial = JSON.stringify(newWorking);
 
-function reset() {
-  data.workingRecipe = getWorkingCopy();
+  data.workingRecipe = newWorking;
 }
 
 function addCategory(tag: string) {
@@ -114,19 +115,7 @@ watch(
   }
 );
 
-const isRecipeDirty = computed(() => {
-  const working = JSON.stringify(data.workingRecipe);
-  const source = JSON.stringify(getWorkingCopy());
-  const isDirty = working !== source;
-
-  // TODO: testing, found that ingredient guids are different
-  // if (isDirty) {
-  //   console.log('working', working);
-  //   console.log('source', source);
-  // }
-
-  return isDirty;
-});
+const isRecipeDirty = computed(() => JSON.stringify(data.workingRecipe) !== workingRecipeInitial);
 
 watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);

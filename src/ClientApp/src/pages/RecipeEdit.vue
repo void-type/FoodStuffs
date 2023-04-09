@@ -7,7 +7,12 @@ import {
   useRouter,
   type NavigationGuardNext,
 } from 'vue-router';
-import type { GetRecipeResponse, SaveRecipeRequest } from '@/api/data-contracts';
+import type {
+  GetRecipeResponse,
+  IFailureIItemSet,
+  Int32EntityMessage,
+  SaveRecipeRequest,
+} from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
@@ -17,6 +22,7 @@ import RecipeEditor from '@/components/RecipeEditor.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 import type { ModalParameters } from '@/models/ModalParameters';
 import ApiHelpers from '@/models/ApiHelpers';
+import type { HttpResponse } from '@/api/http-client';
 
 const props = defineProps({
   id: {
@@ -120,24 +126,27 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
   api()
     .recipesCreate(recipe)
     .then((response) => {
-      data.isRecipeDirty = false;
-
-      if (props.id === 0) {
-        router.push({ name: 'edit', params: { id: response.data.id } });
+      if (!isEditMode.value) {
+        router.push({ name: 'edit', params: { id: response.data.id } }).then(() => {
+          onPostSave(response);
+        });
       } else {
         fetchRecipe();
+        onPostSave(response);
       }
-
-      if (response.data.message) {
-        appStore.setSuccessMessage(response.data.message);
-      }
-
-      fetchRecipesList();
-      recipeStore.updateRecent(recipe);
     })
     .catch((response) => {
       appStore.setApiFailureMessages(response);
     });
+
+  function onPostSave(response: HttpResponse<Int32EntityMessage, IFailureIItemSet>) {
+    if (response.data.message) {
+      appStore.setSuccessMessage(response.data.message);
+    }
+
+    fetchRecipesList();
+    recipeStore.updateRecent(recipe);
+  }
 }
 
 function onRecipeDelete(id: number) {
