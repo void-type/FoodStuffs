@@ -43,6 +43,7 @@ const data = reactive({
   isRecipeDirty: false,
   suggestedImageId: -1,
   pinnedImageId: null as number | null,
+  imageUploadSuccessToken: 0,
 });
 
 const appStore = useAppStore();
@@ -193,6 +194,7 @@ function onImageUpload(file: File) {
 
       fetchImageIds(props.id);
       fetchRecipesList();
+      data.imageUploadSuccessToken++;
     })
     .catch((response) => appStore.setApiFailureMessages(response));
 }
@@ -294,6 +296,7 @@ onBeforeRouteLeave(async (to, from, next) => {
           :suggested-image-id="data.suggestedImageId"
           :pinned-image-id="data.pinnedImageId"
           :on-image-upload="onImageUpload"
+          :image-upload-success-token="data.imageUploadSuccessToken"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
           class="mb-4"

@@ -27,6 +27,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  imageUploadSuccessToken: {
+    type: Number,
+    required: true,
+  },
   onImageDelete: {
     type: Function,
     required: true,
@@ -57,6 +61,17 @@ watch(
       props.suggestedImageId === null ? -1 : props.imageIds.indexOf(props.suggestedImageId);
     const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
     carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
+  }
+);
+
+watch(
+  () => props.imageUploadSuccessToken,
+  () => {
+    var fileInput = document.getElementById('upload-file') as HTMLInputElement;
+
+    if (fileInput !== null) {
+      fileInput.value = '';
+    }
   }
 );
 
@@ -121,9 +136,9 @@ function pinImageClick(imageId: number) {
     <div class="card-body">
       <div class="grid">
         <div class="g-col-12 g-col-md-6">
-          <label :for="`upload-${uniqueId}`" class="form-label">Upload image</label>
+          <label for="upload-file" class="form-label">Upload image</label>
           <input
-            :id="`upload-${uniqueId}`"
+            id="upload-file"
             type="file"
             :class="{
               'form-control': true,
