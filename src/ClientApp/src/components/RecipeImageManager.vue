@@ -174,14 +174,13 @@ onMounted(() => {
           <div
             v-if="imageIds.length > 0"
             :id="`image-carousel-${uniqueId}`"
-            :key="imageIds.join(',')"
             class="carousel slide"
             data-bs-interval="false"
           >
             <div class="carousel-indicators d-print-none">
               <button
                 v-for="(imageId, i) in imageIds"
-                :key="imageId"
+                :key="`${imageId}:${props.suggestedImageId}`"
                 type="button"
                 :data-bs-target="`#image-carousel-${uniqueId}`"
                 :data-bs-slide-to="i"
@@ -193,7 +192,7 @@ onMounted(() => {
             <div class="carousel-inner">
               <div
                 v-for="(imageId, i) in imageIds"
-                :key="imageId"
+                :key="`${imageId}:${props.suggestedImageId}`"
                 :class="{ 'carousel-item': true, active: i === carouselIndex }"
               >
                 <button
