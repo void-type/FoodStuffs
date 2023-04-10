@@ -56,6 +56,7 @@ function removeTagClick(tag: string) {
       <button
         v-for="tag in tags"
         :key="tag"
+        type="button"
         class="btn btn-sm btn-secondary me-2 mb-2"
         @click.stop.prevent="removeTagClick(tag)"
       >

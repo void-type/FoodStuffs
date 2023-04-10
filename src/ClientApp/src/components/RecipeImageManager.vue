@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import useAppStore from '@/stores/appStore';
 import ApiHelpers from '@/models/ApiHelpers';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import type bootstrap from 'bootstrap';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
@@ -97,6 +98,7 @@ function uploadFileChange(event: Event | DragEvent) {
     return;
   }
 
+  // eslint-disable-next-line prefer-destructuring
   uploadFile.value = files[0];
 }
 
@@ -118,7 +120,7 @@ watch([() => props.imageIds, () => props.suggestedImageId], () => {
 watch(
   () => props.imageUploadSuccessToken,
   () => {
-    var fileInput = document.getElementById('upload-file') as HTMLInputElement;
+    const fileInput = document.getElementById('upload-file') as HTMLInputElement;
 
     if (fileInput !== null) {
       fileInput.value = '';
@@ -171,8 +173,8 @@ onMounted(() => {
         <div class="g-col-12 g-col-md-6 text-center">
           <div
             v-if="imageIds.length > 0"
-            :key="imageIds.join(',')"
             :id="`image-carousel-${uniqueId}`"
+            :key="imageIds.join(',')"
             class="carousel slide"
             data-bs-interval="false"
           >
@@ -180,12 +182,12 @@ onMounted(() => {
               <button
                 v-for="(imageId, i) in imageIds"
                 :key="imageId"
+                type="button"
                 :data-bs-target="`#image-carousel-${uniqueId}`"
                 :data-bs-slide-to="i"
                 :class="{ active: i === carouselIndex }"
                 :aria-current="i === carouselIndex"
                 :aria-label="`Show image ${i}`"
-                type="button"
               ></button>
             </div>
             <div class="carousel-inner">
@@ -196,6 +198,7 @@ onMounted(() => {
               >
                 <button
                   v-if="imageIds.length > 0 && imageId != pinnedImageId"
+                  type="button"
                   class="btn btn-secondary btn-sm image-button image-button-pin d-print-none"
                   title="Pin image"
                   @click.stop.prevent="pinImageClick(imageId)"
@@ -205,6 +208,7 @@ onMounted(() => {
                 </button>
                 <button
                   v-if="imageIds.length > 0"
+                  type="button"
                   class="btn btn-danger btn-sm image-button image-button-delete d-print-none"
                   title="Delete image"
                   @click.stop.prevent="deleteImageClick(imageId)"

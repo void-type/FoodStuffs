@@ -23,8 +23,8 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
         {{ applicationName }}
       </router-link>
       <button
-        class="navbar-toggler"
         type="button"
+        class="navbar-toggler"
         data-bs-toggle="collapse"
         data-bs-target="#navbar-menu"
         aria-controls="navbar-menu"

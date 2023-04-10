@@ -136,6 +136,7 @@ watch(data, (newValue) => {
                       'form-control': true,
                       'is-invalid': isFieldInError('ingredients'),
                     }"
+                    @keydown.stop.prevent.enter
                   />
                 </div>
                 <div v-if="!element.isCategory" class="g-col-12 g-col-md-4">
@@ -170,6 +171,7 @@ watch(data, (newValue) => {
                 </div>
                 <div class="btn-toolbar g-col-12">
                   <button
+                    type="button"
                     class="btn btn-danger btn-sm d-inline ms-auto"
                     @click.stop.prevent="onDeleteClick(index)"
                   >
@@ -183,7 +185,11 @@ watch(data, (newValue) => {
       </Sortable>
     </div>
     <div class="btn-toolbar">
-      <button class="btn btn-secondary btn-sm me-2 mt-3" @click.stop.prevent="onNewClick()">
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm me-2 mt-3"
+        @click.stop.prevent="onNewClick()"
+      >
         New ingredient
       </button>
     </div>

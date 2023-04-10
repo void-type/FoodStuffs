@@ -109,12 +109,12 @@ onMounted(() => {
             <button
               v-for="(imageId, i) in imageIds"
               :key="imageId"
+              type="button"
               :data-bs-target="`#image-carousel-${uniqueId}`"
               :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
               aria-label="Show image {{i}}"
-              type="button"
             ></button>
           </div>
           <div class="carousel-inner">
@@ -132,8 +132,8 @@ onMounted(() => {
             </div>
           </div>
           <button
-            class="carousel-control-prev d-print-none"
             type="button"
+            class="carousel-control-prev d-print-none"
             :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="prev"
           >
@@ -141,8 +141,8 @@ onMounted(() => {
             <span class="visually-hidden">Previous</span>
           </button>
           <button
-            class="carousel-control-next d-print-none"
             type="button"
+            class="carousel-control-next d-print-none"
             :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="next"
           >

@@ -14,7 +14,7 @@ defineProps({
     <div class="card">
       <h5 class="card-header d-flex justify-content-between align-items-center">
         {{ title }}
-        <button class="btn btn-primary" @click="onClear()">Clear</button>
+        <button type="button" class="btn btn-primary" @click="onClear()">Clear</button>
       </h5>
       <ul class="list-group list-group-flush">
         <li

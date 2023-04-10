@@ -125,6 +125,15 @@ function fetchImageIds(recipeId: number) {
 }
 
 function onRecipeSave(recipe: SaveRecipeRequest) {
+  function onPostSave(response: HttpResponse<Int32EntityMessage, IFailureIItemSet>) {
+    if (response.data.message) {
+      appStore.setSuccessMessage(response.data.message);
+    }
+
+    fetchRecipesList();
+    recipeStore.updateRecent(recipe);
+  }
+
   api()
     .recipesCreate(recipe)
     .then((response) => {
@@ -140,15 +149,6 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
     .catch((response) => {
       appStore.setApiFailureMessages(response);
     });
-
-  function onPostSave(response: HttpResponse<Int32EntityMessage, IFailureIItemSet>) {
-    if (response.data.message) {
-      appStore.setSuccessMessage(response.data.message);
-    }
-
-    fetchRecipesList();
-    recipeStore.updateRecent(recipe);
-  }
 }
 
 function onRecipeDelete(id: number) {
@@ -194,7 +194,7 @@ function onImageUpload(file: File) {
       data.suggestedImageId = response.data.id || -1;
       fetchImageIds(props.id);
       fetchRecipesList();
-      data.imageUploadSuccessToken++;
+      data.imageUploadSuccessToken += 1;
     })
     .catch((response) => appStore.setApiFailureMessages(response));
 }
@@ -208,8 +208,12 @@ function onImageDelete(imageId: number) {
           appStore.setSuccessMessage(response.data.message);
         }
 
-        const suggestedImageIndex = clamp(data.sourceImages.indexOf(imageId) - 1, 0, data.sourceImages.length - 1);
-        data.suggestedImageId =  data.sourceImages[suggestedImageIndex];
+        const suggestedImageIndex = clamp(
+          data.sourceImages.indexOf(imageId) - 1,
+          0,
+          data.sourceImages.length - 1
+        );
+        data.suggestedImageId = data.sourceImages[suggestedImageIndex];
         fetchImageIds(props.id);
         fetchRecipesList();
       })
