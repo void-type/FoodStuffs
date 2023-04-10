@@ -137,6 +137,8 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
   api()
     .recipesCreate(recipe)
     .then((response) => {
+      data.isRecipeDirty = false;
+
       if (!isEditMode.value) {
         router.push({ name: 'edit', params: { id: response.data.id } }).then(() => {
           onPostSave(response);
