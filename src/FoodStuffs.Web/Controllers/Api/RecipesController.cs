@@ -1,7 +1,5 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
-using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
@@ -22,6 +20,7 @@ public class RecipesController : ControllerBase
     /// <param name="listPipeline"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
     /// <param name="category">Category names contain (case-insensitive)</param>
+    /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
     /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: name. Default is ID</param>
     /// <param name="sortDesc">True for descending sort</param>
     /// <param name="isPagingEnabled">False for all results</param>
@@ -31,11 +30,12 @@ public class RecipesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListRecipesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> Search([FromServices] ListRecipesPipeline listPipeline, string? name = null, string? category = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> Search([FromServices] ListRecipesPipeline listPipeline, string? name = null, string? category = null, bool? isForMealPlanning = null, string? sortBy = null, bool sortDesc = false, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListRecipesRequest(
             NameSearch: name,
             CategorySearch: category,
+            IsForMealPlanning: isForMealPlanning,
             SortBy: sortBy,
             SortDesc: sortDesc,
             IsPagingEnabled: isPagingEnabled,

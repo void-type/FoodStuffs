@@ -1,0 +1,20 @@
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #642b61;
+  background-color: #ffffff;
+  margin: 0;
+}
+
+main {
+  padding-top: 3em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.text-center {
+  text-align: center;
+}

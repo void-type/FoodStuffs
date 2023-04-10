@@ -4,4 +4,6 @@
 
 namespace FoodStuffs.Model.Data.Models;
 
-public partial class Image : IAuditable { }
+public partial class Image : IAuditable
+{
+}

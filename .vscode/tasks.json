@@ -30,13 +30,12 @@
             }
         },
         {
-            "label": "buildDebug",
+            "label": "build-debug",
             "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipTest -SkipPublish",
             "options": {
                 "cwd": "./build"
             },
             "type": "shell",
-            "group": "test",
             "problemMatcher": [
                 "$node-sass",
                 "$eslint-compact",
@@ -53,13 +52,72 @@
             }
         },
         {
-            "label": "testServer",
+            "label": "format",
+            "command": "./format.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "build"
+            }
+        },
+        {
+            "label": "update-dependencies",
+            "command": "./updateDependencies.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "build"
+            }
+        },
+        {
+            "label": "generate-api-client",
+            "command": "./generateApiClient.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "build"
+            }
+        },
+        {
+            "label": "test-server",
             "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipClient -SkipPublish",
             "options": {
                 "cwd": "./build"
             },
             "type": "shell",
-            "group": "test",
             "problemMatcher": "$msCompile",
             "presentation": {
                 "echo": true,
@@ -68,17 +126,34 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false,
-                "group": "test"
+                "group": "build"
             }
         },
         {
-            "label": "watchClient",
+            "label": "watch-test-server",
+            "command": "./watchServerTest.ps1",
+            "options": {
+                "cwd": "./build"
+            },
+            "type": "shell",
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false,
+                "group": "watch"
+            }
+        },
+        {
+            "label": "watch-web-client",
             "command": "./watchClient.ps1",
             "options": {
                 "cwd": "./build"
             },
             "type": "shell",
-            "group": "test",
             "problemMatcher": [
                 "$node-sass",
                 "$eslint-compact"
@@ -94,13 +169,12 @@
             }
         },
         {
-            "label": "watchServer",
-            "command": "./watchServer.ps1",
+            "label": "watch-web-server",
+            "command": "./watchWeb.ps1",
             "options": {
                 "cwd": "./build"
             },
             "type": "shell",
-            "group": "test",
             "problemMatcher": [
                 "$msCompile"
             ],
@@ -115,23 +189,9 @@
             }
         },
         {
-            "label": "watchServerTest",
-            "command": "./watchServerTest.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": "test",
-            "problemMatcher": "$msCompile",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "watch"
-            }
-        },
+            "label": "watch-web",
+            "dependsOn": ["watch-web-client", "watch-web-server"],
+            "problemMatcher": []
+        }
     ]
 }

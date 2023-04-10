@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FoodStuffs.Model.Events.Recipes;
+﻿namespace FoodStuffs.Model.Events.Recipes;
 
 public record GetRecipeResponse(
     int Id,
     string Name,
-    string Ingredients,
     string Directions,
     int? CookTimeMinutes,
     int? PrepTimeMinutes,
@@ -15,5 +11,7 @@ public record GetRecipeResponse(
     string ModifiedBy,
     DateTime ModifiedOn,
     int? PinnedImageId,
+    bool IsForMealPlanning,
     IEnumerable<string> Categories,
-    IEnumerable<int> Images);
+    IEnumerable<int> Images,
+    IEnumerable<GetRecipeResponseIngredient> Ingredients);

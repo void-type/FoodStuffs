@@ -1,8 +1,6 @@
 ﻿using FoodStuffs.Model.Events;
 using FoodStuffs.Model.Events.Images;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using VoidCore.Model.Responses.Files;
 using Xunit;
 
@@ -101,6 +99,10 @@ public class ImageEventTests
             .First(r => r.Name == "Recipe1");
 
         var image = recipe.Images.First();
+
+        // For testing, we need to pull in all entities so EF can cascade delete.
+        // In prod, SQL Server will do the cascading without needing to bring them into memory.
+        var blobs = context.Blobs.ToList();
 
         var request = new DeleteImageRequest(image.Id);
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using VoidCore.AspNet.Security;
+﻿using VoidCore.AspNet.Security;
 
 namespace FoodStuffs.Web.Configuration;
 
@@ -45,6 +43,9 @@ public static class ApplicationBuilderExtensions
             options.StyleSources
                 .AllowSelf();
 
+            options.FrameAncestors
+                .AllowNone();
+
             if (environment.IsDevelopment())
             {
                 // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
@@ -54,6 +55,10 @@ public static class ApplicationBuilderExtensions
 
                 options.StyleSources
                     .AllowUnsafeInline();
+
+                // .NET hot reloading uses web sockets
+                options.Custom("default-src")
+                    .Allow("wss:");
             }
             else
             {
@@ -63,16 +68,12 @@ public static class ApplicationBuilderExtensions
 
                 options.StyleSources
                     // Add the Swagger UI scripts
-                    .AllowNonce()
-                    // Add the Vue-Progressbar hash because it applies inline styling.
-                    .AllowHash("sha256", "DNQ8Cm24tOHANsjo3O93DpqGvfN0qkQZsMZIt0PmA2o=")
-                    // Add the Font-Awesome hash because it applied inline styling.
-                    .AllowHash("sha256", "UTjtaAWWTyzFjRKbltk24jHijlTbP20C1GUYaWPqg7E=");
+                    .AllowNonce();
             }
         });
 
         app.UseXContentTypeOptionsNoSniff();
 
-        return app.UseXFrameOptions(options => options.Deny());
+        return app;
     }
 }

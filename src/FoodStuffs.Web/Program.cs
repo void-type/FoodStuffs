@@ -1,11 +1,9 @@
 ﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
-using FoodStuffs.Web.Data.EntityFramework;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
-using System;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
@@ -47,7 +45,9 @@ try
     services.AddSingleton<IDateTimeService, NowDateTimeService>();
 
     config.GetRequiredConnectionString<FoodStuffsContext>();
-    services.AddDbContext<FoodStuffsContext>();
+    services.AddDbContext<FoodStuffsContext>(options => options
+        .UseSqlServer("Name=FoodStuffs", b => b.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName)));
+
     services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
 
     // Auto-register Domain Events
@@ -61,16 +61,16 @@ try
     var app = builder.Build();
 
     // Middleware pipeline
-    app.UseSpaExceptionPage(env)
-        .UseSecureTransport(env)
-        .UseSecurityHeaders(env)
-        .UseStaticFiles()
-        .UseRouting()
-        .UseRequestLoggingScope()
-        .UseSerilogRequestLogging()
-        .UseCurrentUserLogging()
-        .UseSwaggerAndUi(env)
-        .UseSpaEndpoints();
+    app.UseSpaExceptionPage(env);
+    app.UseSecureTransport(env);
+    app.UseSecurityHeaders(env);
+    app.UseStaticFiles();
+    app.UseRouting();
+    app.UseRequestLoggingScope();
+    app.UseSerilogRequestLogging();
+    app.UseCurrentUserLogging();
+    app.UseSwaggerAndUi(env);
+    app.UseSpaEndpoints();
 
     Log.Information("Starting host.");
     app.Run();

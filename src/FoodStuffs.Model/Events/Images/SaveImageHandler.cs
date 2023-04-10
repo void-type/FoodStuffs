@@ -1,8 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
-using System.Threading;
-using System.Threading.Tasks;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -24,10 +22,10 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         // To change this, you will need both:
         // 1. a web.config with requestLimits maxAllowedContentLength="<byte size>"
         // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
-        // 3. edit the client-side upload validation in the recipeedit.vue file.
+        // 3. edit the client-side upload validation in the RecipeEdit.vue file.
 
         var recipeResult = await _data.Recipes.Get(new RecipesByIdSpecification(request.RecipeId), cancellationToken)
-            .ToResultAsync(new RecipeNotFoundFailure()).ConfigureAwait(false);
+            .ToResultAsync(new RecipeNotFoundFailure());
 
         if (recipeResult.IsFailed)
         {
@@ -39,7 +37,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
             RecipeId = recipeResult.Value.Id
         };
 
-        await _data.Images.Add(image, cancellationToken).ConfigureAwait(false);
+        await _data.Images.Add(image, cancellationToken);
 
         var blob = new Blob
         {
@@ -47,7 +45,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
             Bytes = request.FileContent
         };
 
-        await _data.Blobs.Add(blob, cancellationToken).ConfigureAwait(false);
+        await _data.Blobs.Add(blob, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.Id));
     }

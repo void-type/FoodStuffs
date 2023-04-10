@@ -1,8 +1,5 @@
 ﻿using FoodStuffs.Model.Events.Images;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using System.Threading.Tasks;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
@@ -53,8 +50,7 @@ public class ImagesController : ControllerBase
         {
             await file
                 .EnsureNotNull()
-                .CopyToAsync(memoryStream)
-                .ConfigureAwait(false);
+                .CopyToAsync(memoryStream);
 
             content = memoryStream.ToArray();
         }
@@ -63,8 +59,7 @@ public class ImagesController : ControllerBase
 
         return await savePipeline
             .Handle(request)
-            .MapAsync(HttpResponder.Respond)
-            .ConfigureAwait(false);
+            .MapAsync(HttpResponder.Respond);
     }
 
     /// <summary>

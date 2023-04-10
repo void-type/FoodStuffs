@@ -5,6 +5,7 @@ namespace FoodStuffs.Model.Events.Recipes;
 public record ListRecipesRequest(
     string? NameSearch,
     string? CategorySearch,
+    bool? IsForMealPlanning,
     string? SortBy,
     bool SortDesc,
     bool IsPagingEnabled,

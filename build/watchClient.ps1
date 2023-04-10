@@ -8,7 +8,7 @@ try {
   Set-Location -Path $webClientProjectFolder
 
   npm install --no-audit
-  npm run build -- --watch --mode "development"
+  npm run watch
 
 } finally {
   Set-Location $originalLocation

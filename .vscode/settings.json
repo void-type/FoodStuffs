@@ -1,0 +1,3 @@
+{
+  "typescript.tsdk": "src/ClientApp/node_modules/typescript/lib"
+}

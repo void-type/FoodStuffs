@@ -1,12 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
@@ -30,7 +25,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
         var allSearch = new RecipesSearchSpecification(searchCriteria);
 
-        var totalCount = await _data.Recipes.Count(allSearch, cancellationToken).ConfigureAwait(false);
+        var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
 
         var pagedSearch = new RecipesSearchSpecification(
             criteria: searchCriteria,
@@ -38,13 +33,13 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
             sortBy: request.SortBy,
             sortDesc: request.SortDesc);
 
-        var recipes = await _data.Recipes.List(pagedSearch, cancellationToken).ConfigureAwait(false);
+        var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
 
         return recipes
             .Select(r => new ListRecipesResponse(
                 Id: r.Id,
                 Name: r.Name,
-                Categories: r.CategoryRecipes.Select(cr => cr.Category.Name).OrderBy(n => n),
+                Categories: r.Categories.Select(c => c.Name).OrderBy(n => n),
                 ImageId: r.PinnedImageId ?? r.Images.FirstOrDefault()?.Id))
             .ToItemSet(paginationOptions, totalCount)
             .Map(Ok);
@@ -64,10 +59,15 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
         if (!string.IsNullOrWhiteSpace(request.CategorySearch))
         {
-            searchCriteria.Add(recipe => recipe.CategoryRecipes.Any(cr => cr.Category.Name.ToLower().Contains(request.CategorySearch.ToLower())));
+            searchCriteria.Add(recipe => recipe.Categories.Any(c => c.Name.ToLower().Contains(request.CategorySearch.ToLower())));
         }
 
 #pragma warning restore RCS1155
+
+        if (request.IsForMealPlanning is not null)
+        {
+            searchCriteria.Add(recipe => recipe.IsForMealPlanning == request.IsForMealPlanning);
+        }
 
         return searchCriteria.ToArray();
     }

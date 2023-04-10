@@ -10,7 +10,6 @@ public interface IFoodStuffsData
 {
     IWritableRepository<Blob> Blobs { get; }
     IWritableRepository<Category> Categories { get; }
-    IWritableRepository<CategoryRecipe> CategoryRecipes { get; }
     IWritableRepository<Image> Images { get; }
     IWritableRepository<Recipe> Recipes { get; }
     IWritableRepository<User> Users { get; }

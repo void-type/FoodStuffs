@@ -7,39 +7,41 @@
 
 A web application for managing recipes.
 
-FoodStuffs is based on ASP.NET Core 6 and Vue.js 2.6.
+FoodStuffs is based on ASP.NET Core 7 and Vue 3.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
 ## Features
 
-* Printer-friendly views.
-* Category tags on recipes.
-* Multi-image uploads for recipes.
-* Copy recipes.
-* Text search on recipe names and categories.
-* Recent history list.
-* Full logging on the server.
-* Bootstrap-Vue UI.
-* See screenshots [here](docs/screenshots.md).
-
-### Coming Soon™
-
-* Users and authentication
-* Side-by-side recipe viewing
+- Category tags on recipes.
+- Images for recipes.
+- Copy recipes.
+- Search and pagination.
+- Recent history list.
+- Unsaved change detection.
+- Responsive UI using Bootstrap grid.
+- Dark mode.
+- Printer-friendly views.
+- See screenshots [here](docs/screenshots.md).
 
 ## Build and Run FoodStuffs
 
 ### Make a Database
 
-1. Build a SQL Server database by running the migration scripts in /build/sql in order by date.
+This project now uses Entity Framework Code First, but used to use Database First.
+
+To create a new database, uncomment the up/down method bodies in the initial migration and run `./build/dbApplyMigration.ps1`.
+
+To update your database after v9.0.0, run `./build/dbCreateMigration.ps1`.
+
+If upgrading a database from before v9.0.0, migration scripts in /build/sql in order by date, then run `./build/dbApplyMigration.ps1`.
 
 ### Local build (production and development)
 
 Install the following tools:
 
-* [.NET SDK](https://www.microsoft.com/net/download)
-* [Node](https://nodejs.org/en/)
+- [.NET SDK](https://www.microsoft.com/net/download)
+- [Node](https://nodejs.org/en/)
 
 See the /build folder for scripts used to test and build this project.
 
@@ -50,6 +52,8 @@ Run build.ps1 to make a production build.
 ```powershell
 ./build/build.ps1
 ```
+
+### IIS Deployment
 
 Use the deployment/setup scripts as templates to deploy to your environment.
 
