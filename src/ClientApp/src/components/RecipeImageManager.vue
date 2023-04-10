@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, type PropType, type Ref } from 'vue';
+import { onMounted, ref, watch, type PropType, type Ref } from 'vue';
 import { clamp } from '@/models/FormatHelpers';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import useAppStore from '@/stores/appStore';
@@ -54,27 +54,6 @@ const uploadFile: Ref<File | null> = ref(null);
 const carouselIndex = ref(0);
 const uniqueId = crypto.randomUUID();
 
-watch(
-  () => props.imageIds,
-  () => {
-    const suggestedImageIndex =
-      props.suggestedImageId === null ? -1 : props.imageIds.indexOf(props.suggestedImageId);
-    const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
-    carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
-  }
-);
-
-watch(
-  () => props.imageUploadSuccessToken,
-  () => {
-    var fileInput = document.getElementById('upload-file') as HTMLInputElement;
-
-    if (fileInput !== null) {
-      fileInput.value = '';
-    }
-  }
-);
-
 function imageUrl(imageId: number) {
   return ApiHelpers.imageUrl(imageId);
 }
@@ -118,7 +97,6 @@ function uploadFileChange(event: Event | DragEvent) {
     return;
   }
 
-  // eslint-disable-next-line prefer-destructuring
   uploadFile.value = files[0];
 }
 
@@ -129,6 +107,35 @@ function deleteImageClick(imageId: number) {
 function pinImageClick(imageId: number) {
   props.onImagePin(imageId);
 }
+
+watch([() => props.imageIds, () => props.suggestedImageId], () => {
+  const suggestedImageIndex =
+    props.suggestedImageId === null ? -1 : props.imageIds.indexOf(props.suggestedImageId);
+  const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
+  carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
+});
+
+watch(
+  () => props.imageUploadSuccessToken,
+  () => {
+    var fileInput = document.getElementById('upload-file') as HTMLInputElement;
+
+    if (fileInput !== null) {
+      fileInput.value = '';
+    }
+  }
+);
+
+onMounted(() => {
+  const carouselElement = document.getElementById('image-carousel');
+
+  if (carouselElement !== null) {
+    carouselElement.addEventListener('slid.bs.carousel', (event) => {
+      const carouselEvent = event as unknown as bootstrap.Carousel.Event;
+      carouselIndex.value = carouselEvent.to;
+    });
+  }
+});
 </script>
 
 <template>
@@ -164,6 +171,7 @@ function pinImageClick(imageId: number) {
         <div class="g-col-12 g-col-md-6 text-center">
           <div
             v-if="imageIds.length > 0"
+            :key="imageIds.join(',')"
             :id="`image-carousel-${uniqueId}`"
             class="carousel slide"
             data-bs-interval="false"
@@ -176,7 +184,7 @@ function pinImageClick(imageId: number) {
                 :data-bs-slide-to="i"
                 :class="{ active: i === carouselIndex }"
                 :aria-current="i === carouselIndex"
-                aria-label="Show image {{i}}"
+                :aria-label="`Show image ${i}`"
                 type="button"
               ></button>
             </div>

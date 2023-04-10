@@ -23,6 +23,7 @@ import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 import type { ModalParameters } from '@/models/ModalParameters';
 import ApiHelpers from '@/models/ApiHelpers';
 import type { HttpResponse } from '@/api/http-client';
+import { clamp } from '@/models/FormatHelpers';
 
 const props = defineProps({
   id: {
@@ -191,7 +192,6 @@ function onImageUpload(file: File) {
       }
 
       data.suggestedImageId = response.data.id || -1;
-
       fetchImageIds(props.id);
       fetchRecipesList();
       data.imageUploadSuccessToken++;
@@ -207,6 +207,9 @@ function onImageDelete(imageId: number) {
         if (response.data.message) {
           appStore.setSuccessMessage(response.data.message);
         }
+
+        const suggestedImageIndex = clamp(data.sourceImages.indexOf(imageId) - 1, 0, data.sourceImages.length - 1);
+        data.suggestedImageId =  data.sourceImages[suggestedImageIndex];
         fetchImageIds(props.id);
         fetchRecipesList();
       })
@@ -265,7 +268,7 @@ function beforeRouteChange(next: NavigationGuardNext) {
 }
 
 watch(
-  () => [props.id],
+  () => props.id,
   () => {
     fetchRecipe();
   }
