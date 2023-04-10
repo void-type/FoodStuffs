@@ -32,6 +32,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  recipeChangedToken: {
+    type: Number,
+    required: true,
+  },
   onImageDelete: {
     type: Function,
     required: true,
@@ -117,6 +121,10 @@ watch([() => props.imageIds, () => props.suggestedImageId], () => {
   carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
 });
 
+watch([() => props.recipeChangedToken], () => {
+  carouselIndex.value = 0;
+});
+
 watch(
   () => props.imageUploadSuccessToken,
   () => {
@@ -125,6 +133,8 @@ watch(
     if (fileInput !== null) {
       fileInput.value = '';
     }
+
+    uploadFile.value = null;
   }
 );
 

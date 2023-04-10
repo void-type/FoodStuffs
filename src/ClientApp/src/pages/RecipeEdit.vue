@@ -45,6 +45,7 @@ const data = reactive({
   suggestedImageId: -1,
   pinnedImageId: null as number | null,
   imageUploadSuccessToken: 0,
+  recipeChangeToken: 0,
 });
 
 const appStore = useAppStore();
@@ -95,6 +96,7 @@ function fetchRecipe() {
   api()
     .recipesDetail(id)
     .then((response) => {
+      data.recipeChangeToken += 1;
       setSources(response.data);
       if (isEditMode.value) {
         recipeStore.queueRecent(response.data);
@@ -306,6 +308,7 @@ onBeforeRouteLeave(async (to, from, next) => {
           :pinned-image-id="data.pinnedImageId"
           :on-image-upload="onImageUpload"
           :image-upload-success-token="data.imageUploadSuccessToken"
+          :recipe-changed-token="data.recipeChangeToken"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
           class="mb-4"
