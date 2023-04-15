@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
-import { mapState, storeToRefs } from 'pinia';
-import { useCardStore } from '@/stores/cardStore';
+import { storeToRefs } from 'pinia';
+import useCardStore from '@/stores/cardStore';
 import { toInt } from '@/models/FormatHelpers';
 import ApiHelpers from '@/models/ApiHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';

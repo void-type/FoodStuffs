@@ -18,7 +18,7 @@ function cardClickInternal() {
   <div
     :class="['card', selected ? 'card--selected' : '', 'card-hover', 'meal-card']"
     tabindex="0"
-    :role="selected ? '' : 'button'"
+    role="button"
     @keydown.stop.prevent.enter="cardClickInternal()"
     @click.stop.prevent="cardClickInternal()"
   >
@@ -39,7 +39,10 @@ function cardClickInternal() {
     <div :id="`card-${cardType}-${card.id}-ingredient-collapse`" class="collapse">
       <div class="card-body">
         <ul>
-          <li v-for="ingredient in card.ingredients?.filter(x => x.isCategory === false)" :key="ingredient.name || ''">
+          <li
+            v-for="ingredient in card.ingredients?.filter((x) => x.isCategory === false)"
+            :key="ingredient.name || ''"
+          >
             {{ ingredient.quantity }}x {{ ingredient.name }}
           </li>
         </ul>

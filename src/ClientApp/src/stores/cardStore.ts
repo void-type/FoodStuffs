@@ -23,10 +23,13 @@ function countIngredients(acc: Record<string, number>, curr: ListRecipesResponse
     return acc;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (!acc[name!]) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     acc[name!] = 0;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   acc[name!] += quantity || 0;
   return acc;
 }
@@ -55,7 +58,7 @@ function subtractCount(dict: Record<string, number>, key: string, count = 1) {
   }
 }
 
-export const useCardStore = defineStore('cards', {
+export default defineStore('cards', {
   state: (): CardStoreState => ({
     listResponse: {
       count: 0,
