@@ -11,6 +11,7 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
     {
         AddInclude(nameof(Recipe.Categories));
         AddInclude(nameof(Recipe.Images));
+        AddInclude(nameof(Recipe.Ingredients));
     }
 
     public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null, bool sortDesc = false) : this(criteria)

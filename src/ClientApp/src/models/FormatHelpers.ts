@@ -30,5 +30,5 @@ export function trimAndTitleCase(value: string) {
 }
 
 export function isNil(value: string | null | undefined) {
-  return value === null || value === undefined || value === '';
+  return value === null || typeof value === 'undefined' || value === '';
 }

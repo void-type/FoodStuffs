@@ -120,6 +120,18 @@ footer {
       max-height: 16rem;
     }
   }
+
+  &.meal-card {
+    --bs-accordion-btn-icon-width: #{$accordion-icon-width};
+    --bs-accordion-btn-icon: #{escape-svg($accordion-button-icon)};
+    --bs-accordion-btn-icon-transition: #{$accordion-icon-transition};
+    --bs-accordion-btn-active-icon: #{escape-svg($accordion-button-active-icon)};
+    --bs-accordion-btn-icon-transform: #{$accordion-icon-transform};
+    --bs-accordion-btn-padding-y: #{$accordion-button-padding-y};
+    --bs-accordion-btn-padding-x: #{$accordion-button-padding-x};
+    --bs-accordion-btn-color: #{$accordion-button-color};
+    --bs-accordion-btn-bg: #{$accordion-button-bg};
+  }
 }
 
 body.bg-dark {
@@ -161,7 +173,8 @@ body.bg-dark {
     --bs-pagination-disabled-border-color: unset;
   }
 
-  .accordion {
+  .accordion,
+  .card.meal-card {
     --bs-accordion-color: unset;
     --bs-accordion-bg: unset;
     --bs-accordion-btn-color: var(--bs-white);

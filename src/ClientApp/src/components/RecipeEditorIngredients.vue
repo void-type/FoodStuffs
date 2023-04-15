@@ -104,7 +104,7 @@ watch(data, (newValue) => {
       <Sortable :list="data.ingredients" item-key="id" @end="onSortEnd">
         <template #item="{ element, index }">
           <div :key="element.id" class="accordion-item sortable-draggable">
-            <h2 :id="`ingredient-${element.id}-accordion-header`" class="accordion-header">
+            <div :id="`ingredient-${element.id}-accordion-header`" class="h2 accordion-header">
               <button
                 class="accordion-button collapsed"
                 type="button"
@@ -117,7 +117,7 @@ watch(data, (newValue) => {
                 <span v-if="element.isCategory" class="fw-bold">{{ element.name }}</span>
                 <span v-else>{{ element.quantity }}x {{ element.name }}</span>
               </button>
-            </h2>
+            </div>
             <div
               :id="`ingredient-${element.id}-accordion-collapse`"
               class="accordion-collapse collapse"

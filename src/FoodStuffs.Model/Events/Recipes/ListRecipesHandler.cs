@@ -40,6 +40,9 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
                 Id: r.Id,
                 Name: r.Name,
                 Categories: r.Categories.Select(c => c.Name).OrderBy(n => n),
+                Ingredients: r.Ingredients
+                    .Select(i => new ListRecipesResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
+                    .OrderBy(i => i.Order),
                 ImageId: r.PinnedImageId ?? r.Images.FirstOrDefault()?.Id))
             .ToItemSet(paginationOptions, totalCount)
             .Map(Ok);

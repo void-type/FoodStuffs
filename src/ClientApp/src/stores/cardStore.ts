@@ -1,34 +1,33 @@
+import type {
+  ListRecipesResponse,
+  ListRecipesResponseIItemSet,
+  ListRecipesResponseIngredient,
+  RecipesListParams,
+} from '@/api/data-contracts';
+import Choices from '@/models/Choices';
+import { isNil } from '@/models/FormatHelpers';
+import ListRecipesRequest from '@/models/ListRecipesRequest';
 import { defineStore } from 'pinia';
 
-export interface CardIngredient {
-  name: string;
-  quantity: number;
-}
-
-export interface Card {
-  id: number;
-  name: string;
-  ingredients: CardIngredient[];
-  active: boolean;
-}
-
 interface CardStoreState {
-  cards: Card[];
+  listResponse: ListRecipesResponseIItemSet;
+  listRequest: RecipesListParams;
+  selectedCards: ListRecipesResponse[];
   pantry: Record<string, number>;
 }
 
-export interface CardQuery {
-  active: boolean;
-}
+function countIngredients(acc: Record<string, number>, curr: ListRecipesResponseIngredient) {
+  const { name, quantity } = curr;
 
-function countIngredients(acc: Record<string, number>, curr: CardIngredient) {
-  const { name } = curr;
-
-  if (!acc[name]) {
-    acc[name] = 0;
+  if (isNil(name)) {
+    return acc;
   }
 
-  acc[name] += curr.quantity;
+  if (!acc[name!]) {
+    acc[name!] = 0;
+  }
+
+  acc[name!] += quantity || 0;
   return acc;
 }
 
@@ -56,89 +55,31 @@ function subtractCount(dict: Record<string, number>, key: string, count = 1) {
   }
 }
 
-const testCards = [
-  {
-    id: 1,
-    name: 'Burgers',
-    ingredients: [
-      { name: 'Beef', quantity: 2 },
-      { name: 'Buns', quantity: 2 },
-      { name: 'Ketchup', quantity: 1 },
-    ],
-    active: false,
-  },
-  {
-    id: 2,
-    name: 'Brats',
-    ingredients: [
-      { name: 'Sausage', quantity: 1 },
-      { name: 'Buns', quantity: 1 },
-      { name: 'Mustard', quantity: 3 },
-    ],
-    active: false,
-  },
-  {
-    id: 3,
-    name: 'Mac N Cheese',
-    ingredients: [
-      { name: 'Mac', quantity: 1 },
-      { name: 'Cheese', quantity: 1 },
-    ],
-    active: false,
-  },
-  {
-    id: 4,
-    name: 'Curry',
-    ingredients: [
-      { name: 'Chicken', quantity: 1 },
-      { name: 'Curry sauce', quantity: 1 },
-      { name: 'Rice', quantity: 1 },
-    ],
-    active: false,
-  },
-  {
-    id: 5,
-    name: 'Meatloaf',
-    ingredients: [
-      { name: 'Beef', quantity: 3 },
-      { name: 'Crackers', quantity: 1 },
-      { name: 'Ketchup', quantity: 1 },
-      { name: 'Egg', quantity: 1 },
-    ],
-    active: false,
-  },
-  {
-    id: 6,
-    name: 'Sandwich',
-    ingredients: [
-      { name: 'Lunch meat', quantity: 1 },
-      { name: 'Buns', quantity: 2 },
-      { name: 'Mustard', quantity: 1 },
-      { name: 'Cheese', quantity: 1 },
-      { name: 'Lettuce', quantity: 1 },
-    ],
-    active: false,
-  },
-];
-
 export const useCardStore = defineStore('cards', {
   state: (): CardStoreState => ({
-    cards: testCards,
+    listResponse: {
+      count: 0,
+      items: [],
+      isPagingEnabled: true,
+      page: 1,
+      take: Choices.paginationTake[2].value,
+      totalCount: 0,
+    },
+    listRequest: {
+      ...new ListRecipesRequest(),
+      take: Choices.paginationTake[2].value,
+      isForMealPlanning: true,
+    },
+    selectedCards: [],
     pantry: {},
   }),
 
   getters: {
-    getCards: (state) => (query: CardQuery) =>
-      state.cards
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .filter((c) => (query.active !== null ? c.active === query.active : true)),
-
     getPantry: (state) => Object.entries(state.pantry),
 
     getShoppingList: (state) => {
-      const ingredientCounts = state.cards
-        .filter((card) => card.active === true)
-        .flatMap((c) => c.ingredients)
+      const ingredientCounts = state.selectedCards
+        .flatMap((c) => c.ingredients || [])
         .reduce(countIngredients, {});
 
       Object.entries(state.pantry).forEach(([ingredient, quantity]) => {
@@ -147,15 +88,35 @@ export const useCardStore = defineStore('cards', {
 
       return Object.entries(ingredientCounts);
     },
+
+    isCardSelected: (state) => (id: number | null | undefined) =>
+      state.selectedCards.findIndex((x) => x.id === id) > -1,
   },
 
   actions: {
+    setListResponse(data: ListRecipesResponseIItemSet) {
+      this.listResponse = data;
+    },
+
+    setListRequest(data: RecipesListParams) {
+      this.listRequest = data;
+    },
+
     toggleCard(id: number) {
-      const card = this.cards.find((c) => c.id === id);
-      if (typeof card === 'undefined') {
+      const cardIndex = this.selectedCards.findIndex((x) => x.id === id);
+
+      if (cardIndex > -1) {
+        this.selectedCards.splice(cardIndex, 1);
         return;
       }
-      card.active = !card.active;
+
+      const recipe = this.listResponse.items?.find((c) => c.id === id);
+
+      if (typeof recipe === 'undefined' || recipe === null) {
+        return;
+      }
+
+      this.selectedCards.push(recipe);
     },
 
     clearPantry() {
@@ -171,10 +132,7 @@ export const useCardStore = defineStore('cards', {
     },
 
     clearShoppingList() {
-      this.cards.forEach((c) => {
-        // eslint-disable-next-line no-param-reassign
-        c.active = false;
-      });
+      this.selectedCards = [];
     },
   },
 });

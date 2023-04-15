@@ -14,7 +14,6 @@ export interface AppVersion {
   isPublicRelease?: boolean;
   isPrerelease?: boolean;
   gitCommitId?: string | null;
-
   /** @format date-time */
   gitCommitDate?: string;
   assemblyConfiguration?: string | null;
@@ -30,21 +29,16 @@ export interface GetRecipeResponse {
   id?: number;
   name?: string | null;
   directions?: string | null;
-
   /** @format int32 */
   cookTimeMinutes?: number | null;
-
   /** @format int32 */
   prepTimeMinutes?: number | null;
   createdBy?: string | null;
-
   /** @format date-time */
   createdOn?: string;
   modifiedBy?: string | null;
-
   /** @format date-time */
   modifiedOn?: string;
-
   /** @format int32 */
   pinnedImageId?: number | null;
   isForMealPlanning?: boolean;
@@ -55,10 +49,8 @@ export interface GetRecipeResponse {
 
 export interface GetRecipeResponseIngredient {
   name?: string | null;
-
   /** @format int32 */
   quantity?: number;
-
   /** @format int32 */
   order?: number;
   isCategory?: boolean;
@@ -74,20 +66,16 @@ export interface IFailureIItemSet {
   count?: number;
   items?: IFailure[] | null;
   isPagingEnabled?: boolean;
-
   /** @format int32 */
   page?: number;
-
   /** @format int32 */
   take?: number;
-
   /** @format int32 */
   totalCount?: number;
 }
 
 export interface Int32EntityMessage {
   message?: string | null;
-
   /** @format int32 */
   id?: number;
 }
@@ -97,7 +85,7 @@ export interface ListRecipesResponse {
   id?: number;
   name?: string | null;
   categories?: string[] | null;
-
+  ingredients?: ListRecipesResponseIngredient[] | null;
   /** @format int32 */
   imageId?: number | null;
 }
@@ -107,15 +95,21 @@ export interface ListRecipesResponseIItemSet {
   count?: number;
   items?: ListRecipesResponse[] | null;
   isPagingEnabled?: boolean;
-
   /** @format int32 */
   page?: number;
-
   /** @format int32 */
   take?: number;
-
   /** @format int32 */
   totalCount?: number;
+}
+
+export interface ListRecipesResponseIngredient {
+  name?: string | null;
+  /** @format int32 */
+  quantity?: number;
+  /** @format int32 */
+  order?: number;
+  isCategory?: boolean;
 }
 
 export interface PinImageRequest {
@@ -128,10 +122,8 @@ export interface SaveRecipeRequest {
   id?: number;
   name?: string | null;
   directions?: string | null;
-
   /** @format int32 */
   cookTimeMinutes?: number | null;
-
   /** @format int32 */
   prepTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
@@ -141,10 +133,8 @@ export interface SaveRecipeRequest {
 
 export interface SaveRecipeRequestIngredient {
   name?: string | null;
-
   /** @format int32 */
   quantity?: number;
-
   /** @format int32 */
   order?: number;
   isCategory?: boolean;
@@ -168,31 +158,32 @@ export interface ImagesCreateParams {
 export interface RecipesListParams {
   /** Name contains (case-insensitive) */
   name?: string;
-
   /** Category names contain (case-insensitive) */
   category?: string;
-
   /** If the recipes should be enabled for meal planning */
   isForMealPlanning?: boolean | null;
-
   /** Field name to sort by (case-insensitive). Options are: name. Default is ID */
   sortBy?: string;
-
-  /** True for descending sort */
+  /**
+   * True for descending sort
+   * @default false
+   */
   sortDesc?: boolean;
-
-  /** False for all results */
+  /**
+   * False for all results
+   * @default true
+   */
   isPagingEnabled?: boolean;
-
   /**
    * The page of results to retrieve
    * @format int32
+   * @default 1
    */
   page?: number;
-
   /**
    * How many items in a page
    * @format int32
+   * @default 30
    */
   take?: number;
 }
