@@ -107,7 +107,7 @@ onMounted(() => {
           :on-ingredient-click="cardStore.addToPantry"
         />
         <MealCardsIngredientList
-          class="mt-5"
+          class="mt-5 mb-4"
           title="Pantry"
           :ingredients="cardStore.getPantry"
           :on-clear="cardStore.clearPantry"
@@ -115,7 +115,7 @@ onMounted(() => {
         />
       </div>
       <div class="g-col-12 g-col-lg-9">
-        <h2 class="mt-5">Selected cards</h2>
+        <h2>Selected cards</h2>
         <div class="grid mt-3">
           <MealCardsCard
             v-for="card in activeCards"
