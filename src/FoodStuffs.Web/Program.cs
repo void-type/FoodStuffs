@@ -61,6 +61,7 @@ try
     var app = builder.Build();
 
     // Middleware pipeline
+    app.UseAlwaysOnShortCircuit();
     app.UseSpaExceptionPage(env);
     app.UseSecureTransport(env);
     app.UseSecurityHeaders(env);

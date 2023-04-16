@@ -10,7 +10,7 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 </script>
 
 <template>
-  <header class="navbar navbar-expand-md navbar-dark bg-primary shadow">
+  <header id="header" class="navbar navbar-expand-md navbar-dark bg-primary shadow">
     <nav class="container-xxl">
       <router-link :to="{ name: 'home' }" class="navbar-brand text-secondary">
         <img

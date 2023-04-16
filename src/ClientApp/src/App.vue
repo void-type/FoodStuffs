@@ -50,7 +50,7 @@ onMounted(() => {
       >Skip to main content</router-link
     >
   </div>
-  <AppHeader id="header" class="d-print-none">
+  <AppHeader class="d-print-none">
     <template #navItems>
       <AppNav />
     </template>
@@ -60,7 +60,7 @@ onMounted(() => {
     <RouterView />
   </main>
   <AppModal />
-  <AppFooter id="footer" class="mt-2" />
+  <AppFooter class="mt-2" />
 </template>
 
 <style lang="scss">

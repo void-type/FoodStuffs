@@ -8,7 +8,7 @@ try {
   Set-Location -Path $webClientProjectFolder
 
   npm install --no-audit
-  npx ncu -u
+  npx ncu -u --target minor
   npm install --no-audit
 
   Set-Location -Path $projectRoot
