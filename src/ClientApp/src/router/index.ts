@@ -28,13 +28,13 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/pages/AppHome.vue'),
+      component: () => import('@/pages/HomePage.vue'),
       meta: { title: 'Home' },
     },
     {
       name: 'view',
       path: '/view/:id',
-      component: () => import('@/pages/RecipeView.vue'),
+      component: () => import('@/pages/RecipeViewPage.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -43,7 +43,7 @@ const router = createRouter({
     {
       name: 'edit',
       path: '/edit/:id',
-      component: () => import('@/pages/RecipeEdit.vue'),
+      component: () => import('@/pages/RecipeEditPage.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
@@ -52,7 +52,7 @@ const router = createRouter({
     {
       name: 'new',
       path: '/new',
-      component: () => import('@/pages/RecipeEdit.vue'),
+      component: () => import('@/pages/RecipeEditPage.vue'),
       props: (route) => ({
         copy: +(route.query?.copy || 0),
       }),
@@ -61,15 +61,15 @@ const router = createRouter({
     {
       name: 'search',
       path: '/search',
-      component: () => import('@/pages/RecipeSearch.vue'),
+      component: () => import('@/pages/RecipeSearchPage.vue'),
       props: (route) => ({ query: route.query }),
       meta: { title: 'Search' },
     },
     {
-      name: 'meal-cards',
-      path: '/meal-cards',
-      component: () => import('@/pages/MealCards.vue'),
-      meta: { title: 'Meal Cards' },
+      name: 'meals',
+      path: '/meals',
+      component: () => import('@/pages/MealsPage.vue'),
+      meta: { title: 'Meals' },
     },
     {
       path: '/:pathMatch(.*)*',

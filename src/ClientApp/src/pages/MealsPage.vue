@@ -71,14 +71,50 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container-fluid">
-    <h1 class="mt-4 mb-4">Meal Cards</h1>
+  <div class="container-xxl">
+    <h1 class="mt-4 mb-4">Meals</h1>
     <div class="grid">
-      <div class="g-col-12 g-col-lg-3 d-print-none">
-        <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
+      <div class="g-col-12 g-col-lg-6">
+        <h2>Selected cards</h2>
+        <div class="btn-toolbar mt-3">
+          <button class="btn btn-primary me-2" disabled @click.stop.prevent="() => {}">Save</button>
+          <button class="btn btn-secondary" @click.stop.prevent="cardStore.clearShoppingList">
+            Clear
+          </button>
+        </div>
+        <div class="grid mt-3">
+          <div v-if="(activeCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
+            None selected
+          </div>
+          <MealCardsCard
+            v-for="card in activeCards"
+            :key="card.id"
+            :card="card"
+            :on-card-click="cardStore.toggleCard"
+            card-type="active"
+            class="g-col-12 g-col-md-6"
+          />
+        </div>
+        <MealCardsIngredientList
+          class="mt-4"
+          title="Shopping list"
+          :ingredients="cardStore.getShoppingList"
+          :on-ingredient-click="cardStore.addToPantry"
+        />
+        <MealCardsIngredientList
+          class="mt-4 mb-4"
+          title="Pantry"
+          :ingredients="cardStore.getPantry"
+          :on-clear="cardStore.clearPantry"
+          :on-ingredient-click="cardStore.removeFromPantry"
+        />
+      </div>
+      <div class="g-col-12 g-col-lg-6">
+        <h2>Available cards</h2>
+        <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
             <div class="grid mb-3" style="--bs-gap: 1em">
-              <div class="g-col-12">
+              <div class="g-col-12 g-col-md-6">
                 <label for="nameSearch" class="form-label">Name contains</label>
                 <input
                   id="nameSearch"
@@ -87,7 +123,7 @@ onMounted(() => {
                   @keydown.stop.prevent.enter="startSearch"
                 />
               </div>
-              <div class="g-col-12">
+              <div class="g-col-12 g-col-md-6">
                 <label for="categorySearch" class="form-label">Categories contain</label>
                 <input
                   id="categorySearch"
@@ -99,35 +135,10 @@ onMounted(() => {
             </div>
           </template>
         </EntityTableControls>
-        <MealCardsIngredientList
-          class="mt-5"
-          title="Shopping list"
-          :ingredients="cardStore.getShoppingList"
-          :on-clear="cardStore.clearShoppingList"
-          :on-ingredient-click="cardStore.addToPantry"
-        />
-        <MealCardsIngredientList
-          class="mt-5 mb-4"
-          title="Pantry"
-          :ingredients="cardStore.getPantry"
-          :on-clear="cardStore.clearPantry"
-          :on-ingredient-click="cardStore.removeFromPantry"
-        />
-      </div>
-      <div class="g-col-12 g-col-lg-9">
-        <h2>Selected cards</h2>
         <div class="grid mt-3">
-          <MealCardsCard
-            v-for="card in activeCards"
-            :key="card.id"
-            :card="card"
-            :on-card-click="cardStore.toggleCard"
-            card-type="active"
-            class="g-col-12 g-col-md-6 g-col-xxl-4"
-          />
-        </div>
-        <h2 class="mt-5">Available cards</h2>
-        <div class="grid mt-3">
+          <div v-if="(inactiveCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
+            No results
+          </div>
           <MealCardsCard
             v-for="card in inactiveCards"
             :key="card.id"
@@ -135,7 +146,7 @@ onMounted(() => {
             :on-card-click="cardStore.toggleCard"
             :selected="cardStore.isCardSelected(card.id)"
             card-type="inactive"
-            class="g-col-12 g-col-md-6 g-col-xxl-4"
+            class="g-col-12 g-col-md-6"
           />
         </div>
         <EntityTablePager

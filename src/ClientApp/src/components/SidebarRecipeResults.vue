@@ -36,7 +36,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <SelectSidebarList :recipes="searchedRecipes" title="Recipes" :route-name="routeName" />
+    <SelectSidebarList :recipes="searchedRecipes" title="Search results" :route-name="routeName" />
   </div>
 </template>
 

@@ -33,7 +33,7 @@ const props = defineProps({
       >
         {{ recipe.name }}
       </router-link>
-      <div v-if="recipes.length < 1" class="list-group-item">No recipes</div>
+      <div v-if="recipes.length < 1" class="list-group-item p-4 text-center">No results</div>
     </div>
   </div>
 </template>

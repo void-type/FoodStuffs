@@ -138,6 +138,11 @@ body.bg-dark {
   --bs-link-color: #{lighten($primary, 20%)};
   --bs-link-hover-color: #{lighten($primary, 10%)};
 
+  .page-link.active,
+  .active > .page-link {
+    border-color: unset;
+  }
+
   .card,
   .list-group,
   .list-group-item:not(.active) {

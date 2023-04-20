@@ -198,6 +198,9 @@ watch(listRequest, () => {
             </tr>
           </thead>
           <tbody>
+            <tr v-if="(listResponse.items?.length || 0) < 1">
+              <td class="p-4 text-center" colspan="2">No results</td>
+            </tr>
             <tr v-for="recipe in listResponse.items" :key="recipe.id" @click="showDetails(recipe)">
               <td>
                 <router-link class="table-link" :to="{ name: 'view', params: { id: recipe.id } }">{{

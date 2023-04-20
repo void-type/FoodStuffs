@@ -1,12 +1,18 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 
-defineProps({
+const props = defineProps({
   title: { type: String, required: true },
   ingredients: { type: Object as PropType<[string, number][]>, required: true },
-  onClear: { type: Function, required: true },
+  onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
   onIngredientClick: { type: Function, required: true },
 });
+
+function clear() {
+  if (props.onClear !== null) {
+    props.onClear();
+  }
+}
 </script>
 
 <template>
@@ -14,7 +20,9 @@ defineProps({
     <div class="card">
       <h5 class="card-header d-flex justify-content-between align-items-center">
         {{ title }}
-        <button type="button" class="btn btn-primary" @click="onClear()">Clear</button>
+        <button v-if="onClear !== null" type="button" class="btn btn-secondary" @click="clear()">
+          Clear
+        </button>
       </h5>
       <ul class="list-group list-group-flush">
         <li
@@ -28,7 +36,9 @@ defineProps({
         >
           {{ quantity }}x {{ ingredient }}
         </li>
-        <li v-if="ingredients.length < 1" class="list-group-item">-- Empty --</li>
+        <li v-if="ingredients.length < 1" class="list-group-item p-4 text-center">
+          No ingredients
+        </li>
       </ul>
     </div>
   </div>

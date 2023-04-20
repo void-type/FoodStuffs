@@ -9,6 +9,8 @@ import Choices from '@/models/Choices';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 
+const recentLimit = 5;
+
 interface RecipeStoreState {
   listResponse: ListRecipesResponseIItemSet;
   listRequest: RecipesListParams;
@@ -55,8 +57,6 @@ export const useRecipeStore = defineStore('recipes', {
         return;
       }
 
-      const limit = 3;
-
       const recentRecipes = this.recentRecipes.slice();
 
       const indexOfCurrentInRecents = recentRecipes
@@ -75,7 +75,7 @@ export const useRecipeStore = defineStore('recipes', {
         recentRecipes.unshift(recipeListItem);
       }
 
-      const limitedRecipes = recentRecipes.slice(0, limit);
+      const limitedRecipes = recentRecipes.slice(0, recentLimit);
 
       this.recentRecipes = limitedRecipes;
       RecipeStoreHelpers.storeRecents(this.recentRecipes);
