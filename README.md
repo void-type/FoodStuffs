@@ -13,6 +13,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 ## Features
 
+- Meal cards to build weekly shopping list.
 - Category tags on recipes.
 - Images for recipes.
 - Copy recipes.
