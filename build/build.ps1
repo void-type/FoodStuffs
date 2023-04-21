@@ -14,7 +14,7 @@ $nodeModes = @{
   'Debug'   = 'development'
 }
 
-throw "Purposefully failed."
+throw "Purposefully failed2."
 
 function Stop-OnError([string]$errorMessage) {
   if ($LASTEXITCODE -eq 0) {
