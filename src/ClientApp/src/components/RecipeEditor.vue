@@ -129,30 +129,32 @@ onMounted(() => {
 <template>
   <form id="recipe-details-form" name="recipe-details-form">
     <div class="grid">
-      <div class="g-col-12">
-        <label for="name" class="form-label">Name *</label>
-        <input
-          id="name"
-          v-model="data.workingRecipe.name"
-          required
-          type="text"
-          :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
-        />
+      <div class="g-col-12 g-col-md-6">
+        <div>
+          <label for="name" class="form-label">Name *</label>
+          <input
+            id="name"
+            v-model="data.workingRecipe.name"
+            required
+            type="text"
+            :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
+          />
+        </div>
+        <div class="mt-4">
+          <label for="directions" class="form-label">Directions</label>
+          <textarea
+            id="directions"
+            v-model="data.workingRecipe.directions"
+            rows="10"
+            :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
+          />
+        </div>
       </div>
-      <div class="g-col-12">
+      <div class="g-col-12 g-col-md-6">
         <label for="ingredients" class="form-label">Ingredients</label>
         <RecipeEditorIngredients
           v-model="data.workingRecipe.ingredients"
           :is-field-in-error="isFieldInError"
-        />
-      </div>
-      <div class="g-col-12">
-        <label for="directions" class="form-label">Directions</label>
-        <textarea
-          id="directions"
-          v-model="data.workingRecipe.directions"
-          rows="10"
-          :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
         />
       </div>
       <div class="g-col-12 g-col-md-6">

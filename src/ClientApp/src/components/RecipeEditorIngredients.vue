@@ -96,7 +96,9 @@ watch(data, (newValue) => {
 </script>
 
 <template>
+  <div v-if="data.ingredients.length < 1" class="p-4 text-center">No ingredients</div>
   <vue-draggable
+    v-else
     id="ingredient-accordion"
     v-model="data.ingredients"
     animation="200"

@@ -151,106 +151,108 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="grid">
-    <div class="g-col-12 g-col-md-6">
-      <label for="upload-file" class="form-label">Upload image</label>
-      <input
-        id="upload-file"
-        type="file"
-        :class="{
-          'form-control': true,
-          'text-nowrap': true,
-          'text-truncate': true,
-          'is-invalid': isFieldInError('upload'),
-        }"
-        placeholder="Drop file or click to browse..."
-        @drop="uploadFileChange"
-        @change="uploadFileChange"
-      />
-      <div class="btn-toolbar mt-3">
-        <button
-          class="btn btn-primary"
-          type="button"
-          :disabled="uploadFile === null"
-          @click.stop.prevent="uploadImageClick()"
-        >
-          Upload
-        </button>
-      </div>
-    </div>
-    <div class="g-col-12 g-col-md-6 text-center">
-      <div
-        v-if="imageIds.length > 0"
-        :id="`image-carousel-${uniqueId}`"
-        class="carousel slide"
-        data-bs-interval="false"
-      >
-        <div class="carousel-indicators d-print-none">
+  <div>
+    <label for="upload-file" class="form-label">Upload image</label>
+    <div class="grid">
+      <div class="g-col-12 g-col-md-6">
+        <input
+          id="upload-file"
+          type="file"
+          :class="{
+            'form-control': true,
+            'text-nowrap': true,
+            'text-truncate': true,
+            'is-invalid': isFieldInError('upload'),
+          }"
+          placeholder="Drop file or click to browse..."
+          @drop="uploadFileChange"
+          @change="uploadFileChange"
+        />
+        <div class="btn-toolbar mt-3">
           <button
-            v-for="(imageId, i) in imageIds"
-            :key="`${imageId}:${props.suggestedImageId}`"
+            class="btn btn-primary"
+            type="button"
+            :disabled="uploadFile === null"
+            @click.stop.prevent="uploadImageClick()"
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+      <div class="g-col-12 g-col-md-6 text-center">
+        <div
+          v-if="imageIds.length > 0"
+          :id="`image-carousel-${uniqueId}`"
+          class="carousel slide"
+          data-bs-interval="false"
+        >
+          <div class="carousel-indicators d-print-none">
+            <button
+              v-for="(imageId, i) in imageIds"
+              :key="`${imageId}:${props.suggestedImageId}`"
+              type="button"
+              :data-bs-target="`#image-carousel-${uniqueId}`"
+              :data-bs-slide-to="i"
+              :class="{ active: i === carouselIndex }"
+              :aria-current="i === carouselIndex"
+              :aria-label="`Show image ${i}`"
+            ></button>
+          </div>
+          <div class="carousel-inner">
+            <div
+              v-for="(imageId, i) in imageIds"
+              :key="`${imageId}:${props.suggestedImageId}`"
+              :class="{ 'carousel-item': true, active: i === carouselIndex }"
+            >
+              <button
+                v-if="imageIds.length > 0 && imageId != pinnedImageId"
+                type="button"
+                class="btn btn-secondary btn-sm image-button image-button-pin d-print-none"
+                title="Pin image"
+                @click.stop.prevent="pinImageClick(imageId)"
+              >
+                <span class="visually-hidden">Pin image</span>
+                <font-awesome-icon icon="thumbtack" />
+              </button>
+              <button
+                v-if="imageIds.length > 0"
+                type="button"
+                class="btn btn-danger btn-sm image-button image-button-delete d-print-none"
+                title="Delete image"
+                @click.stop.prevent="deleteImageClick(imageId)"
+              >
+                <span class="visually-hidden">Delete image</span>
+                <font-awesome-icon icon="times" />
+              </button>
+              <img
+                class="img-fluid rounded"
+                :src="imageUrl(imageId)"
+                :alt="`image ${i}`"
+                :loading="i > 0 ? 'lazy' : 'eager'"
+              />
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev d-print-none"
             type="button"
             :data-bs-target="`#image-carousel-${uniqueId}`"
-            :data-bs-slide-to="i"
-            :class="{ active: i === carouselIndex }"
-            :aria-current="i === carouselIndex"
-            :aria-label="`Show image ${i}`"
-          ></button>
-        </div>
-        <div class="carousel-inner">
-          <div
-            v-for="(imageId, i) in imageIds"
-            :key="`${imageId}:${props.suggestedImageId}`"
-            :class="{ 'carousel-item': true, active: i === carouselIndex }"
+            data-bs-slide="prev"
           >
-            <button
-              v-if="imageIds.length > 0 && imageId != pinnedImageId"
-              type="button"
-              class="btn btn-secondary btn-sm image-button image-button-pin d-print-none"
-              title="Pin image"
-              @click.stop.prevent="pinImageClick(imageId)"
-            >
-              <span class="visually-hidden">Pin image</span>
-              <font-awesome-icon icon="thumbtack" />
-            </button>
-            <button
-              v-if="imageIds.length > 0"
-              type="button"
-              class="btn btn-danger btn-sm image-button image-button-delete d-print-none"
-              title="Delete image"
-              @click.stop.prevent="deleteImageClick(imageId)"
-            >
-              <span class="visually-hidden">Delete image</span>
-              <font-awesome-icon icon="times" />
-            </button>
-            <img
-              class="img-fluid rounded"
-              :src="imageUrl(imageId)"
-              :alt="`image ${i}`"
-              :loading="i > 0 ? 'lazy' : 'eager'"
-            />
-          </div>
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next d-print-none"
+            type="button"
+            :data-bs-target="`#image-carousel-${uniqueId}`"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-        <button
-          class="carousel-control-prev d-print-none"
-          type="button"
-          :data-bs-target="`#image-carousel-${uniqueId}`"
-          data-bs-slide="prev"
-        >
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button
-          class="carousel-control-next d-print-none"
-          type="button"
-          :data-bs-target="`#image-carousel-${uniqueId}`"
-          data-bs-slide="next"
-        >
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+        <ImagePlaceholder v-else />
       </div>
-      <ImagePlaceholder v-else />
     </div>
   </div>
 </template>
