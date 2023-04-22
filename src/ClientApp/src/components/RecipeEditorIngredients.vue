@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
 import { nextTick, reactive, watch, type PropType } from 'vue';
-import { Sortable } from 'sortablejs-vue3';
+import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
@@ -52,24 +52,14 @@ function onNewClick() {
   showInAccordion(newLength - 1);
 }
 
-function onDeleteClick(index: number) {
+function onDeleteClick(id: string) {
   const ingredients = copy(data.ingredients);
+
+  const index = ingredients.findIndex((x) => x.id === id);
   ingredients.splice(index, 1);
-  data.ingredients = ingredients;
 
+  data.ingredients = ingredients;
   showInAccordion(index);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function onSortEnd(event: any) {
-  if (event.oldIndex === event.newIndex) {
-    return;
-  }
-
-  const ingredients = copy(data.ingredients);
-  const item = ingredients.splice(event.oldIndex, 1)[0];
-  ingredients.splice(event.newIndex, 0, item);
-  data.ingredients = ingredients;
 }
 
 function setOrderFromIndex(ingredients: WorkingRecipeIngredient[]) {
@@ -79,6 +69,7 @@ function setOrderFromIndex(ingredients: WorkingRecipeIngredient[]) {
   });
 }
 
+// When props change, we'll update the working version.
 watch(props, () => {
   const ingredients = copy(props.modelValue);
 
@@ -91,120 +82,134 @@ watch(props, () => {
   }
 });
 
+// When data changes, we'll emit the new model.
 watch(data, (newValue) => {
-  const { ingredients } = newValue;
+  const ingredients = copy(newValue.ingredients);
+
   setOrderFromIndex(ingredients);
-  emit('update:modelValue', ingredients);
+
+  // Deep compare to prevent circular changes.
+  if (JSON.stringify(props.modelValue) !== JSON.stringify(ingredients)) {
+    emit('update:modelValue', ingredients);
+  }
 });
 </script>
 
 <template>
-  <div>
-    <div id="ingredient-accordion" class="accordion">
-      <Sortable :list="data.ingredients" item-key="id" @end="onSortEnd">
-        <template #item="{ element, index }">
-          <div :key="element.id" class="accordion-item sortable-draggable">
-            <div :id="`ingredient-${element.id}-accordion-header`" class="h2 accordion-header">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                :data-bs-target="`#ingredient-${element.id}-accordion-collapse`"
-                aria-expanded="false"
-                :aria-controls="`ingredient-${element.id}-accordion-collapse`"
+  <vue-draggable
+    id="ingredient-accordion"
+    v-model="data.ingredients"
+    animation="200"
+    group="ingredients"
+    ghost-class="ghost"
+    handle=".sort-handle"
+    class="accordion"
+  >
+    <div v-for="ing in data.ingredients" :key="ing.id" class="accordion-item">
+      <div :id="`ingredient-${ing.id}-accordion-header`" class="h2 accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          :data-bs-target="`#ingredient-${ing.id}-accordion-collapse`"
+          aria-expanded="false"
+          :aria-controls="`ingredient-${ing.id}-accordion-collapse`"
+        >
+          <font-awesome-icon icon="fa-align-justify" class="text-muted me-3 sort-handle" />
+          <span v-if="ing.isCategory" class="fw-bold">{{ ing.name }}</span>
+          <span v-else>{{ ing.quantity }}x {{ ing.name }}</span>
+        </button>
+      </div>
+      <div
+        :id="`ingredient-${ing.id}-accordion-collapse`"
+        class="accordion-collapse collapse"
+        :aria-labelledby="`ingredient-${ing.id}-accordion-header`"
+        data-bs-parent="#ingredient-accordion"
+      >
+        <div class="grid p-3" style="--bs-gap: 1em">
+          <div class="g-col-12 g-col-md-12">
+            <label :for="`ingredient-${ing.id}-name`" class="form-label">Name</label>
+            <input
+              :id="`ingredient-${ing.id}-name`"
+              v-model="ing.name"
+              required
+              type="text"
+              :class="{
+                'form-control': true,
+                'is-invalid': isFieldInError('ingredients'),
+              }"
+              @keydown.stop.prevent.enter
+            />
+          </div>
+          <div v-if="!ing.isCategory" class="g-col-12 g-col-md-4">
+            <label :for="`ingredient-${ing.id}-quantity`" class="form-label">Quantity</label>
+            <input
+              :id="`ingredient-${ing.id}-quantity`"
+              v-model="ing.quantity"
+              required
+              type="number"
+              min="1"
+              :class="{
+                'form-control': true,
+                'is-invalid': isFieldInError('ingredients'),
+              }"
+            />
+          </div>
+          <div class="g-col-12">
+            <div class="form-check">
+              <input
+                :id="`ingredient-${ing.id}-isCategory`"
+                v-model="ing.isCategory"
+                class="form-check-input"
+                type="checkbox"
+                :class="{ 'is-invalid': isFieldInError('ingredients') }"
+              />
+              <label :for="`ingredient-${ing.id}-isCategory`" class="form-check-label"
+                >Is Category</label
               >
-                <font-awesome-icon icon="fa-sort" class="text-muted me-3" />
-                <span v-if="element.isCategory" class="fw-bold">{{ element.name }}</span>
-                <span v-else>{{ element.quantity }}x {{ element.name }}</span>
-              </button>
-            </div>
-            <div
-              :id="`ingredient-${element.id}-accordion-collapse`"
-              class="accordion-collapse collapse"
-              :aria-labelledby="`ingredient-${element.id}-accordion-header`"
-              data-bs-parent="#ingredient-accordion"
-            >
-              <div class="grid p-3" style="--bs-gap: 1em">
-                <div class="g-col-12 g-col-md-12">
-                  <label :for="`ingredient-${element.id}-name`" class="form-label">Name</label>
-                  <input
-                    :id="`ingredient-${element.id}-name`"
-                    v-model="element.name"
-                    required
-                    type="text"
-                    :class="{
-                      'form-control': true,
-                      'is-invalid': isFieldInError('ingredients'),
-                    }"
-                    @keydown.stop.prevent.enter
-                  />
-                </div>
-                <div v-if="!element.isCategory" class="g-col-12 g-col-md-4">
-                  <label :for="`ingredient-${element.id}-quantity`" class="form-label"
-                    >Quantity</label
-                  >
-                  <input
-                    :id="`ingredient-${element.id}-quantity`"
-                    v-model="element.quantity"
-                    required
-                    type="number"
-                    min="1"
-                    :class="{
-                      'form-control': true,
-                      'is-invalid': isFieldInError('ingredients'),
-                    }"
-                  />
-                </div>
-                <div class="g-col-12">
-                  <div class="form-check">
-                    <input
-                      :id="`ingredient-${element.id}-isCategory`"
-                      v-model="element.isCategory"
-                      class="form-check-input"
-                      type="checkbox"
-                      :class="{ 'is-invalid': isFieldInError('ingredients') }"
-                    />
-                    <label :for="`ingredient-${element.id}-isCategory`" class="form-check-label"
-                      >Is Category</label
-                    >
-                  </div>
-                </div>
-                <div class="btn-toolbar g-col-12">
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm d-inline ms-auto"
-                    @click.stop.prevent="onDeleteClick(index)"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
-        </template>
-      </Sortable>
+          <div class="btn-toolbar g-col-12">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm d-inline ms-auto"
+              @click.stop.prevent="onDeleteClick(ing.id)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="btn-toolbar">
-      <button
-        type="button"
-        class="btn btn-secondary btn-sm me-2 mt-3"
-        @click.stop.prevent="onNewClick()"
-      >
-        New ingredient
-      </button>
-    </div>
+  </vue-draggable>
+  <div class="btn-toolbar">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm me-2 mt-3"
+      @click.stop.prevent="onNewClick()"
+    >
+      New ingredient
+    </button>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.accordion-button {
-  padding: 0.75em;
-}
+.accordion {
+  .accordion-button {
+    padding: 0.75em;
+  }
 
-.accordion .sortable-draggable {
-  &,
-  .fa-sort {
+  .sort-handle {
     cursor: grab;
   }
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+
+.ghost {
+  // opacity: 0.8;
+  background: var(--bs-accordion-active-bg);
 }
 </style>

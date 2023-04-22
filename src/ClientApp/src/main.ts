@@ -6,12 +6,12 @@ import 'bootstrap';
 import App from '@/App.vue';
 import router from '@/router';
 import { library, config as fontAwesomeConfig } from '@fortawesome/fontawesome-svg-core';
-import { faSort, faTimes, faThumbtack } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faThumbtack, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 
 // Prevents inline styling to appease CSP.
 fontAwesomeConfig.autoAddCss = false;
 
-library.add(faTimes, faThumbtack, faSort);
+library.add(faTimes, faThumbtack, faAlignJustify);
 
 const app = createApp(App);
 
