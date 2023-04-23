@@ -24,6 +24,7 @@ import type { ModalParameters } from '@/models/ModalParameters';
 import ApiHelpers from '@/models/ApiHelpers';
 import type { HttpResponse } from '@/api/http-client';
 import { clamp } from '@/models/FormatHelpers';
+import RouterHelpers from '@/models/RouterHelpers';
 
 const props = defineProps({
   id: {
@@ -81,6 +82,8 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
   } else {
     data.sourceRecipe = getRecipeResponse;
   }
+
+  RouterHelpers.setTitle(router.currentRoute.value, data.sourceRecipe.name);
   setImageSources(data.sourceRecipe);
   data.suggestedImageId = -1;
 }

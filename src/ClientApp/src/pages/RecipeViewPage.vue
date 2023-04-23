@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, watch, reactive } from 'vue';
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
@@ -8,6 +8,7 @@ import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
 import ApiHelpers from '@/models/ApiHelpers';
+import RouterHelpers from '@/models/RouterHelpers';
 
 const props = defineProps({
   id: {
@@ -18,6 +19,7 @@ const props = defineProps({
 
 const appStore = useAppStore();
 const recipeStore = useRecipeStore();
+const router = useRouter();
 const api = ApiHelpers.client;
 
 const data = reactive({
@@ -29,6 +31,7 @@ function fetchRecipe(id: number) {
     .recipesDetail(id)
     .then((response) => {
       data.sourceRecipe = response.data;
+      RouterHelpers.setTitle(router.currentRoute.value, data.sourceRecipe.name);
       recipeStore.queueRecent(response.data);
     })
     .catch((response) => {
