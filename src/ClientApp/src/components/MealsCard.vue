@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { ListRecipesResponse } from '@/api/data-contracts';
 import type { PropType } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
   card: { type: Object as PropType<ListRecipesResponse>, required: true },
@@ -15,16 +16,25 @@ function cardClickInternal() {
 </script>
 
 <template>
-  <div
-    :class="['card', selected ? 'card--selected' : '', 'card-hover', 'meal-card']"
-    tabindex="0"
-    role="button"
-    @keydown.stop.prevent.enter="cardClickInternal()"
-    @click.stop.prevent="cardClickInternal()"
-  >
-    <div class="card-header-custom d-flex align-items-center">
-      <span class="h5">{{ card.name }}</span>
-      <div class="d-flex ms-auto">
+  <div>
+    <div
+      :class="['card', selected ? 'card--selected' : '', 'card-hover', 'meal-card']"
+      tabindex="0"
+      role="button"
+      @keydown.stop.prevent.enter="cardClickInternal()"
+      @click.stop.prevent="cardClickInternal()"
+    >
+      <div class="card-header">
+        <div class="h5">{{ card.name }}</div>
+      </div>
+      <div class="d-flex align-items-center">
+        <router-link
+          class="btn-card-control"
+          :to="{ name: 'edit', params: { id: card.id } }"
+          @click.stop.prevent
+        >
+          <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
+        </router-link>
         <button
           type="button"
           data-bs-toggle="collapse"
@@ -35,17 +45,17 @@ function cardClickInternal() {
           @click.stop.prevent="() => {}"
         ></button>
       </div>
-    </div>
-    <div :id="`card-${cardType}-${card.id}-ingredient-collapse`" class="collapse">
-      <div class="card-body">
-        <ul>
-          <li
-            v-for="ingredient in card.ingredients?.filter((x) => x.isCategory === false)"
-            :key="ingredient.name || ''"
-          >
-            {{ ingredient.quantity }}x {{ ingredient.name }}
-          </li>
-        </ul>
+      <div :id="`card-${cardType}-${card.id}-ingredient-collapse`" class="collapse">
+        <div class="card-body">
+          <ul>
+            <li
+              v-for="ingredient in card.ingredients?.filter((x) => x.isCategory === false)"
+              :key="ingredient.name || ''"
+            >
+              {{ ingredient.quantity }}x {{ ingredient.name }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -60,13 +70,9 @@ body .card.card--selected {
   color: var(--bs-gray-500);
 }
 
-.card-header-custom {
-  padding: 0;
-
-  .h5 {
-    padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
-    margin: 0;
-  }
+.btn-card-control,
+.btn-card-collapse {
+  padding: 0.5rem var(--bs-card-cap-padding-x);
 }
 
 .btn-card-collapse::after {
@@ -91,7 +97,6 @@ body .card.card--selected {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
   font-size: 1rem;
   color: var(--bs-accordion-btn-color);
   text-align: left;

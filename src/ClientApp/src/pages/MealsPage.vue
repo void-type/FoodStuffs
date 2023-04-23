@@ -6,8 +6,8 @@ import { toInt } from '@/models/FormatHelpers';
 import ApiHelpers from '@/models/ApiHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 import useAppStore from '@/stores/appStore';
-import MealCardsIngredientList from '@/components/MealCardsIngredientList.vue';
-import MealCardsCard from '@/components/MealCardsCard.vue';
+import MealsIngredientList from '@/components/MealsIngredientList.vue';
+import MealsCard from '@/components/MealsCard.vue';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 
@@ -75,7 +75,7 @@ onMounted(() => {
     <h1 class="mt-4 mb-4">Meals</h1>
     <div class="grid">
       <div class="g-col-12 g-col-lg-6">
-        <h2>Selected cards</h2>
+        <h2>Selected</h2>
         <div class="btn-toolbar mt-3">
           <button class="btn btn-primary me-2" disabled @click.stop.prevent="() => {}">Save</button>
           <button class="btn btn-secondary" @click.stop.prevent="cardStore.clearShoppingList">
@@ -86,7 +86,7 @@ onMounted(() => {
           <div v-if="(activeCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
             None selected
           </div>
-          <MealCardsCard
+          <MealsCard
             v-for="card in activeCards"
             :key="card.id"
             :card="card"
@@ -95,13 +95,13 @@ onMounted(() => {
             class="g-col-12 g-col-md-6"
           />
         </div>
-        <MealCardsIngredientList
+        <MealsIngredientList
           class="mt-4"
           title="Shopping list"
           :ingredients="cardStore.getShoppingList"
           :on-ingredient-click="cardStore.addToPantry"
         />
-        <MealCardsIngredientList
+        <MealsIngredientList
           class="mt-4 mb-4"
           title="Pantry"
           :ingredients="cardStore.getPantry"
@@ -110,7 +110,7 @@ onMounted(() => {
         />
       </div>
       <div class="g-col-12 g-col-lg-6">
-        <h2>Available cards</h2>
+        <h2>Available</h2>
         <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
             <div class="grid mb-3" style="--bs-gap: 1em">
@@ -139,7 +139,7 @@ onMounted(() => {
           <div v-if="(inactiveCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
             No results
           </div>
-          <MealCardsCard
+          <MealsCard
             v-for="card in inactiveCards"
             :key="card.id"
             :card="card"

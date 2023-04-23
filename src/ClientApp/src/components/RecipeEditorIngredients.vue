@@ -96,10 +96,12 @@ watch(data, (newValue) => {
 </script>
 
 <template>
-  <div v-if="data.ingredients.length < 1" class="p-4 text-center">No ingredients</div>
+  <div v-if="data.ingredients.length < 1" id="ingredient-list" class="card p-4 text-center">
+    No ingredients
+  </div>
   <vue-draggable
     v-else
-    id="ingredient-accordion"
+    id="ingredient-list"
     v-model="data.ingredients"
     animation="200"
     group="ingredients"
@@ -117,7 +119,11 @@ watch(data, (newValue) => {
           aria-expanded="false"
           :aria-controls="`ingredient-${ing.id}-accordion-collapse`"
         >
-          <font-awesome-icon icon="fa-align-justify" class="text-muted me-3 sort-handle" />
+          <font-awesome-icon
+            icon="fa-align-justify"
+            class="text-muted me-3 sort-handle"
+            aria-label="drag to sort"
+          />
           <span v-if="ing.isCategory" class="fw-bold">{{ ing.name }}</span>
           <span v-else>{{ ing.quantity }}x {{ ing.name }}</span>
         </button>
@@ -126,7 +132,7 @@ watch(data, (newValue) => {
         :id="`ingredient-${ing.id}-accordion-collapse`"
         class="accordion-collapse collapse"
         :aria-labelledby="`ingredient-${ing.id}-accordion-header`"
-        data-bs-parent="#ingredient-accordion"
+        data-bs-parent="#ingredient-list"
       >
         <div class="grid p-3" style="--bs-gap: 1em">
           <div class="g-col-12 g-col-md-12">
@@ -184,15 +190,13 @@ watch(data, (newValue) => {
       </div>
     </div>
   </vue-draggable>
-  <div class="btn-toolbar">
-    <button
-      type="button"
-      class="btn btn-secondary btn-sm me-2 mt-3"
-      @click.stop.prevent="onNewClick()"
-    >
-      New ingredient
-    </button>
-  </div>
+  <button
+    type="button"
+    class="btn btn-secondary btn-sm btn-add-ingredient"
+    @click.stop.prevent="onNewClick()"
+  >
+    <font-awesome-icon icon="fa-plus" aria-label="add ingredient" />
+  </button>
 </template>
 
 <style lang="scss" scoped>
@@ -206,12 +210,18 @@ watch(data, (newValue) => {
   }
 }
 
-.flip-list-move {
-  transition: transform 0.5s;
+div#ingredient-list,
+div#ingredient-list .accordion-item:last-of-type {
+  border-bottom-left-radius: 0;
+}
+
+.btn.btn-sm.btn-add-ingredient {
+  min-width: 3rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .ghost {
-  // opacity: 0.8;
   background: var(--bs-accordion-active-bg);
 }
 </style>

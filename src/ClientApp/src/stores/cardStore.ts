@@ -83,6 +83,7 @@ export default defineStore('cards', {
     getShoppingList: (state) => {
       const ingredientCounts = state.selectedCards
         .flatMap((c) => c.ingredients || [])
+        .filter((c) => !c.isCategory)
         .reduce(countIngredients, {});
 
       Object.entries(state.pantry).forEach(([ingredient, quantity]) => {
