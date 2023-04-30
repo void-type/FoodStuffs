@@ -106,7 +106,7 @@ onMounted(() => {
       ...props.query,
       sortDesc: JSON.parse(String(props.query.sortDesc?.valueOf())) === true,
       page: toNumber(Number(props.query.page), 1),
-      take: toNumber(Number(props.query.take), Choices.paginationTake[0].value),
+      take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
     });
   }
 

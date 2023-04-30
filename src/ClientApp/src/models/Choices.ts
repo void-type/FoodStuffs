@@ -2,8 +2,8 @@ export default class Choices {
   static get paginationTake() {
     return [
       {
-        text: '10',
-        value: 10,
+        text: '15',
+        value: 15,
       },
       {
         text: '30',
@@ -18,6 +18,10 @@ export default class Choices {
         value: -1,
       },
     ];
+  }
+
+  static get defaultPaginationTake() {
+    return this.paginationTake[1];
   }
 
   static get boolean() {

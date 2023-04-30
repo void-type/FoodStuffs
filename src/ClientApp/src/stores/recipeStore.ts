@@ -24,7 +24,7 @@ export const useRecipeStore = defineStore('recipes', {
       items: [],
       isPagingEnabled: true,
       page: 1,
-      take: Choices.paginationTake[0].value,
+      take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
     listRequest: new ListRecipesRequest(),

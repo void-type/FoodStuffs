@@ -65,12 +65,11 @@ export default defineStore('cards', {
       items: [],
       isPagingEnabled: true,
       page: 1,
-      take: Choices.paginationTake[2].value,
+      take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
     listRequest: {
       ...new ListRecipesRequest(),
-      take: Choices.paginationTake[2].value,
       isForMealPlanning: true,
     },
     selectedCards: [],

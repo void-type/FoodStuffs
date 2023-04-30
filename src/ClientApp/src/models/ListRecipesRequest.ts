@@ -16,5 +16,5 @@ export default class ListRecipesRequest implements RecipesListParams {
 
   public page = 1;
 
-  public take = Choices.paginationTake[0].value;
+  public take = Choices.defaultPaginationTake.value;
 }
