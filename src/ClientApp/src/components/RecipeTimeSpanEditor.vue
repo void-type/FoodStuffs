@@ -76,7 +76,7 @@ const minutes = computed({
         min="-1"
       />
     </div>
-    <small :class="{ invisible: !(showPreview && (modelValue || 0) > 0) }">
+    <small :class="{ invisible: !showPreview }">
       {{ toTimeSpanString(modelValue || 0) }}
     </small>
   </div>
