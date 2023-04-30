@@ -75,41 +75,6 @@ onMounted(() => {
     <h1 class="mt-4 mb-4">Meals</h1>
     <div class="grid">
       <div class="g-col-12 g-col-lg-6">
-        <h2>Selected</h2>
-        <div class="btn-toolbar mt-3">
-          <button class="btn btn-primary me-2" disabled @click.stop.prevent="() => {}">Save</button>
-          <button class="btn btn-secondary" @click.stop.prevent="cardStore.clearShoppingList">
-            Clear
-          </button>
-        </div>
-        <div class="grid mt-3">
-          <div v-if="(activeCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
-            None selected
-          </div>
-          <MealsCard
-            v-for="card in activeCards"
-            :key="card.id"
-            :card="card"
-            :on-card-click="cardStore.toggleCard"
-            card-type="active"
-            class="g-col-12 g-col-md-6"
-          />
-        </div>
-        <MealsIngredientList
-          class="mt-4"
-          title="Shopping list"
-          :ingredients="cardStore.getShoppingList"
-          :on-ingredient-click="cardStore.addToPantry"
-        />
-        <MealsIngredientList
-          class="mt-4 mb-4"
-          title="Pantry"
-          :ingredients="cardStore.getPantry"
-          :on-clear="cardStore.clearPantry"
-          :on-ingredient-click="cardStore.removeFromPantry"
-        />
-      </div>
-      <div class="g-col-12 g-col-lg-6">
         <h2>Available</h2>
         <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
@@ -155,6 +120,41 @@ onMounted(() => {
           :on-change-page="changePage"
           :on-change-take="changeTake"
           class="mt-4"
+        />
+      </div>
+      <div class="g-col-12 g-col-lg-6">
+        <h2>Selected</h2>
+        <div class="btn-toolbar mt-3">
+          <button class="btn btn-primary me-2" disabled @click.stop.prevent="() => {}">Save</button>
+          <button class="btn btn-secondary" @click.stop.prevent="cardStore.clearShoppingList">
+            Clear
+          </button>
+        </div>
+        <div class="grid mt-3">
+          <div v-if="(activeCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
+            None selected
+          </div>
+          <MealsCard
+            v-for="card in activeCards"
+            :key="card.id"
+            :card="card"
+            :on-card-click="cardStore.toggleCard"
+            card-type="active"
+            class="g-col-12 g-col-md-6"
+          />
+        </div>
+        <MealsIngredientList
+          class="mt-4"
+          title="Shopping list"
+          :ingredients="cardStore.getShoppingList"
+          :on-ingredient-click="cardStore.addToPantry"
+        />
+        <MealsIngredientList
+          class="mt-4 mb-4"
+          title="Pantry"
+          :ingredients="cardStore.getPantry"
+          :on-clear="cardStore.clearPantry"
+          :on-ingredient-click="cardStore.removeFromPantry"
         />
       </div>
     </div>
