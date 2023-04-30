@@ -18,7 +18,7 @@ function clear() {
 function copyList() {
   // TODO: add tooltip: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_copy_clipboard2
   // TODO: this doesn't paste as multiple items from firefox (chrome works)
-  var text = props.ingredients.map((x) => `${x[1]}x ${x[0]}`).join(`\n`);
+  const text = props.ingredients.map((x) => `${x[1]}x ${x[0]}`).join(`\n`);
   navigator.clipboard.writeText(text);
 }
 </script>
