@@ -100,7 +100,7 @@ onMounted(() => {
             </div>
           </template>
         </EntityTableControls>
-        <div class="grid mt-3">
+        <div class="grid mt-4">
           <div v-if="(inactiveCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
             No results
           </div>
@@ -130,7 +130,7 @@ onMounted(() => {
             Clear
           </button>
         </div>
-        <div class="grid mt-3">
+        <div class="grid mt-4">
           <div v-if="(activeCards?.length || 0) < 1" class="g-col-12 p-4 text-center">
             None selected
           </div>
