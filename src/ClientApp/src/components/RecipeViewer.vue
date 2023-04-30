@@ -153,9 +153,9 @@ onMounted(() => {
         <ImagePlaceholder v-else />
       </div>
     </div>
-    <h3 v-if="(recipe.ingredients?.length || []) > 0" class="mt-4">Ingredients</h3>
+    <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
     <RecipeViewerIngredients
-      v-if="(recipe.ingredients?.length || []) > 0"
+      v-if="(recipe.ingredients?.length || 0) > 0"
       :ingredients="recipe.ingredients || []"
     />
     <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
