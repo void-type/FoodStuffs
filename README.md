@@ -17,6 +17,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 - Category tags on recipes.
 - Images for recipes.
 - Copy recipes.
+- Random sort discovery on home page.
 - Search and pagination.
 - Recent history list.
 - Unsaved change detection.

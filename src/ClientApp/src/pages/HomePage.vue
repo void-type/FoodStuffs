@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import ImagePlaceholder from '@/components/ImagePlaceholder.vue';
 import ApiHelpers from '@/models/ApiHelpers';
+import ListRecipesRequest from '@/models/ListRecipesRequest';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
@@ -10,15 +11,18 @@ const appStore = useAppStore();
 const recipeStore = useRecipeStore();
 const api = ApiHelpers.client;
 
-const { listResponse, listRequest } = storeToRefs(recipeStore);
+const { discoverListResponse } = storeToRefs(recipeStore);
 
 const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
 
 onMounted(() => {
-  if (listResponse.value.count === 0) {
+  if (discoverListResponse.value.count === 0) {
     api()
-      .recipesList(listRequest.value)
-      .then((response) => recipeStore.setListResponse(response.data))
+      .recipesList({
+        ...new ListRecipesRequest(),
+        sortBy: 'random',
+      })
+      .then((response) => recipeStore.setDiscoverListResponse(response.data))
       .catch((response) => appStore.setApiFailureMessages(response));
   }
 });
@@ -28,7 +32,7 @@ onMounted(() => {
   <div class="container-xxl">
     <div class="grid mt-4">
       <div
-        v-for="(recipe, i) in listResponse.items"
+        v-for="(recipe, i) in discoverListResponse.items"
         :key="recipe.id"
         class="g-col-12 g-col-md-6 g-col-lg-4"
       >

@@ -25,6 +25,10 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
                 AddOrderBy(recipe => recipe.Id);
                 break;
 
+            case "RANDOM":
+                AddOrderBy(_ => Guid.NewGuid());
+                break;
+
             default:
                 AddOrderBy(recipe => recipe.Id, true);
                 break;
