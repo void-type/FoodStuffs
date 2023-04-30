@@ -30,6 +30,13 @@ function cardClickInternal() {
       <div class="d-flex align-items-center">
         <router-link
           class="btn-card-control"
+          :to="{ name: 'view', params: { id: card.id } }"
+          @click.stop.prevent
+        >
+          <font-awesome-icon icon="fa-eye" aria-label="view recipe" />
+        </router-link>
+        <router-link
+          class="btn-card-control"
           :to="{ name: 'edit', params: { id: card.id } }"
           @click.stop.prevent
         >
