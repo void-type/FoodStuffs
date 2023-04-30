@@ -74,7 +74,7 @@ onMounted(() => {
   <div class="container-xxl">
     <h1 class="mt-4 mb-4">Meals</h1>
     <div class="grid">
-      <div class="g-col-12 g-col-lg-6">
+      <div class="g-col-12 g-col-lg-6 d-print-none">
         <h2>Available</h2>
         <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
@@ -148,6 +148,7 @@ onMounted(() => {
           title="Shopping list"
           :ingredients="cardStore.getShoppingList"
           :on-ingredient-click="cardStore.addToPantry"
+          :show-copy-list="true"
         />
         <MealsIngredientList
           class="mt-4 mb-4"
