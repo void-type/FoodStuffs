@@ -46,9 +46,10 @@ function copyList() {
           <button
             type="button"
             class="btn btn-secondary"
+            :title="data.copyTooltipText"
             @click.stop.prevent="copyList()"
             @mouseout="data.copyTooltipText = defaultCopyTooltip"
-            :title="data.copyTooltipText"
+            @focusout="data.copyTooltipText = defaultCopyTooltip"
           >
             <span id="copyTooltipText" class="copy-tooltip-text">{{ data.copyTooltipText }}</span>
             Copy
