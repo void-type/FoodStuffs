@@ -303,6 +303,14 @@ onBeforeRouteLeave(async (to, from, next) => {
     <h1 class="mt-4 mb-4">{{ isCreateNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
     <div class="grid">
       <div class="g-col-12 g-col-lg-9">
+        <RecipeEditor
+          :is-field-in-error="isFieldInError"
+          :source-recipe="data.sourceRecipe"
+          :on-recipe-save="onRecipeSave"
+          :on-recipe-delete="onRecipeDelete"
+          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
+          :is-edit-mode="isEditMode"
+        />
         <RecipeImageManager
           v-if="isEditMode"
           :image-ids="data.sourceImages"
@@ -314,15 +322,7 @@ onBeforeRouteLeave(async (to, from, next) => {
           :recipe-changed-token="data.recipeChangeToken"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
-          class="mb-4"
-        />
-        <RecipeEditor
-          :is-field-in-error="isFieldInError"
-          :source-recipe="data.sourceRecipe"
-          :on-recipe-save="onRecipeSave"
-          :on-recipe-delete="onRecipeDelete"
-          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
-          :is-edit-mode="isEditMode"
+          class="mt-4"
         />
       </div>
       <div class="g-col-12 g-col-lg-3 d-print-none">

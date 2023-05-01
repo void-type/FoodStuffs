@@ -129,6 +129,35 @@ onMounted(() => {
 <template>
   <form id="recipe-details-form" name="recipe-details-form">
     <div class="grid">
+      <div class="btn-toolbar g-col-12">
+        <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
+          Save
+        </button>
+        <button
+          v-if="isEditMode"
+          type="button"
+          class="btn btn-secondary me-2"
+          @click.stop.prevent="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
+        >
+          Copy
+        </button>
+        <button
+          v-if="isEditMode"
+          type="button"
+          class="btn btn-secondary me-2"
+          @click.stop.prevent="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
+        >
+          Cancel
+        </button>
+        <button
+          v-if="isEditMode"
+          type="button"
+          class="btn btn-danger d-inline ms-auto"
+          @click.stop.prevent="onRecipeDelete(data.workingRecipe.id)"
+        >
+          Delete
+        </button>
+      </div>
       <div class="g-col-12 g-col-md-6">
         <div>
           <label for="name" class="form-label">Name *</label>

@@ -74,7 +74,7 @@ onMounted(() => {
   <div class="container-xxl">
     <h1 class="mt-4 mb-4">Meals</h1>
     <div class="grid">
-      <div class="g-col-12 g-col-lg-6 d-print-none">
+      <div class="g-col-12 g-col-lg-8 d-print-none">
         <h2>Available</h2>
         <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
@@ -122,7 +122,7 @@ onMounted(() => {
           class="mt-4"
         />
       </div>
-      <div class="g-col-12 g-col-lg-6">
+      <div class="g-col-12 g-col-lg-4">
         <h2>Selected</h2>
         <div class="btn-toolbar mt-3">
           <button class="btn btn-primary me-2" disabled @click.stop.prevent="() => {}">Save</button>
@@ -140,7 +140,7 @@ onMounted(() => {
             :card="card"
             :on-card-click="cardStore.toggleCard"
             card-type="active"
-            class="g-col-12 g-col-md-6"
+            class="g-col-12"
           />
         </div>
         <MealsIngredientList
