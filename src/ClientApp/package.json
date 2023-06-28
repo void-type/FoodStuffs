@@ -6,8 +6,8 @@
     "build": "vue-tsc --noEmit && vite build",
     "watch": "vue-tsc --noEmit && vite build --watch --mode development",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
-    "format": "prettier . --write",
+    "lint": "eslint ./src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "format": "prettier ./src --write",
     "generate-api-client": "sta -p https://localhost:5001/swagger/v1/swagger.json -o ./src/api/ --modular --responses --extract-request-params --disableStrictSSL"
   },
   "dependencies": {

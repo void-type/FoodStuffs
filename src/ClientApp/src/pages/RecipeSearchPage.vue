@@ -12,6 +12,7 @@ import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   query: {
@@ -22,6 +23,7 @@ const props = defineProps({
 });
 
 const appStore = useAppStore();
+const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
 const api = ApiHelpers.client;
@@ -117,7 +119,7 @@ watch(listRequest, () => {
   api()
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
-    .catch((response) => appStore.setApiFailureMessages(response));
+    .catch((response) => messageStore.setApiFailureMessages(response));
 });
 </script>
 

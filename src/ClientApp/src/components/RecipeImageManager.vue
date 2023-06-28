@@ -2,10 +2,10 @@
 import { onMounted, ref, watch, type PropType, type Ref } from 'vue';
 import { clamp } from '@/models/FormatHelpers';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import useAppStore from '@/stores/appStore';
 import ApiHelpers from '@/models/ApiHelpers';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import type bootstrap from 'bootstrap';
+import useMessageStore from '@/stores/messageStore';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
@@ -53,7 +53,7 @@ const props = defineProps({
   },
 });
 
-const appStore = useAppStore();
+const messageStore = useMessageStore();
 
 const uploadFile: Ref<File | null> = ref(null);
 const carouselIndex = ref(0);
@@ -79,7 +79,7 @@ function uploadImageClick() {
     const sizeMiB = toMiB(uploadFile.value.size);
     const limitMiB = toMiB(fileSizeLimit);
 
-    appStore.setValidationErrorMessages([
+    messageStore.setValidationErrorMessages([
       {
         message: `Your file (${sizeMiB} MB) exceeds the limit (${limitMiB} MB).`,
         uiHandle: 'upload',

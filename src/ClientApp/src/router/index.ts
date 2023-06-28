@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import useAppStore from '@/stores/appStore';
 import RouterHelpers from '@/models/RouterHelpers';
+import useMessageStore from '@/stores/messageStore';
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -80,8 +80,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const appStore = useAppStore();
-  appStore.clearMessages();
+  const messageStore = useMessageStore();
+  messageStore.clearMessages();
   next();
 });
 

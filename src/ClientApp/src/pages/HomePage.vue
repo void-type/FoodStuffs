@@ -2,13 +2,13 @@
 import ImagePlaceholder from '@/components/ImagePlaceholder.vue';
 import ApiHelpers from '@/models/ApiHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
-import useAppStore from '@/stores/appStore';
+import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 
-const appStore = useAppStore();
 const recipeStore = useRecipeStore();
+const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
 const { discoverListResponse } = storeToRefs(recipeStore);
@@ -23,7 +23,7 @@ onMounted(() => {
         sortBy: 'random',
       })
       .then((response) => recipeStore.setDiscoverListResponse(response.data))
-      .catch((response) => appStore.setApiFailureMessages(response));
+      .catch((response) => messageStore.setApiFailureMessages(response));
   }
 });
 </script>

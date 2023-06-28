@@ -5,14 +5,14 @@ import useCardStore from '@/stores/cardStore';
 import { toInt } from '@/models/FormatHelpers';
 import ApiHelpers from '@/models/ApiHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
-import useAppStore from '@/stores/appStore';
 import MealsIngredientList from '@/components/MealsIngredientList.vue';
 import MealsCard from '@/components/MealsCard.vue';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
+import useMessageStore from '@/stores/messageStore';
 
-const appStore = useAppStore();
 const cardStore = useCardStore();
+const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
 const { listRequest } = storeToRefs(cardStore);
@@ -25,7 +25,7 @@ function fetchList() {
       ...listRequest.value,
     })
     .then((response) => cardStore.setListResponse(response.data))
-    .catch((response) => appStore.setApiFailureMessages(response));
+    .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
 function clearSearch() {

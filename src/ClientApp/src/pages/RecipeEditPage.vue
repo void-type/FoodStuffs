@@ -25,6 +25,7 @@ import ApiHelpers from '@/models/ApiHelpers';
 import type { HttpResponse } from '@/api/http-client';
 import { clamp } from '@/models/FormatHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -50,6 +51,7 @@ const data = reactive({
 });
 
 const appStore = useAppStore();
+const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
 const api = ApiHelpers.client;
@@ -106,7 +108,7 @@ function fetchRecipe() {
       }
     })
     .catch((response) => {
-      appStore.setApiFailureMessages(response);
+      messageStore.setApiFailureMessages(response);
       data.sourceRecipe = new GetRecipeResponseClass();
     });
 }
@@ -115,7 +117,7 @@ function fetchRecipesList() {
   api()
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
-    .catch((response) => appStore.setApiFailureMessages(response));
+    .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
 function fetchImageIds(recipeId: number) {
@@ -125,14 +127,14 @@ function fetchImageIds(recipeId: number) {
       setImageSources(response.data);
     })
     .catch((response) => {
-      appStore.setApiFailureMessages(response);
+      messageStore.setApiFailureMessages(response);
     });
 }
 
 function onRecipeSave(recipe: SaveRecipeRequest) {
   function onPostSave(response: HttpResponse<Int32EntityMessage, IFailureIItemSet>) {
     if (response.data.message) {
-      appStore.setSuccessMessage(response.data.message);
+      messageStore.setSuccessMessage(response.data.message);
     }
 
     fetchRecipesList();
@@ -154,7 +156,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
       }
     })
     .catch((response) => {
-      appStore.setApiFailureMessages(response);
+      messageStore.setApiFailureMessages(response);
     });
 }
 
@@ -168,12 +170,12 @@ function onRecipeDelete(id: number) {
         fetchRecipesList();
         router.push({ name: 'search', query: recipeStore.currentQueryParams }).then(() => {
           if (response.data.message) {
-            appStore.setSuccessMessage(response.data.message);
+            messageStore.setSuccessMessage(response.data.message);
           }
         });
       })
       .catch((response) => {
-        appStore.setApiFailureMessages(response);
+        messageStore.setApiFailureMessages(response);
       });
   }
 
@@ -195,7 +197,7 @@ function onImageUpload(file: File) {
     .imagesCreate({ recipeId: props.id }, { file })
     .then((response) => {
       if (response.data.message) {
-        appStore.setSuccessMessage(response.data.message);
+        messageStore.setSuccessMessage(response.data.message);
       }
 
       data.suggestedImageId = response.data.id || -1;
@@ -203,7 +205,7 @@ function onImageUpload(file: File) {
       fetchRecipesList();
       data.imageUploadSuccessToken += 1;
     })
-    .catch((response) => appStore.setApiFailureMessages(response));
+    .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
 function onImageDelete(imageId: number) {
@@ -212,7 +214,7 @@ function onImageDelete(imageId: number) {
       .imagesDelete(imageId)
       .then((response) => {
         if (response.data.message) {
-          appStore.setSuccessMessage(response.data.message);
+          messageStore.setSuccessMessage(response.data.message);
         }
 
         const suggestedImageIndex = clamp(
@@ -225,7 +227,7 @@ function onImageDelete(imageId: number) {
         fetchRecipesList();
       })
       .catch((response) => {
-        appStore.setApiFailureMessages(response);
+        messageStore.setApiFailureMessages(response);
       });
   }
 
@@ -243,14 +245,14 @@ function onImagePin(imageId: number) {
     .imagesPinCreate({ id: imageId })
     .then((response) => {
       if (response.data.message) {
-        appStore.setSuccessMessage(response.data.message);
+        messageStore.setSuccessMessage(response.data.message);
       }
       data.suggestedImageId = imageId;
       fetchImageIds(props.id);
       fetchRecipesList();
     })
     .catch((response) => {
-      appStore.setApiFailureMessages(response);
+      messageStore.setApiFailureMessages(response);
     });
 }
 

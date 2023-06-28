@@ -2,13 +2,13 @@
 import { onMounted, watch, reactive } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
-import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
 import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -17,7 +17,7 @@ const props = defineProps({
   },
 });
 
-const appStore = useAppStore();
+const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
 const api = ApiHelpers.client;
@@ -35,7 +35,7 @@ function fetchRecipe(id: number) {
       recipeStore.queueRecent(response.data);
     })
     .catch((response) => {
-      appStore.setApiFailureMessages(response);
+      messageStore.setApiFailureMessages(response);
       data.sourceRecipe = null;
     });
 }
