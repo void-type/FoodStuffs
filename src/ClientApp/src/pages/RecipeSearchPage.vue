@@ -127,11 +127,11 @@ watch(listRequest, () => {
   <div class="container-xxl">
     <h1 class="mt-4 mb-4">Search recipes</h1>
     <div class="grid">
-      <div class="g-col-12 g-col-lg-3 d-print-none">
+      <div class="g-col-12 g-col-lg-9">
         <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
             <div class="grid mb-3" style="--bs-gap: 1em">
-              <div class="g-col-12">
+              <div class="g-col-12 g-col-md-5">
                 <label for="nameSearch" class="form-label">Name contains</label>
                 <input
                   id="nameSearch"
@@ -140,7 +140,7 @@ watch(listRequest, () => {
                   @keydown.stop.prevent.enter="startSearch"
                 />
               </div>
-              <div class="g-col-12">
+              <div class="g-col-12 g-col-md-5">
                 <label for="categorySearch" class="form-label">Categories contain</label>
                 <input
                   id="categorySearch"
@@ -149,8 +149,8 @@ watch(listRequest, () => {
                   @keydown.stop.prevent.enter="startSearch"
                 />
               </div>
-              <div class="g-col-12">
-                <label class="form-label" for="isForMealPlanning">For meal planning</label>
+              <div class="g-col-12 g-col-md-2">
+                <label class="form-label" for="isForMealPlanning">Meals</label>
                 <select
                   id="isForMealPlanning"
                   v-model="listRequest.isForMealPlanning"
@@ -169,15 +169,13 @@ watch(listRequest, () => {
             </div>
           </template>
         </EntityTableControls>
-        <SidebarRecipeRecent :route-name="'view'" class="mt-4" />
-      </div>
-      <div class="g-col-12 g-col-lg-9">
         <table
           :class="{
             table: true,
             'table-hover': true,
             'text-start': true,
             'table-dark': useDarkMode,
+            'mt-4': true,
           }"
         >
           <thead>
@@ -220,6 +218,9 @@ watch(listRequest, () => {
           :on-change-take="changeTake"
           class="mt-4"
         />
+      </div>
+      <div class="g-col-12 g-col-lg-3 d-print-none">
+        <SidebarRecipeRecent :route-name="'view'" />
       </div>
     </div>
   </div>
