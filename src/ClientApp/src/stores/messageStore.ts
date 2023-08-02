@@ -2,10 +2,17 @@ import { defineStore } from 'pinia';
 import type { IFailureIItemSet, IFailure } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 
+const DEFAULT_TIMEOUT = 4;
+
+let nextId = 0;
+
 interface Message {
   text: string;
   fieldName: string | null;
   isError: boolean;
+  // undefined = default, 0 = never
+  autoClear?: number;
+  id?: number;
 }
 
 interface MessageStoreState {
@@ -54,21 +61,42 @@ export const useMessageStore = defineStore('messages', {
 
     clearMessage(message: Message) {
       const index = this.messages.indexOf(message);
-      this.messages.splice(index, 1);
+      if (index > -1) {
+        this.messages.splice(index, 1);
+      }
     },
 
-    setMessage(message: Message, autoClearSeconds: number | null = null) {
+    pushMessage(message: Message) {
+      const matchingMessage = this.messages.find(
+        (x) => x.fieldName === message.fieldName && x.text === message.text
+      );
+
+      if (matchingMessage) {
+        this.clearMessage(matchingMessage);
+      }
+
+      if (typeof message.autoClear === 'undefined') {
+        // eslint-disable-next-line no-param-reassign
+        message.autoClear = DEFAULT_TIMEOUT;
+      }
+
+      if (typeof message.id === 'undefined') {
+        // eslint-disable-next-line no-param-reassign
+        message.id = nextId;
+        nextId += 1;
+      }
+
       this.messages.push(message);
 
-      if (autoClearSeconds !== null && autoClearSeconds > 0) {
+      if (message.autoClear > 0) {
         setTimeout(() => {
           this.clearMessage(message);
-        }, autoClearSeconds * 1000);
+        }, message.autoClear * 1000);
       }
     },
 
     setSuccessMessage(message: string) {
-      this.setMessage({
+      this.pushMessage({
         text: message,
         fieldName: null,
         isError: false,
@@ -76,7 +104,7 @@ export const useMessageStore = defineStore('messages', {
     },
 
     setErrorMessage(message: string) {
-      this.messages.push({
+      this.pushMessage({
         text: message,
         fieldName: null,
         isError: true,
@@ -85,7 +113,7 @@ export const useMessageStore = defineStore('messages', {
 
     setValidationErrorMessages(failures: IFailure[]) {
       failures.forEach((x) => {
-        this.messages.push({
+        this.pushMessage({
           text: x.message || '',
           fieldName: x.uiHandle || null,
           isError: true,
