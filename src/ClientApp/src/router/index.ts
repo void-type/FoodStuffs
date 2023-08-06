@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
 import { Collapse } from 'bootstrap';
-import { nextTick } from 'vue';
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
