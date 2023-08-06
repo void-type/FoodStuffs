@@ -33,7 +33,7 @@ function showInAccordion(index: number) {
 
   if (ingredient) {
     const element = `#ingredient-${ingredient.id}-accordion-collapse`;
-    nextTick(() => Collapse.getOrCreateInstance(element).show());
+    nextTick(() => Collapse.getOrCreateInstance(element, { toggle: false }).show());
   }
 }
 
