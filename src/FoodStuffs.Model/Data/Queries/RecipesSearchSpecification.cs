@@ -14,15 +14,28 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
         AddInclude(nameof(Recipe.Ingredients));
     }
 
-    public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null, bool sortDesc = false) : this(criteria)
+    public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null) : this(criteria)
     {
         ApplyPaging(paginationOptions);
 
         switch (sortBy?.ToUpperInvariant())
         {
-            case "NAME":
-                AddOrderBy(recipe => recipe.Name, sortDesc);
+            case "NEWEST":
+                AddOrderBy(recipe => recipe.CreatedOn, true);
+                break;
+
+            case "OLDEST":
+                AddOrderBy(recipe => recipe.CreatedOn);
+                break;
+
+            case "A-Z":
+                AddOrderBy(recipe => recipe.Name);
                 AddOrderBy(recipe => recipe.Id);
+                break;
+
+            case "Z-A":
+                AddOrderBy(recipe => recipe.Name, true);
+                AddOrderBy(recipe => recipe.Id, true);
                 break;
 
             case "RANDOM":

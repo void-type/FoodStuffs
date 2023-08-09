@@ -27,4 +27,12 @@ export default class RecipeStoreHelpers {
 
     localStorage.setItem(settingsKeyQueuedRecentRecipe, JSON.stringify(recipe));
   }
+
+  static sortOptions = [
+    { text: 'Newest', value: 'newest' },
+    { text: 'Oldest', value: 'oldest' },
+    { text: 'A-Z', value: 'a-z' },
+    { text: 'Z-A', value: 'z-a' },
+    { text: 'Random', value: 'random' },
+  ];
 }

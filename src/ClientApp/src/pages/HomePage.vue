@@ -6,6 +6,7 @@ import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const recipeStore = useRecipeStore();
 const messageStore = useMessageStore();
@@ -37,25 +38,26 @@ onMounted(() => {
         class="g-col-12 g-col-md-6 g-col-lg-4"
       >
         <div class="card card-hover overflow-hidden">
-          <router-link
-            class="card-link text-center p-3"
-            :to="{ name: 'view', params: { id: recipe.id } }"
-          >
-            <img
-              v-if="recipe.imageId != null"
-              class="img-fluid rounded"
-              :src="imageUrl(recipe.imageId)"
-              :alt="`image of ${recipe.name}`"
-              :loading="i > 5 ? 'lazy' : 'eager'"
-            />
-            <ImagePlaceholder v-else />
-            <div class="mt-3">
-              <h4 class="card-title">
-                {{ recipe.name }}
-              </h4>
-              <p class="card-text">
-                {{ (recipe?.categories || []).join(', ') }}
-              </p>
+          <router-link class="card-link" :to="{ name: 'view', params: { id: recipe.id } }">
+            <div>
+              <div class="card-title h5 m-3">{{ recipe.name }}</div>
+              <div class="btn-card-toolbar">
+                <router-link
+                  class="btn-card-control ms-auto"
+                  :to="{ name: 'edit', params: { id: recipe.id } }"
+                  @click.stop.prevent
+                >
+                  <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
+                </router-link>
+              </div>
+              <img
+                v-if="recipe.imageId != null"
+                class="img-fluid"
+                :src="imageUrl(recipe.imageId)"
+                :alt="`Image of ${recipe.name}`"
+                :loading="i > 5 ? 'lazy' : 'eager'"
+              />
+              <ImagePlaceholder v-else class="img-fluid rounded-bottom" width="100%" />
             </div>
           </router-link>
         </div>
@@ -64,4 +66,10 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.btn-card-toolbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+</style>

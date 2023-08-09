@@ -7,7 +7,6 @@ public record ListRecipesRequest(
     string? CategorySearch,
     bool? IsForMealPlanning,
     string? SortBy,
-    bool SortDesc,
     bool IsPagingEnabled,
     int Page,
     int Take) : IPaginatedRequest;

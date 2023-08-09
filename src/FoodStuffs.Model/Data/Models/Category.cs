@@ -6,5 +6,5 @@ public partial class Category
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Recipe> Recipes { get; } = new List<Recipe>();
+    public virtual List<Recipe> Recipes { get; } = new List<Recipe>();
 }

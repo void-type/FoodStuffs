@@ -150,7 +150,7 @@ onMounted(() => {
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-        <ImagePlaceholder v-else />
+        <ImagePlaceholder v-else class="rounded" />
       </div>
     </div>
     <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>

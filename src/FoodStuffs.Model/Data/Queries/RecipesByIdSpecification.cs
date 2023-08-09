@@ -9,4 +9,9 @@ public class RecipesByIdSpecification : QuerySpecificationAbstract<Recipe>
     {
         AddCriteria(r => r.Id == id);
     }
+
+    public RecipesByIdSpecification(IEnumerable<int> ids) : base()
+    {
+        AddCriteria(r => ids.Contains(r.Id));
+    }
 }

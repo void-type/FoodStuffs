@@ -1,18 +1,25 @@
 import type {
-  ListRecipesResponse,
+  GetMealSetResponse,
+  ListMealSetsResponseIItemSet,
   ListRecipesResponseIItemSet,
   ListRecipesResponseIngredient,
+  MealSetsListParams,
   RecipesListParams,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
+import DateHelpers from '@/models/DateHelpers';
 import { isNil } from '@/models/FormatHelpers';
+import GetMealSetResponseClass from '@/models/GetMealSetResponseClass';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 import { defineStore } from 'pinia';
 
-interface CardStoreState {
-  listResponse: ListRecipesResponseIItemSet;
-  listRequest: RecipesListParams;
-  selectedCards: ListRecipesResponse[];
+interface MealStoreState {
+  recipeListResponse: ListRecipesResponseIItemSet;
+  recipeListRequest: RecipesListParams;
+  mealSetListResponse: ListMealSetsResponseIItemSet;
+  mealSetListRequest: MealSetsListParams;
+  mealSetListIndex: number;
+  currentMealSet: GetMealSetResponse;
   pantry: Record<string, number>;
 }
 
@@ -58,9 +65,13 @@ function subtractCount(dict: Record<string, number>, key: string, count = 1) {
   }
 }
 
-export default defineStore('cards', {
-  state: (): CardStoreState => ({
-    listResponse: {
+function getSelectedRecipes(state: MealStoreState) {
+  return state.currentMealSet.recipes || [];
+}
+
+export default defineStore('meals', {
+  state: (): MealStoreState => ({
+    recipeListResponse: {
       count: 0,
       items: [],
       isPagingEnabled: true,
@@ -68,19 +79,33 @@ export default defineStore('cards', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: {
+    recipeListRequest: {
       ...new ListRecipesRequest(),
       isForMealPlanning: true,
     },
-    selectedCards: [],
+    mealSetListResponse: {
+      count: 0,
+      items: [],
+      isPagingEnabled: true,
+      page: 1,
+      take: Choices.defaultPaginationTake.value,
+      totalCount: 0,
+    },
+    mealSetListRequest: {
+      isPagingEnabled: false,
+    },
+    mealSetListIndex: -1,
+    currentMealSet: new GetMealSetResponseClass() as GetMealSetResponse,
     pantry: {},
   }),
 
   getters: {
     getPantry: (state) => Object.entries(state.pantry),
 
+    getSelectedRecipes: (state) => getSelectedRecipes(state),
+
     getShoppingList: (state) => {
-      const ingredientCounts = state.selectedCards
+      const ingredientCounts = getSelectedRecipes(state)
         .flatMap((c) => c.ingredients || [])
         .filter((c) => !c.isCategory)
         .reduce(countIngredients, {});
@@ -92,34 +117,26 @@ export default defineStore('cards', {
       return Object.entries(ingredientCounts);
     },
 
-    isCardSelected: (state) => (id: number | null | undefined) =>
-      state.selectedCards.findIndex((x) => x.id === id) > -1,
+    isRecipeSelected: (state) => (id: number | null | undefined) =>
+      getSelectedRecipes(state).findIndex((x) => x.id === id) > -1,
   },
 
   actions: {
-    setListResponse(data: ListRecipesResponseIItemSet) {
-      this.listResponse = data;
-    },
+    toggleRecipe(id: number) {
+      const index = this.getSelectedRecipes.findIndex((x) => x.id === id);
 
-    setListRequest(data: RecipesListParams) {
-      this.listRequest = data;
-    },
-
-    toggleCard(id: number) {
-      const cardIndex = this.selectedCards.findIndex((x) => x.id === id);
-
-      if (cardIndex > -1) {
-        this.selectedCards.splice(cardIndex, 1);
+      if (index > -1) {
+        this.getSelectedRecipes.splice(index, 1);
         return;
       }
 
-      const recipe = this.listResponse.items?.find((c) => c.id === id);
+      const recipe = this.recipeListResponse.items?.find((c) => c.id === id);
 
       if (typeof recipe === 'undefined' || recipe === null) {
         return;
       }
 
-      this.selectedCards.push(recipe);
+      this.getSelectedRecipes.push(recipe);
     },
 
     clearPantry() {
@@ -134,8 +151,14 @@ export default defineStore('cards', {
       subtractCount(this.pantry, ingredient);
     },
 
-    clearShoppingList() {
-      this.selectedCards = [];
+    clearSelectedRecipes() {
+      this.currentMealSet.recipes = [];
+    },
+
+    newMealSet() {
+      this.currentMealSet = new GetMealSetResponseClass();
+      this.currentMealSet.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDay(1));
+      this.mealSetListIndex = -1;
     },
   },
 });

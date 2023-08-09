@@ -24,6 +24,39 @@ export interface DomainUser {
   authorizedAs?: string[] | null;
 }
 
+export interface GetMealSetResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string | null;
+  createdBy?: string | null;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string | null;
+  /** @format date-time */
+  modifiedOn?: string;
+  recipes?: GetMealSetResponseRecipe[] | null;
+}
+
+export interface GetMealSetResponseRecipe {
+  /** @format int32 */
+  id?: number;
+  name?: string | null;
+  /** @format int32 */
+  pinnedImageId?: number | null;
+  categories?: string[] | null;
+  images?: number[] | null;
+  ingredients?: GetMealSetResponseRecipeIngredient[] | null;
+}
+
+export interface GetMealSetResponseRecipeIngredient {
+  name?: string | null;
+  /** @format int32 */
+  quantity?: number;
+  /** @format int32 */
+  order?: number;
+  isCategory?: boolean;
+}
+
 export interface GetRecipeResponse {
   /** @format int32 */
   id?: number;
@@ -80,6 +113,25 @@ export interface Int32EntityMessage {
   id?: number;
 }
 
+export interface ListMealSetsResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string | null;
+}
+
+export interface ListMealSetsResponseIItemSet {
+  /** @format int32 */
+  count?: number;
+  items?: ListMealSetsResponse[] | null;
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
 export interface ListRecipesResponse {
   /** @format int32 */
   id?: number;
@@ -115,6 +167,13 @@ export interface ListRecipesResponseIngredient {
 export interface PinImageRequest {
   /** @format int32 */
   id?: number;
+}
+
+export interface SaveMealSetRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string | null;
+  recipeIds?: number[] | null;
 }
 
 export interface SaveRecipeRequest {
@@ -155,6 +214,28 @@ export interface ImagesCreateParams {
   recipeId?: number;
 }
 
+export interface MealSetsListParams {
+  /** Name contains (case-insensitive) */
+  name?: string;
+  /**
+   * False for all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
 export interface RecipesListParams {
   /** Name contains (case-insensitive) */
   name?: string;
@@ -162,13 +243,8 @@ export interface RecipesListParams {
   category?: string;
   /** If the recipes should be enabled for meal planning */
   isForMealPlanning?: boolean | null;
-  /** Field name to sort by (case-insensitive). Options are: name. Default is ID */
+  /** Field name to sort by (case-insensitive). Options are: name, modifiedon. Default is ID */
   sortBy?: string;
-  /**
-   * True for descending sort
-   * @default false
-   */
-  sortDesc?: boolean;
   /**
    * False for all results
    * @default true

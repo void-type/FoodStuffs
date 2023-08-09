@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import type { ListRecipesResponse } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import ApiHelpers from '@/models/ApiHelpers';
 import { toInt, toNumber } from '@/models/FormatHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
-import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
+import RecipeSearchCard from '@/components/RecipeSearchCard.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import useMessageStore from '@/stores/messageStore';
+import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 
 const props = defineProps({
   query: {
@@ -22,14 +22,13 @@ const props = defineProps({
   },
 });
 
-const appStore = useAppStore();
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
 const api = ApiHelpers.client;
 
-const { useDarkMode } = storeToRefs(appStore);
 const { listResponse, listRequest } = storeToRefs(recipeStore);
+const { sortOptions } = RecipeStoreHelpers;
 
 function fetchList() {
   router.push({
@@ -57,14 +56,14 @@ function startSearch() {
 }
 
 function changePage(page: number) {
-  recipeStore.setListRequest({ ...recipeStore.listRequest, page });
+  recipeStore.setListRequest({ ...listRequest.value, page });
 
   fetchList();
 }
 
 function changeTake(take: number) {
   recipeStore.setListRequest({
-    ...recipeStore.listRequest,
+    ...listRequest.value,
     isPagingEnabled: toInt(take) > 1,
     take,
     page: 1,
@@ -73,44 +72,20 @@ function changeTake(take: number) {
   fetchList();
 }
 
-function changeSort(columnName: string) {
-  // 1st click asc
-  let sortBy = columnName;
-  let sortDesc = false;
-
-  if (columnName === listRequest.value.sortBy) {
-    if (listRequest.value.sortDesc !== true) {
-      // 2nd click desc
-      sortDesc = true;
-    } else {
-      // 3rd click turn off sorting
-      sortBy = '';
-    }
-  }
-
-  recipeStore.setListRequest({
-    ...listRequest.value,
-    sortBy,
-    sortDesc,
-  });
+function changeSort(event: Event) {
+  const { value } = event.target as HTMLSelectElement;
+  recipeStore.setListRequest({ ...listRequest.value, sortBy: value });
 
   fetchList();
 }
 
-function showDetails(recipe: ListRecipesResponse) {
-  router.push({ name: 'view', params: { id: recipe.id } });
-}
-
 onMounted(() => {
-  if (Object.keys(props.query).length !== 0) {
-    recipeStore.setListRequest({
-      ...new ListRecipesRequest(),
-      ...props.query,
-      sortDesc: JSON.parse(String(props.query.sortDesc?.valueOf())) === true,
-      page: toNumber(Number(props.query.page), 1),
-      take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
-    });
-  }
+  recipeStore.setListRequest({
+    ...new ListRecipesRequest(),
+    ...props.query,
+    page: toNumber(Number(props.query.page), 1),
+    take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
+  });
 
   fetchList();
 });
@@ -131,7 +106,7 @@ watch(listRequest, () => {
         <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
             <div class="grid mb-3" style="--bs-gap: 1em">
-              <div class="g-col-12 g-col-md-5">
+              <div class="g-col-12 g-col-md-6">
                 <label for="nameSearch" class="form-label">Name contains</label>
                 <input
                   id="nameSearch"
@@ -140,7 +115,7 @@ watch(listRequest, () => {
                   @keydown.stop.prevent.enter="startSearch"
                 />
               </div>
-              <div class="g-col-12 g-col-md-5">
+              <div class="g-col-12 g-col-md-6">
                 <label for="categorySearch" class="form-label">Categories contain</label>
                 <input
                   id="categorySearch"
@@ -149,7 +124,7 @@ watch(listRequest, () => {
                   @keydown.stop.prevent.enter="startSearch"
                 />
               </div>
-              <div class="g-col-12 g-col-md-2">
+              <div class="g-col-6 g-col-md-4">
                 <label class="form-label" for="isForMealPlanning">Meals</label>
                 <select
                   id="isForMealPlanning"
@@ -166,54 +141,42 @@ watch(listRequest, () => {
                   </option>
                 </select>
               </div>
+              <div class="g-col-6 g-col-md-4">
+                <label for="recipeSort" class="form-label">Sort</label>
+                <select
+                  id="recipeSort"
+                  name="recipeSort"
+                  class="form-select"
+                  aria-label="Page size"
+                  @change="changeSort"
+                >
+                  <option
+                    v-for="sortOption in sortOptions"
+                    :key="String(sortOption.value)"
+                    :value="String(sortOption.value)"
+                  >
+                    {{ sortOption.text }}
+                  </option>
+                </select>
+              </div>
             </div>
           </template>
         </EntityTableControls>
-        <table
-          :class="{
-            table: true,
-            'table-hover': true,
-            'text-start': true,
-            'table-dark': useDarkMode,
-            'mt-4': true,
-          }"
-        >
-          <thead>
-            <tr>
-              <th
-                class="sortable"
-                scope="col"
-                tabindex="0"
-                @click="changeSort('name')"
-                @keydown.stop.prevent.enter="changeSort('name')"
-              >
-                Name
-                <i v-if="listRequest.sortBy === 'name'">{{ listRequest.sortDesc ? '▼' : '▲' }}</i>
-                <span v-if="listRequest.sortBy === 'name'" class="visually-hidden"
-                  >({{ listRequest.sortDesc ? 'Descending' : 'Ascending' }} sort)</span
-                >
-                <span v-else class="visually-hidden">(Not sorted)</span>
-              </th>
-              <th scope="col">Categories</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="(listResponse.items?.length || 0) < 1">
-              <td class="p-4 text-center" colspan="2">No results</td>
-            </tr>
-            <tr v-for="recipe in listResponse.items" :key="recipe.id" @click="showDetails(recipe)">
-              <td>
-                <router-link class="table-link" :to="{ name: 'view', params: { id: recipe.id } }">{{
-                  recipe.name
-                }}</router-link>
-              </td>
-              <td>{{ recipe?.categories?.join(', ') }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="grid mt-4">
+          <div v-if="(listResponse.items?.length || 0) < 1" class="g-col-12 p-4 text-center">
+            None selected
+          </div>
+          <RecipeSearchCard
+            v-for="recipe in listResponse.items"
+            :key="recipe.id"
+            :recipe="recipe"
+            :on-card-click="() => {}"
+            class="g-col-12"
+          />
+        </div>
         <EntityTablePager
-          :list-request="recipeStore.listRequest"
-          :total-count="toInt(recipeStore.listResponse.totalCount)"
+          :list-request="listRequest"
+          :total-count="toInt(listResponse.totalCount)"
           :on-change-page="changePage"
           :on-change-take="changeTake"
           class="mt-4"
@@ -226,22 +189,4 @@ watch(listRequest, () => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import '@/styles/theme';
-
-// Hover table cursor
-table.table-hover tbody {
-  cursor: pointer;
-}
-
-table th.sortable:hover {
-  cursor: pointer;
-  --bs-table-accent-bg: var(--bs-table-hover-bg);
-  color: var(--bs-table-hover-color);
-}
-
-.table-link {
-  color: unset;
-  text-decoration: none;
-}
-</style>
+<style lang="scss" scoped></style>

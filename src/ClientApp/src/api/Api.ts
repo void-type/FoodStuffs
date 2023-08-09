@@ -11,13 +11,17 @@
 
 import type {
   AppVersion,
+  GetMealSetResponse,
   GetRecipeResponse,
   IFailureIItemSet,
   ImagesCreateParams,
   Int32EntityMessage,
+  ListMealSetsResponseIItemSet,
   ListRecipesResponseIItemSet,
+  MealSetsListParams,
   PinImageRequest,
   RecipesListParams,
+  SaveMealSetRequest,
   SaveRecipeRequest,
   WebClientInfo,
 } from './data-contracts';
@@ -133,6 +137,77 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags MealSets
+   * @name MealSetsList
+   * @summary Search for meal sets using the following criteria. All are optional and some have defaults.
+   * @request GET:/api/mealSets
+   * @response `200` `ListMealSetsResponseIItemSet` Success
+   * @response `400` `IFailureIItemSet` Bad Request
+   */
+  mealSetsList = (query: MealSetsListParams, params: RequestParams = {}) =>
+    this.request<ListMealSetsResponseIItemSet, IFailureIItemSet>({
+      path: `/api/mealSets`,
+      method: 'GET',
+      query: query,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags MealSets
+   * @name MealSetsCreate
+   * @summary Save a meal set. Will update if found, otherwise a new meal set will be created.
+   * @request POST:/api/mealSets
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
+   */
+  mealSetsCreate = (data: SaveMealSetRequest, params: RequestParams = {}) =>
+    this.request<Int32EntityMessage, IFailureIItemSet>({
+      path: `/api/mealSets`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags MealSets
+   * @name MealSetsDetail
+   * @summary Get a meal set.
+   * @request GET:/api/mealSets/{id}
+   * @response `200` `GetMealSetResponse` Success
+   * @response `400` `IFailureIItemSet` Bad Request
+   */
+  mealSetsDetail = (id: number, params: RequestParams = {}) =>
+    this.request<GetMealSetResponse, IFailureIItemSet>({
+      path: `/api/mealSets/${id}`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags MealSets
+   * @name MealSetsDelete
+   * @summary Delete a meal set.
+   * @request DELETE:/api/mealSets/{id}
+   * @response `200` `Int32EntityMessage` Success
+   * @response `400` `IFailureIItemSet` Bad Request
+   */
+  mealSetsDelete = (id: number, params: RequestParams = {}) =>
+    this.request<Int32EntityMessage, IFailureIItemSet>({
+      path: `/api/mealSets/${id}`,
+      method: 'DELETE',
       format: 'json',
       ...params,
     });

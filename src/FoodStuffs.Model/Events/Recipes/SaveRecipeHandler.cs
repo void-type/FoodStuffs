@@ -26,6 +26,8 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         var recipeToEdit = maybeRecipe.Unwrap(() => new Recipe());
 
         Transfer(request, recipeToEdit);
+        ManageIngredients(request, recipeToEdit);
+        await ManageCategories(request, recipeToEdit, cancellationToken);
 
         if (maybeRecipe.HasValue)
         {
@@ -39,59 +41,66 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));
     }
 
-    private static void Transfer(SaveRecipeRequest request, Recipe recipe)
+    private void Transfer(SaveRecipeRequest request, Recipe recipe)
     {
         recipe.Name = request.Name;
         recipe.Directions = request.Directions ?? string.Empty;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
         recipe.IsForMealPlanning = request.IsForMealPlanning;
-
-        ManageIngredients(request, recipe);
-        ManageCategories(request, recipe);
     }
 
     private static void ManageIngredients(SaveRecipeRequest request, Recipe recipe)
     {
         recipe.Ingredients.Clear();
 
-        foreach (var ingredient in request.Ingredients)
-        {
-            recipe.Ingredients.Add(new Ingredient
+        var ingredientsToAdd = request.Ingredients
+            .Select(x => new Ingredient
             {
-                Name = ingredient.Name,
-                Quantity = ingredient.Quantity,
-                Order = ingredient.Order,
-                IsCategory = ingredient.IsCategory,
+                Name = x.Name,
+                Quantity = x.Quantity,
+                Order = x.Order,
+                IsCategory = x.IsCategory,
             });
-        }
+
+        recipe.Ingredients.AddRange(ingredientsToAdd);
     }
 
-    private static void ManageCategories(SaveRecipeRequest request, Recipe recipe)
+    private async Task ManageCategories(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
     {
-        var requested = request.Categories
-            .Where(n => !string.IsNullOrWhiteSpace(n))
-            .Select(n => n.ToLower().Trim())
+        var requestedNames = request.Categories
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x).Trim())
             .ToArray();
 
-        var existingCategories = recipe.Categories
-            .Where(c => requested.Contains(c.Name.ToLower().Trim()));
+        // Remove extra categories.
+        recipe.Categories.RemoveAll(x => !requestedNames.Contains(x.Name));
 
-        var existingCategoryNames = existingCategories
-            .Select(c => c.Name.ToLower().Trim());
+        var missingNames = requestedNames
+            .Where(n => !recipe.Categories.Select(x => x.Name).Contains(n))
+            .ToList();
 
-        // Create categories that don't exist
-        var newCategories = requested
-            .Where(n => !existingCategoryNames.Contains(n))
-            .Select(n => new Category { Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(n) });
+        // Find missing categories that already exist.
+        var missingCategoriesSpec = new CategoriesSpecification(x => missingNames.Contains(x.Name));
 
-        var finalCategories = existingCategories.Concat(newCategories);
+        var existingCategories = (await _data.Categories.List(missingCategoriesSpec, cancellationToken))
+            // In case there are duplicates, add only the first.
+            .OrderBy(x => x.Id)
+            .GroupBy(x => x.Name)
+            .Select(g => g.First());
 
-        recipe.Categories.Clear();
+        recipe.Categories.AddRange(existingCategories);
 
-        foreach (var category in finalCategories)
-        {
-            recipe.Categories.Add(category);
-        }
+        // Create missing categories.
+        var createdCategories = missingNames
+            .Where(x => !recipe.Categories.Select(x => x.Name).Contains(x))
+            .Select(x => new Category { Name = x });
+
+        recipe.Categories.AddRange(createdCategories);
+
+        // Remove categories that are no longer used.
+        var unusedCategoriesSpec = new CategoriesUnusedSpecification();
+        var categories = await _data.Categories.List(unusedCategoriesSpec, cancellationToken);
+        await _data.Categories.RemoveRange(categories, cancellationToken);
     }
 }

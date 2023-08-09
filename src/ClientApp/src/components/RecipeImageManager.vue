@@ -225,7 +225,7 @@ onMounted(() => {
                 <font-awesome-icon icon="times" />
               </button>
               <img
-                class="img-fluid rounded"
+                class="img-fluid rounded w-100"
                 :src="imageUrl(imageId)"
                 :alt="`image ${i}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
@@ -251,7 +251,7 @@ onMounted(() => {
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-        <ImagePlaceholder v-else />
+        <ImagePlaceholder v-else class="rounded" />
       </div>
     </div>
   </div>

@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -100,7 +100,7 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("Image", (string)null);
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.Ingredient", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealSet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,36 +113,22 @@ namespace FoodStuffs.Model.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<bool>("IsCategory")
-                        .HasColumnType("bit");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("Ingredient", (string)null);
+                    b.ToTable("MealSet", (string)null);
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
@@ -228,10 +214,24 @@ namespace FoodStuffs.Model.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("PK_AppUser");
+                    b.HasKey("Id");
 
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("MealSetRecipe", b =>
+                {
+                    b.Property<int>("MealSetsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MealSetsId", "RecipesId");
+
+                    b.HasIndex("RecipesId");
+
+                    b.ToTable("MealSetRecipe");
                 });
 
             modelBuilder.Entity("CategoryRecipe", b =>
@@ -240,15 +240,13 @@ namespace FoodStuffs.Model.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_CategoryRecipe_Category");
+                        .IsRequired();
 
                     b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
                         .WithMany()
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_CategoryRecipe_Recipe");
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Blob", b =>
@@ -257,8 +255,7 @@ namespace FoodStuffs.Model.Migrations
                         .WithOne("Blob")
                         .HasForeignKey("FoodStuffs.Model.Data.Models.Blob", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Blob_Image");
+                        .IsRequired();
 
                     b.Navigation("Image");
                 });
@@ -269,20 +266,7 @@ namespace FoodStuffs.Model.Migrations
                         .WithMany("Images")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Image_Recipe");
-
-                    b.Navigation("Recipe");
-                });
-
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.Ingredient", b =>
-                {
-                    b.HasOne("FoodStuffs.Model.Data.Models.Recipe", "Recipe")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Ingredient_Recipe");
+                        .IsRequired();
 
                     b.Navigation("Recipe");
                 });
@@ -291,10 +275,72 @@ namespace FoodStuffs.Model.Migrations
                 {
                     b.HasOne("FoodStuffs.Model.Data.Models.Image", "PinnedImage")
                         .WithMany()
-                        .HasForeignKey("PinnedImageId")
-                        .HasConstraintName("FK_Recipe_PinnedImage");
+                        .HasForeignKey("PinnedImageId");
+
+                    b.OwnsMany("FoodStuffs.Model.Data.Models.Ingredient", "Ingredients", b1 =>
+                        {
+                            b1.Property<int>("RecipeId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("CreatedBy")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("CreatedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<bool>("IsCategory")
+                                .HasColumnType("bit");
+
+                            b1.Property<string>("ModifiedBy")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("ModifiedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("Order")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Quantity")
+                                .HasColumnType("int");
+
+                            b1.HasKey("RecipeId", "Id");
+
+                            b1.ToTable("Ingredient", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("RecipeId");
+                        });
+
+                    b.Navigation("Ingredients");
 
                     b.Navigation("PinnedImage");
+                });
+
+            modelBuilder.Entity("MealSetRecipe", b =>
+                {
+                    b.HasOne("FoodStuffs.Model.Data.Models.MealSet", null)
+                        .WithMany()
+                        .HasForeignKey("MealSetsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
@@ -305,8 +351,6 @@ namespace FoodStuffs.Model.Migrations
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
                 {
                     b.Navigation("Images");
-
-                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }

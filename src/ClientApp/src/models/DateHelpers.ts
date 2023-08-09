@@ -33,4 +33,14 @@ export default class DateHelpers {
   static dateTimeForView(value: Date) {
     return getFormattedMoment(value, formatStrings.viewDateTime);
   }
+
+  static getThisOrNextDay(day: number) {
+    const d = new Date();
+
+    while (d.getDay() !== day) {
+      d.setDate(d.getDate() + 1);
+    }
+
+    return d;
+  }
 }

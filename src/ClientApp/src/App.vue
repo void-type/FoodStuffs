@@ -134,11 +134,22 @@ footer {
     --bs-accordion-btn-color: #{$accordion-button-color};
     --bs-accordion-btn-bg: #{$accordion-button-bg};
   }
+
+  .btn-card-control {
+    padding: 0.5rem var(--bs-card-cap-padding-x);
+    display: inline-block;
+  }
 }
 
 body.bg-dark {
   --bs-link-color: #{lighten($primary, 20%)};
   --bs-link-hover-color: #{lighten($primary, 10%)};
+  --bs-border-color: var(--bs-gray-800);
+
+  .text-muted {
+    --bs-text-opacity: 1;
+    color: var(--bs-gray-600) !important;
+  }
 
   .page-link.active,
   .active > .page-link {
@@ -164,13 +175,27 @@ body.bg-dark {
   }
 
   .form-control,
-  .form-select {
+  .form-select,
+  .dropdown-menu {
     background-color: var(--bs-dark);
     color: var(--bs-white);
   }
 
+  .dropdown-item {
+    color: var(--bs-white);
+
+    &:hover {
+      background-color: var(--bs-gray-800);
+    }
+  }
+
   .modal-content {
-    color: var(--bs-dark);
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+
+    .modal-header .btn-close {
+      --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e6e6e6'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+    }
   }
 
   .pagination {
@@ -181,7 +206,7 @@ body.bg-dark {
   }
 
   .accordion,
-  .card.meal-card {
+  .card {
     --bs-accordion-color: unset;
     --bs-accordion-bg: unset;
     --bs-accordion-btn-color: var(--bs-white);

@@ -19,8 +19,4 @@ public partial class Ingredient
     public string ModifiedBy { get; set; } = null!;
 
     public DateTime ModifiedOn { get; set; }
-
-    public int RecipeId { get; set; }
-
-    public virtual Recipe Recipe { get; set; } = null!;
 }

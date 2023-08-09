@@ -19,8 +19,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="card img-placeholder d-print-none">
-    <div>{{ text }}</div>
+  <div class="img-placeholder d-print-none">
+    <div class="text-muted">{{ text }}</div>
   </div>
 </template>
 
@@ -34,5 +34,11 @@ defineProps({
   align-items: center;
   justify-content: center;
   background-color: inherit;
+  display: flex;
+  outline: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+body.bg-dark .img-placeholder {
+  outline: var(--bs-gray-800) 1px solid;
 }
 </style>
