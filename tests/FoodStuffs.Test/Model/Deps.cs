@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Web.Auth;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Time;
@@ -15,9 +15,7 @@ public static class Deps
 {
     static Deps()
     {
-        var userAccessorMock = new Mock<ICurrentUserAccessor>();
-        userAccessorMock.Setup(a => a.User).Returns(new DomainUser("SingleUser", Array.Empty<string>()));
-        CurrentUserAccessor = userAccessorMock.Object;
+        CurrentUserAccessor = new SingleUserAccessor();
 
         var early = new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc);
         var late = new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc);
