@@ -12,6 +12,7 @@ import EntityTablePager from '@/components/EntityTablePager.vue';
 import useMessageStore from '@/stores/messageStore';
 import type { SaveMealSetRequest } from '@/api/data-contracts';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
+import type { HttpResponse } from '@/api/http-client';
 
 const mealStore = useMealStore();
 const messageStore = useMessageStore();
@@ -19,7 +20,6 @@ const api = ApiHelpers.client;
 
 const { recipeListRequest, mealSetListRequest, currentMealSet } = storeToRefs(mealStore);
 const availableRecipes = computed(() => mealStore.recipeListResponse.items);
-const mealSets = computed(() => mealStore.mealSetListResponse.items || []);
 const selectedRecipes = computed(() => mealStore.getSelectedRecipes);
 const { sortOptions } = RecipeStoreHelpers;
 
@@ -71,44 +71,51 @@ function changeRecipeTake(take: number) {
   fetchRecipeList();
 }
 
-function changeMealSetIndex(suggestedIndex: number) {
-  if (mealSets.value.length < 1) {
+async function changeMealSetIndex(suggestedIndex: number) {
+  const sets = mealStore.mealSetListResponse.items || [];
+
+  if (sets.length < 1) {
     mealStore.newMealSet();
     return;
   }
 
-  const newIndex = clamp(suggestedIndex, 0, mealSets.value.length - 1);
-  const mealSet = mealSets.value[newIndex];
+  const newIndex = clamp(suggestedIndex, 0, sets.length - 1);
+  const mealSet = sets[newIndex];
 
-  ApiHelpers.client()
+  try {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    .mealSetsDetail(mealSet.id!)
-    .then((response) => {
-      mealStore.currentMealSet = response.data;
-      mealStore.mealSetListIndex = newIndex;
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+    const response = await api().mealSetsDetail(mealSet.id!);
+    mealStore.currentMealSet = response.data;
+    mealStore.mealSetListIndex = newIndex;
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
-function changeMealSetIndexBack() {
-  changeMealSetIndex(mealStore.mealSetListIndex + 1);
+async function changeMealSetIndexBack() {
+  await changeMealSetIndex(mealStore.mealSetListIndex + 1);
 }
 
-function changeMealSetIndexForward() {
-  changeMealSetIndex(mealStore.mealSetListIndex - 1);
+async function changeMealSetIndexForward() {
+  await changeMealSetIndex(mealStore.mealSetListIndex - 1);
 }
 
-function fetchMealSetList() {
-  api()
-    .mealSetsList(mealSetListRequest.value)
-    .then((response) => {
-      mealStore.mealSetListResponse = response.data;
-      changeMealSetIndex(0);
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+async function changeMealSetId(id: number) {
+  const sets = mealStore.mealSetListResponse.items || [];
+  const index = sets.findIndex((x) => x.id === id);
+  await changeMealSetIndex(index);
 }
 
-function saveMealSet() {
+async function fetchMealSetList() {
+  try {
+    const response = await api().mealSetsList(mealSetListRequest.value);
+    mealStore.mealSetListResponse = response.data;
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
+async function saveMealSet() {
   const current = currentMealSet.value;
 
   const request: SaveMealSetRequest = {
@@ -118,52 +125,54 @@ function saveMealSet() {
     recipeIds: selectedRecipes.value.map((x) => x.id!).filter((x) => !isNil(x)),
   };
 
-  api()
-    .mealSetsCreate(request)
-    .then((response) => {
-      if (response.data.message) {
-        messageStore.setSuccessMessage(response.data.message);
-      }
+  try {
+    const response = await api().mealSetsCreate(request);
 
-      fetchMealSetList();
-    })
-    .catch((response) => {
-      messageStore.setApiFailureMessages(response);
-    });
+    if (response.data.message) {
+      messageStore.setSuccessMessage(response.data.message);
+    }
+
+    await fetchMealSetList();
+
+    if (response.data.id) {
+      await changeMealSetId(response.data.id);
+    }
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
-function deleteMealSet() {
-  const current = currentMealSet.value;
+async function deleteMealSet() {
+  const { id } = currentMealSet.value;
 
-  if (isNil(current.id)) {
+  if (!id) {
     return;
   }
 
-  api()
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    .mealSetsDelete(current.id!)
-    .then((response) => {
-      if (response.data.message) {
-        messageStore.setSuccessMessage(response.data.message);
-      }
+  try {
+    const response = await api().mealSetsDelete(id);
 
-      fetchMealSetList();
-    })
-    .catch((response) => {
-      messageStore.setApiFailureMessages(response);
-    });
+    if (response.data.message) {
+      messageStore.setSuccessMessage(response.data.message);
+    }
+
+    await fetchMealSetList();
+    await changeMealSetIndex(mealStore.mealSetListIndex - 1);
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
-function changeRecipeSort(event: Event) {
+async function changeRecipeSort(event: Event) {
   const { value } = event.target as HTMLSelectElement;
   recipeListRequest.value.sortBy = value;
-  fetchRecipeList();
+  await fetchRecipeList();
 }
 
-onMounted(() => {
+onMounted(async () => {
   fetchRecipeList();
-  fetchMealSetList();
-  changeMealSetIndex(0);
+  await fetchMealSetList();
+  await changeMealSetIndex(0);
 });
 </script>
 
