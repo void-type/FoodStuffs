@@ -1,4 +1,8 @@
-import type { GetMealSetResponse, GetRecipeResponse } from '@/api/data-contracts';
+import type {
+  GetMealSetResponse,
+  GetMealSetResponsePantryIngredient,
+  GetRecipeResponse,
+} from '@/api/data-contracts';
 
 export default class GetMealSetResponseClass implements GetMealSetResponse {
   public id = 0;
@@ -14,4 +18,6 @@ export default class GetMealSetResponseClass implements GetMealSetResponse {
   public modifiedOn = '';
 
   public recipes: GetRecipeResponse[] = [];
+
+  public pantryIngredients: GetMealSetResponsePantryIngredient[] = [];
 }

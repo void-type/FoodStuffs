@@ -48,10 +48,7 @@ public partial class FoodStuffsContext : DbContext
             });
         });
 
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.ToTable("Category");
-        });
+        modelBuilder.Entity<Category>(entity => entity.ToTable("Category"));
 
         modelBuilder.Entity<Image>(entity =>
         {
@@ -75,6 +72,8 @@ public partial class FoodStuffsContext : DbContext
 
             entity.HasMany(d => d.Recipes)
                 .WithMany(p => p.MealSets);
+
+            entity.OwnsMany(d => d.PantryIngredients, o => o.ToJson());
         });
 
         modelBuilder.Entity<User>(entity =>

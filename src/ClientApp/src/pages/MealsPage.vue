@@ -123,6 +123,7 @@ async function saveMealSet() {
     name: current.name,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     recipeIds: selectedRecipes.value.map((x) => x.id!).filter((x) => !isNil(x)),
+    pantryIngredients: current.pantryIngredients,
   };
 
   try {

@@ -39,9 +39,16 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
         return Ok(EntityMessage.Create($"Meal set {(maybeMealSet.HasValue ? "updated" : "added")}.", mealSetToEdit.Id));
     }
 
-    private void Transfer(SaveMealSetRequest request, MealSet mealSet)
+    private static void Transfer(SaveMealSetRequest request, MealSet mealSet)
     {
         mealSet.Name = request.Name;
+        mealSet.PantryIngredients = request.PantryIngredients
+            .Select(x => new PantryIngredient
+            {
+                Name = x.Name,
+                Quantity = x.Quantity,
+            })
+            .ToList();
     }
 
     private async Task ManageRecipes(SaveMealSetRequest request, MealSet mealSet, CancellationToken cancellationToken)

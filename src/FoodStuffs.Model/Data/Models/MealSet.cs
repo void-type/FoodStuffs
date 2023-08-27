@@ -15,4 +15,6 @@ public partial class MealSet
     public DateTime ModifiedOn { get; set; }
 
     public virtual List<Recipe> Recipes { get; } = new List<Recipe>();
+
+    public virtual List<PantryIngredient> PantryIngredients { get; set; } = new List<PantryIngredient>();
 }

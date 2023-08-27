@@ -37,6 +37,7 @@ public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMeal
                     Images: r.Images.Select(i => i.Id),
                     Ingredients: r.Ingredients
                         .Select(i => new GetMealSetResponseRecipeIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
-                        .OrderBy(i => i.Order)))));
+                        .OrderBy(i => i.Order))),
+                PantryIngredients: r.PantryIngredients.Select(i => new GetMealSetResponsePantryIngredient(i.Name, i.Quantity))));
     }
 }

@@ -1,5 +1,6 @@
 import type {
   GetMealSetResponse,
+  GetMealSetResponsePantryIngredient,
   ListMealSetsResponseIItemSet,
   ListRecipesResponseIItemSet,
   ListRecipesResponseIngredient,
@@ -20,10 +21,12 @@ interface MealStoreState {
   mealSetListRequest: MealSetsListParams;
   mealSetListIndex: number;
   currentMealSet: GetMealSetResponse;
-  pantry: Record<string, number>;
 }
 
-function countIngredients(acc: Record<string, number>, curr: ListRecipesResponseIngredient) {
+function countIngredients(
+  acc: GetMealSetResponsePantryIngredient[],
+  curr: ListRecipesResponseIngredient
+) {
   const { name, quantity } = curr;
 
   if (isNil(name)) {
@@ -31,37 +34,43 @@ function countIngredients(acc: Record<string, number>, curr: ListRecipesResponse
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (!acc[name!]) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    acc[name!] = 0;
+  let match = acc.find((x) => x.name === name!);
+
+  if (!match) {
+    match = { name, quantity: 0 };
+    acc.push(match);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  acc[name!] += quantity || 0;
+  match.quantity! += quantity || 0;
   return acc;
 }
 
-function addCount(dict: Record<string, number>, key: string, count = 1) {
-  if (!dict[key]) {
-    // eslint-disable-next-line no-param-reassign
-    dict[key] = 0;
+function addCount(ingredients: GetMealSetResponsePantryIngredient[], name: string, count = 1) {
+  let ingredient = ingredients.find((x) => x.name === name);
+
+  if (!ingredient) {
+    ingredient = { name, quantity: 0 };
+    ingredients.push(ingredient);
   }
 
-  // eslint-disable-next-line no-param-reassign
-  dict[key] += count;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  ingredient.quantity! += count;
 }
 
-function subtractCount(dict: Record<string, number>, key: string, count = 1) {
-  if (!dict[key]) {
+function subtractCount(ingredients: GetMealSetResponsePantryIngredient[], name: string, count = 1) {
+  const ingredient = ingredients.find((x) => x.name === name);
+
+  if (!ingredient) {
     return;
   }
 
-  // eslint-disable-next-line no-param-reassign
-  dict[key] -= count;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  ingredient.quantity! -= count;
 
-  if (dict[key] < 1) {
-    // eslint-disable-next-line no-param-reassign
-    delete dict[key];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  if (ingredient.quantity! < 1) {
+    ingredients.splice(ingredients.indexOf(ingredient), 1);
   }
 }
 
@@ -96,11 +105,10 @@ export default defineStore('meals', {
     },
     mealSetListIndex: -1,
     currentMealSet: new GetMealSetResponseClass() as GetMealSetResponse,
-    pantry: {},
   }),
 
   getters: {
-    getPantry: (state) => Object.entries(state.pantry),
+    getPantry: (state) => state.currentMealSet.pantryIngredients || [],
 
     getSelectedRecipes: (state) => getSelectedRecipes(state),
 
@@ -108,13 +116,14 @@ export default defineStore('meals', {
       const ingredientCounts = getSelectedRecipes(state)
         .flatMap((c) => c.ingredients || [])
         .filter((c) => !c.isCategory)
-        .reduce(countIngredients, {});
+        .reduce(countIngredients, []);
 
-      Object.entries(state.pantry).forEach(([ingredient, quantity]) => {
-        subtractCount(ingredientCounts, ingredient, quantity);
+      (state.currentMealSet.pantryIngredients || []).forEach((x) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        subtractCount(ingredientCounts, x.name!, x.quantity);
       });
 
-      return Object.entries(ingredientCounts);
+      return ingredientCounts;
     },
 
     isRecipeSelected: (state) => (id: number | null | undefined) =>
@@ -140,15 +149,15 @@ export default defineStore('meals', {
     },
 
     clearPantry() {
-      this.pantry = {};
+      this.currentMealSet.pantryIngredients = [];
     },
 
     addToPantry(ingredient: string) {
-      addCount(this.pantry, ingredient);
+      addCount(this.currentMealSet.pantryIngredients || [], ingredient);
     },
 
     removeFromPantry(ingredient: string) {
-      subtractCount(this.pantry, ingredient);
+      subtractCount(this.currentMealSet.pantryIngredients || [], ingredient);
     },
 
     clearSelectedRecipes() {

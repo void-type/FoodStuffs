@@ -35,6 +35,13 @@ export interface GetMealSetResponse {
   /** @format date-time */
   modifiedOn?: string;
   recipes?: GetMealSetResponseRecipe[] | null;
+  pantryIngredients?: GetMealSetResponsePantryIngredient[] | null;
+}
+
+export interface GetMealSetResponsePantryIngredient {
+  name?: string | null;
+  /** @format int32 */
+  quantity?: number;
 }
 
 export interface GetMealSetResponseRecipe {
@@ -174,6 +181,13 @@ export interface SaveMealSetRequest {
   id?: number;
   name?: string | null;
   recipeIds?: number[] | null;
+  pantryIngredients?: SaveMealSetRequestPantryIngredient[] | null;
+}
+
+export interface SaveMealSetRequestPantryIngredient {
+  name?: string | null;
+  /** @format int32 */
+  quantity?: number;
 }
 
 export interface SaveRecipeRequest {

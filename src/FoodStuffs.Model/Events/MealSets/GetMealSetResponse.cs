@@ -7,4 +7,5 @@ public record GetMealSetResponse(
     DateTime CreatedOn,
     string ModifiedBy,
     DateTime ModifiedOn,
-    IEnumerable<GetMealSetResponseRecipe> Recipes);
+    IEnumerable<GetMealSetResponseRecipe> Recipes,
+    IEnumerable<GetMealSetResponsePantryIngredient> PantryIngredients);
