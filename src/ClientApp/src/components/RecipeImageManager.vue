@@ -225,7 +225,7 @@ onMounted(() => {
                 <font-awesome-icon icon="times" />
               </button>
               <img
-                class="img-fluid rounded w-100"
+                class="img-fluid rounded"
                 :src="imageUrl(imageId)"
                 :alt="`image ${i}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
