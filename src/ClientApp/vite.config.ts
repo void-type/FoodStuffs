@@ -1,4 +1,4 @@
-import { fileURLToPath, URL } from 'url';
+import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -18,12 +18,12 @@ export default defineConfig(({ command, mode }) => {
           app: './app.html',
         },
       },
-      outDir: '../FoodStuffs.Web/wwwroot',
+      outDir: '../HomeSensors.Web/wwwroot',
       emptyOutDir: true,
       sourcemap: mode === 'development',
     },
     watch: {
-      include: './src/**'
-    }
+      include: './src/**',
+    },
   };
 });

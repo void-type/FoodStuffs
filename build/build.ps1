@@ -9,11 +9,6 @@ param(
   [switch] $SkipPublish
 )
 
-$nodeModes = @{
-  'Release' = 'production'
-  'Debug'   = 'development'
-}
-
 function Stop-OnError([string]$errorMessage) {
   if ($LASTEXITCODE -eq 0) {
     return
@@ -55,11 +50,11 @@ try {
 
     if (-not $SkipOutdated) {
       npm outdated
-      npm audit --production
+      npm audit --omit=dev
       Stop-OnError
     }
 
-    npm run build -- --mode "$($nodeModes[$Configuration])"
+    npm run build
     Stop-OnError
   }
 

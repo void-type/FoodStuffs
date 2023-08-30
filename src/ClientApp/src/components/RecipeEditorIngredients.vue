@@ -103,7 +103,7 @@ watch(data, (newValue) => {
     v-else
     id="ingredient-list"
     v-model="data.ingredients"
-    animation="200"
+    :animation="200"
     group="ingredients"
     ghost-class="ghost"
     handle=".sort-handle"
