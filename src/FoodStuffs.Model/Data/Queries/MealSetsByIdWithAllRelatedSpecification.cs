@@ -5,7 +5,7 @@ namespace FoodStuffs.Model.Data.Queries;
 
 public class MealSetsByIdWithAllRelatedSpecification : QuerySpecificationAbstract<MealSet>
 {
-    public MealSetsByIdWithAllRelatedSpecification(int id) : base()
+    public MealSetsByIdWithAllRelatedSpecification(int id)
     {
         AddCriteria(r => r.Id == id);
         AddInclude($"{nameof(MealSet.Recipes)}.{nameof(Recipe.Categories)}");
