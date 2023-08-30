@@ -1,7 +1,10 @@
 ﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
@@ -11,10 +14,12 @@ namespace FoodStuffs.Model.Events.Recipes;
 public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItemSet<ListRecipesResponse>>
 {
     private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _dbContext;
 
-    public ListRecipesHandler(IFoodStuffsData data)
+    public ListRecipesHandler(IFoodStuffsData data, FoodStuffsContext dbContext)
     {
         _data = data;
+        _dbContext = dbContext;
     }
 
     public override async Task<IResult<IItemSet<ListRecipesResponse>>> Handle(ListRecipesRequest request, CancellationToken cancellationToken = default)
@@ -23,16 +28,11 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var allSearch = new RecipesSearchSpecification(searchCriteria);
+        var allSearch = new RecipesSearchSpecification(searchCriteria.ToArray());
 
         var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
 
-        var pagedSearch = new RecipesSearchSpecification(
-            criteria: searchCriteria,
-            paginationOptions: paginationOptions,
-            sortBy: request.SortBy);
-
-        var recipes = await _data.Recipes.List(pagedSearch, cancellationToken);
+        var recipes = await GetRecipes(request, paginationOptions, searchCriteria, allSearch, cancellationToken);
 
         return recipes
             .Select(r => new ListRecipesResponse(
@@ -47,7 +47,39 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
             .Map(Ok);
     }
 
-    private static Expression<Func<Recipe, bool>>[] GetSearchCriteria(ListRecipesRequest request)
+    private async Task<IReadOnlyList<Recipe>> GetRecipes(ListRecipesRequest request, PaginationOptions paginationOptions, List<Expression<Func<Recipe, bool>>> searchCriteria, RecipesSearchSpecification allSearch, CancellationToken cancellationToken)
+    {
+        if (string.Equals(request.SortBy, "RANDOM", StringComparison.OrdinalIgnoreCase))
+        {
+            // Due to a bug in EF with random sorts, we will get a list of IDs without using Includes.
+            var randomIds = await _dbContext.Recipes
+                .TagWith($"EF query called from: {nameof(ListRecipesHandler)}.{nameof(GetRecipes)}")
+                .ApplyEfSpecification(allSearch)
+                .GetPage(paginationOptions)
+                .OrderBy(_ => Guid.NewGuid())
+                .Select(x => x.Id)
+                .ToListAsync(cancellationToken);
+
+            // Get the hydrated items by ID.
+            var randomPagedSearch = new RecipesSearchSpecification(
+                criteria: new Expression<Func<Recipe, bool>>[] { x => randomIds.Contains(x.Id) },
+                paginationOptions: PaginationOptions.None);
+
+            // Order by our random IDs
+            return (await _data.Recipes.List(randomPagedSearch, cancellationToken))
+                .OrderBy(x => randomIds.IndexOf(x.Id))
+                .ToList();
+        }
+
+        var pagedSearch = new RecipesSearchSpecification(
+            criteria: searchCriteria.ToArray(),
+            paginationOptions: paginationOptions,
+            sortBy: request.SortBy);
+
+        return await _data.Recipes.List(pagedSearch, cancellationToken);
+    }
+
+    private static List<Expression<Func<Recipe, bool>>> GetSearchCriteria(ListRecipesRequest request)
     {
         var searchCriteria = new List<Expression<Func<Recipe, bool>>>();
 
@@ -74,6 +106,6 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
             searchCriteria.Add(recipe => recipe.IsForMealPlanning == request.IsForMealPlanning);
         }
 
-        return searchCriteria.ToArray();
+        return searchCriteria;
     }
 }

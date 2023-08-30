@@ -9,15 +9,17 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
 {
     public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria) : base(criteria)
     {
-        AddInclude(nameof(Recipe.Categories));
-        AddInclude(nameof(Recipe.Images));
-        AddInclude(nameof(Recipe.Ingredients));
     }
 
     public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null) : this(criteria)
     {
         ApplyPaging(paginationOptions);
 
+        AddInclude(nameof(Recipe.Categories));
+        AddInclude(nameof(Recipe.Images));
+        AddInclude(nameof(Recipe.Ingredients));
+
+        // We handle random in the handler because EF can't order by unstable sorts.
         switch (sortBy?.ToUpperInvariant())
         {
             case "NEWEST":
@@ -36,10 +38,6 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
             case "Z-A":
                 AddOrderBy(recipe => recipe.Name, true);
                 AddOrderBy(recipe => recipe.Id, true);
-                break;
-
-            case "RANDOM":
-                AddOrderBy(_ => Guid.NewGuid());
                 break;
 
             default:
