@@ -91,6 +91,7 @@ export default defineStore('meals', {
     recipeListRequest: {
       ...new ListRecipesRequest(),
       isForMealPlanning: true,
+      sortBy: 'random',
     },
     mealSetListResponse: {
       count: 0,

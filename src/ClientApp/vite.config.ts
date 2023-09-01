@@ -18,7 +18,7 @@ export default defineConfig(({ command, mode }) => {
           app: './app.html',
         },
       },
-      outDir: '../HomeSensors.Web/wwwroot',
+      outDir: '../FoodStuffs.Web/wwwroot',
       emptyOutDir: true,
       sourcemap: mode === 'development',
     },

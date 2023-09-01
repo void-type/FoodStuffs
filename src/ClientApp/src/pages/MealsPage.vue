@@ -212,6 +212,7 @@ onMounted(async () => {
                 <label for="recipeSort" class="form-label">Sort</label>
                 <select
                   id="recipeSort"
+                  :value="recipeListRequest.sortBy"
                   name="recipeSort"
                   class="form-select"
                   aria-label="Page size"
@@ -219,8 +220,8 @@ onMounted(async () => {
                 >
                   <option
                     v-for="sortOption in sortOptions"
-                    :key="String(sortOption.value)"
-                    :value="String(sortOption.value)"
+                    :key="sortOption.value"
+                    :value="sortOption.value"
                   >
                     {{ sortOption.text }}
                   </option>
