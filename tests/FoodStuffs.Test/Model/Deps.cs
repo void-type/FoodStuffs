@@ -28,6 +28,8 @@ public static class Deps
     public static readonly IDateTimeService DateTimeServiceLate;
     public static readonly ICurrentUserAccessor CurrentUserAccessor;
 
+    public static string PngBase64String = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQAAAAA3bvkkAAAACklEQVQI12NoAAAAggCB3UNq9AAAAABJRU5ErkJggg==";
+
     public static FoodStuffsContext FoodStuffsContext(string dbName = null)
     {
         return new FoodStuffsContext(
@@ -96,7 +98,8 @@ public static class Deps
 
         recipe3.Ingredients.Add(new Ingredient { Name = "some", Quantity = 1, Order = 1 });
 
-        var file = new SimpleFile("seeded file content", "some file.txt");
+        var fileBytes = Convert.FromBase64String(PngBase64String);
+        var file = new SimpleFile(fileBytes, "my-image.png");
 
         var image1 = new Image
         {
@@ -121,13 +124,15 @@ public static class Deps
             Bytes = file.Content.AsBytes,
             Id = image1.Id,
             Image = image1,
+            FileExtension = ".png",
         };
 
         var blob2 = new Blob
         {
             Bytes = file.Content.AsBytes,
             Id = image2.Id,
-            Image = image2
+            Image = image2,
+            FileExtension = ".png",
         };
 
         image1.Blob = blob1;

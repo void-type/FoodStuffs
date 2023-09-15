@@ -6,5 +6,7 @@ public partial class Blob
 
     public byte[] Bytes { get; set; } = null!;
 
+    public string FileExtension { get; set; } = null!;
+
     public virtual Image Image { get; set; } = null!;
 }

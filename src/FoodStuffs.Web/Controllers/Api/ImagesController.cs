@@ -1,10 +1,12 @@
 ﻿using FoodStuffs.Model.Events.Images;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Guards;
 using VoidCore.Model.Responses.Collections;
+using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Web.Controllers.Api;
@@ -30,7 +32,7 @@ public class ImagesController : ControllerBase
 
         return getPipeline
             .Handle(request)
-            .MapAsync(HttpResponder.RespondWithFile);
+            .MapAsync(RespondWithImage);
     }
 
     /// <summary>
@@ -94,5 +96,36 @@ public class ImagesController : ControllerBase
         return pinPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
+    }
+
+    // TODO: move this to VoidCore
+    /// <summary>
+    /// Create an image FileContentResult.
+    /// </summary>
+    /// <param name="result">The domain result</param>
+    /// <returns>An IActionResult</returns>
+    public static IActionResult RespondWithImage(IResult<SimpleFile> result)
+    {
+        result.EnsureNotNull();
+
+        if (result.IsFailed)
+        {
+            return Fail(result);
+        }
+
+        var file = result.Value;
+
+        new FileExtensionContentTypeProvider()
+            .TryGetContentType(file.Name, out var contentType);
+
+        return new FileContentResult(file.Content.AsBytes, contentType ?? "application/octet-stream")
+        {
+            FileDownloadName = file.Name
+        };
+    }
+
+    private static IActionResult Fail(VoidCore.Model.Functional.IResult result)
+    {
+        return new ObjectResult(result.Failures.ToItemSet()) { StatusCode = 400 };
     }
 }

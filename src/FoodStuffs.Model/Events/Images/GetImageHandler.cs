@@ -23,7 +23,7 @@ public class GetImageHandler : EventHandlerAbstract<GetImageRequest, SimpleFile>
         return _data.Images.Get(byId, cancellationToken)
             .ToResultAsync(new ImageNotFoundFailure())
             .ThenAsync(ValidateBlobIsNotNull)
-            .SelectAsync(r => new SimpleFile(r.Blob!.Bytes, $"{r.Id}"));
+            .SelectAsync(r => new SimpleFile(r.Blob!.Bytes, $"{r.Id}{r.Blob.FileExtension}"));
     }
 
     private static IResult<Image> ValidateBlobIsNotNull(Image r)

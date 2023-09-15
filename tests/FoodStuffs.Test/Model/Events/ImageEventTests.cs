@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Events;
 using FoodStuffs.Model.Events.Images;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using VoidCore.Model.Responses.Files;
 using Xunit;
 
@@ -26,8 +27,8 @@ public class ImageEventTests
 
         var file = result.Value;
 
-        Assert.Equal(image.Id.ToString(), file.Name);
-        Assert.Equal("seeded file content", file.Content.ToString());
+        Assert.Equal(image.Id.ToString() + image.Blob.FileExtension, file.Name);
+        Assert.Equal(Deps.PngBase64String, Convert.ToBase64String(file.Content.AsBytes));
     }
 
     [Fact]
@@ -45,24 +46,25 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task SaveImage_creates_an_image_and_blob()
+    public async Task SaveImage_creates_a_compressed_image_and_blob()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
         var recipe = context.Recipes.First(r => r.Name == "Recipe2");
 
-        var myFile = new SimpleFile("my file content", "myFile.txt");
+        var myFile = new SimpleFile(Convert.FromBase64String(Deps.PngBase64String), "my-image.png");
 
         var request = new SaveImageRequest(recipe.Id, myFile.Content.AsBytes);
 
-        var result = await new SaveImageHandler(data).Handle(request);
+        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>()).Handle(request);
 
         Assert.True(result.IsSuccess);
 
         var image = context.Images.Include(a => a.Blob).First(a => a.Id == result.Value.Id);
 
-        Assert.Equal(myFile.Content.AsBytes, image.Blob.Bytes);
+        Assert.True(myFile.Content.AsBytes.Length > image.Blob.Bytes.Length);
+        Assert.Equal(".webp", image.Blob.FileExtension);
         Assert.Equal(recipe.Id, image.RecipeId);
         Assert.Equal(Deps.DateTimeServiceLate.Moment, image.ModifiedOn);
     }
@@ -77,7 +79,7 @@ public class ImageEventTests
 
         var request = new SaveImageRequest(-5, myFile.Content.AsBytes);
 
-        var result = await new SaveImageHandler(data).Handle(request);
+        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>()).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains(typeof(RecipeNotFoundFailure), result.Failures.Select(f => f.GetType()));

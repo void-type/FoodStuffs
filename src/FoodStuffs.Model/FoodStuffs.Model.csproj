@@ -3,6 +3,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
     <PackageReference Include="VoidCore.EntityFramework" Version="11.0.2" />
     <PackageReference Include="VoidCore.Model" Version="11.0.2" />
