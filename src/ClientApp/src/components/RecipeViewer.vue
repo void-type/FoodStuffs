@@ -25,24 +25,20 @@ const showImage = ref(true);
 const carouselIndex = ref(0);
 const uniqueId = crypto.randomUUID();
 
-const imageIds = computed(() => {
-  const { pinnedImageId } = props.recipe;
+const images = computed(() => {
+  const { pinnedImage } = props.recipe;
   const recipeImages = props.recipe.images || [];
 
-  if (pinnedImageId != null && recipeImages.includes(pinnedImageId)) {
-    const sortedRecipeImages = recipeImages.filter((i) => i !== pinnedImageId);
+  if (pinnedImage != null && recipeImages.includes(pinnedImage)) {
+    const sortedRecipeImages = recipeImages.filter((i) => i !== pinnedImage);
 
-    sortedRecipeImages.unshift(pinnedImageId);
+    sortedRecipeImages.unshift(pinnedImage);
 
     return sortedRecipeImages;
   }
 
   return recipeImages;
 });
-
-function imageUrl(id: number) {
-  return ApiHelpers.imageUrl(id);
-}
 
 function timeSpanFormat(totalMinutes: number | null | undefined) {
   if (totalMinutes === null || totalMinutes === undefined) {
@@ -96,19 +92,19 @@ onMounted(() => {
           'col-12': true,
           'text-center': true,
           'mt-4': true,
-          'd-print-none': !(imageIds.length > 0),
+          'd-print-none': !(images.length > 0),
         }"
       >
         <div
-          v-if="imageIds.length > 0"
+          v-if="images.length > 0"
           :id="`image-carousel-${uniqueId}`"
           class="carousel slide"
           data-bs-interval="false"
         >
           <div class="carousel-indicators d-print-none">
             <button
-              v-for="(imageId, i) in imageIds"
-              :key="imageId"
+              v-for="(imageName, i) in images"
+              :key="imageName"
               type="button"
               :data-bs-target="`#image-carousel-${uniqueId}`"
               :data-bs-slide-to="i"
@@ -119,13 +115,13 @@ onMounted(() => {
           </div>
           <div class="carousel-inner">
             <div
-              v-for="(imageId, i) in imageIds"
-              :key="imageId"
+              v-for="(imageName, i) in images"
+              :key="imageName"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
               <img
                 class="img-fluid rounded"
-                :src="imageUrl(imageId)"
+                :src="ApiHelpers.imageUrl(imageName)"
                 :alt="`image ${i} of ${recipe.name}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
               />

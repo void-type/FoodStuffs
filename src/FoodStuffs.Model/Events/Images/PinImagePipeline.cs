@@ -3,7 +3,7 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class PinImagePipeline : EventPipelineAbstract<PinImageRequest, EntityMessage<int>>
+public class PinImagePipeline : EventPipelineAbstract<PinImageRequest, EntityMessage<string>>
 {
     public PinImagePipeline(PinImageHandler handler, PinImageRequestLogger requestLogger, PinImageResponseLogger responseLogger)
     {

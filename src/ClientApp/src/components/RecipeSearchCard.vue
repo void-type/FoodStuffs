@@ -10,8 +10,6 @@ const props = defineProps({
   onCardClick: { type: Function, required: true },
 });
 
-const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
-
 function cardClickInternal() {
   props.onCardClick(props.recipe.id);
 }
@@ -34,9 +32,9 @@ function cardClickInternal() {
         <div class="grid">
           <div class="g-col-4">
             <img
-              v-if="recipe.imageId != null"
+              v-if="recipe.image != null"
               class="img-fluid rounded-start"
-              :src="imageUrl(recipe.imageId)"
+              :src="ApiHelpers.imageUrl(recipe.image)"
               :alt="`Image of ${recipe.name}`"
               loading="lazy"
             />

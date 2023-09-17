@@ -51,9 +51,9 @@ onMounted(() => {
                 </router-link>
               </div>
               <img
-                v-if="recipe.imageId != null"
+                v-if="recipe.image != null"
                 class="img-fluid"
-                :src="imageUrl(recipe.imageId)"
+                :src="imageUrl(recipe.image)"
                 :alt="`Image of ${recipe.name}`"
                 :loading="i > 5 ? 'lazy' : 'eager'"
               />

@@ -9,7 +9,7 @@ public class GetImageRequestLogger : RequestLoggerAbstract<GetImageRequest>
 
     public override void Log(GetImageRequest request)
     {
-        Logger.LogInformation("Requested. ImageId: {ImageId}",
-            request.Id);
+        Logger.LogInformation("Requested. Image: {ImageName}",
+            request.Name);
     }
 }

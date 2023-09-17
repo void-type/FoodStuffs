@@ -42,10 +42,10 @@ const props = defineProps({
 
 const data = reactive({
   sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse,
-  sourceImages: [] as number[],
+  sourceImages: [] as string[],
   isRecipeDirty: false,
-  suggestedImageId: -1,
-  pinnedImageId: null as number | null,
+  suggestedImage: null as string | null,
+  pinnedImage: null as string | null,
   imageUploadSuccessToken: 0,
   recipeChangeToken: 0,
 });
@@ -67,9 +67,9 @@ const isCreateCopyMode = computed(() => !isEditMode.value && (props.copy || 0) >
 const isCreateNewMode = computed(() => !isEditMode.value && !isCreateCopyMode.value);
 
 function setImageSources(getRecipeResponse: GetRecipeResponse) {
-  const { images, pinnedImageId } = getRecipeResponse;
+  const { images, pinnedImage } = getRecipeResponse;
   data.sourceImages = images || [];
-  data.pinnedImageId = pinnedImageId || null;
+  data.pinnedImage = pinnedImage || null;
 }
 
 function setSources(getRecipeResponse: GetRecipeResponse) {
@@ -79,7 +79,7 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
       id: 0,
       name: `${getRecipeResponse.name} copy`,
       images: [],
-      pinnedImageId: null,
+      pinnedImage: null,
     };
   } else {
     data.sourceRecipe = getRecipeResponse;
@@ -87,7 +87,7 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
 
   RouterHelpers.setTitle(router.currentRoute.value, data.sourceRecipe.name);
   setImageSources(data.sourceRecipe);
-  data.suggestedImageId = -1;
+  data.suggestedImage = null;
 }
 
 function fetchRecipe() {
@@ -120,7 +120,7 @@ function fetchRecipesList() {
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
-function fetchImageIds(recipeId: number) {
+function fetchImages(recipeId: number) {
   api()
     .recipesDetail(recipeId)
     .then((response) => {
@@ -200,30 +200,30 @@ function onImageUpload(file: File) {
         messageStore.setSuccessMessage(response.data.message);
       }
 
-      data.suggestedImageId = response.data.id || -1;
-      fetchImageIds(props.id);
+      data.suggestedImage = response.data.id || null;
+      fetchImages(props.id);
       fetchRecipesList();
       data.imageUploadSuccessToken += 1;
     })
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
-function onImageDelete(imageId: number) {
+function onImageDelete(name: string) {
   function deleteImage() {
     api()
-      .imagesDelete(imageId)
+      .imagesDelete(name)
       .then((response) => {
         if (response.data.message) {
           messageStore.setSuccessMessage(response.data.message);
         }
 
         const suggestedImageIndex = clamp(
-          data.sourceImages.indexOf(imageId) - 1,
+          data.sourceImages.indexOf(name) - 1,
           0,
           data.sourceImages.length - 1
         );
-        data.suggestedImageId = data.sourceImages[suggestedImageIndex];
-        fetchImageIds(props.id);
+        data.suggestedImage = data.sourceImages[suggestedImageIndex];
+        fetchImages(props.id);
         fetchRecipesList();
       })
       .catch((response) => {
@@ -240,15 +240,15 @@ function onImageDelete(imageId: number) {
   appStore.showModal(parameters);
 }
 
-function onImagePin(imageId: number) {
+function onImagePin(name: string) {
   api()
-    .imagesPinCreate({ id: imageId })
+    .imagesPinCreate(name)
     .then((response) => {
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
       }
-      data.suggestedImageId = imageId;
-      fetchImageIds(props.id);
+      data.suggestedImage = name;
+      fetchImages(props.id);
       fetchRecipesList();
     })
     .catch((response) => {
@@ -315,10 +315,10 @@ onBeforeRouteLeave(async (to, from, next) => {
         />
         <RecipeImageManager
           v-if="isEditMode"
-          :image-ids="data.sourceImages"
+          :images="data.sourceImages"
           :is-field-in-error="isFieldInError"
-          :suggested-image-id="data.suggestedImageId"
-          :pinned-image-id="data.pinnedImageId"
+          :suggested-image="data.suggestedImage"
+          :pinned-image="data.pinnedImage"
           :on-image-upload="onImageUpload"
           :image-upload-success-token="data.imageUploadSuccessToken"
           :recipe-changed-token="data.recipeChangeToken"

@@ -10,7 +10,7 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMessage<int>>
+public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMessage<string>>
 {
     private readonly IFoodStuffsData _data;
     private readonly ILogger<SaveImageHandler> _logger;
@@ -21,7 +21,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         _logger = logger;
     }
 
-    public override async Task<IResult<EntityMessage<int>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
     {
         // Note: Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MB (~28.6 MiB).
         // To change this, you will need both:
@@ -48,7 +48,8 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
 
         var image = new Image
         {
-            RecipeId = recipeResult.Value.Id
+            RecipeId = recipeResult.Value.Id,
+            FileName = $"{Guid.NewGuid()}.webp",
         };
 
         await _data.Images.Add(image, cancellationToken);
@@ -57,12 +58,11 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         {
             Id = image.Id,
             Bytes = compressedFileContent,
-            FileExtension = ".webp",
         };
 
         await _data.Blobs.Add(blob, cancellationToken);
 
-        return Ok(EntityMessage.Create("Image uploaded.", image.Id));
+        return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }
 
     private async Task<IResult<byte[]>> CompressImage(byte[] fileContent, int quality, int maxHeight, CancellationToken cancellationToken)

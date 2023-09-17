@@ -104,6 +104,7 @@ public static class Deps
         var image1 = new Image
         {
             RecipeId = recipe1.Id,
+            FileName = "1.png",
             CreatedBy = "Long John Silver2",
             CreatedOn = new DateTime(2019, 11, 8),
             ModifiedBy = "Long John Silver2",
@@ -113,6 +114,7 @@ public static class Deps
         var image2 = new Image
         {
             RecipeId = recipe1.Id,
+            FileName = "2.png",
             CreatedBy = "Long John Silver2",
             CreatedOn = new DateTime(2019, 11, 8),
             ModifiedBy = "Long John Silver2",
@@ -124,7 +126,6 @@ public static class Deps
             Bytes = file.Content.AsBytes,
             Id = image1.Id,
             Image = image1,
-            FileExtension = ".png",
         };
 
         var blob2 = new Blob
@@ -132,7 +133,6 @@ public static class Deps
             Bytes = file.Content.AsBytes,
             Id = image2.Id,
             Image = image2,
-            FileExtension = ".png",
         };
 
         image1.Blob = blob1;

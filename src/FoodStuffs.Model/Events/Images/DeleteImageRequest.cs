@@ -1,3 +1,3 @@
 ﻿namespace FoodStuffs.Model.Events.Images;
 
-public record DeleteImageRequest(int Id);
+public record DeleteImageRequest(string Name);

@@ -54,6 +54,12 @@ public partial class FoodStuffsContext : DbContext
         {
             entity.ToTable("Image");
 
+            entity.Property(e => e.FileName)
+                .HasDefaultValueSql("NEWID()");
+
+            entity.HasIndex(e => e.FileName)
+                .IsUnique();
+
             entity.HasOne(p => p.Blob)
                 .WithOne(d => d.Image)
                 .HasForeignKey<Blob>(d => d.Id);

@@ -42,7 +42,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
                 Ingredients: r.Ingredients
                     .Select(i => new ListRecipesResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
                     .OrderBy(i => i.Order),
-                ImageId: r.PinnedImageId ?? r.Images.FirstOrDefault()?.Id))
+                Image: r.DefaultImage?.FileName))
             .ToItemSet(paginationOptions, totalCount)
             .Map(Ok);
     }

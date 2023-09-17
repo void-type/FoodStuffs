@@ -20,7 +20,7 @@ export default class ApiHelpers {
     });
   }
 
-  static imageUrl(id: number | string) {
-    return `/api/images/${id}`;
+  static imageUrl(fileName: number | string) {
+    return `/api/images/${fileName}`;
   }
 }

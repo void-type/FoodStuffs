@@ -5,4 +5,4 @@ public record ListRecipesResponse(
     string Name,
     IEnumerable<string> Categories,
     IEnumerable<ListRecipesResponseIngredient> Ingredients,
-    int? ImageId);
+    string? Image);

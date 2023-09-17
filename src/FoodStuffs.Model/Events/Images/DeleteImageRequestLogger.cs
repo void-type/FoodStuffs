@@ -9,7 +9,7 @@ public class DeleteImageRequestLogger : RequestLoggerAbstract<DeleteImageRequest
 
     public override void Log(DeleteImageRequest request)
     {
-        Logger.LogInformation("Requested. ImageId: {ImageId}",
-            request.Id);
+        Logger.LogInformation("Requested. Image: {ImageName}",
+            request.Name);
     }
 }

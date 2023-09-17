@@ -7,9 +7,11 @@ public class MealSetsByIdWithAllRelatedSpecification : QuerySpecificationAbstrac
 {
     public MealSetsByIdWithAllRelatedSpecification(int id)
     {
+        // TODO: ensure query splitting
         AddCriteria(r => r.Id == id);
         AddInclude($"{nameof(MealSet.Recipes)}.{nameof(Recipe.Categories)}");
         AddInclude($"{nameof(MealSet.Recipes)}.{nameof(Recipe.Images)}");
+        AddInclude($"{nameof(MealSet.Recipes)}.{nameof(Recipe.PinnedImage)}");
         AddInclude($"{nameof(MealSet.Recipes)}.{nameof(Recipe.Ingredients)}");
     }
 }

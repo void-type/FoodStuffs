@@ -8,7 +8,9 @@ public class RecipesByIdWithAllRelatedSpecification : QuerySpecificationAbstract
     public RecipesByIdWithAllRelatedSpecification(int id)
     {
         AddCriteria(r => r.Id == id);
+        // TODO: ensure query splitting
         AddInclude(nameof(Recipe.Categories));
+        AddInclude(nameof(Recipe.PinnedImage));
         AddInclude(nameof(Recipe.Images));
         AddInclude(nameof(Recipe.Ingredients));
     }

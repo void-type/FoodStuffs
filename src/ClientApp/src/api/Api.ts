@@ -19,10 +19,10 @@ import type {
   ListMealSetsResponseIItemSet,
   ListRecipesResponseIItemSet,
   MealSetsListParams,
-  PinImageRequest,
   RecipesListParams,
   SaveMealSetRequest,
   SaveRecipeRequest,
+  StringEntityMessage,
   WebClientInfo,
 } from './data-contracts';
 import { ContentType, HttpClient, type RequestParams } from './http-client';
@@ -66,13 +66,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Images
    * @name ImagesDetail
    * @summary Get an image.
-   * @request GET:/api/images/{id}
+   * @request GET:/api/images/{name}
    * @response `200` `File` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
-  imagesDetail = (id: number, params: RequestParams = {}) =>
+  imagesDetail = (name: string, params: RequestParams = {}) =>
     this.request<File, IFailureIItemSet>({
-      path: `/api/images/${id}`,
+      path: `/api/images/${name}`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -83,13 +83,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Images
    * @name ImagesDelete
    * @summary Delete an image.
-   * @request DELETE:/api/images/{id}
-   * @response `200` `Int32EntityMessage` Success
+   * @request DELETE:/api/images/{name}
+   * @response `200` `StringEntityMessage` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
-  imagesDelete = (id: number, params: RequestParams = {}) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
-      path: `/api/images/${id}`,
+  imagesDelete = (name: string, params: RequestParams = {}) =>
+    this.request<StringEntityMessage, IFailureIItemSet>({
+      path: `/api/images/${name}`,
       method: 'DELETE',
       format: 'json',
       ...params,
@@ -101,7 +101,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name ImagesCreate
    * @summary Upload an image using a multi-part form file.
    * @request POST:/api/images
-   * @response `200` `Int32EntityMessage` Success
+   * @response `200` `StringEntityMessage` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
   imagesCreate = (
@@ -112,7 +112,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {}
   ) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
+    this.request<StringEntityMessage, IFailureIItemSet>({
       path: `/api/images`,
       method: 'POST',
       query: query,
@@ -127,16 +127,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Images
    * @name ImagesPinCreate
    * @summary Pin an image for a recipe. This image will be the default image for the recipe.
-   * @request POST:/api/images/pin
-   * @response `200` `Int32EntityMessage` Success
+   * @request POST:/api/images/pin/{name}
+   * @response `200` `StringEntityMessage` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
-  imagesPinCreate = (data: PinImageRequest, params: RequestParams = {}) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
-      path: `/api/images/pin`,
+  imagesPinCreate = (name: string, params: RequestParams = {}) =>
+    this.request<StringEntityMessage, IFailureIItemSet>({
+      path: `/api/images/pin/${name}`,
       method: 'POST',
-      body: data,
-      type: ContentType.Json,
       format: 'json',
       ...params,
     });

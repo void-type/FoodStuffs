@@ -9,18 +9,18 @@ import useMessageStore from '@/stores/messageStore';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
-  imageIds: {
-    type: Array as PropType<Array<number>>,
+  images: {
+    type: Array as PropType<Array<string>>,
     required: true,
     default: () => [],
   },
-  suggestedImageId: {
-    type: Number as PropType<number | null>,
+  suggestedImage: {
+    type: String as PropType<string | null>,
     required: false,
     default: null,
   },
-  pinnedImageId: {
-    type: Number as PropType<number | null>,
+  pinnedImage: {
+    type: String as PropType<string | null>,
     required: false,
     default: null,
   },
@@ -58,10 +58,6 @@ const messageStore = useMessageStore();
 const uploadFile: Ref<File | null> = ref(null);
 const carouselIndex = ref(0);
 const uniqueId = crypto.randomUUID();
-
-function imageUrl(imageId: number) {
-  return ApiHelpers.imageUrl(imageId);
-}
 
 function uploadImageClick() {
   if (uploadFile.value === null) {
@@ -106,19 +102,19 @@ function uploadFileChange(event: Event | DragEvent) {
   uploadFile.value = files[0];
 }
 
-function deleteImageClick(imageId: number) {
-  props.onImageDelete(imageId);
+function deleteImageClick(name: string) {
+  props.onImageDelete(name);
 }
 
-function pinImageClick(imageId: number) {
-  props.onImagePin(imageId);
+function pinImageClick(name: string) {
+  props.onImagePin(name);
 }
 
-watch([() => props.imageIds, () => props.suggestedImageId], () => {
+watch([() => props.images, () => props.suggestedImage], () => {
   const suggestedImageIndex =
-    props.suggestedImageId === null ? -1 : props.imageIds.indexOf(props.suggestedImageId);
+    props.suggestedImage === null ? -1 : props.images.indexOf(props.suggestedImage);
   const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
-  carouselIndex.value = clamp(newIndex, 0, props.imageIds.length - 1);
+  carouselIndex.value = clamp(newIndex, 0, props.images.length - 1);
 });
 
 watch([() => props.recipeChangedToken], () => {
@@ -181,15 +177,15 @@ onMounted(() => {
       </div>
       <div class="g-col-12 g-col-md-6 text-center">
         <div
-          v-if="imageIds.length > 0"
+          v-if="images.length > 0"
           :id="`image-carousel-${uniqueId}`"
           class="carousel slide"
           data-bs-interval="false"
         >
           <div class="carousel-indicators d-print-none">
             <button
-              v-for="(imageId, i) in imageIds"
-              :key="`${imageId}:${props.suggestedImageId}`"
+              v-for="(imageName, i) in images"
+              :key="`${imageName}:${props.suggestedImage}`"
               type="button"
               :data-bs-target="`#image-carousel-${uniqueId}`"
               :data-bs-slide-to="i"
@@ -200,33 +196,33 @@ onMounted(() => {
           </div>
           <div class="carousel-inner">
             <div
-              v-for="(imageId, i) in imageIds"
-              :key="`${imageId}:${props.suggestedImageId}`"
+              v-for="(imageName, i) in images"
+              :key="`${imageName}:${props.suggestedImage}`"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
               <button
-                v-if="imageIds.length > 0 && imageId != pinnedImageId"
+                v-if="images.length > 0 && imageName != pinnedImage"
                 type="button"
                 class="btn btn-secondary btn-sm image-button image-button-pin d-print-none"
                 title="Pin image"
-                @click.stop.prevent="pinImageClick(imageId)"
+                @click.stop.prevent="pinImageClick(imageName)"
               >
                 <span class="visually-hidden">Pin image</span>
                 <font-awesome-icon icon="thumbtack" />
               </button>
               <button
-                v-if="imageIds.length > 0"
+                v-if="images.length > 0"
                 type="button"
                 class="btn btn-danger btn-sm image-button image-button-delete d-print-none"
                 title="Delete image"
-                @click.stop.prevent="deleteImageClick(imageId)"
+                @click.stop.prevent="deleteImageClick(imageName)"
               >
                 <span class="visually-hidden">Delete image</span>
                 <font-awesome-icon icon="times" />
               </button>
               <img
                 class="img-fluid rounded"
-                :src="imageUrl(imageId)"
+                :src="ApiHelpers.imageUrl(imageName)"
                 :alt="`image ${i}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
               />

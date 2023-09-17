@@ -6,7 +6,7 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, EntityMessage<int>>
+public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, EntityMessage<string>>
 {
     private readonly IFoodStuffsData _data;
 
@@ -15,9 +15,9 @@ public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, Entit
         _data = data;
     }
 
-    public override Task<IResult<EntityMessage<int>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
+    public override Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new ImagesByIdWithRecipesSpecification(request.Id);
+        var byId = new ImagesByNameWithRecipesSpecification(request.Name);
 
         return _data.Images.Get(byId, cancellationToken)
             .ToResultAsync(new ImageNotFoundFailure())
@@ -30,6 +30,6 @@ public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, Entit
                 }
             })
             .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
-            .SelectAsync(i => EntityMessage.Create("Image deleted.", i.Id));
+            .SelectAsync(i => EntityMessage.Create("Image deleted.", request.Name));
     }
 }

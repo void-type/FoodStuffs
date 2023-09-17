@@ -27,17 +27,16 @@ public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMeal
                 CreatedOn: r.CreatedOn,
                 ModifiedBy: r.ModifiedBy,
                 ModifiedOn: r.ModifiedOn,
+                PantryIngredients: r.PantryIngredients.Select(i => new GetMealSetResponsePantryIngredient(i.Name, i.Quantity)),
                 Recipes: r.Recipes.Select(r => new GetMealSetResponseRecipe(
                     Id: r.Id,
                     Name: r.Name,
-                    PinnedImageId: r.PinnedImageId,
                     Categories: r.Categories
                         .Select(c => c.Name)
                         .OrderBy(n => n),
-                    Images: r.Images.Select(i => i.Id),
+                    Image: r.DefaultImage?.FileName,
                     Ingredients: r.Ingredients
                         .Select(i => new GetMealSetResponseRecipeIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
-                        .OrderBy(i => i.Order))),
-                PantryIngredients: r.PantryIngredients.Select(i => new GetMealSetResponsePantryIngredient(i.Name, i.Quantity))));
+                        .OrderBy(i => i.Order)))));
     }
 }

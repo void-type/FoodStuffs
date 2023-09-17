@@ -19,7 +19,7 @@ public class ImageEventTests
             .Include(a => a.Blob)
             .First();
 
-        var request = new GetImageRequest(image.Id);
+        var request = new GetImageRequest(image.FileName);
 
         var result = await new GetImageHandler(data).Handle(request);
 
@@ -27,7 +27,7 @@ public class ImageEventTests
 
         var file = result.Value;
 
-        Assert.Equal(image.Id.ToString() + image.Blob.FileExtension, file.Name);
+        Assert.Equal(image.FileName, file.Name);
         Assert.Equal(Deps.PngBase64String, Convert.ToBase64String(file.Content.AsBytes));
     }
 
@@ -37,7 +37,7 @@ public class ImageEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var request = new GetImageRequest(-5);
+        var request = new GetImageRequest("not-exist-image.jpg");
 
         var result = await new GetImageHandler(data).Handle(request);
 
@@ -61,10 +61,9 @@ public class ImageEventTests
 
         Assert.True(result.IsSuccess);
 
-        var image = context.Images.Include(a => a.Blob).First(a => a.Id == result.Value.Id);
+        var image = context.Images.Include(a => a.Blob).First(a => a.FileName == result.Value.Id);
 
         Assert.True(myFile.Content.AsBytes.Length > image.Blob.Bytes.Length);
-        Assert.Equal(".webp", image.Blob.FileExtension);
         Assert.Equal(recipe.Id, image.RecipeId);
         Assert.Equal(Deps.DateTimeServiceLate.Moment, image.ModifiedOn);
     }
@@ -106,7 +105,7 @@ public class ImageEventTests
         // In prod, SQL Server will do the cascading without needing to bring them into memory.
         var blobs = context.Blobs.ToList();
 
-        var request = new DeleteImageRequest(image.Id);
+        var request = new DeleteImageRequest(image.FileName);
 
         var result = await new DeleteImageHandler(data).Handle(request);
 
@@ -122,7 +121,7 @@ public class ImageEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var request = new DeleteImageRequest(-5);
+        var request = new DeleteImageRequest("not-exist-image.jpg");
 
         var result = await new DeleteImageHandler(data).Handle(request);
 
@@ -143,16 +142,15 @@ public class ImageEventTests
 
         var image = recipe.Images.First();
 
-        var request = new PinImageRequest(image.Id);
+        var request = new PinImageRequest(image.FileName);
 
         var result = await new PinImageHandler(data).Handle(request);
 
         Assert.True(result.IsSuccess);
 
-        var imageId = result.Value.Id;
-        var pinnedImageId = context.Recipes.Where(r => r.Id == image.RecipeId).First().PinnedImageId;
+        var pinnedImageFileName = context.Recipes.Where(r => r.Id == image.RecipeId).First().PinnedImage.FileName;
 
-        Assert.Equal(image.Id, pinnedImageId);
+        Assert.Equal(image.FileName, pinnedImageFileName);
     }
 
     [Fact]
@@ -161,7 +159,7 @@ public class ImageEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var request = new PinImageRequest(-5);
+        var request = new PinImageRequest("not-exist-image.jpg");
 
         var result = await new PinImageHandler(data).Handle(request);
 

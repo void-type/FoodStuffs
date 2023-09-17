@@ -4,6 +4,8 @@ public partial class Image
 {
     public int Id { get; set; }
 
+    public string FileName { get; set; } = null!;
+
     public string CreatedBy { get; set; } = null!;
 
     public DateTime CreatedOn { get; set; }

@@ -6,7 +6,7 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class PinImageHandler : EventHandlerAbstract<PinImageRequest, EntityMessage<int>>
+public class PinImageHandler : EventHandlerAbstract<PinImageRequest, EntityMessage<string>>
 {
     private readonly IFoodStuffsData _data;
 
@@ -15,13 +15,13 @@ public class PinImageHandler : EventHandlerAbstract<PinImageRequest, EntityMessa
         _data = data;
     }
 
-    public override Task<IResult<EntityMessage<int>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
+    public override Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
     {
-        return _data.Images.Get(new ImagesByIdWithRecipesSpecification(request.Id), cancellationToken)
+        return _data.Images.Get(new ImagesByNameWithRecipesSpecification(request.Name), cancellationToken)
             .ToResultAsync(new ImageNotFoundFailure())
+            .TeeOnSuccessAsync(i => i.Recipe.PinnedImageId = i.Id)
             .SelectAsync(i => i.Recipe)
-            .TeeOnSuccessAsync(r => r.PinnedImageId = request.Id)
             .TeeOnSuccessAsync(r => _data.Recipes.Update(r, cancellationToken))
-            .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Id));
+            .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));
     }
 }

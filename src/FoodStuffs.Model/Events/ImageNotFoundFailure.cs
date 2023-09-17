@@ -4,7 +4,7 @@ namespace FoodStuffs.Model.Events;
 
 public class ImageNotFoundFailure : Failure
 {
-    public ImageNotFoundFailure() : base(errorMessage: "Image not found.", uiHandle: "imageId")
+    public ImageNotFoundFailure() : base(errorMessage: "Image not found.", uiHandle: "imageName")
     {
     }
 }

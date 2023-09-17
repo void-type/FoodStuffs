@@ -7,6 +7,7 @@ public class RecipesByIdWithCategoriesAndIngredientsSpecification : QuerySpecifi
 {
     public RecipesByIdWithCategoriesAndIngredientsSpecification(int id)
     {
+        // TODO: ensure query spitting
         AddCriteria(r => r.Id == id);
         AddInclude(nameof(Recipe.Categories));
         AddInclude(nameof(Recipe.Ingredients));

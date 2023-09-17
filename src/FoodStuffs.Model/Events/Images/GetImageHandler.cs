@@ -18,12 +18,12 @@ public class GetImageHandler : EventHandlerAbstract<GetImageRequest, SimpleFile>
 
     public override Task<IResult<SimpleFile>> Handle(GetImageRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new ImagesByIdWithBlobsSpecification(request.Id);
+        var byId = new ImagesByNameWithBlobsSpecification(request.Name);
 
         return _data.Images.Get(byId, cancellationToken)
             .ToResultAsync(new ImageNotFoundFailure())
             .ThenAsync(ValidateBlobIsNotNull)
-            .SelectAsync(r => new SimpleFile(r.Blob!.Bytes, $"{r.Id}{r.Blob.FileExtension}"));
+            .SelectAsync(r => new SimpleFile(r.Blob!.Bytes, r.FileName));
     }
 
     private static IResult<Image> ValidateBlobIsNotNull(Image r)

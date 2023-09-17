@@ -34,8 +34,8 @@ export interface GetMealSetResponse {
   modifiedBy?: string | null;
   /** @format date-time */
   modifiedOn?: string;
-  recipes?: GetMealSetResponseRecipe[] | null;
   pantryIngredients?: GetMealSetResponsePantryIngredient[] | null;
+  recipes?: GetMealSetResponseRecipe[] | null;
 }
 
 export interface GetMealSetResponsePantryIngredient {
@@ -48,10 +48,8 @@ export interface GetMealSetResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string | null;
-  /** @format int32 */
-  pinnedImageId?: number | null;
+  image?: string | null;
   categories?: string[] | null;
-  images?: number[] | null;
   ingredients?: GetMealSetResponseRecipeIngredient[] | null;
 }
 
@@ -79,11 +77,10 @@ export interface GetRecipeResponse {
   modifiedBy?: string | null;
   /** @format date-time */
   modifiedOn?: string;
-  /** @format int32 */
-  pinnedImageId?: number | null;
+  pinnedImage?: string | null;
   isForMealPlanning?: boolean;
   categories?: string[] | null;
-  images?: number[] | null;
+  images?: string[] | null;
   ingredients?: GetRecipeResponseIngredient[] | null;
 }
 
@@ -145,8 +142,7 @@ export interface ListRecipesResponse {
   name?: string | null;
   categories?: string[] | null;
   ingredients?: ListRecipesResponseIngredient[] | null;
-  /** @format int32 */
-  imageId?: number | null;
+  image?: string | null;
 }
 
 export interface ListRecipesResponseIItemSet {
@@ -169,11 +165,6 @@ export interface ListRecipesResponseIngredient {
   /** @format int32 */
   order?: number;
   isCategory?: boolean;
-}
-
-export interface PinImageRequest {
-  /** @format int32 */
-  id?: number;
 }
 
 export interface SaveMealSetRequest {
@@ -213,6 +204,11 @@ export interface SaveRecipeRequestIngredient {
   isCategory?: boolean;
 }
 
+export interface StringEntityMessage {
+  message?: string | null;
+  id?: string | null;
+}
+
 export interface WebClientInfo {
   antiforgeryToken?: string | null;
   antiforgeryTokenHeaderName?: string | null;
@@ -222,7 +218,7 @@ export interface WebClientInfo {
 
 export interface ImagesCreateParams {
   /**
-   * The Id of the recipe the image is of
+   * The ID of the recipe of which the image belongs to
    * @format int32
    */
   recipeId?: number;

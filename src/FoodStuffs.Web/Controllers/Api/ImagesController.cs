@@ -1,12 +1,10 @@
 ﻿using FoodStuffs.Model.Events.Images;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Guards;
 using VoidCore.Model.Responses.Collections;
-using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Web.Controllers.Api;
@@ -21,28 +19,28 @@ public class ImagesController : ControllerBase
     /// Get an image.
     /// </summary>
     /// <param name="getPipeline"></param>
-    /// <param name="id">The Id of the image to download</param>
-    [Route("{id}")]
+    /// <param name="name">The name of the image to download</param>
+    [Route("{name}")]
     [HttpGet]
     [ProducesResponseType(typeof(FileContentResult), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Get([FromServices] GetImagePipeline getPipeline, int id)
+    public Task<IActionResult> Get([FromServices] GetImagePipeline getPipeline, string name)
     {
-        var request = new GetImageRequest(id);
+        var request = new GetImageRequest(name);
 
         return getPipeline
             .Handle(request)
-            .MapAsync(RespondWithImage);
+            .MapAsync(HttpResponder.RespondWithInlineFile);
     }
 
     /// <summary>
     /// Upload an image using a multi-part form file.
     /// </summary>
     /// <param name="savePipeline"></param>
-    /// <param name="recipeId">The Id of the recipe the image is of</param>
+    /// <param name="recipeId">The ID of the recipe of which the image belongs to</param>
     /// <param name="file">The file to upload</param>
     [HttpPost]
-    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> Upload([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
     {
@@ -68,14 +66,14 @@ public class ImagesController : ControllerBase
     /// Delete an image.
     /// </summary>
     /// <param name="deletePipeline"></param>
-    /// <param name="id">ID of the image</param>
-    [Route("{id}")]
+    /// <param name="name">The name of the image to delete</param>
+    [Route("{name}")]
     [HttpDelete]
-    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Delete([FromServices] DeleteImagePipeline deletePipeline, int id)
+    public Task<IActionResult> Delete([FromServices] DeleteImagePipeline deletePipeline, string name)
     {
-        var request = new DeleteImageRequest(id);
+        var request = new DeleteImageRequest(name);
 
         return deletePipeline
             .Handle(request)
@@ -86,46 +84,17 @@ public class ImagesController : ControllerBase
     /// Pin an image for a recipe. This image will be the default image for the recipe.
     /// </summary>
     /// <param name="pinPipeline"></param>
-    /// <param name="request">The request containing which image to pin</param>
-    [Route("pin")]
+    /// <param name="name">The name of the image to pin</param>
+    [Route("pin/{name}")]
     [HttpPost]
-    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Pin([FromServices] PinImagePipeline pinPipeline, [FromBody] PinImageRequest request)
+    public Task<IActionResult> Pin([FromServices] PinImagePipeline pinPipeline, string name)
     {
+        var request = new PinImageRequest(name);
+
         return pinPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
-    }
-
-    // TODO: move this to VoidCore
-    /// <summary>
-    /// Create an image FileContentResult.
-    /// </summary>
-    /// <param name="result">The domain result</param>
-    /// <returns>An IActionResult</returns>
-    public static IActionResult RespondWithImage(IResult<SimpleFile> result)
-    {
-        result.EnsureNotNull();
-
-        if (result.IsFailed)
-        {
-            return Fail(result);
-        }
-
-        var file = result.Value;
-
-        new FileExtensionContentTypeProvider()
-            .TryGetContentType(file.Name, out var contentType);
-
-        return new FileContentResult(file.Content.AsBytes, contentType ?? "application/octet-stream")
-        {
-            FileDownloadName = file.Name
-        };
-    }
-
-    private static IActionResult Fail(VoidCore.Model.Functional.IResult result)
-    {
-        return new ObjectResult(result.Failures.ToItemSet()) { StatusCode = 400 };
     }
 }

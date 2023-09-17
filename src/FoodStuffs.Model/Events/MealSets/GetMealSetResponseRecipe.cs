@@ -3,7 +3,6 @@
 public record GetMealSetResponseRecipe(
     int Id,
     string Name,
-    int? PinnedImageId,
+    string? Image,
     IEnumerable<string> Categories,
-    IEnumerable<int> Images,
     IEnumerable<GetMealSetResponseRecipeIngredient> Ingredients);

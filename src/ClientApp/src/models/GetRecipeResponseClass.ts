@@ -19,13 +19,13 @@ export default class GetRecipeResponseClass implements GetRecipeResponse {
 
   public modifiedOn = '';
 
-  public pinnedImageId: number | null = null;
+  public pinnedImage: string | null = null;
 
   public isForMealPlanning = false;
 
   public categories: string[] | null = [];
 
-  public images: number[] | null = [];
+  public images: string[] | null = [];
 
   public ingredients: GetRecipeResponseIngredient[] | null = [];
 }

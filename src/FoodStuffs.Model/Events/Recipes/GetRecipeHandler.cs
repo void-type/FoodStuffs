@@ -30,12 +30,12 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
                CreatedOn: r.CreatedOn,
                ModifiedBy: r.ModifiedBy,
                ModifiedOn: r.ModifiedOn,
-               PinnedImageId: r.PinnedImageId,
+               PinnedImage: r.PinnedImage?.FileName,
                IsForMealPlanning: r.IsForMealPlanning,
                Categories: r.Categories
                 .Select(c => c.Name)
                 .OrderBy(n => n),
-               Images: r.Images.Select(i => i.Id),
+               Images: r.Images.Select(i => i.FileName),
                Ingredients: r.Ingredients
                 .Select(i => new GetRecipeResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
                 .OrderBy(i => i.Order)));

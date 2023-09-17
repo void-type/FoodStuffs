@@ -4,4 +4,7 @@
 
 namespace FoodStuffs.Model.Data.Models;
 
-public partial class Recipe : IAuditable { }
+public partial class Recipe : IAuditable
+{
+    public Image DefaultImage => PinnedImage ?? Images.FirstOrDefault();
+}
