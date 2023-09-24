@@ -165,7 +165,7 @@ watch(listRequest, () => {
         </EntityTableControls>
         <div class="grid mt-4">
           <div v-if="(listResponse.items?.length || 0) < 1" class="g-col-12 p-4 text-center">
-            None selected
+            No results
           </div>
           <RecipeSearchCard
             v-for="recipe in listResponse.items"
