@@ -181,78 +181,7 @@ onMounted(async () => {
   <div class="container-xxl">
     <h1 class="mt-4 mb-4">Meals</h1>
     <div class="grid">
-      <div class="g-col-12 g-col-lg-4 d-print-none">
-        <h2>Recipes</h2>
-        <EntityTableControls
-          class="mt-3"
-          :clear-search="clearRecipeSearch"
-          :init-search="startRecipeSearch"
-        >
-          <template #searchForm>
-            <div class="grid mb-3" style="--bs-gap: 1em">
-              <div class="g-col-12">
-                <label for="nameSearch" class="form-label">Name contains</label>
-                <input
-                  id="nameSearch"
-                  v-model="recipeListRequest.name"
-                  class="form-control"
-                  @keydown.stop.prevent.enter="startRecipeSearch"
-                />
-              </div>
-              <div class="g-col-12">
-                <label for="categorySearch" class="form-label">Categories contain</label>
-                <input
-                  id="categorySearch"
-                  v-model="recipeListRequest.category"
-                  class="form-control"
-                  @keydown.stop.prevent.enter="startRecipeSearch"
-                />
-              </div>
-              <div class="g-col-12 g-col-xs-6 g-col-sm-4 g-col-md-3 g-col-lg-12">
-                <label for="recipeSort" class="form-label">Sort</label>
-                <select
-                  id="recipeSort"
-                  :value="recipeListRequest.sortBy"
-                  name="recipeSort"
-                  class="form-select"
-                  aria-label="Page size"
-                  @change="changeRecipeSort"
-                >
-                  <option
-                    v-for="sortOption in sortOptions"
-                    :key="sortOption.value"
-                    :value="sortOption.value"
-                  >
-                    {{ sortOption.text }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </template>
-        </EntityTableControls>
-        <div class="grid mt-4">
-          <div v-if="(availableRecipes?.length || 0) < 1" class="g-col-12 p-4 text-center">
-            No results
-          </div>
-          <MealsCard
-            v-for="recipe in availableRecipes"
-            :key="recipe.id"
-            :recipe="recipe"
-            :on-card-click="mealStore.toggleRecipe"
-            :selected="mealStore.isRecipeSelected(recipe.id)"
-            card-type="inactive"
-            class="g-col-12"
-          />
-        </div>
-        <EntityTablePager
-          :list-request="mealStore.recipeListRequest"
-          :total-count="toInt(mealStore.recipeListResponse.totalCount)"
-          :on-change-page="changeRecipePage"
-          :on-change-take="changeRecipeTake"
-          class="mt-4"
-        />
-      </div>
-      <div class="g-col-12 g-col-lg-8">
+      <div class="g-col-12">
         <h2>{{ (currentMealSet.id || 0) < 1 ? 'New' : 'Edit' }} plan</h2>
         <div class="grid">
           <div class="g-col-12 g-col-lg-6">
@@ -324,6 +253,77 @@ onMounted(async () => {
             />
           </div>
         </div>
+      </div>
+      <div class="g-col-12 d-print-none">
+        <h2>Search recipes</h2>
+        <EntityTableControls
+          class="mt-3"
+          :clear-search="clearRecipeSearch"
+          :init-search="startRecipeSearch"
+        >
+          <template #searchForm>
+            <div class="grid mb-3" style="--bs-gap: 1em">
+              <div class="g-col-12 g-col-md-6">
+                <label for="nameSearch" class="form-label">Name contains</label>
+                <input
+                  id="nameSearch"
+                  v-model="recipeListRequest.name"
+                  class="form-control"
+                  @keydown.stop.prevent.enter="startRecipeSearch"
+                />
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <label for="categorySearch" class="form-label">Categories contain</label>
+                <input
+                  id="categorySearch"
+                  v-model="recipeListRequest.category"
+                  class="form-control"
+                  @keydown.stop.prevent.enter="startRecipeSearch"
+                />
+              </div>
+              <div class="g-col-6 g-col-md-4">
+                <label for="recipeSort" class="form-label">Sort</label>
+                <select
+                  id="recipeSort"
+                  :value="recipeListRequest.sortBy"
+                  name="recipeSort"
+                  class="form-select"
+                  aria-label="Page size"
+                  @change="changeRecipeSort"
+                >
+                  <option
+                    v-for="sortOption in sortOptions"
+                    :key="sortOption.value"
+                    :value="sortOption.value"
+                  >
+                    {{ sortOption.text }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </template>
+        </EntityTableControls>
+        <div class="grid mt-4">
+          <div v-if="(availableRecipes?.length || 0) < 1" class="g-col-12 p-4 text-center">
+            No results
+          </div>
+          <MealsCard
+            v-for="recipe in availableRecipes"
+            :key="recipe.id"
+            :recipe="recipe"
+            :on-card-click="mealStore.toggleRecipe"
+            :selected="mealStore.isRecipeSelected(recipe.id)"
+            card-type="inactive"
+            class="g-col-12 g-col-md-6"
+          />
+        </div>
+        <EntityTablePager
+          :list-request="mealStore.recipeListRequest"
+          :total-count="toInt(mealStore.recipeListResponse.totalCount)"
+          :on-change-page="changeRecipePage"
+          :on-change-take="changeRecipeTake"
+          class="mt-4"
+        />
       </div>
     </div>
   </div>
