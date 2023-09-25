@@ -37,28 +37,26 @@ onMounted(() => {
         :key="recipe.id"
         class="g-col-12 g-col-md-6 g-col-lg-4"
       >
-        <div class="card card-hover overflow-hidden">
+        <div class="card card-hover">
           <router-link class="card-link" :to="{ name: 'view', params: { id: recipe.id } }">
-            <div>
-              <div class="card-title h5 m-3">{{ recipe.name }}</div>
-              <div class="btn-card-toolbar">
-                <router-link
-                  class="btn-card-control ms-auto"
-                  :to="{ name: 'edit', params: { id: recipe.id } }"
-                  @click.stop.prevent
-                >
-                  <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
-                </router-link>
-              </div>
-              <img
-                v-if="recipe.image != null"
-                class="img-fluid"
-                :src="imageUrl(recipe.image)"
-                :alt="`Image of ${recipe.name}`"
-                :loading="i > 5 ? 'lazy' : 'eager'"
-              />
-              <ImagePlaceholder v-else class="img-fluid rounded-bottom" width="100%" />
+            <div class="card-title h5 m-3 me-5">{{ recipe.name }}</div>
+            <div class="card-floating-toolbar">
+              <router-link
+                class="btn-card-control ms-auto"
+                :to="{ name: 'edit', params: { id: recipe.id } }"
+                @click.stop.prevent
+              >
+                <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
+              </router-link>
             </div>
+            <img
+              v-if="recipe.image != null"
+              class="img-fluid rounded-bottom w-auto"
+              :src="imageUrl(recipe.image)"
+              :alt="`Image of ${recipe.name}`"
+              :loading="i > 5 ? 'lazy' : 'eager'"
+            />
+            <ImagePlaceholder v-else class="img-fluid rounded-bottom" width="100%" />
           </router-link>
         </div>
       </div>
@@ -66,10 +64,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.btn-card-toolbar {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-</style>
+<style lang="scss" scoped></style>

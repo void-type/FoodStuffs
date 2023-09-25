@@ -171,7 +171,6 @@ watch(listRequest, () => {
             v-for="recipe in listResponse.items"
             :key="recipe.id"
             :recipe="recipe"
-            :on-card-click="() => {}"
             class="g-col-12"
           />
         </div>

@@ -109,6 +109,16 @@ footer {
 }
 
 .card {
+  --bs-accordion-btn-icon-width: #{$accordion-icon-width};
+  --bs-accordion-btn-icon: #{escape-svg($accordion-button-icon)};
+  --bs-accordion-btn-icon-transition: #{$accordion-icon-transition};
+  --bs-accordion-btn-active-icon: #{escape-svg($accordion-button-active-icon)};
+  --bs-accordion-btn-icon-transform: #{$accordion-icon-transform};
+  --bs-accordion-btn-padding-y: #{$accordion-button-padding-y};
+  --bs-accordion-btn-padding-x: #{$accordion-button-padding-x};
+  --bs-accordion-btn-color: #{$accordion-button-color};
+  --bs-accordion-btn-bg: #{$accordion-button-bg};
+
   &.card-hover:hover:not(.active),
   .card-hover:hover:not(.active) {
     background-color: var(--bs-gray-200);
@@ -117,22 +127,12 @@ footer {
   .card-link {
     text-decoration: none;
     color: unset;
-
-    & > .img-fluid {
-      max-height: 16rem;
-    }
   }
 
-  &.meal-card {
-    --bs-accordion-btn-icon-width: #{$accordion-icon-width};
-    --bs-accordion-btn-icon: #{escape-svg($accordion-button-icon)};
-    --bs-accordion-btn-icon-transition: #{$accordion-icon-transition};
-    --bs-accordion-btn-active-icon: #{escape-svg($accordion-button-active-icon)};
-    --bs-accordion-btn-icon-transform: #{$accordion-icon-transform};
-    --bs-accordion-btn-padding-y: #{$accordion-button-padding-y};
-    --bs-accordion-btn-padding-x: #{$accordion-button-padding-x};
-    --bs-accordion-btn-color: #{$accordion-button-color};
-    --bs-accordion-btn-bg: #{$accordion-button-bg};
+  .card-floating-toolbar {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .btn-card-control {

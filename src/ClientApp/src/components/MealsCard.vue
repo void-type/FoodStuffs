@@ -2,6 +2,8 @@
 import type { ListRecipesResponse } from '@/api/data-contracts';
 import type { PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import ApiHelpers from '@/models/ApiHelpers';
+import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
   recipe: { type: Object as PropType<ListRecipesResponse>, required: true },
@@ -18,50 +20,67 @@ function cardClickInternal() {
 <template>
   <div>
     <div
-      :class="['card', selected ? 'card--selected' : '', 'card-hover', 'meal-card']"
+      :class="['card', 'card-hover', selected ? 'card--selected' : '']"
       tabindex="0"
       role="button"
       @keydown.stop.prevent.enter="cardClickInternal()"
       @click.stop.prevent="cardClickInternal()"
     >
-      <div class="card-header">
-        <div class="h5">{{ recipe.name }}</div>
-      </div>
-      <div class="d-flex align-items-center">
-        <button
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="`#card-${cardType}-${recipe.id}-ingredient-collapse`"
-          aria-expanded="false"
-          :aria-controls="`card-${cardType}-${recipe.id}-ingredient-collapse`"
-          class="btn-card-collapse collapsed"
-          @click.stop.prevent="() => {}"
-        ></button>
-        <router-link
-          class="btn-card-control ms-auto"
-          :to="{ name: 'view', params: { id: recipe.id } }"
-          @click.stop.prevent
-        >
-          <font-awesome-icon icon="fa-eye" aria-label="view recipe" />
-        </router-link>
-        <router-link
-          class="btn-card-control"
-          :to="{ name: 'edit', params: { id: recipe.id } }"
-          @click.stop.prevent
-        >
-          <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
-        </router-link>
-      </div>
-      <div :id="`card-${cardType}-${recipe.id}-ingredient-collapse`" class="collapse">
-        <div class="card-body">
-          <ul>
-            <li
-              v-for="ingredient in recipe.ingredients?.filter((x) => x.isCategory === false)"
-              :key="ingredient.name || ''"
+      <div class="grid gap-0">
+        <div class="g-col-4">
+          <img
+            v-if="recipe.image != null"
+            class="img-fluid rounded-start"
+            :src="ApiHelpers.imageUrl(recipe.image)"
+            :alt="`Image of ${recipe.name}`"
+            loading="lazy"
+          />
+          <ImagePlaceholder v-else class="img-fluid rounded-start" width="100%" height="100%" />
+        </div>
+        <div class="g-col-8">
+          <div class="card-body">
+            <h5 class="card-title me-5">{{ recipe.name }}</h5>
+            <div class="card-floating-toolbar">
+              <div class="d-flex align-items-center">
+                <router-link
+                  class="btn-card-control ms-auto"
+                  :to="{ name: 'view', params: { id: recipe.id } }"
+                  @click.stop.prevent
+                >
+                  <font-awesome-icon icon="fa-eye" aria-label="view recipe" />
+                </router-link>
+                <router-link
+                  class="btn-card-control"
+                  :to="{ name: 'edit', params: { id: recipe.id } }"
+                  @click.stop.prevent
+                >
+                  <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
+                </router-link>
+              </div>
+            </div>
+            <button
+              type="button"
+              data-bs-toggle="collapse"
+              :data-bs-target="`#card-${cardType}-${recipe.id}-ingredient-collapse`"
+              aria-expanded="false"
+              :aria-controls="`card-${cardType}-${recipe.id}-ingredient-collapse`"
+              class="btn-card-collapse mb-2 collapsed"
+              @click.stop.prevent="() => {}"
+            ></button>
+            <div
+              :id="`card-${cardType}-${recipe.id}-ingredient-collapse`"
+              class="card-text collapse"
             >
-              {{ ingredient.quantity }}x {{ ingredient.name }}
-            </li>
-          </ul>
+              <ul class="text-muted">
+                <li
+                  v-for="ingredient in recipe.ingredients?.filter((x) => x.isCategory === false)"
+                  :key="ingredient.name || ''"
+                >
+                  {{ ingredient.quantity }}x {{ ingredient.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -75,10 +94,6 @@ body.bg-dark .card.card--selected {
 
 body .card.card--selected {
   color: var(--bs-gray-500);
-}
-
-.btn-card-collapse {
-  padding: 0.5rem var(--bs-card-cap-padding-x);
 }
 
 .btn-card-collapse::after {
@@ -111,5 +126,12 @@ body .card.card--selected {
   border-radius: 0;
   overflow-anchor: none;
   transition: var(--bs-accordion-transition);
+  padding: 0;
+}
+
+ul.text-muted {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
 }
 </style>
