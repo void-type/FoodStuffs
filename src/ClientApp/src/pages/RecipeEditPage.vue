@@ -19,6 +19,7 @@ import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
+import AppModal from '@/components/AppModal.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 import type { ModalParameters } from '@/models/ModalParameters';
 import ApiHelpers from '@/models/ApiHelpers';

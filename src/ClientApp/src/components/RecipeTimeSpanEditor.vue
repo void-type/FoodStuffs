@@ -15,7 +15,6 @@ const props = defineProps({
   },
   modelValue: {
     type: Number as PropType<number | null>,
-    required: true,
     default: 0,
   },
   isInvalid: {

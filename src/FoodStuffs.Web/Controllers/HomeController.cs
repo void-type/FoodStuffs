@@ -7,7 +7,7 @@ namespace FoodStuffs.Web.Controllers;
 /// Home controller.
 /// </summary>
 [ApiExplorerSettings(IgnoreApi = true)]
-public class HomeController : ControllerBase
+public class HomeController : Controller
 {
     private readonly ILogger _logger;
 
@@ -30,7 +30,7 @@ public class HomeController : ControllerBase
     public IActionResult Error()
     {
         _logger.LogInformation("Error page requested.");
-        return File("error.html", "text/html");
+        return View();
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class HomeController : ControllerBase
     public IActionResult Forbidden()
     {
         _logger.LogInformation("Forbidden page requested.");
-        return File("forbidden.html", "text/html");
+        return View();
     }
 
     /// <summary>
@@ -54,6 +54,6 @@ public class HomeController : ControllerBase
     public IActionResult Index()
     {
         _logger.LogInformation("Home page requested.");
-        return File("app.html", "text/html");
+        return View();
     }
 }

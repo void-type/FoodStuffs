@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import logoSvg from '@/img/logo.svg';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import useAppStore from '@/stores/appStore';
@@ -14,7 +15,7 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
     <nav class="container-xxl">
       <router-link :to="{ name: 'home' }" class="navbar-brand text-secondary">
         <img
-          src="/img/logo.svg"
+          :src="logoSvg"
           alt="logo"
           class="d-inline-block align-text-top"
           width="24"

@@ -1,10 +1,48 @@
 import { fileURLToPath, URL } from 'node:url';
-
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+
+/**
+ * Retrieves the ASP.NET Core dev certificate paths
+ */
+function getDotnetCertPaths() {
+  const baseFolder =
+    process.env.APPDATA !== undefined && process.env.APPDATA !== ''
+      ? `${process.env.APPDATA}/ASP.NET/https`
+      : `${process.env.HOME}/.aspnet/https`;
+
+  const certificateName = process.env.npm_package_name;
+
+  const cert = path.join(baseFolder, `${certificateName}.pem`);
+  const key = path.join(baseFolder, `${certificateName}.key`);
+
+  return { cert, key };
+}
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(async ({ command, mode }) => {
+  const { cert, key } = getDotnetCertPaths();
+
+  // Ensure the certificate and key exist
+  if (mode === 'development' && (!fs.existsSync(cert) || !fs.existsSync(key))) {
+    // Wait for the certificate to be generated
+    await new Promise((resolve) => {
+      spawn(
+        'dotnet',
+        ['dev-certs', 'https', '--export-path', cert, '--format', 'Pem', '--no-password'],
+        { stdio: 'inherit' }
+      ).on('exit', (code) => {
+        resolve(null);
+        if (code) {
+          process.exit(code);
+        }
+      });
+    });
+  }
+
   return {
     plugins: [vue()],
     resolve: {
@@ -13,17 +51,24 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     build: {
+      manifest: true,
       rollupOptions: {
-        input: {
-          app: './app.html',
-        },
+        input: ['./src/main.ts', './src/styles/main.scss'],
       },
       outDir: '../FoodStuffs.Web/wwwroot',
       emptyOutDir: true,
-      sourcemap: mode === 'development',
+      sourcemap: true,
     },
     watch: {
       include: './src/**',
+    },
+    server: {
+      origin: 'https://localhost:5173',
+      strictPort: true,
+      https: true && {
+        cert,
+        key,
+      },
     },
   };
 });

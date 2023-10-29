@@ -50,14 +50,24 @@ public static class ApplicationBuilderExtensions
             {
                 // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
                 options.ScriptSources
-                    .AllowUnsafeInline()
+                    // Vite dev server
+                    .Allow("https://localhost:5173")
                     .AllowUnsafeEval();
 
                 options.StyleSources
+                    // Vite dev server
+                    .Allow("https://localhost:5173")
                     .AllowUnsafeInline();
 
-                // .NET hot reloading uses web sockets
-                options.Custom("default-src")
+                options.ImageSources
+                    .Allow("https://localhost:5173");
+
+                // .NET and Vite hot reloading use web sockets
+                options.Custom("connect-src")
+                    .AllowSelf()
+                    // Vite dev server
+                    .Allow("https://localhost:5173")
+                    .Allow("ws:")
                     .Allow("wss:");
             }
             else

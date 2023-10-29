@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>@ViewData["Title"]</title>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" />
+    @RenderSection("Style", required: false)
+</head>
+
+<body class="text-dark">
+    @RenderBody()
+    @RenderSection("Script", required: false)
+</body>
+
+</html>

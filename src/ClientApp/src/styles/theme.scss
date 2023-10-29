@@ -15,8 +15,8 @@ $print-page-size: auto;
 $carousel-indicator-height: 4px;
 $carousel-control-color: var(--bs-primary);
 $carousel-indicator-active-bg: var(--bs-white);
-$carousel-control-prev-icon-bg: url('/img/carousel-control-prev.svg');
-$carousel-control-next-icon-bg: url('/img/carousel-control-next.svg');
+$carousel-control-prev-icon-bg: url('@/img/carousel-control-prev.svg');
+$carousel-control-next-icon-bg: url('@/img/carousel-control-next.svg');
 
 $enable-grid-classes: false;
 $enable-cssgrid: true;
