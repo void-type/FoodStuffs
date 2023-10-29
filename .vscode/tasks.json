@@ -131,7 +131,7 @@
         },
         {
             "label": "watch-test-server",
-            "command": "./watchServerTest.ps1",
+            "command": "./watchTestServer.ps1",
             "options": {
                 "cwd": "./build"
             },
@@ -149,7 +149,7 @@
         },
         {
             "label": "watch-web-client",
-            "command": "./watchClient.ps1",
+            "command": "./watchWebClient.ps1",
             "options": {
                 "cwd": "./build"
             },
@@ -170,7 +170,7 @@
         },
         {
             "label": "watch-web-server",
-            "command": "./watchWeb.ps1",
+            "command": "./watchWebServer.ps1",
             "options": {
                 "cwd": "./build"
             },
