@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "FoodStuffs - Error";
+﻿@using VoidCore.AspNet.Configuration
+@inject WebApplicationSettings appConfig
+@{
+    ViewData["Title"] = $"Error | {appConfig.Name}";
 }
 
 @section Style

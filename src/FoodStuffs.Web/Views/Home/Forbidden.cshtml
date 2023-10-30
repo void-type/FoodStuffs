@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "FoodStuffs - Forbidden";
+﻿@using VoidCore.AspNet.Configuration
+@inject WebApplicationSettings appConfig
+@{
+    ViewData["Title"] = $"Forbidden | {appConfig.Name}";
 }
 
 @section Style

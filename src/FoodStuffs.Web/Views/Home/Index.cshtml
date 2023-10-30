@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "FoodStuffs";
+﻿@using VoidCore.AspNet.Configuration
+@inject WebApplicationSettings appConfig
+@{
+    ViewData["Title"] = $"Home | {appConfig.Name}";
 }
 
 @section Style
@@ -11,7 +13,7 @@
         </script>
         <link rel="stylesheet"
             href="https://localhost:5173/src/styles/main.scss"
-            asp-fallback-href-include="~/assets/main-*.css"/>
+            asp-fallback-href-include="~/assets/main-*.css" />
         <script type="module"
             src="https://localhost:5173/src/main.ts"
             asp-fallback-src-include="~/assets/main-*.js">
@@ -22,11 +24,11 @@
         <link rel="preload" as="style"
             asp-href-include="~/assets/main-*.css"
             asp-fallback-href-include="~/assets/main-*.css"
-            asp-suppress-fallback-integrity="true"/>
+            asp-suppress-fallback-integrity="true" />
         <link rel="stylesheet"
             asp-href-include="~/assets/main-*.css"
             asp-fallback-href-include="~/assets/main-*.css"
-            asp-suppress-fallback-integrity="true"/>
+            asp-suppress-fallback-integrity="true" />
     </environment>
 }
 
@@ -38,7 +40,7 @@
                 asp-src-include="~/assets/main-*.js"
                 asp-fallback-src-include="~/assets/main-*.js"
                 asp-suppress-fallback-integrity="true">
-        </script>
+                </script>
     </environment>
 }
 
