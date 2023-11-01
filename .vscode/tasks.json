@@ -30,15 +30,14 @@
             }
         },
         {
-            "label": "build-debug",
-            "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipTest -SkipPublish",
+            "label": "build-debug-web",
+            "command": "dotnet",
+            "args": ["build"],
             "options": {
-                "cwd": "./build"
+                "cwd": "./src/FoodStuffs.Web/"
             },
             "type": "shell",
             "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
                 "$msCompile"
             ],
             "presentation": {
