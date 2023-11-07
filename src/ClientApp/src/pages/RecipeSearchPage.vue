@@ -30,7 +30,7 @@ const api = ApiHelpers.client;
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelpers;
 
-function fetchList() {
+function navigateSearch() {
   router.push({
     query: recipeStore.currentQueryParams,
   });
@@ -43,7 +43,7 @@ function clearSearch() {
     isPagingEnabled: listRequest.value.isPagingEnabled,
   });
 
-  fetchList();
+  navigateSearch();
 }
 
 function startSearch() {
@@ -52,13 +52,13 @@ function startSearch() {
     page: 1,
   });
 
-  fetchList();
+  navigateSearch();
 }
 
 function changePage(page: number) {
   recipeStore.setListRequest({ ...listRequest.value, page });
 
-  fetchList();
+  navigateSearch();
 }
 
 function changeTake(take: number) {
@@ -69,32 +69,40 @@ function changeTake(take: number) {
     page: 1,
   });
 
-  fetchList();
+  navigateSearch();
 }
 
 function changeSort(event: Event) {
   const { value } = event.target as HTMLSelectElement;
   recipeStore.setListRequest({ ...listRequest.value, sortBy: value });
 
-  fetchList();
+  navigateSearch();
 }
 
-onMounted(() => {
+function setListRequestFromQuery() {
   recipeStore.setListRequest({
     ...new ListRecipesRequest(),
     ...props.query,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   });
+}
 
-  fetchList();
-});
-
-watch(listRequest, () => {
+function fetchList() {
   api()
     .recipesList(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
     .catch((response) => messageStore.setApiFailureMessages(response));
+}
+
+onMounted(() => {
+  setListRequestFromQuery();
+  fetchList();
+});
+
+watch(props, () => {
+  setListRequestFromQuery();
+  fetchList();
 });
 </script>
 

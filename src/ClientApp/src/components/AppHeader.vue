@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import logoSvg from '@/img/logo.svg';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import useAppStore from '@/stores/appStore';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import AppHeaderSearch from './AppHeaderSearch.vue';
 
 const appStore = useAppStore();
 const { applicationName, user, useDarkMode } = storeToRefs(appStore);
 const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
+
+const searchText = ref('');
 </script>
 
 <template>
@@ -23,6 +26,7 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
         />
         {{ applicationName }}
       </router-link>
+      <AppHeaderSearch v-model="searchText" class="ms-auto me-2 d-none d-sm-block d-md-none" />
       <button
         type="button"
         class="navbar-toggler"
@@ -35,8 +39,10 @@ const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
         <span class="navbar-toggler-icon"></span>
       </button>
       <div id="navbar-menu" class="navbar-collapse collapse">
+        <AppHeaderSearch v-model="searchText" class="mt-3 d-sm-none" />
         <slot name="navItems"></slot>
-        <ul class="navbar-nav ms-auto">
+        <AppHeaderSearch v-model="searchText" class="ms-auto me-2 d-none d-md-block" />
+        <ul class="navbar-nav">
           <li class="nav-item dropdown">
             <a
               role="button"

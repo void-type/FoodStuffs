@@ -78,7 +78,8 @@ body.bg-dark {
   --bs-link-hover-color: #{lighten($primary, 10%)};
   --bs-border-color: var(--bs-gray-800);
 
-  .text-muted {
+  .text-muted,
+  .form-control::placeholder {
     --bs-text-opacity: 1;
     color: var(--bs-gray-600) !important;
   }

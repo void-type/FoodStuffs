@@ -1,4 +1,9 @@
-import type { ListRecipesResponse, GetRecipeResponse } from '@/api/data-contracts';
+import type {
+  ListRecipesResponse,
+  GetRecipeResponse,
+  RecipesListParams,
+} from '@/api/data-contracts';
+import ListRecipesRequest from './ListRecipesRequest';
 
 const settingsKeyRecentRecipes = 'recentRecipes';
 const settingsKeyQueuedRecentRecipe = 'queuedRecentRecipe';
@@ -35,4 +40,25 @@ export default class RecipeStoreHelpers {
     { text: 'Z-A', value: 'z-a' },
     { text: 'Random', value: 'random' },
   ];
+
+  static listRequestToQueryParams(listRequest: RecipesListParams) {
+    const defaultRequest = new ListRecipesRequest();
+
+    // Query params need to be string or number
+    const qp = {
+      ...listRequest,
+    };
+
+    const qpEntries = Object.entries(qp);
+    const defaultValues = Object.entries(defaultRequest);
+
+    const cleanedEntries = qpEntries
+      .filter(([qpKey, qpValue]) => {
+        const dValue = defaultValues.find(([q]) => q === qpKey)?.[1];
+        return qpValue !== dValue && typeof qpValue !== 'undefined';
+      })
+      .map(([qpKey, qpValue]) => [qpKey, String(qpValue)]);
+
+    return Object.fromEntries(cleanedEntries);
+  }
 }

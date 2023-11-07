@@ -42,22 +42,9 @@ export const useRecipeStore = defineStore('recipes', {
 
   getters: {
     currentQueryParams(state) {
-      // Query params need to be string or number
-      const qp = {
-        ...state.listRequest,
-        isForMealPlanning: String(state.listRequest.isForMealPlanning),
-        isPagingEnabled: String(state.listRequest.isPagingEnabled),
-      };
+      const { listRequest } = state;
 
-      const qpEntries = Object.entries(qp);
-      const defaultValues = Object.entries(new ListRecipesRequest());
-
-      const cleanedEntries = qpEntries.filter(([qpKey, qpValue]) => {
-        const dValue = defaultValues.find(([q]) => q === qpKey)?.[1];
-        return String(qpValue) !== String(dValue);
-      });
-
-      return Object.fromEntries(cleanedEntries);
+      return RecipeStoreHelpers.listRequestToQueryParams(listRequest);
     },
   },
 

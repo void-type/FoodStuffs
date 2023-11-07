@@ -13,12 +13,13 @@ import {
   faPencil,
   faPlus,
   faEye,
+  faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Prevents inline styling to appease CSP.
 fontAwesomeConfig.autoAddCss = false;
 
-library.add(faTimes, faThumbtack, faAlignJustify, faPencil, faPlus, faEye);
+library.add(faTimes, faThumbtack, faAlignJustify, faPencil, faPlus, faEye, faSearch);
 
 const app = createApp(App);
 
