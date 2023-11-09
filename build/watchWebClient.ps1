@@ -5,7 +5,7 @@ try {
   Set-Location -Path $projectRoot
   . ./build/buildSettings.ps1
 
-  Remove-Item -Path "$webProjectFolder/wwwroot/*" -Recurse
+  Remove-Item -Path "$webProjectFolder/wwwroot/*" -Recurse -ErrorAction SilentlyContinue
   Copy-Item -Path "$webClientProjectFolder/public/*" -Destination "$webProjectFolder/wwwroot" -Recurse
 
   Set-Location -Path $webClientProjectFolder
