@@ -45,14 +45,16 @@ function cardClickInternal() {
                 <router-link
                   class="btn-card-control ms-auto"
                   :to="{ name: 'view', params: { id: recipe.id } }"
-                  @click.stop.prevent
+                  @keydown.stop.enter
+                  @click.stop
                 >
                   <font-awesome-icon icon="fa-eye" aria-label="view recipe" />
                 </router-link>
                 <router-link
                   class="btn-card-control"
                   :to="{ name: 'edit', params: { id: recipe.id } }"
-                  @click.stop.prevent
+                  @keydown.stop.enter
+                  @click.stop
                 >
                   <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
                 </router-link>

@@ -36,6 +36,11 @@ a.btn,
   min-width: 5rem;
 }
 
+// Bootstrap hide nav-link focus ring
+.nav-link:focus-visible {
+  outline: auto;
+}
+
 footer {
   border-top: var(--bs-gray-500) 1px solid;
 }
@@ -51,9 +56,16 @@ footer {
   --bs-accordion-btn-color: #{$accordion-button-color};
   --bs-accordion-btn-bg: #{$accordion-button-bg};
 
-  &.card-hover:hover:not(.active),
-  .card-hover:hover:not(.active) {
-    background-color: var(--bs-gray-200);
+  &.card-hover,
+  .card-hover {
+    &:hover:not(.active),
+    &:focus-visible {
+      background-color: var(--bs-gray-200);
+    }
+
+    &:focus-visible {
+      outline: auto;
+    }
   }
 
   .card-link {
@@ -96,13 +108,20 @@ body.bg-dark {
     color: inherit;
     outline: var(--bs-gray-800) 1px solid;
 
-    &.card-hover:hover:not(.active),
-    .card-hover:hover:not(.active) {
-      background-color: var(--bs-gray-800);
+    &.card-hover,
+    .card-hover {
+      &:hover:not(.active),
+      &:focus-visible {
+        background-color: var(--bs-gray-800);
 
-      .card-link:hover {
-        background-color: inherit;
-        color: inherit;
+        .card-link:hover {
+          background-color: inherit;
+          color: inherit;
+        }
+      }
+
+      &:focus-visible {
+        outline: auto;
       }
     }
   }
