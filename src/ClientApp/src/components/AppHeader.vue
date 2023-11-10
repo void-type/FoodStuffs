@@ -56,8 +56,15 @@ const searchText = ref('');
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li class="dropdown-item">Roles: {{ userRoles }}</li>
               <li class="dropdown-item">
-                <div class="form-check form-switch" title="Toggle dark mode">
-                  <label class="form-check-label" for="useDarkMode">🌙</label>
+                <div class="form-check form-switch" title="Use dark mode">
+                  <label
+                    class="form-check-label"
+                    for="useDarkMode"
+                    title="Use dark mode"
+                    aria-label="Use dark mode"
+                    @click.stop
+                    >🌙</label
+                  >
                   <input
                     id="useDarkMode"
                     :checked="useDarkMode"
@@ -77,4 +84,8 @@ const searchText = ref('');
   </header>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.form-check-label {
+  width: 100%;
+}
+</style>
