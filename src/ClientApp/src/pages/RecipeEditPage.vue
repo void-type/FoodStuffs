@@ -48,6 +48,7 @@ const data = reactive({
   suggestedImage: null as string | null,
   pinnedImage: null as string | null,
   imageUploadSuccessToken: 0,
+  imageUploadFailToken: 0,
   recipeChangeToken: 0,
 });
 
@@ -206,7 +207,10 @@ function onImageUpload(file: File) {
       fetchRecipesList();
       data.imageUploadSuccessToken += 1;
     })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+    .catch((response) => {
+      data.imageUploadFailToken += 1;
+      messageStore.setApiFailureMessages(response);
+    });
 }
 
 function onImageDelete(name: string) {
@@ -322,6 +326,7 @@ onBeforeRouteLeave(async (to, from, next) => {
           :pinned-image="data.pinnedImage"
           :on-image-upload="onImageUpload"
           :image-upload-success-token="data.imageUploadSuccessToken"
+          :image-upload-fail-token="data.imageUploadFailToken"
           :recipe-changed-token="data.recipeChangeToken"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"

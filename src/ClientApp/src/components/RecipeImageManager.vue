@@ -32,6 +32,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  imageUploadFailToken: {
+    type: Number,
+    required: true,
+  },
   recipeChangedToken: {
     type: Number,
     required: true,
@@ -56,6 +60,7 @@ const props = defineProps({
 const messageStore = useMessageStore();
 
 const uploadFile: Ref<File | null> = ref(null);
+const uploadInProgress = ref(false);
 const carouselIndex = ref(0);
 const uniqueId = crypto.randomUUID();
 
@@ -84,6 +89,8 @@ function uploadImageClick() {
 
     return;
   }
+
+  uploadInProgress.value = true;
 
   props.onImageUpload(uploadFile.value);
 }
@@ -131,6 +138,14 @@ watch(
     }
 
     uploadFile.value = null;
+    uploadInProgress.value = false;
+  }
+);
+
+watch(
+  () => props.imageUploadFailToken,
+  () => {
+    uploadInProgress.value = false;
   }
 );
 
@@ -168,10 +183,10 @@ onMounted(() => {
           <button
             class="btn btn-primary"
             type="button"
-            :disabled="uploadFile === null"
+            :disabled="uploadFile === null || uploadInProgress"
             @click.stop.prevent="uploadImageClick()"
           >
-            Upload
+            {{ uploadInProgress ? 'Uploading...' : 'Upload' }}
           </button>
         </div>
       </div>

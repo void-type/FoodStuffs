@@ -77,7 +77,11 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
                 return Result.Ok(fileContent);
             }
 
+            image.AutoOrient();
+
             image.Strip();
+
+            image.Crop(new MagickGeometry("4:3"), Gravity.Center);
 
             var defines = new WebPWriteDefines
             {
