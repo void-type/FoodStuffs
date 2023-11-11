@@ -235,7 +235,7 @@ onMounted(() => {
             data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
+            <span class="visually-hidden">Previous image</span>
           </button>
           <button
             class="carousel-control-next d-print-none"
@@ -244,7 +244,7 @@ onMounted(() => {
             data-bs-slide="next"
           >
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+            <span class="visually-hidden">Next image</span>
           </button>
         </div>
         <ImagePlaceholder v-else class="rounded" />

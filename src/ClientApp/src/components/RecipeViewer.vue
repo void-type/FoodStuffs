@@ -110,7 +110,7 @@ onMounted(() => {
               :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
-              aria-label="Show image {{i}}"
+              :aria-label="`Show image ${i}`"
             ></button>
           </div>
           <div class="carousel-inner">
@@ -134,7 +134,7 @@ onMounted(() => {
             data-bs-slide="prev"
           >
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
+            <span class="visually-hidden">Previous image</span>
           </button>
           <button
             type="button"
@@ -143,7 +143,7 @@ onMounted(() => {
             data-bs-slide="next"
           >
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+            <span class="visually-hidden">Next image</span>
           </button>
         </div>
         <ImagePlaceholder v-else class="rounded" />
