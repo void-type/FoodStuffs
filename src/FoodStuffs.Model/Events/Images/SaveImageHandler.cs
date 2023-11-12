@@ -1,8 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
-using ImageMagick;
-using ImageMagick.Formats;
+using FoodStuffs.Model.ImageCompression;
 using Microsoft.Extensions.Logging;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
@@ -14,15 +13,20 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
 {
     private readonly IFoodStuffsData _data;
     private readonly ILogger<SaveImageHandler> _logger;
+    private readonly IImageCompressionService _compressor;
 
-    public SaveImageHandler(IFoodStuffsData data, ILogger<SaveImageHandler> logger)
+    public SaveImageHandler(IFoodStuffsData data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService)
     {
         _data = data;
         _logger = logger;
+        _compressor = imageCompressionService;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
     {
+        // TODO: If we want to handle large files via streaming, we can use https://code-maze.com/aspnetcore-upload-large-files/.
+        // IFormFile is still buffered by model binding.
+
         // Note: Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MB (~28.6 MiB).
         // To change this, you will need both:
         // 1. a web.config with requestLimits maxAllowedContentLength="<byte size>"
@@ -37,7 +41,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
             return Fail(recipeResult.Failures);
         }
 
-        var compressResult = await CompressImage(request.FileContent, 95, 1200, cancellationToken);
+        var compressResult = await CompressImage(request, cancellationToken);
 
         if (compressResult.IsFailed)
         {
@@ -65,55 +69,19 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }
 
-    private async Task<IResult<byte[]>> CompressImage(byte[] fileContent, int quality, int maxHeight, CancellationToken cancellationToken)
+    private async Task<IResult<byte[]>> CompressImage(SaveImageRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            using var image = new MagickImage(fileContent);
+            using var compressedFileContent = await _compressor
+                .CompressAndResizeImage(request.FileStream, 95, ResizeSettings.CenterCrop(4, 3, 1600), cancellationToken);
 
-            if (image.Format == MagickFormat.WebP)
-            {
-                _logger.LogInformation("Skipping compression. Already webp.");
-                return Result.Ok(fileContent);
-            }
-
-            image.AutoOrient();
-
-            image.Strip();
-
-            image.Crop(new MagickGeometry("4:3"), Gravity.Center);
-
-            var defines = new WebPWriteDefines
-            {
-                Lossless = true,
-                Method = 6,
-            };
-
-            if (quality < 100)
-            {
-                image.Quality = quality;
-                defines.Lossless = false;
-                defines.Method = 5;
-            }
-
-            if (image.Height > maxHeight)
-            {
-                image.Resize(0, maxHeight);
-            }
-
-            using var ms = new MemoryStream();
-            await image.WriteAsync(ms, defines, cancellationToken);
-
-            var compressedFileContent = ms.ToArray();
-
-            _logger.LogInformation("Compressed image from {OldSize} KB to {NewSize} KB", fileContent.Length / 1024, compressedFileContent.Length / 1024);
-
-            return Result.Ok(compressedFileContent);
+            return Result.Ok(compressedFileContent.ToArray());
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Exception thrown while compressing image.");
-            return Result.Fail<byte[]>(new Failure("Not a valid image.", "upload"));
+            return Result.Fail<byte[]>(new Failure("There was an error while processing your image.", "upload-file"));
         }
     }
 }

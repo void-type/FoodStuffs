@@ -44,18 +44,11 @@ public class ImagesController : ControllerBase
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> Upload([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
     {
-        byte[] content;
+        using var fileStream = file
+            .EnsureNotNull()
+            .OpenReadStream();
 
-        using (var memoryStream = new MemoryStream())
-        {
-            await file
-                .EnsureNotNull()
-                .CopyToAsync(memoryStream);
-
-            content = memoryStream.ToArray();
-        }
-
-        var request = new SaveImageRequest(recipeId, content);
+        var request = new SaveImageRequest(recipeId, fileStream);
 
         return await savePipeline
             .Handle(request)

@@ -1,3 +1,3 @@
 ﻿namespace FoodStuffs.Model.Events.Images;
 
-public record SaveImageRequest(int RecipeId, byte[] FileContent);
+public record SaveImageRequest(int RecipeId, Stream FileStream);

@@ -9,8 +9,7 @@ public class SaveImageRequestLogger : RequestLoggerAbstract<SaveImageRequest>
 
     public override void Log(SaveImageRequest request)
     {
-        Logger.LogInformation("Requested. RecipeId: {RecipeId} FileSize: {FileSize}",
-            request.RecipeId,
-            request.FileContent.Length);
+        Logger.LogInformation("Requested. RecipeId: {RecipeId}",
+            request.RecipeId);
     }
 }

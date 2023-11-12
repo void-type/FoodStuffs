@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Events;
 using FoodStuffs.Model.Events.Images;
+using FoodStuffs.Model.ImageCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using VoidCore.Model.Responses.Files;
@@ -53,19 +54,40 @@ public class ImageEventTests
 
         var recipe = context.Recipes.First(r => r.Name == "Recipe2");
 
-        var myFile = new SimpleFile(Convert.FromBase64String(Deps.PngBase64String), "my-image.png");
+        var myFile = new MemoryStream(Convert.FromBase64String(Deps.PngBase64String));
 
-        var request = new SaveImageRequest(recipe.Id, myFile.Content.AsBytes);
+        var request = new SaveImageRequest(recipe.Id, myFile);
+        var imageCompressor = new ImageCompressionService(new NullLogger<ImageCompressionService>());
 
-        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>()).Handle(request);
+        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>(), imageCompressor).Handle(request);
 
         Assert.True(result.IsSuccess);
 
         var image = context.Images.Include(a => a.Blob).First(a => a.FileName == result.Value.Id);
 
-        Assert.True(myFile.Content.AsBytes.Length > image.Blob.Bytes.Length);
+        Assert.True(myFile.Length > image.Blob.Bytes.Length);
         Assert.Equal(recipe.Id, image.RecipeId);
         Assert.Equal(Deps.DateTimeServiceLate.Moment, image.ModifiedOn);
+    }
+
+    [Fact]
+    public async Task SaveImage_fails_if_file_is_not_image()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+        var data = context.FoodStuffsData();
+
+        var recipe = context.Recipes.First(r => r.Name == "Recipe2");
+
+        var myFile = new MemoryStream(new FileContent("my file content").AsBytes);
+
+        var request = new SaveImageRequest(recipe.Id, myFile);
+
+        var imageCompressor = new ImageCompressionService(new NullLogger<ImageCompressionService>());
+
+        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>(), imageCompressor).Handle(request);
+
+        Assert.True(result.IsFailed);
+        Assert.Contains("upload-file", result.Failures.Select(f => f.UiHandle));
     }
 
     [Fact]
@@ -74,11 +96,13 @@ public class ImageEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var myFile = new SimpleFile("my file content", "myFile.txt");
+        var myFile = new MemoryStream(new FileContent("my file content").AsBytes);
 
-        var request = new SaveImageRequest(-5, myFile.Content.AsBytes);
+        var request = new SaveImageRequest(-5, myFile);
 
-        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>()).Handle(request);
+        var imageCompressor = new ImageCompressionService(new NullLogger<ImageCompressionService>());
+
+        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>(), imageCompressor).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains(typeof(RecipeNotFoundFailure), result.Failures.Select(f => f.GetType()));

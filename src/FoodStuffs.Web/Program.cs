@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.EntityFramework;
+using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ try
     services.AddHttpContextAccessor();
     services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
     services.AddSingleton<IDateTimeService, NowDateTimeService>();
+    services.AddSingleton<IImageCompressionService, ImageCompressionService>();
 
     config.GetRequiredConnectionString<FoodStuffsContext>();
     services.AddDbContext<FoodStuffsContext>(options => options
