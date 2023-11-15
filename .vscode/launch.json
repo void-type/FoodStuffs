@@ -13,7 +13,7 @@
           "request": "launch",
           "preLaunchTask": "build-debug-web",
           // If you have changed target frameworks, make sure to update the program path.
-          "program": "${workspaceFolder}/src/FoodStuffs.Web/bin/Debug/net7.0/FoodStuffs.Web.dll",
+          "program": "${workspaceFolder}/src/FoodStuffs.Web/bin/Debug/net8.0/FoodStuffs.Web.dll",
           "args": [],
           "cwd": "${workspaceFolder}/src/FoodStuffs.Web",
           // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
