@@ -6,7 +6,7 @@ public class CategoriesUnusedSpecification : QuerySpecificationAbstract<Category
 {
     public CategoriesUnusedSpecification()
     {
-        AddCriteria(x => !x.Recipes.Any());
+        AddCriteria(x => x.Recipes.Count == 0);
         AddInclude(nameof(Category.Recipes));
     }
 }

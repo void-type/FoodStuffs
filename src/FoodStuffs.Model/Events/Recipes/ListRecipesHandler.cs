@@ -62,7 +62,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
             // Get the hydrated items by ID.
             var randomPagedSearch = new RecipesSearchSpecification(
-                criteria: new Expression<Func<Recipe, bool>>[] { x => randomIds.Contains(x.Id) },
+                criteria: [x => randomIds.Contains(x.Id)],
                 paginationOptions: PaginationOptions.None);
 
             // Order by our random IDs
@@ -84,9 +84,8 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
         var searchCriteria = new List<Expression<Func<Recipe, bool>>>();
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
-#pragma warning disable RCS1155
         // Need to use Linq methods for EF
-#pragma warning disable S6605
+#pragma warning disable S6605, RCS1155, CA1862
 
         if (!string.IsNullOrWhiteSpace(request.NameSearch))
         {
@@ -98,8 +97,7 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
             searchCriteria.Add(recipe => recipe.Categories.Any(c => c.Name.ToLower().Contains(request.CategorySearch.ToLower())));
         }
 
-#pragma warning restore S6605
-#pragma warning restore RCS1155
+#pragma warning restore S6605, RCS1155, CA1862
 
         if (request.IsForMealPlanning is not null)
         {

@@ -31,10 +31,10 @@ public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMeal
                 Recipes: r.Recipes.Select(r => new GetMealSetResponseRecipe(
                     Id: r.Id,
                     Name: r.Name,
+                    Image: r.DefaultImage?.FileName,
                     Categories: r.Categories
                         .Select(c => c.Name)
                         .OrderBy(n => n),
-                    Image: r.DefaultImage?.FileName,
                     Ingredients: r.Ingredients
                         .Select(i => new GetMealSetResponseRecipeIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
                         .OrderBy(i => i.Order)))));

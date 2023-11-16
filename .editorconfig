@@ -115,7 +115,10 @@ csharp_style_throw_expression = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
 # File-scoped namespace declarations
-csharp_style_namespace_declarations=file_scoped:warning
+csharp_style_namespace_declarations = file_scoped:warning
+
+# Don't prefer primary constructors
+csharp_style_prefer_primary_constructors = false
 
 # Code block preferences
 csharp_prefer_braces = true:warning

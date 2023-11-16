@@ -46,17 +46,15 @@ public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IIt
         var searchCriteria = new List<Expression<Func<MealSet, bool>>>();
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
-#pragma warning disable RCS1155
         // Need to use Linq methods for EF
-#pragma warning disable S6605
+#pragma warning disable S6605, RCS1155, CA1862
 
         if (!string.IsNullOrWhiteSpace(request.NameSearch))
         {
             searchCriteria.Add(m => m.Name.ToLower().Contains(request.NameSearch.ToLower()));
         }
 
-#pragma warning restore S6605
-#pragma warning restore RCS1155
+#pragma warning restore S6605, RCS1155, CA1862
 
         return searchCriteria.ToArray();
     }

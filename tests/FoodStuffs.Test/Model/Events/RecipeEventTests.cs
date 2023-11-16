@@ -207,7 +207,7 @@ public class RecipeEventTests
         var images = context.Images.ToList();
         var blobs = context.Blobs.ToList();
 
-        Assert.True(recipeToDelete.Images.Any());
+        Assert.True(recipeToDelete.Images.Count != 0);
         Assert.True(recipeToDelete.Images.Select(i => i.Blob).Any());
         Assert.Equal(recipeToDelete.Images.Count, recipeToDelete.Images.Select(i => i.Blob).Count());
 

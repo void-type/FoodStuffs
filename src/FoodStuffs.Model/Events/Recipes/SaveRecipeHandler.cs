@@ -41,7 +41,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));
     }
 
-    private void Transfer(SaveRecipeRequest request, Recipe recipe)
+    private static void Transfer(SaveRecipeRequest request, Recipe recipe)
     {
         recipe.Name = request.Name;
         recipe.Directions = request.Directions ?? string.Empty;

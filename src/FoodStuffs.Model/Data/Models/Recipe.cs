@@ -24,13 +24,13 @@ public partial class Recipe
 
     public bool IsForMealPlanning { get; set; }
 
-    public virtual List<Image> Images { get; } = new List<Image>();
+    public virtual List<Image> Images { get; } = [];
 
-    public virtual List<Ingredient> Ingredients { get; } = new List<Ingredient>();
+    public virtual List<Ingredient> Ingredients { get; } = [];
 
     public virtual Image? PinnedImage { get; set; }
 
-    public virtual List<Category> Categories { get; } = new List<Category>();
+    public virtual List<Category> Categories { get; } = [];
 
-    public virtual List<MealSet> MealSets { get; } = new List<MealSet>();
+    public virtual List<MealSet> MealSets { get; } = [];
 }
