@@ -2,7 +2,7 @@
 import WorkingRecipe from '@/models/WorkingRecipe';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { trimAndTitleCase } from '@/models/FormatHelpers';
-import { computed, onMounted, reactive, watch, type PropType } from 'vue';
+import { computed, reactive, watch, type PropType } from 'vue';
 import { useRouter } from 'vue-router';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 import EntityAuditInfo from './EntityAuditInfo.vue';
@@ -112,17 +112,14 @@ watch(
   () => props.sourceRecipe,
   () => {
     reset();
-  }
+  },
+  { immediate: true }
 );
 
 const isRecipeDirty = computed(() => JSON.stringify(data.workingRecipe) !== workingRecipeInitial);
 
 watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);
-});
-
-onMounted(() => {
-  reset();
 });
 </script>
 

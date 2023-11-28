@@ -5,7 +5,7 @@ import { toInt, toNumber } from '@/models/FormatHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { onMounted, watch, type PropType } from 'vue';
+import { watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
@@ -95,15 +95,14 @@ function fetchList() {
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
-onMounted(() => {
-  setListRequestFromQuery();
-  fetchList();
-});
-
-watch(props, () => {
-  setListRequestFromQuery();
-  fetchList();
-});
+watch(
+  props,
+  () => {
+    setListRequestFromQuery();
+    fetchList();
+  },
+  { immediate: true }
+);
 </script>
 
 <template>

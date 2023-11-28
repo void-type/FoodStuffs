@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, watch, reactive } from 'vue';
+import { watch, reactive } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import useRecipeStore from '@/stores/recipeStore';
@@ -44,12 +44,9 @@ watch(
   () => props.id,
   () => {
     fetchRecipe(props.id);
-  }
+  },
+  { immediate: true }
 );
-
-onMounted(() => {
-  fetchRecipe(props.id);
-});
 
 onBeforeRouteUpdate((to, from, next) => {
   recipeStore.addToRecent(data.sourceRecipe);

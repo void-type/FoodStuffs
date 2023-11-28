@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, watch, reactive, computed } from 'vue';
+import { watch, reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import {
   onBeforeRouteLeave,
@@ -289,12 +289,9 @@ watch(
   () => props.id,
   () => {
     fetchRecipe();
-  }
+  },
+  { immediate: true }
 );
-
-onMounted(() => {
-  fetchRecipe();
-});
 
 onBeforeRouteUpdate(async (to, from, next) => {
   await beforeRouteChange(next);
