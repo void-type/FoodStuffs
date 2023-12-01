@@ -23,7 +23,6 @@ public class HomeController : Controller
     /// <summary>
     /// Static error page.
     /// </summary>
-    /// <returns></returns>
     [AllowAnonymous]
     [HttpGet]
     [Route("/error")]
@@ -36,7 +35,6 @@ public class HomeController : Controller
     /// <summary>
     /// Static forbidden page.
     /// </summary>
-    /// <returns></returns>
     [AllowAnonymous]
     [HttpGet]
     [Route("/forbidden")]
@@ -49,7 +47,6 @@ public class HomeController : Controller
     /// <summary>
     /// Home page.
     /// </summary>
-    /// <returns></returns>
     [HttpGet]
     public IActionResult Index()
     {

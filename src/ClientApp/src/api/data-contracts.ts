@@ -117,6 +117,25 @@ export interface Int32EntityMessage {
   id?: number;
 }
 
+export interface ListCategoriesResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string | null;
+}
+
+export interface ListCategoriesResponseIItemSet {
+  /** @format int32 */
+  count?: number;
+  items?: ListCategoriesResponse[] | null;
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
 export interface ListMealSetsResponse {
   /** @format int32 */
   id?: number;
@@ -214,6 +233,28 @@ export interface WebClientInfo {
   antiforgeryTokenHeaderName?: string | null;
   applicationName?: string | null;
   user?: DomainUser;
+}
+
+export interface CategoriesListParams {
+  /** Name contains (case-insensitive) */
+  name?: string;
+  /**
+   * False for all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
 }
 
 export interface ImagesCreateParams {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealStore from '@/stores/mealStore';
 import { clamp, isNil, toInt } from '@/models/FormatHelpers';
@@ -10,7 +10,7 @@ import MealsCard from '@/components/MealsCard.vue';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import useMessageStore from '@/stores/messageStore';
-import type { SaveMealSetRequest } from '@/api/data-contracts';
+import type { ListCategoriesResponse, SaveMealSetRequest } from '@/api/data-contracts';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import type { HttpResponse } from '@/api/http-client';
 
@@ -22,6 +22,8 @@ const { recipeListRequest, mealSetListRequest, currentMealSet } = storeToRefs(me
 const availableRecipes = computed(() => mealStore.recipeListResponse.items);
 const selectedRecipes = computed(() => mealStore.getSelectedRecipes);
 const { sortOptions } = RecipeStoreHelpers;
+
+const categoryOptions = ref([] as Array<ListCategoriesResponse>);
 
 function fetchRecipeList() {
   api()
@@ -172,6 +174,14 @@ async function changeRecipeSort(event: Event) {
 
 onMounted(async () => {
   fetchRecipeList();
+
+  api()
+    .categoriesList({ isPagingEnabled: false })
+    .then((response) => {
+      categoryOptions.value = response.data.items || [];
+    })
+    .catch((response) => messageStore.setApiFailureMessages(response));
+
   await fetchMealSetList();
   await changeMealSetIndex(0);
 });
@@ -277,9 +287,19 @@ onMounted(async () => {
                 <input
                   id="categorySearch"
                   v-model="recipeListRequest.category"
+                  list="categoryAutocomplete"
                   class="form-control"
                   @keydown.stop.prevent.enter="startRecipeSearch"
                 />
+                <datalist id="categoryAutocomplete">
+                  <option
+                    v-for="categoryOption in categoryOptions"
+                    :key="categoryOption.id"
+                    :value="categoryOption.name"
+                  >
+                    {{ categoryOption.name }}
+                  </option>
+                </datalist>
               </div>
               <div class="g-col-6 g-col-md-4">
                 <label for="recipeSort" class="form-label">Sort</label>

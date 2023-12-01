@@ -22,7 +22,6 @@ public class MealSetsController : ControllerBase
     /// <param name="isPagingEnabled">False for all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
-    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListMealSetsResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -48,7 +47,6 @@ public class MealSetsController : ControllerBase
     /// </summary>
     /// <param name="getPipeline"></param>
     /// <param name="id">The ID of the meal set to get</param>
-    /// <returns></returns>
     [Route("{id}")]
     [HttpGet]
     [ProducesResponseType(typeof(GetMealSetResponse), 200)]
@@ -67,7 +65,6 @@ public class MealSetsController : ControllerBase
     /// </summary>
     /// <param name="savePipeline"></param>
     /// <param name="request">The meal set to save</param>
-    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -83,7 +80,6 @@ public class MealSetsController : ControllerBase
     /// </summary>
     /// <param name="deletePipeline"></param>
     /// <param name="id">The ID of the meal set</param>
-    /// <returns></returns>
     [Route("{id}")]
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]

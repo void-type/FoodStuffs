@@ -25,7 +25,6 @@ public class RecipesController : ControllerBase
     /// <param name="isPagingEnabled">False for all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
-    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListRecipesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -54,7 +53,6 @@ public class RecipesController : ControllerBase
     /// </summary>
     /// <param name="getPipeline"></param>
     /// <param name="id">The ID of the recipe to get</param>
-    /// <returns></returns>
     [Route("{id}")]
     [HttpGet]
     [ProducesResponseType(typeof(GetRecipeResponse), 200)]
@@ -73,7 +71,6 @@ public class RecipesController : ControllerBase
     /// </summary>
     /// <param name="savePipeline"></param>
     /// <param name="request">The recipe to save</param>
-    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -89,7 +86,6 @@ public class RecipesController : ControllerBase
     /// </summary>
     /// <param name="deletePipeline"></param>
     /// <param name="id">The ID of the recipe</param>
-    /// <returns></returns>
     [Route("{id}")]
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]

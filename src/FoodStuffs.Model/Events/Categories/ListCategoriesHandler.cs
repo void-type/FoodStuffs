@@ -6,41 +6,41 @@ using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
-namespace FoodStuffs.Model.Events.MealSets;
+namespace FoodStuffs.Model.Events.Categories;
 
-public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IItemSet<ListMealSetsResponse>>
+public class ListCategoriesHandler : EventHandlerAbstract<ListCategoriesRequest, IItemSet<ListCategoriesResponse>>
 {
     private readonly IFoodStuffsData _data;
 
-    public ListMealSetsHandler(IFoodStuffsData data)
+    public ListCategoriesHandler(IFoodStuffsData data)
     {
         _data = data;
     }
 
-    public override async Task<IResult<IItemSet<ListMealSetsResponse>>> Handle(ListMealSetsRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<IItemSet<ListCategoriesResponse>>> Handle(ListCategoriesRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var pagedSearch = new MealSetsSearchSpecification(
+        var pagedSearch = new CategoriesSearchSpecification(
             criteria: searchCriteria,
             paginationOptions: paginationOptions);
 
-        var mealSets = await _data.MealSets.ListPage(pagedSearch, cancellationToken);
+        var categories = await _data.Categories.ListPage(pagedSearch, cancellationToken);
 
-        return mealSets
+        return categories
             .Items
-            .Select(ms => new ListMealSetsResponse(
+            .Select(ms => new ListCategoriesResponse(
                 Id: ms.Id,
                 Name: ms.Name))
-            .ToItemSet(paginationOptions, mealSets.TotalCount)
+            .ToItemSet(paginationOptions, categories.TotalCount)
             .Map(Ok);
     }
 
-    private static Expression<Func<MealSet, bool>>[] GetSearchCriteria(ListMealSetsRequest request)
+    private static Expression<Func<Category, bool>>[] GetSearchCriteria(ListCategoriesRequest request)
     {
-        var searchCriteria = new List<Expression<Func<MealSet, bool>>>();
+        var searchCriteria = new List<Expression<Func<Category, bool>>>();
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
         // Need to use Linq methods for EF

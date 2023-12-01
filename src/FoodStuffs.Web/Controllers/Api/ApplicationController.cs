@@ -14,7 +14,6 @@ public class ApplicationController : ControllerBase
     /// <summary>
     /// Get information to bootstrap the SPA client like application name and user data.
     /// </summary>
-    /// <returns></returns>
     [HttpGet]
     [Route("info")]
     [ProducesResponseType(typeof(GetWebClientInfo.WebClientInfo), 200)]
@@ -28,7 +27,6 @@ public class ApplicationController : ControllerBase
     /// <summary>
     /// Get the version of the application.
     /// </summary>
-    /// <returns></returns>
     [HttpGet]
     [Route("version")]
     [ProducesResponseType(typeof(AppVersion), 200)]

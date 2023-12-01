@@ -28,13 +28,15 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var allSearch = new RecipesSearchSpecification(searchCriteria.ToArray());
+        var pagedSearch = new RecipesSearchSpecification(
+            criteria: searchCriteria.ToArray(),
+            paginationOptions: paginationOptions,
+            sortBy: request.SortBy);
 
-        var totalCount = await _data.Recipes.Count(allSearch, cancellationToken);
-
-        var recipes = await GetRecipes(request, paginationOptions, searchCriteria, allSearch, cancellationToken);
+        var recipes = await GetRecipes(request, paginationOptions, pagedSearch, cancellationToken);
 
         return recipes
+            .Items
             .Select(r => new ListRecipesResponse(
                 Id: r.Id,
                 Name: r.Name,
@@ -43,40 +45,41 @@ public class ListRecipesHandler : EventHandlerAbstract<ListRecipesRequest, IItem
                     .Select(i => new ListRecipesResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
                     .OrderBy(i => i.Order),
                 Image: r.DefaultImage?.FileName))
-            .ToItemSet(paginationOptions, totalCount)
+            .ToItemSet(paginationOptions, recipes.TotalCount)
             .Map(Ok);
     }
 
-    private async Task<IReadOnlyList<Recipe>> GetRecipes(ListRecipesRequest request, PaginationOptions paginationOptions, List<Expression<Func<Recipe, bool>>> searchCriteria, RecipesSearchSpecification allSearch, CancellationToken cancellationToken)
+    private async Task<IItemSet<Recipe>> GetRecipes(ListRecipesRequest request, PaginationOptions paginationOptions, RecipesSearchSpecification pagedSearch, CancellationToken cancellationToken)
     {
         if (string.Equals(request.SortBy, "RANDOM", StringComparison.OrdinalIgnoreCase))
         {
             // Due to a bug in EF with random sorts, we will get a list of IDs without using Includes.
+            // We will also discard pagination until we can cache what items have been pulled.
             var randomIds = await _dbContext.Recipes
                 .TagWith($"EF query called from: {nameof(ListRecipesHandler)}.{nameof(GetRecipes)}")
-                .ApplyEfSpecification(allSearch)
-                .GetPage(paginationOptions)
+                .ApplyEfSpecification(pagedSearch, countAll: true)
+                .Take(paginationOptions.Take)
                 .OrderBy(_ => Guid.NewGuid())
                 .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
 
             // Get the hydrated items by ID.
-            var randomPagedSearch = new RecipesSearchSpecification(
+            var randomIdSearch = new RecipesSearchSpecification(
                 criteria: [x => randomIds.Contains(x.Id)],
                 paginationOptions: PaginationOptions.None);
 
+            var recipes = await _data.Recipes.ListPage(randomIdSearch, cancellationToken);
+
+            // Always use page 1 of 1 for random sorts.
+            var randomPaginationOptions = new PaginationOptions(1, paginationOptions.Take);
+
             // Order by our random IDs
-            return (await _data.Recipes.List(randomPagedSearch, cancellationToken))
+            return recipes.Items
                 .OrderBy(x => randomIds.IndexOf(x.Id))
-                .ToList();
+                .ToItemSet(randomPaginationOptions, recipes.TotalCount);
         }
 
-        var pagedSearch = new RecipesSearchSpecification(
-            criteria: searchCriteria.ToArray(),
-            paginationOptions: paginationOptions,
-            sortBy: request.SortBy);
-
-        return await _data.Recipes.List(pagedSearch, cancellationToken);
+        return await _data.Recipes.ListPage(pagedSearch, cancellationToken);
     }
 
     private static List<Expression<Func<Recipe, bool>>> GetSearchCriteria(ListRecipesRequest request)

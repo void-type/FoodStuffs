@@ -5,7 +5,7 @@ import { toInt, toNumber } from '@/models/FormatHelpers';
 import ListRecipesRequest from '@/models/ListRecipesRequest';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { watch, type PropType } from 'vue';
+import { watch, type PropType, ref, onMounted } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
@@ -13,6 +13,8 @@ import RecipeSearchCard from '@/components/RecipeSearchCard.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
+import type { ListCategoriesResponse } from '@/api/data-contracts';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
   query: {
@@ -29,6 +31,8 @@ const api = ApiHelpers.client;
 
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelpers;
+
+const categoryOptions = ref([] as Array<ListCategoriesResponse>);
 
 function navigateSearch() {
   router.push({
@@ -95,6 +99,15 @@ function fetchList() {
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
+onMounted(() => {
+  api()
+    .categoriesList({ isPagingEnabled: false })
+    .then((response) => {
+      categoryOptions.value = response.data.items || [];
+    })
+    .catch((response) => messageStore.setApiFailureMessages(response));
+});
+
 watch(
   props,
   () => {
@@ -127,9 +140,19 @@ watch(
                 <input
                   id="categorySearch"
                   v-model="listRequest.category"
+                  list="categoryAutocomplete"
                   class="form-control"
                   @keydown.stop.prevent.enter="startSearch"
                 />
+                <datalist id="categoryAutocomplete">
+                  <option
+                    v-for="categoryOption in categoryOptions"
+                    :key="categoryOption.id"
+                    :value="categoryOption.name"
+                  >
+                    {{ categoryOption.name }}
+                  </option>
+                </datalist>
               </div>
               <div class="g-col-6 g-col-md-4">
                 <label class="form-label" for="isForMealPlanning">Meals</label>

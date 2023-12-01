@@ -11,11 +11,13 @@
 
 import type {
   AppVersion,
+  CategoriesListParams,
   GetMealSetResponse,
   GetRecipeResponse,
   IFailureIItemSet,
   ImagesCreateParams,
   Int32EntityMessage,
+  ListCategoriesResponseIItemSet,
   ListMealSetsResponseIItemSet,
   ListRecipesResponseIItemSet,
   MealSetsListParams,
@@ -57,6 +59,24 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<AppVersion, any>({
       path: `/api/app/version`,
       method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Categories
+   * @name CategoriesList
+   * @summary Search for meal sets using the following criteria. All are optional and some have defaults.
+   * @request GET:/api/categories
+   * @response `200` `ListCategoriesResponseIItemSet` Success
+   * @response `400` `IFailureIItemSet` Bad Request
+   */
+  categoriesList = (query: CategoriesListParams, params: RequestParams = {}) =>
+    this.request<ListCategoriesResponseIItemSet, IFailureIItemSet>({
+      path: `/api/categories`,
+      method: 'GET',
+      query: query,
       format: 'json',
       ...params,
     });

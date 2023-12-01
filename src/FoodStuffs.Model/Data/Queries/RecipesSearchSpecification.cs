@@ -15,7 +15,7 @@ public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
     {
         ApplyPaging(paginationOptions);
 
-        // TODO: ensure query spitting
+        // TODO: ensure query splitting
         AddInclude(nameof(Recipe.Categories));
         AddInclude(nameof(Recipe.Images));
         AddInclude(nameof(Recipe.Ingredients));
