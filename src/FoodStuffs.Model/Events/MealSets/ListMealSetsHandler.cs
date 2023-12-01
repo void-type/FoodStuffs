@@ -17,7 +17,7 @@ public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IIt
         _data = data;
     }
 
-    public override async Task<IResult<IItemSet<ListMealSetsResponse>>> Handle(ListMealSetsRequest request, CancellationToken cancellationToken = default)
+    public override Task<IResult<IItemSet<ListMealSetsResponse>>> Handle(ListMealSetsRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
@@ -27,15 +27,11 @@ public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IIt
             criteria: searchCriteria,
             paginationOptions: paginationOptions);
 
-        var mealSets = await _data.MealSets.ListPage(pagedSearch, cancellationToken);
-
-        return mealSets
-            .Items
-            .Select(ms => new ListMealSetsResponse(
+        return _data.MealSets.ListPage(pagedSearch, cancellationToken)
+            .SelectAsync(ms => new ListMealSetsResponse(
                 Id: ms.Id,
                 Name: ms.Name))
-            .ToItemSet(paginationOptions, mealSets.TotalCount)
-            .Map(Ok);
+            .MapAsync(Ok);
     }
 
     private static Expression<Func<MealSet, bool>>[] GetSearchCriteria(ListMealSetsRequest request)

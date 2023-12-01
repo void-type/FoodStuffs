@@ -17,7 +17,7 @@ public class ListCategoriesHandler : EventHandlerAbstract<ListCategoriesRequest,
         _data = data;
     }
 
-    public override async Task<IResult<IItemSet<ListCategoriesResponse>>> Handle(ListCategoriesRequest request, CancellationToken cancellationToken = default)
+    public override Task<IResult<IItemSet<ListCategoriesResponse>>> Handle(ListCategoriesRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
@@ -27,15 +27,11 @@ public class ListCategoriesHandler : EventHandlerAbstract<ListCategoriesRequest,
             criteria: searchCriteria,
             paginationOptions: paginationOptions);
 
-        var categories = await _data.Categories.ListPage(pagedSearch, cancellationToken);
-
-        return categories
-            .Items
-            .Select(ms => new ListCategoriesResponse(
+        return _data.Categories.ListPage(pagedSearch, cancellationToken)
+            .SelectAsync(ms => new ListCategoriesResponse(
                 Id: ms.Id,
                 Name: ms.Name))
-            .ToItemSet(paginationOptions, categories.TotalCount)
-            .Map(Ok);
+            .MapAsync(Ok);
     }
 
     private static Expression<Func<Category, bool>>[] GetSearchCriteria(ListCategoriesRequest request)

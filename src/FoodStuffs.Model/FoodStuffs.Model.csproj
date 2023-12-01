@@ -5,10 +5,8 @@
   <ItemGroup>
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-    <PackageReference Include="VoidCore.EntityFramework" Version="12.1.1" />
-    <PackageReference Include="VoidCore.Model" Version="12.1.1" />
+    <!-- <PackageReference Include="VoidCore.EntityFramework" Version="12.1.2-gcb2f9ea608" /> -->
 
-    <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.Model\VoidCore.Model.csproj" /> -->
+    <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" />
   </ItemGroup>
 </Project>

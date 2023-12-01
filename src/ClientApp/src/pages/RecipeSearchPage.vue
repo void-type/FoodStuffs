@@ -14,7 +14,6 @@ import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import type { ListCategoriesResponse } from '@/api/data-contracts';
-import { faL } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
   query: {
