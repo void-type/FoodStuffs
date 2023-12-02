@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import WorkingRecipe from '@/models/WorkingRecipe';
 import type { GetRecipeResponse } from '@/api/data-contracts';
-import { trimAndTitleCase } from '@/models/FormatHelpers';
-import { computed, reactive, watch, type PropType } from 'vue';
+import { isNil, trimAndTitleCase } from '@/models/FormatHelpers';
+import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import ApiHelpers from '@/models/ApiHelpers';
+import useMessageStore from '@/stores/messageStore';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
@@ -41,9 +43,13 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const messageStore = useMessageStore();
+const api = ApiHelpers.client;
 
 // This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
 let workingRecipeInitial = '';
+
+const categoryOptions = ref([] as Array<string>);
 
 const data = reactive({
   workingRecipe: new WorkingRecipe(),
@@ -120,6 +126,16 @@ const isRecipeDirty = computed(() => JSON.stringify(data.workingRecipe) !== work
 
 watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);
+});
+
+onMounted(() => {
+  api()
+    .categoriesList({ isPagingEnabled: false })
+    .then((response) => {
+      categoryOptions.value =
+        response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+    })
+    .catch((response) => messageStore.setApiFailureMessages(response));
 });
 </script>
 
@@ -205,6 +221,7 @@ watch(isRecipeDirty, () => {
           :tags="data.workingRecipe.categories || []"
           :on-add-tag="addCategory"
           :on-remove-tag="removeCategory"
+          :suggestions="categoryOptions"
           field-name="categories"
           label="Categories"
         />

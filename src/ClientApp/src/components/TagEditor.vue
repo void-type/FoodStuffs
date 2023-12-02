@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 
 const props = defineProps({
   label: {
@@ -22,12 +22,21 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  suggestions: {
+    type: Array as PropType<Array<string>>,
+    required: false,
+    default: () => [],
+  },
 });
 
 let newTag = '';
 
-function addTagClick() {
-  props.onAddTag(newTag);
+const availableSuggestions = computed(() =>
+  props.suggestions.filter((x) => !props.tags.includes(x))
+);
+
+function addTagClick(tag: string) {
+  props.onAddTag(tag);
   newTag = '';
 }
 
@@ -44,11 +53,17 @@ function removeTagClick(tag: string) {
         :id="fieldName"
         v-model="newTag"
         :name="fieldName"
+        list="tagSuggestions"
         class="form-control"
         :disabled="false"
-        @keydown.stop.prevent.enter="addTagClick()"
+        @keydown.stop.prevent.enter="addTagClick(newTag)"
       />
-      <button class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick()">
+      <datalist id="tagSuggestions">
+        <option v-for="suggestion in availableSuggestions" :key="suggestion" :value="suggestion">
+          {{ suggestion }}
+        </option>
+      </datalist>
+      <button class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick(newTag)">
         Add
       </button>
     </div>
