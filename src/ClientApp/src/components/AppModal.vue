@@ -56,6 +56,7 @@ watch(modalIsActive, (isActive) => {
       tabindex="-1"
       aria-labelledby="app-modal-title"
       aria-hidden="true"
+      @keydown.esc.prevent.stop="cancelAction()"
     >
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">

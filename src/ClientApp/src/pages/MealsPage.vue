@@ -13,7 +13,10 @@ import useMessageStore from '@/stores/messageStore';
 import type { ListCategoriesResponse, SaveMealSetRequest } from '@/api/data-contracts';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import type { HttpResponse } from '@/api/http-client';
+import type { ModalParameters } from '@/models/ModalParameters';
+import useAppStore from '@/stores/appStore';
 
+const appStore = useAppStore();
 const mealStore = useMealStore();
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
@@ -145,25 +148,35 @@ async function saveMealSet() {
   }
 }
 
-async function deleteMealSet() {
-  const { id } = currentMealSet.value;
+async function onDeleteMealSet() {
+  async function deleteMealSet() {
+    const { id } = currentMealSet.value;
 
-  if (!id) {
-    return;
-  }
-
-  try {
-    const response = await api().mealSetsDelete(id);
-
-    if (response.data.message) {
-      messageStore.setSuccessMessage(response.data.message);
+    if (!id) {
+      return;
     }
 
-    await fetchMealSetList();
-    await changeMealSetIndex(mealStore.mealSetListIndex - 1);
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    try {
+      const response = await api().mealSetsDelete(id);
+
+      if (response.data.message) {
+        messageStore.setSuccessMessage(response.data.message);
+      }
+
+      await fetchMealSetList();
+      await changeMealSetIndex(mealStore.mealSetListIndex - 1);
+    } catch (error) {
+      messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    }
   }
+
+  const parameters: ModalParameters = {
+    title: 'Delete meal set',
+    description: 'Do you really want to delete this meal set?',
+    okAction: deleteMealSet,
+  };
+
+  appStore.showModal(parameters);
 }
 
 async function changeRecipeSort(event: Event) {
@@ -227,7 +240,7 @@ onMounted(async () => {
               <button
                 class="btn btn-danger ms-auto"
                 :disabled="(currentMealSet.id || 0) < 1"
-                @click.stop.prevent="deleteMealSet"
+                @click.stop.prevent="onDeleteMealSet"
               >
                 Delete
               </button>
