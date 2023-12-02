@@ -6,6 +6,7 @@ import {
   onBeforeRouteUpdate,
   useRouter,
   type NavigationGuardNext,
+  type RouteLocationNormalized,
 } from 'vue-router';
 import type {
   GetRecipeResponse,
@@ -19,7 +20,6 @@ import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
-import AppModal from '@/components/AppModal.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
 import type { ModalParameters } from '@/models/ModalParameters';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -261,28 +261,41 @@ function onImagePin(name: string) {
     });
 }
 
-function beforeRouteChange(next: NavigationGuardNext) {
-  function changeRoute() {
-    recipeStore.addToRecent(data.sourceRecipe);
-    next();
-  }
+let forceImmediateRouteChange = false;
 
-  function cancelRouteChange() {
-    next(false);
+function changeRouteFromModal(t: RouteLocationNormalized) {
+  recipeStore.addToRecent(data.sourceRecipe);
+  forceImmediateRouteChange = true;
+  router.push(t).then(() => {
+    forceImmediateRouteChange = false;
+  });
+}
+
+function beforeRouteChange(
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) {
+  if (forceImmediateRouteChange) {
+    next();
+    return;
   }
 
   if (data.isRecipeDirty) {
     const parameters: ModalParameters = {
       title: 'Unsaved changes',
       description: 'You have unsaved changes. Do you really want to leave?',
-      okAction: changeRoute,
-      cancelAction: cancelRouteChange,
+      okAction: () => changeRouteFromModal(to),
     };
 
+    next(false);
     appStore.showModal(parameters);
-  } else {
-    changeRoute();
+    return;
   }
+
+  recipeStore.addToRecent(data.sourceRecipe);
+  changeRouteFromModal(to);
+  next();
 }
 
 watch(
@@ -294,11 +307,11 @@ watch(
 );
 
 onBeforeRouteUpdate(async (to, from, next) => {
-  await beforeRouteChange(next);
+  await beforeRouteChange(to, from, next);
 });
 
 onBeforeRouteLeave(async (to, from, next) => {
-  await beforeRouteChange(next);
+  await beforeRouteChange(to, from, next);
 });
 </script>
 
@@ -336,7 +349,6 @@ onBeforeRouteLeave(async (to, from, next) => {
       </div>
     </div>
   </div>
-  <AppModal ref="recipe-edit-modal" />
 </template>
 
 <style lang="scss" scoped></style>
