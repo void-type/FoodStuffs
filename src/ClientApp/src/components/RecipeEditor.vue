@@ -149,7 +149,7 @@ onMounted(() => {
         <button
           v-if="isEditMode"
           type="button"
-          class="btn btn-secondary me-2"
+          class="btn btn-outline-light me-2"
           @click.stop.prevent="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
         >
           Copy
@@ -157,7 +157,7 @@ onMounted(() => {
         <button
           v-if="isEditMode"
           type="button"
-          class="btn btn-secondary me-2"
+          class="btn btn-outline-light me-2"
           @click.stop.prevent="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
         >
           Cancel
@@ -246,7 +246,7 @@ onMounted(() => {
         <button
           v-if="isEditMode"
           type="button"
-          class="btn btn-secondary me-2"
+          class="btn btn-outline-light me-2"
           @click.stop.prevent="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
         >
           Copy
@@ -254,7 +254,7 @@ onMounted(() => {
         <button
           v-if="isEditMode"
           type="button"
-          class="btn btn-secondary me-2"
+          class="btn btn-outline-light me-2"
           @click.stop.prevent="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
         >
           Cancel

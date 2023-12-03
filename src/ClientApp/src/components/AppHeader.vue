@@ -16,7 +16,7 @@ const searchText = ref('');
 <template>
   <header id="header" class="navbar navbar-expand-md navbar-dark bg-primary shadow">
     <nav class="container-xxl">
-      <router-link :to="{ name: 'home' }" class="navbar-brand text-secondary">
+      <router-link :to="{ name: 'home' }" class="navbar-brand text-light">
         <img
           :src="logoSvg"
           alt="logo"

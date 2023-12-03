@@ -36,13 +36,13 @@ a.btn,
   min-width: 5rem;
 }
 
-// Bootstrap hide nav-link focus ring
+// Bootstrap hides nav-link focus ring
 .nav-link:focus-visible {
   outline: auto;
 }
 
 footer {
-  border-top: var(--bs-gray-500) 1px solid;
+  border-top: var(--bs-border-width) solid var(--bs-border-color);
 }
 
 .card {
@@ -85,19 +85,22 @@ footer {
   }
 }
 
-body.bg-dark {
-  --bs-link-color: #{lighten($primary, 20%)};
-  --bs-link-hover-color: #{lighten($primary, 10%)};
-  --bs-border-color: var(--bs-gray-800);
+.btn-outline-light {
+  color: var(--bs-text);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
 
-  .text-muted,
-  .form-control::placeholder {
-    --bs-text-opacity: 1;
-    color: var(--bs-gray-600) !important;
-  }
+.navbar .btn-outline-light,
+.navbar-toggler {
+  color: var(--bs-text);
+  border: var(--bs-border-width) solid var(--bs-gray-600);
+}
 
-  .page-link.active,
-  .active > .page-link {
+html[data-bs-theme='dark'] {
+  --bs-body-bg: #{$dark};
+
+  // Pagination active link
+  .page-item.active > .page-link {
     border-color: unset;
   }
 
@@ -126,59 +129,17 @@ body.bg-dark {
     }
   }
 
-  .form-control,
-  .form-select,
-  .dropdown-menu {
-    background-color: var(--bs-dark);
-    color: var(--bs-white);
-  }
-
-  .dropdown-item {
-    color: var(--bs-white);
-
-    &:hover {
-      background-color: var(--bs-gray-800);
-    }
-  }
-
-  .modal-content {
-    background-color: var(--bs-dark);
-    color: var(--bs-light);
-
-    .modal-header .btn-close {
-      --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23e6e6e6'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
-    }
-  }
-
   .pagination {
-    --bs-pagination-color: unset;
     --bs-pagination-bg: unset;
     --bs-pagination-disabled-bg: unset;
-    --bs-pagination-disabled-border-color: unset;
   }
 
   .accordion,
+  .accordion-button::after,
   .card {
-    --bs-accordion-color: unset;
-    --bs-accordion-bg: unset;
-    --bs-accordion-btn-color: var(--bs-white);
-    --bs-accordion-active-color: var(--bs-white);
     --bs-accordion-active-bg: var(--bs-gray-800);
     --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
     --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-  }
-
-  .form-check:not(.form-switch) .form-check-input {
-    background-color: var(--bs-dark);
-    border-color: var(--bs-light);
-
-    &:checked {
-      background-color: var(--bs-primary);
-    }
-  }
-
-  footer {
-    border-top: var(--bs-gray-800) 1px solid;
   }
 }
 

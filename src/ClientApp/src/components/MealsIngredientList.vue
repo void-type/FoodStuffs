@@ -39,7 +39,7 @@ function copyList() {
         <button
           v-if="onClear !== null"
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-outline-light"
           @click.stop.prevent="clear()"
         >
           Clear
@@ -47,7 +47,7 @@ function copyList() {
         <div v-if="showCopyList" class="copy-tooltip">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-outline-light"
             :title="data.copyTooltipText"
             @click.stop.prevent="copyList()"
             @mouseout="data.copyTooltipText = defaultCopyTooltip"

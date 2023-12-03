@@ -63,7 +63,7 @@ function removeTagClick(tag: string) {
           {{ suggestion }}
         </option>
       </datalist>
-      <button class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick(newTag)">
+      <button class="btn btn-outline-light" type="button" @click.stop.prevent="addTagClick(newTag)">
         Add
       </button>
     </div>
@@ -72,7 +72,7 @@ function removeTagClick(tag: string) {
         v-for="tag in tags"
         :key="tag"
         type="button"
-        class="btn btn-sm btn-secondary me-2 mb-2"
+        class="btn btn-sm btn-light me-2 mb-2"
         @click.stop.prevent="removeTagClick(tag)"
       >
         {{ tag }}

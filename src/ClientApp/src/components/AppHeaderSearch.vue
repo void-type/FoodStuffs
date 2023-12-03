@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { isNil } from '@/models/FormatHelpers';
 import { defineModel } from 'vue';
 import useRecipeStore from '@/stores/recipeStore';
 import router from '@/router';
@@ -39,10 +38,9 @@ function initSearch() {
         @keydown.enter.stop.prevent="initSearch"
       />
       <button
-        class="btn btn-outline-secondary nav-search-button"
+        class="btn btn-outline-light nav-search-button text-light bg-primary"
         type="button"
         aria-label="Search"
-        :disabled="isNil(searchText)"
         @click.stop.prevent="initSearch"
       >
         <font-awesome-icon icon="fa-search" aria-label="view recipe" />

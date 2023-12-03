@@ -18,16 +18,12 @@ export default class DarkModeHelpers {
   static setDarkMode(setting: boolean) {
     localStorage.setItem(settingKeyEnableDarkMode, setting.toString());
 
-    const { body } = document;
+    const html = document.documentElement;
 
     if (setting) {
-      body.classList.add('bg-dark');
-      body.classList.add('text-light');
-      body.classList.remove('text-dark');
+      html.setAttribute('data-bs-theme', 'dark');
     } else {
-      body.classList.remove('bg-dark');
-      body.classList.remove('text-light');
-      body.classList.add('text-dark');
+      html.removeAttribute('data-bs-theme');
     }
   }
 }

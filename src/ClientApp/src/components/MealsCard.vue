@@ -90,7 +90,7 @@ function cardClickInternal() {
 </template>
 
 <style lang="scss" scoped>
-body.bg-dark .card.card--selected {
+html[data-bs-theme='dark'] .card.card--selected {
   color: var(--bs-gray-700);
 }
 

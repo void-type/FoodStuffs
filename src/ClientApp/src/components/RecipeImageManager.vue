@@ -218,7 +218,7 @@ onMounted(() => {
               <button
                 v-if="images.length > 0 && imageName != pinnedImage"
                 type="button"
-                class="btn btn-secondary btn-sm image-button image-button-pin d-print-none"
+                class="btn btn-light btn-sm image-button image-button-pin d-print-none"
                 title="Pin image"
                 @click.stop.prevent="pinImageClick(imageName)"
               >
