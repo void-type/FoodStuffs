@@ -124,6 +124,8 @@ onMounted(() => {
                 :src="ApiHelpers.imageUrl(imageName)"
                 :alt="`image ${i} of ${recipe.name}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
+                width="1600"
+                height="1200"
               />
             </div>
           </div>

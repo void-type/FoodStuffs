@@ -25,6 +25,8 @@ defineProps({
             :src="ApiHelpers.imageUrl(recipe.image)"
             :alt="`Image of ${recipe.name}`"
             loading="lazy"
+            width="1600"
+            height="1200"
           />
           <ImagePlaceholder v-else class="img-fluid rounded-start" width="100%" height="100%" />
         </div>

@@ -55,6 +55,8 @@ onMounted(() => {
               :src="imageUrl(recipe.image)"
               :alt="`Image of ${recipe.name}`"
               :loading="i > 5 ? 'lazy' : 'eager'"
+              width="1600"
+              height="1200"
             />
             <ImagePlaceholder v-else class="img-fluid rounded-bottom" width="100%" />
           </router-link>
