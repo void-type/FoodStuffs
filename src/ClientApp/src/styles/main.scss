@@ -41,10 +41,6 @@ a.btn,
   outline: auto;
 }
 
-footer {
-  border-top: var(--bs-border-width) solid var(--bs-border-color);
-}
-
 .card {
   --bs-accordion-btn-icon-width: #{$accordion-icon-width};
   --bs-accordion-btn-icon: #{escape-svg($accordion-button-icon)};
