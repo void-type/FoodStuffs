@@ -119,14 +119,16 @@ onMounted(() => {
               :key="imageName"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
-              <img
-                class="img-fluid rounded"
-                :src="ApiHelpers.imageUrl(imageName)"
-                :alt="`image ${i} of ${recipe.name}`"
-                :loading="i > 0 ? 'lazy' : 'eager'"
-                width="1600"
-                height="1200"
-              />
+              <div class="image-wrapper">
+                <img
+                  class="img-fluid rounded"
+                  :src="ApiHelpers.imageUrl(imageName)"
+                  :alt="`image ${i} of ${recipe.name}`"
+                  :loading="i > 0 ? 'lazy' : 'eager'"
+                  width="1600"
+                  height="1200"
+                />
+              </div>
             </div>
           </div>
           <button
@@ -148,7 +150,9 @@ onMounted(() => {
             <span class="visually-hidden">Next image</span>
           </button>
         </div>
-        <ImagePlaceholder v-else class="rounded" />
+        <div class="img-placeholder-wrapper m-auto" v-else>
+          <ImagePlaceholder class="img-fluid rounded" />
+        </div>
       </div>
     </div>
     <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
@@ -195,7 +199,8 @@ div.form-control-plaintext {
   white-space: pre-wrap;
 }
 
-div.carousel-item img {
-  max-height: 20rem;
+div.carousel-item img,
+.img-placeholder-wrapper {
+  max-width: 27rem;
 }
 </style>

@@ -58,7 +58,7 @@ onMounted(() => {
               width="1600"
               height="1200"
             />
-            <ImagePlaceholder v-else class="img-fluid rounded-bottom" width="100%" />
+            <ImagePlaceholder v-else class="img-fluid rounded-bottom" />
           </router-link>
         </div>
       </div>

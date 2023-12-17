@@ -37,7 +37,7 @@ function cardClickInternal() {
             width="1600"
             height="1200"
           />
-          <ImagePlaceholder v-else class="img-fluid rounded-start" width="100%" height="100%" />
+          <ImagePlaceholder v-else class="img-fluid rounded-start" />
         </div>
         <div class="g-col-8">
           <div class="card-body">

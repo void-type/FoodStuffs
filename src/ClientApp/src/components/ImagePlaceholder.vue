@@ -5,32 +5,21 @@ defineProps({
     required: false,
     default: 'No image',
   },
-  height: {
-    type: String,
-    required: false,
-    default: '16rem',
-  },
-  width: {
-    type: String,
-    required: false,
-    default: '20rem',
-  },
 });
 </script>
 
 <template>
-  <div class="img-placeholder d-print-none">
+  <div class="img-placeholder d-print-none m-auto">
     <div class="text-muted">{{ text }}</div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .img-placeholder {
-  height: v-bind(height);
+  padding-top: calc((75% / 2) - (1.5rem / 2));
+  padding-bottom: calc((75% / 2) - (1.5rem / 2));
   width: 100%;
-  max-width: v-bind(width);
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 100%;
   align-items: center;
   justify-content: center;
   background-color: inherit;

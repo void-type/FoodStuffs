@@ -264,17 +264,13 @@ onMounted(() => {
             <span class="visually-hidden">Next image</span>
           </button>
         </div>
-        <ImagePlaceholder v-else class="rounded" />
+        <ImagePlaceholder v-else class="img-fluid rounded" />
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-div.carousel-item img {
-  max-height: 16rem;
-}
-
 .image-button {
   position: absolute;
   top: 0;
