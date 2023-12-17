@@ -150,7 +150,7 @@ onMounted(() => {
             <span class="visually-hidden">Next image</span>
           </button>
         </div>
-        <div class="img-placeholder-wrapper m-auto" v-else>
+        <div v-else class="img-placeholder-wrapper m-auto">
           <ImagePlaceholder class="img-fluid rounded" />
         </div>
       </div>
