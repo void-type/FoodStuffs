@@ -51,7 +51,7 @@ onMounted(() => {
             </div>
             <img
               v-if="recipe.image != null"
-              class="img-fluid rounded-bottom w-auto"
+              class="img-fluid rounded-bottom"
               :src="imageUrl(recipe.image)"
               :alt="`Image of ${recipe.name}`"
               :loading="i > 5 ? 'lazy' : 'eager'"
