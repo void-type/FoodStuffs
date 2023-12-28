@@ -167,7 +167,7 @@ export default defineStore('meals', {
 
     newMealSet() {
       this.currentMealSet = new GetMealSetResponseClass();
-      this.currentMealSet.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDay(1));
+      this.currentMealSet.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDayOfWeek(1));
       this.mealSetListIndex = -1;
     },
   },

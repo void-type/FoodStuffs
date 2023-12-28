@@ -1,40 +1,23 @@
-import moment from 'moment';
-
-function getFormattedMoment(value: Date | string, formatString: string) {
-  const instant = moment(value);
-
-  if (instant.isValid() === false) {
-    return null;
-  }
-
-  return instant.format(formatString);
-}
-
-const formatStrings = {
-  apiDate: 'YYYY-MM-DD',
-  apiDateTime: 'YYYY-MM-DDTHH:mm:ss',
-  viewDate: 'L',
-  viewDateTime: 'L LT',
-};
+import { format, formatISO } from 'date-fns';
 
 export default class DateHelpers {
   static dateForApi(value: Date) {
-    return getFormattedMoment(value, formatStrings.apiDate);
+    return formatISO(value as Date, { representation: 'date' });
   }
 
   static dateTimeForApi(value: Date) {
-    return getFormattedMoment(value, formatStrings.apiDateTime);
+    return formatISO(value);
   }
 
   static dateForView(value: Date) {
-    return getFormattedMoment(value, formatStrings.viewDate);
+    return format(value as Date, 'P');
   }
 
   static dateTimeForView(value: Date) {
-    return getFormattedMoment(value, formatStrings.viewDateTime);
+    return format(value as Date, 'P p');
   }
 
-  static getThisOrNextDay(day: number) {
+  static getThisOrNextDayOfWeek(day: number) {
     const d = new Date();
 
     while (d.getDay() !== day) {
