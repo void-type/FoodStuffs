@@ -3,6 +3,7 @@
     <!-- Generate documentation for Swagger/Swashbuckle and dismiss warning about undocumented public APIs -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <UserSecretsId>284ce2f6-8580-4d7a-a172-e88457b1b351</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
