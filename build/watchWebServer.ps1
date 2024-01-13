@@ -1,3 +1,10 @@
+[CmdletBinding()]
+param (
+  [Parameter()]
+  [switch]
+  $DisableVueDevServer
+)
+
 $originalLocation = Get-Location
 $projectRoot = "$PSScriptRoot/../"
 
@@ -7,7 +14,7 @@ try {
 
   Set-Location $webProjectFolder
 
-  dotnet watch
+  dotnet watch -- /DisableVueDevServer=$DisableVueDevServer
 
 } finally {
   Set-Location $originalLocation

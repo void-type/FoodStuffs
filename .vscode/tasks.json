@@ -3,194 +3,228 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "build",
-            "command": "./build.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact",
-                "$msCompile"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "build"
-            }
+      {
+        "label": "build",
+        "command": "./build.ps1",
+        "options": {
+          "cwd": "./build"
         },
-        {
-            "label": "build-debug-web",
-            "command": "dotnet",
-            "args": ["build"],
-            "options": {
-                "cwd": "./src/FoodStuffs.Web/"
-            },
-            "type": "shell",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "build"
-            }
+        "type": "shell",
+        "group": {
+          "kind": "build",
+          "isDefault": true
         },
-        {
-            "label": "format",
-            "command": "./format.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "build"
-            }
-        },
-        {
-            "label": "update-dependencies",
-            "command": "./updateDependencies.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "build"
-            }
-        },
-        {
-            "label": "generate-api-client",
-            "command": "./generateApiClient.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "build"
-            }
-        },
-        {
-            "label": "test-server",
-            "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipClient -SkipPublish",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": "$msCompile",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "build"
-            }
-        },
-        {
-            "label": "watch-test-server",
-            "command": "./watchTestServer.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": "$msCompile",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "watch"
-            }
-        },
-        {
-            "label": "watch-web-client",
-            "command": "./watchWebClient.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": [
-                "$node-sass",
-                "$eslint-compact"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "watch"
-            }
-        },
-        {
-            "label": "watch-web-server",
-            "command": "./watchWebServer.ps1",
-            "options": {
-                "cwd": "./build"
-            },
-            "type": "shell",
-            "problemMatcher": [
-                "$msCompile"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false,
-                "group": "watch"
-            }
-        },
-        {
-            "label": "watch-web",
-            "dependsOn": ["watch-web-client", "watch-web-server"],
-            "problemMatcher": []
+        "problemMatcher": ["$node-sass", "$eslint-compact", "$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "build"
         }
+      },
+      {
+        "label": "build-debug-web",
+        "command": "dotnet",
+        "args": ["build"],
+        "options": {
+          "cwd": "./src/FoodStuffs.Web/"
+        },
+        "type": "shell",
+        "problemMatcher": ["$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "build"
+        },
+        "hide": true
+      },
+      {
+        "label": "format",
+        "command": "./format.ps1",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$node-sass", "$eslint-compact", "$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "build"
+        }
+      },
+      {
+        "label": "update-dependencies",
+        "command": "./updateDependencies.ps1",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "build"
+        }
+      },
+      {
+        "label": "generate-api-client",
+        "command": "./generateApiClient.ps1",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "build"
+        }
+      },
+      {
+        "label": "test-server",
+        "command": "./build.ps1 -Configuration Debug -SkipFormat -SkipOutdated -SkipClient -SkipPublish",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "build"
+        }
+      },
+      {
+        "label": "watch-test-server",
+        "command": "./watchTestServer.ps1",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "watch"
+        }
+      },
+      {
+        "label": "watch-web-client",
+        "command": "./watchWebClient.ps1",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$node-sass", "$eslint-compact"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "watch"
+        },
+        "hide": true
+      },
+      {
+        "label": "watch-web-server",
+        "command": "./watchWebServer.ps1",
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "watch"
+        },
+        "hide": true
+      },
+      {
+        "label": "watch-web",
+        "dependsOn": ["watch-web-client", "watch-web-server"],
+        "problemMatcher": []
+      },
+      {
+        "label": "watch-web-client-with-build",
+        "command": "./watchWebClient.ps1",
+        "args": ["-DisableVueDevServer"],
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$node-sass", "$eslint-compact"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "watch"
+        },
+        "hide": true
+      },
+      {
+        "label": "watch-web-server-with-client-build",
+        "command": "./watchWebServer.ps1",
+        "args": ["-DisableVueDevServer"],
+        "options": {
+          "cwd": "./build"
+        },
+        "type": "shell",
+        "problemMatcher": ["$msCompile"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": true,
+          "clear": false,
+          "group": "watch"
+        },
+        "hide": true
+      },
+      {
+        "label": "watch-web-with-client-build",
+        "dependsOn": [
+          "watch-web-client-with-build",
+          "watch-web-server-with-client-build"
+        ],
+        "problemMatcher": []
+      }
     ]
-}
+  }

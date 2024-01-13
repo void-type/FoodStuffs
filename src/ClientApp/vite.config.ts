@@ -63,7 +63,7 @@ export default defineConfig(async ({ command, mode }) => {
     build: {
       manifest: true,
       rollupOptions: {
-        input: ['./src/main.ts', './src/styles/main.scss'],
+        input: ['./src/main.ts', './src/styles/styles-main.scss'],
       },
       outDir: '../FoodStuffs.Web/wwwroot',
       emptyOutDir: true,
