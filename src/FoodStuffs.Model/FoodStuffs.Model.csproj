@@ -4,7 +4,7 @@
 
   <ItemGroup>
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
     <PackageReference Include="VoidCore.EntityFramework" Version="12.1.2" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.EntityFramework\VoidCore.EntityFramework.csproj" /> -->
