@@ -7,7 +7,7 @@
 
 A web application for managing recipes.
 
-FoodStuffs is based on ASP.NET Core 7 and Vue 3.
+FoodStuffs is based on ASP.NET Core and Vue.
 
 This application demonstrates the [VoidCore](https://github.com/void-type/VoidCore) libraries.
 
