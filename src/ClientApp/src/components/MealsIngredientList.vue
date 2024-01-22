@@ -23,7 +23,7 @@ function clear() {
 }
 
 function copyList() {
-  // TODO: this doesn't paste as multiple items from firefox (chrome works)
+  // This doesn't paste as multiple items from firefox (chrome works)
   const text = props.ingredients.map((x) => `${x.quantity}x ${x.name}`).join(`\n`);
 
   navigator.clipboard.writeText(text);

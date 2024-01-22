@@ -2,10 +2,10 @@ import type { RecipesListParams } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import RecipeStoreHelpers from './RecipeStoreHelpers';
 
-export default class ListRecipesRequest implements RecipesListParams {
+export default class SearchRecipesRequest implements RecipesListParams {
   public name = '';
 
-  public category = '';
+  public categories = [];
 
   public isForMealPlanning = null;
 

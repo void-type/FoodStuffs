@@ -4,11 +4,30 @@ import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import useAppStore from '@/stores/appStore';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import useMessageStore from '@/stores/messageStore';
+import ApiHelpers from '@/models/ApiHelpers';
 import AppHeaderSearch from './AppHeaderSearch.vue';
 
 const appStore = useAppStore();
+const messageStore = useMessageStore();
 const { applicationName, user, useDarkMode } = storeToRefs(appStore);
 const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
+
+const api = ApiHelpers.client;
+
+const isRebuilding = ref(false);
+
+async function rebuildSearch() {
+  isRebuilding.value = true;
+
+  const response = await api().recipesRebuildIndexCreate();
+
+  isRebuilding.value = false;
+
+  if (response.data.message) {
+    messageStore.setSuccessMessage(response.data.message);
+  }
+}
 
 const searchText = ref('');
 </script>
@@ -55,6 +74,15 @@ const searchText = ref('');
             >
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li class="dropdown-item">Roles: {{ userRoles }}</li>
+              <li class="dropdown-item">
+                <button
+                  class="btn btn-outline-light"
+                  :disabled="isRebuilding"
+                  @click.stop.prevent="rebuildSearch"
+                >
+                  {{ isRebuilding ? 'Rebuilding...' : 'Rebuild index' }}
+                </button>
+              </li>
               <li class="dropdown-item">
                 <div class="form-check form-switch" title="Use dark mode">
                   <label

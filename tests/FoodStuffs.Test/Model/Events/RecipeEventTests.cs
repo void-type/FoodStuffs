@@ -1,6 +1,10 @@
 ﻿using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using VoidCore.Model.Time;
 using Xunit;
 
 namespace FoodStuffs.Test.Model.Events;
@@ -37,154 +41,32 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task ListRecipes_returns_a_page_of_recipes()
+    public async Task SearchRecipes_returns_a_page_of_recipes()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, null, null, null, true, 2, 1));
+        var logger = Substitute.For<ILogger<RecipeIndexService>>();
+
+        var settings = new RecipeSearchSettings
+        {
+            IndexFolder = "App_Data/Lucene/RecipeIndex",
+            TaxonomyFolder = "App_Data/Lucene/RecipeTaxonomy",
+        };
+
+        var indexService = new RecipeIndexService(logger, settings, data);
+        await indexService.Rebuild();
+
+        var queryService = new RecipeQueryService(settings, new UtcNowDateTimeService());
+
+        var result = await new SearchRecipesHandler(queryService)
+            .Handle(new SearchRecipesRequest(null, null, null, null, true, 2, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Count);
         Assert.Equal(3, result.Value.TotalCount);
         Assert.Equal(2, result.Value.Page);
         Assert.Equal(1, result.Value.Take);
-    }
-
-    [Fact]
-    public async Task ListRecipe_returns_all_recipes_when_paging_is_disabled()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, null, null, null, false, 0, 0));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(3, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Contains("Recipe1", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Recipe2", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Recipe3", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Category1", result.Value.Items.SelectMany(r => r.Categories));
-    }
-
-    [Fact]
-    public async Task ListRecipes_can_sort_by_descending()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, null, null, "z-a", true, 1, 1));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(1, result.Value.Take);
-        Assert.Equal("Recipe3", result.Value.Items.First().Name);
-    }
-
-    [Fact]
-    public async Task ListRecipes_can_sort_by_ascending()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, null, null, "a-z", true, 1, 1));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(1, result.Value.Take);
-        Assert.Contains("Recipe1", result.Value.Items.First().Name);
-    }
-
-    [Fact]
-    public async Task ListRecipes_can_search_by_recipe_name()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest("recipe2", null, null, null, true, 1, 2));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(1, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(2, result.Value.Take);
-        Assert.Contains("Recipe2", result.Value.Items.Select(r => r.Name));
-    }
-
-    [Fact]
-    public async Task ListRecipes_can_search_by_category_name()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, "cat", null, null, true, 1, 4));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(2, result.Value.Count);
-        Assert.Equal(2, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(4, result.Value.Take);
-        Assert.Contains("Recipe1", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Recipe2", result.Value.Items.Select(r => r.Name));
-        Assert.DoesNotContain("Recipe3", result.Value.Items.Select(r => r.Name));
-    }
-
-    [Fact]
-    public async Task ListRecipes_can_search_by_is_for_meal_planning()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, null, true, null, true, 1, 4));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(1, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(4, result.Value.Take);
-        Assert.DoesNotContain("Recipe1", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Recipe2", result.Value.Items.Select(r => r.Name));
-        Assert.DoesNotContain("Recipe3", result.Value.Items.Select(r => r.Name));
-    }
-
-    [Fact]
-    public async Task ListRecipes_returns_empty_item_set_when_name_search_matches_zero_items()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest("nothing matches", null, null, null, true, 1, 2));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(0, result.Value.Count);
-        Assert.Equal(0, result.Value.TotalCount);
-    }
-
-    [Fact]
-    public async Task ListRecipes_returns_empty_item_set_when_category_search_matches_zero_items()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var result = await new ListRecipesHandler(data, context)
-            .Handle(new ListRecipesRequest(null, "nothing matches", null, null, true, 1, 2));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(0, result.Value.Count);
-        Assert.Equal(0, result.Value.TotalCount);
     }
 
     [Fact]
@@ -200,7 +82,7 @@ public class RecipeEventTests
             .Include(r => r.Images)
             .ThenInclude(r => r.Blob)
             .AsNoTracking()
-            .First(r => r.Name == "Recipe1");
+            .First(r => r.Name == "Cheeseburger");
 
         // For testing, we need to pull in all entities so EF can cascade delete.
         // In prod, SQL Server will do the cascading without needing to bring them into memory.
@@ -211,7 +93,9 @@ public class RecipeEventTests
         Assert.True(recipeToDelete.Images.Select(i => i.Blob).Any());
         Assert.Equal(recipeToDelete.Images.Count, recipeToDelete.Images.Select(i => i.Blob).Count());
 
-        var result = await new DeleteRecipeHandler(data)
+        var indexService = Substitute.For<IRecipeIndexService>();
+
+        var result = await new DeleteRecipeHandler(data, indexService)
             .Handle(new DeleteRecipeRequest(recipeToDelete.Id));
 
         Assert.True(result.IsSuccess);
@@ -230,7 +114,9 @@ public class RecipeEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var result = await new DeleteRecipeHandler(data)
+        var indexService = Substitute.For<IRecipeIndexService>();
+
+        var result = await new DeleteRecipeHandler(data, indexService)
             .Handle(new DeleteRecipeRequest(-22));
 
         Assert.True(result.IsFailed);
@@ -242,7 +128,9 @@ public class RecipeEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var result = await new SaveRecipeHandler(data)
+        var indexService = Substitute.For<IRecipeIndexService>();
+
+        var result = await new SaveRecipeHandler(data, indexService)
             .Handle(new SaveRecipeRequest(0, "New", "New", null, 20, false, new[] { new SaveRecipeRequestIngredient("New", 1, 1, false) }, new[] { "Category2", "Category3", "Category4" }));
 
         Assert.True(result.IsSuccess);
@@ -267,7 +155,9 @@ public class RecipeEventTests
 
         var existingRecipeId = (await data.Recipes.ListAll(default))[0].Id;
 
-        var result = await new SaveRecipeHandler(data)
+        var indexService = Substitute.For<IRecipeIndexService>();
+
+        var result = await new SaveRecipeHandler(data, indexService)
             .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", null, 20, false, new[] { new SaveRecipeRequestIngredient("New", 1, 1, false) }, new[] { "Category2", "Category3", "Category4" }));
 
         Assert.True(result.IsSuccess);

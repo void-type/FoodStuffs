@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.ImageCompression;
+using FoodStuffs.Model.Search;
 using Microsoft.Extensions.Logging;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
@@ -14,17 +15,19 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
     private readonly IFoodStuffsData _data;
     private readonly ILogger<SaveImageHandler> _logger;
     private readonly IImageCompressionService _compressor;
+    private readonly IRecipeIndexService _indexService;
 
-    public SaveImageHandler(IFoodStuffsData data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService)
+    public SaveImageHandler(IFoodStuffsData data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, IRecipeIndexService indexService)
     {
         _data = data;
         _logger = logger;
         _compressor = imageCompressionService;
+        _indexService = indexService;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
     {
-        // TODO: If we want to handle large files via streaming, we can use https://code-maze.com/aspnetcore-upload-large-files/.
+        // If we want to handle large files via streaming, we can use https://code-maze.com/aspnetcore-upload-large-files/.
         // IFormFile is still buffered by model binding.
 
         // Note: Size limit is controlled by the server (IIS and/or Kestrel) and validated on the client. Default is 30MB (~28.6 MiB).
@@ -65,6 +68,8 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         };
 
         await _data.Blobs.Add(blob, cancellationToken);
+
+        await _indexService.AddOrUpdate(recipeResult.Value.Id, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }

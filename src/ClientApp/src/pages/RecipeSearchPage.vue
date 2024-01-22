@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import Choices from '@/models/Choices';
 import ApiHelpers from '@/models/ApiHelpers';
-import { toInt, toNumber } from '@/models/FormatHelpers';
-import ListRecipesRequest from '@/models/ListRecipesRequest';
+import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelpers';
+import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { watch, type PropType, ref, onMounted } from 'vue';
+import { watch, type PropType, ref } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
@@ -13,7 +13,7 @@ import RecipeSearchCard from '@/components/RecipeSearchCard.vue';
 import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
-import type { ListCategoriesResponse } from '@/api/data-contracts';
+import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
 
 const props = defineProps({
   query: {
@@ -31,7 +31,7 @@ const api = ApiHelpers.client;
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelpers;
 
-const categoryOptions = ref([] as Array<ListCategoriesResponse>);
+const selectedCategories = ref([] as Array<number>);
 
 function navigateSearch() {
   router.push({
@@ -41,7 +41,7 @@ function navigateSearch() {
 
 function clearSearch() {
   recipeStore.setListRequest({
-    ...new ListRecipesRequest(),
+    ...new SearchRecipesRequest(),
     take: listRequest.value.take,
     isPagingEnabled: listRequest.value.isPagingEnabled,
   });
@@ -77,15 +77,26 @@ function changeTake(take: number) {
 
 function changeSort(event: Event) {
   const { value } = event.target as HTMLSelectElement;
-  recipeStore.setListRequest({ ...listRequest.value, sortBy: value });
-
+  listRequest.value.sortBy = value;
   navigateSearch();
 }
 
 function setListRequestFromQuery() {
+  const categories =
+    props.query.categories
+      ?.toString()
+      ?.split(',')
+      .flatMap((x) => {
+        const n = toNumberOrNull(x);
+        return n ? [n] : [];
+      }) || [];
+
+  selectedCategories.value = categories;
+
   recipeStore.setListRequest({
-    ...new ListRecipesRequest(),
+    ...new SearchRecipesRequest(),
     ...props.query,
+    categories,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   });
@@ -98,13 +109,9 @@ function fetchList() {
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
-onMounted(() => {
-  api()
-    .categoriesList({ isPagingEnabled: false })
-    .then((response) => {
-      categoryOptions.value = response.data.items || [];
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+watch(selectedCategories, () => {
+  listRequest.value.categories = selectedCategories.value;
+  navigateSearch();
 });
 
 watch(
@@ -124,9 +131,9 @@ watch(
       <div class="g-col-12 g-col-lg-9">
         <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
-            <div class="grid mb-3" style="--bs-gap: 1em">
+            <div class="grid mb-3 gap-sm">
               <div class="g-col-12 g-col-md-6">
-                <label for="nameSearch" class="form-label">Name contains</label>
+                <label for="nameSearch" class="form-label">Name</label>
                 <input
                   id="nameSearch"
                   v-model="listRequest.name"
@@ -134,26 +141,7 @@ watch(
                   @keydown.stop.prevent.enter="startSearch"
                 />
               </div>
-              <div class="g-col-12 g-col-md-6">
-                <label for="categorySearch" class="form-label">Categories contain</label>
-                <input
-                  id="categorySearch"
-                  v-model="listRequest.category"
-                  list="categoryAutocomplete"
-                  class="form-control"
-                  @keydown.stop.prevent.enter="startSearch"
-                />
-                <datalist id="categoryAutocomplete">
-                  <option
-                    v-for="categoryOption in categoryOptions"
-                    :key="categoryOption.id"
-                    :value="categoryOption.name"
-                  >
-                    {{ categoryOption.name }}
-                  </option>
-                </datalist>
-              </div>
-              <div class="g-col-6 g-col-md-4">
+              <div class="g-col-6 g-col-md-3">
                 <label class="form-label" for="isForMealPlanning">Meals</label>
                 <select
                   id="isForMealPlanning"
@@ -170,7 +158,7 @@ watch(
                   </option>
                 </select>
               </div>
-              <div class="g-col-6 g-col-md-4">
+              <div class="g-col-6 g-col-md-3">
                 <label for="recipeSort" class="form-label">Sort</label>
                 <select
                   id="recipeSort"
@@ -189,6 +177,7 @@ watch(
                   </option>
                 </select>
               </div>
+              <RecipeSearchCategoriesFilter v-model="selectedCategories" class="g-col-12" />
             </div>
           </template>
         </EntityTableControls>

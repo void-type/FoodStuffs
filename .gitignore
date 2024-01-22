@@ -264,6 +264,9 @@ __pycache__/
 # Compiled client app
 **/*.Web/wwwroot
 
+# App_Data
+**/*.Web/App_Data
+
 # App
 appsettings.*.json
 !appsettings.example.json

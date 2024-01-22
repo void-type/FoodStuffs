@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.ImageCompression;
+using FoodStuffs.Model.Search;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ try
 
     // Settings
     services.AddSettingsSingleton<WebApplicationSettings>(config, true).Validate();
+    services.AddSettingsSingleton<RecipeSearchSettings>(config, true).Validate();
 
     // Infrastructure
     services.AddControllers();
@@ -51,6 +53,9 @@ try
         .UseSqlServer("Name=FoodStuffs", b => b.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName)));
 
     services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
+
+    services.AddScoped<IRecipeIndexService, RecipeIndexService>();
+    services.AddScoped<IRecipeQueryService, RecipeQueryService>();
 
     // Auto-register Domain Events
     services.AddDomainEvents(

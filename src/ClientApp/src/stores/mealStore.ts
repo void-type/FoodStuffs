@@ -2,8 +2,8 @@ import type {
   GetMealSetResponse,
   GetMealSetResponsePantryIngredient,
   ListMealSetsResponseIItemSet,
-  ListRecipesResponseIItemSet,
-  ListRecipesResponseIngredient,
+  SearchRecipesResponseIItemSet,
+  SearchRecipesResponseIngredient,
   MealSetsListParams,
   RecipesListParams,
 } from '@/api/data-contracts';
@@ -11,11 +11,11 @@ import Choices from '@/models/Choices';
 import DateHelpers from '@/models/DateHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import GetMealSetResponseClass from '@/models/GetMealSetResponseClass';
-import ListRecipesRequest from '@/models/ListRecipesRequest';
+import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import { defineStore } from 'pinia';
 
 interface MealStoreState {
-  recipeListResponse: ListRecipesResponseIItemSet;
+  recipeListResponse: SearchRecipesResponseIItemSet;
   recipeListRequest: RecipesListParams;
   mealSetListResponse: ListMealSetsResponseIItemSet;
   mealSetListRequest: MealSetsListParams;
@@ -25,7 +25,7 @@ interface MealStoreState {
 
 function countIngredients(
   acc: GetMealSetResponsePantryIngredient[],
-  curr: ListRecipesResponseIngredient
+  curr: SearchRecipesResponseIngredient
 ) {
   const { name, quantity } = curr;
 
@@ -85,24 +85,27 @@ export default defineStore('meals', {
       items: [],
       isPagingEnabled: true,
       page: 1,
-      take: Choices.defaultPaginationTake.value,
+      take: Choices.paginationTake[0].value,
       totalCount: 0,
     },
     recipeListRequest: {
-      ...new ListRecipesRequest(),
+      ...new SearchRecipesRequest(),
+      take: Choices.paginationTake[0].value,
       isForMealPlanning: true,
-      sortBy: 'random',
     },
     mealSetListResponse: {
       count: 0,
       items: [],
-      isPagingEnabled: true,
+      isPagingEnabled: false,
       page: 1,
-      take: Choices.defaultPaginationTake.value,
+      take: -1,
       totalCount: 0,
     },
     mealSetListRequest: {
+      name: '',
       isPagingEnabled: false,
+      page: 1,
+      take: -1,
     },
     mealSetListIndex: -1,
     currentMealSet: new GetMealSetResponseClass() as GetMealSetResponse,

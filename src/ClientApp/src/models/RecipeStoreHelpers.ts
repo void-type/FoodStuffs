@@ -1,9 +1,9 @@
 import type {
-  ListRecipesResponse,
+  SearchRecipesResponse,
   GetRecipeResponse,
   RecipesListParams,
 } from '@/api/data-contracts';
-import ListRecipesRequest from './ListRecipesRequest';
+import SearchRecipesRequest from './SearchRecipesRequest';
 
 const settingsKeyRecentRecipes = 'recentRecipes';
 const settingsKeyQueuedRecentRecipe = 'queuedRecentRecipe';
@@ -12,10 +12,10 @@ export default class RecipeStoreHelpers {
   static getRecents() {
     return JSON.parse(
       localStorage.getItem(settingsKeyRecentRecipes) || '[]'
-    ) as ListRecipesResponse[];
+    ) as SearchRecipesResponse[];
   }
 
-  static storeRecents(recentRecipes: Array<ListRecipesResponse>) {
+  static storeRecents(recentRecipes: Array<SearchRecipesResponse>) {
     localStorage.setItem(settingsKeyRecentRecipes, JSON.stringify(recentRecipes));
   }
 
@@ -34,6 +34,7 @@ export default class RecipeStoreHelpers {
   }
 
   static sortOptions = [
+    { text: 'Relevance', value: '' },
     { text: 'Newest', value: 'newest' },
     { text: 'Oldest', value: 'oldest' },
     { text: 'A-Z', value: 'a-z' },
@@ -42,20 +43,23 @@ export default class RecipeStoreHelpers {
   ];
 
   static listRequestToQueryParams(listRequest: RecipesListParams) {
-    const defaultRequest = new ListRecipesRequest();
-
     // Query params need to be string or number
-    const qp = {
+    const requestEntries = Object.entries({
       ...listRequest,
-    };
+      categories: listRequest.categories?.join() || '',
+    });
 
-    const qpEntries = Object.entries(qp);
-    const defaultValues = Object.entries(defaultRequest);
+    const defaultEntries = Object.entries({
+      ...new SearchRecipesRequest(),
+      categories: new SearchRecipesRequest().categories?.join() || '',
+    });
 
-    const cleanedEntries = qpEntries
-      .filter(([qpKey, qpValue]) => {
-        const dValue = defaultValues.find(([q]) => q === qpKey)?.[1];
-        return qpValue !== dValue && typeof qpValue !== 'undefined';
+    const cleanedEntries = requestEntries
+      .filter(([rKey, rValue]) => {
+        // Get the matching default value
+        const dValue = defaultEntries.find(([dKey]) => dKey === rKey)?.[1];
+        // Compare the values
+        return JSON.stringify(rValue) !== JSON.stringify(dValue);
       })
       .map(([qpKey, qpValue]) => [qpKey, String(qpValue)]);
 

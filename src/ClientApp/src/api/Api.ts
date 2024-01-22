@@ -19,12 +19,13 @@ import type {
   Int32EntityMessage,
   ListCategoriesResponseIItemSet,
   ListMealSetsResponseIItemSet,
-  ListRecipesResponseIItemSet,
   MealSetsListParams,
   RecipesListParams,
   SaveMealSetRequest,
   SaveRecipeRequest,
+  SearchRecipesResponseIItemSet,
   StringEntityMessage,
+  UserMessage,
   WebClientInfo,
 } from './data-contracts';
 import { ContentType, HttpClient, type RequestParams } from './http-client';
@@ -233,14 +234,30 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Recipes
+   * @name RecipesRebuildIndexCreate
+   * @summary Rebuild the recipe search index.
+   * @request POST:/api/recipes/rebuild-index
+   * @response `200` `UserMessage` Success
+   */
+  recipesRebuildIndexCreate = (params: RequestParams = {}) =>
+    this.request<UserMessage, any>({
+      path: `/api/recipes/rebuild-index`,
+      method: 'POST',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
    * @name RecipesList
    * @summary Search for recipes using the following criteria. All are optional and some have defaults.
    * @request GET:/api/recipes
-   * @response `200` `ListRecipesResponseIItemSet` Success
+   * @response `200` `SearchRecipesResponseIItemSet` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
   recipesList = (query: RecipesListParams, params: RequestParams = {}) =>
-    this.request<ListRecipesResponseIItemSet, IFailureIItemSet>({
+    this.request<SearchRecipesResponseIItemSet, IFailureIItemSet>({
       path: `/api/recipes`,
       method: 'GET',
       query: query,

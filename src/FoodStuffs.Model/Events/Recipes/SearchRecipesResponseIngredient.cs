@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Model.Events.Recipes;
 
-public record ListRecipesResponseIngredient(
+public record SearchRecipesResponseIngredient(
     string Name,
     int Quantity,
     int Order,

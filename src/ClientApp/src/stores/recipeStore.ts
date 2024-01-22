@@ -1,21 +1,21 @@
 import { defineStore } from 'pinia';
 import type {
   GetRecipeResponse,
-  ListRecipesResponse,
-  ListRecipesResponseIItemSet,
+  SearchRecipesResponse,
+  SearchRecipesResponseIItemSet,
   RecipesListParams,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
-import ListRecipesRequest from '@/models/ListRecipesRequest';
+import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 
-const recentLimit = 5;
+const recentLimit = 10;
 
 interface RecipeStoreState {
-  listResponse: ListRecipesResponseIItemSet;
+  listResponse: SearchRecipesResponseIItemSet;
   listRequest: RecipesListParams;
-  recentRecipes: Array<ListRecipesResponse>;
-  discoverListResponse: ListRecipesResponseIItemSet;
+  recentRecipes: Array<SearchRecipesResponse>;
+  discoverListResponse: SearchRecipesResponseIItemSet;
 }
 
 export const useRecipeStore = defineStore('recipes', {
@@ -28,7 +28,7 @@ export const useRecipeStore = defineStore('recipes', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: new ListRecipesRequest(),
+    listRequest: { ...new SearchRecipesRequest(), take: Choices.defaultPaginationTake.value },
     recentRecipes: RecipeStoreHelpers.getRecents(),
     discoverListResponse: {
       count: 0,
@@ -49,7 +49,7 @@ export const useRecipeStore = defineStore('recipes', {
   },
 
   actions: {
-    setListResponse(data: ListRecipesResponseIItemSet) {
+    setListResponse(data: SearchRecipesResponseIItemSet) {
       this.listResponse = data;
     },
 
@@ -57,7 +57,7 @@ export const useRecipeStore = defineStore('recipes', {
       this.listRequest = data;
     },
 
-    setDiscoverListResponse(data: ListRecipesResponseIItemSet) {
+    setDiscoverListResponse(data: SearchRecipesResponseIItemSet) {
       this.discoverListResponse = data;
     },
 

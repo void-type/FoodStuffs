@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Search;
 using System.Globalization;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
@@ -11,10 +12,12 @@ namespace FoodStuffs.Model.Events.Recipes;
 public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityMessage<int>>
 {
     private readonly IFoodStuffsData _data;
+    private readonly IRecipeIndexService _indexService;
 
-    public SaveRecipeHandler(IFoodStuffsData data)
+    public SaveRecipeHandler(IFoodStuffsData data, IRecipeIndexService indexService)
     {
         _data = data;
+        _indexService = indexService;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
@@ -37,6 +40,8 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         {
             await _data.Recipes.Add(recipeToEdit, cancellationToken);
         }
+
+        await _indexService.AddOrUpdate(recipeToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));
     }

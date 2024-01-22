@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import type { ListRecipesResponse } from '@/api/data-contracts';
+import type { SearchRecipesResponse } from '@/api/data-contracts';
 
 const props = defineProps({
   recipes: {
-    type: Object as PropType<Array<ListRecipesResponse>>,
+    type: Object as PropType<Array<SearchRecipesResponse>>,
     required: true,
   },
   title: {

@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -15,36 +16,47 @@ namespace FoodStuffs.Web.Controllers.Api;
 public class RecipesController : ControllerBase
 {
     /// <summary>
+    /// Rebuild the recipe search index.
+    /// </summary>
+    /// <param name="indexService"></param>
+    [Route("rebuild-index")]
+    [HttpPost]
+    [ProducesResponseType(typeof(UserMessage), 200)]
+    public async Task<IActionResult> Rebuild([FromServices] IRecipeIndexService indexService)
+    {
+        await indexService.Rebuild();
+
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Index rebuilt.")));
+    }
+
+    /// <summary>
     /// Search for recipes using the following criteria. All are optional and some have defaults.
     /// </summary>
-    /// <param name="listPipeline"></param>
+    /// <param name="searchPipeline"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
-    /// <param name="category">Category names contain (case-insensitive)</param>
+    /// <param name="categories">Category IDs to filter on</param>
     /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
-    /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: name, modifiedon. Default is ID</param>
+    /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
     /// <param name="isPagingEnabled">False for all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
-    [ProducesResponseType(typeof(IItemSet<ListRecipesResponse>), 200)]
+    [ProducesResponseType(typeof(IItemSet<SearchRecipesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> Search([FromServices] ListRecipesPipeline listPipeline, string? name = null, string? category = null, bool? isForMealPlanning = null, string? sortBy = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public Task<IActionResult> Search([FromServices] SearchRecipesPipeline searchPipeline, string? name = null, int[]? categories = null,
+        bool? isForMealPlanning = null, string? sortBy = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
-        var request = new ListRecipesRequest(
+        var request = new SearchRecipesRequest(
             NameSearch: name,
-            CategorySearch: category,
+            CategoryIds: categories,
             IsForMealPlanning: isForMealPlanning,
             SortBy: sortBy,
             IsPagingEnabled: isPagingEnabled,
             Page: page,
             Take: take);
 
-        // Cancel long-running queries
-        using var cts = new CancellationTokenSource()
-            .Tee(c => c.CancelAfter(5000));
-
-        return await listPipeline
-            .Handle(request, cts.Token)
+        return searchPipeline
+            .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
 

@@ -2,8 +2,8 @@ export default class Choices {
   static get paginationTake() {
     return [
       {
-        text: '15',
-        value: 15,
+        text: '10',
+        value: 10,
       },
       {
         text: '30',

@@ -2,9 +2,9 @@
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public record ListRecipesRequest(
+public record SearchRecipesRequest(
     string? NameSearch,
-    string? CategorySearch,
+    int[]? CategoryIds,
     bool? IsForMealPlanning,
     string? SortBy,
     bool IsPagingEnabled,

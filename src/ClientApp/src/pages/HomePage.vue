@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ImagePlaceholder from '@/components/ImagePlaceholder.vue';
 import ApiHelpers from '@/models/ApiHelpers';
-import ListRecipesRequest from '@/models/ListRecipesRequest';
+import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
@@ -20,7 +20,7 @@ onMounted(() => {
   if (discoverListResponse.value.count === 0) {
     api()
       .recipesList({
-        ...new ListRecipesRequest(),
+        ...new SearchRecipesRequest(),
         sortBy: 'random',
       })
       .then((response) => recipeStore.setDiscoverListResponse(response.data))

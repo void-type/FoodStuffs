@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { ListRecipesResponse } from '@/api/data-contracts';
+import type { SearchRecipesResponse } from '@/api/data-contracts';
 import type { PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelpers from '@/models/ApiHelpers';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
-  recipe: { type: Object as PropType<ListRecipesResponse>, required: true },
+  recipe: { type: Object as PropType<SearchRecipesResponse>, required: true },
   onCardClick: { type: Function, required: true },
   selected: { type: Boolean, required: false, default: false },
   cardType: { type: String, required: true },

@@ -134,7 +134,7 @@ watch(data, (newValue) => {
         :aria-labelledby="`ingredient-${ing.id}-accordion-header`"
         data-bs-parent="#ingredient-list"
       >
-        <div class="grid p-3" style="--bs-gap: 1em">
+        <div class="grid p-3 gap-sm">
           <div class="g-col-12 g-col-md-12">
             <label :for="`ingredient-${ing.id}-name`" class="form-label">Name</label>
             <input

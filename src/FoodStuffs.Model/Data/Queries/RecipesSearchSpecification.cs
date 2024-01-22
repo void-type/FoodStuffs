@@ -7,15 +7,10 @@ namespace FoodStuffs.Model.Data.Queries;
 
 public class RecipesSearchSpecification : QuerySpecificationAbstract<Recipe>
 {
-    public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria) : base(criteria)
-    {
-    }
-
-    public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null) : this(criteria)
+    public RecipesSearchSpecification(Expression<Func<Recipe, bool>>[] criteria, PaginationOptions paginationOptions, string? sortBy = null) : base(criteria)
     {
         ApplyPaging(paginationOptions);
 
-        // TODO: ensure query splitting
         AddInclude(nameof(Recipe.Categories));
         AddInclude(nameof(Recipe.Images));
         AddInclude(nameof(Recipe.Ingredients));

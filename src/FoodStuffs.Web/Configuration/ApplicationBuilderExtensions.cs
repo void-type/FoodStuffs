@@ -13,7 +13,11 @@ public static class ApplicationBuilderExtensions
 
         return app
             .UseSwagger()
-            .UseSwaggerUI(c => c.DocumentTitle = environment.ApplicationName + " API");
+            .UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = environment.ApplicationName + " API";
+                c.UseRequestInterceptor("(req) => { req.headers['X-Csrf-Token'] = window.vt_api_csrf_token; return req; }");
+            });
     }
 
     public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment)
@@ -52,6 +56,7 @@ public static class ApplicationBuilderExtensions
                 options.ScriptSources
                     // Vite dev server
                     .Allow("https://localhost:5173")
+                    .AllowUnsafeInline()
                     .AllowUnsafeEval();
 
                 options.StyleSources
