@@ -46,6 +46,8 @@ function clearSearch() {
     isPagingEnabled: listRequest.value.isPagingEnabled,
   });
 
+  // selectedCategories gets it's new value from query params.
+
   navigateSearch();
 }
 

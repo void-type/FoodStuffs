@@ -50,7 +50,8 @@ function clearRecipeSearch() {
     isForMealPlanning: true,
   };
 
-  fetchRecipeList();
+  // This should trigger a fetch.
+  selectedCategories.value = [];
 }
 
 function startRecipeSearch() {
@@ -346,20 +347,20 @@ watch(selectedCategories, () => {
         <div class="grid">
           <div class="g-col-12 g-col-md-6">
             <MealsIngredientList
-              class="mt-4 mb-4"
-              title="Pantry"
-              :ingredients="mealStore.getPantry"
-              :on-clear="mealStore.clearPantry"
-              :on-ingredient-click="mealStore.removeFromPantry"
-            />
-          </div>
-          <div class="g-col-12 g-col-md-6">
-            <MealsIngredientList
               class="mt-4"
               title="Shopping list"
               :ingredients="mealStore.getShoppingList"
               :on-ingredient-click="mealStore.addToPantry"
               :show-copy-list="true"
+            />
+          </div>
+          <div class="g-col-12 g-col-md-6">
+            <MealsIngredientList
+              class="mt-4"
+              title="Pantry"
+              :ingredients="mealStore.getPantry"
+              :on-clear="mealStore.clearPantry"
+              :on-ingredient-click="mealStore.removeFromPantry"
             />
           </div>
         </div>
