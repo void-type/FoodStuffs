@@ -1,6 +1,6 @@
-﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Queries;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Search;
+using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -9,23 +9,29 @@ namespace FoodStuffs.Model.Events.Images;
 
 public class PinImageHandler : EventHandlerAbstract<PinImageRequest, EntityMessage<string>>
 {
-    private readonly IFoodStuffsData _data;
-    private readonly IRecipeIndexService _indexService;
+    private readonly FoodStuffsContext _data;
+    private readonly IRecipeIndexService _index;
 
-    public PinImageHandler(IFoodStuffsData data, IRecipeIndexService indexService)
+    public PinImageHandler(FoodStuffsContext data, IRecipeIndexService index)
     {
         _data = data;
-        _indexService = indexService;
+        _index = index;
     }
 
     public override Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
     {
-        return _data.Images.Get(new ImagesByNameWithRecipesSpecification(request.Name), cancellationToken)
+        return _data.Images
+            .Include(x => x.Recipe)
+            .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new ImageNotFoundFailure())
-            .TeeOnSuccessAsync(i => i.Recipe.PinnedImageId = i.Id)
-            .SelectAsync(i => i.Recipe)
-            .TeeOnSuccessAsync(r => _data.Recipes.Update(r, cancellationToken))
-            .TeeOnSuccessAsync(async r => await _indexService.AddOrUpdate(r.Id, cancellationToken))
+            .TeeOnSuccessAsync(async i =>
+            {
+                i.Recipe.PinnedImageId = i.Id;
+
+                await _data.SaveChangesAsync(cancellationToken);
+                await _index.AddOrUpdate(i.Recipe.Id, cancellationToken);
+            })
             .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));
     }
 }

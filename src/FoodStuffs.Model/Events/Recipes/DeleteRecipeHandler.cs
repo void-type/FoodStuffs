@@ -1,6 +1,8 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Search;
+using Microsoft.EntityFrameworkCore;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -9,23 +11,30 @@ namespace FoodStuffs.Model.Events.Recipes;
 
 public class DeleteRecipeHandler : EventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
 {
-    private readonly IFoodStuffsData _data;
-    private readonly IRecipeIndexService _indexService;
+    private readonly FoodStuffsContext _data;
+    private readonly IRecipeIndexService _index;
 
-    public DeleteRecipeHandler(IFoodStuffsData data, IRecipeIndexService indexService)
+    public DeleteRecipeHandler(FoodStuffsContext data, IRecipeIndexService index)
     {
         _data = data;
-        _indexService = indexService;
+        _index = index;
     }
 
     public override Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new RecipesByIdSpecification(request.Id);
+        var byId = new RecipesSpecification(request.Id);
 
-        return _data.Recipes.Get(byId, cancellationToken)
+        return _data.Recipes
+            .ApplyEfSpecification(byId)
+            .FirstOrDefaultAsync(cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure())
-            .TeeOnSuccessAsync(r => _data.Recipes.Remove(r, cancellationToken))
-            .TeeOnSuccessAsync(r => _indexService.Remove(r.Id))
+            .TeeOnSuccessAsync(r =>
+            {
+                _data.Recipes.Remove(r);
+                _data.SaveChangesAsync(cancellationToken);
+            })
+            .TeeOnSuccessAsync(r => _index.Remove(r.Id))
             .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
     }
 }

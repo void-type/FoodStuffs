@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
 using Xunit;
 
-namespace FoodStuffs.Test.Model.Events;
+namespace FoodStuffs.Test;
 
 public class SaveRecipeRequestValidatorTests
 {

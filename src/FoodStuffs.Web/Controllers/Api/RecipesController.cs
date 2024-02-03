@@ -19,12 +19,13 @@ public class RecipesController : ControllerBase
     /// Rebuild the recipe search index.
     /// </summary>
     /// <param name="indexService"></param>
+    /// <param name="cancellationToken"></param>
     [Route("rebuild-index")]
     [HttpPost]
     [ProducesResponseType(typeof(UserMessage), 200)]
-    public async Task<IActionResult> Rebuild([FromServices] IRecipeIndexService indexService)
+    public async Task<IActionResult> Rebuild([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
     {
-        await indexService.Rebuild();
+        await indexService.Rebuild(cancellationToken);
 
         return HttpResponder.Respond(Result.Ok(new UserMessage("Index rebuilt.")));
     }

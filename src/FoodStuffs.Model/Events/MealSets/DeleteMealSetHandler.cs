@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Queries;
+﻿using FoodStuffs.Model.Data.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -8,20 +8,24 @@ namespace FoodStuffs.Model.Events.MealSets;
 
 public class DeleteMealSetHandler : EventHandlerAbstract<DeleteMealSetRequest, EntityMessage<int>>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public DeleteMealSetHandler(IFoodStuffsData data)
+    public DeleteMealSetHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
     public override Task<IResult<EntityMessage<int>>> Handle(DeleteMealSetRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new MealSetsByIdSpecification(request.Id);
-
-        return _data.MealSets.Get(byId, cancellationToken)
+        return _data.MealSets
+            .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new MealSetNotFoundFailure())
-            .TeeOnSuccessAsync(r => _data.MealSets.Remove(r, cancellationToken))
+            .TeeOnSuccessAsync(async r =>
+            {
+                _data.MealSets.Remove(r);
+                await _data.SaveChangesAsync(cancellationToken);
+            })
             .SelectAsync(r => EntityMessage.Create("Meal set deleted.", r.Id));
     }
 }

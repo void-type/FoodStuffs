@@ -1,5 +1,7 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 
@@ -7,18 +9,23 @@ namespace FoodStuffs.Model.Events.Recipes;
 
 public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipeResponse>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public GetRecipeHandler(IFoodStuffsData data)
+    public GetRecipeHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
     public override Task<IResult<GetRecipeResponse>> Handle(GetRecipeRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new RecipesByIdWithAllRelatedSpecification(request.Id);
+        var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
-        return _data.Recipes.Get(byId, cancellationToken)
+        return _data.Recipes
+            .ApplyEfSpecification(byId)
+            .AsSplitQuery()
+            .OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure())
             .SelectAsync(r => new GetRecipeResponse(
                Id: r.Id,

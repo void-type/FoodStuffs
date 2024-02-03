@@ -1,6 +1,8 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -9,18 +11,23 @@ namespace FoodStuffs.Model.Events.MealSets;
 
 public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, EntityMessage<int>>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public SaveMealSetHandler(IFoodStuffsData data)
+    public SaveMealSetHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveMealSetRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new MealSetsByIdWithAllRelatedSpecification(request.Id);
+        var byId = new MealSetsWithAllRelatedSpecification(request.Id);
 
-        var maybeMealSet = await _data.MealSets.Get(byId, cancellationToken);
+        var maybeMealSet = await _data.MealSets
+            .ApplyEfSpecification(byId)
+            .AsSplitQuery()
+            .OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken)
+            .MapAsync(Maybe.From);
 
         var mealSetToEdit = maybeMealSet.Unwrap(() => new MealSet());
 
@@ -29,12 +36,14 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
 
         if (maybeMealSet.HasValue)
         {
-            await _data.MealSets.Update(mealSetToEdit, cancellationToken);
+            _data.MealSets.Update(mealSetToEdit);
         }
         else
         {
-            await _data.MealSets.Add(mealSetToEdit, cancellationToken);
+            _data.MealSets.Add(mealSetToEdit);
         }
+
+        await _data.SaveChangesAsync(cancellationToken);
 
         return Ok(EntityMessage.Create($"Meal set {(maybeMealSet.HasValue ? "updated" : "added")}.", mealSetToEdit.Id));
     }
@@ -60,7 +69,9 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
         var missingRecipeIds = request.RecipeIds
             .Where(x => !mealSet.Recipes.Select(x => x.Id).Contains(x));
 
-        var missingRecipes = await _data.Recipes.List(new RecipesByIdSpecification(missingRecipeIds), cancellationToken);
+        var missingRecipes = await _data.Recipes
+            .ApplyEfSpecification(new RecipesSpecification(missingRecipeIds))
+            .ToListAsync(cancellationToken);
 
         mealSet.Recipes.AddRange(missingRecipes);
     }

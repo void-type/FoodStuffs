@@ -1,6 +1,6 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Files;
@@ -9,18 +9,19 @@ namespace FoodStuffs.Model.Events.Images;
 
 public class GetImageHandler : EventHandlerAbstract<GetImageRequest, SimpleFile>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public GetImageHandler(IFoodStuffsData data)
+    public GetImageHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
     public override Task<IResult<SimpleFile>> Handle(GetImageRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new ImagesByNameWithBlobsSpecification(request.Name);
-
-        return _data.Images.Get(byId, cancellationToken)
+        return _data.Images
+            .Include(x => x.Blob)
+            .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new ImageNotFoundFailure())
             .ThenAsync(ValidateBlobIsNotNull)
             .SelectAsync(r => new SimpleFile(r.Blob!.Bytes, r.FileName));

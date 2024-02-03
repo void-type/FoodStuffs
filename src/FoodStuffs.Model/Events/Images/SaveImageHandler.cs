@@ -1,8 +1,8 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
@@ -12,17 +12,17 @@ namespace FoodStuffs.Model.Events.Images;
 
 public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMessage<string>>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
     private readonly ILogger<SaveImageHandler> _logger;
     private readonly IImageCompressionService _compressor;
-    private readonly IRecipeIndexService _indexService;
+    private readonly IRecipeIndexService _index;
 
-    public SaveImageHandler(IFoodStuffsData data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, IRecipeIndexService indexService)
+    public SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, IRecipeIndexService index)
     {
         _data = data;
         _logger = logger;
         _compressor = imageCompressionService;
-        _indexService = indexService;
+        _index = index;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
@@ -36,7 +36,11 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
         // 3. edit the client-side upload validation in the RecipeEdit.vue file.
 
-        var recipeResult = await _data.Recipes.Get(new RecipesByIdSpecification(request.RecipeId), cancellationToken)
+        var recipeResult = await _data.Recipes
+            .Include(x => x.Images)
+            .AsSingleQuery()
+            .FirstOrDefaultAsync(r => r.Id == request.RecipeId, cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure());
 
         if (recipeResult.IsFailed)
@@ -55,21 +59,25 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
 
         var image = new Image
         {
-            RecipeId = recipeResult.Value.Id,
             FileName = $"{Guid.NewGuid()}.webp",
         };
 
-        await _data.Images.Add(image, cancellationToken);
+        recipeResult.Value.Images.Add(image);
 
-        var blob = new Blob
+        await _data.SaveChangesAsync(cancellationToken);
+
+        image.Blob = new Blob
         {
+            // This is tech-debt from when we wanted Images and Blobs to share an ID to shortcut downloads by ID.
+            // We should eventually make this independent.
+            // When we fix that, we can save in one step instead of 2.
             Id = image.Id,
             Bytes = compressedFileContent,
         };
 
-        await _data.Blobs.Add(blob, cancellationToken);
+        await _data.SaveChangesAsync(cancellationToken);
 
-        await _indexService.AddOrUpdate(recipeResult.Value.Id, cancellationToken);
+        await _index.AddOrUpdate(recipeResult.Value.Id, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }
@@ -78,7 +86,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
     {
         try
         {
-            using var compressedFileContent = await _compressor
+            await using var compressedFileContent = await _compressor
                 .CompressAndResizeImage(request.FileStream, 95, ResizeSettings.CenterCrop(4, 3, 1600), cancellationToken);
 
             return Result.Ok(compressedFileContent.ToArray());

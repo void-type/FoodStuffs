@@ -7,7 +7,7 @@ public partial class FoodStuffsContext : DbContext
 {
     public virtual DbSet<Blob> Blobs { get; set; }
     public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<MealSet> MealSet { get; set; }
+    public virtual DbSet<MealSet> MealSets { get; set; }
     public virtual DbSet<Image> Images { get; set; }
     public virtual DbSet<Recipe> Recipes { get; set; }
     public virtual DbSet<User> Users { get; set; }
@@ -69,6 +69,8 @@ public partial class FoodStuffsContext : DbContext
         {
             entity.ToTable("Blob");
 
+            // This is tech-debt from when we wanted Images and Blobs to share an ID to shortcut downloads by ID.
+            // We should eventually make this independent.
             entity.Property(e => e.Id).ValueGeneratedNever();
         });
 

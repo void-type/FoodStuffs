@@ -3,12 +3,21 @@ using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Data.Queries;
 
-public class RecipesByIdWithAllRelatedSpecification : QuerySpecificationAbstract<Recipe>
+public class RecipesWithAllRelatedSpecification : QuerySpecificationAbstract<Recipe>
 {
-    public RecipesByIdWithAllRelatedSpecification(int id)
+    public RecipesWithAllRelatedSpecification()
+    {
+        IncludeAll();
+    }
+
+    public RecipesWithAllRelatedSpecification(int id)
     {
         AddCriteria(r => r.Id == id);
+        IncludeAll();
+    }
 
+    private void IncludeAll()
+    {
         AddInclude(nameof(Recipe.Categories));
         AddInclude(nameof(Recipe.PinnedImage));
         AddInclude(nameof(Recipe.Images));

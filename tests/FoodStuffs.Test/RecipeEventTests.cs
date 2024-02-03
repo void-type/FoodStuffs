@@ -7,7 +7,7 @@ using NSubstitute;
 using VoidCore.Model.Time;
 using Xunit;
 
-namespace FoodStuffs.Test.Model.Events;
+namespace FoodStuffs.Test;
 
 public class RecipeEventTests
 {
@@ -20,7 +20,7 @@ public class RecipeEventTests
         var recipes = await data.Recipes.ListAll(default);
         var recipeToFind = recipes[0];
 
-        var result = await new GetRecipeHandler(data)
+        var result = await new GetRecipeHandler(context)
             .Handle(new GetRecipeRequest(recipeToFind.Id));
 
         Assert.True(result.IsSuccess);
@@ -34,7 +34,7 @@ public class RecipeEventTests
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
 
-        var result = await new GetRecipeHandler(data)
+        var result = await new GetRecipeHandler(context)
             .Handle(new GetRecipeRequest(-22));
 
         Assert.True(result.IsFailed);
@@ -54,8 +54,8 @@ public class RecipeEventTests
             TaxonomyFolder = "App_Data/Lucene/RecipeTaxonomy",
         };
 
-        var indexService = new RecipeIndexService(logger, settings, data);
-        await indexService.Rebuild();
+        var indexService = new RecipeIndexService(logger, settings, context);
+        await indexService.Rebuild(CancellationToken.None);
 
         var queryService = new RecipeQueryService(settings, new UtcNowDateTimeService());
 
@@ -95,7 +95,7 @@ public class RecipeEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new DeleteRecipeHandler(data, indexService)
+        var result = await new DeleteRecipeHandler(context, indexService)
             .Handle(new DeleteRecipeRequest(recipeToDelete.Id));
 
         Assert.True(result.IsSuccess);
@@ -116,7 +116,7 @@ public class RecipeEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new DeleteRecipeHandler(data, indexService)
+        var result = await new DeleteRecipeHandler(context, indexService)
             .Handle(new DeleteRecipeRequest(-22));
 
         Assert.True(result.IsFailed);
@@ -130,13 +130,13 @@ public class RecipeEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveRecipeHandler(data, indexService)
+        var result = await new SaveRecipeHandler(context, indexService)
             .Handle(new SaveRecipeRequest(0, "New", "New", null, 20, false, new[] { new SaveRecipeRequestIngredient("New", 1, 1, false) }, new[] { "Category2", "Category3", "Category4" }));
 
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.Id > 0);
 
-        var maybeRecipe = await data.Recipes.Get(new RecipesByIdWithAllRelatedSpecification(result.Value.Id), default);
+        var maybeRecipe = await data.Recipes.Get(new RecipesWithAllRelatedSpecification(result.Value.Id), default);
 
         Assert.True(maybeRecipe.HasValue);
         Assert.Equal(Deps.DateTimeServiceLate.Moment, maybeRecipe.Value.CreatedOn);
@@ -157,13 +157,13 @@ public class RecipeEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveRecipeHandler(data, indexService)
+        var result = await new SaveRecipeHandler(context, indexService)
             .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", null, 20, false, new[] { new SaveRecipeRequestIngredient("New", 1, 1, false) }, new[] { "Category2", "Category3", "Category4" }));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(existingRecipeId, result.Value.Id);
 
-        var updatedRecipe = await data.Recipes.Get(new RecipesByIdWithAllRelatedSpecification(existingRecipeId), default);
+        var updatedRecipe = await data.Recipes.Get(new RecipesWithAllRelatedSpecification(existingRecipeId), default);
         Assert.True(updatedRecipe.HasValue);
         Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.Value.ModifiedOn);
         Assert.DoesNotContain("Category1", updatedRecipe.Value.Categories.Select(c => c.Name));

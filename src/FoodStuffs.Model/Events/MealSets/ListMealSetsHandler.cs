@@ -23,7 +23,7 @@ public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IIt
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var pagedSearch = new MealSetsSearchSpecification(
+        var pagedSearch = new MealSetsSpecification(
             criteria: searchCriteria,
             paginationOptions: paginationOptions);
 

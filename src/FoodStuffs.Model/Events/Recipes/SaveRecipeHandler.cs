@@ -1,8 +1,10 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Search;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -11,20 +13,25 @@ namespace FoodStuffs.Model.Events.Recipes;
 
 public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityMessage<int>>
 {
-    private readonly IFoodStuffsData _data;
-    private readonly IRecipeIndexService _indexService;
+    private readonly FoodStuffsContext _data;
+    private readonly IRecipeIndexService _index;
 
-    public SaveRecipeHandler(IFoodStuffsData data, IRecipeIndexService indexService)
+    public SaveRecipeHandler(FoodStuffsContext data, IRecipeIndexService index)
     {
         _data = data;
-        _indexService = indexService;
+        _index = index;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new RecipesByIdWithCategoriesAndIngredientsSpecification(request.Id);
+        var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
-        var maybeRecipe = await _data.Recipes.Get(byId, cancellationToken);
+        var maybeRecipe = await _data.Recipes
+            .ApplyEfSpecification(byId)
+            .AsSplitQuery()
+            .OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken)
+            .MapAsync(Maybe.From);
 
         var recipeToEdit = maybeRecipe.Unwrap(() => new Recipe());
 
@@ -34,14 +41,16 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
         if (maybeRecipe.HasValue)
         {
-            await _data.Recipes.Update(recipeToEdit, cancellationToken);
+            _data.Recipes.Update(recipeToEdit);
         }
         else
         {
-            await _data.Recipes.Add(recipeToEdit, cancellationToken);
+            _data.Recipes.Add(recipeToEdit);
         }
 
-        await _indexService.AddOrUpdate(recipeToEdit.Id, cancellationToken);
+        await _data.SaveChangesAsync(cancellationToken);
+
+        _index.AddOrUpdate(recipeToEdit);
 
         return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));
     }
@@ -86,13 +95,13 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
             .ToList();
 
         // Find missing categories that already exist.
-        var missingCategoriesSpec = new CategoriesSpecification(x => missingNames.Contains(x.Name));
-
-        var existingCategories = (await _data.Categories.List(missingCategoriesSpec, cancellationToken))
-            // In case there are duplicates, add only the first.
+        var existingCategories = await _data.Categories
+            .Where(x => missingNames.Contains(x.Name))
             .OrderBy(x => x.Id)
+            // In case there are duplicates, add only the first.
             .GroupBy(x => x.Name)
-            .Select(g => g.First());
+            .Select(g => g.First())
+            .ToListAsync(cancellationToken);
 
         recipe.Categories.AddRange(existingCategories);
 
@@ -104,8 +113,13 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         recipe.Categories.AddRange(createdCategories);
 
         // Remove categories that are no longer used.
-        var unusedCategoriesSpec = new CategoriesUnusedSpecification();
-        var categories = await _data.Categories.List(unusedCategoriesSpec, cancellationToken);
-        await _data.Categories.RemoveRange(categories, cancellationToken);
+        var unusedCategories = await _data.Categories
+            .Include(x => x.Recipes)
+            .Where(x => x.Recipes.Count == 0)
+            .AsSingleQuery()
+            .ToListAsync(cancellationToken);
+
+        // Remove categories that are no longer used.
+        _data.Categories.RemoveRange(unusedCategories);
     }
 }

@@ -8,7 +8,7 @@ using NSubstitute;
 using VoidCore.Model.Responses.Files;
 using Xunit;
 
-namespace FoodStuffs.Test.Model.Events;
+namespace FoodStuffs.Test;
 
 public class ImageEventTests
 {
@@ -24,7 +24,7 @@ public class ImageEventTests
 
         var request = new GetImageRequest(image.FileName);
 
-        var result = await new GetImageHandler(data).Handle(request);
+        var result = await new GetImageHandler(context).Handle(request);
 
         Assert.True(result.IsSuccess);
 
@@ -42,7 +42,7 @@ public class ImageEventTests
 
         var request = new GetImageRequest("not-exist-image.jpg");
 
-        var result = await new GetImageHandler(data).Handle(request);
+        var result = await new GetImageHandler(context).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));
@@ -63,7 +63,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
+        var result = await new SaveImageHandler(context, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
 
         Assert.True(result.IsSuccess);
 
@@ -90,7 +90,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
+        var result = await new SaveImageHandler(context, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains("upload-file", result.Failures.Select(f => f.UiHandle));
@@ -110,7 +110,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveImageHandler(data, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
+        var result = await new SaveImageHandler(context, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains(typeof(RecipeNotFoundFailure), result.Failures.Select(f => f.GetType()));
@@ -141,7 +141,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new DeleteImageHandler(data, indexService).Handle(request);
+        var result = await new DeleteImageHandler(context, indexService).Handle(request);
 
         Assert.True(result.IsSuccess);
 
@@ -159,7 +159,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new DeleteImageHandler(data, indexService).Handle(request);
+        var result = await new DeleteImageHandler(context, indexService).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));
@@ -182,7 +182,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new PinImageHandler(data, indexService).Handle(request);
+        var result = await new PinImageHandler(context, indexService).Handle(request);
 
         Assert.True(result.IsSuccess);
 
@@ -201,7 +201,7 @@ public class ImageEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new PinImageHandler(data, indexService).Handle(request);
+        var result = await new PinImageHandler(context, indexService).Handle(request);
 
         Assert.True(result.IsFailed);
         Assert.Contains(typeof(ImageNotFoundFailure), result.Failures.Select(f => f.GetType()));

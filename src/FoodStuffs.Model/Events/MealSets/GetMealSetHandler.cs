@@ -1,5 +1,7 @@
-﻿using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 
@@ -7,18 +9,23 @@ namespace FoodStuffs.Model.Events.MealSets;
 
 public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMealSetResponse>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public GetMealSetHandler(IFoodStuffsData data)
+    public GetMealSetHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
     public override Task<IResult<GetMealSetResponse>> Handle(GetMealSetRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new MealSetsByIdWithAllRelatedSpecification(request.Id);
+        var byId = new MealSetsWithAllRelatedSpecification(request.Id);
 
-        return _data.MealSets.Get(byId, cancellationToken)
+        return _data.MealSets
+            .ApplyEfSpecification(byId)
+            .AsSplitQuery()
+            .OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new MealSetNotFoundFailure())
             .SelectAsync(r => new GetMealSetResponse(
                 Id: r.Id,

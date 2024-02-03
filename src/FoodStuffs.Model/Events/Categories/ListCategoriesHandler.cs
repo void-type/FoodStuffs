@@ -23,7 +23,7 @@ public class ListCategoriesHandler : EventHandlerAbstract<ListCategoriesRequest,
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var pagedSearch = new CategoriesSearchSpecification(
+        var pagedSearch = new CategoriesSpecification(
             criteria: searchCriteria,
             paginationOptions: paginationOptions);
 

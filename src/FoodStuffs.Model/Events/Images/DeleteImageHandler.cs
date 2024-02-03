@@ -1,6 +1,6 @@
-﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Queries;
+﻿using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.Search;
+using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -9,31 +9,34 @@ namespace FoodStuffs.Model.Events.Images;
 
 public class DeleteImageHandler : EventHandlerAbstract<DeleteImageRequest, EntityMessage<string>>
 {
-    private readonly IFoodStuffsData _data;
-    private readonly IRecipeIndexService _indexService;
+    private readonly FoodStuffsContext _data;
+    private readonly IRecipeIndexService _index;
 
-    public DeleteImageHandler(IFoodStuffsData data, IRecipeIndexService indexService)
+    public DeleteImageHandler(FoodStuffsContext data, IRecipeIndexService index)
     {
         _data = data;
-        _indexService = indexService;
+        _index = index;
     }
 
     public override Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new ImagesByNameWithRecipesSpecification(request.Name);
-
-        return _data.Images.Get(byId, cancellationToken)
+        return _data.Images
+            .Include(x => x.Recipe)
+            .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
+            .MapAsync(Maybe.From)
             .ToResultAsync(new ImageNotFoundFailure())
             .TeeOnSuccessAsync(async i =>
             {
                 if (i.Recipe.PinnedImageId == i.Id)
                 {
                     i.Recipe.PinnedImageId = null;
-                    await _data.Recipes.Update(i.Recipe, cancellationToken);
                 }
+
+                _data.Remove(i);
+
+                await _data.SaveChangesAsync(cancellationToken);
+                await _index.AddOrUpdate(i.RecipeId, cancellationToken);
             })
-            .TeeOnSuccessAsync(i => _data.Images.Remove(i, cancellationToken))
-            .TeeOnSuccessAsync(async i => await _indexService.AddOrUpdate(i.RecipeId, cancellationToken))
             .SelectAsync(i => EntityMessage.Create("Image deleted.", request.Name));
     }
 }

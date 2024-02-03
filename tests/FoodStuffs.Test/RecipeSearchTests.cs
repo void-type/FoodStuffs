@@ -5,7 +5,7 @@ using NSubstitute;
 using VoidCore.Model.Time;
 using Xunit;
 
-namespace FoodStuffs.Test.Model;
+namespace FoodStuffs.Test;
 
 public class RecipeSearchTests : IAsyncLifetime
 {
@@ -39,8 +39,8 @@ public class RecipeSearchTests : IAsyncLifetime
             TaxonomyFolder = "App_Data/Lucene/RecipeTaxonomy",
         };
 
-        var indexService = new RecipeIndexService(logger, settings, data);
-        await indexService.Rebuild();
+        var indexService = new RecipeIndexService(logger, settings, context);
+        await indexService.Rebuild(CancellationToken.None);
 
         return new RecipeQueryService(settings, new UtcNowDateTimeService());
     }

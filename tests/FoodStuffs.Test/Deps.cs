@@ -6,7 +6,7 @@ using VoidCore.Model.Auth;
 using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Time;
 
-namespace FoodStuffs.Test.Model;
+namespace FoodStuffs.Test;
 
 /// <summary>
 /// Test Dependencies

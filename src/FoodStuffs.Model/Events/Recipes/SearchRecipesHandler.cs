@@ -7,15 +7,15 @@ namespace FoodStuffs.Model.Events.Recipes;
 
 public class SearchRecipesHandler : EventHandlerSyncAbstract<SearchRecipesRequest, IItemSet<SearchRecipesResponse>>
 {
-    private readonly IRecipeQueryService _queryService;
+    private readonly IRecipeQueryService _query;
 
-    public SearchRecipesHandler(IRecipeQueryService queryService)
+    public SearchRecipesHandler(IRecipeQueryService query)
     {
-        _queryService = queryService;
+        _query = query;
     }
 
     protected override IResult<IItemSet<SearchRecipesResponse>> HandleSync(SearchRecipesRequest request)
     {
-        return Ok(_queryService.Search(request));
+        return Ok(_query.Search(request));
     }
 }
