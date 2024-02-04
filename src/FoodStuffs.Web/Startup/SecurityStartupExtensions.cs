@@ -1,25 +1,9 @@
 ﻿using VoidCore.AspNet.Security;
 
-namespace FoodStuffs.Web.Configuration;
+namespace FoodStuffs.Web.Startup;
 
-public static class ApplicationBuilderExtensions
+public static class SecurityStartupExtensions
 {
-    public static IApplicationBuilder UseSwaggerAndUi(this IApplicationBuilder app, IHostEnvironment environment)
-    {
-        if (environment.IsProduction())
-        {
-            return app;
-        }
-
-        return app
-            .UseSwagger()
-            .UseSwaggerUI(c =>
-            {
-                c.DocumentTitle = environment.ApplicationName + " API";
-                c.UseRequestInterceptor("(req) => { req.headers['X-Csrf-Token'] = window.vt_api_csrf_token; return req; }");
-            });
-    }
-
     public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment)
     {
         app.UseContentSecurityPolicy(options =>

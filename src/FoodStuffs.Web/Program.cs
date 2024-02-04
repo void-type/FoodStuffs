@@ -3,7 +3,7 @@ using FoodStuffs.Model.Data.EntityFramework;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
 using FoodStuffs.Web.Auth;
-using FoodStuffs.Web.Configuration;
+using FoodStuffs.Web.Startup;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VoidCore.AspNet.ClientApp;
@@ -64,6 +64,8 @@ try
         typeof(IFoodStuffsData).Assembly);
 
     services.AddSwaggerWithCsp(env);
+
+    services.AddHostedService<EnsureIndexHostedService>();
 
     var app = builder.Build();
 
