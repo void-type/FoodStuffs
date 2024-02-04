@@ -23,8 +23,8 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
         var byId = new MealSetsWithAllRelatedSpecification(request.Id);
 
         var maybeMealSet = await _data.MealSets
-            .ApplyEfSpecification(byId)
             .AsSplitQuery()
+            .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);

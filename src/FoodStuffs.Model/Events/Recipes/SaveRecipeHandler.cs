@@ -27,8 +27,8 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
         var maybeRecipe = await _data.Recipes
-            .ApplyEfSpecification(byId)
             .AsSplitQuery()
+            .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
@@ -114,9 +114,9 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
         // Remove categories that are no longer used.
         var unusedCategories = await _data.Categories
+            .AsSingleQuery()
             .Include(x => x.Recipes)
             .Where(x => x.Recipes.Count == 0)
-            .AsSingleQuery()
             .ToListAsync(cancellationToken);
 
         // Remove categories that are no longer used.

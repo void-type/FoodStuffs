@@ -21,8 +21,8 @@ public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMeal
         var byId = new MealSetsWithAllRelatedSpecification(request.Id);
 
         return _data.MealSets
-            .ApplyEfSpecification(byId)
             .AsSplitQuery()
+            .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)

@@ -21,8 +21,8 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
         return _data.Recipes
-            .ApplyEfSpecification(byId)
             .AsSplitQuery()
+            .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)

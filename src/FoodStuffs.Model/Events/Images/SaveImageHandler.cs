@@ -37,8 +37,8 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         // 3. edit the client-side upload validation in the RecipeEdit.vue file.
 
         var recipeResult = await _data.Recipes
-            .Include(x => x.Images)
             .AsSingleQuery()
+            .Include(x => x.Images)
             .FirstOrDefaultAsync(r => r.Id == request.RecipeId, cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure());

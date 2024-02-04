@@ -32,8 +32,8 @@ public class RecipeIndexService : IRecipeIndexService
         var byId = new RecipesWithAllRelatedSpecification(recipeId);
 
         var maybeRecipe = await _data.Recipes
-            .ApplyEfSpecification(byId)
             .AsSplitQuery()
+            .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
@@ -89,10 +89,10 @@ public class RecipeIndexService : IRecipeIndexService
             var withAllRelated = new RecipesWithAllRelatedSpecification();
 
             var recipes = await _data.Recipes
-                .ApplyEfSpecification(withAllRelated)
-                .GetPage(pagination)
                 .AsSplitQuery()
+                .ApplyEfSpecification(withAllRelated)
                 .OrderBy(x => x.Id)
+                .GetPage(pagination)
                 .ToListAsync(cancellationToken);
 
             foreach (var recipe in recipes)
