@@ -101,7 +101,7 @@ try {
 
   if (-not $SkipPublish) {
     # Package build
-    dotnet publish "$webProjectFolder" --configuration "$Configuration" --no-build --output './artifacts/dist/release'
+    dotnet publish "$webProjectFolder" --configuration "$Configuration" --no-build --output $webReleaseFolder
     Stop-OnError
   }
 

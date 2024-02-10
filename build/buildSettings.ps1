@@ -1,13 +1,16 @@
-$shortAppName = "FoodStuffs"
+$shortAppName = 'FoodStuffs'
 $projectName = "$shortAppName"
 
+$webClientProjectFolder = './src/ClientApp'
+$testProjectFolder = "./tests/$projectName.Test"
+$modelProjectFolder = "./src/$projectName.Model"
 $webProjectFolder = "./src/$projectName.Web"
 $modelProjectFolder = "./src/$projectName.Model"
-$webClientProjectFolder = "./src/ClientApp"
-$iisDirectoryProduction = "\\server2\DeployedApps\apps\$projectName"
-$settingsDirectoryProduction = "\\server2\Servers\AppConfigs\$projectName"
 
-$testProjectFolder = "./tests/$projectName.Test"
+$webReleaseFolder = './artifacts/dist/release/web'
 
-$iisDirectoryTest = "\\server2\DeployedApps\apps\$($projectName)-Test"
-$settingsDirectoryTest = "$settingsDirectoryProduction"
+$webDirectoryProduction = "\\server2\DeployedApps\apps\$projectName.Web"
+$webSettingsDirectoryProduction = "\\server2\Servers\AppConfigs\$projectName\Web"
+
+$webDirectoryTest = "\\server2\DeployedApps\apps\$($projectName).Web-Test"
+$webSettingsDirectoryTest = "$webSettingsDirectoryProduction"
