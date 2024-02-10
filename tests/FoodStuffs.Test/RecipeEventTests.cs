@@ -41,35 +41,6 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task SearchRecipes_returns_a_page_of_recipes()
-    {
-        await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
-
-        var logger = Substitute.For<ILogger<RecipeIndexService>>();
-
-        var settings = new RecipeSearchSettings
-        {
-            IndexFolder = "App_Data/Lucene/RecipeIndex",
-            TaxonomyFolder = "App_Data/Lucene/RecipeTaxonomy",
-        };
-
-        var indexService = new RecipeIndexService(logger, settings, context);
-        await indexService.Rebuild(CancellationToken.None);
-
-        var queryService = new RecipeQueryService(settings, new UtcNowDateTimeService());
-
-        var result = await new SearchRecipesHandler(queryService)
-            .Handle(new SearchRecipesRequest(null, null, null, null, true, 2, 1));
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Equal(2, result.Value.Page);
-        Assert.Equal(1, result.Value.Take);
-    }
-
-    [Fact]
     public async Task DeleteRecipe_deletes_recipe_and_returns_id_when_recipe_exists()
     {
         // Due to the way we delete, we need a fresh dbcontext to remove tracked entities.

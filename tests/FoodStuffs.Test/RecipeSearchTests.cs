@@ -46,7 +46,23 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task ListRecipe_returns_all_recipes_when_paging_is_disabled()
+    public async Task SearchRecipes_returns_a_page_of_recipes()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+        var data = context.FoodStuffsData();
+
+        var result = await new SearchRecipesHandler(_queryService)
+            .Handle(new SearchRecipesRequest(null, null, null, null, true, 2, 1));
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.Count);
+        Assert.Equal(3, result.Value.TotalCount);
+        Assert.Equal(2, result.Value.Page);
+        Assert.Equal(1, result.Value.Take);
+    }
+
+    [Fact]
+    public async Task SearchRecipes_returns_all_recipes_when_paging_is_disabled()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
         var data = context.FoodStuffsData();
