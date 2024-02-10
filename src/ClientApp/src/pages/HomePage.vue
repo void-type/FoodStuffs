@@ -49,16 +49,18 @@ onMounted(() => {
                 <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
               </router-link>
             </div>
-            <img
-              v-if="recipe.image != null"
-              class="img-fluid rounded-bottom"
-              :src="imageUrl(recipe.image)"
-              :alt="`Image of ${recipe.name}`"
-              :loading="i > 5 ? 'lazy' : 'eager'"
-              width="1600"
-              height="1200"
-            />
-            <ImagePlaceholder v-else class="img-fluid rounded-bottom" />
+            <div class="image-container">
+              <img
+                v-if="recipe.image != null"
+                class="img-fluid rounded-bottom"
+                :src="imageUrl(recipe.image)"
+                :alt="`Image of ${recipe.name}`"
+                :loading="i > 5 ? 'lazy' : 'eager'"
+                width="1600"
+                height="1200"
+              />
+              <ImagePlaceholder v-else class="img-fluid rounded-bottom position-absolute" />
+            </div>
           </router-link>
         </div>
       </div>
@@ -66,4 +68,33 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: calc(1200 / 1600 * 100%);
+  overflow: hidden;
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.position-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+</style>
