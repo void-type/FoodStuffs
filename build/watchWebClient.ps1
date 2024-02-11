@@ -26,7 +26,6 @@ try {
     npm run watch
   }
 
-
 } finally {
   Set-Location $originalLocation
 }
