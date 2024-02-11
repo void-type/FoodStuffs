@@ -157,13 +157,6 @@ html[data-bs-theme='dark'] {
   column-gap: 0;
 }
 
-.category-facets-scroll {
-  max-height: 12rem;
-  overflow: scroll;
-  row-gap: 0;
-  column-gap: 0;
-}
-
 // Printable screens
 @media print {
   div {

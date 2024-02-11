@@ -31,14 +31,14 @@ onMounted(() => {
       >Categories
       <span v-if="model.length">({{ model.length }} selected)</span>
     </label>
-    <button class="btn btn-sm btn-outline-light btn-cling ms-3" @click.stop.prevent="model = []">
+    <button class="btn btn-sm btn-outline-light btn-cling ms-2" @click.stop.prevent="model = []">
       Clear
     </button>
-    <div class="grid py-2 category-facets-scroll">
+    <div class="grid category-facets-scroll">
       <div
         v-for="categoryOption in categoryOptions"
         :key="categoryOption.id"
-        class="g-col-6 form-check"
+        class="g-col-6 form-check m-0"
       >
         <input
           :id="`category-${categoryOption.id}`"
@@ -55,4 +55,11 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.category-facets-scroll {
+  max-height: 12rem;
+  overflow: scroll;
+  row-gap: 0.1rem;
+  column-gap: 0;
+}
+</style>
