@@ -64,7 +64,19 @@ export const useRecipeStore = defineStore('recipes', {
       }
 
       this.discoverPage = data.page || 0;
-      this.discoverList = [...this.discoverList, ...data.items];
+
+      // If it wasn't a full page, make the next request load this page again.
+      if ((data.count || 0) < (data.take || 1) && this.discoverPage > 1) {
+        this.discoverPage -= 1;
+      }
+
+      const newItems = data.items.filter(
+        (newItem) => !this.discoverList.some((existingItem) => existingItem.id === newItem.id)
+      );
+
+      if (newItems.length > 0) {
+        this.discoverList = [...this.discoverList, ...newItems];
+      }
     },
 
     addToRecent(recipe: GetRecipeResponse | null) {

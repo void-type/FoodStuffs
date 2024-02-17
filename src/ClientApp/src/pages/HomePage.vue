@@ -16,29 +16,29 @@ const { discoverList, discoverPage } = storeToRefs(recipeStore);
 
 const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
 
-let isFetchingRecipes = false;
+const isFetchingRecipes = ref(false);
 
 function fetchRecipes() {
-  if (isFetchingRecipes) {
+  if (isFetchingRecipes.value) {
     return;
   }
 
-  isFetchingRecipes = true;
+  isFetchingRecipes.value = true;
 
   api()
     .recipesList({
       ...new SearchRecipesRequest(),
       page: discoverPage.value + 1,
-      take: 15,
+      take: 8,
       sortBy: 'random',
     })
     .then((response) => {
       recipeStore.setDiscoverListResponse(response.data);
-      isFetchingRecipes = false;
+      isFetchingRecipes.value = false;
     })
     .catch((response) => {
       messageStore.setApiFailureMessages(response);
-      isFetchingRecipes = false;
+      isFetchingRecipes.value = false;
     });
 }
 
@@ -104,7 +104,15 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div ref="loadMoreTrigger"></div>
+    <p v-if="discoverList.length > 0" class="mt-3 mb-4">
+      <a href="#main">Back to top</a>
+    </p>
+    <div ref="loadMoreTrigger" class="m-0"></div>
+    <div v-if="isFetchingRecipes" class="g-col-12 text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -130,11 +138,5 @@ onMounted(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.position-absolute {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 </style>
