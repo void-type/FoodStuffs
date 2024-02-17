@@ -5,27 +5,66 @@ import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const recipeStore = useRecipeStore();
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
-const { discoverListResponse } = storeToRefs(recipeStore);
+const { discoverList, discoverPage } = storeToRefs(recipeStore);
 
 const imageUrl = (id: number | string) => ApiHelpers.imageUrl(id);
 
-onMounted(() => {
-  if (discoverListResponse.value.count === 0) {
-    api()
-      .recipesList({
-        ...new SearchRecipesRequest(),
-        sortBy: 'random',
-      })
-      .then((response) => recipeStore.setDiscoverListResponse(response.data))
-      .catch((response) => messageStore.setApiFailureMessages(response));
+let isFetchingRecipes = false;
+
+function fetchRecipes() {
+  if (isFetchingRecipes) {
+    return;
   }
+
+  isFetchingRecipes = true;
+
+  api()
+    .recipesList({
+      ...new SearchRecipesRequest(),
+      page: discoverPage.value + 1,
+      take: 15,
+      sortBy: 'random',
+    })
+    .then((response) => {
+      recipeStore.setDiscoverListResponse(response.data);
+      isFetchingRecipes = false;
+    })
+    .catch((response) => {
+      messageStore.setApiFailureMessages(response);
+      isFetchingRecipes = false;
+    });
+}
+
+const loadMoreTrigger: Ref<Element | undefined> = ref();
+
+function observeLoadMoreTrigger() {
+  if (!loadMoreTrigger.value) {
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        fetchRecipes();
+      }
+    },
+    {
+      threshold: 1,
+    }
+  );
+
+  observer.observe(loadMoreTrigger.value);
+}
+
+onMounted(() => {
+  observeLoadMoreTrigger();
 });
 </script>
 
@@ -33,7 +72,7 @@ onMounted(() => {
   <div class="container-xxl">
     <div class="grid mt-4">
       <div
-        v-for="(recipe, i) in discoverListResponse.items"
+        v-for="(recipe, i) in discoverList"
         :key="recipe.id"
         class="g-col-12 g-col-md-6 g-col-lg-4"
       >
@@ -65,6 +104,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <div ref="loadMoreTrigger"></div>
   </div>
 </template>
 

@@ -15,7 +15,8 @@ interface RecipeStoreState {
   listResponse: SearchRecipesResponseIItemSet;
   listRequest: RecipesListParams;
   recentRecipes: Array<SearchRecipesResponse>;
-  discoverListResponse: SearchRecipesResponseIItemSet;
+  discoverList: SearchRecipesResponse[];
+  discoverPage: number;
 }
 
 export const useRecipeStore = defineStore('recipes', {
@@ -30,14 +31,8 @@ export const useRecipeStore = defineStore('recipes', {
     },
     listRequest: { ...new SearchRecipesRequest(), take: Choices.defaultPaginationTake.value },
     recentRecipes: RecipeStoreHelpers.getRecents(),
-    discoverListResponse: {
-      count: 0,
-      items: [],
-      isPagingEnabled: true,
-      page: 1,
-      take: Choices.defaultPaginationTake.value,
-      totalCount: 0,
-    },
+    discoverList: [],
+    discoverPage: 0,
   }),
 
   getters: {
@@ -58,7 +53,18 @@ export const useRecipeStore = defineStore('recipes', {
     },
 
     setDiscoverListResponse(data: SearchRecipesResponseIItemSet) {
-      this.discoverListResponse = data;
+      if (!data.items) {
+        this.discoverPage = 0;
+        this.discoverList = [];
+        return;
+      }
+
+      if (data.page === 1) {
+        this.discoverList = [];
+      }
+
+      this.discoverPage = data.page || 0;
+      this.discoverList = [...this.discoverList, ...data.items];
     },
 
     addToRecent(recipe: GetRecipeResponse | null) {
