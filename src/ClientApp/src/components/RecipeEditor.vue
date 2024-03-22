@@ -3,8 +3,8 @@ import WorkingRecipe from '@/models/WorkingRecipe';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import { isNil, trimAndTitleCase } from '@/models/FormatHelpers';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import ApiHelpers from '@/models/ApiHelpers';
+import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 import EntityAuditInfo from './EntityAuditInfo.vue';
@@ -42,7 +42,6 @@ const props = defineProps({
   },
 });
 
-const router = useRouter();
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
@@ -146,22 +145,22 @@ onMounted(() => {
         <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
           Save
         </button>
-        <button
+        <router-link
           v-if="isEditMode"
           type="button"
           class="btn btn-outline-light me-2"
-          @click.stop.prevent="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
+          :to="{ name: 'new', query: { copy: sourceRecipe.id } }"
         >
           Copy
-        </button>
-        <button
+        </router-link>
+        <router-link
           v-if="isEditMode"
           type="button"
           class="btn btn-outline-light me-2"
-          @click.stop.prevent="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
+          :to="RouterHelpers.viewRecipe(sourceRecipe)"
         >
           Cancel
-        </button>
+        </router-link>
         <button
           v-if="isEditMode"
           type="button"
@@ -243,19 +242,19 @@ onMounted(() => {
         <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
           Save
         </button>
-        <button
+        <router-link
           v-if="isEditMode"
           type="button"
           class="btn btn-outline-light me-2"
-          @click.stop.prevent="() => router.push({ name: 'new', query: { copy: sourceRecipe.id } })"
+          :to="{ name: 'new', query: { copy: sourceRecipe.id } }"
         >
           Copy
-        </button>
+        </router-link>
         <button
           v-if="isEditMode"
           type="button"
           class="btn btn-outline-light me-2"
-          @click.stop.prevent="() => router.push({ name: 'view', params: { id: sourceRecipe.id } })"
+          :to="RouterHelpers.viewRecipe(sourceRecipe)"
         >
           Cancel
         </button>

@@ -1,16 +1,15 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMessage<string>>
+public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, EntityMessage<string>>
 {
     private readonly FoodStuffsContext _data;
     private readonly ILogger<SaveImageHandler> _logger;
@@ -37,6 +36,7 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         // 3. edit the client-side upload validation in the RecipeEdit.vue file.
 
         var recipeResult = await _data.Recipes
+            .TagWith(GetTag())
             .AsSingleQuery()
             .Include(x => x.Images)
             .FirstOrDefaultAsync(r => r.Id == request.RecipeId, cancellationToken)
@@ -60,20 +60,13 @@ public class SaveImageHandler : EventHandlerAbstract<SaveImageRequest, EntityMes
         var image = new Image
         {
             FileName = $"{Guid.NewGuid()}.webp",
+            ImageBlob = new ImageBlob
+            {
+                Bytes = compressedFileContent,
+            }
         };
 
         recipeResult.Value.Images.Add(image);
-
-        await _data.SaveChangesAsync(cancellationToken);
-
-        image.Blob = new Blob
-        {
-            // This is tech-debt from when we wanted Images and Blobs to share an ID to shortcut downloads by ID.
-            // We should eventually make this independent.
-            // When we fix that, we can save in one step instead of 2.
-            Id = image.Id,
-            Bytes = compressedFileContent,
-        };
 
         await _data.SaveChangesAsync(cancellationToken);
 

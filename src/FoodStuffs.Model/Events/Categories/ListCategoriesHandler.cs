@@ -1,18 +1,19 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using VoidCore.Model.Events;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.Events.Categories;
 
-public class ListCategoriesHandler : EventHandlerAbstract<ListCategoriesRequest, IItemSet<ListCategoriesResponse>>
+public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRequest, IItemSet<ListCategoriesResponse>>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public ListCategoriesHandler(IFoodStuffsData data)
+    public ListCategoriesHandler(FoodStuffsContext data)
     {
         _data = data;
     }
@@ -23,14 +24,15 @@ public class ListCategoriesHandler : EventHandlerAbstract<ListCategoriesRequest,
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var pagedSearch = new CategoriesSpecification(
-            criteria: searchCriteria,
-            paginationOptions: paginationOptions);
+        var specification = new CategoriesSpecification(criteria: searchCriteria);
 
-        return _data.Categories.ListPage(pagedSearch, cancellationToken)
-            .SelectAsync(ms => new ListCategoriesResponse(
-                Id: ms.Id,
-                Name: ms.Name))
+        return _data.Categories
+            .TagWith(GetTag(specification))
+            .ApplyEfSpecification(specification)
+            .ToItemSet(paginationOptions, cancellationToken)
+            .SelectAsync(c => new ListCategoriesResponse(
+                Id: c.Id,
+                Name: c.Name))
             .MapAsync(Ok);
     }
 

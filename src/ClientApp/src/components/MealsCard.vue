@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import type { SearchRecipesResponse } from '@/api/data-contracts';
+import type { RecipeSearchResultItem } from '@/api/data-contracts';
 import type { PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import RouterHelpers from '@/models/RouterHelpers';
 import ApiHelpers from '@/models/ApiHelpers';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
-  recipe: { type: Object as PropType<SearchRecipesResponse>, required: true },
+  recipe: { type: Object as PropType<RecipeSearchResultItem>, required: true },
   onCardClick: { type: Function, required: true },
   selected: { type: Boolean, required: false, default: false },
   cardType: { type: String, required: true },
@@ -46,7 +47,7 @@ function cardClickInternal() {
               <div class="d-flex align-items-center">
                 <router-link
                   class="btn-card-control ms-auto"
-                  :to="{ name: 'view', params: { id: recipe.id } }"
+                  :to="RouterHelpers.viewRecipe(recipe)"
                   @keydown.stop.enter
                   @click.stop
                 >
@@ -54,7 +55,7 @@ function cardClickInternal() {
                 </router-link>
                 <router-link
                   class="btn-card-control"
-                  :to="{ name: 'edit', params: { id: recipe.id } }"
+                  :to="RouterHelpers.editRecipe(recipe)"
                   @keydown.stop.enter
                   @click.stop
                 >

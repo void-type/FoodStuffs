@@ -1,15 +1,14 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class DeleteRecipeHandler : EventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
+public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
     private readonly IRecipeIndexService _index;
@@ -25,6 +24,7 @@ public class DeleteRecipeHandler : EventHandlerAbstract<DeleteRecipeRequest, Ent
         var byId = new RecipesSpecification(request.Id);
 
         return _data.Recipes
+            .TagWith(GetTag(byId))
             .ApplyEfSpecification(byId)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)

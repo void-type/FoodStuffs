@@ -1,13 +1,12 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.MealSets;
 
-public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMealSetResponse>
+public class GetMealSetHandler : CustomEventHandlerAbstract<GetMealSetRequest, GetMealSetResponse>
 {
     private readonly FoodStuffsContext _data;
 
@@ -21,6 +20,7 @@ public class GetMealSetHandler : EventHandlerAbstract<GetMealSetRequest, GetMeal
         var byId = new MealSetsWithAllRelatedSpecification(request.Id);
 
         return _data.MealSets
+            .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)

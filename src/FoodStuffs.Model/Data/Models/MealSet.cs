@@ -1,6 +1,8 @@
-﻿namespace FoodStuffs.Model.Data.Models;
+﻿using VoidCore.Model.Data;
 
-public partial class MealSet
+namespace FoodStuffs.Model.Data.Models;
+
+public class MealSet : IAuditableWithOffset
 {
     public int Id { get; set; }
 
@@ -8,13 +10,13 @@ public partial class MealSet
 
     public string CreatedBy { get; set; } = null!;
 
-    public DateTime CreatedOn { get; set; }
+    public DateTimeOffset CreatedOn { get; set; }
 
     public string ModifiedBy { get; set; } = null!;
 
-    public DateTime ModifiedOn { get; set; }
+    public DateTimeOffset ModifiedOn { get; set; }
 
     public virtual List<Recipe> Recipes { get; } = [];
 
-    public virtual List<PantryIngredient> PantryIngredients { get; set; } = [];
+    public virtual List<MealSetPantryIngredient> PantryIngredients { get; } = [];
 }

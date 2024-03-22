@@ -4,8 +4,8 @@ public record GetMealSetResponse(
     int Id,
     string Name,
     string CreatedBy,
-    DateTime CreatedOn,
+    DateTimeOffset CreatedOn,
     string ModifiedBy,
-    DateTime ModifiedOn,
+    DateTimeOffset ModifiedOn,
     IEnumerable<GetMealSetResponsePantryIngredient> PantryIngredients,
     IEnumerable<GetMealSetResponseRecipe> Recipes);

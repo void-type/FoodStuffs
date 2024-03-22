@@ -1,6 +1,8 @@
-﻿namespace FoodStuffs.Model.Data.Models;
+﻿using VoidCore.Model.Data;
 
-public partial class Image
+namespace FoodStuffs.Model.Data.Models;
+
+public class Image : IAuditableWithOffset
 {
     public int Id { get; set; }
 
@@ -8,15 +10,15 @@ public partial class Image
 
     public string CreatedBy { get; set; } = null!;
 
-    public DateTime CreatedOn { get; set; }
+    public DateTimeOffset CreatedOn { get; set; }
 
     public string ModifiedBy { get; set; } = null!;
 
-    public DateTime ModifiedOn { get; set; }
+    public DateTimeOffset ModifiedOn { get; set; }
 
     public int RecipeId { get; set; }
 
-    public virtual Blob? Blob { get; set; }
-
     public virtual Recipe Recipe { get; set; } = null!;
+
+    public virtual ImageBlob ImageBlob { get; set; } = null!;
 }

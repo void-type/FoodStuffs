@@ -1,12 +1,11 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using Microsoft.EntityFrameworkCore;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.MealSets;
 
-public class DeleteMealSetHandler : EventHandlerAbstract<DeleteMealSetRequest, EntityMessage<int>>
+public class DeleteMealSetHandler : CustomEventHandlerAbstract<DeleteMealSetRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
 
@@ -18,6 +17,7 @@ public class DeleteMealSetHandler : EventHandlerAbstract<DeleteMealSetRequest, E
     public override Task<IResult<EntityMessage<int>>> Handle(DeleteMealSetRequest request, CancellationToken cancellationToken = default)
     {
         return _data.MealSets
+            .TagWith(GetTag())
             .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new MealSetNotFoundFailure())

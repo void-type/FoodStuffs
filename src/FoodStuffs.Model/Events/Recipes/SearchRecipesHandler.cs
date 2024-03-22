@@ -1,11 +1,10 @@
 ﻿using FoodStuffs.Model.Search;
 using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
-using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class SearchRecipesHandler : EventHandlerSyncAbstract<SearchRecipesRequest, IItemSet<SearchRecipesResponse>>
+public class SearchRecipesHandler : EventHandlerSyncAbstract<RecipeSearchRequest, RecipeSearchResponse>
 {
     private readonly IRecipeQueryService _query;
 
@@ -14,7 +13,7 @@ public class SearchRecipesHandler : EventHandlerSyncAbstract<SearchRecipesReques
         _query = query;
     }
 
-    protected override IResult<IItemSet<SearchRecipesResponse>> HandleSync(SearchRecipesRequest request)
+    protected override IResult<RecipeSearchResponse> HandleSync(RecipeSearchRequest request)
     {
         return Ok(_query.Search(request));
     }

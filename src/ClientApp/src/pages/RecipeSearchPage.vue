@@ -5,15 +5,14 @@ import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelpers';
 import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { watch, type PropType, ref } from 'vue';
+import { watch, type PropType, ref, computed } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
-import RecipeSearchCard from '@/components/RecipeSearchCard.vue';
-import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
+import RecipeCard from '@/components/RecipeCard.vue';
 
 const props = defineProps({
   query: {
@@ -32,6 +31,23 @@ const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelpers;
 
 const selectedCategories = ref([] as Array<number>);
+
+const resultCountText = computed(() => {
+  const itemSet = listResponse.value;
+
+  const totalCount = itemSet.totalCount || 0;
+
+  // If NaN or less than 0.
+  if (!(totalCount > 0)) {
+    return 'No results';
+  }
+
+  const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
+  const start = base + 1;
+  const end = base + (itemSet.count || 0);
+
+  return `Showing ${start}-${end} of ${totalCount} results.`;
+});
 
 function navigateSearch() {
   router.push({
@@ -79,7 +95,13 @@ function changeTake(take: number) {
 
 function changeSort(event: Event) {
   const { value } = event.target as HTMLSelectElement;
-  listRequest.value.sortBy = value;
+
+  recipeStore.setListRequest({
+    ...listRequest.value,
+    sortBy: value,
+    page: 1,
+  });
+
   navigateSearch();
 }
 
@@ -111,9 +133,36 @@ function fetchList() {
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
+const { listFacets } = storeToRefs(recipeStore);
+
+const categoryFacets = computed(() => {
+  return listFacets.value.find((x) => x.fieldName === 'Category_Ids')?.values || [];
+});
+
+function getMealFacetCount(facetValue: boolean | null) {
+  if (facetValue == null) {
+    return null;
+  }
+
+  const count =
+    recipeStore.listFacets
+      .find((x) => x.fieldName === 'IsForMealPlanning')
+      ?.values?.find((x) => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
+      ?.count || 0;
+
+  return ` (${count})`;
+}
+
 watch(selectedCategories, () => {
-  listRequest.value.categories = selectedCategories.value;
-  navigateSearch();
+  if (JSON.stringify(listRequest.value.categories) !== JSON.stringify(selectedCategories.value)) {
+    recipeStore.setListRequest({
+      ...listRequest.value,
+      categories: selectedCategories.value,
+      page: 1,
+    });
+
+    navigateSearch();
+  }
 });
 
 watch(
@@ -130,7 +179,7 @@ watch(
   <div class="container-xxl">
     <h1 class="mt-4 mb-4">Search recipes</h1>
     <div class="grid">
-      <div class="g-col-12 g-col-lg-9">
+      <div class="g-col-12">
         <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
           <template #searchForm>
             <div class="grid mb-3 gap-sm">
@@ -156,7 +205,7 @@ watch(
                     :key="option.value?.toString()"
                     :value="option.value"
                   >
-                    {{ option.text }}
+                    {{ option.text }}{{ getMealFacetCount(option.value) }}
                   </option>
                 </select>
               </div>
@@ -179,33 +228,34 @@ watch(
                   </option>
                 </select>
               </div>
-              <RecipeSearchCategoriesFilter v-model="selectedCategories" class="g-col-12" />
+              <RecipeSearchCategoriesFilter
+                v-model="selectedCategories"
+                :facet-values="categoryFacets"
+                class="g-col-12"
+              />
             </div>
           </template>
         </EntityTableControls>
-        <div class="grid mt-4">
-          <div v-if="(listResponse.items?.length || 0) < 1" class="g-col-12 p-4 text-center">
-            No results
-          </div>
-          <RecipeSearchCard
-            v-for="recipe in listResponse.items"
-            :key="recipe.id"
-            :recipe="recipe"
-            class="g-col-12"
-          />
-        </div>
-        <EntityTablePager
-          :list-request="listRequest"
-          :total-count="toInt(listResponse.totalCount)"
-          :on-change-page="changePage"
-          :on-change-take="changeTake"
-          class="mt-4"
-        />
-      </div>
-      <div class="g-col-12 g-col-lg-3 d-print-none">
-        <SidebarRecipeRecent :route-name="'view'" />
       </div>
     </div>
+    <div class="grid mt-4">
+      <div class="g-col-12">{{ resultCountText }}</div>
+      <RecipeCard
+        v-for="(recipe, i) in listResponse.items"
+        :key="recipe.id"
+        :recipe="recipe"
+        :lazy="i > 6"
+        class="g-col-12 g-col-sm-6 g-col-lg-4"
+      />
+    </div>
+    <EntityTablePager
+      v-if="(listResponse.items?.length || 0) > 0"
+      :list-request="listRequest"
+      :total-count="toInt(listResponse.totalCount)"
+      :on-change-page="changePage"
+      :on-change-take="changeTake"
+      class="mt-4"
+    />
   </div>
 </template>
 

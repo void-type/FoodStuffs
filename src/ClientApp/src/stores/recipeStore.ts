@@ -1,21 +1,24 @@
 import { defineStore } from 'pinia';
 import type {
   GetRecipeResponse,
-  SearchRecipesResponse,
-  SearchRecipesResponseIItemSet,
+  RecipeSearchResultItem,
+  RecipeSearchResponse,
   RecipesListParams,
+  RecipeSearchResultItemIItemSet,
+  RecipeSearchFacet,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 
-const recentLimit = 10;
+const recentLimit = 7;
 
 interface RecipeStoreState {
-  listResponse: SearchRecipesResponseIItemSet;
+  listResponse: RecipeSearchResultItemIItemSet;
   listRequest: RecipesListParams;
-  recentRecipes: Array<SearchRecipesResponse>;
-  discoverList: SearchRecipesResponse[];
+  listFacets: RecipeSearchFacet[];
+  recentRecipes: Array<RecipeSearchResultItem>;
+  discoverList: RecipeSearchResultItem[];
   discoverPage: number;
 }
 
@@ -29,6 +32,7 @@ export const useRecipeStore = defineStore('recipes', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
+    listFacets: [],
     listRequest: { ...new SearchRecipesRequest(), take: Choices.defaultPaginationTake.value },
     recentRecipes: RecipeStoreHelpers.getRecents(),
     discoverList: [],
@@ -44,33 +48,41 @@ export const useRecipeStore = defineStore('recipes', {
   },
 
   actions: {
-    setListResponse(data: SearchRecipesResponseIItemSet) {
-      this.listResponse = data;
+    setListResponse(data: RecipeSearchResponse) {
+      if (data.results) {
+        this.listResponse = data.results;
+      }
+
+      if (data.facets) {
+        this.listFacets = data.facets;
+      }
     },
 
     setListRequest(data: RecipesListParams) {
       this.listRequest = data;
     },
 
-    setDiscoverListResponse(data: SearchRecipesResponseIItemSet) {
-      if (!data.items) {
+    setDiscoverListResponse(data: RecipeSearchResponse) {
+      const { results } = data;
+
+      if (!results?.items) {
         this.discoverPage = 0;
         this.discoverList = [];
         return;
       }
 
-      if (data.page === 1) {
+      if (results.page === 1) {
         this.discoverList = [];
       }
 
-      this.discoverPage = data.page || 0;
+      this.discoverPage = results.page || 0;
 
       // If it wasn't a full page, make the next request load this page again.
-      if ((data.count || 0) < (data.take || 1) && this.discoverPage > 1) {
+      if ((results.count || 0) < (results.take || 1) && this.discoverPage > 1) {
         this.discoverPage -= 1;
       }
 
-      const newItems = data.items.filter(
+      const newItems = results.items.filter(
         (newItem) => !this.discoverList.some((existingItem) => existingItem.id === newItem.id)
       );
 

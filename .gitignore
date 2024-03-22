@@ -268,5 +268,5 @@ __pycache__/
 **/*.Web/App_Data
 
 # App
-appsettings.*.json
+appsettings*.json
 !appsettings.example.json

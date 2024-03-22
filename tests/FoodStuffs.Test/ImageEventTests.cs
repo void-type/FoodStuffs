@@ -16,10 +16,9 @@ public class ImageEventTests
     public async Task GetImage_gets_image_by_id_if_exists()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var image = context.Images
-            .Include(a => a.Blob)
+            .Include(a => a.ImageBlob)
             .First();
 
         var request = new GetImageRequest(image.FileName);
@@ -38,7 +37,6 @@ public class ImageEventTests
     public async Task GetImage_fails_if_image_not_found()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var request = new GetImageRequest("not-exist-image.jpg");
 
@@ -52,7 +50,6 @@ public class ImageEventTests
     public async Task SaveImage_creates_a_compressed_image_and_blob()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var recipe = context.Recipes.First(r => r.Name == "Hotdog");
 
@@ -67,9 +64,9 @@ public class ImageEventTests
 
         Assert.True(result.IsSuccess);
 
-        var image = context.Images.Include(a => a.Blob).First(a => a.FileName == result.Value.Id);
+        var image = context.Images.Include(a => a.ImageBlob).First(a => a.FileName == result.Value.Id);
 
-        Assert.True(myFile.Length > image.Blob.Bytes.Length);
+        Assert.True(myFile.Length > image.ImageBlob.Bytes.Length);
         Assert.Equal(recipe.Id, image.RecipeId);
         Assert.Equal(Deps.DateTimeServiceLate.Moment, image.ModifiedOn);
     }
@@ -78,7 +75,6 @@ public class ImageEventTests
     public async Task SaveImage_fails_if_file_is_not_image()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var recipe = context.Recipes.First(r => r.Name == "Hotdog");
 
@@ -100,7 +96,6 @@ public class ImageEventTests
     public async Task SaveImage_fails_if_recipe_not_found()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var myFile = new MemoryStream(new FileContent("my file content").AsBytes);
 
@@ -123,11 +118,10 @@ public class ImageEventTests
         await using var context1 = Deps.FoodStuffsContext("delete images success").Seed();
 
         await using var context = Deps.FoodStuffsContext("delete images success");
-        var data = context.FoodStuffsData();
 
         var recipe = context.Recipes
             .Include(r => r.Images)
-            .ThenInclude(r => r.Blob)
+            .ThenInclude(r => r.ImageBlob)
             .AsNoTracking()
             .First(r => r.Name == "Cheeseburger");
 
@@ -135,7 +129,7 @@ public class ImageEventTests
 
         // For testing, we need to pull in all entities so EF can cascade delete.
         // In prod, SQL Server will do the cascading without needing to bring them into memory.
-        var blobs = context.Blobs.ToList();
+        var _ = context.Images.Include(x => x.ImageBlob).ToList();
 
         var request = new DeleteImageRequest(image.FileName);
 
@@ -146,14 +140,12 @@ public class ImageEventTests
         Assert.True(result.IsSuccess);
 
         Assert.Empty(context.Images.Where(a => a.Id == image.Id).AsNoTracking().ToList());
-        Assert.Empty(context.Blobs.Where(b => b.Id == image.Blob.Id).AsNoTracking().ToList());
     }
 
     [Fact]
     public async Task DeleteImage_fails_if_recipe_not_found()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var request = new DeleteImageRequest("not-exist-image.jpg");
 
@@ -169,7 +161,6 @@ public class ImageEventTests
     public async Task PinImage_pins_image_to_recipe()
     {
         await using var context = Deps.FoodStuffsContext("pin image success").Seed();
-        var data = context.FoodStuffsData();
 
         var recipe = context.Recipes
             .Include(r => r.Images)
@@ -195,7 +186,6 @@ public class ImageEventTests
     public async Task PinImage_fails_if_image_not_found()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var request = new PinImageRequest("not-exist-image.jpg");
 

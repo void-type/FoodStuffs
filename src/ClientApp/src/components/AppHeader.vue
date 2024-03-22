@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 import useAppStore from '@/stores/appStore';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import useMessageStore from '@/stores/messageStore';
+import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import AppHeaderSearch from './AppHeaderSearch.vue';
 
@@ -18,14 +19,18 @@ const api = ApiHelpers.client;
 const isRebuilding = ref(false);
 
 async function rebuildSearch() {
-  isRebuilding.value = true;
+  try {
+    isRebuilding.value = true;
 
-  const response = await api().recipesRebuildIndexCreate();
+    const response = await api().recipesRebuildIndexCreate();
 
-  isRebuilding.value = false;
-
-  if (response.data.message) {
-    messageStore.setSuccessMessage(response.data.message);
+    if (response.data.message) {
+      messageStore.setSuccessMessage(response.data.message);
+    }
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  } finally {
+    isRebuilding.value = false;
   }
 }
 

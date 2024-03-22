@@ -24,7 +24,6 @@ public class RecipeSearchTests : IAsyncLifetime
     private static async Task<IRecipeQueryService> BuildQueryService()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var logger = Substitute.For<ILogger<RecipeIndexService>>();
 
@@ -49,150 +48,143 @@ public class RecipeSearchTests : IAsyncLifetime
     public async Task SearchRecipes_returns_a_page_of_recipes()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, null, null, null, true, 2, 1));
+            .Handle(new RecipeSearchRequest(null, null, null, null, null, true, 2, 1));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Equal(2, result.Value.Page);
-        Assert.Equal(1, result.Value.Take);
+        Assert.Equal(1, result.Value.Results.Count);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+        Assert.Equal(2, result.Value.Results.Page);
+        Assert.Equal(1, result.Value.Results.Take);
     }
 
     [Fact]
     public async Task SearchRecipes_returns_all_recipes_when_paging_is_disabled()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, null, null, null, false, 0, 0));
+            .Handle(new RecipeSearchRequest(null, null, null, null, null, false, 0, 0));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(3, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Contains("Cheeseburger", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Hotdog", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Sandwich", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Category1", result.Value.Items.SelectMany(r => r.Categories));
+        Assert.Equal(3, result.Value.Results.Count);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+        Assert.Contains("Cheeseburger", result.Value.Results.Items.Select(r => r.Name));
+        Assert.Contains("Hotdog", result.Value.Results.Items.Select(r => r.Name));
+        Assert.Contains("Sandwich", result.Value.Results.Items.Select(r => r.Name));
+        Assert.Contains("Category1", result.Value.Results.Items.SelectMany(r => r.Categories));
     }
 
     [Fact]
     public async Task SearchRecipes_can_sort_by_descending()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, null, null, "z-a", true, 1, 1));
+            .Handle(new RecipeSearchRequest(null, null, null, "z-a", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(1, result.Value.Take);
-        Assert.Equal("Sandwich", result.Value.Items.First().Name);
+        Assert.Equal(1, result.Value.Results.Count);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+        Assert.Equal(1, result.Value.Results.Page);
+        Assert.Equal(1, result.Value.Results.Take);
+        Assert.Equal("Sandwich", result.Value.Results.Items.First().Name);
     }
 
     [Fact]
     public async Task SearchRecipes_can_sort_by_ascending()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, null, null, "a-z", true, 1, 1));
+            .Handle(new RecipeSearchRequest(null, null, null, "a-z", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(3, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(1, result.Value.Take);
-        Assert.Contains("Cheeseburger", result.Value.Items.First().Name);
+        Assert.Equal(1, result.Value.Results.Count);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+        Assert.Equal(1, result.Value.Results.Page);
+        Assert.Equal(1, result.Value.Results.Take);
+        Assert.Contains("Cheeseburger", result.Value.Results.Items.First().Name);
     }
 
     [Fact]
     public async Task SearchRecipes_can_search_by_recipe_name()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest("Hutdug", null, null, null, true, 1, 2));
+            .Handle(new RecipeSearchRequest("Hutdug", null, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(1, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(2, result.Value.Take);
-        Assert.Contains("Hotdog", result.Value.Items.Select(r => r.Name));
+        Assert.Equal(1, result.Value.Results.Count);
+        Assert.Equal(1, result.Value.Results.TotalCount);
+        Assert.Equal(1, result.Value.Results.Page);
+        Assert.Equal(2, result.Value.Results.Take);
+        Assert.Contains("Hotdog", result.Value.Results.Items.Select(r => r.Name));
     }
 
     [Fact]
     public async Task SearchRecipes_can_search_by_category_name()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
+
+        var cat = context.Categories.ToList();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, [1, 2, 3], null, null, true, 1, 4));
+            .Handle(new RecipeSearchRequest(null, [1, 2, 3], null, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(2, result.Value.Count);
-        Assert.Equal(2, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(4, result.Value.Take);
-        Assert.Contains("Cheeseburger", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Hotdog", result.Value.Items.Select(r => r.Name));
-        Assert.DoesNotContain("Sandwich", result.Value.Items.Select(r => r.Name));
+        Assert.Equal(2, result.Value.Results.Count);
+        Assert.Equal(2, result.Value.Results.TotalCount);
+        Assert.Equal(1, result.Value.Results.Page);
+        Assert.Equal(4, result.Value.Results.Take);
+        Assert.Contains("Cheeseburger", result.Value.Results.Items.Select(r => r.Name));
+        Assert.Contains("Hotdog", result.Value.Results.Items.Select(r => r.Name));
+        Assert.DoesNotContain("Sandwich", result.Value.Results.Items.Select(r => r.Name));
     }
 
     [Fact]
     public async Task SearchRecipes_can_search_by_is_for_meal_planning()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, null, true, null, true, 1, 4));
+            .Handle(new RecipeSearchRequest(null, null, true, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(1, result.Value.Count);
-        Assert.Equal(1, result.Value.TotalCount);
-        Assert.Equal(1, result.Value.Page);
-        Assert.Equal(4, result.Value.Take);
-        Assert.DoesNotContain("Cheeseburger", result.Value.Items.Select(r => r.Name));
-        Assert.Contains("Hotdog", result.Value.Items.Select(r => r.Name));
-        Assert.DoesNotContain("Sandwich", result.Value.Items.Select(r => r.Name));
+        Assert.Equal(1, result.Value.Results.Count);
+        Assert.Equal(1, result.Value.Results.TotalCount);
+        Assert.Equal(1, result.Value.Results.Page);
+        Assert.Equal(4, result.Value.Results.Take);
+        Assert.DoesNotContain("Cheeseburger", result.Value.Results.Items.Select(r => r.Name));
+        Assert.Contains("Hotdog", result.Value.Results.Items.Select(r => r.Name));
+        Assert.DoesNotContain("Sandwich", result.Value.Results.Items.Select(r => r.Name));
     }
 
     [Fact]
     public async Task SearchRecipes_returns_empty_item_set_when_name_search_matches_zero_items()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest("nothing matches", null, null, null, true, 1, 2));
+            .Handle(new RecipeSearchRequest("nothing matches", null, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(0, result.Value.Count);
-        Assert.Equal(0, result.Value.TotalCount);
+        Assert.Equal(0, result.Value.Results.Count);
+        Assert.Equal(0, result.Value.Results.TotalCount);
     }
 
     [Fact]
     public async Task SearchRecipes_returns_empty_item_set_when_category_search_matches_zero_items()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
-        var data = context.FoodStuffsData();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new SearchRecipesRequest(null, [1000, 2000, 3000], null, null, true, 1, 2));
+            .Handle(new RecipeSearchRequest(null, [1000, 2000, 3000], null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(0, result.Value.Count);
-        Assert.Equal(0, result.Value.TotalCount);
+        Assert.Equal(0, result.Value.Results.Count);
+        Assert.Equal(0, result.Value.Results.TotalCount);
     }
 }

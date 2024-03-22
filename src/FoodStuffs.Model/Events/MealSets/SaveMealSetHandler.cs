@@ -1,15 +1,14 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.MealSets;
 
-public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, EntityMessage<int>>
+public class SaveMealSetHandler : CustomEventHandlerAbstract<SaveMealSetRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
 
@@ -23,6 +22,7 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
         var byId = new MealSetsWithAllRelatedSpecification(request.Id);
 
         var maybeMealSet = await _data.MealSets
+            .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
@@ -51,13 +51,13 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
     private static void Transfer(SaveMealSetRequest request, MealSet mealSet)
     {
         mealSet.Name = request.Name;
-        mealSet.PantryIngredients = request.PantryIngredients
-            .Select(x => new PantryIngredient
+        mealSet.PantryIngredients.Clear();
+        mealSet.PantryIngredients.AddRange(request.PantryIngredients
+            .Select(x => new MealSetPantryIngredient
             {
                 Name = x.Name,
                 Quantity = x.Quantity,
-            })
-            .ToList();
+            }));
     }
 
     private async Task ManageRecipes(SaveMealSetRequest request, MealSet mealSet, CancellationToken cancellationToken)
@@ -69,8 +69,11 @@ public class SaveMealSetHandler : EventHandlerAbstract<SaveMealSetRequest, Entit
         var missingRecipeIds = request.RecipeIds
             .Where(x => !mealSet.Recipes.Select(x => x.Id).Contains(x));
 
+        var specification = new RecipesSpecification(missingRecipeIds);
+
         var missingRecipes = await _data.Recipes
-            .ApplyEfSpecification(new RecipesSpecification(missingRecipeIds))
+            .TagWith(GetTag(specification))
+            .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);
 
         mealSet.Recipes.AddRange(missingRecipes);

@@ -9,6 +9,7 @@ import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RecipeViewerIngredients from '@/components/RecipeViewerIngredients.vue';
 import useAppStore from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
+import RouterHelpers from '@/models/RouterHelpers';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
@@ -73,7 +74,7 @@ onMounted(() => {
       <div class="col-12 d-print-none">
         <div class="btn-toolbar">
           <router-link
-            :to="{ name: 'edit', params: { id: recipe.id } }"
+            :to="RouterHelpers.editRecipe(recipe)"
             class="btn btn-primary me-3"
             type="button"
           >

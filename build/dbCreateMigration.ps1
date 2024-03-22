@@ -15,10 +15,6 @@ try {
     --project "$modelProjectFolder" `
     --startup-project  "$webProjectFolder"
 
-  # dotnet ef migrations remove `
-  #   --project "$modelProjectFolder" `
-  #   --startup-project  "$webProjectFolder"
-
 
 } finally {
   Set-Location $originalLocation

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import SelectSidebarList from '@/components/SidebarRecipeBase.vue';
+import SidebarRecipeBase from '@/components/SidebarRecipeBase.vue';
 
 defineProps({
   routeName: {
@@ -17,7 +17,7 @@ const { recentRecipes } = storeToRefs(recipeStore);
 
 <template>
   <div>
-    <SelectSidebarList
+    <SidebarRecipeBase
       v-if="recentRecipes.length > 0"
       :recipes="recentRecipes"
       title="Recent"

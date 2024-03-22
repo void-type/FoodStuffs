@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Web.Auth;
 using Microsoft.EntityFrameworkCore;
@@ -41,11 +41,6 @@ public static class Deps
         );
     }
 
-    public static FoodStuffsEfData FoodStuffsData(this FoodStuffsContext context)
-    {
-        return new FoodStuffsEfData(context);
-    }
-
     public static FoodStuffsContext Seed(this FoodStuffsContext context)
     {
         var category1 = context.Categories.Add(new Category { Id = 1, Name = "Category1" }).Entity;
@@ -64,7 +59,7 @@ public static class Deps
             ModifiedBy = "12"
         }).Entity;
 
-        recipe1.Ingredients.Add(new Ingredient { Name = "ing", Quantity = 1, Order = 1 });
+        recipe1.Ingredients.Add(new RecipeIngredient { Name = "ing", Quantity = 1, Order = 1 });
         recipe1.Categories.Add(category1);
         recipe1.Categories.Add(category2);
 
@@ -81,7 +76,7 @@ public static class Deps
             ModifiedBy = "11"
         }).Entity;
 
-        recipe1.Ingredients.Add(new Ingredient { Name = "ing", Quantity = 1, Order = 1 });
+        recipe1.Ingredients.Add(new RecipeIngredient { Name = "ing", Quantity = 1, Order = 1 });
         recipe2.Categories.Add(category3);
 
         var recipe3 = context.Recipes.Add(new Recipe
@@ -96,7 +91,7 @@ public static class Deps
             ModifiedBy = "11"
         }).Entity;
 
-        recipe3.Ingredients.Add(new Ingredient { Name = "some", Quantity = 1, Order = 1 });
+        recipe3.Ingredients.Add(new RecipeIngredient { Name = "some", Quantity = 1, Order = 1 });
 
         var fileBytes = Convert.FromBase64String(PngBase64String);
         var file = new SimpleFile(fileBytes, "my-image.png");
@@ -109,6 +104,10 @@ public static class Deps
             CreatedOn = new DateTime(2019, 11, 8),
             ModifiedBy = "Long John Silver2",
             ModifiedOn = new DateTime(2019, 11, 8),
+            ImageBlob = new ImageBlob
+            {
+                Bytes = file.Content.AsBytes,
+            }
         };
 
         var image2 = new Image
@@ -119,27 +118,13 @@ public static class Deps
             CreatedOn = new DateTime(2019, 11, 8),
             ModifiedBy = "Long John Silver2",
             ModifiedOn = new DateTime(2019, 11, 8),
+            ImageBlob = new ImageBlob
+            {
+                Bytes = file.Content.AsBytes,
+            }
         };
-
-        var blob1 = new Blob
-        {
-            Bytes = file.Content.AsBytes,
-            Id = image1.Id,
-            Image = image1,
-        };
-
-        var blob2 = new Blob
-        {
-            Bytes = file.Content.AsBytes,
-            Id = image2.Id,
-            Image = image2,
-        };
-
-        image1.Blob = blob1;
-        image2.Blob = blob2;
 
         context.Images.AddRange(image1, image2);
-        context.Blobs.AddRange(blob1, blob2);
 
         context.SaveChanges();
         return context;

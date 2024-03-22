@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using Lucene.Net.Index;
@@ -32,6 +32,7 @@ public class RecipeIndexService : IRecipeIndexService
         var byId = new RecipesWithAllRelatedSpecification(recipeId);
 
         var maybeRecipe = await _data.Recipes
+            .TagWith($"{nameof(RecipeIndexService)}.{nameof(AddOrUpdate)}({nameof(RecipesWithAllRelatedSpecification)})")
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
@@ -54,7 +55,7 @@ public class RecipeIndexService : IRecipeIndexService
         writers.IndexWriter.Commit();
         writers.TaxonomyWriter.Commit();
 
-        var facetsConfig = DocumentMappers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
 
         var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
 
@@ -77,7 +78,7 @@ public class RecipeIndexService : IRecipeIndexService
 
         using var writers = new LuceneWriters(_settings, C.Version, OpenMode.CREATE);
 
-        var facetsConfig = DocumentMappers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
 
         var page = 1;
         var numIndexed = 0;
@@ -89,6 +90,7 @@ public class RecipeIndexService : IRecipeIndexService
             var withAllRelated = new RecipesWithAllRelatedSpecification();
 
             var recipes = await _data.Recipes
+                .TagWith($"{nameof(RecipeIndexService)}.{nameof(Rebuild)}({nameof(RecipesWithAllRelatedSpecification)})")
                 .AsSplitQuery()
                 .ApplyEfSpecification(withAllRelated)
                 .OrderBy(x => x.Id)

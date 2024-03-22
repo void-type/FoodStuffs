@@ -20,10 +20,10 @@ import type {
   ListCategoriesResponseIItemSet,
   ListMealSetsResponseIItemSet,
   MealSetsListParams,
+  RecipeSearchResponse,
   RecipesListParams,
   SaveMealSetRequest,
   SaveRecipeRequest,
-  SearchRecipesResponseIItemSet,
   StringEntityMessage,
   UserMessage,
   WebClientInfo,
@@ -253,11 +253,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name RecipesList
    * @summary Search for recipes using the following criteria. All are optional and some have defaults.
    * @request GET:/api/recipes
-   * @response `200` `SearchRecipesResponseIItemSet` Success
+   * @response `200` `RecipeSearchResponse` Success
    * @response `400` `IFailureIItemSet` Bad Request
    */
   recipesList = (query: RecipesListParams, params: RequestParams = {}) =>
-    this.request<SearchRecipesResponseIItemSet, IFailureIItemSet>({
+    this.request<RecipeSearchResponse, IFailureIItemSet>({
       path: `/api/recipes`,
       method: 'GET',
       query: query,

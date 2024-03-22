@@ -1,18 +1,19 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using VoidCore.Model.Events;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.Events.MealSets;
 
-public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IItemSet<ListMealSetsResponse>>
+public class ListMealSetsHandler : CustomEventHandlerAbstract<ListMealSetsRequest, IItemSet<ListMealSetsResponse>>
 {
-    private readonly IFoodStuffsData _data;
+    private readonly FoodStuffsContext _data;
 
-    public ListMealSetsHandler(IFoodStuffsData data)
+    public ListMealSetsHandler(FoodStuffsContext data)
     {
         _data = data;
     }
@@ -23,11 +24,12 @@ public class ListMealSetsHandler : EventHandlerAbstract<ListMealSetsRequest, IIt
 
         var searchCriteria = GetSearchCriteria(request);
 
-        var pagedSearch = new MealSetsSpecification(
-            criteria: searchCriteria,
-            paginationOptions: paginationOptions);
+        var specification = new MealSetsSpecification(criteria: searchCriteria);
 
-        return _data.MealSets.ListPage(pagedSearch, cancellationToken)
+        return _data.MealSets
+            .TagWith(GetTag(specification))
+            .ApplyEfSpecification(specification)
+            .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(ms => new ListMealSetsResponse(
                 Id: ms.Id,
                 Name: ms.Name))

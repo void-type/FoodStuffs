@@ -1,13 +1,12 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class PinImageHandler : EventHandlerAbstract<PinImageRequest, EntityMessage<string>>
+public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, EntityMessage<string>>
 {
     private readonly FoodStuffsContext _data;
     private readonly IRecipeIndexService _index;
@@ -21,6 +20,7 @@ public class PinImageHandler : EventHandlerAbstract<PinImageRequest, EntityMessa
     public override Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
     {
         return _data.Images
+            .TagWith(GetTag())
             .Include(x => x.Recipe)
             .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
             .MapAsync(Maybe.From)

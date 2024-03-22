@@ -1,6 +1,9 @@
-﻿namespace FoodStuffs.Model.Data.Models;
+﻿using VoidCore.Model.Data;
+using VoidCore.Model.Text;
 
-public partial class Recipe
+namespace FoodStuffs.Model.Data.Models;
+
+public class Recipe : IAuditableWithOffset
 {
     public int Id { get; set; }
 
@@ -14,11 +17,11 @@ public partial class Recipe
 
     public string CreatedBy { get; set; } = null!;
 
-    public DateTime CreatedOn { get; set; }
+    public DateTimeOffset CreatedOn { get; set; }
 
     public string ModifiedBy { get; set; } = null!;
 
-    public DateTime ModifiedOn { get; set; }
+    public DateTimeOffset ModifiedOn { get; set; }
 
     public int? PinnedImageId { get; set; }
 
@@ -26,11 +29,15 @@ public partial class Recipe
 
     public virtual List<Image> Images { get; } = [];
 
-    public virtual List<Ingredient> Ingredients { get; } = [];
+    public virtual List<RecipeIngredient> Ingredients { get; } = [];
 
     public virtual Image? PinnedImage { get; set; }
 
     public virtual List<Category> Categories { get; } = [];
 
     public virtual List<MealSet> MealSets { get; } = [];
+
+    public Image? DefaultImage => PinnedImage ?? Images.FirstOrDefault();
+
+    public string Slug => Name.Slugify(230, true);
 }

@@ -40,7 +40,7 @@ export interface GetMealSetResponse {
 
 export interface GetMealSetResponsePantryIngredient {
   name?: string | null;
-  /** @format int32 */
+  /** @format double */
   quantity?: number;
 }
 
@@ -55,7 +55,7 @@ export interface GetMealSetResponseRecipe {
 
 export interface GetMealSetResponseRecipeIngredient {
   name?: string | null;
-  /** @format int32 */
+  /** @format double */
   quantity?: number;
   /** @format int32 */
   order?: number;
@@ -77,6 +77,7 @@ export interface GetRecipeResponse {
   modifiedBy?: string | null;
   /** @format date-time */
   modifiedOn?: string;
+  slug?: string | null;
   pinnedImage?: string | null;
   isForMealPlanning?: boolean;
   categories?: string[] | null;
@@ -86,7 +87,7 @@ export interface GetRecipeResponse {
 
 export interface GetRecipeResponseIngredient {
   name?: string | null;
-  /** @format int32 */
+  /** @format double */
   quantity?: number;
   /** @format int32 */
   order?: number;
@@ -155,6 +156,57 @@ export interface ListMealSetsResponseIItemSet {
   totalCount?: number;
 }
 
+export interface RecipeSearchFacet {
+  fieldName?: string | null;
+  values?: RecipeSearchFacetValue[] | null;
+}
+
+export interface RecipeSearchFacetValue {
+  fieldValue?: string | null;
+  /** @format int32 */
+  count?: number;
+}
+
+export interface RecipeSearchResponse {
+  results?: RecipeSearchResultItemIItemSet;
+  facets?: RecipeSearchFacet[] | null;
+}
+
+export interface RecipeSearchResultItem {
+  /** @format int32 */
+  id?: number;
+  name?: string | null;
+  isForMealPlanning?: boolean;
+  /** @format date-time */
+  createdOn?: string;
+  slug?: string | null;
+  categories?: string[] | null;
+  ingredients?: RecipeSearchResultItemIngredient[] | null;
+  image?: string | null;
+}
+
+export interface RecipeSearchResultItemIItemSet {
+  /** @format int32 */
+  count?: number;
+  items?: RecipeSearchResultItem[] | null;
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
+export interface RecipeSearchResultItemIngredient {
+  name?: string | null;
+  /** @format double */
+  quantity?: number;
+  /** @format int32 */
+  order?: number;
+  isCategory?: boolean;
+}
+
 export interface SaveMealSetRequest {
   /** @format int32 */
   id?: number;
@@ -165,7 +217,7 @@ export interface SaveMealSetRequest {
 
 export interface SaveMealSetRequestPantryIngredient {
   name?: string | null;
-  /** @format int32 */
+  /** @format double */
   quantity?: number;
 }
 
@@ -185,41 +237,7 @@ export interface SaveRecipeRequest {
 
 export interface SaveRecipeRequestIngredient {
   name?: string | null;
-  /** @format int32 */
-  quantity?: number;
-  /** @format int32 */
-  order?: number;
-  isCategory?: boolean;
-}
-
-export interface SearchRecipesResponse {
-  /** @format int32 */
-  id?: number;
-  name?: string | null;
-  isForMealPlanning?: boolean;
-  /** @format date-time */
-  createdOn?: string;
-  categories?: string[] | null;
-  ingredients?: SearchRecipesResponseIngredient[] | null;
-  image?: string | null;
-}
-
-export interface SearchRecipesResponseIItemSet {
-  /** @format int32 */
-  count?: number;
-  items?: SearchRecipesResponse[] | null;
-  isPagingEnabled?: boolean;
-  /** @format int32 */
-  page?: number;
-  /** @format int32 */
-  take?: number;
-  /** @format int32 */
-  totalCount?: number;
-}
-
-export interface SearchRecipesResponseIngredient {
-  name?: string | null;
-  /** @format int32 */
+  /** @format double */
   quantity?: number;
   /** @format int32 */
   order?: number;
@@ -303,6 +321,8 @@ export interface RecipesListParams {
   isForMealPlanning?: boolean | null;
   /** Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score. */
   sortBy?: string;
+  /** Give a seed for stable random sorting. By default is stable for 24 hours on the server. */
+  randomSortSeed?: string;
   /**
    * False for all results
    * @default true

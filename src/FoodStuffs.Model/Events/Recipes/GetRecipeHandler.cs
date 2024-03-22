@@ -1,13 +1,12 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipeResponse>
+public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, GetRecipeResponse>
 {
     private readonly FoodStuffsContext _data;
 
@@ -21,6 +20,7 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
         return _data.Recipes
+            .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
@@ -37,6 +37,7 @@ public class GetRecipeHandler : EventHandlerAbstract<GetRecipeRequest, GetRecipe
                CreatedOn: r.CreatedOn,
                ModifiedBy: r.ModifiedBy,
                ModifiedOn: r.ModifiedOn,
+               Slug: r.Slug,
                PinnedImage: r.PinnedImage?.FileName,
                IsForMealPlanning: r.IsForMealPlanning,
                Categories: r.Categories

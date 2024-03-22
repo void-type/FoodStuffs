@@ -2,7 +2,7 @@
 import useRecipeStore from '@/stores/recipeStore';
 import { onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import SelectSidebarList from '@/components/SidebarRecipeBase.vue';
+import SidebarRecipeBase from '@/components/SidebarRecipeBase.vue';
 import ApiHelpers from '@/models/ApiHelpers';
 import useMessageStore from '@/stores/messageStore';
 
@@ -36,7 +36,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <SelectSidebarList :recipes="searchedRecipes" title="Search results" :route-name="routeName" />
+    <SidebarRecipeBase :recipes="searchedRecipes" title="Search results" :route-name="routeName" />
   </div>
 </template>
 

@@ -18,8 +18,6 @@ public class RecipesController : ControllerBase
     /// <summary>
     /// Rebuild the recipe search index.
     /// </summary>
-    /// <param name="indexService"></param>
-    /// <param name="cancellationToken"></param>
     [Route("rebuild-index")]
     [HttpPost]
     [ProducesResponseType(typeof(UserMessage), 200)]
@@ -38,20 +36,22 @@ public class RecipesController : ControllerBase
     /// <param name="categories">Category IDs to filter on</param>
     /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
     /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
+    /// <param name="randomSortSeed">Give a seed for stable random sorting. By default is stable for 24 hours on the server.</param>
     /// <param name="isPagingEnabled">False for all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
-    [ProducesResponseType(typeof(IItemSet<SearchRecipesResponse>), 200)]
+    [ProducesResponseType(typeof(RecipeSearchResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public Task<IActionResult> Search([FromServices] SearchRecipesPipeline searchPipeline, string? name = null, int[]? categories = null,
-        bool? isForMealPlanning = null, string? sortBy = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+        bool? isForMealPlanning = null, string? sortBy = null, string? randomSortSeed = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
-        var request = new SearchRecipesRequest(
+        var request = new RecipeSearchRequest(
             NameSearch: name,
             CategoryIds: categories,
             IsForMealPlanning: isForMealPlanning,
             SortBy: sortBy,
+            RandomSortSeed: randomSortSeed,
             IsPagingEnabled: isPagingEnabled,
             Page: page,
             Take: take);

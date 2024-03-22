@@ -1,6 +1,6 @@
-﻿using FoodStuffs.Model.Events.Recipes;
-using Lucene.Net.Analysis.Standard;
+﻿using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Facet;
+using Lucene.Net.Facet.Taxonomy;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
@@ -21,7 +21,7 @@ public class RecipeQueryService : IRecipeQueryService
         _settings = settings;
     }
 
-    public IItemSet<SearchRecipesResponse> Search(SearchRecipesRequest request)
+    public RecipeSearchResponse Search(RecipeSearchRequest request)
     {
         using (var writers = new LuceneWriters(_settings, C.Version, OpenMode.CREATE_OR_APPEND))
         {
@@ -32,20 +32,21 @@ public class RecipeQueryService : IRecipeQueryService
 
         using var readers = new LuceneReaders(_settings);
         var searcher = readers.IndexSearcher;
+        var facetsCollector = new FacetsCollector();
 
-        var facetsConfig = DocumentMappers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
 
         var query = new BooleanQuery()
         {
             { BuildTextQuery(request), Occur.MUST },
-            { BuildFilterQuery(request, facetsConfig), Occur.MUST },
         };
 
+        var filter = BuildFilter(request, facetsConfig);
         var sort = BuildSortCriteria(request);
 
         var topDocs = sort is null
-            ? searcher.Search(query, C.MAX_RESULTS)
-            : searcher.Search(query, C.MAX_RESULTS, sort);
+            ? FacetsCollector.Search(searcher, query, filter, C.MAX_RESULTS, facetsCollector)
+            : FacetsCollector.Search(searcher, query, filter, C.MAX_RESULTS, sort, facetsCollector);
 
         var pagination = request.GetPaginationOptions();
 
@@ -53,23 +54,32 @@ public class RecipeQueryService : IRecipeQueryService
 
         if (request.SortBy?.ToUpperInvariant() == "RANDOM")
         {
-            // Perform a random sort on the whole search set.
-            // Sort is stable within same local day.
-            var random = new Random(_dateTimeService.MomentWithOffset.Date.GetHashCode());
+            var seed = request.RandomSortSeed is not null ?
+                // Let the client give us a seed.
+                request.RandomSortSeed.GetHashCode() :
+                // Sort is stable within same local day.
+                _dateTimeService.MomentWithOffset.Date.GetHashCode();
+
+            var random = new Random(seed);
 
             // Ignore weak random
 #pragma warning disable SCS0005
+            // Perform a random sort on the whole search set.
             scoreDocs.Sort((_, __) => random.Next(-1, 2));
 #pragma warning restore SCS0005
         }
 
-        return scoreDocs
+        var resultItems = scoreDocs
             .GetPage(pagination)
-            .Select(x => searcher.Doc(x.Doc).ToSearchRecipesResponse())
+            .Select(x => searcher.Doc(x.Doc).ToRecipeSearchResultItem())
             .ToItemSet(pagination, topDocs.TotalHits);
+
+        var resultFacets = GetFacets(readers, facetsCollector, facetsConfig);
+
+        return new(resultItems, resultFacets);
     }
 
-    private static Query BuildTextQuery(SearchRecipesRequest request)
+    private static Query BuildTextQuery(RecipeSearchRequest request)
     {
         var analyzer = new StandardAnalyzer(C.Version);
         var queryBuilder = new QueryBuilder(analyzer);
@@ -98,14 +108,20 @@ public class RecipeQueryService : IRecipeQueryService
 
             if (!string.IsNullOrWhiteSpace(lastTerm))
             {
-                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"));
-                lastWildcard.Boost = 1;
+                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
+                {
+                    Boost = 1
+                };
+
                 query.Add(lastWildcard, Occur.SHOULD);
             }
 
             // Partial word matches using fuzzy queries
-            var fuzzyQuery = new FuzzyQuery(new Term(C.FIELD_NAME, searchText), 2);
-            fuzzyQuery.Boost = 0.3f;
+            var fuzzyQuery = new FuzzyQuery(new Term(C.FIELD_NAME, searchText), 2)
+            {
+                Boost = 0.3f
+            };
+
             query.Add(fuzzyQuery, Occur.SHOULD);
         }
 
@@ -117,7 +133,7 @@ public class RecipeQueryService : IRecipeQueryService
         return query;
     }
 
-    private static Query BuildFilterQuery(SearchRecipesRequest request, FacetsConfig facetsConfig)
+    private static QueryWrapperFilter BuildFilter(RecipeSearchRequest request, FacetsConfig facetsConfig)
     {
         var query = new BooleanQuery();
 
@@ -150,13 +166,13 @@ public class RecipeQueryService : IRecipeQueryService
 
         if (query.Clauses.Count < 1)
         {
-            return new MatchAllDocsQuery();
+            return new QueryWrapperFilter(new MatchAllDocsQuery());
         }
 
-        return query;
+        return new QueryWrapperFilter(query);
     }
 
-    private static Sort? BuildSortCriteria(SearchRecipesRequest request)
+    private static Sort? BuildSortCriteria(RecipeSearchRequest request)
     {
         // If "RANDOM", we shuffle topDocs results later.
         return (request.SortBy?.ToUpperInvariant()) switch
@@ -173,5 +189,26 @@ public class RecipeQueryService : IRecipeQueryService
                 new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
             _ => null,
         };
+    }
+
+    private static RecipeSearchFacet[] GetFacets(LuceneReaders readers, FacetsCollector facetsCollector, FacetsConfig facetsConfig)
+    {
+        var facetCounts = new TaxonomyFacetCounts(new DocValuesOrdinalsReader(), readers.TaxonomyReader, facetsConfig, facetsCollector);
+
+        return facetsConfig.DimConfigs.Keys
+            .Select(fieldName => new RecipeSearchFacet
+            {
+                FieldName = fieldName,
+                Values = (facetCounts
+                    .GetTopChildren(int.MaxValue, fieldName)?
+                    .LabelValues ?? [])
+                    .Select(x => new RecipeSearchFacetValue
+                    {
+                        FieldValue = x.Label,
+                        Count = (int)x.Value
+                    })
+                    .ToList()
+            })
+            .ToArray();
     }
 }

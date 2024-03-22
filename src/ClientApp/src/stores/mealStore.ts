@@ -2,10 +2,12 @@ import type {
   GetMealSetResponse,
   GetMealSetResponsePantryIngredient,
   ListMealSetsResponseIItemSet,
-  SearchRecipesResponseIItemSet,
-  SearchRecipesResponseIngredient,
   MealSetsListParams,
   RecipesListParams,
+  RecipeSearchResultItemIItemSet,
+  RecipeSearchResultItemIngredient,
+  RecipeSearchFacet,
+  RecipeSearchResponse,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import DateHelpers from '@/models/DateHelpers';
@@ -15,8 +17,9 @@ import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import { defineStore } from 'pinia';
 
 interface MealStoreState {
-  recipeListResponse: SearchRecipesResponseIItemSet;
+  recipeListResponse: RecipeSearchResultItemIItemSet;
   recipeListRequest: RecipesListParams;
+  recipeListFacets: RecipeSearchFacet[];
   mealSetListResponse: ListMealSetsResponseIItemSet;
   mealSetListRequest: MealSetsListParams;
   mealSetListIndex: number;
@@ -25,7 +28,7 @@ interface MealStoreState {
 
 function countIngredients(
   acc: GetMealSetResponsePantryIngredient[],
-  curr: SearchRecipesResponseIngredient
+  curr: RecipeSearchResultItemIngredient
 ) {
   const { name, quantity } = curr;
 
@@ -93,6 +96,7 @@ export default defineStore('meals', {
       take: Choices.paginationTake[0].value,
       isForMealPlanning: true,
     },
+    recipeListFacets: [],
     mealSetListResponse: {
       count: 0,
       items: [],
@@ -166,6 +170,16 @@ export default defineStore('meals', {
 
     clearSelectedRecipes() {
       this.currentMealSet.recipes = [];
+    },
+
+    setListResponse(data: RecipeSearchResponse) {
+      if (data.results) {
+        this.recipeListResponse = data.results;
+      }
+
+      if (data.facets) {
+        this.recipeListFacets = data.facets;
+      }
     },
 
     newMealSet() {

@@ -1,17 +1,16 @@
-﻿using FoodStuffs.Model.Data.EntityFramework;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Events;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityMessage<int>>
+public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
     private readonly IRecipeIndexService _index;
@@ -27,6 +26,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
         var maybeRecipe = await _data.Recipes
+            .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
@@ -69,7 +69,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
         recipe.Ingredients.Clear();
 
         var ingredientsToAdd = request.Ingredients
-            .Select(x => new Ingredient
+            .Select(x => new RecipeIngredient
             {
                 Name = x.Name,
                 Quantity = x.Quantity,
@@ -96,6 +96,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
         // Find missing categories that already exist.
         var existingCategories = await _data.Categories
+            .TagWith(GetTag())
             .Where(x => missingNames.Contains(x.Name))
             .OrderBy(x => x.Id)
             // In case there are duplicates, add only the first.
@@ -114,6 +115,7 @@ public class SaveRecipeHandler : EventHandlerAbstract<SaveRecipeRequest, EntityM
 
         // Remove categories that are no longer used.
         var unusedCategories = await _data.Categories
+            .TagWith(GetTag())
             .AsSingleQuery()
             .Include(x => x.Recipes)
             .Where(x => x.Recipes.Count == 0)

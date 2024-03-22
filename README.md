@@ -14,11 +14,11 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 ## Features
 
 - Meal cards to build weekly shopping list.
-- Category tags on recipes.
+- Category tags on recipes. Appear as facets in search.
 - Images for recipes.
 - Copy recipes.
-- Random sort discovery on home page.
-- Search and pagination.
+- Random sort and infinite scroll for recipe discovery on home page.
+- Paginated and robust search.
 - Recent history list.
 - Unsaved change detection.
 - Responsive UI using Bootstrap grid.

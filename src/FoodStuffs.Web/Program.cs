@@ -1,5 +1,5 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.EntityFramework;
+using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
 using FoodStuffs.Web.Auth;
@@ -52,8 +52,6 @@ try
     services.AddDbContext<FoodStuffsContext>(options => options
         .UseSqlServer("Name=FoodStuffs", b => b.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName)));
 
-    services.AddScoped<IFoodStuffsData, FoodStuffsEfData>();
-
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();
 
@@ -61,7 +59,7 @@ try
     services.AddDomainEvents(
         ServiceLifetime.Scoped,
         typeof(GetWebClientInfo).Assembly,
-        typeof(IFoodStuffsData).Assembly);
+        typeof(SearchRecipesHandler).Assembly);
 
     services.AddSwaggerWithCsp(env);
 

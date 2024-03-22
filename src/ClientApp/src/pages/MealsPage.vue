@@ -36,9 +36,7 @@ function fetchRecipeList() {
     .recipesList({
       ...recipeListRequest.value,
     })
-    .then((response) => {
-      mealStore.recipeListResponse = response.data;
-    })
+    .then((response) => mealStore.setListResponse(response.data))
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 

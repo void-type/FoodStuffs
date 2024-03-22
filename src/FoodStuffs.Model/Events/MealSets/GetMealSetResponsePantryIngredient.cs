@@ -2,4 +2,4 @@
 
 public record GetMealSetResponsePantryIngredient(
     string Name,
-    int Quantity);
+    decimal Quantity);

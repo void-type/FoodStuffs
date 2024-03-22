@@ -2,6 +2,6 @@
 
 public record GetRecipeResponseIngredient(
     string Name,
-    int Quantity,
+    decimal Quantity,
     int Order,
     bool IsCategory);

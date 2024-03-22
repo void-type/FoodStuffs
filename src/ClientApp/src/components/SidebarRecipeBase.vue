@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import type { SearchRecipesResponse } from '@/api/data-contracts';
+import type { RecipeSearchResultItem } from '@/api/data-contracts';
+import RouterHelpers from '@/models/RouterHelpers';
 
-const props = defineProps({
+defineProps({
   recipes: {
-    type: Object as PropType<Array<SearchRecipesResponse>>,
+    type: Object as PropType<Array<RecipeSearchResultItem>>,
     required: true,
   },
   title: {
@@ -29,7 +30,7 @@ const props = defineProps({
         v-for="recipe in recipes"
         :key="recipe.id"
         class="list-group-item card-hover"
-        :to="{ name: props.routeName, params: { id: recipe.id } }"
+        :to="RouterHelpers.viewRecipe(recipe)"
       >
         {{ recipe.name }}
       </router-link>
