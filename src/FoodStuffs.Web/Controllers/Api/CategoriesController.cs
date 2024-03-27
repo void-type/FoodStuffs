@@ -1,7 +1,6 @@
 ﻿using FoodStuffs.Model.Events.Categories;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
-using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
@@ -10,7 +9,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Manage recipes.
 /// </summary>
-[ApiRoute("categories")]
+[Route("api/categories")]
 public class CategoriesController : ControllerBase
 {
     /// <summary>
