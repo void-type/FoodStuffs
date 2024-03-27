@@ -18,7 +18,13 @@ public partial class FoodStuffsContext : DbContext
         {
             entity.ToTable("MealSet");
 
-            entity.OwnsMany(d => d.PantryIngredients, o => o.ToJson());
+            entity.OwnsMany(d => d.PantryIngredients, p =>
+            {
+                p.ToJson();
+
+                p.Property(d => d.Quantity)
+                    .HasPrecision(18, 2);
+            });
         });
 
         modelBuilder.Entity<Image>(entity =>
@@ -53,6 +59,10 @@ public partial class FoodStuffsContext : DbContext
             entity.OwnsMany(d => d.Ingredients, p =>
             {
                 p.ToTable("RecipeIngredient");
+
+                p.Property(d => d.Quantity)
+                    .HasPrecision(18, 2);
+
                 p.WithOwner();
             });
         });
