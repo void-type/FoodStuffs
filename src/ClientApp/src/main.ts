@@ -7,19 +7,33 @@ import App from '@/App.vue';
 import router from '@/router';
 import { library, config as fontAwesomeConfig } from '@fortawesome/fontawesome-svg-core';
 import {
-  faTimes,
-  faThumbtack,
-  faAlignJustify,
-  faPencil,
-  faPlus,
-  faEye,
+  faRotateRight,
+  faMoon,
   faSearch,
+  faTimes,
+  faEye,
+  faPencil,
+  faRotate,
+  faPlus,
+  faGripLines,
+  faThumbtack,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Prevents inline styling to appease CSP.
 fontAwesomeConfig.autoAddCss = false;
 
-library.add(faTimes, faThumbtack, faAlignJustify, faPencil, faPlus, faEye, faSearch);
+library.add(
+  faTimes,
+  faThumbtack,
+  faPencil,
+  faPlus,
+  faEye,
+  faSearch,
+  faRotate,
+  faRotateRight,
+  faMoon,
+  faGripLines
+);
 
 const app = createApp(App);
 

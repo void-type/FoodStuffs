@@ -48,18 +48,20 @@ function cardClickInternal() {
                 <router-link
                   class="btn-card-control ms-auto"
                   :to="RouterHelpers.viewRecipe(recipe)"
+                  aria-label="view recipe"
                   @keydown.stop.enter
                   @click.stop
                 >
-                  <font-awesome-icon icon="fa-eye" aria-label="view recipe" />
+                  <font-awesome-icon icon="fa-eye" />
                 </router-link>
                 <router-link
                   class="btn-card-control"
                   :to="RouterHelpers.editRecipe(recipe)"
+                  aria-label="edit recipe"
                   @keydown.stop.enter
                   @click.stop
                 >
-                  <font-awesome-icon icon="fa-pencil" aria-label="edit recipe" />
+                  <font-awesome-icon icon="fa-pencil" />
                 </router-link>
               </div>
             </div>

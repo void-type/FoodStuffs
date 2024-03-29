@@ -6,6 +6,7 @@ import useAppStore from '@/stores/appStore';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelpers from '@/models/ApiHelpers';
 import AppHeaderSearch from './AppHeaderSearch.vue';
 
@@ -78,14 +79,16 @@ const searchText = ref('');
               ><span>{{ user.login }}</span></a
             >
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <li class="dropdown-item">Roles: {{ userRoles }}</li>
+              <li class="dropdown-item">Roles: {{ userRoles || 'none' }}</li>
               <li class="dropdown-item">
                 <button
                   class="btn btn-outline-light"
                   :disabled="isRebuilding"
                   @click.stop.prevent="rebuildSearch"
                 >
-                  {{ isRebuilding ? 'Rebuilding...' : 'Rebuild index' }}
+                  <font-awesome-icon class="me-2" icon="fa-rotate-right" />{{
+                    isRebuilding ? 'Rebuilding...' : 'Rebuild index'
+                  }}
                 </button>
               </li>
               <li class="dropdown-item">
@@ -96,7 +99,7 @@ const searchText = ref('');
                     title="Use dark mode"
                     aria-label="Use dark mode"
                     @click.stop
-                    >🌙</label
+                    ><font-awesome-icon class="me-2" icon="fa-moon" />Dark mode</label
                   >
                   <input
                     id="useDarkMode"

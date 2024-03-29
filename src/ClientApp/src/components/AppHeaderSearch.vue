@@ -34,16 +34,16 @@ function initSearch() {
         class="form-control"
         type="text"
         placeholder="Search"
-        aria-label="Search"
+        aria-label="Search text"
         @keydown.enter.stop.prevent="initSearch"
       />
       <button
         class="btn btn-outline-light nav-search-button text-light bg-primary"
         type="button"
-        aria-label="Search"
+        aria-label="Start search"
         @click.stop.prevent="initSearch"
       >
-        <font-awesome-icon icon="fa-search" aria-label="view recipe" />
+        <font-awesome-icon icon="fa-search" />
       </button>
     </div>
   </form>

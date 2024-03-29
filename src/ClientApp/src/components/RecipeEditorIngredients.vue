@@ -128,11 +128,10 @@ watch(data, (newValue) => {
           aria-expanded="false"
           :aria-controls="`ingredient-${ing.id}-accordion-collapse`"
         >
-          <font-awesome-icon
-            icon="fa-align-justify"
-            class="text-muted me-3 sort-handle"
-            aria-label="drag to sort"
-          />
+          <span class="pe-3 sort-handle">
+            <div class="visually-hidden">Drag to sort</div>
+            <font-awesome-icon icon="fa-grip-lines" class="text-muted"
+          /></span>
           <span v-if="ing.isCategory" class="fw-bold">{{ ing.name }}</span>
           <span v-else>{{ ing.quantity }}x {{ ing.name }}</span>
         </button>
@@ -202,9 +201,10 @@ watch(data, (newValue) => {
   <button
     type="button"
     class="btn btn-outline-light btn-sm btn-add-ingredient"
+    aria-label="add ingredient"
     @click.stop.prevent="onNewClick()"
   >
-    <font-awesome-icon icon="fa-plus" aria-label="add ingredient" />
+    <font-awesome-icon icon="fa-plus" />
   </button>
 </template>
 

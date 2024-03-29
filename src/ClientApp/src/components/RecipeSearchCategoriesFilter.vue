@@ -73,7 +73,7 @@ onMounted(() => {
         Select all
       </button>
     </div>
-    <div class="grid category-facets-scroll">
+    <div class="grid slim-scroll">
       <div
         v-for="categoryOption in categoryOptions"
         :key="categoryOption.id"
@@ -95,22 +95,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.category-facets-scroll {
+.slim-scroll {
   max-height: 12rem;
-  overflow-y: auto;
   row-gap: 0.1rem;
   column-gap: 0;
-
-  &::-webkit-scrollbar {
-    width: 1px;
-    height: 36px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--bs-body-color);
-    outline: 1px solid var(--bs-body-color);
-    border-radius: 30px;
-    height: 10px;
-  }
 }
 </style>

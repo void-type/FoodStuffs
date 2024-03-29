@@ -45,6 +45,22 @@ a.btn,
   outline: auto;
 }
 
+.slim-scroll {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 1px;
+    height: 36px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--bs-body-color);
+    outline: 1px solid var(--bs-body-color);
+    border-radius: 30px;
+    height: 10px;
+  }
+}
+
 .card {
   --bs-accordion-btn-icon-width: #{$accordion-icon-width};
   --bs-accordion-btn-icon: #{escape-svg($accordion-button-icon)};

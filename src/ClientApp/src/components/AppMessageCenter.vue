@@ -31,7 +31,7 @@ const { clearMessage } = messageStore;
         <button
           type="button"
           class="btn-close"
-          aria-label="Close"
+          aria-label="Close message"
           @click="clearMessage(message)"
         ></button>
       </div>
