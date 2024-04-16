@@ -200,7 +200,7 @@ watch(data, (newValue) => {
   </vue-draggable>
   <button
     type="button"
-    class="btn btn-outline-light btn-sm btn-add-ingredient"
+    class="btn btn-secondary btn-sm btn-add-ingredient"
     aria-label="add ingredient"
     @click.stop.prevent="onNewClick()"
   >

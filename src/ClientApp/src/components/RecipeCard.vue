@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { RecipeSearchResultItem } from '@/api/data-contracts';
 import { computed, type PropType } from 'vue';
+import useMealStore from '@/stores/mealStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
@@ -10,6 +11,8 @@ const props = defineProps({
   recipe: { type: Object as PropType<RecipeSearchResultItem>, required: true },
   imgLazy: { type: Boolean, required: false, default: false },
 });
+
+const mealStore = useMealStore();
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 
@@ -24,7 +27,9 @@ function flipCard() {
 }
 
 function addToMealPlan(recipe: RecipeSearchResultItem) {
-  console.log(recipe);
+  // if (recipe.id > 0) {
+  //   mealStore.toggleRecipe(recipe.id);
+  // }
 }
 </script>
 
@@ -57,14 +62,14 @@ function addToMealPlan(recipe: RecipeSearchResultItem) {
             <div class="btn-toolbar">
               <router-link
                 type="button"
-                class="btn btn-sm btn-outline-light me-2"
+                class="btn btn-sm btn-secondary me-2"
                 aria-label="edit recipe"
                 :to="RouterHelpers.editRecipe(recipe)"
                 @click.stop.prevent
                 >Edit</router-link
               >
               <button
-                class="btn btn-sm btn-outline-light"
+                class="btn btn-sm btn-secondary"
                 aria-label="Add recipe to current meal plan"
                 @click.stop.prevent="addToMealPlan(recipe)"
               >
@@ -72,7 +77,7 @@ function addToMealPlan(recipe: RecipeSearchResultItem) {
               </button>
             </div>
             <div v-if="recipe.ingredients?.some((x) => x.isCategory === false)" class="mt-3">
-              <span>Ingredients</span>
+              <div>Ingredients</div>
               <ul>
                 <li
                   v-for="ingredient in recipe.ingredients?.filter((x) => x.isCategory === false)"
@@ -83,12 +88,13 @@ function addToMealPlan(recipe: RecipeSearchResultItem) {
               </ul>
             </div>
             <div v-if="(recipe.categories?.length || 0) > 0" class="mt-3">
-              <span>Categories</span>
-              <ul>
-                <li v-for="category in recipe.categories" :key="category || ''">
-                  {{ category }}
-                </li>
-              </ul>
+              <span
+                v-for="category in recipe.categories"
+                :key="category || ''"
+                class="badge text-bg-secondary me-2 mt-2"
+              >
+                {{ category }}</span
+              >
             </div>
           </div>
         </div>

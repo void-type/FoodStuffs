@@ -74,7 +74,7 @@ watch(modalIsActive, (isActive) => {
             <button
               id="app-modal-cancel-button"
               type="button"
-              class="btn btn-outline-light"
+              class="btn btn-secondary"
               @click="cancelAction()"
             >
               Cancel

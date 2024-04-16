@@ -290,29 +290,23 @@ watch(selectedCategories, () => {
               @keydown.stop.prevent.enter="saveMealSet"
             />
             <div class="btn-toolbar mt-3">
-              <button
-                class="btn btn-outline-light me-2"
-                @click.stop.prevent="changeMealSetIndexBack"
-              >
+              <button class="btn btn-secondary me-2" @click.stop.prevent="changeMealSetIndexBack">
                 Back
               </button>
               <button
-                class="btn btn-outline-light me-2"
+                class="btn btn-secondary me-2"
                 @click.stop.prevent="changeMealSetIndexForward"
               >
                 Forward
               </button>
-              <button
-                class="btn btn-outline-light ms-auto"
-                @click.stop.prevent="mealStore.newMealSet"
-              >
+              <button class="btn btn-secondary ms-auto" @click.stop.prevent="mealStore.newMealSet">
                 New
               </button>
             </div>
             <div class="btn-toolbar mt-3">
               <button class="btn btn-primary me-2" @click.stop.prevent="saveMealSet">Save</button>
               <button
-                class="btn btn-outline-light me-2"
+                class="btn btn-secondary me-2"
                 @click.stop.prevent="mealStore.clearSelectedRecipes"
               >
                 Empty

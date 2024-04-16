@@ -38,7 +38,7 @@ function initSearch() {
         @keydown.enter.stop.prevent="initSearch"
       />
       <button
-        class="btn btn-outline-light nav-search-button text-light bg-primary"
+        class="btn btn-secondary nav-search-button text-light bg-primary"
         type="button"
         aria-label="Start search"
         @click.stop.prevent="initSearch"

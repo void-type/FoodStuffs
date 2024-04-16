@@ -148,7 +148,7 @@ onMounted(() => {
         <router-link
           v-if="isEditMode"
           type="button"
-          class="btn btn-outline-light me-2"
+          class="btn btn-secondary me-2"
           :to="{ name: 'new', query: { copy: sourceRecipe.id } }"
         >
           Copy
@@ -156,7 +156,7 @@ onMounted(() => {
         <router-link
           v-if="isEditMode"
           type="button"
-          class="btn btn-outline-light me-2"
+          class="btn btn-secondary me-2"
           :to="RouterHelpers.viewRecipe(sourceRecipe)"
         >
           Cancel
@@ -214,7 +214,7 @@ onMounted(() => {
           :is-invalid="isFieldInError('cookTimeMinutes')"
         />
       </div>
-      <div class="g-col-12">
+      <div class="g-col-12 g-col-md-6">
         <TagEditor
           :class="{ 'form-group': true, danger: isFieldInError('categories') }"
           :tags="data.workingRecipe.categories || []"
@@ -245,7 +245,7 @@ onMounted(() => {
         <router-link
           v-if="isEditMode"
           type="button"
-          class="btn btn-outline-light me-2"
+          class="btn btn-secondary me-2"
           :to="{ name: 'new', query: { copy: sourceRecipe.id } }"
         >
           Copy
@@ -253,7 +253,7 @@ onMounted(() => {
         <button
           v-if="isEditMode"
           type="button"
-          class="btn btn-outline-light me-2"
+          class="btn btn-secondary me-2"
           :to="RouterHelpers.viewRecipe(sourceRecipe)"
         >
           Cancel

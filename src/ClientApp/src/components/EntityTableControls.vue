@@ -18,7 +18,7 @@ defineProps({
       <button class="btn btn-primary me-2" type="button" @click.stop.prevent="initSearch()">
         Search
       </button>
-      <button class="btn btn-outline-light" type="button" @click.stop.prevent="clearSearch()">
+      <button class="btn btn-secondary" type="button" @click.stop.prevent="clearSearch()">
         Clear
       </button>
     </div>

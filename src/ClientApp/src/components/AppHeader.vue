@@ -82,7 +82,7 @@ const searchText = ref('');
               <li class="dropdown-item">Roles: {{ userRoles || 'none' }}</li>
               <li class="dropdown-item">
                 <button
-                  class="btn btn-outline-light"
+                  class="btn btn-secondary"
                   :disabled="isRebuilding"
                   @click.stop.prevent="rebuildSearch"
                 >

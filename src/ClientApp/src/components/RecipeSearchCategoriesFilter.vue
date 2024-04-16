@@ -58,22 +58,14 @@ onMounted(() => {
       <span v-if="model.length">({{ model.length }} selected)</span>
     </label>
     <div class="mb-2">
-      <button
-        v-if="model.length"
-        class="btn btn-sm btn-outline-light btn-cling"
-        @click.stop.prevent="model = []"
-      >
+      <button v-if="model.length" class="btn btn-sm btn-secondary" @click.stop.prevent="model = []">
         Select none
       </button>
-      <button
-        v-else
-        class="btn btn-sm btn-outline-light btn-cling2"
-        @click.stop.prevent="selectAll"
-      >
+      <button v-else class="btn btn-sm btn-secondary" @click.stop.prevent="selectAll">
         Select all
       </button>
     </div>
-    <div class="grid slim-scroll">
+    <div class="grid slim-scroll category-scroll">
       <div
         v-for="categoryOption in categoryOptions"
         :key="categoryOption.id"
@@ -95,7 +87,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.slim-scroll {
+.category-scroll {
   max-height: 12rem;
   row-gap: 0.1rem;
   column-gap: 0;
