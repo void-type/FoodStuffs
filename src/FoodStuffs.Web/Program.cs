@@ -15,20 +15,23 @@ using VoidCore.Model.Auth;
 using VoidCore.Model.Configuration;
 using VoidCore.Model.Time;
 
-var builder = WebApplication.CreateBuilder(args);
-var env = builder.Environment;
-var config = builder.Configuration;
-var services = builder.Services;
-
-// Logging
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(config)
-    .CreateLogger();
-
-builder.Host.UseSerilog();
-
 try
 {
+    var builder = WebApplication.CreateBuilder(args);
+    var env = builder.Environment;
+    var config = builder.Configuration;
+    var services = builder.Services;
+
+    // Logging
+    var loggerBuilder = new LoggerConfiguration()
+        // Set a default logger if none configured or configuration not found.
+        .WriteTo.Console()
+        .ReadFrom.Configuration(config);
+
+    Log.Logger = loggerBuilder.CreateLogger();
+
+    builder.Host.UseSerilog();
+
     Log.Information("Configuring host for {Name} v{Version}", ThisAssembly.AssemblyTitle, ThisAssembly.AssemblyInformationalVersion);
 
     // Settings
