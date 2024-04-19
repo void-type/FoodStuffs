@@ -3,28 +3,25 @@ import type {
   GetMealSetResponsePantryIngredient,
   ListMealSetsResponseIItemSet,
   MealSetsListParams,
-  RecipesListParams,
-  RecipeSearchResultItemIItemSet,
   RecipeSearchResultItemIngredient,
-  RecipeSearchFacet,
-  RecipeSearchResponse,
+  SaveMealSetRequest,
 } from '@/api/data-contracts';
-import Choices from '@/models/Choices';
+import type { HttpResponse } from '@/api/http-client';
+import ApiHelpers from '@/models/ApiHelpers';
 import DateHelpers from '@/models/DateHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import GetMealSetResponseClass from '@/models/GetMealSetResponseClass';
-import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import { defineStore } from 'pinia';
+import useMessageStore from './messageStore';
 
 interface MealStoreState {
-  recipeListResponse: RecipeSearchResultItemIItemSet;
-  recipeListRequest: RecipesListParams;
-  recipeListFacets: RecipeSearchFacet[];
   mealSetListResponse: ListMealSetsResponseIItemSet;
   mealSetListRequest: MealSetsListParams;
-  mealSetListIndex: number;
-  currentMealSet: GetMealSetResponse;
+  currentMealSet: GetMealSetResponse | null;
 }
+
+const messageStore = useMessageStore();
+const api = ApiHelpers.client;
 
 function countIngredients(
   acc: GetMealSetResponsePantryIngredient[],
@@ -77,26 +74,12 @@ function subtractCount(ingredients: GetMealSetResponsePantryIngredient[], name: 
   }
 }
 
-function getSelectedRecipes(state: MealStoreState) {
-  return state.currentMealSet.recipes || [];
+function getRecipes(state: MealStoreState) {
+  return state.currentMealSet?.recipes || [];
 }
 
 export default defineStore('meals', {
   state: (): MealStoreState => ({
-    recipeListResponse: {
-      count: 0,
-      items: [],
-      isPagingEnabled: true,
-      page: 1,
-      take: Choices.paginationTake[0].value,
-      totalCount: 0,
-    },
-    recipeListRequest: {
-      ...new SearchRecipesRequest(),
-      take: Choices.paginationTake[0].value,
-      isForMealPlanning: true,
-    },
-    recipeListFacets: [],
     mealSetListResponse: {
       count: 0,
       items: [],
@@ -111,22 +94,21 @@ export default defineStore('meals', {
       page: 1,
       take: -1,
     },
-    mealSetListIndex: -1,
-    currentMealSet: new GetMealSetResponseClass() as GetMealSetResponse,
+    currentMealSet: null,
   }),
 
   getters: {
-    getPantry: (state) => state.currentMealSet.pantryIngredients || [],
+    getPantry: (state) => state.currentMealSet?.pantryIngredients || [],
 
-    getSelectedRecipes: (state) => getSelectedRecipes(state),
+    getRecipes: (state) => getRecipes(state),
 
     getShoppingList: (state) => {
-      const ingredientCounts = getSelectedRecipes(state)
+      const ingredientCounts = getRecipes(state)
         .flatMap((c) => c.ingredients || [])
         .filter((c) => !c.isCategory)
         .reduce(countIngredients, []);
 
-      (state.currentMealSet.pantryIngredients || []).forEach((x) => {
+      (state.currentMealSet?.pantryIngredients || []).forEach((x) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         subtractCount(ingredientCounts, x.name!, x.quantity);
       });
@@ -134,58 +116,108 @@ export default defineStore('meals', {
       return ingredientCounts;
     },
 
-    isRecipeSelected: (state) => (id: number | null | undefined) =>
-      getSelectedRecipes(state).findIndex((x) => x.id === id) > -1,
+    isRecipeInCurrentMealSet: (state) => (id: number | null | undefined) =>
+      getRecipes(state).findIndex((x) => x.id === id) > -1,
   },
 
   actions: {
-    toggleRecipe(id: number) {
-      const index = this.getSelectedRecipes.findIndex((x) => x.id === id);
-
-      if (index > -1) {
-        this.getSelectedRecipes.splice(index, 1);
+    async clearPantry() {
+      if (this.currentMealSet === null) {
         return;
       }
 
-      const recipe = this.recipeListResponse.items?.find((c) => c.id === id);
-
-      if (typeof recipe === 'undefined' || recipe === null) {
-        return;
-      }
-
-      this.getSelectedRecipes.push(recipe);
-    },
-
-    clearPantry() {
       this.currentMealSet.pantryIngredients = [];
+      await this.saveCurrentMealSet();
     },
 
-    addToPantry(ingredient: string) {
-      addCount(this.currentMealSet.pantryIngredients || [], ingredient);
+    async addToPantry(ingredient: string, count = 1) {
+      if (this.currentMealSet === null) {
+        return;
+      }
+
+      addCount(this.currentMealSet.pantryIngredients || [], ingredient, count);
+      await this.saveCurrentMealSet();
     },
 
-    removeFromPantry(ingredient: string) {
-      subtractCount(this.currentMealSet.pantryIngredients || [], ingredient);
+    async removeFromPantry(ingredient: string, count = 1) {
+      if (this.currentMealSet === null) {
+        return;
+      }
+
+      subtractCount(this.currentMealSet.pantryIngredients || [], ingredient, count);
+      await this.saveCurrentMealSet();
     },
 
-    clearSelectedRecipes() {
+    async clearRecipes() {
+      if (this.currentMealSet === null) {
+        return;
+      }
+
       this.currentMealSet.recipes = [];
+      await this.saveCurrentMealSet();
     },
 
-    setListResponse(data: RecipeSearchResponse) {
-      if (data.results) {
-        this.recipeListResponse = data.results;
-      }
-
-      if (data.facets) {
-        this.recipeListFacets = data.facets;
+    async fetchMealSetList() {
+      try {
+        const response = await api().mealSetsList(this.mealSetListRequest);
+        this.mealSetListResponse = response.data;
+      } catch (error) {
+        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
     },
 
-    newMealSet() {
+    async newMealSet() {
       this.currentMealSet = new GetMealSetResponseClass();
       this.currentMealSet.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDayOfWeek(1));
-      this.mealSetListIndex = -1;
+
+      await this.saveCurrentMealSet();
+    },
+
+    async setCurrentMealSet(mealSetId: number | null | undefined) {
+      if (isNil(mealSetId)) {
+        return;
+      }
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const response = await api().mealSetsDetail(mealSetId!);
+        this.currentMealSet = response.data;
+      } catch (error) {
+        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
+    },
+
+    unsetCurrentMealSet() {
+      this.currentMealSet = null;
+    },
+
+    async saveCurrentMealSet() {
+      const current = this.currentMealSet;
+
+      if (current === null) {
+        return;
+      }
+
+      const request: SaveMealSetRequest = {
+        id: current.id,
+        name: current.name,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        recipeIds: this.getRecipes.map((x) => x.id!).filter((x) => !isNil(x)),
+        pantryIngredients: current.pantryIngredients,
+      };
+
+      try {
+        const response = await api().mealSetsCreate(request);
+
+        if (response.data.message) {
+          messageStore.setSuccessMessage(response.data.message);
+        }
+
+        await this.fetchMealSetList();
+        await this.setCurrentMealSet(response.data.id);
+      } catch (error) {
+        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
     },
   },
 });

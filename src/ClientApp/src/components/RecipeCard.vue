@@ -25,12 +25,6 @@ function flipCard() {
   const back = card?.querySelector('.card-flip-back');
   back?.classList.toggle('d-none');
 }
-
-function addToMealPlan(recipe: RecipeSearchResultItem) {
-  // if (recipe.id > 0) {
-  //   mealStore.toggleRecipe(recipe.id);
-  // }
-}
 </script>
 
 <template>
@@ -71,7 +65,7 @@ function addToMealPlan(recipe: RecipeSearchResultItem) {
               <button
                 class="btn btn-sm btn-secondary"
                 aria-label="Add recipe to current meal plan"
-                @click.stop.prevent="addToMealPlan(recipe)"
+                @click.stop.prevent="mealStore.addToMealPlan(recipe.id)"
               >
                 Add meal
               </button>
