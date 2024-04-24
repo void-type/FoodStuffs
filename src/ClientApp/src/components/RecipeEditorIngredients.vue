@@ -27,13 +27,22 @@ function copy(ingredients: WorkingRecipeIngredient[]) {
   return JSON.parse(JSON.stringify(ingredients)) as WorkingRecipeIngredient[];
 }
 
-function showInAccordion(index: number) {
+function showInAccordion(index: number, focus: boolean = false) {
   const safeIndex = clamp(index, 0, data.ingredients.length - 1);
   const ingredient = data.ingredients[safeIndex];
 
   if (ingredient) {
-    const element = `#ingredient-${ingredient.id}-accordion-collapse`;
-    nextTick(() => Collapse.getOrCreateInstance(element, { toggle: false }).show());
+    const elementId = `#ingredient-${ingredient.id}`;
+    nextTick(() => {
+      Collapse.getOrCreateInstance(`${elementId}-accordion-collapse`, { toggle: false }).show();
+
+      if (focus) {
+        const nameInput = document.querySelector(`${elementId}-name`) as HTMLElement;
+        if (nameInput !== null) {
+          nameInput.focus();
+        }
+      }
+    });
   }
 }
 
@@ -49,7 +58,7 @@ function onNewClick() {
   });
 
   data.ingredients = ingredients;
-  showInAccordion(newLength - 1);
+  showInAccordion(newLength - 1, true);
 }
 
 function onDeleteClick(id: string) {
