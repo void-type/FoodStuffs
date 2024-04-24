@@ -22,13 +22,11 @@ try
     var config = builder.Configuration;
     var services = builder.Services;
 
-    // Logging
-    var loggerBuilder = new LoggerConfiguration()
+    Log.Logger = new LoggerConfiguration()
         // Set a default logger if none configured or configuration not found.
         .WriteTo.Console()
-        .ReadFrom.Configuration(config);
-
-    Log.Logger = loggerBuilder.CreateLogger();
+        .ReadFrom.Configuration(config)
+        .CreateLogger();
 
     builder.Host.UseSerilog();
 
