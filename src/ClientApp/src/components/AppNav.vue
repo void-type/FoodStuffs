@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
-import useMealStore from '@/stores/mealStore';
+import useMealSetStore from '@/stores/mealSetStore';
 import { isNil } from '@/models/FormatHelpers';
 import { computed } from 'vue';
 
 const recipeStore = useRecipeStore();
-const mealStore = useMealStore();
+const mealSetStore = useMealSetStore();
 
 const mealSetName = computed(() => {
-  const name = mealStore.currentMealSet?.name;
+  const name = mealSetStore.currentMealSet?.name;
 
   if (isNil(name)) {
     return '';

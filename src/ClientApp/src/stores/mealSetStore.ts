@@ -14,7 +14,7 @@ import GetMealSetResponseClass from '@/models/GetMealSetResponseClass';
 import { defineStore } from 'pinia';
 import useMessageStore from './messageStore';
 
-interface MealStoreState {
+interface MealSetStoreState {
   mealSetListResponse: ListMealSetsResponseIItemSet;
   mealSetListRequest: MealSetsListParams;
   currentMealSet: GetMealSetResponse | null;
@@ -74,12 +74,12 @@ function subtractCount(ingredients: GetMealSetResponsePantryIngredient[], name: 
   }
 }
 
-function getRecipes(state: MealStoreState) {
+function getRecipes(state: MealSetStoreState) {
   return state.currentMealSet?.recipes || [];
 }
 
-export default defineStore('meals', {
-  state: (): MealStoreState => ({
+export default defineStore('mealSets', {
+  state: (): MealSetStoreState => ({
     mealSetListResponse: {
       count: 0,
       items: [],
@@ -215,6 +215,30 @@ export default defineStore('meals', {
 
         await this.fetchMealSetList();
         await this.setCurrentMealSet(response.data.id);
+      } catch (error) {
+        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
+    },
+
+    async deleteCurrentMealSet() {
+      const { id } = this.currentMealSet;
+
+      if (!id) {
+        return;
+      }
+
+      try {
+        const response = await api().mealSetsDelete(id);
+
+        if (response.data.message) {
+          messageStore.setSuccessMessage(response.data.message);
+        }
+
+        await this.fetchMealSetList();
+
+        if (this.currentMealSet?.id === id) {
+          this.unsetCurrentMealSet();
+        }
       } catch (error) {
         messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { RecipeSearchResultItem } from '@/api/data-contracts';
 import { computed, type PropType } from 'vue';
-import useMealStore from '@/stores/mealStore';
+import useMealSetStore from '@/stores/mealSetStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
@@ -12,7 +12,7 @@ const props = defineProps({
   imgLazy: { type: Boolean, required: false, default: false },
 });
 
-const mealStore = useMealStore();
+const mealSetStore = useMealSetStore();
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 
@@ -65,7 +65,7 @@ function flipCard() {
               <button
                 class="btn btn-sm btn-secondary"
                 aria-label="Add recipe to current meal plan"
-                @click.stop.prevent="mealStore.addToMealPlan(recipe.id)"
+                @click.stop.prevent="mealSetStore.addToMealPlan(recipe.id)"
               >
                 Add meal
               </button>
