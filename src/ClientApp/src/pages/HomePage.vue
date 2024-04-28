@@ -26,7 +26,7 @@ async function fetchRecipes() {
   isFetchingRecipes.value = true;
 
   try {
-    const response = await api().recipesList({
+    const response = await api().recipesSearch({
       ...new SearchRecipesRequest(),
       page: discoverPage.value + 1,
       take: 12,

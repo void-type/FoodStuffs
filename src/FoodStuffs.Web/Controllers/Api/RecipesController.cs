@@ -16,19 +16,6 @@ namespace FoodStuffs.Web.Controllers.Api;
 public class RecipesController : ControllerBase
 {
     /// <summary>
-    /// Rebuild the recipe search index.
-    /// </summary>
-    [Route("rebuild-index")]
-    [HttpPost]
-    [ProducesResponseType(typeof(UserMessage), 200)]
-    public async Task<IActionResult> Rebuild([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
-    {
-        await indexService.Rebuild(cancellationToken);
-
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Index rebuilt.")));
-    }
-
-    /// <summary>
     /// Search for recipes using the following criteria. All are optional and some have defaults.
     /// </summary>
     /// <param name="searchPipeline"></param>
@@ -110,5 +97,18 @@ public class RecipesController : ControllerBase
         return deletePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Rebuild the recipe search index.
+    /// </summary>
+    [Route("rebuild-index")]
+    [HttpPost]
+    [ProducesResponseType(typeof(UserMessage), 200)]
+    public async Task<IActionResult> Rebuild([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
+    {
+        await indexService.Rebuild(cancellationToken);
+
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Index rebuilt.")));
     }
 }

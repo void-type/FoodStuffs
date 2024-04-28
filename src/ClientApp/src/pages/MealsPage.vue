@@ -32,7 +32,7 @@ onMounted(async () => {});
       <div class="g-col-12">
         <div class="grid">
           <div class="g-col-12 g-col-lg-6">
-            <h2 class="mt-4 mb-3">{{ (currentMealSet.id || 0) < 1 ? 'New' : 'Edit' }} plan</h2>
+            <h2 class="mt-4 mb-3">{{ (currentMealSet?.id || 0) < 1 ? 'New' : 'Edit' }} plan</h2>
             <label for="nameSearch" class="form-label">Meal set name</label>
             <input
               id="mealSetName"
@@ -55,7 +55,7 @@ onMounted(async () => {});
               </button>
               <button
                 class="btn btn-danger ms-auto"
-                :disabled="(currentMealSet.id || 0) < 1"
+                :disabled="(currentMealSet?.id || 0) < 1"
                 @click.stop.prevent="onDeleteMealSet"
               >
                 Delete

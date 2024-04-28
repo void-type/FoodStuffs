@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { IFailureIItemSet, IFailure } from '@/api/data-contracts';
+import type { IItemSetOfIFailure, IFailure } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 
 const DEFAULT_TIMEOUT = 4;
@@ -44,7 +44,7 @@ export const useMessageStore = defineStore('messages', {
         const userMessage = response.error as IFailure;
         this.setErrorMessage(userMessage.message || '');
       } else {
-        const failureSet = response.error as IFailureIItemSet;
+        const failureSet = response.error as IItemSetOfIFailure;
         if (typeof failureSet !== 'undefined' && failureSet !== null) {
           this.setValidationErrorMessages(failureSet.items || []);
         } else {

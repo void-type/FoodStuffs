@@ -9,7 +9,7 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage meals.
+/// Manage meal sets.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/mealSets")]
 public class MealSetsController : ControllerBase

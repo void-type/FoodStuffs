@@ -3,7 +3,7 @@ import type { SaveRecipeRequestIngredient } from '@/api/data-contracts';
 export default class WorkingRecipeIngredient implements SaveRecipeRequestIngredient {
   public id = crypto.randomUUID();
 
-  public name?: string | null = '';
+  public name?: string = '';
 
   /** @format int32 */
   public quantity?: number = 1;

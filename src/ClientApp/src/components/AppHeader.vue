@@ -23,7 +23,7 @@ async function rebuildSearch() {
   try {
     isRebuilding.value = true;
 
-    const response = await api().recipesRebuildIndexCreate();
+    const response = await api().recipesRebuild();
 
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);

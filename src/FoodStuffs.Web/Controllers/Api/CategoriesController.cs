@@ -8,13 +8,13 @@ using VoidCore.Model.Responses.Collections;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage recipes.
+/// Manage recipe categories.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/categories")]
 public class CategoriesController : ControllerBase
 {
     /// <summary>
-    /// Search for meal sets using the following criteria. All are optional and some have defaults.
+    /// Search for categories using the following criteria. All are optional and some have defaults.
     /// </summary>
     /// <param name="listPipeline"></param>
     /// <param name="name">Name contains (case-insensitive)</param>

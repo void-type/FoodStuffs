@@ -28,7 +28,7 @@ const data = reactive({
 
 function fetchRecipe(id: number) {
   api()
-    .recipesDetail(id)
+    .recipesGet(id)
     .then((response) => {
       data.sourceRecipe = response.data;
       RouterHelpers.setTitle(router.currentRoute.value, data.sourceRecipe.name);

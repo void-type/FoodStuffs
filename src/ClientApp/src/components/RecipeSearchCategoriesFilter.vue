@@ -43,7 +43,7 @@ function getFacetCount(facetValue: number | null | undefined) {
 
 onMounted(() => {
   api()
-    .categoriesList({ isPagingEnabled: false })
+    .categoriesSearch({ isPagingEnabled: false })
     .then((response) => {
       categoryOptions.value = response.data.items || [];
     })

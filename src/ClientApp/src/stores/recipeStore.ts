@@ -3,8 +3,8 @@ import type {
   GetRecipeResponse,
   RecipeSearchResultItem,
   RecipeSearchResponse,
-  RecipesListParams,
-  RecipeSearchResultItemIItemSet,
+  RecipesSearchParams,
+  IItemSetOfRecipeSearchResultItem,
   RecipeSearchFacet,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
@@ -14,8 +14,8 @@ import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 const recentLimit = 7;
 
 interface RecipeStoreState {
-  listResponse: RecipeSearchResultItemIItemSet;
-  listRequest: RecipesListParams;
+  listResponse: IItemSetOfRecipeSearchResultItem;
+  listRequest: RecipesSearchParams;
   listFacets: RecipeSearchFacet[];
   recentRecipes: Array<RecipeSearchResultItem>;
   discoverList: RecipeSearchResultItem[];
@@ -58,7 +58,7 @@ export const useRecipeStore = defineStore('recipes', {
       }
     },
 
-    setListRequest(data: RecipesListParams) {
+    setListRequest(data: RecipesSearchParams) {
       this.listRequest = data;
     },
 

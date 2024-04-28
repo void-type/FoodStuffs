@@ -129,7 +129,7 @@ watch(isRecipeDirty, () => {
 
 onMounted(() => {
   api()
-    .categoriesList({ isPagingEnabled: false })
+    .categoriesSearch({ isPagingEnabled: false })
     .then((response) => {
       categoryOptions.value =
         response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];

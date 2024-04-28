@@ -1,8 +1,8 @@
 import type {
   GetMealSetResponse,
   GetMealSetResponsePantryIngredient,
-  ListMealSetsResponseIItemSet,
-  MealSetsListParams,
+  IItemSetOfListMealSetsResponse,
+  MealSetsSearchParams,
   RecipeSearchResultItemIngredient,
   SaveMealSetRequest,
 } from '@/api/data-contracts';
@@ -15,8 +15,8 @@ import { defineStore } from 'pinia';
 import useMessageStore from './messageStore';
 
 interface MealSetStoreState {
-  mealSetListResponse: ListMealSetsResponseIItemSet;
-  mealSetListRequest: MealSetsListParams;
+  mealSetListResponse: IItemSetOfListMealSetsResponse;
+  mealSetListRequest: MealSetsSearchParams;
   currentMealSet: GetMealSetResponse | null;
 }
 
@@ -159,7 +159,7 @@ export default defineStore('mealSets', {
 
     async fetchMealSetList() {
       try {
-        const response = await api().mealSetsList(this.mealSetListRequest);
+        const response = await api().mealSetsSearch(this.mealSetListRequest);
         this.mealSetListResponse = response.data;
       } catch (error) {
         messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -180,7 +180,7 @@ export default defineStore('mealSets', {
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const response = await api().mealSetsDetail(mealSetId!);
+        const response = await api().mealSetsGet(mealSetId!);
         this.currentMealSet = response.data;
       } catch (error) {
         messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -207,7 +207,7 @@ export default defineStore('mealSets', {
       };
 
       try {
-        const response = await api().mealSetsCreate(request);
+        const response = await api().mealSetsSave(request);
 
         if (response.data.message) {
           messageStore.setSuccessMessage(response.data.message);

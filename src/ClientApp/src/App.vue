@@ -26,7 +26,7 @@ onMounted(() => {
   recipeStore.addToRecent(RecipeStoreHelpers.getQueuedRecent());
 
   api()
-    .appInfoList()
+    .applicationGetInfo()
     .then((response) => {
       appStore.setApplicationInfo(response.data);
       RouterHelpers.setTitle(route);
@@ -41,7 +41,7 @@ onMounted(() => {
     .catch((response) => messageStore.setApiFailureMessages(response));
 
   api()
-    .appVersionList()
+    .applicationGetVersion()
     .then((response) => appStore.setVersionInfo(response.data));
 });
 </script>

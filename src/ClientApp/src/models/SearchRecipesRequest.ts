@@ -1,8 +1,8 @@
-import type { RecipesListParams } from '@/api/data-contracts';
+import type { RecipesSearchParams } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import RecipeStoreHelpers from './RecipeStoreHelpers';
 
-export default class SearchRecipesRequest implements RecipesListParams {
+export default class SearchRecipesRequest implements RecipesSearchParams {
   public name = '';
 
   public categories = [];

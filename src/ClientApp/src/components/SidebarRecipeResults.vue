@@ -27,7 +27,7 @@ const searchedRecipes = computed(() => {
 onMounted(() => {
   if (listResponse.value.count === 0) {
     api()
-      .recipesList(listRequest.value)
+      .recipesSearch(listRequest.value)
       .then((response) => recipeStore.setListResponse(response.data))
       .catch((response) => messageStore.setApiFailureMessages(response));
   }

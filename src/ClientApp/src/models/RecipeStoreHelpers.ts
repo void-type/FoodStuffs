@@ -1,7 +1,7 @@
 import type {
   RecipeSearchResultItem,
   GetRecipeResponse,
-  RecipesListParams,
+  RecipesSearchParams,
 } from '@/api/data-contracts';
 import SearchRecipesRequest from './SearchRecipesRequest';
 
@@ -42,7 +42,7 @@ export default class RecipeStoreHelpers {
     { text: 'Random', value: 'random' },
   ];
 
-  static listRequestToQueryParams(listRequest: RecipesListParams) {
+  static listRequestToQueryParams(listRequest: RecipesSearchParams) {
     // Query params need to be string or number
     const requestEntries = Object.entries({
       ...listRequest,

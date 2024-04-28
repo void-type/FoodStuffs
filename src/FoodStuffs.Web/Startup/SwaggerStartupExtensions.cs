@@ -13,7 +13,6 @@ public static class SwaggerStartupExtensions
             configure.Version = ThisAssembly.AssemblyInformationalVersion.Split('+').FirstOrDefault();
             configure.UseControllerSummaryAsTagDescription = true;
 
-            // TODO: BaseUrl (probably should be empty or the current app).
             // TODO: Typescript generation (once we verify that the old generator sees this document as similar)
         });
 
@@ -24,7 +23,14 @@ public static class SwaggerStartupExtensions
     {
         // Add OpenAPI 3.0 document serving middleware
         // Available at: /swagger/v1/swagger.json
-        app.UseOpenApi();
+        app.UseOpenApi(c =>
+        {
+            // Clear the current server so the generated httpClient can be environment agnostic.
+            c.PostProcess = (document, httpRequest) =>
+            {
+                document.Servers.Clear();
+            };
+        });
 
 
         // Add web UIs to interact with the document
@@ -34,7 +40,7 @@ public static class SwaggerStartupExtensions
             // Add script to fetch the csrf token and store it so the dev doesn't have to load the Vue App.
             c.CustomHeadContent = """<script src="/swagger-csrf.js"></script>""";
 
-            // This is an intentional script injection to ad antiforgery support. https://github.com/RicoSuter/NSwag/issues/4108
+            // This is an intentional script injection to add antiforgery support. https://github.com/RicoSuter/NSwag/issues/4108
             c.AdditionalSettings.Add("requestInterceptor: (req) => { req.headers['" + SecurityConstants.AntiforgeryTokenHeaderName + "'] = window.vt_api_csrf_token; return req; },//", string.Empty);
         });
 

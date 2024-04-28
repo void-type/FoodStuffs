@@ -11,20 +11,20 @@
 
 import type {
   AppVersion,
-  CategoriesListParams,
+  CategoriesSearchParams,
+  EntityMessageOfInteger,
+  EntityMessageOfString,
   GetMealSetResponse,
   GetRecipeResponse,
-  IFailureIItemSet,
-  ImagesCreateParams,
-  Int32EntityMessage,
-  ListCategoriesResponseIItemSet,
-  ListMealSetsResponseIItemSet,
-  MealSetsListParams,
+  IItemSetOfIFailure,
+  IItemSetOfListCategoriesResponse,
+  IItemSetOfListMealSetsResponse,
+  ImagesUploadParams,
+  MealSetsSearchParams,
   RecipeSearchResponse,
-  RecipesListParams,
+  RecipesSearchParams,
   SaveMealSetRequest,
   SaveRecipeRequest,
-  StringEntityMessage,
   UserMessage,
   WebClientInfo,
 } from './data-contracts';
@@ -35,12 +35,12 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Application
-   * @name AppInfoList
+   * @name ApplicationGetInfo
    * @summary Get information to bootstrap the SPA client like application name and user data.
    * @request GET:/api/app/info
-   * @response `200` `WebClientInfo` Success
+   * @response `200` `WebClientInfo`
    */
-  appInfoList = (params: RequestParams = {}) =>
+  applicationGetInfo = (params: RequestParams = {}) =>
     this.request<WebClientInfo, any>({
       path: `/api/app/info`,
       method: 'GET',
@@ -51,12 +51,12 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Application
-   * @name AppVersionList
+   * @name ApplicationGetVersion
    * @summary Get the version of the application.
    * @request GET:/api/app/version
-   * @response `200` `AppVersion` Success
+   * @response `200` `AppVersion`
    */
-  appVersionList = (params: RequestParams = {}) =>
+  applicationGetVersion = (params: RequestParams = {}) =>
     this.request<AppVersion, any>({
       path: `/api/app/version`,
       method: 'GET',
@@ -67,14 +67,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Categories
-   * @name CategoriesList
-   * @summary Search for meal sets using the following criteria. All are optional and some have defaults.
+   * @name CategoriesSearch
+   * @summary Search for categories using the following criteria. All are optional and some have defaults.
    * @request GET:/api/categories
-   * @response `200` `ListCategoriesResponseIItemSet` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `IItemSetOfListCategoriesResponse`
+   * @response `400` `IItemSetOfIFailure`
    */
-  categoriesList = (query: CategoriesListParams, params: RequestParams = {}) =>
-    this.request<ListCategoriesResponseIItemSet, IFailureIItemSet>({
+  categoriesSearch = (query: CategoriesSearchParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListCategoriesResponse, IItemSetOfIFailure>({
       path: `/api/categories`,
       method: 'GET',
       query: query,
@@ -85,17 +85,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Images
-   * @name ImagesDetail
+   * @name ImagesGet
    * @summary Get an image.
    * @request GET:/api/images/{name}
-   * @response `200` `File` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `File`
+   * @response `400` `IItemSetOfIFailure`
    */
-  imagesDetail = (name: string, params: RequestParams = {}) =>
-    this.request<File, IFailureIItemSet>({
+  imagesGet = (name: string, params: RequestParams = {}) =>
+    this.request<File, IItemSetOfIFailure>({
       path: `/api/images/${name}`,
       method: 'GET',
-      format: 'json',
       ...params,
     });
   /**
@@ -105,11 +104,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name ImagesDelete
    * @summary Delete an image.
    * @request DELETE:/api/images/{name}
-   * @response `200` `StringEntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfString`
+   * @response `400` `IItemSetOfIFailure`
    */
   imagesDelete = (name: string, params: RequestParams = {}) =>
-    this.request<StringEntityMessage, IFailureIItemSet>({
+    this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images/${name}`,
       method: 'DELETE',
       format: 'json',
@@ -119,21 +118,21 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Images
-   * @name ImagesCreate
+   * @name ImagesUpload
    * @summary Upload an image using a multi-part form file.
    * @request POST:/api/images
-   * @response `200` `StringEntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfString`
+   * @response `400` `IItemSetOfIFailure`
    */
-  imagesCreate = (
-    query: ImagesCreateParams,
+  imagesUpload = (
+    query: ImagesUploadParams,
     data: {
       /** @format binary */
-      file?: File;
+      file?: File | null;
     },
     params: RequestParams = {}
   ) =>
-    this.request<StringEntityMessage, IFailureIItemSet>({
+    this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images`,
       method: 'POST',
       query: query,
@@ -146,14 +145,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Images
-   * @name ImagesPinCreate
+   * @name ImagesPin
    * @summary Pin an image for a recipe. This image will be the default image for the recipe.
    * @request POST:/api/images/pin/{name}
-   * @response `200` `StringEntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfString`
+   * @response `400` `IItemSetOfIFailure`
    */
-  imagesPinCreate = (name: string, params: RequestParams = {}) =>
-    this.request<StringEntityMessage, IFailureIItemSet>({
+  imagesPin = (name: string, params: RequestParams = {}) =>
+    this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images/pin/${name}`,
       method: 'POST',
       format: 'json',
@@ -163,14 +162,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags MealSets
-   * @name MealSetsList
+   * @name MealSetsSearch
    * @summary Search for meal sets using the following criteria. All are optional and some have defaults.
    * @request GET:/api/mealSets
-   * @response `200` `ListMealSetsResponseIItemSet` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `IItemSetOfListMealSetsResponse`
+   * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsList = (query: MealSetsListParams, params: RequestParams = {}) =>
-    this.request<ListMealSetsResponseIItemSet, IFailureIItemSet>({
+  mealSetsSearch = (query: MealSetsSearchParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListMealSetsResponse, IItemSetOfIFailure>({
       path: `/api/mealSets`,
       method: 'GET',
       query: query,
@@ -181,14 +180,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags MealSets
-   * @name MealSetsCreate
+   * @name MealSetsSave
    * @summary Save a meal set. Will update if found, otherwise a new meal set will be created.
    * @request POST:/api/mealSets
-   * @response `200` `Int32EntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsCreate = (data: SaveMealSetRequest, params: RequestParams = {}) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
+  mealSetsSave = (data: SaveMealSetRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/mealSets`,
       method: 'POST',
       body: data,
@@ -200,14 +199,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags MealSets
-   * @name MealSetsDetail
+   * @name MealSetsGet
    * @summary Get a meal set.
    * @request GET:/api/mealSets/{id}
-   * @response `200` `GetMealSetResponse` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `GetMealSetResponse`
+   * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsDetail = (id: number, params: RequestParams = {}) =>
-    this.request<GetMealSetResponse, IFailureIItemSet>({
+  mealSetsGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetMealSetResponse, IItemSetOfIFailure>({
       path: `/api/mealSets/${id}`,
       method: 'GET',
       format: 'json',
@@ -220,11 +219,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name MealSetsDelete
    * @summary Delete a meal set.
    * @request DELETE:/api/mealSets/{id}
-   * @response `200` `Int32EntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
    */
   mealSetsDelete = (id: number, params: RequestParams = {}) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/mealSets/${id}`,
       method: 'DELETE',
       format: 'json',
@@ -234,30 +233,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Recipes
-   * @name RecipesRebuildIndexCreate
-   * @summary Rebuild the recipe search index.
-   * @request POST:/api/recipes/rebuild-index
-   * @response `200` `UserMessage` Success
-   */
-  recipesRebuildIndexCreate = (params: RequestParams = {}) =>
-    this.request<UserMessage, any>({
-      path: `/api/recipes/rebuild-index`,
-      method: 'POST',
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Recipes
-   * @name RecipesList
+   * @name RecipesSearch
    * @summary Search for recipes using the following criteria. All are optional and some have defaults.
    * @request GET:/api/recipes
-   * @response `200` `RecipeSearchResponse` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `RecipeSearchResponse`
+   * @response `400` `IItemSetOfIFailure`
    */
-  recipesList = (query: RecipesListParams, params: RequestParams = {}) =>
-    this.request<RecipeSearchResponse, IFailureIItemSet>({
+  recipesSearch = (query: RecipesSearchParams, params: RequestParams = {}) =>
+    this.request<RecipeSearchResponse, IItemSetOfIFailure>({
       path: `/api/recipes`,
       method: 'GET',
       query: query,
@@ -268,14 +251,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Recipes
-   * @name RecipesCreate
+   * @name RecipesSave
    * @summary Save a recipe. Will update if found, otherwise a new recipe will be created.
    * @request POST:/api/recipes
-   * @response `200` `Int32EntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
    */
-  recipesCreate = (data: SaveRecipeRequest, params: RequestParams = {}) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
+  recipesSave = (data: SaveRecipeRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/recipes`,
       method: 'POST',
       body: data,
@@ -287,14 +270,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Recipes
-   * @name RecipesDetail
+   * @name RecipesGet
    * @summary Get a recipe.
    * @request GET:/api/recipes/{id}
-   * @response `200` `GetRecipeResponse` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `GetRecipeResponse`
+   * @response `400` `IItemSetOfIFailure`
    */
-  recipesDetail = (id: number, params: RequestParams = {}) =>
-    this.request<GetRecipeResponse, IFailureIItemSet>({
+  recipesGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetRecipeResponse, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
       method: 'GET',
       format: 'json',
@@ -307,13 +290,29 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name RecipesDelete
    * @summary Delete a recipe.
    * @request DELETE:/api/recipes/{id}
-   * @response `200` `Int32EntityMessage` Success
-   * @response `400` `IFailureIItemSet` Bad Request
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
    */
   recipesDelete = (id: number, params: RequestParams = {}) =>
-    this.request<Int32EntityMessage, IFailureIItemSet>({
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
       method: 'DELETE',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
+   * @name RecipesRebuild
+   * @summary Rebuild the recipe search index.
+   * @request POST:/api/recipes/rebuild-index
+   * @response `200` `UserMessage`
+   */
+  recipesRebuild = (params: RequestParams = {}) =>
+    this.request<UserMessage, any>({
+      path: `/api/recipes/rebuild-index`,
+      method: 'POST',
       format: 'json',
       ...params,
     });

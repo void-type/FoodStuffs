@@ -4,7 +4,7 @@ import type WorkingRecipeIngredient from './WorkingRecipeIngredient';
 export default class WorkingRecipe implements SaveRecipeRequest {
   public id = 0;
 
-  public name: string | null = '';
+  public name: string = '';
 
   public directions = '';
 
@@ -16,5 +16,5 @@ export default class WorkingRecipe implements SaveRecipeRequest {
 
   public ingredients: WorkingRecipeIngredient[] = [];
 
-  public categories: string[] | null = [];
+  public categories: string[] = [];
 }

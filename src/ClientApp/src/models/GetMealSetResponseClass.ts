@@ -7,13 +7,13 @@ import type {
 export default class GetMealSetResponseClass implements GetMealSetResponse {
   public id = 0;
 
-  public name: string | null = '';
+  public name: string = '';
 
-  public createdBy: string | null = '';
+  public createdBy: string = '';
 
   public createdOn = '';
 
-  public modifiedBy: string | null = '';
+  public modifiedBy: string = '';
 
   public modifiedOn = '';
 

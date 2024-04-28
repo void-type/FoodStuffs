@@ -3,19 +3,19 @@ import type { GetRecipeResponse, GetRecipeResponseIngredient } from '@/api/data-
 export default class GetRecipeResponseClass implements GetRecipeResponse {
   public id = 0;
 
-  public name: string | null = '';
+  public name: string = '';
 
-  public directions: string | null = '';
+  public directions: string = '';
 
   public cookTimeMinutes: number | null = null;
 
   public prepTimeMinutes: number | null = null;
 
-  public createdBy: string | null = '';
+  public createdBy: string = '';
 
   public createdOn = '';
 
-  public modifiedBy: string | null = '';
+  public modifiedBy: string = '';
 
   public modifiedOn = '';
 
@@ -23,9 +23,9 @@ export default class GetRecipeResponseClass implements GetRecipeResponse {
 
   public isForMealPlanning = false;
 
-  public categories: string[] | null = [];
+  public categories: string[] = [];
 
-  public images: string[] | null = [];
+  public images: string[] = [];
 
-  public ingredients: GetRecipeResponseIngredient[] | null = [];
+  public ingredients: GetRecipeResponseIngredient[] = [];
 }

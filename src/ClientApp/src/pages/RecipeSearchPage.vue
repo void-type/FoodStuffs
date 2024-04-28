@@ -128,7 +128,7 @@ function setListRequestFromQuery() {
 
 function fetchList() {
   api()
-    .recipesList(listRequest.value)
+    .recipesSearch(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
     .catch((response) => messageStore.setApiFailureMessages(response));
 }

@@ -10,8 +10,8 @@ import {
 } from 'vue-router';
 import type {
   GetRecipeResponse,
-  IFailureIItemSet,
-  Int32EntityMessage,
+  IItemSetOfIFailure,
+  EntityMessageOfInteger,
   SaveRecipeRequest,
 } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
@@ -101,7 +101,7 @@ function fetchRecipe() {
   const id = isCreateCopyMode.value ? props.copy : props.id;
 
   api()
-    .recipesDetail(id)
+    .recipesGet(id)
     .then((response) => {
       data.recipeChangeToken += 1;
       setSources(response.data);
@@ -117,14 +117,14 @@ function fetchRecipe() {
 
 function fetchRecipesList() {
   api()
-    .recipesList(listRequest.value)
+    .recipesSearch(listRequest.value)
     .then((response) => recipeStore.setListResponse(response.data))
     .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
 function fetchImages(recipeId: number) {
   api()
-    .recipesDetail(recipeId)
+    .recipesGet(recipeId)
     .then((response) => {
       setImageSources(response.data);
     })
@@ -134,7 +134,7 @@ function fetchImages(recipeId: number) {
 }
 
 function onRecipeSave(recipe: SaveRecipeRequest) {
-  function onPostSave(response: HttpResponse<Int32EntityMessage, IFailureIItemSet>) {
+  function onPostSave(response: HttpResponse<EntityMessageOfInteger, IItemSetOfIFailure>) {
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
     }
@@ -144,7 +144,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
   }
 
   api()
-    .recipesCreate(recipe)
+    .recipesSave(recipe)
     .then((response) => {
       data.isRecipeDirty = false;
 
@@ -196,7 +196,7 @@ function onRecipeDirtyStateChange(value: boolean) {
 
 function onImageUpload(file: File) {
   api()
-    .imagesCreate({ recipeId: props.id }, { file })
+    .imagesUpload({ recipeId: props.id }, { file })
     .then((response) => {
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
@@ -247,7 +247,7 @@ function onImageDelete(name: string) {
 
 function onImagePin(name: string) {
   api()
-    .imagesPinCreate(name)
+    .imagesPin(name)
     .then((response) => {
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
