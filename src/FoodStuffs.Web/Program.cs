@@ -78,7 +78,7 @@ try
     app.UseRequestLoggingScope();
     app.UseSerilogRequestLogging();
     app.UseCurrentUserLogging();
-    app.UseSwaggerAndUi(env);
+    app.UseSwaggerAndUi();
     app.UseSpaEndpoints();
 
     Log.Information("Starting host.");
