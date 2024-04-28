@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Events.MealSets;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 using VoidCore.Model.Responses.Messages;
@@ -10,7 +11,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Manage meals.
 /// </summary>
-[Route("api/mealSets")]
+[Route(ApiRouteAttribute.BasePath + "/mealSets")]
 public class MealSetsController : ControllerBase
 {
     /// <summary>

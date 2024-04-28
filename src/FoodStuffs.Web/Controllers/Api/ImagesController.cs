@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Events.Images;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Guards;
 using VoidCore.Model.Responses.Collections;
@@ -11,7 +12,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Manage images.
 /// </summary>
-[Route("api/images")]
+[Route(ApiRouteAttribute.BasePath + "/images")]
 public class ImagesController : ControllerBase
 {
     /// <summary>

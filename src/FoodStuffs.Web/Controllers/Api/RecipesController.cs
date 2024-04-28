@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Search;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 using VoidCore.Model.Responses.Messages;
@@ -11,7 +12,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Manage recipes.
 /// </summary>
-[Route("api/recipes")]
+[Route(ApiRouteAttribute.BasePath + "/recipes")]
 public class RecipesController : ControllerBase
 {
     /// <summary>

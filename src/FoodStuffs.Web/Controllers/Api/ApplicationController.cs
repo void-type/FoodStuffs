@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
+using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Web.Controllers.Api;
@@ -7,7 +8,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Application metadata.
 /// </summary>
-[Route("api/app")]
+[Route(ApiRouteAttribute.BasePath + "/app")]
 public class ApplicationController : ControllerBase
 {
     /// <summary>

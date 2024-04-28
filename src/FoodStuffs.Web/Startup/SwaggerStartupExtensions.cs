@@ -46,16 +46,17 @@ public static class SwaggerStartupExtensions
                     var nonce = httpContextAccessor.HttpContext.EnsureNotNull().GetNonce();
 
                     // Add script to fetch the csrf token and store it so the dev doesn't have to load the Vue App.
-                    var csrfScript = $@"
-                        <script async nonce=""{nonce}"">
-                                async function fetchAppInfo() {{
+                    var csrfScript = $$"""
+                        <script async nonce="{{nonce}}">
+                                async function fetchAppInfo() {
                                     const response = await fetch('/api/app/info');
                                     const data = await response.json();
                                     window.vt_api_csrf_token = data.antiforgeryToken;
-                                }}
+                                }
                                 fetchAppInfo();
                             </script>
-                        </body>";
+                        </body>
+""";
 
                     // Replace inline `<script>` and `<style>` tags by adding a `nonce` attribute to them
                     var newHtml = originalHtml
@@ -83,7 +84,7 @@ public static class SwaggerStartupExtensions
             .UseSwaggerUI(c =>
             {
                 c.DocumentTitle = environment.ApplicationName + " API";
-                c.UseRequestInterceptor("(req) => { req.headers['X-Csrf-Token'] = window.vt_api_csrf_token; return req; }");
+                c.UseRequestInterceptor("(req) => { req.headers['" + SecurityConstants.AntiforgeryTokenHeaderName + "'] = window.vt_api_csrf_token; return req; }");
             });
     }
 }
