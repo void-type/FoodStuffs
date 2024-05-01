@@ -83,7 +83,6 @@ CREATE TABLE [dbo].[User]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
--- TODO: Remove this once users are implemented
 INSERT INTO [dbo].[User]
     ( [UserName]
     , [Password]
