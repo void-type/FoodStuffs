@@ -62,7 +62,7 @@ try
         typeof(GetWebClientInfo).Assembly,
         typeof(SearchRecipesHandler).Assembly);
 
-    services.AddSwaggerWithCsp(env);
+    services.AddSwagger(env);
 
     services.AddHostedService<EnsureIndexHostedService>();
 

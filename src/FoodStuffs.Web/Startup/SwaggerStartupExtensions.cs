@@ -4,7 +4,7 @@ namespace FoodStuffs.Web.Startup;
 
 public static class SwaggerStartupExtensions
 {
-    public static IServiceCollection AddSwaggerWithCsp(this IServiceCollection services, IHostEnvironment environment)
+    public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment)
     {
         // Generate OpenAPI 3.0 document.
         services.AddOpenApiDocument((configure, provider) =>
@@ -12,8 +12,6 @@ public static class SwaggerStartupExtensions
             configure.Title = environment.ApplicationName;
             configure.Version = ThisAssembly.AssemblyInformationalVersion.Split('+').FirstOrDefault();
             configure.UseControllerSummaryAsTagDescription = true;
-
-            // TODO: Typescript generation (once we verify that the old generator sees this document as similar)
         });
 
         return services;
@@ -26,10 +24,7 @@ public static class SwaggerStartupExtensions
         app.UseOpenApi(c =>
         {
             // Clear the current server so the generated httpClient can be environment agnostic.
-            c.PostProcess = (document, httpRequest) =>
-            {
-                document.Servers.Clear();
-            };
+            c.PostProcess = (document, _) => document.Servers.Clear();
         });
 
 
@@ -38,7 +33,7 @@ public static class SwaggerStartupExtensions
         app.UseSwaggerUi(c =>
         {
             // Add script to fetch the csrf token and store it so the dev doesn't have to load the Vue App.
-            c.CustomHeadContent = """<script src="/swagger-csrf.js"></script>""";
+            c.CustomHeadContent = """<script src="/js/swagger-csrf.js"></script>""";
 
             // This is an intentional script injection to add antiforgery support. https://github.com/RicoSuter/NSwag/issues/4108
             c.AdditionalSettings.Add("requestInterceptor: (req) => { req.headers['" + SecurityConstants.AntiforgeryTokenHeaderName + "'] = window.vt_api_csrf_token; return req; },//", string.Empty);
