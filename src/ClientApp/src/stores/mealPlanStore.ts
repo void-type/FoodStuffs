@@ -28,8 +28,6 @@ interface MealPlanStoreState {
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
-let isInitialized = false;
-
 export default defineStore('mealPlans', {
   state: (): MealPlanStoreState => ({
     mealPlanListResponse: {
@@ -110,9 +108,6 @@ export default defineStore('mealPlans', {
       try {
         const response = await api().mealPlansSearch(this.mealPlanListRequest);
         this.mealPlanListResponse = response.data;
-
-        if (!isInitialized) {
-        }
       } catch (error) {
         messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
