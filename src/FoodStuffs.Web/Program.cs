@@ -56,13 +56,13 @@ try
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();
 
+    services.AddSwagger(env);
+
     // Auto-register Domain Events
     services.AddDomainEvents(
         ServiceLifetime.Scoped,
         typeof(GetWebClientInfo).Assembly,
         typeof(SearchRecipesHandler).Assembly);
-
-    services.AddSwagger(env);
 
     services.AddHostedService<EnsureIndexHostedService>();
 

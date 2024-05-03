@@ -22,7 +22,7 @@ public static class SecurityStartupExtensions
 
             options.ImageSources
                 .AllowSelf()
-                // Bootstrap and other webpacked assets are loaded from inline data.
+                // Bootstrap and other webpack'd assets are loaded from inline data.
                 .Allow("data:");
 
             options.ScriptSources
@@ -66,7 +66,7 @@ public static class SecurityStartupExtensions
                     .AllowNonce();
 
                 options.StyleSources
-                    // Add the Swagger UI scripts
+                    // Add the Swagger UI style
                     .AllowNonce();
             }
         });

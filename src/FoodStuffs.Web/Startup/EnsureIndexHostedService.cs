@@ -4,7 +4,7 @@ using FoodStuffs.Model.Search;
 namespace FoodStuffs.Web.Startup;
 
 /// <summary>
-/// This service will rebuild the index on startup if it doesn't exit.
+/// This service will rebuild the index on startup if it doesn't exist.
 /// </summary>
 public class EnsureIndexHostedService : IHostedService
 {

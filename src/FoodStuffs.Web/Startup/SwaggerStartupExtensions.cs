@@ -7,7 +7,7 @@ public static class SwaggerStartupExtensions
     public static IServiceCollection AddSwagger(this IServiceCollection services, IHostEnvironment environment)
     {
         // Generate OpenAPI 3.0 document.
-        services.AddOpenApiDocument((configure, provider) =>
+        services.AddOpenApiDocument((configure, _) =>
         {
             configure.Title = environment.ApplicationName;
             configure.Version = ThisAssembly.AssemblyInformationalVersion.Split('+').FirstOrDefault();
