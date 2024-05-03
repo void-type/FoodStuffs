@@ -85,6 +85,11 @@ try
     app.Run();
     return 0;
 }
+catch (HostAbortedException)
+{
+    // For EF tooling, let the exception throw and the tooling will catch it.
+    throw;
+}
 catch (Exception ex)
 {
     Log.Fatal(ex, "Host terminated unexpectedly.");
