@@ -21,10 +21,10 @@ export default class RouterHelpers {
   }
 
   static viewRecipe(recipe: RouteRecipe) {
-    return { name: 'view', params: { id: recipe.id, slug: recipe.slug } };
+    return { name: 'recipeView', params: { id: recipe.id, slug: recipe.slug } };
   }
 
   static editRecipe(recipe: RouteRecipe) {
-    return { name: 'edit', params: { id: recipe.id, slug: recipe.slug } };
+    return { name: 'recipeEdit', params: { id: recipe.id, slug: recipe.slug } };
   }
 }

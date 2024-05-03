@@ -7,7 +7,7 @@ import { computed } from 'vue';
 const recipeStore = useRecipeStore();
 const mealSetStore = useMealSetStore();
 
-const mealSetName = computed(() => {
+const planName = computed(() => {
   const name = mealSetStore.currentMealSet?.name;
 
   if (isNil(name)) {
@@ -24,15 +24,20 @@ const mealSetName = computed(() => {
       <router-link :to="{ name: 'home' }" class="nav-link">Home</router-link>
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'search', query: recipeStore.currentQueryParams }" class="nav-link"
-        >Search</router-link
+      <router-link
+        :to="{ name: 'recipeSearch', query: recipeStore.currentQueryParams }"
+        class="nav-link"
+        >Search Recipes</router-link
       >
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'new' }" class="nav-link">New</router-link>
+      <router-link :to="{ name: 'recipeNew' }" class="nav-link">New Recipe</router-link>
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'meals' }" class="nav-link">Meals{{ mealSetName }}</router-link>
+      <router-link :to="{ name: 'planSearch' }" class="nav-link">Plans</router-link>
+    </li>
+    <li class="nav-item">
+      <router-link :to="{ name: 'planEdit' }" class="nav-link">Edit {{ planName }}</router-link>
     </li>
   </ul>
 </template>

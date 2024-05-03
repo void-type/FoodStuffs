@@ -3,7 +3,6 @@ import type {
   GetMealSetResponsePantryIngredient,
   IItemSetOfListMealSetsResponse,
   MealSetsSearchParams,
-  RecipeSearchResultItemIngredient,
   SaveMealSetRequest,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
@@ -11,113 +10,63 @@ import ApiHelpers from '@/models/ApiHelpers';
 import DateHelpers from '@/models/DateHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import GetMealSetResponseClass from '@/models/GetMealSetResponseClass';
+import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import useMessageStore from './messageStore';
+import {
+  countIngredients,
+  subtractIngredient,
+  addIngredient,
+} from '../models/PantryIngredientHelpers';
 
 interface MealSetStoreState {
   mealSetListResponse: IItemSetOfListMealSetsResponse;
   mealSetListRequest: MealSetsSearchParams;
-  currentMealSet: GetMealSetResponse | null;
+  currentMealSet: GetMealSetResponse;
 }
 
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
-function countIngredients(
-  acc: GetMealSetResponsePantryIngredient[],
-  curr: RecipeSearchResultItemIngredient
-) {
-  const { name, quantity } = curr;
-
-  if (isNil(name)) {
-    return acc;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let match = acc.find((x) => x.name === name!);
-
-  if (!match) {
-    match = { name, quantity: 0 };
-    acc.push(match);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  match.quantity! += quantity || 0;
-  return acc;
-}
-
-function addCount(ingredients: GetMealSetResponsePantryIngredient[], name: string, count = 1) {
-  let ingredient = ingredients.find((x) => x.name === name);
-
-  if (!ingredient) {
-    ingredient = { name, quantity: 0 };
-    ingredients.push(ingredient);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  ingredient.quantity! += count;
-}
-
-function subtractCount(ingredients: GetMealSetResponsePantryIngredient[], name: string, count = 1) {
-  const ingredient = ingredients.find((x) => x.name === name);
-
-  if (!ingredient) {
-    return;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  ingredient.quantity! -= count;
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (ingredient.quantity! < 1) {
-    ingredients.splice(ingredients.indexOf(ingredient), 1);
-  }
-}
-
-function getRecipes(state: MealSetStoreState) {
-  return state.currentMealSet?.recipes || [];
-}
+let isInitialized = false;
 
 export default defineStore('mealSets', {
   state: (): MealSetStoreState => ({
     mealSetListResponse: {
       count: 0,
       items: [],
-      isPagingEnabled: false,
+      isPagingEnabled: true,
       page: 1,
-      take: -1,
+      take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
     mealSetListRequest: {
       name: '',
-      isPagingEnabled: false,
+      isPagingEnabled: true,
       page: 1,
-      take: -1,
+      take: Choices.defaultPaginationTake.value,
     },
-    currentMealSet: null,
+    currentMealSet: new GetMealSetResponseClass(),
   }),
 
   getters: {
-    getPantry: (state) => state.currentMealSet?.pantryIngredients || [],
+    pantry: (state) => state.currentMealSet?.pantryIngredients || [],
 
-    getRecipes: (state) => getRecipes(state),
+    recipes: (state) => state.currentMealSet?.recipes || [],
 
-    getShoppingList: (state) => {
-      const ingredientCounts = getRecipes(state)
+    shoppingList(state): GetMealSetResponsePantryIngredient[] {
+      const ingredientCounts = this.recipes
         .flatMap((c) => c.ingredients || [])
         .filter((c) => !c.isCategory)
         .reduce(countIngredients, []);
 
       (state.currentMealSet?.pantryIngredients || []).forEach((x) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        subtractCount(ingredientCounts, x.name!, x.quantity);
+        subtractIngredient(ingredientCounts, x.name!, x.quantity);
       });
 
       return ingredientCounts;
     },
-
-    isRecipeInCurrentMealSet: (state) => (id: number | null | undefined) =>
-      getRecipes(state).findIndex((x) => x.id === id) > -1,
   },
 
   actions: {
@@ -135,7 +84,7 @@ export default defineStore('mealSets', {
         return;
       }
 
-      addCount(this.currentMealSet.pantryIngredients || [], ingredient, count);
+      addIngredient(this.currentMealSet.pantryIngredients || [], ingredient, count);
       await this.saveCurrentMealSet();
     },
 
@@ -144,11 +93,11 @@ export default defineStore('mealSets', {
         return;
       }
 
-      subtractCount(this.currentMealSet.pantryIngredients || [], ingredient, count);
+      subtractIngredient(this.currentMealSet.pantryIngredients || [], ingredient, count);
       await this.saveCurrentMealSet();
     },
 
-    async clearRecipes() {
+  async clearRecipes() {
       if (this.currentMealSet === null) {
         return;
       }
@@ -161,6 +110,10 @@ export default defineStore('mealSets', {
       try {
         const response = await api().mealSetsSearch(this.mealSetListRequest);
         this.mealSetListResponse = response.data;
+
+        if (!isInitialized) {
+
+        }
       } catch (error) {
         messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
@@ -188,7 +141,7 @@ export default defineStore('mealSets', {
     },
 
     unsetCurrentMealSet() {
-      this.currentMealSet = null;
+      this.newMealSet();
     },
 
     async saveCurrentMealSet() {
@@ -202,7 +155,7 @@ export default defineStore('mealSets', {
         id: current.id,
         name: current.name,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        recipeIds: this.getRecipes.map((x) => x.id!).filter((x) => !isNil(x)),
+        recipeIds: this.recipes.map((x) => x.id!).filter((x) => !isNil(x)),
         pantryIngredients: current.pantryIngredients,
       };
 
@@ -221,7 +174,7 @@ export default defineStore('mealSets', {
     },
 
     async deleteCurrentMealSet() {
-      const { id } = this.currentMealSet;
+      const id = this.currentMealSet?.id;
 
       if (!id) {
         return;

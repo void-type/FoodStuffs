@@ -10,7 +10,7 @@ import useAppStore from '@/stores/appStore';
 const appStore = useAppStore();
 const mealSetStore = useMealSetStore();
 
-const { currentMealSet, selectedRecipes } = storeToRefs(mealSetStore);
+const { currentMealSet, recipes } = storeToRefs(mealSetStore);
 
 async function onDeleteMealSet() {
   const parameters: ModalParameters = {
@@ -22,7 +22,9 @@ async function onDeleteMealSet() {
   appStore.showModal(parameters);
 }
 
-onMounted(async () => {});
+onMounted(async () => {
+  mealSetStore.fetchMealSetList();
+});
 </script>
 
 <template>
@@ -36,7 +38,7 @@ onMounted(async () => {});
             <label for="nameSearch" class="form-label">Meal set name</label>
             <input
               id="mealSetName"
-              v-model="currentMealSet.name"
+              v-model="currentMealSet?.name"
               class="form-control"
               @keydown.stop.prevent.enter="mealSetStore.saveCurrentMealSet"
             />
@@ -83,7 +85,7 @@ onMounted(async () => {});
             <MealsIngredientList
               class="mt-4"
               title="Shopping list"
-              :ingredients="mealSetStore.getShoppingList"
+              :ingredients="mealSetStore.shoppingList"
               :on-ingredient-click="mealSetStore.addToPantry"
               :show-copy-list="true"
             />
@@ -92,7 +94,7 @@ onMounted(async () => {});
             <MealsIngredientList
               class="mt-4"
               title="Pantry"
-              :ingredients="mealSetStore.getPantry"
+              :ingredients="mealSetStore.pantry"
               :on-clear="mealSetStore.clearPantry"
               :on-ingredient-click="mealSetStore.removeFromPantry"
             />

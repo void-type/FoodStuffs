@@ -149,7 +149,7 @@ onMounted(() => {
           v-if="isEditMode"
           type="button"
           class="btn btn-secondary me-2"
-          :to="{ name: 'new', query: { copy: sourceRecipe.id } }"
+          :to="{ name: 'recipeNew', query: { copy: sourceRecipe.id } }"
         >
           Copy
         </router-link>
@@ -246,7 +246,7 @@ onMounted(() => {
           v-if="isEditMode"
           type="button"
           class="btn btn-secondary me-2"
-          :to="{ name: 'new', query: { copy: sourceRecipe.id } }"
+          :to="{ name: 'recipeNew', query: { copy: sourceRecipe.id } }"
         >
           Copy
         </router-link>

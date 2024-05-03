@@ -17,7 +17,7 @@ function initSearch() {
 
   router
     .push({
-      name: 'search',
+      name: 'recipeSearch',
       query,
     })
     .then(() => {

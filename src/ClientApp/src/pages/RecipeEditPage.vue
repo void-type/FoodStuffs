@@ -149,7 +149,7 @@ function onRecipeSave(recipe: SaveRecipeRequest) {
       data.isRecipeDirty = false;
 
       if (!isEditMode.value) {
-        router.push({ name: 'edit', params: { id: response.data.id } }).then(() => {
+        router.push({ name: 'recipeEdit', params: { id: response.data.id } }).then(() => {
           onPostSave(response);
         });
       } else {
@@ -170,7 +170,7 @@ function onRecipeDelete(id: number) {
         recipeStore.removeFromRecent(props.id);
         setSources(new GetRecipeResponseClass());
         fetchRecipesList();
-        router.push({ name: 'search', query: recipeStore.currentQueryParams }).then(() => {
+        router.push({ name: 'recipeSearch', query: recipeStore.currentQueryParams }).then(() => {
           if (response.data.message) {
             messageStore.setSuccessMessage(response.data.message);
           }

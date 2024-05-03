@@ -40,7 +40,7 @@ export const useAppStore = defineStore('app', {
         .map((errorField) => errorField.toLowerCase())
         .indexOf(fieldName.toLowerCase()) > -1,
 
-    userIsAuthorizedAs: (state) => (policy: string) =>
+    isUserIsAuthorizedAs: (state) => (policy: string) =>
       (state.user.authorizedAs || []).includes(policy),
   },
 
