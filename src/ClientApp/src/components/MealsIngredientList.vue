@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { GetMealSetResponsePantryIngredient } from '@/api/data-contracts';
+import type { GetMealPlanResponsePantryIngredient } from '@/api/data-contracts';
 import { reactive, type PropType } from 'vue';
 
 const props = defineProps({
   title: { type: String, required: true },
-  ingredients: { type: Array<GetMealSetResponsePantryIngredient>, required: true },
+  ingredients: { type: Array<GetMealPlanResponsePantryIngredient>, required: true },
   onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
   onIngredientClick: { type: Function, required: true },
   showCopyList: { type: Boolean, required: false, default: false },

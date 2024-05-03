@@ -35,7 +35,7 @@ public class Recipe : IAuditableWithOffset
 
     public virtual List<Category> Categories { get; } = [];
 
-    public virtual List<MealSet> MealSets { get; } = [];
+    public virtual List<MealPlan> MealPlans { get; } = [];
 
     public Image? DefaultImage => PinnedImage ?? Images.FirstOrDefault();
 

@@ -6,7 +6,7 @@ namespace FoodStuffs.Model.Data;
 public partial class FoodStuffsContext : DbContext
 {
     public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<MealSet> MealSets { get; set; }
+    public virtual DbSet<MealPlan> MealPlans { get; set; }
     public virtual DbSet<Image> Images { get; set; }
     public virtual DbSet<Recipe> Recipes { get; set; }
 
@@ -14,7 +14,7 @@ public partial class FoodStuffsContext : DbContext
     {
         modelBuilder.Entity<Category>(entity => entity.ToTable("Category"));
 
-        modelBuilder.Entity<MealSet>(entity =>
+        modelBuilder.Entity<MealPlan>(entity =>
         {
             entity.ToTable("MealPlan");
 
@@ -55,10 +55,6 @@ public partial class FoodStuffsContext : DbContext
             entity.HasMany(d => d.Images)
                 .WithOne(p => p.Recipe)
                 .HasForeignKey(d => d.RecipeId);
-
-            entity.HasMany(d => d.MealSets)
-                .WithMany(p => p.Recipes)
-                .UsingEntity(join => join.ToTable("MealPlanRecipe"));
 
             entity.OwnsMany(d => d.Ingredients, p =>
             {

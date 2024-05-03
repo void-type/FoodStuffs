@@ -14,16 +14,16 @@ import type {
   CategoriesSearchParams,
   EntityMessageOfInteger,
   EntityMessageOfString,
-  GetMealSetResponse,
+  GetMealPlanResponse,
   GetRecipeResponse,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
-  IItemSetOfListMealSetsResponse,
+  IItemSetOfListMealPlansResponse,
   ImagesUploadParams,
-  MealSetsSearchParams,
+  MealPlansSearchParams,
   RecipeSearchResponse,
   RecipesSearchParams,
-  SaveMealSetRequest,
+  SaveMealPlanRequest,
   SaveRecipeRequest,
   UserMessage,
   WebClientInfo,
@@ -161,16 +161,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags MealSets
-   * @name MealSetsSearch
+   * @tags MealPlans
+   * @name MealPlansSearch
    * @summary Search for meal sets using the following criteria. All are optional and some have defaults.
-   * @request GET:/api/mealSets
-   * @response `200` `IItemSetOfListMealSetsResponse`
+   * @request GET:/api/meal-plans
+   * @response `200` `IItemSetOfListMealPlansResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsSearch = (query: MealSetsSearchParams, params: RequestParams = {}) =>
-    this.request<IItemSetOfListMealSetsResponse, IItemSetOfIFailure>({
-      path: `/api/mealSets`,
+  mealPlansSearch = (query: MealPlansSearchParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListMealPlansResponse, IItemSetOfIFailure>({
+      path: `/api/meal-plans`,
       method: 'GET',
       query: query,
       format: 'json',
@@ -179,16 +179,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags MealSets
-   * @name MealSetsSave
+   * @tags MealPlans
+   * @name MealPlansSave
    * @summary Save a meal set. Will update if found, otherwise a new meal set will be created.
-   * @request POST:/api/mealSets
+   * @request POST:/api/meal-plans
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsSave = (data: SaveMealSetRequest, params: RequestParams = {}) =>
+  mealPlansSave = (data: SaveMealPlanRequest, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/mealSets`,
+      path: `/api/meal-plans`,
       method: 'POST',
       body: data,
       type: ContentType.Json,
@@ -198,16 +198,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags MealSets
-   * @name MealSetsGet
+   * @tags MealPlans
+   * @name MealPlansGet
    * @summary Get a meal set.
-   * @request GET:/api/mealSets/{id}
-   * @response `200` `GetMealSetResponse`
+   * @request GET:/api/meal-plans/{id}
+   * @response `200` `GetMealPlanResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsGet = (id: number, params: RequestParams = {}) =>
-    this.request<GetMealSetResponse, IItemSetOfIFailure>({
-      path: `/api/mealSets/${id}`,
+  mealPlansGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetMealPlanResponse, IItemSetOfIFailure>({
+      path: `/api/meal-plans/${id}`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -215,16 +215,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags MealSets
-   * @name MealSetsDelete
+   * @tags MealPlans
+   * @name MealPlansDelete
    * @summary Delete a meal set.
-   * @request DELETE:/api/mealSets/{id}
+   * @request DELETE:/api/meal-plans/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealSetsDelete = (id: number, params: RequestParams = {}) =>
+  mealPlansDelete = (id: number, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/mealSets/${id}`,
+      path: `/api/meal-plans/${id}`,
       method: 'DELETE',
       format: 'json',
       ...params,

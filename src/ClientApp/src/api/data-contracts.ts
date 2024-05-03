@@ -76,10 +76,10 @@ export interface UserMessage {
   message?: string;
 }
 
-export interface IItemSetOfListMealSetsResponse {
+export interface IItemSetOfListMealPlansResponse {
   /** @format int32 */
   count?: number;
-  items?: ListMealSetsResponse[];
+  items?: ListMealPlansResponse[];
   isPagingEnabled?: boolean;
   /** @format int32 */
   page?: number;
@@ -89,13 +89,13 @@ export interface IItemSetOfListMealSetsResponse {
   totalCount?: number;
 }
 
-export interface ListMealSetsResponse {
+export interface ListMealPlansResponse {
   /** @format int32 */
   id?: number;
   name?: string;
 }
 
-export interface GetMealSetResponse {
+export interface GetMealPlanResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -105,26 +105,26 @@ export interface GetMealSetResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  pantryIngredients?: GetMealSetResponsePantryIngredient[];
-  recipes?: GetMealSetResponseRecipe[];
+  pantryIngredients?: GetMealPlanResponsePantryIngredient[];
+  recipes?: GetMealPlanResponseRecipe[];
 }
 
-export interface GetMealSetResponsePantryIngredient {
+export interface GetMealPlanResponsePantryIngredient {
   name?: string;
   /** @format decimal */
   quantity?: number;
 }
 
-export interface GetMealSetResponseRecipe {
+export interface GetMealPlanResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string;
   image?: string | null;
   categories?: string[];
-  ingredients?: GetMealSetResponseRecipeIngredient[];
+  ingredients?: GetMealPlanResponseRecipeIngredient[];
 }
 
-export interface GetMealSetResponseRecipeIngredient {
+export interface GetMealPlanResponseRecipeIngredient {
   name?: string;
   /** @format decimal */
   quantity?: number;
@@ -138,15 +138,15 @@ export type EntityMessageOfInteger = UserMessage & {
   id?: number;
 };
 
-export interface SaveMealSetRequest {
+export interface SaveMealPlanRequest {
   /** @format int32 */
   id?: number;
   name?: string;
   recipeIds?: number[];
-  pantryIngredients?: SaveMealSetRequestPantryIngredient[];
+  pantryIngredients?: SaveMealPlanRequestPantryIngredient[];
 }
 
-export interface SaveMealSetRequestPantryIngredient {
+export interface SaveMealPlanRequestPantryIngredient {
   name?: string;
   /** @format decimal */
   quantity?: number;
@@ -288,7 +288,7 @@ export interface ImagesUploadParams {
   recipeId?: number;
 }
 
-export interface MealSetsSearchParams {
+export interface MealPlansSearchParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /**

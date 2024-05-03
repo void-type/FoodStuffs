@@ -1,11 +1,11 @@
 import type {
-  GetMealSetResponsePantryIngredient,
+  GetMealPlanResponsePantryIngredient,
   RecipeSearchResultItemIngredient,
 } from '@/api/data-contracts';
 import { isNil } from '@/models/FormatHelpers';
 
 export function countIngredients(
-  acc: GetMealSetResponsePantryIngredient[],
+  acc: GetMealPlanResponsePantryIngredient[],
   curr: RecipeSearchResultItemIngredient
 ) {
   const { name, quantity } = curr;
@@ -27,7 +27,7 @@ export function countIngredients(
   return acc;
 }
 export function addIngredient(
-  ingredients: GetMealSetResponsePantryIngredient[],
+  ingredients: GetMealPlanResponsePantryIngredient[],
   name: string,
   count = 1
 ) {
@@ -42,7 +42,7 @@ export function addIngredient(
   ingredient.quantity! += count;
 }
 export function subtractIngredient(
-  ingredients: GetMealSetResponsePantryIngredient[],
+  ingredients: GetMealPlanResponsePantryIngredient[],
   name: string,
   count = 1
 ) {
