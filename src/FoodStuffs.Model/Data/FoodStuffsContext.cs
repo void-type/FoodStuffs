@@ -16,7 +16,7 @@ public partial class FoodStuffsContext : DbContext
 
         modelBuilder.Entity<MealSet>(entity =>
         {
-            entity.ToTable("MealSet");
+            entity.ToTable("MealPlan");
 
             entity.OwnsMany(d => d.PantryIngredients, p =>
             {
@@ -55,6 +55,10 @@ public partial class FoodStuffsContext : DbContext
             entity.HasMany(d => d.Images)
                 .WithOne(p => p.Recipe)
                 .HasForeignKey(d => d.RecipeId);
+
+            entity.HasMany(d => d.MealSets)
+                .WithMany(p => p.Recipes)
+                .UsingEntity(join => join.ToTable("MealPlanRecipe"));
 
             entity.OwnsMany(d => d.Ingredients, p =>
             {
