@@ -44,7 +44,7 @@ public class ImagesController : ControllerBase
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> Upload([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
     {
-        using var fileStream = file
+        await using var fileStream = file
             .EnsureNotNull()
             .OpenReadStream();
 
