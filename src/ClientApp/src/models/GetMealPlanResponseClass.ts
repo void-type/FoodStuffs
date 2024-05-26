@@ -3,6 +3,7 @@ import type {
   GetMealPlanResponsePantryIngredient,
   GetRecipeResponse,
 } from '@/api/data-contracts';
+import DateHelpers from '@/models/DateHelpers';
 
 export default class GetMealPlanResponseClass implements GetMealPlanResponse {
   public id = 0;
@@ -20,4 +21,10 @@ export default class GetMealPlanResponseClass implements GetMealPlanResponse {
   public recipes: GetRecipeResponse[] = [];
 
   public pantryIngredients: GetMealPlanResponsePantryIngredient[] = [];
+
+  public static createMealPlan() {
+    const newPlan = new GetMealPlanResponseClass();
+    newPlan.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDayOfWeek(1));
+    return newPlan;
+  }
 }

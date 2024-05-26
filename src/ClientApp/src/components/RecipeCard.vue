@@ -65,7 +65,7 @@ function flipCard() {
               <button
                 class="btn btn-sm btn-secondary"
                 aria-label="Add recipe to current meal plan"
-                @click.stop.prevent="mealPlanStore.addToMealPlan(recipe.id)"
+                @click.stop.prevent="mealPlanStore.addCurrentRecipe(recipe.id)"
               >
                 Add meal
               </button>

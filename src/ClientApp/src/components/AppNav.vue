@@ -14,7 +14,7 @@ const planName = computed(() => {
     return '';
   }
 
-  return ` (${name})`;
+  return `(${name})`;
 });
 </script>
 
@@ -34,10 +34,12 @@ const planName = computed(() => {
       <router-link :to="{ name: 'recipeNew' }" class="nav-link">New Recipe</router-link>
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'planSearch' }" class="nav-link">Plans</router-link>
+      <router-link :to="{ name: 'planSearch' }" class="nav-link">Meal Plans</router-link>
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'planEdit' }" class="nav-link">Edit {{ planName }}</router-link>
+      <router-link :to="{ name: 'planEdit' }" class="nav-link"
+        >Edit Plan {{ planName }}</router-link
+      >
     </li>
   </ul>
 </template>

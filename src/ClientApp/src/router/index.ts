@@ -74,7 +74,7 @@ const router = createRouter({
     },
     {
       name: 'planEdit',
-      path: '/meal-plan-edit/:id/:slug?',
+      path: '/meal-plan-edit',
       component: () => import('@/pages/MealPlanEditPage.vue'),
       props: (route) => ({
         id: +route.params.id,

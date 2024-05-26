@@ -10,7 +10,7 @@ import useAppStore from '@/stores/appStore';
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
 
-const { currentMealPlan, recipes } = storeToRefs(mealPlanStore);
+const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 
 async function onDeleteMealPlan() {
   const parameters: ModalParameters = {
@@ -38,7 +38,7 @@ onMounted(async () => {
             <label for="nameSearch" class="form-label">Meal set name</label>
             <input
               id="mealPlanName"
-              v-model="currentMealPlan?.name"
+              v-model="currentMealPlan.name"
               class="form-control"
               @keydown.stop.prevent.enter="mealPlanStore.saveCurrentMealPlan"
             />
@@ -51,7 +51,7 @@ onMounted(async () => {
               </button>
               <button
                 class="btn btn-secondary me-2"
-                @click.stop.prevent="mealPlanStore.clearRecipes"
+                @click.stop.prevent="mealPlanStore.clearCurrentRecipes"
               >
                 Empty
               </button>
@@ -64,14 +64,14 @@ onMounted(async () => {
               </button>
             </div>
             <div class="grid mt-4">
-              <div v-if="(selectedRecipes?.length || 0) < 1" class="g-col-12 p-4 text-center">
+              <div v-if="(currentRecipes?.length || 0) < 1" class="g-col-12 p-4 text-center">
                 None selected
               </div>
               <MealsCard
-                v-for="recipe in selectedRecipes"
+                v-for="recipe in currentRecipes"
                 :key="recipe.id"
                 :recipe="recipe"
-                :on-card-click="mealPlanStore.toggleRecipe"
+                :on-card-click="() => {}"
                 card-type="active"
                 class="g-col-12"
               />
@@ -85,8 +85,8 @@ onMounted(async () => {
             <MealsIngredientList
               class="mt-4"
               title="Shopping list"
-              :ingredients="mealPlanStore.shoppingList"
-              :on-ingredient-click="mealPlanStore.addToPantry"
+              :ingredients="mealPlanStore.currentShoppingList"
+              :on-ingredient-click="mealPlanStore.addToCurrentPantry"
               :show-copy-list="true"
             />
           </div>
@@ -94,9 +94,9 @@ onMounted(async () => {
             <MealsIngredientList
               class="mt-4"
               title="Pantry"
-              :ingredients="mealPlanStore.pantry"
-              :on-clear="mealPlanStore.clearPantry"
-              :on-ingredient-click="mealPlanStore.removeFromPantry"
+              :ingredients="mealPlanStore.currentPantry"
+              :on-clear="mealPlanStore.clearCurrentPantry"
+              :on-ingredient-click="mealPlanStore.removeFromCurrentPantry"
             />
           </div>
         </div>

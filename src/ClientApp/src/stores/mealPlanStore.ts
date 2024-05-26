@@ -7,7 +7,6 @@ import type {
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
-import DateHelpers from '@/models/DateHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import GetMealPlanResponseClass from '@/models/GetMealPlanResponseClass';
 import Choices from '@/models/Choices';
@@ -25,7 +24,6 @@ interface MealPlanStoreState {
   currentMealPlan: GetMealPlanResponse;
 }
 
-const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
 export default defineStore('mealPlans', {
@@ -44,21 +42,21 @@ export default defineStore('mealPlans', {
       page: 1,
       take: Choices.defaultPaginationTake.value,
     },
-    currentMealPlan: new GetMealPlanResponseClass(),
+    currentMealPlan: GetMealPlanResponseClass.createMealPlan(),
   }),
 
   getters: {
-    pantry: (state) => state.currentMealPlan?.pantryIngredients || [],
+    currentPantry: (state) => state.currentMealPlan.pantryIngredients || [],
 
-    recipes: (state) => state.currentMealPlan?.recipes || [],
+    currentRecipes: (state) => state.currentMealPlan.recipes || [],
 
-    shoppingList(state): GetMealPlanResponsePantryIngredient[] {
-      const ingredientCounts = this.recipes
+    currentShoppingList(state): GetMealPlanResponsePantryIngredient[] {
+      const ingredientCounts = this.currentRecipes
         .flatMap((c) => c.ingredients || [])
         .filter((c) => !c.isCategory)
         .reduce(countIngredients, []);
 
-      (state.currentMealPlan?.pantryIngredients || []).forEach((x) => {
+      (state.currentMealPlan.pantryIngredients || []).forEach((x) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         subtractIngredient(ingredientCounts, x.name!, x.quantity);
       });
@@ -68,7 +66,7 @@ export default defineStore('mealPlans', {
   },
 
   actions: {
-    async clearPantry() {
+    async clearCurrentPantry() {
       if (this.currentMealPlan === null) {
         return;
       }
@@ -77,7 +75,7 @@ export default defineStore('mealPlans', {
       await this.saveCurrentMealPlan();
     },
 
-    async addToPantry(ingredient: string, count = 1) {
+    async addToCurrentPantry(ingredient: string, count = 1) {
       if (this.currentMealPlan === null) {
         return;
       }
@@ -86,7 +84,7 @@ export default defineStore('mealPlans', {
       await this.saveCurrentMealPlan();
     },
 
-    async removeFromPantry(ingredient: string, count = 1) {
+    async removeFromCurrentPantry(ingredient: string, count = 1) {
       if (this.currentMealPlan === null) {
         return;
       }
@@ -95,7 +93,7 @@ export default defineStore('mealPlans', {
       await this.saveCurrentMealPlan();
     },
 
-    async clearRecipes() {
+    async clearCurrentRecipes() {
       if (this.currentMealPlan === null) {
         return;
       }
@@ -104,20 +102,21 @@ export default defineStore('mealPlans', {
       await this.saveCurrentMealPlan();
     },
 
-    async fetchMealPlanList() {
-      try {
-        const response = await api().mealPlansSearch(this.mealPlanListRequest);
-        this.mealPlanListResponse = response.data;
-      } catch (error) {
-        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    async addCurrentRecipe(recipeId: number | null | undefined) {
+      if (this.currentMealPlan === null) {
+        return;
       }
+
+      if (isNil(recipeId)) {
+        return;
+      }
+
+      await this.saveCurrentMealPlan([recipeId!]);
     },
 
-    async newMealPlan() {
-      this.currentMealPlan = new GetMealPlanResponseClass();
-      this.currentMealPlan.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDayOfWeek(1));
-
-      await this.saveCurrentMealPlan();
+    async newCurrentMealPlan() {
+      this.currentMealPlan = GetMealPlanResponseClass.createMealPlan();
+      // TODO: remove currentMealSet from localStorage
     },
 
     async setCurrentMealPlan(mealPlanId: number | null | undefined) {
@@ -129,16 +128,14 @@ export default defineStore('mealPlans', {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const response = await api().mealPlansGet(mealPlanId!);
         this.currentMealPlan = response.data;
+        // TODO: set currentMealSet in localStorage
       } catch (error) {
-        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        this.newCurrentMealPlan();
       }
     },
 
-    unsetCurrentMealPlan() {
-      this.newMealPlan();
-    },
-
-    async saveCurrentMealPlan() {
+    async saveCurrentMealPlan(additionalRecipeIds: number[] = []) {
       const current = this.currentMealPlan;
 
       if (current === null) {
@@ -149,26 +146,32 @@ export default defineStore('mealPlans', {
         id: current.id,
         name: current.name,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        recipeIds: this.recipes.map((x) => x.id!).filter((x) => !isNil(x)),
+        recipeIds: this.currentRecipes.map((x) => x.id!).filter((x) => !isNil(x)),
         pantryIngredients: current.pantryIngredients,
       };
+
+      if (additionalRecipeIds) {
+        additionalRecipeIds.forEach((additionalId) => {
+          request.recipeIds?.push(additionalId);
+        });
+      }
 
       try {
         const response = await api().mealPlansSave(request);
 
         if (response.data.message) {
-          messageStore.setSuccessMessage(response.data.message);
+          useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        await this.fetchMealPlanList();
         await this.setCurrentMealPlan(response.data.id);
+        await this.fetchMealPlanList();
       } catch (error) {
-        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
     },
 
     async deleteCurrentMealPlan() {
-      const id = this.currentMealPlan?.id;
+      const { id } = this.currentMealPlan;
 
       if (!id) {
         return;
@@ -178,16 +181,25 @@ export default defineStore('mealPlans', {
         const response = await api().mealPlansDelete(id);
 
         if (response.data.message) {
-          messageStore.setSuccessMessage(response.data.message);
+          useMessageStore().setSuccessMessage(response.data.message);
         }
 
         await this.fetchMealPlanList();
 
-        if (this.currentMealPlan?.id === id) {
-          this.unsetCurrentMealPlan();
+        if (this.currentMealPlan.id === id) {
+          this.newCurrentMealPlan();
         }
       } catch (error) {
-        messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
+    },
+
+    async fetchMealPlanList() {
+      try {
+        const response = await api().mealPlansSearch(this.mealPlanListRequest);
+        this.mealPlanListResponse = response.data;
+      } catch (error) {
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
     },
   },

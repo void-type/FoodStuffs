@@ -25,6 +25,8 @@ onMounted(() => {
 
   recipeStore.addToRecent(RecipeStoreHelpers.getQueuedRecent());
 
+  // TODO: mealPlanStore.setCurrentMealPlan from localStorage
+
   api()
     .applicationGetInfo()
     .then((response) => {
