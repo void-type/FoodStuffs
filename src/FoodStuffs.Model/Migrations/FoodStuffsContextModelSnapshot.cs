@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -34,7 +34,7 @@ namespace FoodStuffs.Model.Migrations
 
                     b.HasIndex("RecipesId");
 
-                    b.ToTable("CategoryRecipe");
+                    b.ToTable("CategoryRecipe", (string)null);
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Category", b =>
@@ -137,7 +137,7 @@ namespace FoodStuffs.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MealPlan", (string)null);
+                    b.ToTable("MealSet", (string)null);
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
@@ -201,7 +201,7 @@ namespace FoodStuffs.Model.Migrations
 
                     b.HasIndex("RecipesId");
 
-                    b.ToTable("MealPlanRecipe", (string)null);
+                    b.ToTable("MealSetRecipe", (string)null);
                 });
 
             modelBuilder.Entity("CategoryRecipe", b =>
@@ -227,7 +227,7 @@ namespace FoodStuffs.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("FoodStuffs.Model.Data.Models.ImageBlob", "ImageBlob", b1 =>
+                    b.OwnsOne("FoodStuffs.Model.Data.Models.Image.ImageBlob#FoodStuffs.Model.Data.Models.ImageBlob", "ImageBlob", b1 =>
                         {
                             b1.Property<int>("ImageId")
                                 .HasColumnType("int");
@@ -252,7 +252,7 @@ namespace FoodStuffs.Model.Migrations
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealSet", b =>
                 {
-                    b.OwnsMany("FoodStuffs.Model.Data.Models.MealSetPantryIngredient", "PantryIngredients", b1 =>
+                    b.OwnsMany("FoodStuffs.Model.Data.Models.MealSet.PantryIngredients#FoodStuffs.Model.Data.Models.MealSetPantryIngredient", "PantryIngredients", b1 =>
                         {
                             b1.Property<int>("MealSetId")
                                 .HasColumnType("int");
@@ -271,7 +271,7 @@ namespace FoodStuffs.Model.Migrations
 
                             b1.HasKey("MealSetId", "Id");
 
-                            b1.ToTable("MealPlan");
+                            b1.ToTable("MealSet", (string)null);
 
                             b1.ToJson("PantryIngredients");
 
@@ -288,7 +288,7 @@ namespace FoodStuffs.Model.Migrations
                         .WithMany()
                         .HasForeignKey("PinnedImageId");
 
-                    b.OwnsMany("FoodStuffs.Model.Data.Models.RecipeIngredient", "Ingredients", b1 =>
+                    b.OwnsMany("FoodStuffs.Model.Data.Models.Recipe.Ingredients#FoodStuffs.Model.Data.Models.RecipeIngredient", "Ingredients", b1 =>
                         {
                             b1.Property<int>("RecipeId")
                                 .HasColumnType("int");
