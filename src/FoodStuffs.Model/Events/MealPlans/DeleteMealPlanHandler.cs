@@ -26,6 +26,6 @@ public class DeleteMealPlanHandler : CustomEventHandlerAbstract<DeleteMealPlanRe
                 _data.MealPlans.Remove(r);
                 await _data.SaveChangesAsync(cancellationToken);
             })
-            .SelectAsync(r => EntityMessage.Create("Meal set deleted.", r.Id));
+            .SelectAsync(r => EntityMessage.Create("Meal plan deleted.", r.Id));
     }
 }

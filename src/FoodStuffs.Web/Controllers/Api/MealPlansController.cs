@@ -9,13 +9,13 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage meal sets.
+/// Manage meal plans.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/meal-plans")]
 public class MealPlansController : ControllerBase
 {
     /// <summary>
-    /// Search for meal sets using the following criteria. All are optional and some have defaults.
+    /// Search for meal plans using the following criteria. All are optional and some have defaults.
     /// </summary>
     /// <param name="listPipeline"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
@@ -43,10 +43,10 @@ public class MealPlansController : ControllerBase
     }
 
     /// <summary>
-    /// Get a meal set.
+    /// Get a meal plan.
     /// </summary>
     /// <param name="getPipeline"></param>
-    /// <param name="id">The ID of the meal set to get</param>
+    /// <param name="id">The ID of the meal plan to get</param>
     [Route("{id}")]
     [HttpGet]
     [ProducesResponseType(typeof(GetMealPlanResponse), 200)]
@@ -61,10 +61,10 @@ public class MealPlansController : ControllerBase
     }
 
     /// <summary>
-    /// Save a meal set. Will update if found, otherwise a new meal set will be created.
+    /// Save a meal plan. Will update if found, otherwise a new meal plan will be created.
     /// </summary>
     /// <param name="savePipeline"></param>
-    /// <param name="request">The meal set to save</param>
+    /// <param name="request">The meal plan to save</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -76,10 +76,10 @@ public class MealPlansController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a meal set.
+    /// Delete a meal plan.
     /// </summary>
     /// <param name="deletePipeline"></param>
-    /// <param name="id">The ID of the meal set</param>
+    /// <param name="id">The ID of the meal plan</param>
     [Route("{id}")]
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]

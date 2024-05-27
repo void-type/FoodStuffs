@@ -9,6 +9,7 @@ import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import GetMealPlanResponseClass from '@/models/GetMealPlanResponseClass';
+import MealPlanStoreHelpers from '@/models/MealPlanStoreHelpers';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import useMessageStore from './messageStore';
@@ -137,7 +138,7 @@ export default defineStore('mealPlans', {
 
     async newCurrentMealPlan() {
       this.currentMealPlan = GetMealPlanResponseClass.createForStore();
-      // TODO: remove currentMealSet from localStorage
+      MealPlanStoreHelpers.setCurrentMealPlan(null);
     },
 
     async setCurrentMealPlan(mealPlanId: number | null | undefined) {
@@ -149,7 +150,9 @@ export default defineStore('mealPlans', {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const response = await api().mealPlansGet(mealPlanId!);
         this.currentMealPlan = response.data;
-        // TODO: set currentMealSet in localStorage
+        if (response.data.id) {
+          MealPlanStoreHelpers.setCurrentMealPlan(response.data.id);
+        }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
         this.newCurrentMealPlan();

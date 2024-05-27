@@ -79,7 +79,7 @@ const router = createRouter({
       props: (route) => ({
         id: +route.params.id,
       }),
-      meta: { title: 'Edit Meal Set' },
+      meta: { title: 'Edit Meal plan' },
     },
     {
       path: '/:pathMatch(.*)*',

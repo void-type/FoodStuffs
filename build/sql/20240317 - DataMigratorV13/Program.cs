@@ -56,24 +56,24 @@ var oldMealSets = oldData.MealSets
     .Include(x => x.PantryIngredients)
     .ToList();
 
-var mealSetDict = new Dictionary<int, MealSet>();
+var mealSetDict = new Dictionary<int, MealPlan>();
 
 foreach (var oldMealSet in oldMealSets)
 {
-    var newMealSet = new MealSet()
+    var newMealSet = new MealPlan()
     {
         Name = oldMealSet.Name
     };
 
     newMealSet.PantryIngredients
         .AddRange(oldMealSet.PantryIngredients
-            .Select(pi => new MealSetPantryIngredient()
+            .Select(pi => new MealPlanPantryIngredient()
             {
                 Name = pi.Name,
                 Quantity = pi.Quantity,
             }));
 
-    newData.MealSets.Add(newMealSet);
+    newData.MealPlans.Add(newMealSet);
     newData.SaveChanges();
 
     mealSetDict.Add(oldMealSet.Id, newMealSet);
@@ -111,7 +111,7 @@ foreach (var oldRecipe in oldRecipes)
             }));
 
     newRecipe.Categories.AddRange(oldRecipe.Categories.Select(i => categoryMap[i.Id]));
-    newRecipe.MealSets.AddRange(oldRecipe.MealSets.Select(i => mealSetDict[i.Id]));
+    newRecipe.MealPlans.AddRange(oldRecipe.MealSets.Select(i => mealSetDict[i.Id]));
 
     newData.Recipes.Add(newRecipe);
     newData.SaveChanges();

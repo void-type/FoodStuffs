@@ -163,7 +163,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags MealPlans
    * @name MealPlansSearch
-   * @summary Search for meal sets using the following criteria. All are optional and some have defaults.
+   * @summary Search for meal plans using the following criteria. All are optional and some have defaults.
    * @request GET:/api/meal-plans
    * @response `200` `IItemSetOfListMealPlansResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -181,7 +181,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags MealPlans
    * @name MealPlansSave
-   * @summary Save a meal set. Will update if found, otherwise a new meal set will be created.
+   * @summary Save a meal plan. Will update if found, otherwise a new meal plan will be created.
    * @request POST:/api/meal-plans
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -200,7 +200,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags MealPlans
    * @name MealPlansGet
-   * @summary Get a meal set.
+   * @summary Get a meal plan.
    * @request GET:/api/meal-plans/{id}
    * @response `200` `GetMealPlanResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -217,7 +217,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags MealPlans
    * @name MealPlansDelete
-   * @summary Delete a meal set.
+   * @summary Delete a meal plan.
    * @request DELETE:/api/meal-plans/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`

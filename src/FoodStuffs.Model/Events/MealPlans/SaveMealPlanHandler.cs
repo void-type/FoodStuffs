@@ -40,12 +40,12 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         }
         else
         {
-            _data.MealPlans.Add(mealPlanToEdit);
+            await _data.MealPlans.AddAsync(mealPlanToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        return Ok(EntityMessage.Create($"Meal set {(maybeMealPlan.HasValue ? "updated" : "added")}.", mealPlanToEdit.Id));
+        return Ok(EntityMessage.Create($"Meal plan {(maybeMealPlan.HasValue ? "updated" : "added")}.", mealPlanToEdit.Id));
     }
 
     private static void Transfer(SaveMealPlanRequest request, MealPlan mealPlan)

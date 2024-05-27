@@ -14,8 +14,8 @@ const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 
 async function onDeleteMealPlan() {
   const parameters: ModalParameters = {
-    title: 'Delete meal set',
-    description: 'Do you really want to delete this meal set?',
+    title: 'Delete meal plan',
+    description: 'Do you really want to delete this meal plan?',
     okAction: mealPlanStore.deleteCurrentMealPlan,
   };
 
@@ -35,7 +35,7 @@ onMounted(async () => {
         <div class="grid">
           <div class="g-col-12 g-col-lg-6">
             <h2 class="mt-4 mb-3">{{ (currentMealPlan?.id || 0) < 1 ? 'New' : 'Edit' }} plan</h2>
-            <label for="nameSearch" class="form-label">Meal set name</label>
+            <label for="nameSearch" class="form-label">Meal plan name</label>
             <input
               id="mealPlanName"
               v-model="currentMealPlan.name"
