@@ -42,13 +42,16 @@ export default defineStore('mealPlans', {
       page: 1,
       take: Choices.defaultPaginationTake.value,
     },
-    currentMealPlan: GetMealPlanResponseClass.createMealPlan(),
+    currentMealPlan: GetMealPlanResponseClass.createForStore(),
   }),
 
   getters: {
     currentPantry: (state) => state.currentMealPlan.pantryIngredients || [],
 
     currentRecipes: (state) => state.currentMealPlan.recipes || [],
+
+    currentRecipesContains: (state) => (recipeId: number | undefined) =>
+      (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId),
 
     currentShoppingList(state): GetMealPlanResponsePantryIngredient[] {
       const ingredientCounts = this.currentRecipes
@@ -114,8 +117,26 @@ export default defineStore('mealPlans', {
       await this.saveCurrentMealPlan([recipeId!]);
     },
 
+    async removeCurrentRecipe(recipeId: number | null | undefined) {
+      if (this.currentMealPlan === null) {
+        return;
+      }
+
+      if (isNil(recipeId)) {
+        return;
+      }
+
+      const { recipes } = this.currentMealPlan;
+
+      if (recipes !== null && typeof recipes !== 'undefined') {
+        this.currentMealPlan.recipes = recipes.filter((x) => x.id !== recipeId);
+      }
+
+      await this.saveCurrentMealPlan();
+    },
+
     async newCurrentMealPlan() {
-      this.currentMealPlan = GetMealPlanResponseClass.createMealPlan();
+      this.currentMealPlan = GetMealPlanResponseClass.createForStore();
       // TODO: remove currentMealSet from localStorage
     },
 

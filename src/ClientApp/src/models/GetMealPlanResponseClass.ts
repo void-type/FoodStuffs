@@ -22,7 +22,7 @@ export default class GetMealPlanResponseClass implements GetMealPlanResponse {
 
   public pantryIngredients: GetMealPlanResponsePantryIngredient[] = [];
 
-  public static createMealPlan() {
+  public static createForStore() {
     const newPlan = new GetMealPlanResponseClass();
     newPlan.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDayOfWeek(1));
     return newPlan;

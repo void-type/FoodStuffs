@@ -63,11 +63,20 @@ function flipCard() {
                 >Edit</router-link
               >
               <button
+                v-if="mealPlanStore.currentRecipesContains(recipe.id)"
+                class="btn btn-sm btn-secondary"
+                aria-label="Add recipe to current meal plan"
+                @click.stop.prevent="mealPlanStore.removeCurrentRecipe(recipe.id)"
+              >
+                Remove from plan
+              </button>
+              <button
+                v-else
                 class="btn btn-sm btn-secondary"
                 aria-label="Add recipe to current meal plan"
                 @click.stop.prevent="mealPlanStore.addCurrentRecipe(recipe.id)"
               >
-                Add meal
+                Add to plan
               </button>
             </div>
             <div v-if="recipe.ingredients?.some((x) => x.isCategory === false)" class="mt-3">
