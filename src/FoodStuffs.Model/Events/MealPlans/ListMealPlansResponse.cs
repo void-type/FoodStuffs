@@ -2,4 +2,6 @@
 
 public record ListMealPlansResponse(
     int Id,
-    string Name);
+    string Name,
+    DateTimeOffset CreatedOn,
+    DateTimeOffset ModifiedOn);

@@ -11,6 +11,7 @@ import useAppStore from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
 import RouterHelpers from '@/models/RouterHelpers';
 import ImagePlaceholder from './ImagePlaceholder.vue';
+import RecipeMealButton from './RecipeMealButton.vue';
 
 const props = defineProps({
   recipe: {
@@ -75,11 +76,12 @@ onMounted(() => {
         <div class="btn-toolbar">
           <router-link
             :to="RouterHelpers.editRecipe(recipe)"
-            class="btn btn-primary me-3"
+            class="btn btn-primary me-2"
             type="button"
           >
             Edit
           </router-link>
+          <RecipeMealButton class="me-2" :recipe-id="recipe.id" />
           <div class="form-check form-switch mt-2">
             <label class="form-check-label" for="showImage">Show image</label>
             <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />

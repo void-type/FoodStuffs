@@ -93,6 +93,10 @@ export interface ListMealPlansResponse {
   /** @format int32 */
   id?: number;
   name?: string;
+  /** @format date-time */
+  createdOn?: string;
+  /** @format date-time */
+  modifiedOn?: string;
 }
 
 export interface GetMealPlanResponse {

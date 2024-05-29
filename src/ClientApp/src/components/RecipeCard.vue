@@ -1,18 +1,16 @@
 <script lang="ts" setup>
 import type { RecipeSearchResultItem } from '@/api/data-contracts';
 import { computed, type PropType } from 'vue';
-import useMealPlanStore from '@/stores/mealPlanStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import ImagePlaceholder from './ImagePlaceholder.vue';
+import RecipeMealButton from './RecipeMealButton.vue';
 
 const props = defineProps({
   recipe: { type: Object as PropType<RecipeSearchResultItem>, required: true },
   imgLazy: { type: Boolean, required: false, default: false },
 });
-
-const mealPlanStore = useMealPlanStore();
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 
@@ -62,22 +60,7 @@ function flipCard() {
                 @click.stop.prevent
                 >Edit</router-link
               >
-              <button
-                v-if="mealPlanStore.currentRecipesContains(recipe.id)"
-                class="btn btn-sm btn-secondary"
-                aria-label="Add recipe to current meal plan"
-                @click.stop.prevent="mealPlanStore.removeCurrentRecipe(recipe.id)"
-              >
-                Remove from plan
-              </button>
-              <button
-                v-else
-                class="btn btn-sm btn-secondary"
-                aria-label="Add recipe to current meal plan"
-                @click.stop.prevent="mealPlanStore.addCurrentRecipe(recipe.id)"
-              >
-                Add to plan
-              </button>
+              <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
             </div>
             <div v-if="recipe.ingredients?.some((x) => x.isCategory === false)" class="mt-3">
               <div>Ingredients</div>

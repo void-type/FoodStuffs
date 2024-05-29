@@ -1,4 +1,5 @@
 import { format, formatISO } from 'date-fns';
+import { isNil } from '@/models/FormatHelpers';
 
 export default class DateHelpers {
   static dateForApi(value: Date) {
@@ -13,7 +14,15 @@ export default class DateHelpers {
     return format(value as Date, 'P');
   }
 
-  static dateTimeForView(value: Date) {
+  static dateTimeForView(value: Date | string | null | undefined): string {
+    if (typeof value === 'string') {
+      if (isNil(value)) {
+        return '';
+      }
+
+      return this.dateTimeForView(new Date(value));
+    }
+
     return format(value as Date, 'P p');
   }
 

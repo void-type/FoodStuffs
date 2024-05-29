@@ -20,16 +20,16 @@ import {
 } from '../models/PantryIngredientHelpers';
 
 interface MealPlanStoreState {
-  mealPlanListResponse: IItemSetOfListMealPlansResponse;
-  mealPlanListRequest: MealPlansSearchParams;
+  listResponse: IItemSetOfListMealPlansResponse;
+  listRequest: MealPlansSearchParams;
   currentMealPlan: GetMealPlanResponse;
 }
 
 const api = ApiHelpers.client;
 
-export default defineStore('mealPlans', {
+export default defineStore('mealPlan', {
   state: (): MealPlanStoreState => ({
-    mealPlanListResponse: {
+    listResponse: {
       count: 0,
       items: [],
       isPagingEnabled: true,
@@ -37,7 +37,7 @@ export default defineStore('mealPlans', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    mealPlanListRequest: {
+    listRequest: {
       name: '',
       isPagingEnabled: true,
       page: 1,
@@ -51,8 +51,13 @@ export default defineStore('mealPlans', {
 
     currentRecipes: (state) => state.currentMealPlan.recipes || [],
 
-    currentRecipesContains: (state) => (recipeId: number | undefined) =>
-      (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId),
+    currentRecipesContains: (state) => (recipeId: number | null | undefined) => {
+      if (isNil(recipeId)) {
+        return false;
+      }
+
+      return (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId!);
+    },
 
     currentShoppingList(state): GetMealPlanResponsePantryIngredient[] {
       const ingredientCounts = this.currentRecipes
@@ -141,7 +146,7 @@ export default defineStore('mealPlans', {
       MealPlanStoreHelpers.setCurrentMealPlan(null);
     },
 
-    async fetchCurrentMealPlan(mealPlanId: number | null | undefined) {
+    async setCurrentMealPlan(mealPlanId: number | null | undefined) {
       if (isNil(mealPlanId)) {
         return;
       }
@@ -187,16 +192,14 @@ export default defineStore('mealPlans', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        await this.fetchCurrentMealPlan(response.data.id);
+        await this.setCurrentMealPlan(response.data.id);
         await this.fetchMealPlanList();
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
     },
 
-    async deleteCurrentMealPlan() {
-      const { id } = this.currentMealPlan;
-
+    async deleteMealPlan(id: number | null | undefined) {
       if (!id) {
         return;
       }
@@ -220,8 +223,8 @@ export default defineStore('mealPlans', {
 
     async fetchMealPlanList() {
       try {
-        const response = await api().mealPlansSearch(this.mealPlanListRequest);
-        this.mealPlanListResponse = response.data;
+        const response = await api().mealPlansSearch(this.listRequest);
+        this.listResponse = response.data;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }

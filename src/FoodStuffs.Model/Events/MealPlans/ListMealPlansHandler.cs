@@ -32,7 +32,9 @@ public class ListMealPlansHandler : CustomEventHandlerAbstract<ListMealPlansRequ
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(ms => new ListMealPlansResponse(
                 Id: ms.Id,
-                Name: ms.Name))
+                Name: ms.Name,
+                CreatedOn: ms.CreatedOn,
+                ModifiedOn: ms.ModifiedOn))
             .MapAsync(Ok);
     }
 

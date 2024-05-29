@@ -11,6 +11,7 @@ import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
+import RecipeMealButton from './RecipeMealButton.vue';
 
 const props = defineProps({
   sourceRecipe: {
@@ -153,6 +154,7 @@ onMounted(() => {
         >
           Copy
         </router-link>
+        <RecipeMealButton v-if="isEditMode" class="me-2" :recipe-id="sourceRecipe.id" />
         <router-link
           v-if="isEditMode"
           type="button"

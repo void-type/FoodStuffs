@@ -22,7 +22,7 @@ interface RecipeStoreState {
   discoverPage: number;
 }
 
-export const useRecipeStore = defineStore('recipes', {
+export const useRecipeStore = defineStore('recipe', {
   state: (): RecipeStoreState => ({
     listResponse: {
       count: 0,
