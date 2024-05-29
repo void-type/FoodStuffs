@@ -273,6 +273,9 @@ dotnet_diagnostic.SCS0012.severity = none
 dotnet_diagnostic.SCS0016.severity = none
 # We don't need ConfigureAwait(false)
 dotnet_diagnostic.RCS1090.severity = none
+# We check our API models ourselves
+dotnet_diagnostic.S6967.severity = none
+
 
 # Javascript and Vue
 [*.{js,jsx,ts,tsx,vue}]

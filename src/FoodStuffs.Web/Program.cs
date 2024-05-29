@@ -82,7 +82,7 @@ try
     app.UseSpaEndpoints();
 
     Log.Information("Starting host.");
-    app.Run();
+    await app.RunAsync();
     return 0;
 }
 catch (HostAbortedException)
@@ -98,5 +98,5 @@ catch (Exception ex)
 finally
 {
     Log.Information("Stopping host.");
-    Log.CloseAndFlush();
+    await Log.CloseAndFlushAsync();
 }
