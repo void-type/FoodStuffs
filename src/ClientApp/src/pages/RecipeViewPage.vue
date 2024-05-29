@@ -62,9 +62,9 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <h1 class="mt-4">{{ data.sourceRecipe?.name }}</h1>
-    <div class="grid">
+    <div class="grid mt-4">
       <div class="g-col-12 g-col-lg-9">
-        <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" class="mt-4" />
+        <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" />
       </div>
       <div class="g-col-12 g-col-lg-3 d-print-none">
         <SidebarRecipeRecent :route-name="'view'" class="mb-3" />

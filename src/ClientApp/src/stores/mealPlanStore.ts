@@ -141,7 +141,7 @@ export default defineStore('mealPlans', {
       MealPlanStoreHelpers.setCurrentMealPlan(null);
     },
 
-    async setCurrentMealPlan(mealPlanId: number | null | undefined) {
+    async fetchCurrentMealPlan(mealPlanId: number | null | undefined) {
       if (isNil(mealPlanId)) {
         return;
       }
@@ -174,7 +174,7 @@ export default defineStore('mealPlans', {
         pantryIngredients: current.pantryIngredients,
       };
 
-      if (additionalRecipeIds) {
+      if (additionalRecipeIds && additionalRecipeIds.length > 0) {
         additionalRecipeIds.forEach((additionalId) => {
           request.recipeIds?.push(additionalId);
         });
@@ -187,7 +187,7 @@ export default defineStore('mealPlans', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        await this.setCurrentMealPlan(response.data.id);
+        await this.fetchCurrentMealPlan(response.data.id);
         await this.fetchMealPlanList();
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);

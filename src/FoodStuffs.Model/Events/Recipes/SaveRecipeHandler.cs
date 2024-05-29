@@ -45,7 +45,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         }
         else
         {
-            _data.Recipes.Add(recipeToEdit);
+            await _data.Recipes.AddAsync(recipeToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

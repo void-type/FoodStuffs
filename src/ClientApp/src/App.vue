@@ -28,7 +28,7 @@ onMounted(() => {
 
   recipeStore.addToRecent(RecipeStoreHelpers.getQueuedRecent());
 
-  mealPlanStore.setCurrentMealPlan(MealPlanStoreHelpers.getCurrentMealPlan());
+  mealPlanStore.fetchCurrentMealPlan(MealPlanStoreHelpers.getCurrentMealPlan());
 
   api()
     .applicationGetInfo()

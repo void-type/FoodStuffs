@@ -317,11 +317,10 @@ onBeforeRouteLeave(async (to, from, next) => {
 
 <template>
   <div class="container-xxl">
-    <h1 class="mt-4">{{ isCreateNewMode ? 'New recipe' : data.sourceRecipe.name }}</h1>
-    <div class="grid">
+    <h1 class="mt-4">{{ isCreateNewMode ? 'New Recipe' : data.sourceRecipe.name }}</h1>
+    <div class="grid mt-4">
       <div class="g-col-12 g-col-lg-9">
         <RecipeEditor
-          class="mt-4"
           :is-field-in-error="isFieldInError"
           :source-recipe="data.sourceRecipe"
           :on-recipe-save="onRecipeSave"
