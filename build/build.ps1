@@ -21,6 +21,9 @@ function Stop-OnError([string]$errorMessage) {
   exit $LASTEXITCODE
 }
 
+$stopwatch = New-Object System.Diagnostics.Stopwatch
+$stopwatch.Start()
+
 $originalLocation = Get-Location
 $projectRoot = "$PSScriptRoot/../"
 
@@ -45,7 +48,7 @@ try {
       npm run lint
       Stop-OnError
       npm run format
-      Stop-OnError "Formatting the client failed."
+      Stop-OnError 'Formatting the client failed.'
     }
 
     if (-not $SkipOutdated) {
@@ -96,7 +99,7 @@ try {
         '-targetdir:./artifacts/testCoverage' `
         '-reporttypes:HtmlInline_AzurePipelines' `
         '-filefilters:-*.g.cs'
-        Stop-OnError
+      Stop-OnError
     }
   }
 
@@ -107,7 +110,10 @@ try {
   }
 
   $projectVersion = (dotnet nbgv get-version -f json | ConvertFrom-Json).NuGetPackageVersion
-  Write-Output "`nBuilt $projectName $projectVersion`n"
+
+  $stopwatch.Stop()
+
+  Write-Output "`nBuilt $projectName $projectVersion in $($stopwatch.Elapsed)`n"
 
 } finally {
   Set-Location $originalLocation
