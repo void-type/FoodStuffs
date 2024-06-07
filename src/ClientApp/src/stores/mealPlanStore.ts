@@ -9,6 +9,7 @@ import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import GetMealPlanResponseClass from '@/models/GetMealPlanResponseClass';
+import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
 import MealPlanStoreHelpers from '@/models/MealPlanStoreHelpers';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
@@ -37,12 +38,7 @@ export default defineStore('mealPlan', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: {
-      name: '',
-      isPagingEnabled: true,
-      page: 1,
-      take: Choices.defaultPaginationTake.value,
-    },
+    listRequest: { ...new SearchMealPlansRequest() },
     currentMealPlan: GetMealPlanResponseClass.createForStore(),
   }),
 
@@ -72,6 +68,12 @@ export default defineStore('mealPlan', {
 
       return ingredientCounts;
     },
+
+    currentQueryParams(state) {
+      const { listRequest } = state;
+
+      return MealPlanStoreHelpers.listRequestToQueryParams(listRequest);
+    },
   },
 
   actions: {
@@ -90,7 +92,7 @@ export default defineStore('mealPlan', {
       }
 
       addIngredient(this.currentMealPlan.pantryIngredients || [], ingredient, count);
-      await this.saveCurrentMealPlan();
+      await this.saveCurrentMealPlan([], true);
     },
 
     async removeFromCurrentPantry(ingredient: string, count = 1) {
@@ -99,7 +101,7 @@ export default defineStore('mealPlan', {
       }
 
       subtractIngredient(this.currentMealPlan.pantryIngredients || [], ingredient, count);
-      await this.saveCurrentMealPlan();
+      await this.saveCurrentMealPlan([], true);
     },
 
     async clearCurrentRecipes() {
@@ -143,7 +145,7 @@ export default defineStore('mealPlan', {
 
     async newCurrentMealPlan() {
       this.currentMealPlan = GetMealPlanResponseClass.createForStore();
-      MealPlanStoreHelpers.setCurrentMealPlan(null);
+      MealPlanStoreHelpers.storeCurrentMealPlan(null);
     },
 
     async setCurrentMealPlan(mealPlanId: number | null | undefined) {
@@ -156,7 +158,7 @@ export default defineStore('mealPlan', {
         const response = await api().mealPlansGet(mealPlanId!);
         this.currentMealPlan = response.data;
         if (response.data.id) {
-          MealPlanStoreHelpers.setCurrentMealPlan(response.data.id);
+          MealPlanStoreHelpers.storeCurrentMealPlan(response.data.id);
         }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -164,7 +166,7 @@ export default defineStore('mealPlan', {
       }
     },
 
-    async saveCurrentMealPlan(additionalRecipeIds: number[] = []) {
+    async saveCurrentMealPlan(additionalRecipeIds: number[] = [], quickSave: boolean = false) {
       const current = this.currentMealPlan;
 
       if (current === null) {
@@ -192,8 +194,11 @@ export default defineStore('mealPlan', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        await this.setCurrentMealPlan(response.data.id);
-        await this.fetchMealPlanList();
+        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry ingredients.
+        if (!quickSave) {
+          await this.setCurrentMealPlan(response.data.id);
+          await this.fetchMealPlanList();
+        }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }

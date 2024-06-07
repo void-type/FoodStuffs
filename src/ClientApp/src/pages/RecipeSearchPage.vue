@@ -177,7 +177,7 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <h1 class="mt-4">Search Recipes</h1>
+    <h1 class="mt-4">Recipes</h1>
     <div class="grid mt-4">
       <div class="g-col-12">
         <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">

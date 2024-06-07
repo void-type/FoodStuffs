@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import useAppStore from '@/stores/appStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import useMessageStore from '@/stores/messageStore';
 import DateHelpers from '@/models/DateHelpers';
 import { storeToRefs } from 'pinia';
-import { computed, type PropType } from 'vue';
+import { computed, watch, type PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
 import type { ModalParameters } from '@/models/ModalParameters';
 import EntityTablePager from '@/components/EntityTablePager.vue';
+import { toInt, toNumber } from '@/models/FormatHelpers';
+import Choices from '@/models/Choices';
+import router from '@/router';
+import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
 
 const props = defineProps({
   query: {
@@ -18,15 +21,11 @@ const props = defineProps({
 });
 
 const appStore = useAppStore();
-const messageStore = useMessageStore();
 const mealPlanStore = useMealPlanStore();
 
 const { useDarkMode } = storeToRefs(appStore);
 
 const { listResponse, listRequest, currentMealPlan } = storeToRefs(mealPlanStore);
-
-// TODO: make sure to gate deletes behind modal.
-// TODO: edit button should disable when current.
 
 async function onDeleteMealPlan(id: number | null | undefined) {
   const parameters: ModalParameters = {
@@ -61,83 +60,67 @@ function navigateSearch() {
   });
 }
 
-function clearSearch() {
-  mealPlanStore.setListRequest({
-    ...new SearchRecipesRequest(),
-    take: listRequest.value.take,
-    isPagingEnabled: listRequest.value.isPagingEnabled,
-  });
+// function clearSearch() {
+//   mealPlanStore.listRequest = {
+//     ...new SearchMealPlansRequest(),
+//     take: listRequest.value.take,
+//     isPagingEnabled: listRequest.value.isPagingEnabled,
+//   };
 
-  // selectedCategories gets it's new value from query params.
+//   navigateSearch();
+// }
 
-  navigateSearch();
-}
+// function startSearch() {
+//   mealPlanStore.listRequest = {
+//     ...listRequest.value,
+//     page: 1,
+//   };
 
-function startSearch() {
-  mealPlanStore.setListRequest({
-    ...listRequest.value,
-    page: 1,
-  });
-
-  navigateSearch();
-}
+//   navigateSearch();
+// }
 
 function changePage(page: number) {
-  mealPlanStore.setListRequest({ ...listRequest.value, page });
+  mealPlanStore.listRequest = { ...listRequest.value, page };
 
   navigateSearch();
 }
 
 function changeTake(take: number) {
-  mealPlanStore.setListRequest({
+  mealPlanStore.listRequest = {
     ...listRequest.value,
     isPagingEnabled: toInt(take) > 1,
     take,
     page: 1,
-  });
-
-  navigateSearch();
-}
-
-function changeSort(event: Event) {
-  const { value } = event.target as HTMLSelectElement;
-
-  mealPlanStore.setListRequest({
-    ...listRequest.value,
-    sortBy: value,
-    page: 1,
-  });
+  };
 
   navigateSearch();
 }
 
 function setListRequestFromQuery() {
-  const categories =
-    props.query.categories
-      ?.toString()
-      ?.split(',')
-      .flatMap((x) => {
-        const n = toNumberOrNull(x);
-        return n ? [n] : [];
-      }) || [];
-
-  selectedCategories.value = categories;
-
-  mealPlanStore.setListRequest({
-    ...new SearchRecipesRequest(),
+  mealPlanStore.listRequest = {
+    ...new SearchMealPlansRequest(),
     ...props.query,
-    categories,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
-  });
+  };
 }
+
+watch(
+  props,
+  () => {
+    setListRequestFromQuery();
+    mealPlanStore.fetchMealPlanList();
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <div class="container-xxl">
     <h1 class="mt-4">Meal Plans</h1>
     <div>
-      <table :class="{ table: true, 'table-dark': useDarkMode }">
+      <div class="mt-4">{{ resultCountText }}</div>
+      <table :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }">
         <thead>
           <tr>
             <th>Name</th>
@@ -147,7 +130,7 @@ function setListRequestFromQuery() {
         </thead>
         <tbody>
           <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
-            <td>{{ mealPlan.name }}</td>
+            <td>{{ currentMealPlan.id === mealPlan.id ? '* ' : '' }}{{ mealPlan.name }}</td>
             <td>{{ DateHelpers.dateTimeForView(mealPlan.createdOn) }}</td>
             <td>
               <button

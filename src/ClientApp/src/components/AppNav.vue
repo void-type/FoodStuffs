@@ -14,7 +14,9 @@ const planName = computed(() => {
     return '';
   }
 
-  return `(${name})`;
+  const recipeCount = mealPlanStore.currentRecipes.length;
+
+  return `${name} (${recipeCount})`;
 });
 </script>
 
@@ -27,19 +29,21 @@ const planName = computed(() => {
       <router-link
         :to="{ name: 'recipeSearch', query: recipeStore.currentQueryParams }"
         class="nav-link"
-        >Search Recipes</router-link
+        >Recipes</router-link
       >
     </li>
     <li class="nav-item">
       <router-link :to="{ name: 'recipeNew' }" class="nav-link">New Recipe</router-link>
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'planSearch' }" class="nav-link">Meal Plans</router-link>
+      <router-link
+        :to="{ name: 'planSearch', query: mealPlanStore.currentQueryParams }"
+        class="nav-link"
+        >Meal Plans</router-link
+      >
     </li>
     <li class="nav-item">
-      <router-link :to="{ name: 'planEdit' }" class="nav-link"
-        >Edit Plan {{ planName }}</router-link
-      >
+      <router-link :to="{ name: 'planEdit' }" class="nav-link">Plan {{ planName }}</router-link>
     </li>
   </ul>
 </template>

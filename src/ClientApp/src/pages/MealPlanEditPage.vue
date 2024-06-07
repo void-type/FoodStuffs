@@ -51,6 +51,12 @@ onMounted(async () => {
             </button>
             <button
               class="btn btn-secondary me-2"
+              @click.stop.prevent="mealPlanStore.newCurrentMealPlan"
+            >
+              New
+            </button>
+            <button
+              class="btn btn-secondary me-2"
               @click.stop.prevent="mealPlanStore.clearCurrentRecipes"
             >
               Empty
