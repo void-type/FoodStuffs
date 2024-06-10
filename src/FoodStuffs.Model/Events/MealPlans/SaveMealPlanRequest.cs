@@ -3,5 +3,5 @@
 public record SaveMealPlanRequest(
     int Id,
     string Name,
-    IEnumerable<int> RecipeIds,
-    IEnumerable<SaveMealPlanRequestPantryIngredient> PantryIngredients);
+    List<SaveMealPlanRequestRecipe> Recipes,
+    List<SaveMealPlanRequestPantryIngredient> PantryIngredients);

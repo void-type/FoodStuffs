@@ -6,6 +6,6 @@ public record RecipeSearchResultItem(
     bool IsForMealPlanning,
     DateTimeOffset CreatedOn,
     string Slug,
-    IEnumerable<string> Categories,
-    IEnumerable<RecipeSearchResultItemIngredient> Ingredients,
+    List<string> Categories,
+    List<RecipeSearchResultItemShoppingItem> ShoppingItems,
     string? Image);

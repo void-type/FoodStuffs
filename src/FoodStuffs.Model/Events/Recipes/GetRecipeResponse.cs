@@ -13,6 +13,6 @@ public record GetRecipeResponse(
     string Slug,
     string? PinnedImage,
     bool IsForMealPlanning,
-    IEnumerable<string> Categories,
-    IEnumerable<string> Images,
-    IEnumerable<GetRecipeResponseIngredient> Ingredients);
+    List<string> Categories,
+    List<string> Images,
+    List<GetRecipeResponseIngredient> Ingredients);

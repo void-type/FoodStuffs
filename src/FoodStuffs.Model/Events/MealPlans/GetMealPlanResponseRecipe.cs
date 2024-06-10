@@ -3,6 +3,7 @@
 public record GetMealPlanResponseRecipe(
     int Id,
     string Name,
+    int Order,
     string? Image,
-    IEnumerable<string> Categories,
-    IEnumerable<GetMealPlanResponseRecipeIngredient> Ingredients);
+    List<string> Categories,
+    List<GetMealPlanResponseShoppingItem> ShoppingItems);

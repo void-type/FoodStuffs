@@ -42,10 +42,13 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                IsForMealPlanning: r.IsForMealPlanning,
                Categories: r.Categories
                 .Select(c => c.Name)
-                .OrderBy(n => n),
-               Images: r.Images.Select(i => i.FileName),
+                .OrderBy(n => n)
+                .ToList(),
+               Images: r.Images
+                .ConvertAll(i => i.FileName),
                Ingredients: r.Ingredients
                 .Select(i => new GetRecipeResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
-                .OrderBy(i => i.Order)));
+                .OrderBy(i => i.Order)
+                .ToList()));
     }
 }

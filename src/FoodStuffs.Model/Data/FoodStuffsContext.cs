@@ -18,7 +18,7 @@ public partial class FoodStuffsContext : DbContext
         {
             entity.ToTable("MealPlan");
 
-            entity.OwnsMany(d => d.PantryIngredients, p =>
+            entity.OwnsMany(d => d.PantryShoppingItemRelations, p =>
             {
                 p.ToJson();
 

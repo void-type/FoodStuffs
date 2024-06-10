@@ -1,8 +1,6 @@
-﻿using VoidCore.Model.Data;
+﻿namespace FoodStuffs.Model.Data.Models;
 
-namespace FoodStuffs.Model.Data.Models;
-
-public class RecipeIngredient : IAuditableWithOffset
+public class RecipeIngredient
 {
     public int Id { get; set; }
 
@@ -13,12 +11,4 @@ public class RecipeIngredient : IAuditableWithOffset
     public int Order { get; set; }
 
     public bool IsCategory { get; set; }
-
-    public string CreatedBy { get; set; } = null!;
-
-    public DateTimeOffset CreatedOn { get; set; }
-
-    public string ModifiedBy { get; set; } = null!;
-
-    public DateTimeOffset ModifiedOn { get; set; }
 }

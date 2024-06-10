@@ -2,4 +2,4 @@
 
 public record SaveMealPlanRequestPantryIngredient(
     string Name,
-    decimal Quantity);
+    int Quantity);

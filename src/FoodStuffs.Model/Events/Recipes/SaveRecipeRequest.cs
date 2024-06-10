@@ -7,5 +7,5 @@ public record SaveRecipeRequest(
     int? CookTimeMinutes,
     int? PrepTimeMinutes,
     bool IsForMealPlanning,
-    IEnumerable<SaveRecipeRequestIngredient> Ingredients,
-    IEnumerable<string> Categories);
+    List<SaveRecipeRequestIngredient> Ingredients,
+    List<string> Categories);

@@ -1,7 +1,6 @@
 ﻿namespace FoodStuffs.Model.Search;
 
-public record RecipeSearchResultItemIngredient(
+public record RecipeSearchResultItemShoppingItem(
     string Name,
     decimal Quantity,
-    int Order,
-    bool IsCategory);
+    int Order);

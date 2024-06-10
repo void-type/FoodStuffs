@@ -51,9 +51,9 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
     private static void Transfer(SaveMealPlanRequest request, MealPlan mealPlan)
     {
         mealPlan.Name = request.Name;
-        mealPlan.PantryIngredients.Clear();
-        mealPlan.PantryIngredients.AddRange(request.PantryIngredients
-            .Select(x => new MealPlanPantryIngredient
+        mealPlan.PantryShoppingItemRelations.Clear();
+        mealPlan.PantryShoppingItemRelations.AddRange(request.PantryIngredients
+            .Select(x => new MealPlanPantryShoppingItemRelation
             {
                 Name = x.Name,
                 Quantity = x.Quantity,
@@ -62,12 +62,16 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
     private async Task ManageRecipes(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
     {
+        var requestedRecipeIds = request.Recipes
+            .Select(x => x.Id)
+            .ToArray();
+
         // Remove extra recipes.
-        mealPlan.Recipes.RemoveAll(x => !request.RecipeIds.Contains(x.Id));
+        mealPlan.RecipeRelations.RemoveAll(x => !requestedRecipeIds.Contains(x.Recipe.Id));
 
         // Add missing recipes. We'll let the database throw when ID's don't exist.
-        var missingRecipeIds = request.RecipeIds
-            .Where(x => !mealPlan.Recipes.Select(x => x.Id).Contains(x));
+        var missingRecipeIds = requestedRecipeIds
+            .Where(x => !mealPlan.RecipeRelations.Select(x => x.Recipe.Id).Contains(x));
 
         var specification = new RecipesSpecification(missingRecipeIds);
 
@@ -76,6 +80,14 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);
 
-        mealPlan.Recipes.AddRange(missingRecipes);
+        mealPlan.RecipeRelations
+            .AddRange(missingRecipes
+                .Select(recipe => new MealPlanRecipeRelation
+                {
+                    Recipe = recipe,
+                    Order = request.Recipes
+                        .Find(req => req.Id == recipe.Id)?
+                        .Order ?? int.MaxValue,
+                }));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Data.Models;
 
-public class MealPlan : IAuditableWithOffset
+public class ShoppingItem : IAuditableWithOffset
 {
     public int Id { get; set; }
 
@@ -15,8 +15,4 @@ public class MealPlan : IAuditableWithOffset
     public string ModifiedBy { get; set; } = null!;
 
     public DateTimeOffset ModifiedOn { get; set; }
-
-    public virtual List<MealPlanRecipeRelation> RecipeRelations { get; } = [];
-
-    public virtual List<MealPlanPantryShoppingItemRelation> PantryShoppingItemRelations { get; } = [];
 }

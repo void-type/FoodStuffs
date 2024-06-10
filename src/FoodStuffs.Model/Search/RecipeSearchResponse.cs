@@ -4,4 +4,4 @@ namespace FoodStuffs.Model.Search;
 
 public record RecipeSearchResponse(
     IItemSet<RecipeSearchResultItem> Results,
-    IEnumerable<RecipeSearchFacet> Facets);
+    List<RecipeSearchFacet> Facets);

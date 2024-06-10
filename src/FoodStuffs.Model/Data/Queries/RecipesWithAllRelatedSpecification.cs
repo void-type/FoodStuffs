@@ -22,5 +22,6 @@ public class RecipesWithAllRelatedSpecification : QuerySpecificationAbstract<Rec
         AddInclude(nameof(Recipe.PinnedImage));
         AddInclude(nameof(Recipe.Images));
         AddInclude(nameof(Recipe.Ingredients));
+        AddInclude($"{nameof(Recipe.ShoppingItems)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}");
     }
 }

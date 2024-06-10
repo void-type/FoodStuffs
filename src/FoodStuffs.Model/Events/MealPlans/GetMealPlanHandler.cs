@@ -27,23 +27,29 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new MealPlanNotFoundFailure())
-            .SelectAsync(r => new GetMealPlanResponse(
-                Id: r.Id,
-                Name: r.Name,
-                CreatedBy: r.CreatedBy,
-                CreatedOn: r.CreatedOn,
-                ModifiedBy: r.ModifiedBy,
-                ModifiedOn: r.ModifiedOn,
-                PantryIngredients: r.PantryIngredients.Select(i => new GetMealPlanResponsePantryIngredient(i.Name, i.Quantity)),
-                Recipes: r.Recipes.Select(r => new GetMealPlanResponseRecipe(
-                    Id: r.Id,
-                    Name: r.Name,
-                    Image: r.DefaultImage?.FileName,
-                    Categories: r.Categories
-                        .Select(c => c.Name)
-                        .OrderBy(n => n),
-                    Ingredients: r.Ingredients
-                        .Select(i => new GetMealPlanResponseRecipeIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
-                        .OrderBy(i => i.Order)))));
+            .SelectAsync(m => new GetMealPlanResponse(
+                Id: m.Id,
+                Name: m.Name,
+                CreatedBy: m.CreatedBy,
+                CreatedOn: m.CreatedOn,
+                ModifiedBy: m.ModifiedBy,
+                ModifiedOn: m.ModifiedOn,
+                PantryShoppingItems: m.PantryShoppingItemRelations
+                    .ConvertAll(i => new GetMealPlanResponsePantryIngredient(i.Name, i.Quantity)),
+                Recipes: m.RecipeRelations
+                    .ConvertAll(rel => new GetMealPlanResponseRecipe(
+                        Id: rel.Recipe.Id,
+                        Name: rel.Recipe.Name,
+                        Order: rel.Order,
+                        Image: rel.Recipe.DefaultImage?.FileName,
+                        Categories: rel.Recipe.Categories
+                            .Select(c => c.Name)
+                            .OrderBy(n => n)
+                            .ToList(),
+                        ShoppingItems: rel.Recipe.ShoppingItems
+                            .Select(i => new GetMealPlanResponseShoppingItem(i.ShoppingItem.Name, i.Quantity, i.Order))
+                            .OrderBy(i => i.Order)
+                            .ToList()))
+));
     }
 }

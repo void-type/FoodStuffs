@@ -12,6 +12,6 @@ public class SaveMealPlanRequestValidator : RuleValidatorAbstract<SaveMealPlanRe
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
         CreateRule(new Failure("Pantry ingredients all need a name.", "pantryIngredients"))
-            .InvalidWhen(entity => entity.PantryIngredients.Any(x => x.Name.IsNullOrWhiteSpace()));
+            .InvalidWhen(entity => entity.PantryIngredients.Exists(x => x.Name.IsNullOrWhiteSpace()));
     }
 }

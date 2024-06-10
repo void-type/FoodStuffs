@@ -50,7 +50,7 @@ public class RecipeIndexService : IRecipeIndexService
 
     public void AddOrUpdate(Recipe recipe)
     {
-        using var writers = new LuceneWriters(_settings, C.Version, OpenMode.CREATE_OR_APPEND);
+        using var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE_OR_APPEND);
         // Ensure index
         writers.IndexWriter.Commit();
         writers.TaxonomyWriter.Commit();
@@ -76,7 +76,7 @@ public class RecipeIndexService : IRecipeIndexService
     {
         _logger.LogInformation("Starting rebuild of recipe search index.");
 
-        using var writers = new LuceneWriters(_settings, C.Version, OpenMode.CREATE);
+        using var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE);
 
         var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
 
@@ -116,7 +116,7 @@ public class RecipeIndexService : IRecipeIndexService
 
     public void Remove(int recipeId)
     {
-        using var writers = new LuceneWriters(_settings, C.Version, OpenMode.CREATE_OR_APPEND);
+        using var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE_OR_APPEND);
         // Ensure index
         writers.IndexWriter.Commit();
         writers.TaxonomyWriter.Commit();

@@ -37,7 +37,7 @@ const planName = computed(() => {
     </li>
     <li class="nav-item">
       <router-link
-        :to="{ name: 'planSearch', query: mealPlanStore.currentQueryParams }"
+        :to="{ name: 'planList', query: mealPlanStore.currentQueryParams }"
         class="nav-link"
         >Meal Plans</router-link
       >

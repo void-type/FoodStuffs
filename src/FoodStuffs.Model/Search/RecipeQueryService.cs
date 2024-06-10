@@ -23,7 +23,7 @@ public class RecipeQueryService : IRecipeQueryService
 
     public RecipeSearchResponse Search(RecipeSearchRequest request)
     {
-        using (var writers = new LuceneWriters(_settings, C.Version, OpenMode.CREATE_OR_APPEND))
+        using (var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE_OR_APPEND))
         {
             // Ensure index
             writers.IndexWriter.Commit();
@@ -81,7 +81,7 @@ public class RecipeQueryService : IRecipeQueryService
 
     private static Query BuildTextQuery(RecipeSearchRequest request)
     {
-        var analyzer = new StandardAnalyzer(C.Version);
+        var analyzer = new StandardAnalyzer(C.LUCENE_VERSION);
         var queryBuilder = new QueryBuilder(analyzer);
         var query = new BooleanQuery();
 
@@ -191,7 +191,7 @@ public class RecipeQueryService : IRecipeQueryService
         };
     }
 
-    private static RecipeSearchFacet[] GetFacets(LuceneReaders readers, FacetsCollector facetsCollector, FacetsConfig facetsConfig)
+    private static List<RecipeSearchFacet> GetFacets(LuceneReaders readers, FacetsCollector facetsCollector, FacetsConfig facetsConfig)
     {
         var facetCounts = new TaxonomyFacetCounts(new DocValuesOrdinalsReader(), readers.TaxonomyReader, facetsConfig, facetsCollector);
 
@@ -209,6 +209,6 @@ public class RecipeQueryService : IRecipeQueryService
                     })
                     .ToList()
             })
-            .ToArray();
+            .ToList();
     }
 }

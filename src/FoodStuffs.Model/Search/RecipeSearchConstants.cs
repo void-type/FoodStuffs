@@ -5,7 +5,7 @@ namespace FoodStuffs.Model.Search;
 
 public static class RecipeSearchConstants
 {
-    public const LuceneVersion Version = LuceneVersion.LUCENE_48;
+    public const LuceneVersion LUCENE_VERSION = LuceneVersion.LUCENE_48;
 
     private const string JSON_SUFFIX = "_JSON";
 
@@ -18,6 +18,6 @@ public static class RecipeSearchConstants
     public const string FIELD_CATEGORY_NAMES = nameof(Category) + "_" + nameof(Category.Name) + "s";
     public const string FIELD_CATEGORY_IDS = nameof(Category) + "_" + nameof(Category.Id) + "s";
     public const string FIELD_IMAGE = nameof(Recipe.DefaultImage);
-    public const string FIELD_INGREDIENTS_JSON = nameof(Recipe.Ingredients) + JSON_SUFFIX;
+    public const string FIELD_MEAL_SHOPPING_ITEMS_JSON = nameof(RecipeShoppingItemRelation.ShoppingItem) + JSON_SUFFIX;
     public const string FIELD_SLUG = nameof(Recipe.Slug);
 }

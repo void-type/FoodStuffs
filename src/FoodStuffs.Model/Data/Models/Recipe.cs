@@ -15,6 +15,8 @@ public class Recipe : IAuditableWithOffset
 
     public int? CookTimeMinutes { get; set; }
 
+    public bool IsForMealPlanning { get; set; }
+
     public string CreatedBy { get; set; } = null!;
 
     public DateTimeOffset CreatedOn { get; set; }
@@ -23,13 +25,13 @@ public class Recipe : IAuditableWithOffset
 
     public DateTimeOffset ModifiedOn { get; set; }
 
-    public int? PinnedImageId { get; set; }
-
-    public bool IsForMealPlanning { get; set; }
-
     public virtual List<Image> Images { get; } = [];
 
     public virtual List<RecipeIngredient> Ingredients { get; } = [];
+
+    public virtual List<RecipeShoppingItemRelation> ShoppingItems { get; } = [];
+
+    public int? PinnedImageId { get; set; }
 
     public virtual Image? PinnedImage { get; set; }
 

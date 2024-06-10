@@ -5,6 +5,7 @@ using Lucene.Net.Facet;
 using Lucene.Net.Util;
 using System.Globalization;
 using System.Text.Json;
+using VoidCore.Model.Functional;
 using C = FoodStuffs.Model.Search.RecipeSearchConstants;
 
 namespace FoodStuffs.Model.Search;
@@ -51,11 +52,15 @@ public static class RecipeSearchMappers
             doc.AddFacetField(C.FIELD_CATEGORY_IDS, categoryId);
         }
 
-        foreach (var ingredient in recipe.Ingredients)
-        {
-            // Ingredients: retrievable
-            doc.AddStoredField(C.FIELD_INGREDIENTS_JSON, JsonSerializer.Serialize(ingredient));
-        }
+        var shoppingItems = recipe.ShoppingItems
+            .Select(x => new RecipeSearchResultItemShoppingItem(
+                Name: x.ShoppingItem.Name,
+                Quantity: x.Quantity,
+                Order: x.Order
+            ));
+
+        // Ingredients: retrievable
+        doc.AddStoredField(C.FIELD_MEAL_SHOPPING_ITEMS_JSON, JsonSerializer.Serialize(shoppingItems));
 
         var image = recipe.DefaultImage;
 
@@ -77,17 +82,11 @@ public static class RecipeSearchMappers
             IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
-            Categories: doc.GetValues(C.FIELD_CATEGORY_NAMES).OrderBy(n => n),
-            Ingredients: doc.GetValues(C.FIELD_INGREDIENTS_JSON)
-                .Select(x =>
-                {
-                    var i = JsonSerializer.Deserialize<RecipeIngredient>(x);
-
-                    return i is not null
-                        ? new RecipeSearchResultItemIngredient(i.Name, i.Quantity, i.Order, i.IsCategory)
-                        : null;
-                })
-                .Where(i => i is not null)!,
+            Categories: doc.GetValues(C.FIELD_CATEGORY_NAMES)
+                .OrderBy(n => n)
+                .ToList(),
+            ShoppingItems: doc.Get(C.FIELD_MEAL_SHOPPING_ITEMS_JSON)
+                .Map(x => JsonSerializer.Deserialize<List<RecipeSearchResultItemShoppingItem>>(x) ?? []),
             Image: doc.Get(C.FIELD_IMAGE)
         );
     }
