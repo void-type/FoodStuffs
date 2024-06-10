@@ -25,17 +25,17 @@ public class Recipe : IAuditableWithOffset
 
     public DateTimeOffset ModifiedOn { get; set; }
 
-    public virtual List<Image> Images { get; } = [];
-
-    public virtual List<RecipeIngredient> Ingredients { get; } = [];
-
-    public virtual List<RecipeShoppingItemRelation> ShoppingItems { get; } = [];
-
     public int? PinnedImageId { get; set; }
 
     public virtual Image? PinnedImage { get; set; }
 
+    public virtual List<Image> Images { get; } = [];
+
     public virtual List<Category> Categories { get; } = [];
+
+    public virtual List<RecipeIngredient> Ingredients { get; } = [];
+
+    public virtual List<RecipeShoppingItemRelation> ShoppingItemRelations { get; } = [];
 
     public virtual List<MealPlan> MealPlans { get; } = [];
 

@@ -6,25 +6,16 @@ namespace FoodStuffs.Model.Data;
 public partial class FoodStuffsContext : DbContext
 {
     public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<MealPlan> MealPlans { get; set; }
     public virtual DbSet<Image> Images { get; set; }
+    public virtual DbSet<MealPlan> MealPlans { get; set; }
     public virtual DbSet<Recipe> Recipes { get; set; }
+    public virtual DbSet<ShoppingItem> ShoppingItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Category>(entity => entity.ToTable("Category"));
-
-        modelBuilder.Entity<MealPlan>(entity =>
+        modelBuilder.Entity<Category>(entity =>
         {
-            entity.ToTable("MealPlan");
-
-            entity.OwnsMany(d => d.PantryShoppingItemRelations, p =>
-            {
-                p.ToJson();
-
-                p.Property(d => d.Quantity)
-                    .HasPrecision(18, 2);
-            });
+            entity.ToTable("Category");
         });
 
         modelBuilder.Entity<Image>(entity =>
@@ -41,6 +32,19 @@ public partial class FoodStuffsContext : DbContext
             {
                 p.ToTable("ImageBlob");
                 p.WithOwner();
+            });
+        });
+
+        modelBuilder.Entity<MealPlan>(entity =>
+        {
+            entity.ToTable("MealPlan");
+
+            entity.OwnsMany(d => d.PantryShoppingItemRelations, p =>
+            {
+                p.ToJson();
+
+                p.Property(d => d.Quantity)
+                    .HasPrecision(18, 2);
             });
         });
 
@@ -64,6 +68,12 @@ public partial class FoodStuffsContext : DbContext
                     .HasPrecision(18, 2);
 
                 p.WithOwner();
+            });
+        });
+
+        modelBuilder.Entity<ShoppingItem>(entity =>
+        {
+            entity.ToTable("ShoppingItem");
             });
         });
     }

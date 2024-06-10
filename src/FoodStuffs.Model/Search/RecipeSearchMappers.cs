@@ -52,7 +52,7 @@ public static class RecipeSearchMappers
             doc.AddFacetField(C.FIELD_CATEGORY_IDS, categoryId);
         }
 
-        var shoppingItems = recipe.ShoppingItems
+        var shoppingItems = recipe.ShoppingItemRelations
             .Select(x => new RecipeSearchResultItemShoppingItem(
                 Name: x.ShoppingItem.Name,
                 Quantity: x.Quantity,

@@ -13,12 +13,12 @@ public class MealPlansWithAllRelatedSpecification : QuerySpecificationAbstract<M
 
     private void IncludeAll()
     {
-        AddInclude($"{nameof(MealPlan.PantryShoppingItemRelations)}.{nameof(MealPlanPantryShoppingItemRelation.ShoppingItem)}");
-
         var recipe = $"{nameof(MealPlan.RecipeRelations)}.{nameof(MealPlanRecipeRelation.Recipe)}";
         AddInclude($"{recipe}.{nameof(Recipe.Categories)}");
         AddInclude($"{recipe}.{nameof(Recipe.Images)}");
         AddInclude($"{recipe}.{nameof(Recipe.PinnedImage)}");
-        AddInclude($"{recipe}.{nameof(Recipe.ShoppingItems)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}");
+        AddInclude($"{recipe}.{nameof(Recipe.ShoppingItemRelations)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}");
+
+        AddInclude($"{nameof(MealPlan.PantryShoppingItemRelations)}.{nameof(MealPlanPantryShoppingItemRelation.ShoppingItem)}");
     }
 }

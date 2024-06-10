@@ -46,7 +46,7 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                             .Select(c => c.Name)
                             .OrderBy(n => n)
                             .ToList(),
-                        ShoppingItems: rel.Recipe.ShoppingItems
+                        ShoppingItems: rel.Recipe.ShoppingItemRelations
                             .Select(i => new GetMealPlanResponseShoppingItem(i.ShoppingItem.Name, i.Quantity, i.Order))
                             .OrderBy(i => i.Order)
                             .ToList()))
