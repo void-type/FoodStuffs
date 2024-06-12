@@ -8,5 +8,5 @@ public class RecipeShoppingItemRelation
 
     public int Order { get; set; }
 
-    public ShoppingItem ShoppingItem { get; set; } = null!;
+    public virtual ShoppingItem ShoppingItem { get; set; } = null!;
 }

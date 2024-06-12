@@ -15,66 +15,81 @@ public partial class FoodStuffsContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.ToTable("Category");
+            entity.ToTable(nameof(Category));
         });
 
         modelBuilder.Entity<Image>(entity =>
         {
-            entity.ToTable("Image");
+            entity.ToTable(nameof(Image));
 
-            entity.Property(e => e.FileName)
+            entity.Property(i => i.FileName)
                 .HasDefaultValueSql("NEWID()");
 
-            entity.HasIndex(e => e.FileName)
+            entity.HasIndex(i => i.FileName)
                 .IsUnique();
 
-            entity.OwnsOne(x => x.ImageBlob, p =>
-            {
-                p.ToTable("ImageBlob");
-                p.WithOwner();
-            });
+            entity.OwnsOne(i => i.ImageBlob)
+                .ToTable(nameof(ImageBlob))
+                .WithOwner();
         });
 
         modelBuilder.Entity<MealPlan>(entity =>
         {
-            entity.ToTable("MealPlan");
+            entity.ToTable(nameof(MealPlan));
+        });
 
-            entity.OwnsMany(d => d.PantryShoppingItemRelations, p =>
-            {
-                p.ToJson();
+        modelBuilder.Entity<MealPlanRecipeRelation>(entity =>
+        {
+            entity.ToTable(nameof(MealPlanRecipeRelation));
 
-                p.Property(d => d.Quantity)
-                    .HasPrecision(18, 2);
-            });
+            entity.HasOne<MealPlan>()
+                .WithMany(mp => mp.RecipeRelations)
+                .HasForeignKey(mpr => mpr.MealPlanId);
+
+            entity.HasOne(mpr => mpr.Recipe)
+                .WithMany(r => r.MealPlanRelations)
+                .HasForeignKey(mpr => mpr.RecipeId);
+        });
+
+        modelBuilder.Entity<MealPlanPantryShoppingItemRelation>(entity =>
+        {
+            entity.ToTable(nameof(MealPlanPantryShoppingItemRelation));
+
+            entity.HasOne<MealPlan>()
+                .WithMany(mp => mp.PantryShoppingItemRelations)
+                .HasForeignKey(mps => mps.MealPlanId);
+
+            entity.HasOne(mps => mps.ShoppingItem)
+                .WithMany()
+                .HasForeignKey(mps => mps.ShoppingItemId);
         });
 
         modelBuilder.Entity<Recipe>(entity =>
         {
-            entity.ToTable("Recipe");
+            entity.ToTable(nameof(Recipe));
 
-            entity.HasOne(d => d.PinnedImage)
+            entity.HasOne(r => r.PinnedImage)
                 .WithMany()
-                .HasForeignKey(d => d.PinnedImageId);
+                .HasForeignKey(r => r.PinnedImageId);
 
-            entity.HasMany(d => d.Images)
-                .WithOne(p => p.Recipe)
-                .HasForeignKey(d => d.RecipeId);
+            entity.HasMany(r => r.Images)
+                .WithOne(i => i.Recipe)
+                .HasForeignKey(i => i.RecipeId);
 
-            entity.OwnsMany(d => d.Ingredients, p =>
+            entity.OwnsMany(r => r.Ingredients, rel =>
             {
-                p.ToTable("RecipeIngredient");
+                rel.ToTable(nameof(RecipeIngredient));
+                rel.WithOwner();
 
-                p.Property(d => d.Quantity)
+                rel.Property(d => d.Quantity)
                     .HasPrecision(18, 2);
-
-                p.WithOwner();
             });
         });
 
-        modelBuilder.Entity<ShoppingItem>(entity =>
+        modelBuilder.Entity<ShoppingItem>(e =>
         {
-            entity.ToTable("ShoppingItem");
-            });
+            e.ToTable(nameof(ShoppingItem));
         });
+    });
     }
 }

@@ -6,5 +6,9 @@ public class MealPlanPantryShoppingItemRelation
 
     public int Quantity { get; set; }
 
-    public ShoppingItem ShoppingItem { get; set; } = null!;
+    public int MealPlanId { get; set; }
+
+    public int ShoppingItemId { get; set; }
+
+    public virtual ShoppingItem ShoppingItem { get; set; } = null!;
 }
