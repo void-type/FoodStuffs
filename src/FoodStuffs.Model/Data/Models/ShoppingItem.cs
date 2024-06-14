@@ -15,4 +15,6 @@ public class ShoppingItem : IAuditableWithOffset
     public string ModifiedBy { get; set; } = null!;
 
     public DateTimeOffset ModifiedOn { get; set; }
+
+    public virtual List<Recipe> Recipes { get; set; } = [];
 }

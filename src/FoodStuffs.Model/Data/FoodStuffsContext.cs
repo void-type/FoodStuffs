@@ -38,19 +38,6 @@ public partial class FoodStuffsContext : DbContext
             entity.ToTable(nameof(MealPlan));
         });
 
-        modelBuilder.Entity<MealPlanRecipeRelation>(entity =>
-        {
-            entity.ToTable(nameof(MealPlanRecipeRelation));
-
-            entity.HasOne<MealPlan>()
-                .WithMany(mp => mp.RecipeRelations)
-                .HasForeignKey(mpr => mpr.MealPlanId);
-
-            entity.HasOne(mpr => mpr.Recipe)
-                .WithMany(r => r.MealPlanRelations)
-                .HasForeignKey(mpr => mpr.RecipeId);
-        });
-
         modelBuilder.Entity<MealPlanPantryShoppingItemRelation>(entity =>
         {
             entity.ToTable(nameof(MealPlanPantryShoppingItemRelation));
@@ -62,6 +49,19 @@ public partial class FoodStuffsContext : DbContext
             entity.HasOne(mps => mps.ShoppingItem)
                 .WithMany()
                 .HasForeignKey(mps => mps.ShoppingItemId);
+        });
+
+        modelBuilder.Entity<MealPlanRecipeRelation>(entity =>
+        {
+            entity.ToTable(nameof(MealPlanRecipeRelation));
+
+            entity.HasOne<MealPlan>()
+                .WithMany(mp => mp.RecipeRelations)
+                .HasForeignKey(mpr => mpr.MealPlanId);
+
+            entity.HasOne(mpr => mpr.Recipe)
+                .WithMany(r => r.MealPlanRelations)
+                .HasForeignKey(mpr => mpr.RecipeId);
         });
 
         modelBuilder.Entity<Recipe>(entity =>
@@ -76,6 +76,13 @@ public partial class FoodStuffsContext : DbContext
                 .WithOne(i => i.Recipe)
                 .HasForeignKey(i => i.RecipeId);
 
+            entity.HasMany(r => r.Categories)
+                .WithMany(i => i.Recipes)
+                .UsingEntity<Dictionary<string, object>>(
+                    "RecipeCategory",
+                    r => r.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
+                    c => c.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"));
+
             entity.OwnsMany(r => r.Ingredients, rel =>
             {
                 rel.ToTable(nameof(RecipeIngredient));
@@ -86,10 +93,22 @@ public partial class FoodStuffsContext : DbContext
             });
         });
 
+        modelBuilder.Entity<RecipeShoppingItemRelation>(entity =>
+        {
+            entity.ToTable(nameof(RecipeShoppingItemRelation));
+
+            entity.HasOne<Recipe>()
+                .WithMany(r => r.ShoppingItemRelations)
+                .HasForeignKey(rsi => rsi.RecipeId);
+
+            entity.HasOne(rsi => rsi.ShoppingItem)
+                .WithMany()
+                .HasForeignKey(rsi => rsi.ShoppingItemId);
+        });
+
         modelBuilder.Entity<ShoppingItem>(e =>
         {
             e.ToTable(nameof(ShoppingItem));
         });
-    });
     }
 }
