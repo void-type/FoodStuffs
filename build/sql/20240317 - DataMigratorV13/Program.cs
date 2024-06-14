@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Data.Models;
+﻿using DataMigratorV13.NewData.Models;
 using FoodStuffs.Web.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +7,7 @@ using VoidCore.Model.Time;
 
 // This app will migrate databases from v12 to v13.
 
-Console.WriteLine("Starting data migration. Be sure to have applied the current EF migration to create a new database.");
+Console.WriteLine("Starting data migration from v12 to v13. Be sure to have applied the current EF migration to create a new database next to your old one.");
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -23,8 +23,8 @@ var oldData = new DataMigratorV13.OldData.EntityFramework.FoodStuffsContext(
     dateTimeService,
     currentUserAccessor);
 
-var newData = new FoodStuffs.Model.Data.FoodStuffsContext(
-    new DbContextOptionsBuilder<FoodStuffs.Model.Data.FoodStuffsContext>()
+var newData = new DataMigratorV13.NewData.FoodStuffsContext(
+    new DbContextOptionsBuilder<DataMigratorV13.NewData.FoodStuffsContext>()
         .UseSqlServer(configuration.GetRequiredConnectionString("FoodStuffsNew"))
         .Options,
     dateTimeService,
