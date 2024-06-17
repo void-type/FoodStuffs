@@ -1,10 +1,25 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using VoidCore.EntityFramework;
+using VoidCore.Model.Auth;
+using VoidCore.Model.Time;
 
 namespace FoodStuffs.Model.Data;
 
-public partial class FoodStuffsContext : DbContext
+public class FoodStuffsContext : DbContext
 {
+    private readonly IDateTimeService _dateTimeService;
+    private readonly ICurrentUserAccessor _currentUserAccessor;
+
+    public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options, IDateTimeService dateTimeService, ICurrentUserAccessor currentUserAccessor)
+        : base(options)
+    {
+        _dateTimeService = dateTimeService;
+        _currentUserAccessor = currentUserAccessor;
+
+        ChangeTracker.LazyLoadingEnabled = false;
+    }
+
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Image> Images { get; set; }
     public virtual DbSet<MealPlan> MealPlans { get; set; }
@@ -110,5 +125,17 @@ public partial class FoodStuffsContext : DbContext
         {
             e.ToTable(nameof(ShoppingItem));
         });
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        ChangeTracker.Entries().SetAuditableProperties(_dateTimeService, _currentUserAccessor.User.Login);
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        ChangeTracker.Entries().SetAuditableProperties(_dateTimeService, _currentUserAccessor.User.Login);
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }
