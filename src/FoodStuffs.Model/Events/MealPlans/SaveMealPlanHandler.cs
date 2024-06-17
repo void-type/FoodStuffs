@@ -55,7 +55,8 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         mealPlan.PantryShoppingItemRelations.AddRange(request.PantryIngredients
             .Select(x => new MealPlanPantryShoppingItemRelation
             {
-                Name = x.Name,
+                // TODO: finish these handlers
+                // Name = x.Name,
                 Quantity = x.Quantity,
             }));
     }

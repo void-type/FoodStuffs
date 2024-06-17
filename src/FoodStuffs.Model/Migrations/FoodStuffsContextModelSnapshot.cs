@@ -17,22 +17,22 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("CategoryRecipe", b =>
                 {
-                    b.Property<int>("CategoriesId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RecipesId")
+                    b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.HasKey("CategoriesId", "RecipesId");
+                    b.HasKey("CategoryId", "RecipeId");
 
-                    b.HasIndex("RecipesId");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("CategoryRecipe");
                 });
@@ -140,6 +140,58 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("MealPlan", (string)null);
                 });
 
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanPantryShoppingItemRelation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MealPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShoppingItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MealPlanId");
+
+                    b.HasIndex("ShoppingItemId");
+
+                    b.ToTable("MealPlanPantryShoppingItemRelation", (string)null);
+                });
+
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanRecipeRelation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MealPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MealPlanId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("MealPlanRecipeRelation", (string)null);
+                });
+
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
@@ -189,32 +241,92 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("Recipe", (string)null);
                 });
 
-            modelBuilder.Entity("MealPlanRecipe", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.RecipeShoppingItemRelation", b =>
                 {
-                    b.Property<int>("MealPlansId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShoppingItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.HasIndex("ShoppingItemId");
+
+                    b.ToTable("RecipeShoppingItemRelation", (string)null);
+                });
+
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.ShoppingItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShoppingItem", (string)null);
+                });
+
+            modelBuilder.Entity("RecipeShoppingItem", b =>
+                {
                     b.Property<int>("RecipesId")
                         .HasColumnType("int");
 
-                    b.HasKey("MealPlansId", "RecipesId");
+                    b.Property<int>("ShoppingItemId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("RecipesId");
+                    b.HasKey("RecipesId", "ShoppingItemId");
 
-                    b.ToTable("MealPlanRecipe");
+                    b.HasIndex("ShoppingItemId");
+
+                    b.ToTable("RecipeShoppingItem");
                 });
 
             modelBuilder.Entity("CategoryRecipe", b =>
                 {
                     b.HasOne("FoodStuffs.Model.Data.Models.Category", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
                         .WithMany()
-                        .HasForeignKey("RecipesId")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -250,36 +362,38 @@ namespace FoodStuffs.Model.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlan", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanPantryShoppingItemRelation", b =>
                 {
-                    b.OwnsMany("FoodStuffs.Model.Data.Models.MealPlanPantryIngredient", "PantryIngredients", b1 =>
-                        {
-                            b1.Property<int>("MealPlanId")
-                                .HasColumnType("int");
+                    b.HasOne("FoodStuffs.Model.Data.Models.MealPlan", null)
+                        .WithMany("PantryShoppingItemRelations")
+                        .HasForeignKey("MealPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", "ShoppingItem")
+                        .WithMany()
+                        .HasForeignKey("ShoppingItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                    b.Navigation("ShoppingItem");
+                });
 
-                            b1.Property<decimal>("Quantity")
-                                .HasPrecision(18, 2)
-                                .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanRecipeRelation", b =>
+                {
+                    b.HasOne("FoodStuffs.Model.Data.Models.MealPlan", null)
+                        .WithMany("RecipeRelations")
+                        .HasForeignKey("MealPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                            b1.HasKey("MealPlanId", "Id");
+                    b.HasOne("FoodStuffs.Model.Data.Models.Recipe", "Recipe")
+                        .WithMany("MealPlanRelations")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                            b1.ToTable("MealPlan");
-
-                            b1.ToJson("PantryIngredients");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MealPlanId");
-                        });
-
-                    b.Navigation("PantryIngredients");
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
@@ -299,22 +413,8 @@ namespace FoodStuffs.Model.Migrations
 
                             SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
 
-                            b1.Property<string>("CreatedBy")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<DateTimeOffset>("CreatedOn")
-                                .HasColumnType("datetimeoffset");
-
                             b1.Property<bool>("IsCategory")
                                 .HasColumnType("bit");
-
-                            b1.Property<string>("ModifiedBy")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<DateTimeOffset>("ModifiedOn")
-                                .HasColumnType("datetimeoffset");
 
                             b1.Property<string>("Name")
                                 .IsRequired()
@@ -340,24 +440,52 @@ namespace FoodStuffs.Model.Migrations
                     b.Navigation("PinnedImage");
                 });
 
-            modelBuilder.Entity("MealPlanRecipe", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.RecipeShoppingItemRelation", b =>
                 {
-                    b.HasOne("FoodStuffs.Model.Data.Models.MealPlan", null)
-                        .WithMany()
-                        .HasForeignKey("MealPlansId")
+                    b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
+                        .WithMany("ShoppingItemRelations")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", "ShoppingItem")
+                        .WithMany()
+                        .HasForeignKey("ShoppingItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShoppingItem");
+                });
+
+            modelBuilder.Entity("RecipeShoppingItem", b =>
+                {
                     b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
                         .WithMany()
                         .HasForeignKey("RecipesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", null)
+                        .WithMany()
+                        .HasForeignKey("ShoppingItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlan", b =>
+                {
+                    b.Navigation("PantryShoppingItemRelations");
+
+                    b.Navigation("RecipeRelations");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("MealPlanRelations");
+
+                    b.Navigation("ShoppingItemRelations");
                 });
 #pragma warning restore 612, 618
         }

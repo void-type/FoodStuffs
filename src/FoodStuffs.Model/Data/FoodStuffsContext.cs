@@ -94,7 +94,7 @@ public class FoodStuffsContext : DbContext
             entity.HasMany(r => r.Categories)
                 .WithMany(i => i.Recipes)
                 .UsingEntity<Dictionary<string, object>>(
-                    "RecipeCategory",
+                    "CategoryRecipe",
                     r => r.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
                     c => c.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"));
 
@@ -121,9 +121,12 @@ public class FoodStuffsContext : DbContext
                 .HasForeignKey(rsi => rsi.ShoppingItemId);
         });
 
-        modelBuilder.Entity<ShoppingItem>(e =>
+        modelBuilder.Entity<ShoppingItem>(entity =>
         {
-            e.ToTable(nameof(ShoppingItem));
+            entity.ToTable(nameof(ShoppingItem));
+
+            entity.HasMany(si => si.Recipes)
+                .WithMany();
         });
     }
 
