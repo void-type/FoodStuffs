@@ -94,7 +94,7 @@ public class FoodStuffsContext : DbContext
             entity.HasMany(r => r.Categories)
                 .WithMany(i => i.Recipes)
                 .UsingEntity<Dictionary<string, object>>(
-                    "CategoryRecipe",
+                    "RecipeCategoryRelation",
                     r => r.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
                     c => c.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"));
 
