@@ -126,7 +126,8 @@ public class FoodStuffsContext : DbContext
             entity.ToTable(nameof(ShoppingItem));
 
             entity.HasMany(si => si.Recipes)
-                .WithMany();
+                .WithMany()
+                .UsingEntity<RecipeShoppingItemRelation>();
         });
     }
 
