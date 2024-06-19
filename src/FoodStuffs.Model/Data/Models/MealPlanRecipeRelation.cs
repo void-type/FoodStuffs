@@ -2,8 +2,6 @@
 
 public class MealPlanRecipeRelation
 {
-    public int Id { get; set; }
-
     public int Order { get; set; }
 
     public int MealPlanId { get; set; }

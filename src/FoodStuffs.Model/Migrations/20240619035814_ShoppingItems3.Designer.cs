@@ -4,6 +4,7 @@ using FoodStuffs.Model.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodStuffs.Model.Migrations
 {
     [DbContext(typeof(FoodStuffsContext))]
-    partial class FoodStuffsContextModelSnapshot : ModelSnapshot
+    [Migration("20240619035814_ShoppingItems3")]
+    partial class ShoppingItems3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -274,7 +277,7 @@ namespace FoodStuffs.Model.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("RecipeCategoryRelation", (string)null);
+                    b.ToTable("RecipeCategoryRelation");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
@@ -285,7 +288,7 @@ namespace FoodStuffs.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("FoodStuffs.Model.Data.Models.Image.ImageBlob#FoodStuffs.Model.Data.Models.ImageBlob", "ImageBlob", b1 =>
+                    b.OwnsOne("FoodStuffs.Model.Data.Models.ImageBlob", "ImageBlob", b1 =>
                         {
                             b1.Property<int>("ImageId")
                                 .HasColumnType("int");
@@ -348,7 +351,7 @@ namespace FoodStuffs.Model.Migrations
                         .WithMany()
                         .HasForeignKey("PinnedImageId");
 
-                    b.OwnsMany("FoodStuffs.Model.Data.Models.Recipe.Ingredients#FoodStuffs.Model.Data.Models.RecipeIngredient", "Ingredients", b1 =>
+                    b.OwnsMany("FoodStuffs.Model.Data.Models.RecipeIngredient", "Ingredients", b1 =>
                         {
                             b1.Property<int>("RecipeId")
                                 .HasColumnType("int");

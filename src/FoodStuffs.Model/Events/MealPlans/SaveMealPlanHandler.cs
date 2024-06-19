@@ -33,6 +33,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         Transfer(request, mealPlanToEdit);
         await ManageRecipes(request, mealPlanToEdit, cancellationToken);
+        await ManagePantryShoppingItems(request, mealPlanToEdit, cancellationToken);
 
         if (maybeMealPlan.HasValue)
         {
@@ -51,14 +52,37 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
     private static void Transfer(SaveMealPlanRequest request, MealPlan mealPlan)
     {
         mealPlan.Name = request.Name;
-        mealPlan.PantryShoppingItemRelations.Clear();
-        mealPlan.PantryShoppingItemRelations.AddRange(request.PantryIngredients
-            .Select(x => new MealPlanPantryShoppingItemRelation
-            {
-                // TODO: finish these handlers
-                // Name = x.Name,
-                Quantity = x.Quantity,
-            }));
+    }
+
+    private async Task ManagePantryShoppingItems(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    {
+        var requestedItemIds = request.PantryShoppingItems
+            .Select(x => x.Id)
+            .ToArray();
+
+        // Remove extra items.
+        mealPlan.PantryShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
+
+        // Add missing items. We'll let the database throw when ID's don't exist.
+        var missingItemIds = requestedItemIds
+            .Where(x => !mealPlan.PantryShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x));
+
+        var specification = new ShoppingItemsSpecification(missingItemIds);
+
+        var missingItems = await _data.ShoppingItems
+            .TagWith(GetTag(specification))
+            .ApplyEfSpecification(specification)
+            .ToListAsync(cancellationToken);
+
+        mealPlan.PantryShoppingItemRelations
+            .AddRange(missingItems
+                .Select(item => new MealPlanPantryShoppingItemRelation
+                {
+                    ShoppingItem = item,
+                    Quantity = request.PantryShoppingItems
+                        .Find(req => req.Id == item.Id)?
+                        .Quantity ?? int.MinValue,
+                }));
     }
 
     private async Task ManageRecipes(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)

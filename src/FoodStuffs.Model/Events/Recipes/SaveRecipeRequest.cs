@@ -8,4 +8,5 @@ public record SaveRecipeRequest(
     int? PrepTimeMinutes,
     bool IsForMealPlanning,
     List<SaveRecipeRequestIngredient> Ingredients,
+    List<SaveRecipeRequestShoppingItem> ShoppingItems,
     List<string> Categories);

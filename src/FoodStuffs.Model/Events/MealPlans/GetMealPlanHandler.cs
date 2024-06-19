@@ -36,7 +36,10 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                 ModifiedOn: m.ModifiedOn,
                 PantryShoppingItems: m.PantryShoppingItemRelations
                     .ConvertAll(i =>
-                        new GetMealPlanResponsePantryShoppingItem(i.ShoppingItem.Id, i.ShoppingItem.Name, i.Quantity)
+                        new GetMealPlanResponsePantryShoppingItem(
+                            Id: i.ShoppingItem.Id,
+                            Name: i.ShoppingItem.Name,
+                            Quantity: i.Quantity)
                     ),
                 Recipes: m.RecipeRelations
                     .ConvertAll(rel => new GetMealPlanResponseRecipe(
@@ -49,12 +52,13 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                             .OrderBy(n => n)
                             .ToList(),
                         ShoppingItems: rel.Recipe.ShoppingItemRelations
-                            // TODO: all apis, order on client (property) or server (implicit)?
                             .OrderBy(i => i.Order)
                             .Select(i =>
-                                new GetMealPlanResponseShoppingItem(i.ShoppingItem.Id, i.ShoppingItem.Name, i.Quantity)
+                                new GetMealPlanResponseRecipeShoppingItem(
+                                    Id: i.ShoppingItem.Id,
+                                    Name: i.ShoppingItem.Name,
+                                    Quantity: i.Quantity)
                             )
-                            .ToList()))
-));
+                            .ToList()))));
     }
 }

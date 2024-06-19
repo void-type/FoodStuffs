@@ -28,27 +28,41 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
             .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure())
             .SelectAsync(r => new GetRecipeResponse(
-               Id: r.Id,
-               Name: r.Name,
-               Directions: r.Directions,
-               CookTimeMinutes: r.CookTimeMinutes,
-               PrepTimeMinutes: r.PrepTimeMinutes,
-               CreatedBy: r.CreatedBy,
-               CreatedOn: r.CreatedOn,
-               ModifiedBy: r.ModifiedBy,
-               ModifiedOn: r.ModifiedOn,
-               Slug: r.Slug,
-               PinnedImage: r.PinnedImage?.FileName,
-               IsForMealPlanning: r.IsForMealPlanning,
-               Categories: r.Categories
-                .Select(c => c.Name)
-                .OrderBy(n => n)
-                .ToList(),
-               Images: r.Images
-                .ConvertAll(i => i.FileName),
-               Ingredients: r.Ingredients
-                .Select(i => new GetRecipeResponseIngredient(i.Name, i.Quantity, i.Order, i.IsCategory))
-                .OrderBy(i => i.Order)
-                .ToList()));
+                Id: r.Id,
+                Name: r.Name,
+                Directions: r.Directions,
+                PrepTimeMinutes: r.PrepTimeMinutes,
+                CookTimeMinutes: r.CookTimeMinutes,
+                IsForMealPlanning: r.IsForMealPlanning,
+                CreatedBy: r.CreatedBy,
+                CreatedOn: r.CreatedOn,
+                ModifiedBy: r.ModifiedBy,
+                ModifiedOn: r.ModifiedOn,
+                Slug: r.Slug,
+                DefaultImage: r.DefaultImage?.FileName,
+                PinnedImage: r.PinnedImage?.FileName,
+                Images: r.Images
+                    .ConvertAll(i => i.FileName),
+                Categories: r.Categories
+                    .Select(c => c.Name)
+                    .OrderBy(n => n)
+                    .ToList(),
+                Ingredients: r.Ingredients
+                    .Select(i => new GetRecipeResponseIngredient(
+                        Name: i.Name,
+                        Quantity: i.Quantity,
+                        Order: i.Order,
+                        IsCategory: i.IsCategory))
+                    .OrderBy(i => i.Order)
+                    .ToList(),
+                ShoppingItems: r.ShoppingItemRelations
+                    .Select(i => new GetRecipeResponseShoppingItem(
+                        Id: i.ShoppingItem.Id,
+                        Name: i.ShoppingItem.Name,
+                        Quantity: i.Quantity,
+                        Order: i.Order))
+                    .OrderBy(i => i.Order)
+                    .ToList()
+                ));
     }
 }

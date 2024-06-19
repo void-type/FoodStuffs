@@ -57,6 +57,8 @@ public class FoodStuffsContext : DbContext
         {
             entity.ToTable(nameof(MealPlanPantryShoppingItemRelation));
 
+            entity.HasKey(mp => new { mp.MealPlanId, mp.ShoppingItemId });
+
             entity.HasOne<MealPlan>()
                 .WithMany(mp => mp.PantryShoppingItemRelations)
                 .HasForeignKey(mps => mps.MealPlanId);
@@ -69,6 +71,8 @@ public class FoodStuffsContext : DbContext
         modelBuilder.Entity<MealPlanRecipeRelation>(entity =>
         {
             entity.ToTable(nameof(MealPlanRecipeRelation));
+
+            entity.HasKey(mp => new { mp.MealPlanId, mp.RecipeId });
 
             entity.HasOne<MealPlan>()
                 .WithMany(mp => mp.RecipeRelations)
@@ -111,6 +115,8 @@ public class FoodStuffsContext : DbContext
         modelBuilder.Entity<RecipeShoppingItemRelation>(entity =>
         {
             entity.ToTable(nameof(RecipeShoppingItemRelation));
+
+            entity.HasKey(mp => new { mp.RecipeId, mp.ShoppingItemId });
 
             entity.HasOne<Recipe>()
                 .WithMany(r => r.ShoppingItemRelations)

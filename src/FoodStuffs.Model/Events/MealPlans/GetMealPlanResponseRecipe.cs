@@ -6,4 +6,4 @@ public record GetMealPlanResponseRecipe(
     int Order,
     string? Image,
     List<string> Categories,
-    List<GetMealPlanResponseShoppingItem> ShoppingItems);
+    List<GetMealPlanResponseRecipeShoppingItem> ShoppingItems);

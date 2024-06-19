@@ -25,6 +25,10 @@ public class Recipe : IAuditableWithOffset
 
     public DateTimeOffset ModifiedOn { get; set; }
 
+    public string Slug => Name.Slugify(230, true);
+
+    public Image? DefaultImage => PinnedImage ?? Images.FirstOrDefault();
+
     public int? PinnedImageId { get; set; }
 
     public virtual Image? PinnedImage { get; set; }
@@ -39,7 +43,5 @@ public class Recipe : IAuditableWithOffset
 
     public virtual List<MealPlanRecipeRelation> MealPlanRelations { get; } = [];
 
-    public Image? DefaultImage => PinnedImage ?? Images.FirstOrDefault();
 
-    public string Slug => Name.Slugify(230, true);
 }

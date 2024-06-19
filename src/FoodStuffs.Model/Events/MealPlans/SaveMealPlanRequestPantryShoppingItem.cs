@@ -1,5 +1,5 @@
 ﻿namespace FoodStuffs.Model.Events.MealPlans;
 
-public record SaveMealPlanRequestPantryIngredient(
-    string Name,
+public record SaveMealPlanRequestPantryShoppingItem(
+    int Id,
     int Quantity);
