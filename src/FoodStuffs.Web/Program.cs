@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Startup;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ try
 
     // Settings
     services.AddSettingsSingleton<WebApplicationSettings>(config, true).Validate();
-    services.AddSettingsSingleton<RecipeSearchSettings>(config, true).Validate();
+    services.AddSettingsSingleton<SearchSettings>(config, true).Validate();
 
     // Infrastructure
     services.AddControllers();

@@ -14,7 +14,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 public class CategoriesController : ControllerBase
 {
     /// <summary>
-    /// Search for categories using the following criteria. All are optional and some have defaults.
+    /// List categories. All parameters are optional and some have defaults.
     /// </summary>
     /// <param name="listPipeline"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
@@ -24,7 +24,7 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListCategoriesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> Search([FromServices] ListCategoriesPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> List([FromServices] ListCategoriesPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListCategoriesRequest(
             NameSearch: name,

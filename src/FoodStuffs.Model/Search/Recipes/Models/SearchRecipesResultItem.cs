@@ -1,11 +1,11 @@
-﻿namespace FoodStuffs.Model.Search;
+﻿namespace FoodStuffs.Model.Search.Recipes.Models;
 
-public record RecipeSearchResultItem(
+public record SearchRecipesResultItem(
     int Id,
     string Name,
     bool IsForMealPlanning,
     DateTimeOffset CreatedOn,
     string Slug,
     List<string> Categories,
-    List<RecipeSearchResultItemShoppingItem> ShoppingItems,
+    List<SearchRecipesResultItemShoppingItem> ShoppingItems,
     string? Image);

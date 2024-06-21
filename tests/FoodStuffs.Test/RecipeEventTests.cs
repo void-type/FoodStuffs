@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
-using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;

@@ -1,5 +1,6 @@
 ﻿
 using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.Recipes;
 
 namespace FoodStuffs.Web.Startup;
 
@@ -22,9 +23,9 @@ public class EnsureIndexHostedService : IHostedService
         using var scope = _serviceProvider.CreateScope();
 
         var index = scope.ServiceProvider.GetRequiredService<IRecipeIndexService>();
-        var config = scope.ServiceProvider.GetRequiredService<RecipeSearchSettings>();
+        var config = scope.ServiceProvider.GetRequiredService<SearchSettings>();
 
-        if (!Directory.Exists(config.IndexFolder) || !Directory.Exists(config.TaxonomyFolder))
+        if (!Directory.Exists(config.GetIndexFolder(RecipeSearchConstants.INDEX_NAME)) || !Directory.Exists(config.GetTaxonomyFolder(RecipeSearchConstants.INDEX_NAME)))
         {
             _logger.LogWarning("Recipe index is missing on startup. Rebuilding.");
             await index.Rebuild(cancellationToken);

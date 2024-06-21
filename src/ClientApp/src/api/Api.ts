@@ -11,7 +11,7 @@
 
 import type {
   AppVersion,
-  CategoriesSearchParams,
+  CategoriesListParams,
   EntityMessageOfInteger,
   EntityMessageOfString,
   GetMealPlanResponse,
@@ -20,11 +20,11 @@ import type {
   IItemSetOfListCategoriesResponse,
   IItemSetOfListMealPlansResponse,
   ImagesUploadParams,
-  MealPlansSearchParams,
-  RecipeSearchResponse,
+  MealPlansListParams,
   RecipesSearchParams,
   SaveMealPlanRequest,
   SaveRecipeRequest,
+  SearchRecipesResponse,
   UserMessage,
   WebClientInfo,
 } from './data-contracts';
@@ -67,13 +67,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Categories
-   * @name CategoriesSearch
-   * @summary Search for categories using the following criteria. All are optional and some have defaults.
+   * @name CategoriesList
+   * @summary List categories. All parameters are optional and some have defaults.
    * @request GET:/api/categories
    * @response `200` `IItemSetOfListCategoriesResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  categoriesSearch = (query: CategoriesSearchParams, params: RequestParams = {}) =>
+  categoriesList = (query: CategoriesListParams, params: RequestParams = {}) =>
     this.request<IItemSetOfListCategoriesResponse, IItemSetOfIFailure>({
       path: `/api/categories`,
       method: 'GET',
@@ -162,13 +162,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags MealPlans
-   * @name MealPlansSearch
-   * @summary Search for meal plans using the following criteria. All are optional and some have defaults.
+   * @name MealPlansList
+   * @summary List meal plans. All parameters are optional and some have defaults.
    * @request GET:/api/meal-plans
    * @response `200` `IItemSetOfListMealPlansResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealPlansSearch = (query: MealPlansSearchParams, params: RequestParams = {}) =>
+  mealPlansList = (query: MealPlansListParams, params: RequestParams = {}) =>
     this.request<IItemSetOfListMealPlansResponse, IItemSetOfIFailure>({
       path: `/api/meal-plans`,
       method: 'GET',
@@ -236,11 +236,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name RecipesSearch
    * @summary Search for recipes using the following criteria. All are optional and some have defaults.
    * @request GET:/api/recipes
-   * @response `200` `RecipeSearchResponse`
+   * @response `200` `SearchRecipesResponse`
    * @response `400` `IItemSetOfIFailure`
    */
   recipesSearch = (query: RecipesSearchParams, params: RequestParams = {}) =>
-    this.request<RecipeSearchResponse, IItemSetOfIFailure>({
+    this.request<SearchRecipesResponse, IItemSetOfIFailure>({
       path: `/api/recipes`,
       method: 'GET',
       query: query,

@@ -2,8 +2,6 @@
 using Lucene.Net.Facet.Taxonomy.Directory;
 using Lucene.Net.Index;
 using Lucene.Net.Store;
-using Lucene.Net.Util;
-using VoidCore.Model.Text;
 
 namespace FoodStuffs.Model.Search;
 
@@ -16,15 +14,15 @@ public class LuceneWriters : IDisposable
     public IndexWriter IndexWriter { get; }
     public DirectoryTaxonomyWriter TaxonomyWriter { get; }
 
-    public LuceneWriters(RecipeSearchSettings settings, LuceneVersion version, OpenMode openMode)
+    public LuceneWriters(SearchSettings settings, OpenMode openMode, string indexName)
     {
-        var indexFolder = settings.IndexFolder.GetSafeFilePath();
-        var taxonomyFolder = settings.TaxonomyFolder.GetSafeFilePath();
+        var indexFolder = settings.GetIndexFolder(indexName);
+        var taxonomyFolder = settings.GetTaxonomyFolder(indexName);
 
         _indexDir = FSDirectory.Open(indexFolder);
-        var standardAnalyzer = new StandardAnalyzer(version);
+        var standardAnalyzer = new StandardAnalyzer(settings.LuceneVersion);
 
-        var indexConfig = new IndexWriterConfig(version, standardAnalyzer)
+        var indexConfig = new IndexWriterConfig(settings.LuceneVersion, standardAnalyzer)
         {
             OpenMode = openMode
         };

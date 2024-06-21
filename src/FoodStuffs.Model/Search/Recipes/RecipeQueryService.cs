@@ -1,40 +1,40 @@
-﻿using Lucene.Net.Analysis.Standard;
+﻿using FoodStuffs.Model.Search.Recipes.Models;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Facet;
-using Lucene.Net.Facet.Taxonomy;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
 using VoidCore.Model.Responses.Collections;
 using VoidCore.Model.Time;
-using C = FoodStuffs.Model.Search.RecipeSearchConstants;
+using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Recipes;
 
 public class RecipeQueryService : IRecipeQueryService
 {
     private readonly IDateTimeService _dateTimeService;
-    private readonly RecipeSearchSettings _settings;
+    private readonly SearchSettings _settings;
 
-    public RecipeQueryService(RecipeSearchSettings settings, IDateTimeService dateTimeService)
+    public RecipeQueryService(SearchSettings settings, IDateTimeService dateTimeService)
     {
         _dateTimeService = dateTimeService;
         _settings = settings;
     }
 
-    public RecipeSearchResponse Search(RecipeSearchRequest request)
+    public SearchRecipesResponse Search(SearchRecipesRequest request)
     {
-        using (var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE_OR_APPEND))
+        using (var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME))
         {
             // Ensure index
             writers.IndexWriter.Commit();
             writers.TaxonomyWriter.Commit();
         }
 
-        using var readers = new LuceneReaders(_settings);
+        using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
         var searcher = readers.IndexSearcher;
         var facetsCollector = new FacetsCollector();
 
-        var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelpers.RecipeFacetsConfig();
 
         var query = new BooleanQuery()
         {
@@ -45,8 +45,8 @@ public class RecipeQueryService : IRecipeQueryService
         var sort = BuildSortCriteria(request);
 
         var topDocs = sort is null
-            ? FacetsCollector.Search(searcher, query, filter, C.MAX_RESULTS, facetsCollector)
-            : FacetsCollector.Search(searcher, query, filter, C.MAX_RESULTS, sort, facetsCollector);
+            ? FacetsCollector.Search(searcher, query, filter, _settings.MaxResults, facetsCollector)
+            : FacetsCollector.Search(searcher, query, filter, _settings.MaxResults, sort, facetsCollector);
 
         var pagination = request.GetPaginationOptions();
 
@@ -74,14 +74,14 @@ public class RecipeQueryService : IRecipeQueryService
             .Select(x => searcher.Doc(x.Doc).ToRecipeSearchResultItem())
             .ToItemSet(pagination, topDocs.TotalHits);
 
-        var resultFacets = GetFacets(readers, facetsCollector, facetsConfig);
+        var resultFacets = SearchHelpers.GetFacets(readers, facetsCollector, facetsConfig);
 
         return new(resultItems, resultFacets);
     }
 
-    private static Query BuildTextQuery(RecipeSearchRequest request)
+    private Query BuildTextQuery(SearchRecipesRequest request)
     {
-        var analyzer = new StandardAnalyzer(C.LUCENE_VERSION);
+        var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
         var queryBuilder = new QueryBuilder(analyzer);
         var query = new BooleanQuery();
 
@@ -133,7 +133,7 @@ public class RecipeQueryService : IRecipeQueryService
         return query;
     }
 
-    private static QueryWrapperFilter BuildFilter(RecipeSearchRequest request, FacetsConfig facetsConfig)
+    private static QueryWrapperFilter BuildFilter(SearchRecipesRequest request, FacetsConfig facetsConfig)
     {
         var query = new BooleanQuery();
 
@@ -172,7 +172,7 @@ public class RecipeQueryService : IRecipeQueryService
         return new QueryWrapperFilter(query);
     }
 
-    private static Sort? BuildSortCriteria(RecipeSearchRequest request)
+    private static Sort? BuildSortCriteria(SearchRecipesRequest request)
     {
         // If "RANDOM", we shuffle topDocs results later.
         return (request.SortBy?.ToUpperInvariant()) switch
@@ -189,26 +189,5 @@ public class RecipeQueryService : IRecipeQueryService
                 new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
             _ => null,
         };
-    }
-
-    private static List<RecipeSearchFacet> GetFacets(LuceneReaders readers, FacetsCollector facetsCollector, FacetsConfig facetsConfig)
-    {
-        var facetCounts = new TaxonomyFacetCounts(new DocValuesOrdinalsReader(), readers.TaxonomyReader, facetsConfig, facetsCollector);
-
-        return facetsConfig.DimConfigs.Keys
-            .Select(fieldName => new RecipeSearchFacet
-            {
-                FieldName = fieldName,
-                Values = (facetCounts
-                    .GetTopChildren(int.MaxValue, fieldName)?
-                    .LabelValues ?? [])
-                    .Select(x => new RecipeSearchFacetValue
-                    {
-                        FieldValue = x.Label,
-                        Count = (int)x.Value
-                    })
-                    .ToList()
-            })
-            .ToList();
     }
 }

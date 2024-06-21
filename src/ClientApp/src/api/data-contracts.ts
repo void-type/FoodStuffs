@@ -109,11 +109,13 @@ export interface GetMealPlanResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  pantryIngredients?: GetMealPlanResponsePantryIngredient[];
+  pantryShoppingItems?: GetMealPlanResponsePantryShoppingItem[];
   recipes?: GetMealPlanResponseRecipe[];
 }
 
-export interface GetMealPlanResponsePantryIngredient {
+export interface GetMealPlanResponsePantryShoppingItem {
+  /** @format int32 */
+  id?: number;
   name?: string;
   /** @format decimal */
   quantity?: number;
@@ -123,18 +125,19 @@ export interface GetMealPlanResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string;
+  /** @format int32 */
+  order?: number;
   image?: string | null;
   categories?: string[];
-  ingredients?: GetMealPlanResponseRecipeIngredient[];
+  shoppingItems?: GetMealPlanResponseRecipeShoppingItem[];
 }
 
-export interface GetMealPlanResponseRecipeIngredient {
+export interface GetMealPlanResponseRecipeShoppingItem {
+  /** @format int32 */
+  id?: number;
   name?: string;
   /** @format decimal */
   quantity?: number;
-  /** @format int32 */
-  order?: number;
-  isCategory?: boolean;
 }
 
 export type EntityMessageOfInteger = UserMessage & {
@@ -146,25 +149,33 @@ export interface SaveMealPlanRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  recipeIds?: number[];
-  pantryIngredients?: SaveMealPlanRequestPantryIngredient[];
+  pantryShoppingItems?: SaveMealPlanRequestPantryShoppingItem[];
+  recipes?: SaveMealPlanRequestRecipe[];
 }
 
-export interface SaveMealPlanRequestPantryIngredient {
-  name?: string;
-  /** @format decimal */
+export interface SaveMealPlanRequestPantryShoppingItem {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
   quantity?: number;
 }
 
-export interface RecipeSearchResponse {
-  results?: IItemSetOfRecipeSearchResultItem;
-  facets?: RecipeSearchFacet[];
+export interface SaveMealPlanRequestRecipe {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
+  order?: number;
 }
 
-export interface IItemSetOfRecipeSearchResultItem {
+export interface SearchRecipesResponse {
+  results?: IItemSetOfSearchRecipesResultItem;
+  facets?: SearchFacet[];
+}
+
+export interface IItemSetOfSearchRecipesResultItem {
   /** @format int32 */
   count?: number;
-  items?: RecipeSearchResultItem[];
+  items?: SearchRecipesResultItem[];
   isPagingEnabled?: boolean;
   /** @format int32 */
   page?: number;
@@ -174,7 +185,7 @@ export interface IItemSetOfRecipeSearchResultItem {
   totalCount?: number;
 }
 
-export interface RecipeSearchResultItem {
+export interface SearchRecipesResultItem {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -183,25 +194,24 @@ export interface RecipeSearchResultItem {
   createdOn?: string;
   slug?: string;
   categories?: string[];
-  ingredients?: RecipeSearchResultItemIngredient[];
+  shoppingItems?: SearchRecipesResultItemShoppingItem[];
   image?: string | null;
 }
 
-export interface RecipeSearchResultItemIngredient {
+export interface SearchRecipesResultItemShoppingItem {
   name?: string;
-  /** @format decimal */
+  /** @format int32 */
   quantity?: number;
   /** @format int32 */
   order?: number;
-  isCategory?: boolean;
 }
 
-export interface RecipeSearchFacet {
+export interface SearchFacet {
   fieldName?: string;
-  values?: RecipeSearchFacetValue[];
+  values?: SearchFacetValue[];
 }
 
-export interface RecipeSearchFacetValue {
+export interface SearchFacetValue {
   fieldValue?: string;
   /** @format int32 */
   count?: number;
@@ -213,9 +223,10 @@ export interface GetRecipeResponse {
   name?: string;
   directions?: string;
   /** @format int32 */
-  cookTimeMinutes?: number | null;
-  /** @format int32 */
   prepTimeMinutes?: number | null;
+  /** @format int32 */
+  cookTimeMinutes?: number | null;
+  isForMealPlanning?: boolean;
   createdBy?: string;
   /** @format date-time */
   createdOn?: string;
@@ -223,11 +234,12 @@ export interface GetRecipeResponse {
   /** @format date-time */
   modifiedOn?: string;
   slug?: string;
+  defaultImage?: string | null;
   pinnedImage?: string | null;
-  isForMealPlanning?: boolean;
-  categories?: string[];
   images?: string[];
+  categories?: string[];
   ingredients?: GetRecipeResponseIngredient[];
+  shoppingItems?: GetRecipeResponseShoppingItem[];
 }
 
 export interface GetRecipeResponseIngredient {
@@ -237,6 +249,16 @@ export interface GetRecipeResponseIngredient {
   /** @format int32 */
   order?: number;
   isCategory?: boolean;
+}
+
+export interface GetRecipeResponseShoppingItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format decimal */
+  quantity?: number;
+  /** @format int32 */
+  order?: number;
 }
 
 export interface SaveRecipeRequest {
@@ -250,6 +272,7 @@ export interface SaveRecipeRequest {
   prepTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
   ingredients?: SaveRecipeRequestIngredient[];
+  shoppingItems?: SaveRecipeRequestShoppingItem[];
   categories?: string[];
 }
 
@@ -262,7 +285,16 @@ export interface SaveRecipeRequestIngredient {
   isCategory?: boolean;
 }
 
-export interface CategoriesSearchParams {
+export interface SaveRecipeRequestShoppingItem {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
+  quantity?: number;
+  /** @format int32 */
+  order?: number;
+}
+
+export interface CategoriesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /**
@@ -292,9 +324,7 @@ export interface ImagesUploadParams {
   recipeId?: number;
 }
 
-export interface MealPlansSearchParams {
-  /** Name contains (case-insensitive) */
-  name?: string | null;
+export interface MealPlansListParams {
   /**
    * False for all results
    * @default true

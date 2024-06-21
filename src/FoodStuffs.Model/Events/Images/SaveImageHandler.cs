@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.ImageCompression;
-using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VoidCore.Model.Functional;

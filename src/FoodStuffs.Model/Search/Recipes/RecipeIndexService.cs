@@ -8,19 +8,19 @@ using Microsoft.Extensions.Logging;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
-using C = FoodStuffs.Model.Search.RecipeSearchConstants;
+using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Recipes;
 
 public class RecipeIndexService : IRecipeIndexService
 {
     private const int BATCH_SIZE = 100;
 
     private readonly ILogger<RecipeIndexService> _logger;
-    private readonly RecipeSearchSettings _settings;
+    private readonly SearchSettings _settings;
     private readonly FoodStuffsContext _data;
 
-    public RecipeIndexService(ILogger<RecipeIndexService> logger, RecipeSearchSettings settings, FoodStuffsContext data)
+    public RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettings settings, FoodStuffsContext data)
     {
         _logger = logger;
         _settings = settings;
@@ -50,12 +50,12 @@ public class RecipeIndexService : IRecipeIndexService
 
     public void AddOrUpdate(Recipe recipe)
     {
-        using var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE_OR_APPEND);
+        using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
         // Ensure index
         writers.IndexWriter.Commit();
         writers.TaxonomyWriter.Commit();
 
-        var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelpers.RecipeFacetsConfig();
 
         var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
 
@@ -76,9 +76,9 @@ public class RecipeIndexService : IRecipeIndexService
     {
         _logger.LogInformation("Starting rebuild of recipe search index.");
 
-        using var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE);
+        using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
 
-        var facetsConfig = RecipeSearchMappers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelpers.RecipeFacetsConfig();
 
         var page = 1;
         var numIndexed = 0;
@@ -116,7 +116,7 @@ public class RecipeIndexService : IRecipeIndexService
 
     public void Remove(int recipeId)
     {
-        using var writers = new LuceneWriters(_settings, C.LUCENE_VERSION, OpenMode.CREATE_OR_APPEND);
+        using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
         // Ensure index
         writers.IndexWriter.Commit();
         writers.TaxonomyWriter.Commit();
@@ -128,7 +128,7 @@ public class RecipeIndexService : IRecipeIndexService
 
     private bool ExistsInIndex(int recipeId)
     {
-        using var readers = new LuceneReaders(_settings);
+        using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
 
         var query = new TermQuery(new Term(C.FIELD_ID, recipeId.ToString()));
         var topDocs = readers.IndexSearcher.Search(query, 1);

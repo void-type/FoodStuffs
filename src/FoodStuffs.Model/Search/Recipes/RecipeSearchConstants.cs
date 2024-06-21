@@ -1,15 +1,10 @@
 ﻿using FoodStuffs.Model.Data.Models;
-using Lucene.Net.Util;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Recipes;
 
 public static class RecipeSearchConstants
 {
-    public const LuceneVersion LUCENE_VERSION = LuceneVersion.LUCENE_48;
-
-    private const string JSON_SUFFIX = "_JSON";
-
-    public const int MAX_RESULTS = 1000;
+    public const string INDEX_NAME = "Recipe";
 
     public const string FIELD_ID = nameof(Recipe.Id);
     public const string FIELD_NAME = nameof(Recipe.Name);
@@ -18,6 +13,6 @@ public static class RecipeSearchConstants
     public const string FIELD_CATEGORY_NAMES = nameof(Category) + "_" + nameof(Category.Name) + "s";
     public const string FIELD_CATEGORY_IDS = nameof(Category) + "_" + nameof(Category.Id) + "s";
     public const string FIELD_IMAGE = nameof(Recipe.DefaultImage);
-    public const string FIELD_MEAL_SHOPPING_ITEMS_JSON = nameof(RecipeShoppingItemRelation.ShoppingItem) + JSON_SUFFIX;
+    public const string FIELD_MEAL_SHOPPING_ITEMS_JSON = nameof(RecipeShoppingItemRelation.ShoppingItem) + "_JSON";
     public const string FIELD_SLUG = nameof(Recipe.Slug);
 }

@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
-using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search.Recipes.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -28,12 +29,12 @@ public class RecipesController : ControllerBase
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
-    [ProducesResponseType(typeof(RecipeSearchResponse), 200)]
+    [ProducesResponseType(typeof(SearchRecipesResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public Task<IActionResult> Search([FromServices] SearchRecipesPipeline searchPipeline, string? name = null, int[]? categories = null,
         bool? isForMealPlanning = null, string? sortBy = null, string? randomSortSeed = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
-        var request = new RecipeSearchRequest(
+        var request = new SearchRecipesRequest(
             NameSearch: name,
             CategoryIds: categories,
             IsForMealPlanning: isForMealPlanning,

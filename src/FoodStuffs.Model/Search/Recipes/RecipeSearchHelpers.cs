@@ -1,16 +1,16 @@
 ﻿using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Search.Recipes.Models;
 using Lucene.Net.Documents;
 using Lucene.Net.Documents.Extensions;
 using Lucene.Net.Facet;
 using Lucene.Net.Util;
-using System.Globalization;
 using System.Text.Json;
 using VoidCore.Model.Functional;
-using C = FoodStuffs.Model.Search.RecipeSearchConstants;
+using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Recipes;
 
-public static class RecipeSearchMappers
+public static class RecipeSearchHelpers
 {
     public static Document ToDocument(this Recipe recipe)
     {
@@ -53,7 +53,7 @@ public static class RecipeSearchMappers
         }
 
         var shoppingItems = recipe.ShoppingItemRelations
-            .Select(x => new RecipeSearchResultItemShoppingItem(
+            .Select(x => new SearchRecipesResultItemShoppingItem(
                 Name: x.ShoppingItem.Name,
                 Quantity: x.Quantity,
                 Order: x.Order
@@ -73,9 +73,9 @@ public static class RecipeSearchMappers
         return doc;
     }
 
-    public static RecipeSearchResultItem ToRecipeSearchResultItem(this Document doc)
+    public static SearchRecipesResultItem ToRecipeSearchResultItem(this Document doc)
     {
-        return new RecipeSearchResultItem
+        return new SearchRecipesResultItem
         (
             Id: int.Parse(doc.Get(C.FIELD_ID)),
             Name: doc.Get(C.FIELD_NAME),
@@ -86,7 +86,7 @@ public static class RecipeSearchMappers
                 .OrderBy(n => n)
                 .ToList(),
             ShoppingItems: doc.Get(C.FIELD_MEAL_SHOPPING_ITEMS_JSON)
-                .Map(x => JsonSerializer.Deserialize<List<RecipeSearchResultItemShoppingItem>>(x) ?? []),
+                .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemShoppingItem>>(x) ?? []),
             Image: doc.Get(C.FIELD_IMAGE)
         );
     }
@@ -99,22 +99,5 @@ public static class RecipeSearchMappers
         facetConfig.SetMultiValued(C.FIELD_CATEGORY_IDS, true);
 
         return facetConfig;
-    }
-
-    /// <summary>
-    /// Convert a string field to a DateTime, or return null if the field is empty.
-    /// DateTimes should be stored using .ToString("o") to ensure they are stored in a sortable and parsable format.
-    /// </summary>
-    public static DateTime? GetStringFieldAsDateTimeOrNull(this Document doc, string fieldName)
-    {
-        var value = doc.Get(fieldName);
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return null;
-        }
-
-        // This should yield the same DateTime (date, time and kind) that was originally stored and won't be affected by parser's timezone.
-        return DateTime.ParseExact(value, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
     }
 }

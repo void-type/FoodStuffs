@@ -1,6 +1,6 @@
 ﻿using FoodStuffs.Model.Data.Models;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Recipes;
 
 public interface IRecipeIndexService
 {

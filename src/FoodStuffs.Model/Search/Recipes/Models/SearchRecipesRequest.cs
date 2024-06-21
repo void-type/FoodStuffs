@@ -1,8 +1,8 @@
 ﻿using VoidCore.Model.Responses.Collections;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Recipes.Models;
 
-public record RecipeSearchRequest(
+public record SearchRecipesRequest(
     string? NameSearch,
     int[]? CategoryIds,
     bool? IsForMealPlanning,

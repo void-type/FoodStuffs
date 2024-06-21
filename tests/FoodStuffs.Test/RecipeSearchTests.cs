@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
-using FoodStuffs.Model.Search;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using VoidCore.Model.Time;
