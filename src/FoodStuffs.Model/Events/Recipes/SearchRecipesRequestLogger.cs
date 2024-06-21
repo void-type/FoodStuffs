@@ -10,11 +10,12 @@ public class SearchRecipesRequestLogger : RequestLoggerAbstract<RecipeSearchRequ
 
     public override void Log(RecipeSearchRequest request)
     {
-        Logger.LogInformation("Requested. NameSearch: {NameSearch} RequestCategoryIds: {CategoryIds} RequestIsForMealPlanning: {IsForMealPlanning} RequestSort: {SortBy} RequestIsPagingEnabled: {IsPagingEnabled} RequestPage: {Page} RequestTake: {Take}",
+        Logger.LogInformation("Requested. NameSearch: {NameSearch} CategoryIds: {CategoryIds} IsForMealPlanning: {IsForMealPlanning} SortBy: {SortBy} RandomSortSeed: {RandomSortSeed} IsPagingEnabled: {IsPagingEnabled} Page: {Page} Take: {Take}",
             request.NameSearch,
             string.Join(",", request.CategoryIds ?? Enumerable.Empty<int>()),
             request.IsForMealPlanning,
             request.SortBy,
+            request.RandomSortSeed,
             request.IsPagingEnabled,
             request.Page,
             request.Take);

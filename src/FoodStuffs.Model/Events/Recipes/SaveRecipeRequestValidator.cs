@@ -21,5 +21,8 @@ public class SaveRecipeRequestValidator : RuleValidatorAbstract<SaveRecipeReques
 
         CreateRule(new Failure("Prep time must be positive.", "prepTimeMinutes"))
             .InvalidWhen(entity => entity.PrepTimeMinutes < 0);
+
+        CreateRule(new Failure("Category names must be no greater than 450 characters.", "categories"))
+            .InvalidWhen(entity => entity.Categories.Exists(x => x.Length > 450));
     }
 }

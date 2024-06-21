@@ -91,7 +91,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         recipe.Categories.AddRange(existingCategories);
 
-        // Create missing categories.
+        // Create missing categories that don't exist.
         var createdCategories = missingNames
             .Where(x => !recipe.Categories.Select(x => x.Name).Contains(x))
             .Select(x => new Category { Name = x });
@@ -112,7 +112,6 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
     private static void ManageIngredients(SaveRecipeRequest request, Recipe recipe)
     {
-        // TODO: this would be great as a JSON field to clear and rebuild every time. If keeping a table, perhaps a lighter touch?
         recipe.Ingredients.Clear();
 
         var ingredientsToAdd = request.Ingredients
@@ -136,9 +135,10 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         // Remove extra items.
         recipe.ShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
 
-        // Add missing items. We'll let the database throw when ID's don't exist.
+        // Relate missing items.
         var missingItemIds = requestedItemIds
-            .Where(x => !recipe.ShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x));
+            .Where(x => !recipe.ShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x))
+            .ToList();
 
         var specification = new ShoppingItemsSpecification(missingItemIds);
 
@@ -147,32 +147,20 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);
 
-        // TODO: left off here. We need to think about shopping item creation story.
-        var itemsToCreate = request.ShoppingItems
-            .Where(requestedItems =>
+        var missingItemRelations = missingItems
+            .Select(item =>
             {
-                requestedItemIds
-            })
+                var requestedItem = request.ShoppingItems
+                    .Find(req => req.Id == item.Id);
 
-
-             missingItemIds
-            .Where(requestId => missingItems.Select(dbItem => dbItem.Id).Contains(requestId));
-
-
-
-        recipe.ShoppingItemRelations
-            .AddRange(missingItems
-                .Select(item =>
+                return new RecipeShoppingItemRelation
                 {
-                    var requestedItem = request.ShoppingItems
-                        .Find(req => req.Id == item.Id);
+                    ShoppingItem = item,
+                    Quantity = requestedItem?.Quantity ?? int.MinValue,
+                    Order = requestedItem?.Order ?? int.MaxValue,
+                };
+            });
 
-                    return new RecipeShoppingItemRelation
-                    {
-                        ShoppingItem = item,
-                        Quantity = requestedItem?.Quantity ?? int.MinValue,
-                        Order = requestedItem?.Order ?? int.MaxValue,
-                    };
-                }));
+        recipe.ShoppingItemRelations.AddRange(missingItemRelations);
     }
 }

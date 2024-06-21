@@ -31,6 +31,9 @@ public class FoodStuffsContext : DbContext
         modelBuilder.Entity<Category>(entity =>
         {
             entity.ToTable(nameof(Category));
+
+            entity.HasIndex(si => si.Name)
+                .IsUnique();
         });
 
         modelBuilder.Entity<Image>(entity =>
@@ -46,6 +49,9 @@ public class FoodStuffsContext : DbContext
             entity.OwnsOne(i => i.ImageBlob)
                 .ToTable(nameof(ImageBlob))
                 .WithOwner();
+
+            entity.Navigation(i => i.ImageBlob)
+                .AutoInclude(false);
         });
 
         modelBuilder.Entity<MealPlan>(entity =>
@@ -104,8 +110,7 @@ public class FoodStuffsContext : DbContext
 
             entity.OwnsMany(r => r.Ingredients, rel =>
             {
-                rel.ToTable(nameof(RecipeIngredient));
-                rel.WithOwner();
+                rel.ToJson();
 
                 rel.Property(d => d.Quantity)
                     .HasPrecision(18, 2);
@@ -134,6 +139,9 @@ public class FoodStuffsContext : DbContext
             entity.HasMany(si => si.Recipes)
                 .WithMany()
                 .UsingEntity<RecipeShoppingItemRelation>();
+
+            entity.HasIndex(si => si.Name)
+                .IsUnique();
         });
     }
 

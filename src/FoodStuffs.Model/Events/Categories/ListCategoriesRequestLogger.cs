@@ -9,7 +9,7 @@ public class ListCategoriesRequestLogger : RequestLoggerAbstract<ListCategoriesR
 
     public override void Log(ListCategoriesRequest request)
     {
-        Logger.LogInformation("Requested. NameSearch: {NameSearch} RequestIsPagingEnabled: {IsPagingEnabled} RequestPage: {Page} RequestTake: {Take}",
+        Logger.LogInformation("Requested. NameSearch: {NameSearch} IsPagingEnabled: {IsPagingEnabled} Page: {Page} Take: {Take}",
             request.NameSearch,
             request.IsPagingEnabled,
             request.Page,

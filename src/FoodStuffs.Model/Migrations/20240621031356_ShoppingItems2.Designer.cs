@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodStuffs.Model.Migrations
 {
     [DbContext(typeof(FoodStuffsContext))]
-    [Migration("20240619035814_ShoppingItems3")]
-    partial class ShoppingItems3
+    [Migration("20240621031356_ShoppingItems2")]
+    partial class ShoppingItems2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,9 +49,12 @@ namespace FoodStuffs.Model.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Category", (string)null);
                 });
@@ -258,9 +261,12 @@ namespace FoodStuffs.Model.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("ShoppingItem", (string)null);
                 });
@@ -360,8 +366,6 @@ namespace FoodStuffs.Model.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int");
 
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
                             b1.Property<bool>("IsCategory")
                                 .HasColumnType("bit");
 
@@ -378,7 +382,9 @@ namespace FoodStuffs.Model.Migrations
 
                             b1.HasKey("RecipeId", "Id");
 
-                            b1.ToTable("RecipeIngredient", (string)null);
+                            b1.ToTable("Recipe");
+
+                            b1.ToJson("Ingredients");
 
                             b1.WithOwner()
                                 .HasForeignKey("RecipeId");

@@ -46,9 +46,12 @@ namespace FoodStuffs.Model.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Category", (string)null);
                 });
@@ -255,9 +258,12 @@ namespace FoodStuffs.Model.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("ShoppingItem", (string)null);
                 });
@@ -274,7 +280,7 @@ namespace FoodStuffs.Model.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("RecipeCategoryRelation", (string)null);
+                    b.ToTable("RecipeCategoryRelation");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
@@ -285,7 +291,7 @@ namespace FoodStuffs.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("FoodStuffs.Model.Data.Models.Image.ImageBlob#FoodStuffs.Model.Data.Models.ImageBlob", "ImageBlob", b1 =>
+                    b.OwnsOne("FoodStuffs.Model.Data.Models.ImageBlob", "ImageBlob", b1 =>
                         {
                             b1.Property<int>("ImageId")
                                 .HasColumnType("int");
@@ -348,7 +354,7 @@ namespace FoodStuffs.Model.Migrations
                         .WithMany()
                         .HasForeignKey("PinnedImageId");
 
-                    b.OwnsMany("FoodStuffs.Model.Data.Models.Recipe.Ingredients#FoodStuffs.Model.Data.Models.RecipeIngredient", "Ingredients", b1 =>
+                    b.OwnsMany("FoodStuffs.Model.Data.Models.RecipeIngredient", "Ingredients", b1 =>
                         {
                             b1.Property<int>("RecipeId")
                                 .HasColumnType("int");
@@ -356,8 +362,6 @@ namespace FoodStuffs.Model.Migrations
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
 
                             b1.Property<bool>("IsCategory")
                                 .HasColumnType("bit");
@@ -375,7 +379,9 @@ namespace FoodStuffs.Model.Migrations
 
                             b1.HasKey("RecipeId", "Id");
 
-                            b1.ToTable("RecipeIngredient", (string)null);
+                            b1.ToTable("Recipe");
+
+                            b1.ToJson("Ingredients");
 
                             b1.WithOwner()
                                 .HasForeignKey("RecipeId");

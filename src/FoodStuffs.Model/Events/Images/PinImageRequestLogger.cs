@@ -9,7 +9,7 @@ public class PinImageRequestLogger : RequestLoggerAbstract<PinImageRequest>
 
     public override void Log(PinImageRequest request)
     {
-        Logger.LogInformation("Requested. Image: {ImageName}",
+        Logger.LogInformation("Requested. Name: {ImageName}",
             request.Name);
     }
 }

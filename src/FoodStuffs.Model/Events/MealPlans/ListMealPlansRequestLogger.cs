@@ -9,7 +9,7 @@ public class ListMealPlansRequestLogger : RequestLoggerAbstract<ListMealPlansReq
 
     public override void Log(ListMealPlansRequest request)
     {
-        Logger.LogInformation("Requested. RequestIsPagingEnabled: {IsPagingEnabled} RequestPage: {Page} RequestTake: {Take}",
+        Logger.LogInformation("Requested. IsPagingEnabled: {IsPagingEnabled} Page: {Page} Take: {Take}",
             request.IsPagingEnabled,
             request.Page,
             request.Take);
