@@ -116,9 +116,9 @@ export class HttpClient<SecurityDataType = unknown> {
         : input,
     [ContentType.Text]: (input: any) =>
       input !== null && typeof input !== 'string' ? JSON.stringify(input) : input,
-    [ContentType.FormData]: (input: any) =>
-      Object.keys(input || {}).reduce((formData, key) => {
-        const property = input[key];
+    [ContentType.FormData]: (input: FormData) =>
+      (Array.from(input.keys()) || []).reduce((formData, key) => {
+        const property = input.get(key);
         formData.append(
           key,
           property instanceof Blob
@@ -201,7 +201,7 @@ export class HttpClient<SecurityDataType = unknown> {
         body: typeof body === 'undefined' || body === null ? null : payloadFormatter(body),
       }
     ).then(async (response) => {
-      const r = response as HttpResponse<T, E>;
+      const r = response.clone() as HttpResponse<T, E>;
       r.data = null as unknown as T;
       r.error = null as unknown as E;
 
