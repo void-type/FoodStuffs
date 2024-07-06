@@ -41,12 +41,13 @@ try
     services.AddControllers();
     services.AddSpaSecurityServices(env);
     services.AddApiExceptionFilter();
+    services.AddSwagger(env);
 
     // Authorization
+    services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
 
     // Dependencies
     services.AddHttpContextAccessor();
-    services.AddSingleton<ICurrentUserAccessor, SingleUserAccessor>();
     services.AddSingleton<IDateTimeService, NowDateTimeService>();
     services.AddSingleton<IImageCompressionService, ImageCompressionService>();
 
@@ -57,14 +58,13 @@ try
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();
 
-    services.AddSwagger(env);
-
     // Auto-register Domain Events
     services.AddDomainEvents(
         ServiceLifetime.Scoped,
         typeof(GetWebClientInfo).Assembly,
         typeof(SearchRecipesHandler).Assembly);
 
+    // Workers and background services
     services.AddHostedService<EnsureIndexHostedService>();
 
     var app = builder.Build();

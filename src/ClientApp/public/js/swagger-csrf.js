@@ -3,4 +3,5 @@ async function fetchAppInfo() {
   const data = await response.json();
   window.vt_api_csrf_token = data.antiforgeryToken;
 }
+
 fetchAppInfo();

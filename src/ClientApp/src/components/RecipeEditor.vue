@@ -174,7 +174,7 @@ onMounted(() => {
       </div>
       <div class="g-col-12 g-col-md-6">
         <div>
-          <label for="name" class="form-label">Name *</label>
+          <label for="name" class="form-label">Name*</label>
           <input
             id="name"
             v-model="data.workingRecipe.name"
