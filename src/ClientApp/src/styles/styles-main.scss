@@ -130,12 +130,6 @@ a.btn,
   column-gap: 0;
 }
 
-.position-absolute {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 html[data-bs-theme='dark'] {
   --bs-body-bg: #{$dark};
 

@@ -46,7 +46,7 @@ function flipCard() {
               width="1600"
               height="1200"
             />
-            <ImagePlaceholder v-else class="img-fluid rounded-bottom position-absolute" />
+            <ImagePlaceholder v-else class="img-fluid rounded-bottom position-absolute top-0 left-0" />
           </div>
         </div>
         <div class="card-flip-back p-3 d-none">

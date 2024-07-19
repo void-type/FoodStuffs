@@ -9,7 +9,7 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// Application metadata.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/app")]
-public class ApplicationController : ControllerBase
+public class AppController : ControllerBase
 {
     /// <summary>
     /// Get information to bootstrap the SPA client like application name and user data.
