@@ -1,4 +1,4 @@
-import type { MealPlansSearchParams } from '@/api/data-contracts';
+import type { MealPlansListParams } from '@/api/data-contracts';
 import SearchMealPlansRequest from './SearchMealPlansRequest';
 
 const settingsKeyCurrentMealPlanId = 'currentMealPlanId';
@@ -14,7 +14,7 @@ export default class RecipeStoreHelpers {
     localStorage.setItem(settingsKeyCurrentMealPlanId, JSON.stringify(currentMealPlanId));
   }
 
-  static listRequestToQueryParams(listRequest: MealPlansSearchParams) {
+  static listRequestToQueryParams(listRequest: MealPlansListParams) {
     // Query params need to be string or number
     const requestEntries = Object.entries({
       ...listRequest,

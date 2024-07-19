@@ -39,14 +39,14 @@ const resultCountText = computed(() => {
 
   // If NaN or less than 0.
   if (!(totalCount > 0)) {
-    return 'No results';
+    return 'Found no recipes.';
   }
 
   const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
   const start = base + 1;
   const end = base + (itemSet.count || 0);
 
-  return `Showing ${start}-${end} of ${totalCount} results.`;
+  return `Showing ${start}-${end} of ${totalCount} recipes.`;
 });
 
 function navigateSearch() {

@@ -1,8 +1,8 @@
 import type {
   GetMealPlanResponse,
-  GetMealPlanResponsePantryIngredient,
+  GetMealPlanResponsePantryShoppingItem,
   IItemSetOfListMealPlansResponse,
-  MealPlansSearchParams,
+  MealPlansListParams,
   SaveMealPlanRequest,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
@@ -22,7 +22,7 @@ import {
 
 interface MealPlanStoreState {
   listResponse: IItemSetOfListMealPlansResponse;
-  listRequest: MealPlansSearchParams;
+  listRequest: MealPlansListParams;
   currentMealPlan: GetMealPlanResponse;
 }
 
@@ -43,7 +43,7 @@ export default defineStore('mealPlan', {
   }),
 
   getters: {
-    currentPantry: (state) => state.currentMealPlan.pantryIngredients || [],
+    currentPantry: (state) => state.currentMealPlan.pantryShoppingItems || [],
 
     currentRecipes: (state) => state.currentMealPlan.recipes || [],
 
@@ -55,13 +55,12 @@ export default defineStore('mealPlan', {
       return (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId!);
     },
 
-    currentShoppingList(state): GetMealPlanResponsePantryIngredient[] {
+    currentShoppingList(state): GetMealPlanResponsePantryShoppingItem[] {
       const ingredientCounts = this.currentRecipes
-        .flatMap((c) => c.ingredients || [])
-        .filter((c) => !c.isCategory)
+        .flatMap((c) => c.shoppingItems || [])
         .reduce(countIngredients, []);
 
-      (state.currentMealPlan.pantryIngredients || []).forEach((x) => {
+      (state.currentMealPlan.pantryShoppingItems || []).forEach((x) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         subtractIngredient(ingredientCounts, x.name!, x.quantity);
       });
@@ -82,7 +81,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      this.currentMealPlan.pantryIngredients = [];
+      this.currentMealPlan.pantryShoppingItems = [];
       await this.saveCurrentMealPlan();
     },
 
@@ -91,7 +90,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      addIngredient(this.currentMealPlan.pantryIngredients || [], ingredient, count);
+      addIngredient(this.currentMealPlan.pantryShoppingItems || [], ingredient, count);
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -100,7 +99,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      subtractIngredient(this.currentMealPlan.pantryIngredients || [], ingredient, count);
+      subtractIngredient(this.currentMealPlan.pantryShoppingItems || [], ingredient, count);
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -177,13 +176,29 @@ export default defineStore('mealPlan', {
         id: current.id,
         name: current.name,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        recipeIds: this.currentRecipes.map((x) => x.id!).filter((x) => !isNil(x)),
-        pantryIngredients: current.pantryIngredients,
+        recipes: this.currentRecipes
+          .map((x) => x.id!)
+          .filter((x) => !isNil(x))
+          .map((id, order) => ({
+            id,
+            order,
+          })),
+        pantryShoppingItems: current.pantryShoppingItems,
       };
 
       if (additionalRecipeIds && additionalRecipeIds.length > 0) {
         additionalRecipeIds.forEach((additionalId) => {
-          request.recipeIds?.push(additionalId);
+          if (typeof request.recipes === 'undefined') {
+            return;
+          }
+
+          const lastIndex = (request.recipes.length || 0) - 1;
+          const lastOrder = request.recipes[lastIndex].order || 0;
+
+          request.recipes?.push({
+            id: additionalId,
+            order: lastOrder + 1,
+          });
         });
       }
 
@@ -228,7 +243,7 @@ export default defineStore('mealPlan', {
 
     async fetchMealPlanList() {
       try {
-        const response = await api().mealPlansSearch(this.listRequest);
+        const response = await api().mealPlansList(this.listRequest);
         this.listResponse = response.data;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);

@@ -2,12 +2,12 @@
 import ApiHelpers from '@/models/ApiHelpers';
 import { ref, onMounted } from 'vue';
 import useMessageStore from '@/stores/messageStore';
-import { type ListCategoriesResponse, type RecipeSearchFacetValue } from '@/api/data-contracts';
+import { type ListCategoriesResponse, type SearchFacetValue } from '@/api/data-contracts';
 import { toNumberOrNull } from '@/models/FormatHelpers';
 
 const props = defineProps({
   facetValues: {
-    type: Array<RecipeSearchFacetValue>,
+    type: Array<SearchFacetValue>,
     required: false,
     default: [],
   },
@@ -43,7 +43,7 @@ function getFacetCount(facetValue: number | null | undefined) {
 
 onMounted(() => {
   api()
-    .categoriesSearch({ isPagingEnabled: false })
+    .categoriesList({ isPagingEnabled: false })
     .then((response) => {
       categoryOptions.value = response.data.items || [];
     })

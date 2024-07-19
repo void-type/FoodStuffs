@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import type { RecipeSearchResultItem } from '@/api/data-contracts';
+import type { SearchRecipesResultItem } from '@/api/data-contracts';
 import RouterHelpers from '@/models/RouterHelpers';
 
 defineProps({
   recipes: {
-    type: Object as PropType<Array<RecipeSearchResultItem>>,
+    type: Object as PropType<Array<SearchRecipesResultItem>>,
     required: true,
   },
   title: {
@@ -34,7 +34,7 @@ defineProps({
       >
         {{ recipe.name }}
       </router-link>
-      <div v-if="recipes.length < 1" class="list-group-item p-4 text-center">No results</div>
+      <div v-if="recipes.length < 1" class="list-group-item p-4 text-center">No results.</div>
     </div>
   </div>
 </template>

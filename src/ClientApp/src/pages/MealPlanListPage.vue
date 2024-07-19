@@ -44,14 +44,14 @@ const resultCountText = computed(() => {
 
   // If NaN or less than 0.
   if (!(totalCount > 0)) {
-    return 'No results';
+    return 'Found no meal plans.';
   }
 
   const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
   const start = base + 1;
   const end = base + (itemSet.count || 0);
 
-  return `Showing ${start}-${end} of ${totalCount} results.`;
+  return `Showing ${start}-${end} of ${totalCount} meal plans.`;
 });
 
 function navigateSearch() {
@@ -120,7 +120,10 @@ watch(
     <h1 class="mt-4">Meal Plans</h1>
     <div>
       <div class="mt-4">{{ resultCountText }}</div>
-      <table :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }">
+      <table
+        v-if="(listResponse.items?.length || 0) > 0"
+        :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }"
+      >
         <thead>
           <tr>
             <th>Name</th>
@@ -147,7 +150,6 @@ watch(
           </tr>
         </tbody>
       </table>
-      <div v-if="(listResponse.items || []).length < 1" class="text-center">No meal plans.</div>
     </div>
     <EntityTablePager
       v-if="(listResponse.items?.length || 0) > 0"

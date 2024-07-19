@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { RecipeSearchResultItem } from '@/api/data-contracts';
+import type { SearchRecipesResultItem } from '@/api/data-contracts';
 import { computed, type PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -8,7 +8,7 @@ import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 
 const props = defineProps({
-  recipe: { type: Object as PropType<RecipeSearchResultItem>, required: true },
+  recipe: { type: Object as PropType<SearchRecipesResultItem>, required: true },
   imgLazy: { type: Boolean, required: false, default: false },
 });
 
@@ -46,7 +46,10 @@ function flipCard() {
               width="1600"
               height="1200"
             />
-            <ImagePlaceholder v-else class="img-fluid rounded-bottom position-absolute top-0 left-0" />
+            <ImagePlaceholder
+              v-else
+              class="img-fluid rounded-bottom position-absolute top-0 left-0"
+            />
           </div>
         </div>
         <div class="card-flip-back p-3 d-none">
@@ -62,13 +65,10 @@ function flipCard() {
               >
               <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
             </div>
-            <div v-if="recipe.ingredients?.some((x) => x.isCategory === false)" class="mt-3">
+            <div v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3">
               <div>Ingredients</div>
               <ul>
-                <li
-                  v-for="ingredient in recipe.ingredients?.filter((x) => x.isCategory === false)"
-                  :key="ingredient.name || ''"
-                >
+                <li v-for="ingredient in recipe.shoppingItems" :key="ingredient.name || ''">
                   {{ ingredient.quantity }}x {{ ingredient.name }}
                 </li>
               </ul>

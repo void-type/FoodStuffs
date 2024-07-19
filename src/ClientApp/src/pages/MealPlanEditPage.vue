@@ -2,10 +2,10 @@
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import MealsIngredientList from '@/components/MealsIngredientList.vue';
 import type { ModalParameters } from '@/models/ModalParameters';
 import useAppStore from '@/stores/appStore';
 import RecipeCard from '@/components/RecipeCard.vue';
+import MealsIngredientList from '@/components/MealsIngredientList.vue';
 
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();

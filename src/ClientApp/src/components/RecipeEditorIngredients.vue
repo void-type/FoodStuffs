@@ -32,7 +32,7 @@ function showInAccordion(index: number, focus: boolean = false) {
   const ingredient = data.ingredients[safeIndex];
 
   if (ingredient) {
-    const elementId = `#ingredient-${ingredient.id}`;
+    const elementId = `#ingredient-${ingredient.uiKey}`;
     nextTick(() => {
       Collapse.getOrCreateInstance(`${elementId}-accordion-collapse`, { toggle: false }).show();
 
@@ -64,7 +64,7 @@ function onNewClick() {
 function onDeleteClick(id: string) {
   const ingredients = copy(data.ingredients);
 
-  const index = ingredients.findIndex((x) => x.id === id);
+  const index = ingredients.findIndex((x) => x.uiKey === id);
   ingredients.splice(index, 1);
 
   data.ingredients = ingredients;
@@ -118,15 +118,15 @@ watch(data, (newValue) => {
     handle=".sort-handle"
     class="accordion"
   >
-    <div v-for="ing in data.ingredients" :key="ing.id" class="accordion-item">
-      <div :id="`ingredient-${ing.id}-accordion-header`" class="h2 accordion-header">
+    <div v-for="ing in data.ingredients" :key="ing.uiKey" class="accordion-item">
+      <div :id="`ingredient-${ing.uiKey}-accordion-header`" class="h2 accordion-header">
         <button
           class="accordion-button collapsed"
           type="button"
           data-bs-toggle="collapse"
-          :data-bs-target="`#ingredient-${ing.id}-accordion-collapse`"
+          :data-bs-target="`#ingredient-${ing.uiKey}-accordion-collapse`"
           aria-expanded="false"
-          :aria-controls="`ingredient-${ing.id}-accordion-collapse`"
+          :aria-controls="`ingredient-${ing.uiKey}-accordion-collapse`"
         >
           <span class="pe-3 sort-handle">
             <div class="visually-hidden">Drag to sort</div>
@@ -137,16 +137,16 @@ watch(data, (newValue) => {
         </button>
       </div>
       <div
-        :id="`ingredient-${ing.id}-accordion-collapse`"
+        :id="`ingredient-${ing.uiKey}-accordion-collapse`"
         class="accordion-collapse collapse"
-        :aria-labelledby="`ingredient-${ing.id}-accordion-header`"
+        :aria-labelledby="`ingredient-${ing.uiKey}-accordion-header`"
         data-bs-parent="#ingredient-list"
       >
         <div class="grid p-3 gap-sm">
           <div class="g-col-12 g-col-md-12">
-            <label :for="`ingredient-${ing.id}-name`" class="form-label">Name</label>
+            <label :for="`ingredient-${ing.uiKey}-name`" class="form-label">Name</label>
             <input
-              :id="`ingredient-${ing.id}-name`"
+              :id="`ingredient-${ing.uiKey}-name`"
               v-model="ing.name"
               required
               type="text"
@@ -158,9 +158,9 @@ watch(data, (newValue) => {
             />
           </div>
           <div v-if="!ing.isCategory" class="g-col-12 g-col-md-4">
-            <label :for="`ingredient-${ing.id}-quantity`" class="form-label">Quantity</label>
+            <label :for="`ingredient-${ing.uiKey}-quantity`" class="form-label">Quantity</label>
             <input
-              :id="`ingredient-${ing.id}-quantity`"
+              :id="`ingredient-${ing.uiKey}-quantity`"
               v-model="ing.quantity"
               required
               type="number"
@@ -174,13 +174,13 @@ watch(data, (newValue) => {
           <div class="g-col-12">
             <div class="form-check">
               <input
-                :id="`ingredient-${ing.id}-isCategory`"
+                :id="`ingredient-${ing.uiKey}-isCategory`"
                 v-model="ing.isCategory"
                 class="form-check-input"
                 type="checkbox"
                 :class="{ 'is-invalid': isFieldInError('ingredients') }"
               />
-              <label :for="`ingredient-${ing.id}-isCategory`" class="form-check-label"
+              <label :for="`ingredient-${ing.uiKey}-isCategory`" class="form-check-label"
                 >Is Category</label
               >
             </div>
@@ -189,7 +189,7 @@ watch(data, (newValue) => {
             <button
               type="button"
               class="btn btn-danger btn-sm d-inline ms-auto"
-              @click.stop.prevent="onDeleteClick(ing.id)"
+              @click.stop.prevent="onDeleteClick(ing.uiKey)"
             >
               Delete
             </button>

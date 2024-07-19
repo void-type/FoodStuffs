@@ -1,7 +1,7 @@
 import type {
   GetMealPlanResponse,
-  GetMealPlanResponsePantryIngredient,
-  GetRecipeResponse,
+  GetMealPlanResponsePantryShoppingItem,
+  GetMealPlanResponseRecipe,
 } from '@/api/data-contracts';
 import DateHelpers from '@/models/DateHelpers';
 
@@ -18,9 +18,9 @@ export default class GetMealPlanResponseClass implements GetMealPlanResponse {
 
   public modifiedOn = '';
 
-  public recipes: GetRecipeResponse[] = [];
+  public recipes: GetMealPlanResponseRecipe[] = [];
 
-  public pantryIngredients: GetMealPlanResponsePantryIngredient[] = [];
+  public pantryIngredients: GetMealPlanResponsePantryShoppingItem[] = [];
 
   public static createForStore() {
     const newPlan = new GetMealPlanResponseClass();

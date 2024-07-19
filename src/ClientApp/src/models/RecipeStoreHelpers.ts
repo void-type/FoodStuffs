@@ -1,5 +1,5 @@
 import type {
-  RecipeSearchResultItem,
+  SearchRecipesResultItem,
   GetRecipeResponse,
   RecipesSearchParams,
 } from '@/api/data-contracts';
@@ -12,10 +12,10 @@ export default class RecipeStoreHelpers {
   static getRecents() {
     return JSON.parse(
       localStorage.getItem(settingsKeyRecentRecipes) || '[]'
-    ) as RecipeSearchResultItem[];
+    ) as SearchRecipesResultItem[];
   }
 
-  static storeRecents(recentRecipes: Array<RecipeSearchResultItem>) {
+  static storeRecents(recentRecipes: Array<SearchRecipesResultItem>) {
     localStorage.setItem(settingsKeyRecentRecipes, JSON.stringify(recentRecipes));
   }
 

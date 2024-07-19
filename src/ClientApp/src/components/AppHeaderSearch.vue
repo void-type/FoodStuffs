@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineModel } from 'vue';
 import useRecipeStore from '@/stores/recipeStore';
 import router from '@/router';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';

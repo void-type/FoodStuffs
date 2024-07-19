@@ -73,7 +73,7 @@ public static class RecipeSearchHelpers
         return doc;
     }
 
-    public static SearchRecipesResultItem ToRecipeSearchResultItem(this Document doc)
+    public static SearchRecipesResultItem ToSearchRecipesResultItem(this Document doc)
     {
         return new SearchRecipesResultItem
         (

@@ -1,7 +1,7 @@
-import type { MealPlansSearchParams } from '@/api/data-contracts';
+import type { MealPlansListParams } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 
-export default class SearchMealPlansRequest implements MealPlansSearchParams {
+export default class SearchMealPlansRequest implements MealPlansListParams {
   public name = '';
 
   public isPagingEnabled = true;

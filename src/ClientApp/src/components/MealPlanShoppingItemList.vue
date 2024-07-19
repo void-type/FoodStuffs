@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { GetMealPlanResponsePantryIngredient } from '@/api/data-contracts';
+import type { GetMealPlanResponsePantryShoppingItem } from '@/api/data-contracts';
 import { reactive, type PropType } from 'vue';
 
 const props = defineProps({
   title: { type: String, required: true },
-  ingredients: { type: Array<GetMealPlanResponsePantryIngredient>, required: true },
+  shoppingItems: { type: Array<GetMealPlanResponsePantryShoppingItem>, required: true },
   onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
-  onIngredientClick: { type: Function, required: true },
+  onItemClick: { type: Function, required: true },
   showCopyList: { type: Boolean, required: false, default: false },
 });
 
@@ -24,7 +24,7 @@ function clear() {
 
 function copyList() {
   // This doesn't paste as multiple items from firefox (chrome works)
-  const text = props.ingredients.map((x) => `${x.quantity}x ${x.name}`).join(`\n`);
+  const text = props.shoppingItems.map((x) => `${x.quantity}x ${x.name}`).join(`\n`);
 
   navigator.clipboard.writeText(text);
   data.copyTooltipText = 'List copied!';
@@ -60,18 +60,18 @@ function copyList() {
       </h5>
       <ul class="list-group list-group-flush">
         <li
-          v-for="{ name: name, quantity } in ingredients"
+          v-for="{ name: name, quantity } in shoppingItems"
           :key="name!"
           tabindex="0"
           role="button"
           class="list-group-item card-hover"
-          @keydown.stop.prevent.enter="onIngredientClick(name)"
-          @click="onIngredientClick(name)"
+          @keydown.stop.prevent.enter="onItemClick(name)"
+          @click="onItemClick(name)"
         >
           {{ quantity }}x {{ name }}
         </li>
-        <li v-if="ingredients.length < 1" class="list-group-item p-4 text-center">
-          No ingredients
+        <li v-if="shoppingItems.length < 1" class="list-group-item p-4 text-center">
+          No shopping items.
         </li>
       </ul>
     </div>

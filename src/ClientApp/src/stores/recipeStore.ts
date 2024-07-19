@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
 import type {
   GetRecipeResponse,
-  RecipeSearchResultItem,
-  RecipeSearchResponse,
+  SearchRecipesResultItem,
+  SearchRecipesResponse,
   RecipesSearchParams,
-  IItemSetOfRecipeSearchResultItem,
-  RecipeSearchFacet,
+  IItemSetOfSearchRecipesResultItem,
+  SearchFacet,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 import SearchRecipesRequest from '@/models/SearchRecipesRequest';
@@ -14,11 +14,11 @@ import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 const recentLimit = 7;
 
 interface RecipeStoreState {
-  listResponse: IItemSetOfRecipeSearchResultItem;
+  listResponse: IItemSetOfSearchRecipesResultItem;
   listRequest: RecipesSearchParams;
-  listFacets: RecipeSearchFacet[];
-  recentRecipes: Array<RecipeSearchResultItem>;
-  discoverList: RecipeSearchResultItem[];
+  listFacets: SearchFacet[];
+  recentRecipes: Array<SearchRecipesResultItem>;
+  discoverList: SearchRecipesResultItem[];
   discoverPage: number;
 }
 
@@ -48,7 +48,7 @@ export const useRecipeStore = defineStore('recipe', {
   },
 
   actions: {
-    setListResponse(data: RecipeSearchResponse) {
+    setListResponse(data: SearchRecipesResponse) {
       if (data.results) {
         this.listResponse = data.results;
       }
@@ -62,7 +62,7 @@ export const useRecipeStore = defineStore('recipe', {
       this.listRequest = data;
     },
 
-    setDiscoverListResponse(data: RecipeSearchResponse) {
+    setDiscoverListResponse(data: SearchRecipesResponse) {
       const { results } = data;
 
       if (!results?.items) {

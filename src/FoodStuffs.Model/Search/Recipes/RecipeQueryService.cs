@@ -71,7 +71,7 @@ public class RecipeQueryService : IRecipeQueryService
 
         var resultItems = scoreDocs
             .GetPage(pagination)
-            .Select(x => searcher.Doc(x.Doc).ToRecipeSearchResultItem())
+            .Select(x => searcher.Doc(x.Doc).ToSearchRecipesResultItem())
             .ToItemSet(pagination, topDocs.TotalHits);
 
         var resultFacets = SearchHelpers.GetFacets(readers, facetsCollector, facetsConfig);

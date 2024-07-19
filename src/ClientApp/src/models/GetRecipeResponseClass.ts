@@ -1,4 +1,8 @@
-import type { GetRecipeResponse, GetRecipeResponseIngredient } from '@/api/data-contracts';
+import type {
+  GetRecipeResponse,
+  GetRecipeResponseIngredient,
+  GetRecipeResponseShoppingItem,
+} from '@/api/data-contracts';
 
 export default class GetRecipeResponseClass implements GetRecipeResponse {
   public id = 0;
@@ -7,9 +11,11 @@ export default class GetRecipeResponseClass implements GetRecipeResponse {
 
   public directions: string = '';
 
+  public prepTimeMinutes: number | null = null;
+
   public cookTimeMinutes: number | null = null;
 
-  public prepTimeMinutes: number | null = null;
+  public isForMealPlanning = false;
 
   public createdBy: string = '';
 
@@ -21,11 +27,11 @@ export default class GetRecipeResponseClass implements GetRecipeResponse {
 
   public pinnedImage: string | null = null;
 
-  public isForMealPlanning = false;
+  public images: string[] = [];
 
   public categories: string[] = [];
 
-  public images: string[] = [];
-
   public ingredients: GetRecipeResponseIngredient[] = [];
+
+  public shoppingItems: GetRecipeResponseShoppingItem[] = [];
 }

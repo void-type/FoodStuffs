@@ -23,7 +23,7 @@ function getDotnetCertPaths() {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(async ({ command, mode }) => {
+export default defineConfig(async ({ mode }) => {
   const { cert, key } = getDotnetCertPaths();
 
   // If you have problems with the cert, uncomment these to clean the certs and force their re-gen. Be sure to comment when done.
@@ -48,13 +48,7 @@ export default defineConfig(async ({ command, mode }) => {
   }
 
   return {
-    plugins: [
-      vue({
-        script: {
-          defineModel: true,
-        },
-      }),
-    ],
+    plugins: [vue()],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
