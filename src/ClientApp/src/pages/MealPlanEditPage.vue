@@ -5,7 +5,7 @@ import useMealPlanStore from '@/stores/mealPlanStore';
 import type { ModalParameters } from '@/models/ModalParameters';
 import useAppStore from '@/stores/appStore';
 import RecipeCard from '@/components/RecipeCard.vue';
-import MealsIngredientList from '@/components/MealsIngredientList.vue';
+import MealPlanShoppingItemList from '@/components/MealPlanShoppingItemList.vue';
 
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
@@ -88,19 +88,19 @@ onMounted(async () => {
       <div class="g-col-12">
         <div class="grid">
           <div class="g-col-12 g-col-md-6">
-            <MealsIngredientList
+            <MealPlanShoppingItemList
               title="Shopping list"
-              :ingredients="mealPlanStore.currentShoppingList"
-              :on-ingredient-click="mealPlanStore.addToCurrentPantry"
+              :shopping-items="mealPlanStore.currentShoppingList"
+              :on-item-click="mealPlanStore.addToCurrentPantry"
               :show-copy-list="true"
             />
           </div>
           <div class="g-col-12 g-col-md-6">
-            <MealsIngredientList
+            <MealPlanShoppingItemList
               title="Pantry"
-              :ingredients="mealPlanStore.currentPantry"
+              :shopping-items="mealPlanStore.currentPantry"
               :on-clear="mealPlanStore.clearCurrentPantry"
-              :on-ingredient-click="mealPlanStore.removeFromCurrentPantry"
+              :on-item-click="mealPlanStore.removeFromCurrentPantry"
             />
           </div>
         </div>

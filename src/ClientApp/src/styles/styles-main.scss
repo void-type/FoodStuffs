@@ -27,20 +27,6 @@ body {
   flex-grow: 1;
 }
 
-// Minimum button width
-Button animation input[type='button'].btn,
-input[type='submit'].btn,
-button.btn,
-a.btn,
-.btn {
-  min-width: 5rem;
-
-  &.btn-cling,
-  &.btn-sm {
-    min-width: unset;
-  }
-}
-
 // Bootstrap hides nav-link focus ring
 .nav-link:focus-visible {
   outline: auto;

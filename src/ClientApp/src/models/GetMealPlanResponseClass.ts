@@ -20,7 +20,7 @@ export default class GetMealPlanResponseClass implements GetMealPlanResponse {
 
   public recipes: GetMealPlanResponseRecipe[] = [];
 
-  public pantryIngredients: GetMealPlanResponsePantryShoppingItem[] = [];
+  public pantryShoppingItems: GetMealPlanResponsePantryShoppingItem[] = [];
 
   public static createForStore() {
     const newPlan = new GetMealPlanResponseClass();

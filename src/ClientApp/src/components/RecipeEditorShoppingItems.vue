@@ -4,11 +4,11 @@ import { nextTick, reactive, watch, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
-import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
+import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Array<WorkingRecipeIngredient>>,
+    type: Object as PropType<Array<WorkingRecipeShoppingItem>>,
     required: true,
   },
   isFieldInError: {
@@ -20,16 +20,16 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const data = reactive({
-  ingredients: [] as WorkingRecipeIngredient[],
+  shoppingItems: [] as WorkingRecipeShoppingItem[],
 });
 
-function copy(ingredients: WorkingRecipeIngredient[]) {
-  return JSON.parse(JSON.stringify(ingredients)) as WorkingRecipeIngredient[];
+function copy(shoppingItems: WorkingRecipeShoppingItem[]) {
+  return JSON.parse(JSON.stringify(shoppingItems)) as WorkingRecipeShoppingItem[];
 }
 
 function showInAccordion(index: number, focus: boolean = false) {
-  const safeIndex = clamp(index, 0, data.ingredients.length - 1);
-  const ingredient = data.ingredients[safeIndex];
+  const safeIndex = clamp(index, 0, data.shoppingItems.length - 1);
+  const ingredient = data.shoppingItems[safeIndex];
 
   if (ingredient) {
     const elementId = `#ingredient-${ingredient.uiKey}`;
@@ -47,32 +47,32 @@ function showInAccordion(index: number, focus: boolean = false) {
 }
 
 function onNewClick() {
-  const ingredients = copy(data.ingredients);
+  const shoppingItems = copy(data.shoppingItems);
 
-  const newLength = ingredients.push({
-    ...new WorkingRecipeIngredient(),
+  const newLength = shoppingItems.push({
+    ...new WorkingRecipeShoppingItem(),
     name: '',
     quantity: 1,
-    order: Math.max(...ingredients.map((x) => x.order || 0)) + 1,
+    order: Math.max(...shoppingItems.map((x) => x.order || 0)) + 1,
     isCategory: false,
   });
 
-  data.ingredients = ingredients;
+  data.shoppingItems = shoppingItems;
   showInAccordion(newLength - 1, true);
 }
 
 function onDeleteClick(id: string) {
-  const ingredients = copy(data.ingredients);
+  const shoppingItems = copy(data.shoppingItems);
 
-  const index = ingredients.findIndex((x) => x.uiKey === id);
-  ingredients.splice(index, 1);
+  const index = shoppingItems.findIndex((x) => x.uiKey === id);
+  shoppingItems.splice(index, 1);
 
-  data.ingredients = ingredients;
+  data.shoppingItems = shoppingItems;
   showInAccordion(index);
 }
 
-function setOrderFromIndex(ingredients: WorkingRecipeIngredient[]) {
-  ingredients.forEach((x, i) => {
+function setOrderFromIndex(shoppingItems: WorkingRecipeShoppingItem[]) {
+  shoppingItems.forEach((x, i) => {
     // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
   });
@@ -80,45 +80,45 @@ function setOrderFromIndex(ingredients: WorkingRecipeIngredient[]) {
 
 // When props change, we'll update the working version.
 watch(props, () => {
-  const ingredients = copy(props.modelValue);
+  const shoppingItems = copy(props.modelValue);
 
-  ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
-  setOrderFromIndex(ingredients);
+  shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+  setOrderFromIndex(shoppingItems);
 
   // Deep compare to prevent circular changes.
-  if (JSON.stringify(data.ingredients) !== JSON.stringify(ingredients)) {
-    data.ingredients = ingredients;
+  if (JSON.stringify(data.shoppingItems) !== JSON.stringify(shoppingItems)) {
+    data.shoppingItems = shoppingItems;
   }
 });
 
 // When data changes, we'll emit the new model.
 watch(data, (newValue) => {
-  const ingredients = copy(newValue.ingredients);
+  const shoppingItems = copy(newValue.shoppingItems);
 
-  setOrderFromIndex(ingredients);
+  setOrderFromIndex(shoppingItems);
 
   // Deep compare to prevent circular changes.
-  if (JSON.stringify(props.modelValue) !== JSON.stringify(ingredients)) {
-    emit('update:modelValue', ingredients);
+  if (JSON.stringify(props.modelValue) !== JSON.stringify(shoppingItems)) {
+    emit('update:modelValue', shoppingItems);
   }
 });
 </script>
 
 <template>
-  <div v-if="data.ingredients.length < 1" id="ingredient-list" class="card p-4 text-center">
-    No ingredients.
+  <div v-if="data.shoppingItems.length < 1" id="ingredient-list" class="card p-4 text-center">
+    No shopping items.
   </div>
   <vue-draggable
     v-else
     id="ingredient-list"
-    v-model="data.ingredients"
+    v-model="data.shoppingItems"
     :animation="200"
     group="ingredients"
     ghost-class="ghost"
     handle=".sort-handle"
     class="accordion"
   >
-    <div v-for="ing in data.ingredients" :key="ing.uiKey" class="accordion-item">
+    <div v-for="ing in data.shoppingItems" :key="ing.uiKey" class="accordion-item">
       <div :id="`ingredient-${ing.uiKey}-accordion-header`" class="h2 accordion-header">
         <button
           class="accordion-button collapsed"
@@ -152,7 +152,7 @@ watch(data, (newValue) => {
               type="text"
               :class="{
                 'form-control': true,
-                'is-invalid': isFieldInError('ingredients'),
+                'is-invalid': isFieldInError('shoppingItems'),
               }"
               @keydown.stop.prevent.enter
             />
@@ -167,23 +167,9 @@ watch(data, (newValue) => {
               min="1"
               :class="{
                 'form-control': true,
-                'is-invalid': isFieldInError('ingredients'),
+                'is-invalid': isFieldInError('shoppingItems'),
               }"
             />
-          </div>
-          <div class="g-col-12">
-            <div class="form-check">
-              <input
-                :id="`ingredient-${ing.uiKey}-isCategory`"
-                v-model="ing.isCategory"
-                class="form-check-input"
-                type="checkbox"
-                :class="{ 'is-invalid': isFieldInError('ingredients') }"
-              />
-              <label :for="`ingredient-${ing.uiKey}-isCategory`" class="form-check-label"
-                >Is Category</label
-              >
-            </div>
           </div>
           <div class="btn-toolbar g-col-12">
             <button

@@ -12,6 +12,7 @@ import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
+import RecipeEditorShoppingItems from './RecipeEditorShoppingItems.vue';
 
 const props = defineProps({
   sourceRecipe: {
@@ -86,6 +87,16 @@ function reset() {
   data.workingRecipe = newWorking;
 }
 
+function fetchCategories() {
+  api()
+    .categoriesList({ isPagingEnabled: false })
+    .then((response) => {
+      categoryOptions.value =
+        response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+    })
+    .catch((response) => messageStore.setApiFailureMessages(response));
+}
+
 function addCategory(tag: string) {
   const categoryName = trimAndTitleCase(tag);
 
@@ -112,6 +123,7 @@ function removeCategory(categoryName: string) {
 
 function saveClick() {
   props.onRecipeSave(data.workingRecipe);
+  fetchCategories();
 }
 
 watch(
@@ -129,13 +141,7 @@ watch(isRecipeDirty, () => {
 });
 
 onMounted(() => {
-  api()
-    .categoriesList({ isPagingEnabled: false })
-    .then((response) => {
-      categoryOptions.value =
-        response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+  fetchCategories();
 });
 </script>
 
@@ -217,18 +223,18 @@ onMounted(() => {
         />
       </div>
       <div class="g-col-12 g-col-md-6">
-        <TagEditor
-          :class="{ 'form-group': true, danger: isFieldInError('categories') }"
-          :tags="data.workingRecipe.categories || []"
-          :on-add-tag="addCategory"
-          :on-remove-tag="removeCategory"
-          :suggestions="categoryOptions"
-          field-name="categories"
-          label="Categories"
-        />
-      </div>
-      <div class="g-col-12">
-        <div class="form-check">
+        <div>
+          <TagEditor
+            :class="{ danger: isFieldInError('categories') }"
+            :tags="data.workingRecipe.categories || []"
+            :on-add-tag="addCategory"
+            :on-remove-tag="removeCategory"
+            :suggestions="categoryOptions"
+            field-name="categories"
+            label="Categories"
+          />
+        </div>
+        <div class="form-check mt-4">
           <input
             id="isForMealPlanning"
             v-model="data.workingRecipe.isForMealPlanning"
@@ -239,36 +245,16 @@ onMounted(() => {
           <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
         </div>
       </div>
-      <EntityAuditInfo v-if="sourceRecipe.id" class="g-col-12" :entity="sourceRecipe" />
-      <div class="btn-toolbar g-col-12">
-        <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
-          Save
-        </button>
-        <router-link
-          v-if="isEditMode"
-          type="button"
-          class="btn btn-secondary me-2"
-          :to="{ name: 'recipeNew', query: { copy: sourceRecipe.id } }"
-        >
-          Copy
-        </router-link>
-        <button
-          v-if="isEditMode"
-          type="button"
-          class="btn btn-secondary me-2"
-          :to="RouterHelpers.viewRecipe(sourceRecipe)"
-        >
-          Cancel
-        </button>
-        <button
-          v-if="isEditMode"
-          type="button"
-          class="btn btn-danger d-inline ms-auto"
-          @click.stop.prevent="onRecipeDelete(data.workingRecipe.id)"
-        >
-          Delete
-        </button>
+      <div class="g-col-12 g-col-md-6">
+        <div class="g-col-12 g-col-md-6">
+          <label for="ingredients" class="form-label">Shopping Items</label>
+          <RecipeEditorShoppingItems
+            v-model="data.workingRecipe.shoppingItems"
+            :is-field-in-error="isFieldInError"
+          />
+        </div>
       </div>
+      <EntityAuditInfo v-if="sourceRecipe.id" class="g-col-12" :entity="sourceRecipe" />
     </div>
   </form>
 </template>

@@ -48,8 +48,4 @@ function initSearch() {
   </form>
 </template>
 
-<style lang="scss" scoped>
-.nav-search-button {
-  min-width: unset;
-}
-</style>
+<style lang="scss" scoped></style>

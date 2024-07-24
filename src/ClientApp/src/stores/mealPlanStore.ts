@@ -186,14 +186,17 @@ export default defineStore('mealPlan', {
         pantryShoppingItems: current.pantryShoppingItems,
       };
 
+      console.log(current.pantryShoppingItems);
+      console.log(request.pantryShoppingItems);
+
       if (additionalRecipeIds && additionalRecipeIds.length > 0) {
         additionalRecipeIds.forEach((additionalId) => {
-          if (typeof request.recipes === 'undefined') {
+          if (request.recipes === null || typeof request.recipes === 'undefined') {
             return;
           }
 
           const lastIndex = (request.recipes.length || 0) - 1;
-          const lastOrder = request.recipes[lastIndex].order || 0;
+          const lastOrder = request.recipes[lastIndex]?.order || 0;
 
           request.recipes?.push({
             id: additionalId,

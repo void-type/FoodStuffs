@@ -274,7 +274,6 @@ onMounted(() => {
 .image-button {
   position: absolute;
   top: 0;
-  min-width: 0;
   z-index: 2;
 
   &.image-button-delete {
