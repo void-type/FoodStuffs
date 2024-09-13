@@ -11,6 +11,6 @@ public class SaveMealPlanRequestValidator : RuleValidatorAbstract<SaveMealPlanRe
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
         CreateRule(new Failure("Pantry shopping items quantity must be positive.", "pantryShoppingItemsQuantity"))
-            .InvalidWhen(entity => entity.PantryShoppingItems.Exists(x => x.Quantity < 0));
+            .InvalidWhen(entity => entity.PantryShoppingItems.Exists(x => x.Quantity <= 0));
     }
 }

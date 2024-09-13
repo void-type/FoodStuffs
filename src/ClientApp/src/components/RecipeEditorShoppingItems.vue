@@ -1,26 +1,31 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
-import { nextTick, reactive, watch, type PropType } from 'vue';
+import { computed, nextTick, ref, watch, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
 import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
+import type { ListShoppingItemsResponse } from '@/api/data-contracts';
+
+const model = defineModel({
+  type: Array as PropType<Array<WorkingRecipeShoppingItem>>,
+  required: true,
+});
 
 const props = defineProps({
-  modelValue: {
-    type: Object as PropType<Array<WorkingRecipeShoppingItem>>,
-    required: true,
-  },
   isFieldInError: {
     type: Function,
     required: true,
   },
-});
-
-const emit = defineEmits(['update:modelValue']);
-
-const data = reactive({
-  shoppingItems: [] as WorkingRecipeShoppingItem[],
+  suggestions: {
+    type: Array as PropType<Array<ListShoppingItemsResponse>>,
+    required: false,
+    default: () => [],
+  },
+  onCreateItem: {
+    type: Function,
+    required: true,
+  },
 });
 
 function copy(shoppingItems: WorkingRecipeShoppingItem[]) {
@@ -28,11 +33,11 @@ function copy(shoppingItems: WorkingRecipeShoppingItem[]) {
 }
 
 function showInAccordion(index: number, focus: boolean = false) {
-  const safeIndex = clamp(index, 0, data.shoppingItems.length - 1);
-  const ingredient = data.shoppingItems[safeIndex];
+  const safeIndex = clamp(index, 0, model.value.length - 1);
+  const item = model.value[safeIndex];
 
-  if (ingredient) {
-    const elementId = `#ingredient-${ingredient.uiKey}`;
+  if (item) {
+    const elementId = `#item-${item.uiKey}`;
     nextTick(() => {
       Collapse.getOrCreateInstance(`${elementId}-accordion-collapse`, { toggle: false }).show();
 
@@ -46,28 +51,25 @@ function showInAccordion(index: number, focus: boolean = false) {
   }
 }
 
+const newShoppingItemName = ref('');
+
+async function createShoppingItem(name: string) {
+  await props.onCreateItem(name);
+}
+
 function onNewClick() {
-  const shoppingItems = copy(data.shoppingItems);
+  const newItem = new WorkingRecipeShoppingItem();
+  newItem.order = Math.max(...model.value.map((x) => x.order || 0)) + 1;
 
-  const newLength = shoppingItems.push({
-    ...new WorkingRecipeShoppingItem(),
-    name: '',
-    quantity: 1,
-    order: Math.max(...shoppingItems.map((x) => x.order || 0)) + 1,
-    isCategory: false,
-  });
+  const newLength = model.value.push(newItem);
 
-  data.shoppingItems = shoppingItems;
   showInAccordion(newLength - 1, true);
 }
 
-function onDeleteClick(id: string) {
-  const shoppingItems = copy(data.shoppingItems);
+function onDeleteClick(id: number) {
+  const index = model.value.findIndex((x) => x.id === id);
+  model.value.splice(index, 1);
 
-  const index = shoppingItems.findIndex((x) => x.uiKey === id);
-  shoppingItems.splice(index, 1);
-
-  data.shoppingItems = shoppingItems;
   showInAccordion(index);
 }
 
@@ -78,120 +80,131 @@ function setOrderFromIndex(shoppingItems: WorkingRecipeShoppingItem[]) {
   });
 }
 
-// When props change, we'll update the working version.
-watch(props, () => {
-  const shoppingItems = copy(props.modelValue);
+// When model changes, we'll update the working version.
+watch(model, () => {
+  const shoppingItems = copy(model.value);
 
   shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
   setOrderFromIndex(shoppingItems);
 
   // Deep compare to prevent circular changes.
-  if (JSON.stringify(data.shoppingItems) !== JSON.stringify(shoppingItems)) {
-    data.shoppingItems = shoppingItems;
-  }
-});
-
-// When data changes, we'll emit the new model.
-watch(data, (newValue) => {
-  const shoppingItems = copy(newValue.shoppingItems);
-
-  setOrderFromIndex(shoppingItems);
-
-  // Deep compare to prevent circular changes.
-  if (JSON.stringify(props.modelValue) !== JSON.stringify(shoppingItems)) {
-    emit('update:modelValue', shoppingItems);
+  if (JSON.stringify(model.value) !== JSON.stringify(shoppingItems)) {
+    model.value = shoppingItems;
   }
 });
 </script>
 
 <template>
-  <div v-if="data.shoppingItems.length < 1" id="ingredient-list" class="card p-4 text-center">
-    No shopping items.
-  </div>
-  <vue-draggable
-    v-else
-    id="ingredient-list"
-    v-model="data.shoppingItems"
-    :animation="200"
-    group="ingredients"
-    ghost-class="ghost"
-    handle=".sort-handle"
-    class="accordion"
-  >
-    <div v-for="ing in data.shoppingItems" :key="ing.uiKey" class="accordion-item">
-      <div :id="`ingredient-${ing.uiKey}-accordion-header`" class="h2 accordion-header">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          :data-bs-target="`#ingredient-${ing.uiKey}-accordion-collapse`"
-          aria-expanded="false"
-          :aria-controls="`ingredient-${ing.uiKey}-accordion-collapse`"
-        >
-          <span class="pe-3 sort-handle">
-            <div class="visually-hidden">Drag to sort</div>
-            <font-awesome-icon icon="fa-grip-lines" class="text-muted"
-          /></span>
-          <span v-if="ing.isCategory" class="fw-bold">{{ ing.name }}</span>
-          <span v-else>{{ ing.quantity }}x {{ ing.name }}</span>
-        </button>
-      </div>
-      <div
-        :id="`ingredient-${ing.uiKey}-accordion-collapse`"
-        class="accordion-collapse collapse"
-        :aria-labelledby="`ingredient-${ing.uiKey}-accordion-header`"
-        data-bs-parent="#ingredient-list"
+  <div>
+    <label for="shoppingItemName" class="form-label visually-hidden">Create a Shopping Item</label>
+    <div class="input-group">
+      <input
+        id="shoppingItemName"
+        v-model="newShoppingItemName"
+        name="shoppingItemName"
+        class="form-control"
+        placeholder="Create a shopping item"
+        @keydown.stop.prevent.enter="createShoppingItem(newShoppingItemName)"
+      />
+      <button
+        class="btn btn-secondary"
+        type="button"
+        @click.stop.prevent="createShoppingItem(newShoppingItemName)"
       >
-        <div class="grid p-3 gap-sm">
-          <div class="g-col-12 g-col-md-12">
-            <label :for="`ingredient-${ing.uiKey}-name`" class="form-label">Name</label>
-            <input
-              :id="`ingredient-${ing.uiKey}-name`"
-              v-model="ing.name"
-              required
-              type="text"
-              :class="{
-                'form-control': true,
-                'is-invalid': isFieldInError('shoppingItems'),
-              }"
-              @keydown.stop.prevent.enter
-            />
-          </div>
-          <div v-if="!ing.isCategory" class="g-col-12 g-col-md-4">
-            <label :for="`ingredient-${ing.uiKey}-quantity`" class="form-label">Quantity</label>
-            <input
-              :id="`ingredient-${ing.uiKey}-quantity`"
-              v-model="ing.quantity"
-              required
-              type="number"
-              min="1"
-              :class="{
-                'form-control': true,
-                'is-invalid': isFieldInError('shoppingItems'),
-              }"
-            />
-          </div>
-          <div class="btn-toolbar g-col-12">
-            <button
-              type="button"
-              class="btn btn-danger btn-sm d-inline ms-auto"
-              @click.stop.prevent="onDeleteClick(ing.uiKey)"
-            >
-              Delete
-            </button>
+        Save
+      </button>
+    </div>
+    <div v-if="model.length < 1" id="item-list" class="card p-4 text-center">
+      No shopping items.
+    </div>
+    <vue-draggable
+      v-else
+      id="item-list"
+      v-model="model"
+      :animation="200"
+      group="item"
+      ghost-class="ghost"
+      handle=".sort-handle"
+      class="accordion"
+    >
+      <div v-for="item in model" :key="item.uiKey" class="accordion-item">
+        <div :id="`item-${item.uiKey}-accordion-header`" class="h2 accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="`#item-${item.uiKey}-accordion-collapse`"
+            aria-expanded="false"
+            :aria-controls="`item-${item.uiKey}-accordion-collapse`"
+          >
+            <span class="pe-3 sort-handle">
+              <div class="visually-hidden">Drag to sort</div>
+              <font-awesome-icon icon="fa-grip-lines" class="text-muted"
+            /></span>
+            <span>{{ item.quantity }}x {{ item.name }}</span>
+          </button>
+        </div>
+        <div
+          :id="`item-${item.uiKey}-accordion-collapse`"
+          class="accordion-collapse collapse"
+          :aria-labelledby="`item-${item.uiKey}-accordion-header`"
+          data-bs-parent="#item-list"
+        >
+          <div class="grid p-3 gap-sm">
+            <div class="g-col-12 g-col-md-12">
+              <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping Item</label>
+              <select
+                :id="`item-${item.uiKey}-name`"
+                v-model="item.shoppingItemValue"
+                required
+                :class="{
+                  'form-select': true,
+                  'is-invalid': isFieldInError('shoppingItems'),
+                }"
+                @keydown.stop.prevent.enter
+              >
+                <option disabled value="">Select one</option>
+                <option v-for="suggestion in suggestions" :key="suggestion.id" :value="suggestion">
+                  {{ suggestion.name }}
+                </option>
+              </select>
+            </div>
+            <div class="g-col-12 g-col-md-4">
+              <label :for="`item-${item.uiKey}-quantity`" class="form-label">Quantity</label>
+              <input
+                :id="`item-${item.uiKey}-quantity`"
+                v-model="item.quantity"
+                required
+                type="number"
+                min="1"
+                :class="{
+                  'form-control': true,
+                  'is-invalid': isFieldInError('shoppingItems'),
+                }"
+              />
+            </div>
+            <div class="btn-toolbar g-col-12">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm d-inline ms-auto"
+                @click.stop.prevent="onDeleteClick(item.id)"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </vue-draggable>
-  <button
-    type="button"
-    class="btn btn-secondary btn-sm btn-add-ingredient"
-    aria-label="add ingredient"
-    @click.stop.prevent="onNewClick()"
-  >
-    <font-awesome-icon icon="fa-plus" />
-  </button>
+    </vue-draggable>
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm btn-add-item"
+      aria-label="add shopping item"
+      @click.stop.prevent="onNewClick()"
+    >
+      <font-awesome-icon icon="fa-plus" />
+    </button>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -205,12 +218,12 @@ watch(data, (newValue) => {
   }
 }
 
-div#ingredient-list,
-div#ingredient-list .accordion-item:last-of-type {
+div#item-list,
+div#item-list .accordion-item:last-of-type {
   border-bottom-left-radius: 0;
 }
 
-.btn.btn-sm.btn-add-ingredient {
+.btn.btn-sm.btn-add-item {
   min-width: 4rem;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

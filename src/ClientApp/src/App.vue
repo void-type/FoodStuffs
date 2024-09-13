@@ -31,7 +31,7 @@ onMounted(() => {
   mealPlanStore.setCurrentMealPlan(MealPlanStoreHelpers.getCurrentMealPlan());
 
   api()
-    .applicationGetInfo()
+    .appGetInfo()
     .then((response) => {
       appStore.setApplicationInfo(response.data);
       RouterHelpers.setTitle(route);
@@ -46,7 +46,7 @@ onMounted(() => {
     .catch((response) => messageStore.setApiFailureMessages(response));
 
   api()
-    .applicationGetVersion()
+    .appGetVersion()
     .then((response) => appStore.setVersionInfo(response.data));
 });
 </script>

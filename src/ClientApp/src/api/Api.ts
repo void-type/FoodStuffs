@@ -19,12 +19,15 @@ import type {
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
   IItemSetOfListMealPlansResponse,
+  IItemSetOfListShoppingItemsResponse,
   ImagesUploadParams,
   MealPlansListParams,
   RecipesSearchParams,
   SaveMealPlanRequest,
   SaveRecipeRequest,
+  SaveShoppingItemRequest,
   SearchRecipesResponse,
+  ShoppingItemsListParams,
   UserMessage,
   WebClientInfo,
 } from './data-contracts';
@@ -34,13 +37,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags Application
-   * @name ApplicationGetInfo
+   * @tags App
+   * @name AppGetInfo
    * @summary Get information to bootstrap the SPA client like application name and user data.
    * @request GET:/api/app/info
    * @response `200` `WebClientInfo`
    */
-  applicationGetInfo = (params: RequestParams = {}) =>
+  appGetInfo = (params: RequestParams = {}) =>
     this.request<WebClientInfo, any>({
       path: `/api/app/info`,
       method: 'GET',
@@ -50,13 +53,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags Application
-   * @name ApplicationGetVersion
+   * @tags App
+   * @name AppGetVersion
    * @summary Get the version of the application.
    * @request GET:/api/app/version
    * @response `200` `AppVersion`
    */
-  applicationGetVersion = (params: RequestParams = {}) =>
+  appGetVersion = (params: RequestParams = {}) =>
     this.request<AppVersion, any>({
       path: `/api/app/version`,
       method: 'GET',
@@ -313,6 +316,43 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<UserMessage, any>({
       path: `/api/recipes/rebuild-index`,
       method: 'POST',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags ShoppingItems
+   * @name ShoppingItemsList
+   * @summary List shopping items. All parameters are optional and some have defaults.
+   * @request GET:/api/shopping-items
+   * @response `200` `IItemSetOfListShoppingItemsResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  shoppingItemsList = (query: ShoppingItemsListParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListShoppingItemsResponse, IItemSetOfIFailure>({
+      path: `/api/shopping-items`,
+      method: 'GET',
+      query: query,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags ShoppingItems
+   * @name ShoppingItemsSave
+   * @summary Save a shopping item. Will update if found, otherwise a new item will be created.
+   * @request POST:/api/shopping-items
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  shoppingItemsSave = (data: SaveShoppingItemRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/shopping-items`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
       format: 'json',
       ...params,
     });

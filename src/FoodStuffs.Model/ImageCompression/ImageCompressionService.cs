@@ -39,7 +39,7 @@ public class ImageCompressionService : IImageCompressionService
 
         if (quality < 100)
         {
-            image.Quality = quality;
+            image.Quality = (uint)quality;
             defines.Lossless = false;
             defines.Method = 5;
         }
@@ -51,14 +51,14 @@ public class ImageCompressionService : IImageCompressionService
 
                 if (ShouldResizeWidth(resizeSettings, image))
                 {
-                    image.Resize(resizeSettings.MaxWidth, 0);
+                    image.Resize((uint)resizeSettings.MaxWidth, 0);
                 }
                 break;
 
             case ResizeOperation.Fit:
                 if (ShouldResizeWidth(resizeSettings, image) || ShouldResizeHeight(resizeSettings, image))
                 {
-                    image.Resize(resizeSettings.MaxWidth, resizeSettings.MaxHeight);
+                    image.Resize((uint)resizeSettings.MaxWidth, (uint)resizeSettings.MaxHeight);
                 }
                 break;
         }

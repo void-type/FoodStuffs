@@ -6,7 +6,6 @@ public class ShoppingItem : IAuditableWithOffset
 {
     public int Id { get; set; }
 
-    // TODO: validate 450 chars max
     public string Name { get; set; } = null!;
 
     public string CreatedBy { get; set; } = null!;

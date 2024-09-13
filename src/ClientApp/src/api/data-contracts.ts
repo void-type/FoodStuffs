@@ -294,6 +294,31 @@ export interface SaveRecipeRequestShoppingItem {
   order?: number;
 }
 
+export interface IItemSetOfListShoppingItemsResponse {
+  /** @format int32 */
+  count?: number;
+  items?: ListShoppingItemsResponse[];
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
+export interface ListShoppingItemsResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SaveShoppingItemRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
 export interface CategoriesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
@@ -355,6 +380,28 @@ export interface RecipesSearchParams {
   sortBy?: string | null;
   /** Give a seed for stable random sorting. By default is stable for 24 hours on the server. */
   randomSortSeed?: string | null;
+  /**
+   * False for all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
+export interface ShoppingItemsListParams {
+  /** Name contains (case-insensitive) */
+  name?: string | null;
   /**
    * False for all results
    * @default true

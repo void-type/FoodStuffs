@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import WorkingRecipe from '@/models/WorkingRecipe';
-import type { GetRecipeResponse } from '@/api/data-contracts';
+import type { GetRecipeResponse, ListShoppingItemsResponse } from '@/api/data-contracts';
 import { isNil, trimAndTitleCase } from '@/models/FormatHelpers';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
+import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
@@ -50,8 +51,6 @@ const api = ApiHelpers.client;
 // This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
 let workingRecipeInitial = '';
 
-const categoryOptions = ref([] as Array<string>);
-
 const data = reactive({
   workingRecipe: new WorkingRecipe(),
 });
@@ -87,14 +86,43 @@ function reset() {
   data.workingRecipe = newWorking;
 }
 
-function fetchCategories() {
-  api()
-    .categoriesList({ isPagingEnabled: false })
-    .then((response) => {
-      categoryOptions.value =
-        response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+const categoryOptions = ref([] as Array<string>);
+
+async function fetchCategories() {
+  try {
+    const response = await api().categoriesList({ isPagingEnabled: false });
+    categoryOptions.value =
+      response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
+const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
+
+async function fetchShoppingItems() {
+  try {
+    const response = await api().shoppingItemsList({ isPagingEnabled: false });
+    shoppingItemOptions.value = response.data.items || [];
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
+async function createShoppingItem(name: string) {
+  try {
+    const response = await api().shoppingItemsSave({ name });
+
+    if (response.data.message) {
+      messageStore.setSuccessMessage(response.data.message);
+    }
+    await fetchShoppingItems();
+    return response.data.id;
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+
+  return null;
 }
 
 function addCategory(tag: string) {
@@ -124,6 +152,7 @@ function removeCategory(categoryName: string) {
 function saveClick() {
   props.onRecipeSave(data.workingRecipe);
   fetchCategories();
+  fetchShoppingItems();
 }
 
 watch(
@@ -142,6 +171,7 @@ watch(isRecipeDirty, () => {
 
 onMounted(() => {
   fetchCategories();
+  fetchShoppingItems();
 });
 </script>
 
@@ -251,6 +281,8 @@ onMounted(() => {
           <RecipeEditorShoppingItems
             v-model="data.workingRecipe.shoppingItems"
             :is-field-in-error="isFieldInError"
+            :suggestions="shoppingItemOptions"
+            :on-create-item="createShoppingItem"
           />
         </div>
       </div>

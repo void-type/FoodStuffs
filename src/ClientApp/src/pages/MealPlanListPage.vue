@@ -141,7 +141,7 @@ watch(
                 :disabled="currentMealPlan.id === mealPlan.id"
                 @click="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
               >
-                Edit
+                Make current
               </button>
               <button class="btn btn-sm btn-danger" @click="() => onDeleteMealPlan(mealPlan.id)">
                 Delete

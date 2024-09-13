@@ -39,32 +39,32 @@ onMounted(async () => {
               id="mealPlanName"
               v-model="currentMealPlan.name"
               class="form-control"
-              @keydown.stop.prevent.enter="mealPlanStore.saveCurrentMealPlan"
+              @keydown.stop.prevent.enter="() => mealPlanStore.saveCurrentMealPlan()"
             />
           </div>
           <div class="g-col-12 btn-toolbar">
             <button
               class="btn btn-primary me-2"
-              @click.stop.prevent="mealPlanStore.saveCurrentMealPlan"
+              @click.stop.prevent="() => mealPlanStore.saveCurrentMealPlan()"
             >
               Save
             </button>
             <button
               class="btn btn-secondary me-2"
-              @click.stop.prevent="mealPlanStore.newCurrentMealPlan"
+              @click.stop.prevent="() => mealPlanStore.newCurrentMealPlan()"
             >
               New
             </button>
             <button
               class="btn btn-secondary me-2"
-              @click.stop.prevent="mealPlanStore.clearCurrentRecipes"
+              @click.stop.prevent="() => mealPlanStore.clearCurrentRecipes()"
             >
               Empty
             </button>
             <button
               class="btn btn-danger ms-auto"
               :disabled="(currentMealPlan?.id || 0) < 1"
-              @click.stop.prevent="onDeleteCurrentMealPlan"
+              @click.stop.prevent="() => onDeleteCurrentMealPlan()"
             >
               Delete
             </button>
