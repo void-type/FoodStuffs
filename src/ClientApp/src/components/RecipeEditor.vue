@@ -14,6 +14,7 @@ import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 import RecipeEditorShoppingItems from './RecipeEditorShoppingItems.vue';
+import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 
 const props = defineProps({
   sourceRecipe: {
@@ -73,6 +74,16 @@ function reset() {
     ...new WorkingRecipeIngredient(),
     ...x,
   }));
+
+  const shoppingItems = (props.sourceRecipe.shoppingItems || []).map((x) => {
+    const item = new WorkingRecipeShoppingItem();
+    item.shoppingItemValue = x;
+
+    return {
+      ...new WorkingRecipeShoppingItem(),
+      ...x,
+    };
+  });
 
   const newWorking: WorkingRecipe = {
     ...newWorkingClass,

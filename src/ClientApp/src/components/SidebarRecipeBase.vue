@@ -5,7 +5,7 @@ import RouterHelpers from '@/models/RouterHelpers';
 
 defineProps({
   recipes: {
-    type: Object as PropType<Array<SearchRecipesResultItem>>,
+    type: Array as PropType<Array<SearchRecipesResultItem>>,
     required: true,
   },
   title: {

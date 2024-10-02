@@ -4,7 +4,7 @@ import { computed, type PropType } from 'vue';
 
 const props = defineProps({
   ingredients: {
-    type: Object as PropType<Array<GetRecipeResponseIngredient>>,
+    type: Array as PropType<Array<GetRecipeResponseIngredient>>,
     required: true,
   },
 });

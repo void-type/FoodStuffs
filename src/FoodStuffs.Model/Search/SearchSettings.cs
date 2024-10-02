@@ -26,7 +26,7 @@ public class SearchSettings
         ValidateFolder(IndexFolder);
     }
 
-    private string ValidateFolder(string folder)
+    private static string ValidateFolder(string folder)
     {
         folder.EnsureNotNullOrEmpty();
 

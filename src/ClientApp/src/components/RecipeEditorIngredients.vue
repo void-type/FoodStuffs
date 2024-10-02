@@ -8,7 +8,7 @@ import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Array<WorkingRecipeIngredient>>,
+    type: Array as PropType<Array<WorkingRecipeIngredient>>,
     required: true,
   },
   isFieldInError: {
