@@ -8,13 +8,13 @@ import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
+import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 import RecipeEditorShoppingItems from './RecipeEditorShoppingItems.vue';
-import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 
 const props = defineProps({
   sourceRecipe: {
@@ -40,10 +40,6 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  isFieldInError: {
-    type: Function,
-    required: true,
-  },
 });
 
 const messageStore = useMessageStore();
@@ -55,6 +51,29 @@ let workingRecipeInitial = '';
 const data = reactive({
   workingRecipe: new WorkingRecipe(),
 });
+
+const categoryOptions = ref([] as Array<string>);
+
+async function fetchCategories() {
+  try {
+    const response = await api().categoriesList({ isPagingEnabled: false });
+    categoryOptions.value =
+      response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
+const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
+
+async function fetchShoppingItems() {
+  try {
+    const response = await api().shoppingItemsList({ isPagingEnabled: false });
+    shoppingItemOptions.value = (response.data.items || []) as Array<ListShoppingItemsResponse>;
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
 
 function reset() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
@@ -75,49 +94,36 @@ function reset() {
     ...x,
   }));
 
-  const shoppingItems = (props.sourceRecipe.shoppingItems || []).map((x) => {
-    const item = new WorkingRecipeShoppingItem();
-    item.shoppingItemValue = x;
+  ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-    return {
-      ...new WorkingRecipeShoppingItem(),
-      ...x,
-    };
-  });
+  const shoppingItems = (props.sourceRecipe.shoppingItems || [])
+    .map((x) => {
+      const item = new WorkingRecipeShoppingItem();
+
+      const value = shoppingItemOptions.value.find((y) => y.id === x.id);
+
+      if (!value) {
+        return null;
+      }
+
+      item.shoppingItemValue = value;
+      return item;
+    })
+    .filter((x) => x) as Array<WorkingRecipeShoppingItem>;
+
+  shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const newWorking: WorkingRecipe = {
     ...newWorkingClass,
     ...sourceCopy,
     ingredients,
     directions: props.sourceRecipe.directions || '',
+    shoppingItems,
   };
 
   workingRecipeInitial = JSON.stringify(newWorking);
 
   data.workingRecipe = newWorking;
-}
-
-const categoryOptions = ref([] as Array<string>);
-
-async function fetchCategories() {
-  try {
-    const response = await api().categoriesList({ isPagingEnabled: false });
-    categoryOptions.value =
-      response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-  }
-}
-
-const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
-
-async function fetchShoppingItems() {
-  try {
-    const response = await api().shoppingItemsList({ isPagingEnabled: false });
-    shoppingItemOptions.value = response.data.items || [];
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-  }
 }
 
 async function createShoppingItem(name: string) {
@@ -227,7 +233,7 @@ onMounted(() => {
             v-model="data.workingRecipe.name"
             required
             type="text"
-            :class="{ 'form-control': true, 'is-invalid': isFieldInError('name') }"
+            :class="{ 'form-control': true, 'is-invalid': messageStore.isFieldInError('name') }"
           />
         </div>
         <div class="mt-4">
@@ -236,7 +242,10 @@ onMounted(() => {
             id="directions"
             v-model="data.workingRecipe.directions"
             rows="10"
-            :class="{ 'form-control': true, 'is-invalid': isFieldInError('directions') }"
+            :class="{
+              'form-control': true,
+              'is-invalid': messageStore.isFieldInError('directions'),
+            }"
           />
         </div>
       </div>
@@ -244,7 +253,7 @@ onMounted(() => {
         <label for="ingredients" class="form-label">Ingredients</label>
         <RecipeEditorIngredients
           v-model="data.workingRecipe.ingredients"
-          :is-field-in-error="isFieldInError"
+          :is-field-in-error="messageStore.isFieldInError"
         />
       </div>
       <div class="g-col-12 g-col-md-6">
@@ -252,7 +261,7 @@ onMounted(() => {
         <RecipeTimeSpanEditor
           id="prepTimeMinutes"
           v-model="data.workingRecipe.prepTimeMinutes"
-          :is-invalid="isFieldInError('prepTimeMinutes')"
+          :is-invalid="messageStore.isFieldInError('prepTimeMinutes')"
         />
       </div>
       <div class="g-col-12 g-col-md-6">
@@ -260,13 +269,13 @@ onMounted(() => {
         <RecipeTimeSpanEditor
           id="cookTimeMinutes"
           v-model="data.workingRecipe.cookTimeMinutes"
-          :is-invalid="isFieldInError('cookTimeMinutes')"
+          :is-invalid="messageStore.isFieldInError('cookTimeMinutes')"
         />
       </div>
       <div class="g-col-12 g-col-md-6">
         <div>
           <TagEditor
-            :class="{ danger: isFieldInError('categories') }"
+            :class="{ danger: messageStore.isFieldInError('categories') }"
             :tags="data.workingRecipe.categories || []"
             :on-add-tag="addCategory"
             :on-remove-tag="removeCategory"
@@ -281,7 +290,7 @@ onMounted(() => {
             v-model="data.workingRecipe.isForMealPlanning"
             class="form-check-input"
             type="checkbox"
-            :class="{ 'is-invalid': isFieldInError('isForMealPlanning') }"
+            :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
           />
           <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
         </div>
@@ -290,8 +299,8 @@ onMounted(() => {
         <div class="g-col-12 g-col-md-6">
           <label for="ingredients" class="form-label">Shopping Items</label>
           <RecipeEditorShoppingItems
-            v-model="data.workingRecipe.shoppingItems"
-            :is-field-in-error="isFieldInError"
+            v-model="data.workingRecipe.shoppingItems as WorkingRecipeShoppingItem[]"
+            :is-field-in-error="messageStore.isFieldInError"
             :suggestions="shoppingItemOptions"
             :on-create-item="createShoppingItem"
           />

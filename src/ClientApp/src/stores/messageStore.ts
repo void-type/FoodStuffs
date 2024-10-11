@@ -117,6 +117,7 @@ export const useMessageStore = defineStore('message', {
           text: x.message || '',
           fieldName: x.uiHandle || null,
           isError: true,
+          autoClear: 0,
         });
       });
     },

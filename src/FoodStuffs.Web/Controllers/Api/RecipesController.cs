@@ -31,8 +31,16 @@ public class RecipesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(SearchRecipesResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Search([FromServices] SearchRecipesPipeline searchPipeline, string? name = null, int[]? categories = null,
-        bool? isForMealPlanning = null, string? sortBy = null, string? randomSortSeed = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public Task<IActionResult> Search(
+        [FromServices] SearchRecipesPipeline searchPipeline,
+        [FromQuery] string? name = null,
+        [FromQuery] int[]? categories = null,
+        [FromQuery] bool? isForMealPlanning = null,
+        [FromQuery] string? sortBy = null,
+        [FromQuery] string? randomSortSeed = null,
+        [FromQuery] bool isPagingEnabled = true,
+        [FromQuery] int page = 1,
+        [FromQuery] int take = 30)
     {
         var request = new SearchRecipesRequest(
             NameSearch: name,

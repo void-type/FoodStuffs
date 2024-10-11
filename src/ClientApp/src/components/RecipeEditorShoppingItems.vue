@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
-import { computed, nextTick, ref, watch, type PropType } from 'vue';
+import { nextTick, ref, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
@@ -28,8 +28,10 @@ const props = defineProps({
   },
 });
 
-function copy(shoppingItems: WorkingRecipeShoppingItem[]) {
-  return JSON.parse(JSON.stringify(shoppingItems)) as WorkingRecipeShoppingItem[];
+const newShoppingItemName = ref('');
+
+async function createShoppingItem(name: string) {
+  await props.onCreateItem(name);
 }
 
 function showInAccordion(index: number, focus: boolean = false) {
@@ -51,47 +53,41 @@ function showInAccordion(index: number, focus: boolean = false) {
   }
 }
 
-const newShoppingItemName = ref('');
-
-async function createShoppingItem(name: string) {
-  await props.onCreateItem(name);
-}
-
 function onNewClick() {
   const newItem = new WorkingRecipeShoppingItem();
-  newItem.order = Math.max(...model.value.map((x) => x.order || 0)) + 1;
+  newItem.order = model.value.length + 1;
 
   const newLength = model.value.push(newItem);
 
   showInAccordion(newLength - 1, true);
 }
 
-function onDeleteClick(id: number) {
-  const index = model.value.findIndex((x) => x.id === id);
-  model.value.splice(index, 1);
-
-  showInAccordion(index);
-}
-
-function setOrderFromIndex(shoppingItems: WorkingRecipeShoppingItem[]) {
-  shoppingItems.forEach((x, i) => {
+function updateOrdersByIndex() {
+  model.value.forEach((x, i) => {
     // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
   });
 }
 
-// When model changes, we'll update the working version.
-watch(model, () => {
-  const shoppingItems = copy(model.value);
+function onDeleteClick(uiKey: string) {
+  const index = model.value.findIndex((x) => x.uiKey === uiKey);
+  model.value.splice(index, 1);
+  updateOrdersByIndex();
+  showInAccordion(index);
+}
 
-  shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
-  setOrderFromIndex(shoppingItems);
+function getFilteredSuggestions(uiKey: string) {
+  const usedIds = model.value.map((x) => x.id);
+  return props.suggestions.filter(
+    (x) => !usedIds.includes(x.id) || x.id === model.value.find((y) => y.uiKey === uiKey)?.id
+  );
+}
 
-  // Deep compare to prevent circular changes.
-  if (JSON.stringify(model.value) !== JSON.stringify(shoppingItems)) {
-    model.value = shoppingItems;
-  }
-});
+function onSortEnd() {
+  nextTick(() => {
+    updateOrdersByIndex();
+  });
+}
 </script>
 
 <template>
@@ -102,7 +98,7 @@ watch(model, () => {
         id="shoppingItemName"
         v-model="newShoppingItemName"
         name="shoppingItemName"
-        class="form-control"
+        :class="{ 'form-control': true, 'is-invalid': isFieldInError('shoppingItemName') }"
         placeholder="Create a shopping item"
         @keydown.stop.prevent.enter="createShoppingItem(newShoppingItemName)"
       />
@@ -114,18 +110,19 @@ watch(model, () => {
         Save
       </button>
     </div>
-    <div v-if="model.length < 1" id="item-list" class="card p-4 text-center">
+    <div v-if="model.length < 1" id="shopping-item-list" class="card p-4 text-center">
       No shopping items.
     </div>
     <vue-draggable
       v-else
-      id="item-list"
+      id="shopping-item-list"
       v-model="model"
       :animation="200"
       group="item"
       ghost-class="ghost"
       handle=".sort-handle"
       class="accordion"
+      @end="onSortEnd"
     >
       <div v-for="item in model" :key="item.uiKey" class="accordion-item">
         <div :id="`item-${item.uiKey}-accordion-header`" class="h2 accordion-header">
@@ -141,14 +138,14 @@ watch(model, () => {
               <div class="visually-hidden">Drag to sort</div>
               <font-awesome-icon icon="fa-grip-lines" class="text-muted"
             /></span>
-            <span>{{ item.quantity }}x {{ item.name }}</span>
+            <span>{{ item.quantity }}x {{ item.shoppingItemValue?.name }}</span>
           </button>
         </div>
         <div
           :id="`item-${item.uiKey}-accordion-collapse`"
           class="accordion-collapse collapse"
           :aria-labelledby="`item-${item.uiKey}-accordion-header`"
-          data-bs-parent="#item-list"
+          data-bs-parent="#shopping-item-list"
         >
           <div class="grid p-3 gap-sm">
             <div class="g-col-12 g-col-md-12">
@@ -164,7 +161,11 @@ watch(model, () => {
                 @keydown.stop.prevent.enter
               >
                 <option disabled value="">Select one</option>
-                <option v-for="suggestion in suggestions" :key="suggestion.id" :value="suggestion">
+                <option
+                  v-for="suggestion in getFilteredSuggestions(item.uiKey)"
+                  :key="suggestion.id"
+                  :value="suggestion"
+                >
                   {{ suggestion.name }}
                 </option>
               </select>
@@ -187,7 +188,7 @@ watch(model, () => {
               <button
                 type="button"
                 class="btn btn-danger btn-sm d-inline ms-auto"
-                @click.stop.prevent="onDeleteClick(item.id)"
+                @click.stop.prevent="onDeleteClick(item.uiKey)"
               >
                 Delete
               </button>
@@ -218,8 +219,8 @@ watch(model, () => {
   }
 }
 
-div#item-list,
-div#item-list .accordion-item:last-of-type {
+div#shopping-item-list,
+div#shopping-item-list .accordion-item:last-of-type {
   border-bottom-left-radius: 0;
 }
 

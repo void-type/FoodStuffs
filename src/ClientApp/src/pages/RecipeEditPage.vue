@@ -58,7 +58,6 @@ const recipeStore = useRecipeStore();
 const router = useRouter();
 const api = ApiHelpers.client;
 
-const { isFieldInError } = appStore;
 const { listRequest } = storeToRefs(recipeStore);
 
 // Editing existing recipe
@@ -321,7 +320,6 @@ onBeforeRouteLeave(async (to, from, next) => {
     <div class="grid mt-4">
       <div class="g-col-12 g-col-lg-9">
         <RecipeEditor
-          :is-field-in-error="isFieldInError"
           :source-recipe="data.sourceRecipe"
           :on-recipe-save="onRecipeSave"
           :on-recipe-delete="onRecipeDelete"
@@ -331,7 +329,6 @@ onBeforeRouteLeave(async (to, from, next) => {
         <RecipeImageManager
           v-if="isEditMode"
           :images="data.sourceImages"
-          :is-field-in-error="isFieldInError"
           :suggested-image="data.suggestedImage"
           :pinned-image="data.pinnedImage"
           :on-image-upload="onImageUpload"

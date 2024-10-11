@@ -12,22 +12,14 @@ export default class WorkingRecipeShoppingItem implements SaveRecipeRequestShopp
 
   public set shoppingItemValue(value: ListShoppingItemsResponse | null) {
     this._shoppingItemValue = value;
-    if (value !== null && value.id && value.name) {
-      this.id = value.id;
-      this.name = value.name;
-    } else {
-      this.id = 0;
-      this.name = '';
-    }
+    this.id = value?.id;
   }
 
   public get shoppingItemValue(): ListShoppingItemsResponse | null {
     return this._shoppingItemValue;
   }
 
-  public id = 0;
-
-  public name = '';
+  public id?: number;
 
   public quantity?: number = 1;
 

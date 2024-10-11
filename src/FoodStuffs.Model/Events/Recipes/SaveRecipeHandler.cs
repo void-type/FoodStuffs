@@ -150,17 +150,26 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         var missingItemRelations = missingItems
             .Select(item =>
             {
-                var requestedItem = request.ShoppingItems
-                    .Find(req => req.Id == item.Id);
-
                 return new RecipeShoppingItemRelation
                 {
-                    ShoppingItem = item,
-                    Quantity = requestedItem?.Quantity ?? int.MinValue,
-                    Order = requestedItem?.Order ?? int.MaxValue,
+                    ShoppingItem = item
                 };
             });
 
         recipe.ShoppingItemRelations.AddRange(missingItemRelations);
+
+        foreach (var item in recipe.ShoppingItemRelations)
+        {
+            var requestedItem = request.ShoppingItems
+                .Find(x => x.Id == item.ShoppingItem.Id);
+
+            if (requestedItem == null)
+            {
+                continue;
+            }
+
+            item.Quantity = requestedItem.Quantity;
+            item.Order = requestedItem.Order;
+        }
     }
 }

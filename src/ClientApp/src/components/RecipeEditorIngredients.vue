@@ -1,38 +1,29 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
-import { nextTick, reactive, watch, type PropType } from 'vue';
+import { nextTick, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
 
-const props = defineProps({
-  modelValue: {
-    type: Array as PropType<Array<WorkingRecipeIngredient>>,
-    required: true,
-  },
+const model = defineModel({
+  type: Array as PropType<Array<WorkingRecipeIngredient>>,
+  required: true,
+});
+
+defineProps({
   isFieldInError: {
     type: Function,
     required: true,
   },
 });
 
-const emit = defineEmits(['update:modelValue']);
-
-const data = reactive({
-  ingredients: [] as WorkingRecipeIngredient[],
-});
-
-function copy(ingredients: WorkingRecipeIngredient[]) {
-  return JSON.parse(JSON.stringify(ingredients)) as WorkingRecipeIngredient[];
-}
-
 function showInAccordion(index: number, focus: boolean = false) {
-  const safeIndex = clamp(index, 0, data.ingredients.length - 1);
-  const ingredient = data.ingredients[safeIndex];
+  const safeIndex = clamp(index, 0, model.value.length - 1);
+  const item = model.value[safeIndex];
 
-  if (ingredient) {
-    const elementId = `#ingredient-${ingredient.uiKey}`;
+  if (item) {
+    const elementId = `#ingredient-${item.uiKey}`;
     nextTick(() => {
       Collapse.getOrCreateInstance(`${elementId}-accordion-collapse`, { toggle: false }).show();
 
@@ -47,78 +38,54 @@ function showInAccordion(index: number, focus: boolean = false) {
 }
 
 function onNewClick() {
-  const ingredients = copy(data.ingredients);
+  const newItem = new WorkingRecipeIngredient();
+  newItem.name = '';
+  newItem.quantity = 1;
+  newItem.order = model.value.length + 1;
+  newItem.isCategory = false;
 
-  const newLength = ingredients.push({
-    ...new WorkingRecipeIngredient(),
-    name: '',
-    quantity: 1,
-    order: Math.max(...ingredients.map((x) => x.order || 0)) + 1,
-    isCategory: false,
-  });
+  const newLength = model.value.push(newItem);
 
-  data.ingredients = ingredients;
   showInAccordion(newLength - 1, true);
 }
 
-function onDeleteClick(id: string) {
-  const ingredients = copy(data.ingredients);
-
-  const index = ingredients.findIndex((x) => x.uiKey === id);
-  ingredients.splice(index, 1);
-
-  data.ingredients = ingredients;
-  showInAccordion(index);
-}
-
-function setOrderFromIndex(ingredients: WorkingRecipeIngredient[]) {
-  ingredients.forEach((x, i) => {
+function updateOrdersByIndex() {
+  model.value.forEach((x, i) => {
     // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
   });
 }
 
-// When props change, we'll update the working version.
-watch(props, () => {
-  const ingredients = copy(props.modelValue);
+function onDeleteClick(id: string) {
+  const index = model.value.findIndex((x) => x.uiKey === id);
+  model.value.splice(index, 1);
+  updateOrdersByIndex();
+  showInAccordion(index);
+}
 
-  ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
-  setOrderFromIndex(ingredients);
-
-  // Deep compare to prevent circular changes.
-  if (JSON.stringify(data.ingredients) !== JSON.stringify(ingredients)) {
-    data.ingredients = ingredients;
-  }
-});
-
-// When data changes, we'll emit the new model.
-watch(data, (newValue) => {
-  const ingredients = copy(newValue.ingredients);
-
-  setOrderFromIndex(ingredients);
-
-  // Deep compare to prevent circular changes.
-  if (JSON.stringify(props.modelValue) !== JSON.stringify(ingredients)) {
-    emit('update:modelValue', ingredients);
-  }
-});
+function onSortEnd() {
+  nextTick(() => {
+    updateOrdersByIndex();
+  });
+}
 </script>
 
 <template>
-  <div v-if="data.ingredients.length < 1" id="ingredient-list" class="card p-4 text-center">
+  <div v-if="model.length < 1" id="ingredient-list" class="card p-4 text-center">
     No ingredients.
   </div>
   <vue-draggable
     v-else
     id="ingredient-list"
-    v-model="data.ingredients"
+    v-model="model"
     :animation="200"
     group="ingredients"
     ghost-class="ghost"
     handle=".sort-handle"
     class="accordion"
+    @end="onSortEnd"
   >
-    <div v-for="ing in data.ingredients" :key="ing.uiKey" class="accordion-item">
+    <div v-for="ing in model" :key="ing.uiKey" class="accordion-item">
       <div :id="`ingredient-${ing.uiKey}-accordion-header`" class="h2 accordion-header">
         <button
           class="accordion-button collapsed"
