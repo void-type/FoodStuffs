@@ -158,6 +158,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         recipe.ShoppingItemRelations.AddRange(missingItemRelations);
 
+        // Set properties
         foreach (var item in recipe.ShoppingItemRelations)
         {
             var requestedItem = request.ShoppingItems

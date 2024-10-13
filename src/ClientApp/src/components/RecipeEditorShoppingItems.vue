@@ -83,6 +83,10 @@ function getFilteredSuggestions(uiKey: string) {
   );
 }
 
+function getShoppingItem(id: number | undefined) {
+  return props.suggestions.find((x) => x.id === id);
+}
+
 function onSortEnd() {
   nextTick(() => {
     updateOrdersByIndex();
@@ -138,7 +142,7 @@ function onSortEnd() {
               <div class="visually-hidden">Drag to sort</div>
               <font-awesome-icon icon="fa-grip-lines" class="text-muted"
             /></span>
-            <span>{{ item.quantity }}x {{ item.shoppingItemValue?.name }}</span>
+            <span>{{ item.quantity }}x {{ getShoppingItem(item.id)?.name }}</span>
           </button>
         </div>
         <div
@@ -152,7 +156,7 @@ function onSortEnd() {
               <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping Item</label>
               <select
                 :id="`item-${item.uiKey}-name`"
-                v-model="item.shoppingItemValue"
+                v-model="item.id"
                 required
                 :class="{
                   'form-select': true,
@@ -164,7 +168,7 @@ function onSortEnd() {
                 <option
                   v-for="suggestion in getFilteredSuggestions(item.uiKey)"
                   :key="suggestion.id"
-                  :value="suggestion"
+                  :value="suggestion.id"
                 >
                   {{ suggestion.name }}
                 </option>

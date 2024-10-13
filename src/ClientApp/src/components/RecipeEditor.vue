@@ -96,20 +96,10 @@ function reset() {
 
   ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const shoppingItems = (props.sourceRecipe.shoppingItems || [])
-    .map((x) => {
-      const item = new WorkingRecipeShoppingItem();
-
-      const value = shoppingItemOptions.value.find((y) => y.id === x.id);
-
-      if (!value) {
-        return null;
-      }
-
-      item.shoppingItemValue = value;
-      return item;
-    })
-    .filter((x) => x) as Array<WorkingRecipeShoppingItem>;
+  const shoppingItems = (props.sourceRecipe.shoppingItems || []).map((x) => ({
+    ...new WorkingRecipeShoppingItem(),
+    ...x,
+  }));
 
   shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
