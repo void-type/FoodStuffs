@@ -2,11 +2,12 @@ import { defineStore } from 'pinia';
 import type { IItemSetOfIFailure, IFailure } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 
-const DEFAULT_TIMEOUT = 4;
+const DEFAULT_TIMEOUT = 5;
 
 let nextId = 0;
 
 interface Message {
+  timeout?: number;
   text: string;
   fieldName: string | null;
   isError: boolean;
@@ -66,6 +67,14 @@ export const useMessageStore = defineStore('message', {
       }
     },
 
+    clearMessageTimeout(message: Message) {
+      if (message.timeout) {
+        clearTimeout(message.timeout);
+        // eslint-disable-next-line no-param-reassign
+        message.timeout = undefined;
+      }
+    },
+
     pushMessage(message: Message) {
       const matchingMessage = this.messages.find(
         (x) => x.fieldName === message.fieldName && x.text === message.text
@@ -89,7 +98,8 @@ export const useMessageStore = defineStore('message', {
       this.messages.push(message);
 
       if (message.autoClear > 0) {
-        setTimeout(() => {
+        // eslint-disable-next-line no-param-reassign
+        message.timeout = setTimeout(() => {
           this.clearMessage(message);
         }, message.autoClear * 1000);
       }
@@ -117,7 +127,6 @@ export const useMessageStore = defineStore('message', {
           text: x.message || '',
           fieldName: x.uiHandle || null,
           isError: true,
-          autoClear: 0,
         });
       });
     },
