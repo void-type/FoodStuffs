@@ -29,7 +29,7 @@ const { clearMessage, clearMessageTimeout } = messageStore;
       >
         <font-awesome-icon
           v-if="typeof message.timeout === 'undefined'"
-          class="me-2"
+          class="opacity-50 me-2"
           icon="fa-thumbtack"
         />
         {{ message.text }}
