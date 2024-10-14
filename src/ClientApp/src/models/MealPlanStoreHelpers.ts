@@ -1,38 +1,104 @@
-import type { MealPlansListParams } from '@/api/data-contracts';
+import type {
+  MealPlansListParams,
+  SaveMealPlanRequestPantryShoppingItem,
+} from '@/api/data-contracts';
 import SearchMealPlansRequest from './SearchMealPlansRequest';
+import { isNil } from './FormatHelpers';
 
 const settingsKeyCurrentMealPlanId = 'currentMealPlanId';
 
-export default class RecipeStoreHelpers {
-  static getCurrentMealPlan() {
-    return JSON.parse(localStorage.getItem(settingsKeyCurrentMealPlanId) || 'null') as
-      | number
-      | null;
+export function getCurrentMealPlanFromStorage() {
+  return JSON.parse(localStorage.getItem(settingsKeyCurrentMealPlanId) || 'null') as number | null;
+}
+
+export function storeCurrentMealPlanInStorage(currentMealPlanId: number | null) {
+  localStorage.setItem(settingsKeyCurrentMealPlanId, JSON.stringify(currentMealPlanId));
+}
+
+export function listRequestToQueryParams(listRequest: MealPlansListParams) {
+  // Query params need to be string or number
+  const requestEntries = Object.entries({
+    ...listRequest,
+  });
+
+  const defaultEntries = Object.entries({
+    ...new SearchMealPlansRequest(),
+  });
+
+  const cleanedEntries = requestEntries
+    .filter(([rKey, rValue]) => {
+      // Get the matching default value
+      const dValue = defaultEntries.find(([dKey]) => dKey === rKey)?.[1];
+      // Compare the values
+      return JSON.stringify(rValue) !== JSON.stringify(dValue);
+    })
+    .map(([qpKey, qpValue]) => [qpKey, String(qpValue)]);
+
+  return Object.fromEntries(cleanedEntries);
+}
+
+export function countShoppingItems(
+  acc: SaveMealPlanRequestPantryShoppingItem[],
+  curr: SaveMealPlanRequestPantryShoppingItem
+) {
+  const { id, quantity } = curr;
+
+  if (isNil(id)) {
+    return acc;
   }
 
-  static storeCurrentMealPlan(currentMealPlanId: number | null) {
-    localStorage.setItem(settingsKeyCurrentMealPlanId, JSON.stringify(currentMealPlanId));
+  let match = acc.find((x) => x.id === id);
+
+  if (!match) {
+    match = { id, quantity: 0 };
+    acc.push(match);
   }
 
-  static listRequestToQueryParams(listRequest: MealPlansListParams) {
-    // Query params need to be string or number
-    const requestEntries = Object.entries({
-      ...listRequest,
-    });
+  if (match.quantity === undefined) {
+    match.quantity = 0;
+  }
 
-    const defaultEntries = Object.entries({
-      ...new SearchMealPlansRequest(),
-    });
+  match.quantity += quantity || 0;
+  return acc;
+}
 
-    const cleanedEntries = requestEntries
-      .filter(([rKey, rValue]) => {
-        // Get the matching default value
-        const dValue = defaultEntries.find(([dKey]) => dKey === rKey)?.[1];
-        // Compare the values
-        return JSON.stringify(rValue) !== JSON.stringify(dValue);
-      })
-      .map(([qpKey, qpValue]) => [qpKey, String(qpValue)]);
+export function addShoppingItem(
+  shoppingItems: SaveMealPlanRequestPantryShoppingItem[],
+  id: number,
+  count = 1
+) {
+  let shoppingItem = shoppingItems.find((x) => x.id === id);
 
-    return Object.fromEntries(cleanedEntries);
+  if (!shoppingItem) {
+    shoppingItem = { id, quantity: 0 };
+    shoppingItems.push(shoppingItem);
+  }
+
+  if (shoppingItem.quantity === undefined) {
+    shoppingItem.quantity = 0;
+  }
+
+  shoppingItem.quantity += count;
+}
+
+export function subtractShoppingItem(
+  shoppingItems: SaveMealPlanRequestPantryShoppingItem[],
+  id: number,
+  count = 1
+) {
+  const shoppingItem = shoppingItems.find((x) => x.id === id);
+
+  if (!shoppingItem) {
+    return;
+  }
+
+  if (shoppingItem.quantity === undefined) {
+    shoppingItem.quantity = 0;
+  }
+
+  shoppingItem.quantity -= count;
+
+  if (shoppingItem.quantity < 1) {
+    shoppingItems.splice(shoppingItems.indexOf(shoppingItem), 1);
   }
 }

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import type { GetMealPlanResponsePantryShoppingItem } from '@/api/data-contracts';
+import type { SaveMealPlanRequestPantryShoppingItem } from '@/api/data-contracts';
 import { reactive, type PropType } from 'vue';
 
 const props = defineProps({
   title: { type: String, required: true },
-  shoppingItems: { type: Array<GetMealPlanResponsePantryShoppingItem>, required: true },
+  shoppingItems: { type: Array<SaveMealPlanRequestPantryShoppingItem>, required: true },
   onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
   onItemClick: { type: Function, required: true },
+  getShoppingItemDetails: { type: Function, required: true },
   showCopyList: { type: Boolean, required: false, default: false },
 });
 
@@ -24,7 +25,9 @@ function clear() {
 
 function copyList() {
   // This doesn't paste as multiple items from firefox (chrome works)
-  const text = props.shoppingItems.map((x) => `${x.quantity}x ${x.name}`).join(`\n`);
+  const text = props.shoppingItems
+    .map((x) => `${x.quantity}x ${props.getShoppingItemDetails(x.id)?.name}`)
+    .join(`\n`);
 
   navigator.clipboard.writeText(text);
   data.copyTooltipText = 'List copied!';
@@ -60,15 +63,15 @@ function copyList() {
       </h5>
       <ul class="list-group list-group-flush">
         <li
-          v-for="{ name: name, quantity } in shoppingItems"
-          :key="name!"
+          v-for="{ id, quantity } in shoppingItems"
+          :key="id"
           tabindex="0"
           role="button"
           class="list-group-item card-hover"
-          @keydown.stop.prevent.enter="onItemClick(name)"
-          @click="onItemClick(name)"
+          @keydown.stop.prevent.enter="onItemClick(id)"
+          @click="onItemClick(id)"
         >
-          {{ quantity }}x {{ name }}
+          {{ quantity }}x {{ getShoppingItemDetails(id)?.name }}
         </li>
         <li v-if="shoppingItems.length < 1" class="list-group-item p-4 text-center">
           No shopping items.

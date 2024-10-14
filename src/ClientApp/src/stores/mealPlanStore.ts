@@ -3,22 +3,22 @@ import type {
   GetMealPlanResponsePantryShoppingItem,
   IItemSetOfListMealPlansResponse,
   MealPlansListParams,
-  SaveMealPlanRequest,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import { isNil } from '@/models/FormatHelpers';
-import GetMealPlanResponseClass from '@/models/GetMealPlanResponseClass';
+import WorkingMealPlan from '@/models/GetMealPlanResponseClass';
 import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
-import MealPlanStoreHelpers from '@/models/MealPlanStoreHelpers';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
-import useMessageStore from './messageStore';
 import {
-  countIngredients,
-  subtractIngredient,
-  addIngredient,
-} from '../models/PantryIngredientHelpers';
+  addShoppingItem,
+  countShoppingItems,
+  listRequestToQueryParams,
+  storeCurrentMealPlanInStorage,
+  subtractShoppingItem,
+} from '@/models/MealPlanStoreHelpers';
+import useMessageStore from './messageStore';
 
 interface MealPlanStoreState {
   listResponse: IItemSetOfListMealPlansResponse;
@@ -39,13 +39,13 @@ export default defineStore('mealPlan', {
       totalCount: 0,
     },
     listRequest: { ...new SearchMealPlansRequest() },
-    currentMealPlan: GetMealPlanResponseClass.createForStore(),
+    currentMealPlan: WorkingMealPlan.createForStore(),
   }),
 
   getters: {
-    currentPantry: (state) => state.currentMealPlan.pantryShoppingItems || [],
-
     currentRecipes: (state) => state.currentMealPlan.recipes || [],
+
+    currentPantry: (state) => state.currentMealPlan.pantryShoppingItems || [],
 
     currentRecipesContains: (state) => (recipeId: number | null | undefined) => {
       if (isNil(recipeId)) {
@@ -56,22 +56,25 @@ export default defineStore('mealPlan', {
     },
 
     currentShoppingList(state): GetMealPlanResponsePantryShoppingItem[] {
-      const ingredientCounts = this.currentRecipes
+      const shoppingItemCounts = this.currentRecipes
         .flatMap((c) => c.shoppingItems || [])
-        .reduce(countIngredients, []);
+        .reduce(countShoppingItems, []);
 
       (state.currentMealPlan.pantryShoppingItems || []).forEach((x) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        subtractIngredient(ingredientCounts, x.name!, x.quantity);
+        if (!x.id) {
+          return;
+        }
+
+        subtractShoppingItem(shoppingItemCounts, x.id, x.quantity);
       });
 
-      return ingredientCounts;
+      return shoppingItemCounts;
     },
 
     currentQueryParams(state) {
       const { listRequest } = state;
 
-      return MealPlanStoreHelpers.listRequestToQueryParams(listRequest);
+      return listRequestToQueryParams(listRequest);
     },
   },
 
@@ -85,21 +88,21 @@ export default defineStore('mealPlan', {
       await this.saveCurrentMealPlan();
     },
 
-    async addToCurrentPantry(ingredient: string, count = 1) {
-      if (this.currentMealPlan === null) {
+    async addToCurrentPantry(shoppingItemId: number | undefined, count = 1) {
+      if (this.currentMealPlan === null || isNil(shoppingItemId)) {
         return;
       }
 
-      addIngredient(this.currentMealPlan.pantryShoppingItems || [], ingredient, count);
+      addShoppingItem(this.currentMealPlan.pantryShoppingItems || [], shoppingItemId, count);
       await this.saveCurrentMealPlan([], true);
     },
 
-    async removeFromCurrentPantry(ingredient: string, count = 1) {
-      if (this.currentMealPlan === null) {
+    async removeFromCurrentPantry(shoppingItemId: number | undefined, count = 1) {
+      if (this.currentMealPlan === null || isNil(shoppingItemId)) {
         return;
       }
 
-      subtractIngredient(this.currentMealPlan.pantryShoppingItems || [], ingredient, count);
+      subtractShoppingItem(this.currentMealPlan.pantryShoppingItems || [], shoppingItemId, count);
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -121,7 +124,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      await this.saveCurrentMealPlan([recipeId!]);
+      await this.saveCurrentMealPlan([recipeId]);
     },
 
     async removeCurrentRecipe(recipeId: number | null | undefined) {
@@ -143,21 +146,20 @@ export default defineStore('mealPlan', {
     },
 
     async newCurrentMealPlan() {
-      this.currentMealPlan = GetMealPlanResponseClass.createForStore();
-      MealPlanStoreHelpers.storeCurrentMealPlan(null);
+      this.currentMealPlan = WorkingMealPlan.createForStore();
+      storeCurrentMealPlanInStorage(null);
     },
 
-    async setCurrentMealPlan(mealPlanId: number | null | undefined) {
-      if (isNil(mealPlanId)) {
+    async setCurrentMealPlan(id: number | null | undefined) {
+      if (isNil(id)) {
         return;
       }
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const response = await api().mealPlansGet(mealPlanId!);
+        const response = await api().mealPlansGet(id);
         this.currentMealPlan = response.data;
         if (response.data.id) {
-          MealPlanStoreHelpers.storeCurrentMealPlan(response.data.id);
+          storeCurrentMealPlanInStorage(response.data.id);
         }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -172,22 +174,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      const request: SaveMealPlanRequest = {
-        id: current.id,
-        name: current.name,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        recipes: this.currentRecipes
-          .map((x) => x.id!)
-          .filter((x) => !isNil(x))
-          .map((id, order) => ({
-            id,
-            order,
-          })),
-        pantryShoppingItems: current.pantryShoppingItems,
-      };
-
-      console.log(current.pantryShoppingItems);
-      console.log(request.pantryShoppingItems);
+      const request = current;
 
       if (additionalRecipeIds && additionalRecipeIds.length > 0) {
         additionalRecipeIds.forEach((additionalId) => {
@@ -212,7 +199,7 @@ export default defineStore('mealPlan', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry ingredients.
+        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry shoppingItems.
         if (!quickSave) {
           await this.setCurrentMealPlan(response.data.id);
           await this.fetchMealPlanList();

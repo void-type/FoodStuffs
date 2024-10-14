@@ -1,11 +1,11 @@
 import type {
-  GetMealPlanResponse,
-  GetMealPlanResponsePantryShoppingItem,
-  GetMealPlanResponseRecipe,
+  SaveMealPlanRequest,
+  SaveMealPlanRequestPantryShoppingItem,
+  SaveMealPlanRequestRecipe,
 } from '@/api/data-contracts';
 import DateHelpers from '@/models/DateHelpers';
 
-export default class GetMealPlanResponseClass implements GetMealPlanResponse {
+export default class WorkingMealPlan implements SaveMealPlanRequest {
   public id = 0;
 
   public name: string = '';
@@ -18,12 +18,12 @@ export default class GetMealPlanResponseClass implements GetMealPlanResponse {
 
   public modifiedOn = '';
 
-  public recipes: GetMealPlanResponseRecipe[] = [];
+  public recipes: SaveMealPlanRequestRecipe[] = [];
 
-  public pantryShoppingItems: GetMealPlanResponsePantryShoppingItem[] = [];
+  public pantryShoppingItems: SaveMealPlanRequestPantryShoppingItem[] = [];
 
   public static createForStore() {
-    const newPlan = new GetMealPlanResponseClass();
+    const newPlan = new WorkingMealPlan();
     newPlan.name = DateHelpers.dateForView(DateHelpers.getThisOrNextDayOfWeek(1));
     return newPlan;
   }

@@ -60,25 +60,6 @@ function navigateSearch() {
   });
 }
 
-// function clearSearch() {
-//   mealPlanStore.listRequest = {
-//     ...new SearchMealPlansRequest(),
-//     take: listRequest.value.take,
-//     isPagingEnabled: listRequest.value.isPagingEnabled,
-//   };
-
-//   navigateSearch();
-// }
-
-// function startSearch() {
-//   mealPlanStore.listRequest = {
-//     ...listRequest.value,
-//     page: 1,
-//   };
-
-//   navigateSearch();
-// }
-
 function changePage(page: number) {
   mealPlanStore.listRequest = { ...listRequest.value, page };
 

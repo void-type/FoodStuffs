@@ -14,7 +14,7 @@ import useMealPlanStore from '@/stores/mealPlanStore';
 import DarkModeHelpers from '@/models/DarkModeHelpers';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import useMessageStore from '@/stores/messageStore';
-import MealPlanStoreHelpers from './models/MealPlanStoreHelpers';
+import { getCurrentMealPlanFromStorage } from './models/MealPlanStoreHelpers';
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
@@ -28,7 +28,7 @@ onMounted(() => {
 
   recipeStore.addToRecent(RecipeStoreHelpers.getQueuedRecent());
 
-  mealPlanStore.setCurrentMealPlan(MealPlanStoreHelpers.getCurrentMealPlan());
+  mealPlanStore.setCurrentMealPlan(getCurrentMealPlanFromStorage());
 
   api()
     .appGetInfo()

@@ -1,29 +1,38 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import type { ModalParameters } from '@/models/ModalParameters';
-import useAppStore from '@/stores/appStore';
 import RecipeCard from '@/components/RecipeCard.vue';
 import MealPlanShoppingItemList from '@/components/MealPlanShoppingItemList.vue';
+import useMessageStore from '@/stores/messageStore';
+import ApiHelpers from '@/models/ApiHelpers';
+import type { ListShoppingItemsResponse } from '@/api/data-contracts';
+import type { HttpResponse } from '@/api/http-client';
 
-const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
+const messageStore = useMessageStore();
+const api = ApiHelpers.client;
 
 const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 
-async function onDeleteCurrentMealPlan() {
-  const parameters: ModalParameters = {
-    title: 'Delete meal plan',
-    description: 'Do you really want to delete this meal plan?',
-    okAction: () => mealPlanStore.deleteMealPlan(currentMealPlan.value.id),
-  };
+const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
 
-  appStore.showModal(parameters);
+async function fetchShoppingItems() {
+  try {
+    const response = await api().shoppingItemsList({ isPagingEnabled: false });
+    shoppingItemOptions.value = (response.data.items || []) as Array<ListShoppingItemsResponse>;
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
+function getShoppingItem(id: number | undefined) {
+  return shoppingItemOptions.value.find((x) => x.id === id);
 }
 
 onMounted(async () => {
   mealPlanStore.fetchMealPlanList();
+  await fetchShoppingItems();
 });
 </script>
 
@@ -61,13 +70,6 @@ onMounted(async () => {
             >
               Empty
             </button>
-            <button
-              class="btn btn-danger ms-auto"
-              :disabled="(currentMealPlan?.id || 0) < 1"
-              @click.stop.prevent="() => onDeleteCurrentMealPlan()"
-            >
-              Delete
-            </button>
           </div>
         </div>
       </div>
@@ -92,6 +94,7 @@ onMounted(async () => {
               title="Shopping list"
               :shopping-items="mealPlanStore.currentShoppingList"
               :on-item-click="mealPlanStore.addToCurrentPantry"
+              :get-shopping-item-details="getShoppingItem"
               :show-copy-list="true"
             />
           </div>
@@ -101,6 +104,7 @@ onMounted(async () => {
               :shopping-items="mealPlanStore.currentPantry"
               :on-clear="mealPlanStore.clearCurrentPantry"
               :on-item-click="mealPlanStore.removeFromCurrentPantry"
+              :get-shopping-item-details="getShoppingItem"
             />
           </div>
         </div>

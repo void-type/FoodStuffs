@@ -54,37 +54,6 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         mealPlan.Name = request.Name;
     }
 
-    private async Task ManagePantryShoppingItems(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
-    {
-        var requestedItemIds = request.PantryShoppingItems
-            .Select(x => x.Id)
-            .ToArray();
-
-        // Remove extra items.
-        mealPlan.PantryShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
-
-        // Add missing items. We'll let the database throw when ID's don't exist.
-        var missingItemIds = requestedItemIds
-            .Where(x => !mealPlan.PantryShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x));
-
-        var specification = new ShoppingItemsSpecification(missingItemIds);
-
-        var missingItems = await _data.ShoppingItems
-            .TagWith(GetTag(specification))
-            .ApplyEfSpecification(specification)
-            .ToListAsync(cancellationToken);
-
-        mealPlan.PantryShoppingItemRelations
-            .AddRange(missingItems
-                .Select(item => new MealPlanPantryShoppingItemRelation
-                {
-                    ShoppingItem = item,
-                    Quantity = request.PantryShoppingItems
-                        .Find(req => req.Id == item.Id)?
-                        .Quantity ?? int.MinValue,
-                }));
-    }
-
     private async Task ManageRecipes(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
     {
         var requestedRecipeIds = request.Recipes
@@ -114,5 +83,52 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
                         .Find(req => req.Id == recipe.Id)?
                         .Order ?? int.MaxValue,
                 }));
+    }
+
+    private async Task ManagePantryShoppingItems(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    {
+        var requestedItemIds = request.PantryShoppingItems
+            .Select(x => x.Id)
+            .ToArray();
+
+        // Remove extra items.
+        mealPlan.PantryShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
+
+        // Add missing items. We'll let the database throw when ID's don't exist.
+        var missingItemIds = requestedItemIds
+            .Where(x => !mealPlan.PantryShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x))
+            .ToList();
+
+        var specification = new ShoppingItemsSpecification(missingItemIds);
+
+        var missingItems = await _data.ShoppingItems
+            .TagWith(GetTag(specification))
+            .ApplyEfSpecification(specification)
+            .ToListAsync(cancellationToken);
+
+        var missingItemRelations = missingItems
+            .Select(item =>
+            {
+                return new MealPlanPantryShoppingItemRelation
+                {
+                    ShoppingItem = item
+                };
+            });
+
+        mealPlan.PantryShoppingItemRelations.AddRange(missingItemRelations);
+
+        // Set properties
+        foreach (var item in mealPlan.PantryShoppingItemRelations)
+        {
+            var requestedItem = request.PantryShoppingItems
+                .Find(x => x.Id == item.ShoppingItem.Id);
+
+            if (requestedItem == null)
+            {
+                continue;
+            }
+
+            item.Quantity = requestedItem.Quantity;
+        }
     }
 }

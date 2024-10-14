@@ -25,25 +25,53 @@ const planName = computed(() => {
     <li class="nav-item">
       <router-link :to="{ name: 'home' }" class="nav-link">Home</router-link>
     </li>
-    <li class="nav-item">
-      <router-link
-        :to="{ name: 'recipeSearch', query: recipeStore.currentQueryParams }"
-        class="nav-link"
-        >Recipes</router-link
+    <li class="nav-item dropdown">
+      <a
+        class="nav-link dropdown-toggle"
+        href="#"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
       >
+        Recipes
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <router-link
+            :to="{ name: 'recipeSearch', query: recipeStore.currentQueryParams }"
+            class="dropdown-item"
+            >Search Recipes</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'recipeNew' }" class="dropdown-item">New Recipe</router-link>
+        </li>
+      </ul>
     </li>
-    <li class="nav-item">
-      <router-link :to="{ name: 'recipeNew' }" class="nav-link">New Recipe</router-link>
-    </li>
-    <li class="nav-item">
-      <router-link
-        :to="{ name: 'planList', query: mealPlanStore.currentQueryParams }"
-        class="nav-link"
-        >Meal Plans</router-link
+    <li class="nav-item dropdown">
+      <a
+        class="nav-link dropdown-toggle"
+        href="#"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
       >
-    </li>
-    <li class="nav-item">
-      <router-link :to="{ name: 'planEdit' }" class="nav-link">Plan {{ planName }}</router-link>
+        Meal Plans
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <router-link
+            :to="{ name: 'planList', query: mealPlanStore.currentQueryParams }"
+            class="dropdown-item"
+            >List Meal Plans</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'planEdit' }" class="dropdown-item"
+            >Current Plan {{ planName }}</router-link
+          >
+        </li>
+      </ul>
     </li>
   </ul>
 </template>

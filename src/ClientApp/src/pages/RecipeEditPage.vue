@@ -306,11 +306,11 @@ watch(
 );
 
 onBeforeRouteUpdate(async (to, from, next) => {
-  await beforeRouteChange(to, from, next);
+  beforeRouteChange(to, from, next);
 });
 
 onBeforeRouteLeave(async (to, from, next) => {
-  await beforeRouteChange(to, from, next);
+  beforeRouteChange(to, from, next);
 });
 </script>
 
