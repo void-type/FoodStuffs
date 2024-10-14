@@ -4,6 +4,7 @@ public record GetRecipeResponse(
     int Id,
     string Name,
     string Directions,
+    string Sides,
     int? PrepTimeMinutes,
     int? CookTimeMinutes,
     bool IsForMealPlanning,

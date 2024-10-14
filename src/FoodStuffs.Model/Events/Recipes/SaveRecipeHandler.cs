@@ -60,6 +60,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
     {
         recipe.Name = request.Name;
         recipe.Directions = request.Directions ?? string.Empty;
+        recipe.Sides = request.Sides ?? string.Empty;
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.IsForMealPlanning = request.IsForMealPlanning;

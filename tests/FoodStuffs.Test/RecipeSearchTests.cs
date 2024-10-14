@@ -1,4 +1,7 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
+using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search.Recipes.Models;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using VoidCore.Model.Time;
@@ -31,11 +34,7 @@ public class RecipeSearchTests : IAsyncLifetime
             Directory.Delete("App_Data/Lucene", true);
         }
 
-        var settings = new RecipeSearchSettings
-        {
-            IndexFolder = "App_Data/Lucene/RecipeIndex",
-            TaxonomyFolder = "App_Data/Lucene/RecipeTaxonomy",
-        };
+        var settings = new SearchSettings();
 
         var indexService = new RecipeIndexService(logger, settings, context);
         await indexService.Rebuild(CancellationToken.None);
@@ -49,7 +48,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, null, null, null, null, true, 2, 1));
+            .Handle(new SearchRecipesRequest(null, null, null, null, null, true, 2, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -64,7 +63,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, null, null, null, null, false, 0, 0));
+            .Handle(new SearchRecipesRequest(null, null, null, null, null, false, 0, 0));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(3, result.Value.Results.Count);
@@ -81,7 +80,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, null, null, "z-a", null, true, 1, 1));
+            .Handle(new SearchRecipesRequest(null, null, null, "z-a", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -97,7 +96,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, null, null, "a-z", null, true, 1, 1));
+            .Handle(new SearchRecipesRequest(null, null, null, "a-z", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -113,7 +112,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest("Hutdug", null, null, null, null, true, 1, 2));
+            .Handle(new SearchRecipesRequest("Hutdug", null, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -131,7 +130,7 @@ public class RecipeSearchTests : IAsyncLifetime
         var cat = context.Categories.ToList();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, [1, 2, 3], null, null, null, true, 1, 4));
+            .Handle(new SearchRecipesRequest(null, [1, 2, 3], null, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Results.Count);
@@ -149,7 +148,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, null, true, null, null, true, 1, 4));
+            .Handle(new SearchRecipesRequest(null, null, true, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -167,7 +166,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest("nothing matches", null, null, null, null, true, 1, 2));
+            .Handle(new SearchRecipesRequest("nothing matches", null, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Results.Count);
@@ -180,7 +179,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(_queryService)
-            .Handle(new RecipeSearchRequest(null, [1000, 2000, 3000], null, null, null, true, 1, 2));
+            .Handle(new SearchRecipesRequest(null, [1000, 2000, 3000], null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Results.Count);

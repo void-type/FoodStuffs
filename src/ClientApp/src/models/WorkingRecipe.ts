@@ -9,6 +9,8 @@ export default class WorkingRecipe implements SaveRecipeRequest {
 
   public directions = '';
 
+  public sides = '';
+
   public cookTimeMinutes: number | null = null;
 
   public prepTimeMinutes: number | null = null;

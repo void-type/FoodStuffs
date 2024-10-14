@@ -31,6 +31,7 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                 Id: r.Id,
                 Name: r.Name,
                 Directions: r.Directions,
+                Sides: r.Sides,
                 PrepTimeMinutes: r.PrepTimeMinutes,
                 CookTimeMinutes: r.CookTimeMinutes,
                 IsForMealPlanning: r.IsForMealPlanning,

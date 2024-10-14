@@ -11,6 +11,8 @@ public class Recipe : IAuditableWithOffset
 
     public string Directions { get; set; } = null!;
 
+    public string Sides { get; set; } = null!;
+
     public int? PrepTimeMinutes { get; set; }
 
     public int? CookTimeMinutes { get; set; }

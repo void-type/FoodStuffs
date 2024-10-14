@@ -108,6 +108,7 @@ function reset() {
     ...sourceCopy,
     ingredients,
     directions: props.sourceRecipe.directions || '',
+    sides: props.sourceRecipe.sides || '',
     shoppingItems,
   };
 
@@ -238,13 +239,59 @@ onMounted(() => {
             }"
           />
         </div>
+        <div class="mt-4">
+          <label for="sides" class="form-label">Sides</label>
+          <textarea
+            id="sides"
+            v-model="data.workingRecipe.sides"
+            rows="10"
+            :class="{
+              'form-control': true,
+              'is-invalid': messageStore.isFieldInError('sides'),
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid g-col-12 g-col-md-6">
+        <div class="g-col-12">
+          <label for="ingredients" class="form-label">Shopping Items</label>
+          <RecipeEditorShoppingItems
+            v-model="data.workingRecipe.shoppingItems as WorkingRecipeShoppingItem[]"
+            :is-field-in-error="messageStore.isFieldInError"
+            :suggestions="shoppingItemOptions"
+            :on-create-item="createShoppingItem"
+          />
+        </div>
+        <div class="g-col-12">
+          <label for="ingredients" class="form-label">Ingredients</label>
+          <RecipeEditorIngredients
+            v-model="data.workingRecipe.ingredients"
+            :is-field-in-error="messageStore.isFieldInError"
+          />
+        </div>
       </div>
       <div class="g-col-12 g-col-md-6">
-        <label for="ingredients" class="form-label">Ingredients</label>
-        <RecipeEditorIngredients
-          v-model="data.workingRecipe.ingredients"
-          :is-field-in-error="messageStore.isFieldInError"
+        <TagEditor
+          :class="{ danger: messageStore.isFieldInError('categories') }"
+          :tags="data.workingRecipe.categories || []"
+          :on-add-tag="addCategory"
+          :on-remove-tag="removeCategory"
+          :suggestions="categoryOptions"
+          field-name="categories"
+          label="Categories"
         />
+      </div>
+      <div class="g-col-12 g-col-md-6">
+        <div class="form-check mt-4">
+          <input
+            id="isForMealPlanning"
+            v-model="data.workingRecipe.isForMealPlanning"
+            class="form-check-input"
+            type="checkbox"
+            :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
+          />
+          <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
+        </div>
       </div>
       <div class="g-col-12 g-col-md-6">
         <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
@@ -261,40 +308,6 @@ onMounted(() => {
           v-model="data.workingRecipe.cookTimeMinutes"
           :is-invalid="messageStore.isFieldInError('cookTimeMinutes')"
         />
-      </div>
-      <div class="g-col-12 g-col-md-6">
-        <div>
-          <TagEditor
-            :class="{ danger: messageStore.isFieldInError('categories') }"
-            :tags="data.workingRecipe.categories || []"
-            :on-add-tag="addCategory"
-            :on-remove-tag="removeCategory"
-            :suggestions="categoryOptions"
-            field-name="categories"
-            label="Categories"
-          />
-        </div>
-        <div class="form-check mt-4">
-          <input
-            id="isForMealPlanning"
-            v-model="data.workingRecipe.isForMealPlanning"
-            class="form-check-input"
-            type="checkbox"
-            :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
-          />
-          <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
-        </div>
-      </div>
-      <div class="g-col-12 g-col-md-6">
-        <div class="g-col-12 g-col-md-6">
-          <label for="ingredients" class="form-label">Shopping Items</label>
-          <RecipeEditorShoppingItems
-            v-model="data.workingRecipe.shoppingItems as WorkingRecipeShoppingItem[]"
-            :is-field-in-error="messageStore.isFieldInError"
-            :suggestions="shoppingItemOptions"
-            :on-create-item="createShoppingItem"
-          />
-        </div>
       </div>
       <EntityAuditInfo v-if="sourceRecipe.id" class="g-col-12" :entity="sourceRecipe" />
     </div>

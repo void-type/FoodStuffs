@@ -240,6 +240,7 @@ export interface GetRecipeResponse {
   categories?: string[];
   ingredients?: GetRecipeResponseIngredient[];
   shoppingItems?: GetRecipeResponseShoppingItem[];
+  sides?: string;
 }
 
 export interface GetRecipeResponseIngredient {
@@ -274,6 +275,7 @@ export interface SaveRecipeRequest {
   ingredients?: SaveRecipeRequestIngredient[];
   shoppingItems?: SaveRecipeRequestShoppingItem[];
   categories?: string[];
+  sides?: string;
 }
 
 export interface SaveRecipeRequestIngredient {

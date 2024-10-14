@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Events;
 using FoodStuffs.Model.Events.Images;
 using FoodStuffs.Model.ImageCompression;
+using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
