@@ -13,6 +13,7 @@ import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
+import RecipeListItem from '@/components/RecipeListItem.vue';
 
 const props = defineProps({
   query: {
@@ -31,6 +32,8 @@ const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelpers;
 
 const selectedCategories = ref([] as Array<number>);
+
+const useListView = ref(true);
 
 const resultCountText = computed(() => {
   const itemSet = listResponse.value;
@@ -238,8 +241,33 @@ watch(
         </EntityTableControls>
       </div>
     </div>
-    <div class="grid mt-4">
-      <div class="g-col-12">{{ resultCountText }}</div>
+    <div class="mt-4">{{ resultCountText }}</div>
+    <div class="form-check form-switch" title="Use list view">
+      <label
+        class="form-check-label"
+        for="useListView"
+        title="Use list view"
+        aria-label="Use list view"
+        ><font-awesome-icon class="me-2" icon="fa-moon" />List view</label
+      >
+      <input
+        id="useListView"
+        v-model="useListView"
+        :checked="useListView"
+        class="form-check-input"
+        type="checkbox"
+      />
+    </div>
+    <div v-if="useListView" class="grid mt-4">
+      <RecipeListItem
+        v-for="(recipe, i) in listResponse.items"
+        :key="recipe.id"
+        :recipe="recipe"
+        :lazy="i > 6"
+        class="g-col-12 g-col-sm-6 g-col-lg-4"
+      />
+    </div>
+    <div v-else class="grid mt-4">
       <RecipeCard
         v-for="(recipe, i) in listResponse.items"
         :key="recipe.id"

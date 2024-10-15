@@ -175,7 +175,7 @@ onMounted(() => {
     >
       {{ recipe.directions }}
     </div>
-    <h3 v-if="!isNil(recipe.sides)" class="mt-3">Directions</h3>
+    <h3 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h3>
     <div
       v-if="!isNil(recipe.sides)"
       :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
