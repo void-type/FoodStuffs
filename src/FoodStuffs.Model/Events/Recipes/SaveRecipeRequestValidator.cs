@@ -20,10 +20,10 @@ public class SaveRecipeRequestValidator : RuleValidatorAbstract<SaveRecipeReques
             .InvalidWhen(entity => entity.ShoppingItems.Exists(i => i.Quantity <= 0));
 
         CreateRule(new Failure("Cook time must be positive.", "cookTimeMinutes"))
-            .InvalidWhen(entity => entity.CookTimeMinutes <= 0);
+            .InvalidWhen(entity => entity.CookTimeMinutes < 0);
 
         CreateRule(new Failure("Prep time must be positive.", "prepTimeMinutes"))
-            .InvalidWhen(entity => entity.PrepTimeMinutes <= 0);
+            .InvalidWhen(entity => entity.PrepTimeMinutes < 0);
 
         CreateRule(new Failure("Category names can't be longer than 450 characters.", "categories"))
             .InvalidWhen(entity => entity.Categories.Exists(x => x.Length > 450));

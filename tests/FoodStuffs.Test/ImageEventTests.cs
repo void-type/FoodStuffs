@@ -177,7 +177,9 @@ public class ImageEventTests
 
         Assert.True(result.IsSuccess);
 
-        var pinnedImageFileName = context.Recipes.Where(r => r.Id == image.RecipeId).First().PinnedImage.FileName;
+        var pinnedImageFileName = context.Recipes
+            .Where(r => r.Id == image.RecipeId)
+            .First()?.PinnedImage?.FileName;
 
         Assert.Equal(image.FileName, pinnedImageFileName);
     }

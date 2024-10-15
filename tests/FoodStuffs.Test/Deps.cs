@@ -28,9 +28,9 @@ public static class Deps
     public static readonly IDateTimeService DateTimeServiceLate;
     public static readonly ICurrentUserAccessor CurrentUserAccessor;
 
-    public static string PngBase64String = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQAAAAA3bvkkAAAACklEQVQI12NoAAAAggCB3UNq9AAAAABJRU5ErkJggg==";
+    public const string PngBase64String = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQAAAAA3bvkkAAAACklEQVQI12NoAAAAggCB3UNq9AAAAABJRU5ErkJggg==";
 
-    public static FoodStuffsContext FoodStuffsContext(string dbName = null)
+    public static FoodStuffsContext FoodStuffsContext(string? dbName = null)
     {
         return new FoodStuffsContext(
             new DbContextOptionsBuilder<FoodStuffsContext>()
@@ -51,6 +51,7 @@ public static class Deps
         {
             Name = "Cheeseburger",
             Directions = "dir",
+            Sides = "side",
             CookTimeMinutes = 21,
             PrepTimeMinutes = 2,
             CreatedOn = DateTimeServiceEarly.Moment,
@@ -67,6 +68,7 @@ public static class Deps
         {
             Name = "Hotdog",
             Directions = "some",
+            Sides = "side",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             IsForMealPlanning = true,
@@ -83,6 +85,7 @@ public static class Deps
         {
             Name = "Sandwich",
             Directions = "some",
+            Sides = "side",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             CreatedOn = DateTimeServiceEarly.Moment,

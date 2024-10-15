@@ -1,7 +1,8 @@
 <Project>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <GenerateFullPaths>true</GenerateFullPaths>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateFullPaths>true</GenerateFullPaths>
   </PropertyGroup>
 </Project>

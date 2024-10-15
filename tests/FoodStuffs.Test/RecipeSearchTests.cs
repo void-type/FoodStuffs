@@ -11,7 +11,9 @@ namespace FoodStuffs.Test;
 
 public class RecipeSearchTests : IAsyncLifetime
 {
-    private IRecipeQueryService _queryService;
+    private IRecipeQueryService? _queryService;
+
+    private IRecipeQueryService QueryService => _queryService ?? throw new InvalidOperationException("QueryService not initialized.");
 
     public async Task InitializeAsync()
     {
@@ -47,7 +49,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, null, null, null, null, true, 2, 1));
 
         Assert.True(result.IsSuccess);
@@ -62,7 +64,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, null, null, null, null, false, 0, 0));
 
         Assert.True(result.IsSuccess);
@@ -79,7 +81,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, null, null, "z-a", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
@@ -95,7 +97,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, null, null, "a-z", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
@@ -111,7 +113,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest("Hutdug", null, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
@@ -129,7 +131,7 @@ public class RecipeSearchTests : IAsyncLifetime
 
         var cat = context.Categories.ToList();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, [1, 2, 3], null, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
@@ -147,7 +149,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, null, true, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
@@ -165,7 +167,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest("nothing matches", null, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
@@ -178,7 +180,7 @@ public class RecipeSearchTests : IAsyncLifetime
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var result = await new SearchRecipesHandler(_queryService)
+        var result = await new SearchRecipesHandler(QueryService)
             .Handle(new SearchRecipesRequest(null, [1000, 2000, 3000], null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
