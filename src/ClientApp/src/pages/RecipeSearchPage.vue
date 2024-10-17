@@ -33,7 +33,7 @@ const { sortOptions } = RecipeStoreHelpers;
 
 const selectedCategories = ref([] as Array<number>);
 
-const useListView = ref(true);
+const useListView = ref(false);
 
 const resultCountText = computed(() => {
   const itemSet = listResponse.value;
