@@ -30,10 +30,6 @@ const props = defineProps({
 
 const newShoppingItemName = ref('');
 
-async function createShoppingItem(name: string) {
-  await props.onCreateItem(name);
-}
-
 function showInAccordion(index: number, focus: boolean = false) {
   const safeIndex = clamp(index, 0, model.value.length - 1);
   const item = model.value[safeIndex];
@@ -53,13 +49,26 @@ function showInAccordion(index: number, focus: boolean = false) {
   }
 }
 
-function onNewClick() {
+function onNewClick(itemId: number | null) {
   const newItem = new WorkingRecipeShoppingItem();
   newItem.order = model.value.length + 1;
 
+  if (itemId !== null) {
+    newItem.id = itemId;
+  }
+
   const newLength = model.value.push(newItem);
 
-  showInAccordion(newLength - 1, true);
+  showInAccordion(newLength - 1, itemId === null);
+}
+
+async function createShoppingItem(name: string) {
+  const itemId = await props.onCreateItem(name);
+
+  if (itemId !== null) {
+    newShoppingItemName.value = '';
+    onNewClick(itemId);
+  }
 }
 
 function updateOrdersByIndex() {
@@ -205,7 +214,7 @@ function onSortEnd() {
       type="button"
       class="btn btn-secondary btn-sm btn-add-item"
       aria-label="add shopping item"
-      @click.stop.prevent="onNewClick()"
+      @click.stop.prevent="onNewClick(null)"
     >
       <font-awesome-icon icon="fa-plus" />
     </button>

@@ -128,9 +128,8 @@ async function createShoppingItem(name: string) {
     return response.data.id;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    return null;
   }
-
-  return null;
 }
 
 function addCategory(tag: string) {
