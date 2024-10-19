@@ -66,7 +66,7 @@ watch(modalIsActive, (isActive) => {
               type="button"
               class="btn-close"
               aria-label="Cancel"
-              @click="cancelAction()"
+              @click="cancelAction"
             ></button>
           </div>
           <div class="modal-body">{{ modalParameters.description }}</div>
@@ -75,7 +75,7 @@ watch(modalIsActive, (isActive) => {
               id="app-modal-cancel-button"
               type="button"
               class="btn btn-secondary"
-              @click="cancelAction()"
+              @click="cancelAction"
             >
               Cancel
             </button>
@@ -83,7 +83,7 @@ watch(modalIsActive, (isActive) => {
               id="app-modal-ok-button"
               type="button"
               class="btn btn-primary"
-              @click="okAction()"
+              @click="okAction"
             >
               OK
             </button>

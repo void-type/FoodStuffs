@@ -84,7 +84,7 @@ const searchText = ref('');
                 <button
                   class="btn btn-secondary"
                   :disabled="isRebuilding"
-                  @click.stop.prevent="rebuildSearch"
+                  @click.stop="rebuildSearch"
                 >
                   <font-awesome-icon class="me-2" icon="fa-rotate-right" />{{
                     isRebuilding ? 'Rebuilding...' : 'Rebuild index'

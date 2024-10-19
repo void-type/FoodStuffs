@@ -155,7 +155,7 @@ function onSortEnd() {
           <div class="btn-toolbar g-col-12">
             <button
               type="button"
-              class="btn btn-danger btn-sm d-inline ms-auto"
+              class="btn btn-danger btn-sm ms-auto"
               @click.stop.prevent="onDeleteClick(ing.uiKey)"
             >
               Delete

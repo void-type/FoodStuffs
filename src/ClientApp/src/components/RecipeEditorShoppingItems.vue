@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
-import { nextTick, ref, type PropType } from 'vue';
+import { computed, nextTick, ref, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
 import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
+import RecipeEditorShoppingItemSelect from './RecipeEditorShoppingItemSelect.vue';
 
 const model = defineModel({
   type: Array as PropType<Array<WorkingRecipeShoppingItem>>,
@@ -85,12 +86,7 @@ function onDeleteClick(uiKey: string) {
   showInAccordion(index);
 }
 
-function getFilteredSuggestions(uiKey: string) {
-  const usedIds = model.value.map((x) => x.id);
-  return props.suggestions.filter(
-    (x) => !usedIds.includes(x.id) || x.id === model.value.find((y) => y.uiKey === uiKey)?.id
-  );
-}
+const usedIds = computed(() => model.value.map((x) => x.id));
 
 function getShoppingItem(id: number | undefined) {
   return props.suggestions.find((x) => x.id === id);
@@ -163,25 +159,13 @@ function onSortEnd() {
           <div class="grid p-3 gap-sm">
             <div class="g-col-12 g-col-md-12">
               <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping Item</label>
-              <select
-                :id="`item-${item.uiKey}-name`"
+              <RecipeEditorShoppingItemSelect
                 v-model="item.id"
-                required
-                :class="{
-                  'form-select': true,
-                  'is-invalid': isFieldInError('shoppingItems'),
-                }"
-                @keydown.stop.prevent.enter
-              >
-                <option disabled value="">Select one</option>
-                <option
-                  v-for="suggestion in getFilteredSuggestions(item.uiKey)"
-                  :key="suggestion.id"
-                  :value="suggestion.id"
-                >
-                  {{ suggestion.name }}
-                </option>
-              </select>
+                :item="item"
+                :item-name="getShoppingItem(item.id)?.name"
+                :suggestions="suggestions"
+                :used-ids="usedIds"
+              />
             </div>
             <div class="g-col-12 g-col-md-4">
               <label :for="`item-${item.uiKey}-quantity`" class="form-label">Quantity</label>
@@ -200,7 +184,7 @@ function onSortEnd() {
             <div class="btn-toolbar g-col-12">
               <button
                 type="button"
-                class="btn btn-danger btn-sm d-inline ms-auto"
+                class="btn btn-danger btn-sm ms-auto"
                 @click.stop.prevent="onDeleteClick(item.uiKey)"
               >
                 Delete

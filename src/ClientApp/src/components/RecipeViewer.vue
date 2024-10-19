@@ -70,142 +70,134 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="row">
-      <div class="col-12 d-print-none">
-        <div class="btn-toolbar">
-          <router-link
-            :to="RouterHelpers.editRecipe(recipe)"
-            class="btn btn-primary me-2"
-            type="button"
-          >
-            Edit
-          </router-link>
-          <RecipeMealButton class="me-2" :recipe-id="recipe.id" />
-          <div class="form-check form-switch mt-2">
-            <label class="form-check-label" for="showImage">Show image</label>
-            <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
-          </div>
-        </div>
-      </div>
+  <div class="btn-toolbar sticky-top pt-1">
+    <router-link :to="RouterHelpers.editRecipe(recipe)" class="btn btn-primary me-2" type="button">
+      Edit
+    </router-link>
+    <RecipeMealButton class="me-2" :recipe-id="recipe.id" />
+  </div>
+  <div class="btn-toolbar mt-3 d-print-none">
+    <div class="form-check form-switch mt-">
+      <label class="form-check-label" for="showImage">Show image</label>
+      <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
     </div>
-    <div v-if="showImage" class="row mb-5">
+  </div>
+  <div v-if="showImage" class="mb-5">
+    <div
+      :class="{
+        'col-12': true,
+        'text-center': true,
+        'mt-4': true,
+        'd-print-none': !(images.length > 0),
+      }"
+    >
       <div
-        :class="{
-          'col-12': true,
-          'text-center': true,
-          'mt-4': true,
-          'd-print-none': !(images.length > 0),
-        }"
+        v-if="images.length > 0"
+        :id="`image-carousel-${uniqueId}`"
+        class="carousel slide"
+        data-bs-interval="false"
       >
-        <div
-          v-if="images.length > 0"
-          :id="`image-carousel-${uniqueId}`"
-          class="carousel slide"
-          data-bs-interval="false"
-        >
-          <div class="carousel-indicators d-print-none">
-            <button
-              v-for="(imageName, i) in images"
-              :key="imageName"
-              type="button"
-              :data-bs-target="`#image-carousel-${uniqueId}`"
-              :data-bs-slide-to="i"
-              :class="{ active: i === carouselIndex }"
-              :aria-current="i === carouselIndex"
-              :aria-label="`Show image ${i}`"
-            ></button>
-          </div>
-          <div class="carousel-inner">
-            <div
-              v-for="(imageName, i) in images"
-              :key="imageName"
-              :class="{ 'carousel-item': true, active: i === carouselIndex }"
-            >
-              <div class="image-wrapper">
-                <img
-                  class="img-fluid rounded"
-                  :src="ApiHelpers.imageUrl(imageName)"
-                  :alt="`image ${i} of ${recipe.name}`"
-                  :loading="i > 0 ? 'lazy' : 'eager'"
-                  width="1600"
-                  height="1200"
-                />
-              </div>
+        <div class="carousel-indicators d-print-none">
+          <button
+            v-for="(imageName, i) in images"
+            :key="imageName"
+            type="button"
+            :data-bs-target="`#image-carousel-${uniqueId}`"
+            :data-bs-slide-to="i"
+            :class="{ active: i === carouselIndex }"
+            :aria-current="i === carouselIndex"
+            :aria-label="`Show image ${i}`"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div
+            v-for="(imageName, i) in images"
+            :key="imageName"
+            :class="{ 'carousel-item': true, active: i === carouselIndex }"
+          >
+            <div class="image-wrapper">
+              <img
+                class="img-fluid rounded"
+                :src="ApiHelpers.imageUrl(imageName)"
+                :alt="`image ${i} of ${recipe.name}`"
+                :loading="i > 0 ? 'lazy' : 'eager'"
+                width="1600"
+                height="1200"
+              />
             </div>
           </div>
-          <button
-            type="button"
-            class="carousel-control-prev d-print-none"
-            :data-bs-target="`#image-carousel-${uniqueId}`"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous image</span>
-          </button>
-          <button
-            type="button"
-            class="carousel-control-next d-print-none"
-            :data-bs-target="`#image-carousel-${uniqueId}`"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next image</span>
-          </button>
         </div>
-        <div v-else class="img-placeholder-wrapper m-auto">
-          <ImagePlaceholder class="img-fluid rounded" />
-        </div>
+        <button
+          type="button"
+          class="carousel-control-prev d-print-none"
+          :data-bs-target="`#image-carousel-${uniqueId}`"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous image</span>
+        </button>
+        <button
+          type="button"
+          class="carousel-control-next d-print-none"
+          :data-bs-target="`#image-carousel-${uniqueId}`"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next image</span>
+        </button>
+      </div>
+      <div v-else class="img-placeholder-wrapper m-auto">
+        <ImagePlaceholder class="img-fluid rounded" />
       </div>
     </div>
-    <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
-    <RecipeViewerIngredients
-      v-if="(recipe.ingredients?.length || 0) > 0"
-      :ingredients="recipe.ingredients || []"
-    />
-    <h3 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-4">Shopping Items</h3>
-    <RecipeViewerIngredients
-      v-if="(recipe.shoppingItems?.length || 0) > 0"
-      :ingredients="recipe.shoppingItems || []"
-    />
-    <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
-    <div
-      v-if="!isNil(recipe.directions)"
-      :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
-    >
-      {{ recipe.directions }}
-    </div>
-    <h3 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h3>
-    <div
-      v-if="!isNil(recipe.sides)"
-      :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
-    >
-      {{ recipe.sides }}
-    </div>
-    <h3
-      v-if="
-        recipe.prepTimeMinutes ||
-        0 > 0 ||
-        recipe.cookTimeMinutes ||
-        0 > 0 ||
-        (recipe.categories || []).length > 0
-      "
-      class="mt-3"
-    >
-      Stats
-    </h3>
-    <div v-if="recipe.prepTimeMinutes || 0 > 0">
-      Prep Time: {{ timeSpanFormat(recipe.prepTimeMinutes) }}
-    </div>
-    <div v-if="recipe.cookTimeMinutes || 0 > 0">
-      Cook Time: {{ timeSpanFormat(recipe.cookTimeMinutes) }}
-    </div>
-    <div v-if="(recipe.categories || []).length > 0">
-      Categories: {{ (recipe.categories || []).join(', ') }}
-    </div>
-    <div>
-      <EntityAuditInfo class="mt-3" :entity="recipe" />
-    </div>
+  </div>
+  <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
+  <RecipeViewerIngredients
+    v-if="(recipe.ingredients?.length || 0) > 0"
+    :ingredients="recipe.ingredients || []"
+  />
+  <h3 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-4">Shopping Items</h3>
+  <RecipeViewerIngredients
+    v-if="(recipe.shoppingItems?.length || 0) > 0"
+    :ingredients="recipe.shoppingItems || []"
+  />
+  <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
+  <div
+    v-if="!isNil(recipe.directions)"
+    :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
+  >
+    {{ recipe.directions }}
+  </div>
+  <h3 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h3>
+  <div
+    v-if="!isNil(recipe.sides)"
+    :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
+  >
+    {{ recipe.sides }}
+  </div>
+  <h3
+    v-if="
+      recipe.prepTimeMinutes ||
+      0 > 0 ||
+      recipe.cookTimeMinutes ||
+      0 > 0 ||
+      (recipe.categories || []).length > 0
+    "
+    class="mt-3"
+  >
+    Stats
+  </h3>
+  <div v-if="recipe.prepTimeMinutes || 0 > 0">
+    Prep Time: {{ timeSpanFormat(recipe.prepTimeMinutes) }}
+  </div>
+  <div v-if="recipe.cookTimeMinutes || 0 > 0">
+    Cook Time: {{ timeSpanFormat(recipe.cookTimeMinutes) }}
+  </div>
+  <div v-if="(recipe.categories || []).length > 0">
+    Categories: {{ (recipe.categories || []).join(', ') }}
+  </div>
+  <div>
+    <EntityAuditInfo class="mt-3" :entity="recipe" />
   </div>
 </template>
 
