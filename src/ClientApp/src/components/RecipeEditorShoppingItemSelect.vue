@@ -54,7 +54,7 @@ function selectSuggestion(id: number | undefined) {
     <button class="form-select" type="button" data-bs-toggle="dropdown" aria-expanded="false">
       {{ (item.id || 0) > 0 ? itemName : 'Select one' }}
     </button>
-    <ul class="dropdown-menu w-100 d-relative">
+    <ul class="dropdown-menu pt-0 w-100">
       <li>
         <label :for="`item-${item.uiKey}-name-filter`" class="visually-hidden"
           >Type to filter options</label
@@ -63,13 +63,28 @@ function selectSuggestion(id: number | undefined) {
           :id="`item-${item.uiKey}-name-filter`"
           v-model="filterText"
           type="text"
-          class="form-control mb-2"
+          class="form-control"
           placeholder="Type to filter options"
           @click.stop
         />
       </li>
       <li v-if="filteredSuggestions.length === 0" class="dropdown-item disabled">
         No options found
+      </li>
+      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
+        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
+          {{ suggestion.name }}
+        </a>
+      </li>
+      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
+        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
+          {{ suggestion.name }}
+        </a>
+      </li>
+      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
+        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
+          {{ suggestion.name }}
+        </a>
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
         <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
@@ -83,5 +98,10 @@ function selectSuggestion(id: number | undefined) {
 <style scoped>
 button.form-select {
   text-align: left;
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
 }
 </style>

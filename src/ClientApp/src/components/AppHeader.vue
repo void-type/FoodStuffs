@@ -76,16 +76,13 @@ const searchText = ref('');
               href="#"
               class="nav-link dropdown-toggle"
               data-bs-toggle="dropdown"
+              data-bs-auto-close="outside"
               ><span>{{ user.login }}</span></a
             >
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li class="dropdown-item">Roles: {{ userRoles || 'none' }}</li>
               <li class="dropdown-item">
-                <button
-                  class="btn btn-secondary"
-                  :disabled="isRebuilding"
-                  @click.stop="rebuildSearch"
-                >
+                <button class="btn btn-secondary" :disabled="isRebuilding" @click="rebuildSearch">
                   <font-awesome-icon class="me-2" icon="fa-rotate-right" />{{
                     isRebuilding ? 'Rebuilding...' : 'Rebuild index'
                   }}
@@ -98,7 +95,6 @@ const searchText = ref('');
                     for="useDarkMode"
                     title="Use dark mode"
                     aria-label="Use dark mode"
-                    @click.stop
                     ><font-awesome-icon class="me-2" icon="fa-moon" />Dark mode</label
                   >
                   <input

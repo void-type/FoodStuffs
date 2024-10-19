@@ -326,4 +326,8 @@ onMounted(() => {
 textarea {
   resize: vertical;
 }
+
+.btn-toolbar.sticky-top {
+  z-index: 3;
+}
 </style>

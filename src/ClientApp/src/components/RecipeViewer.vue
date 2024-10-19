@@ -210,4 +210,8 @@ div.carousel-item img,
 .img-placeholder-wrapper {
   max-width: 27rem;
 }
+
+.btn-toolbar.sticky-top {
+  z-index: 3;
+}
 </style>
