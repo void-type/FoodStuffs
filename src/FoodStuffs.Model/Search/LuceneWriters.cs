@@ -42,7 +42,7 @@ public class LuceneWriters : IDisposable
             {
                 IndexWriter.Dispose();
                 _indexDir.Dispose();
-                
+
                 TaxonomyWriter.Dispose();
                 _taxonomyDir.Dispose();
             }
