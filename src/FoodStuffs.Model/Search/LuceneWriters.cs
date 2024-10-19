@@ -17,7 +17,6 @@ public class LuceneWriters : IDisposable
     public LuceneWriters(SearchSettings settings, OpenMode openMode, string indexName)
     {
         var indexFolder = settings.GetIndexFolder(indexName);
-        var taxonomyFolder = settings.GetTaxonomyFolder(indexName);
 
         _indexDir = FSDirectory.Open(indexFolder);
         var standardAnalyzer = new StandardAnalyzer(settings.LuceneVersion);
@@ -29,6 +28,8 @@ public class LuceneWriters : IDisposable
 
         IndexWriter = new IndexWriter(_indexDir, indexConfig);
 
+        var taxonomyFolder = settings.GetTaxonomyFolder(indexName);
+
         _taxonomyDir = FSDirectory.Open(taxonomyFolder);
         TaxonomyWriter = new DirectoryTaxonomyWriter(_taxonomyDir, openMode);
     }
@@ -39,10 +40,11 @@ public class LuceneWriters : IDisposable
         {
             if (disposing)
             {
-                _indexDir.Dispose();
                 IndexWriter.Dispose();
-                _taxonomyDir.Dispose();
+                _indexDir.Dispose();
+                
                 TaxonomyWriter.Dispose();
+                _taxonomyDir.Dispose();
             }
 
             _disposedValue = true;

@@ -18,11 +18,12 @@ public class LuceneReaders : IDisposable
     public LuceneReaders(SearchSettings settings, string indexName)
     {
         var indexFolder = settings.GetIndexFolder(indexName);
-        var taxonomyFolder = settings.GetTaxonomyFolder(indexName);
 
         _indexDir = FSDirectory.Open(indexFolder);
         IndexReader = DirectoryReader.Open(_indexDir);
         IndexSearcher = new IndexSearcher(IndexReader);
+
+        var taxonomyFolder = settings.GetTaxonomyFolder(indexName);
 
         _taxonomyDir = FSDirectory.Open(taxonomyFolder);
         TaxonomyReader = new DirectoryTaxonomyReader(_taxonomyDir);
@@ -34,10 +35,11 @@ public class LuceneReaders : IDisposable
         {
             if (disposing)
             {
-                _indexDir.Dispose();
                 IndexReader.Dispose();
-                _taxonomyDir.Dispose();
+                _indexDir.Dispose();
+
                 TaxonomyReader.Dispose();
+                _taxonomyDir.Dispose();
             }
 
             _disposedValue = true;
