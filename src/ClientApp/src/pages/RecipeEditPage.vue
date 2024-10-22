@@ -91,7 +91,7 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
   data.suggestedImage = null;
 }
 
-function fetchRecipe() {
+async function fetchRecipe() {
   if (isCreateNewMode.value) {
     setSources(new GetRecipeResponseClass());
     return;
@@ -99,66 +99,61 @@ function fetchRecipe() {
 
   const id = isCreateCopyMode.value ? props.copy : props.id;
 
-  api()
-    .recipesGet(id)
-    .then((response) => {
-      data.recipeChangeToken += 1;
-      setSources(response.data);
-      if (isEditMode.value) {
-        recipeStore.queueRecent(response.data);
-      }
-    })
-    .catch((response) => {
-      messageStore.setApiFailureMessages(response);
-      data.sourceRecipe = new GetRecipeResponseClass();
-    });
+  try {
+    const response = await api().recipesGet(id);
+    data.recipeChangeToken += 1;
+    setSources(response.data);
+    if (isEditMode.value) {
+      recipeStore.queueRecent(response.data);
+    }
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    data.sourceRecipe = new GetRecipeResponseClass();
+  }
 }
 
-function fetchRecipesList() {
-  api()
-    .recipesSearch(listRequest.value)
-    .then((response) => recipeStore.setListResponse(response.data))
-    .catch((response) => messageStore.setApiFailureMessages(response));
+async function fetchRecipesList() {
+  try {
+    const response = await api().recipesSearch(listRequest.value);
+    recipeStore.setListResponse(response.data);
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
-function fetchImages(recipeId: number) {
-  api()
-    .recipesGet(recipeId)
-    .then((response) => {
-      setImageSources(response.data);
-    })
-    .catch((response) => {
-      messageStore.setApiFailureMessages(response);
-    });
+async function fetchImages(recipeId: number) {
+  try {
+    const response = await api().recipesGet(recipeId);
+    setImageSources(response.data);
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
-function onRecipeSave(recipe: SaveRecipeRequest) {
-  function onPostSave(response: HttpResponse<EntityMessageOfInteger, IItemSetOfIFailure>) {
+async function onRecipeSave(recipe: SaveRecipeRequest) {
+  async function onPostSave(response: HttpResponse<EntityMessageOfInteger, IItemSetOfIFailure>) {
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
     }
 
-    fetchRecipesList();
+    await fetchRecipesList();
     recipeStore.updateRecent(recipe);
   }
 
-  api()
-    .recipesSave(recipe)
-    .then((response) => {
-      data.isRecipeDirty = false;
+  try {
+    const response = await api().recipesSave(recipe);
+    data.isRecipeDirty = false;
 
-      if (!isEditMode.value) {
-        router.push({ name: 'recipeEdit', params: { id: response.data.id } }).then(() => {
-          onPostSave(response);
-        });
-      } else {
-        fetchRecipe();
-        onPostSave(response);
-      }
-    })
-    .catch((response) => {
-      messageStore.setApiFailureMessages(response);
-    });
+    if (!isEditMode.value) {
+      await router.push({ name: 'recipeEdit', params: { id: response.data.id } });
+    } else {
+      await fetchRecipe();
+    }
+
+    await onPostSave(response);
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
 function onRecipeDelete(id: number) {

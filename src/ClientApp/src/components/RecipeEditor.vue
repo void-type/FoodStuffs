@@ -7,7 +7,9 @@ import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
+import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelpers';
 import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
@@ -43,6 +45,7 @@ const props = defineProps({
 });
 
 const messageStore = useMessageStore();
+const mealPlanStore = useMealPlanStore();
 const api = ApiHelpers.client;
 
 // This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
@@ -156,10 +159,11 @@ function removeCategory(categoryName: string) {
   }
 }
 
-function saveClick() {
-  props.onRecipeSave(data.workingRecipe);
+async function saveClick() {
+  await props.onRecipeSave(data.workingRecipe);
   fetchCategories();
   fetchShoppingItems();
+  await mealPlanStore.setCurrentMealPlan(getCurrentMealPlanFromStorage());
 }
 
 watch(
