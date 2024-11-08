@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
+import RouterHelpers from '@/models/RouterHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
@@ -18,6 +20,8 @@ const planName = computed(() => {
 
   return `${name} (${recipeCount})`;
 });
+
+const { recentRecipes } = storeToRefs(recipeStore);
 </script>
 
 <template>
@@ -45,6 +49,12 @@ const planName = computed(() => {
         </li>
         <li>
           <router-link :to="{ name: 'recipeNew' }" class="dropdown-item">New Recipe</router-link>
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li v-for="recipe in recentRecipes" :key="recipe.id">
+          <router-link :to="RouterHelpers.viewRecipe(recipe)" class="dropdown-item">{{
+            recipe.name
+          }}</router-link>
         </li>
       </ul>
     </li>

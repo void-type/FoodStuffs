@@ -16,8 +16,6 @@ import type {
 } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
-import SidebarRecipeResults from '@/components/SidebarRecipeResults.vue';
-import SidebarRecipeRecent from '@/components/SidebarRecipeRecent.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
 import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
@@ -313,7 +311,7 @@ onBeforeRouteLeave(async (to, from, next) => {
   <div class="container-xxl">
     <h1 class="mt-4">{{ isCreateNewMode ? 'New Recipe' : data.sourceRecipe.name }}</h1>
     <div class="grid mt-4">
-      <div class="g-col-12 g-col-lg-9">
+      <div class="g-col-12">
         <RecipeEditor
           :source-recipe="data.sourceRecipe"
           :on-recipe-save="onRecipeSave"
@@ -334,10 +332,6 @@ onBeforeRouteLeave(async (to, from, next) => {
           :on-image-pin="onImagePin"
           class="mt-4"
         />
-      </div>
-      <div class="g-col-12 g-col-lg-3 d-print-none">
-        <SidebarRecipeRecent :route-name="'edit'" class="mb-3" />
-        <SidebarRecipeResults :route-name="'edit'" />
       </div>
     </div>
   </div>
