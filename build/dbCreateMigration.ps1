@@ -11,10 +11,7 @@ try {
   Set-Location -Path $projectRoot
   . ./build/buildSettings.ps1
 
-  dotnet ef migrations add "$MigrationName" `
-    --project "$modelProjectFolder" `
-    --startup-project  "$webProjectFolder"
-
+  dotnet ef migrations add "$MigrationName" @dbMigrationArgs
 
 } finally {
   Set-Location $originalLocation

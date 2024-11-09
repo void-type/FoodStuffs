@@ -56,7 +56,7 @@ public partial class HomeController : Controller
             _ => new ErrorViewModel
             {
                 StatusCode = statusCode,
-                Title = $"Error",
+                Title = "Error",
                 Description = "There was a problem getting the page you requested."
             },
         };
@@ -68,6 +68,6 @@ public partial class HomeController : Controller
     [LoggerMessage(0, LogLevel.Information, "Home page requested.")]
     private partial void LogHomePage();
 
-    [LoggerMessage(0, LogLevel.Information, "Error page requested. StatusCode: {StatusCode}")]
+    [LoggerMessage(1, LogLevel.Information, "Error page requested. StatusCode: {StatusCode}")]
     private partial void LogErrorPage(int statusCode);
 }

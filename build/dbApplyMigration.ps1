@@ -11,22 +11,12 @@ try {
   Set-Location -Path $projectRoot
   . ./build/buildSettings.ps1
 
-  $argus = @(
-    'ef'
-    'database'
-    'update'
-    '--project'
-    $modelProjectFolder
-    '--startup-project'
-    $webProjectFolder
-  )
-
-  if (-not [string]::IsNullOrWhiteSpace($MigrationName)) {
-    $argus += $MigrationName
+  if ($MigrationName) {
+    dotnet ef database update "$MigrationName" @dbMigrationArgs
+    return
   }
 
-  & dotnet $argus
-
+  dotnet ef database update @dbMigrationArgs
 
 } finally {
   Set-Location $originalLocation

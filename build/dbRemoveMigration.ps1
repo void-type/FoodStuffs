@@ -1,5 +1,7 @@
 [CmdletBinding()]
 param (
+  [Parameter(Mandatory = $false)]
+  [string] $MigrationName
 )
 
 $originalLocation = Get-Location
@@ -9,10 +11,12 @@ try {
   Set-Location -Path $projectRoot
   . ./build/buildSettings.ps1
 
-  dotnet ef migrations remove `
-    --project "$modelProjectFolder" `
-    --startup-project  "$webProjectFolder"
+  if ($MigrationName) {
+    dotnet ef migrations remove "$MigrationName" @dbMigrationArgs
+    return
+  }
 
+  dotnet ef migrations remove @dbMigrationArgs
 
 } finally {
   Set-Location $originalLocation

@@ -27,8 +27,12 @@ export default defineConfig(async ({ mode }) => {
   const { cert, key } = getDotnetCertPaths();
 
   // If you have problems with the cert, uncomment these to clean the certs and force their re-gen. Be sure to comment when done.
-  // fs.unlinkSync(cert);
-  // fs.unlinkSync(key);
+  // if (fs.existsSync(cert)) {
+  //   fs.unlinkSync(cert);
+  // }
+  // if (fs.existsSync(key)) {
+  //   fs.unlinkSync(key);
+  // }
 
   // Ensure the certificate and key exist
   if (mode === 'development' && (!fs.existsSync(cert) || !fs.existsSync(key))) {

@@ -14,3 +14,8 @@ $webSettingsDirectoryProduction = "\\server2\Servers\AppConfigs\$projectName\Web
 
 $webDirectoryTest = "\\server2\DeployedApps\apps\$($projectName).Web-Test"
 $webSettingsDirectoryTest = "$webSettingsDirectoryProduction"
+
+$dbMigrationArgs = @(
+  '--project', (Resolve-Path "$PSScriptRoot/../$modelProjectFolder" | Select-Object -ExpandProperty Path),
+  '--startup-project', (Resolve-Path "$PSScriptRoot/../$webProjectFolder" | Select-Object -ExpandProperty Path)
+)

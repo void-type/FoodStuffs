@@ -13,7 +13,13 @@ try {
   . ./build/buildSettings.ps1
 
   if (-not $DisableVueDevServer) {
-    Remove-Item -Path "$webProjectFolder/wwwroot/*" -Recurse -ErrorAction SilentlyContinue
+
+    if (-not (Test-Path -Path "$webProjectFolder/wwwroot")) {
+      New-Item -Path "$webProjectFolder/wwwroot" -ItemType Directory
+    } else {
+      Remove-Item -Path "$webProjectFolder/wwwroot/*" -Recurse -ErrorAction SilentlyContinue
+    }
+
     Copy-Item -Path "$webClientProjectFolder/public/*" -Destination "$webProjectFolder/wwwroot" -Recurse
 
     Set-Location -Path $webClientProjectFolder
