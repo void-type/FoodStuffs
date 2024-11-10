@@ -32,8 +32,8 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         var mealPlanToEdit = maybeMealPlan.Unwrap(() => new MealPlan());
 
         Transfer(request, mealPlanToEdit);
-        await ManageRecipes(request, mealPlanToEdit, cancellationToken);
-        await ManagePantryShoppingItems(request, mealPlanToEdit, cancellationToken);
+        await ManageRecipesAsync(request, mealPlanToEdit, cancellationToken);
+        await ManagePantryShoppingItemsAsync(request, mealPlanToEdit, cancellationToken);
 
         if (maybeMealPlan.HasValue)
         {
@@ -54,7 +54,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         mealPlan.Name = request.Name;
     }
 
-    private async Task ManageRecipes(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    private async Task ManageRecipesAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
     {
         var requestedRecipeIds = request.Recipes
             .Select(x => x.Id)
@@ -85,7 +85,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
                 }));
     }
 
-    private async Task ManagePantryShoppingItems(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    private async Task ManagePantryShoppingItemsAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
     {
         var requestedItemIds = request.PantryShoppingItems
             .Select(x => x.Id)

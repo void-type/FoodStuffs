@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FoodStuffs.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
 using VoidCore.Model.Functional;
@@ -17,9 +18,9 @@ public class AppController : ControllerBase
     [HttpGet]
     [Route("info")]
     [ProducesResponseType(typeof(GetWebClientInfo.WebClientInfo), 200)]
-    public Task<IActionResult> GetInfo([FromServices] GetWebClientInfo.Pipeline getPipeline)
+    public async Task<IActionResult> GetInfoAsync([FromServices] GetWebClientInfo.Pipeline getPipeline)
     {
-        return getPipeline
+        return await getPipeline
             .Handle(new GetWebClientInfo.Request())
             .MapAsync(HttpResponder.Respond);
     }
@@ -42,11 +43,3 @@ public class AppController : ControllerBase
             .Map(HttpResponder.Respond);
     }
 }
-
-internal record AppVersion(
-    string? Version,
-    bool IsPublicRelease,
-    bool IsPrerelease,
-    string GitCommitId,
-    DateTime GitCommitDate,
-    string AssemblyConfiguration);

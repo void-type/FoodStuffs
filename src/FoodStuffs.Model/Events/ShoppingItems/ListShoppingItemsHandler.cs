@@ -18,7 +18,7 @@ public class ListShoppingItemsHandler : CustomEventHandlerAbstract<ListShoppingI
         _data = data;
     }
 
-    public override Task<IResult<IItemSet<ListShoppingItemsResponse>>> Handle(ListShoppingItemsRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<IItemSet<ListShoppingItemsResponse>>> Handle(ListShoppingItemsRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
@@ -26,7 +26,7 @@ public class ListShoppingItemsHandler : CustomEventHandlerAbstract<ListShoppingI
 
         var specification = new ShoppingItemsSpecification(criteria: searchCriteria);
 
-        return _data.ShoppingItems
+        return await _data.ShoppingItems
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToItemSet(paginationOptions, cancellationToken)

@@ -24,7 +24,7 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task GetRecipe_returns_failure_when_recipe_does_not_exist()
+    public async Task GetRecipe_returns_failure_when_recipe_does_not_existAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -35,7 +35,7 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task DeleteRecipe_deletes_recipe_and_returns_id_when_recipe_exists()
+    public async Task DeleteRecipe_deletes_recipe_and_returns_id_when_recipe_existsAsync()
     {
         // Due to the way we delete, we need a fresh dbcontext to remove tracked entities.
         await using var context1 = Deps.FoodStuffsContext("delete images").Seed();
@@ -71,7 +71,7 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task DeleteRecipe_returns_failure_when_recipe_does_not_exist()
+    public async Task DeleteRecipe_returns_failure_when_recipe_does_not_existAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -84,7 +84,7 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task SaveRecipe_creates_new_recipe_when_id_0_is_specified()
+    public async Task SaveRecipe_creates_new_recipe_when_id_0_is_specifiedAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -96,7 +96,7 @@ public class RecipeEventTests
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.Id > 0);
 
-        var recipe = context.Recipes.Find(result.Value.Id);
+        var recipe = await context.Recipes.FindAsync(result.Value.Id);
 
         Assert.NotNull(recipe);
 
@@ -109,7 +109,7 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task SaveRecipe_updates_existing_recipe_when_exists()
+    public async Task SaveRecipe_updates_existing_recipe_when_existsAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -123,7 +123,7 @@ public class RecipeEventTests
         Assert.True(result.IsSuccess);
         Assert.Equal(existingRecipeId, result.Value.Id);
 
-        var updatedRecipe = context.Recipes.Find(existingRecipeId);
+        var updatedRecipe = await context.Recipes.FindAsync(existingRecipeId);
         Assert.NotNull(updatedRecipe);
 
         Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.ModifiedOn);

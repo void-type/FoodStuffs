@@ -24,7 +24,7 @@ public class MealPlansController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListMealPlansResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> List([FromServices] ListMealPlansPipeline listPipeline, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListMealPlansPipeline listPipeline, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListMealPlansRequest(
             IsPagingEnabled: isPagingEnabled,
@@ -49,11 +49,11 @@ public class MealPlansController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(GetMealPlanResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Get([FromServices] GetMealPlanPipeline getPipeline, int id)
+    public async Task<IActionResult> GetAsync([FromServices] GetMealPlanPipeline getPipeline, int id)
     {
         var request = new GetMealPlanRequest(id);
 
-        return getPipeline
+        return await getPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -66,9 +66,9 @@ public class MealPlansController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Save([FromServices] SaveMealPlanPipeline savePipeline, [FromBody] SaveMealPlanRequest request)
+    public async Task<IActionResult> SaveAsync([FromServices] SaveMealPlanPipeline savePipeline, [FromBody] SaveMealPlanRequest request)
     {
-        return savePipeline
+        return await savePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -82,11 +82,11 @@ public class MealPlansController : ControllerBase
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Delete([FromServices] DeleteMealPlanPipeline deletePipeline, int id)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteMealPlanPipeline deletePipeline, int id)
     {
         var request = new DeleteMealPlanRequest(id);
 
-        return deletePipeline
+        return await deletePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

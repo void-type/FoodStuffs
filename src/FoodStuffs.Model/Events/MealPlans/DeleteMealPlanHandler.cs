@@ -14,9 +14,9 @@ public class DeleteMealPlanHandler : CustomEventHandlerAbstract<DeleteMealPlanRe
         _data = data;
     }
 
-    public override Task<IResult<EntityMessage<int>>> Handle(DeleteMealPlanRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<int>>> Handle(DeleteMealPlanRequest request, CancellationToken cancellationToken = default)
     {
-        return _data.MealPlans
+        return await _data.MealPlans
             .TagWith(GetTag())
             .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken)
             .MapAsync(Maybe.From)

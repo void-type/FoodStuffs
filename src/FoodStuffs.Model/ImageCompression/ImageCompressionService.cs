@@ -14,7 +14,7 @@ public class ImageCompressionService : IImageCompressionService
     }
 
     /// <inheritdoc/>
-    public async Task<MemoryStream> CompressAndResizeImage(Stream fileStream, int quality, ResizeSettings resizeSettings, CancellationToken cancellationToken)
+    public async Task<MemoryStream> CompressAndResizeImageAsync(Stream fileStream, int quality, ResizeSettings resizeSettings, CancellationToken cancellationToken)
     {
         using var image = new MagickImage(fileStream);
 

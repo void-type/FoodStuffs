@@ -15,11 +15,11 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
         _data = data;
     }
 
-    public override Task<IResult<GetRecipeResponse>> Handle(GetRecipeRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<GetRecipeResponse>> Handle(GetRecipeRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
-        return _data.Recipes
+        return await _data.Recipes
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -46,7 +46,7 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                     .ConvertAll(i => i.FileName),
                 Categories: r.Categories
                     .Select(c => c.Name)
-                    .OrderBy(n => n)
+                    .Order(StringComparer.Ordinal)
                     .ToList(),
                 Ingredients: r.Ingredients
                     .Select(i => new GetRecipeResponseIngredient(

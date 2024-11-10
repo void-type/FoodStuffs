@@ -17,9 +17,9 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
         _index = index;
     }
 
-    public override Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
     {
-        return _data.Images
+        return await _data.Images
             .TagWith(GetTag())
             .Include(x => x.Recipe)
             .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
@@ -35,7 +35,7 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
                 _data.Remove(i);
 
                 await _data.SaveChangesAsync(cancellationToken);
-                await _index.AddOrUpdate(i.RecipeId, cancellationToken);
+                await _index.AddOrUpdateAsync(i.RecipeId, cancellationToken);
             })
             .SelectAsync(i => EntityMessage.Create("Image deleted.", request.Name));
     }

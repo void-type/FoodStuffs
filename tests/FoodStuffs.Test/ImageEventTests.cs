@@ -34,7 +34,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task GetImage_fails_if_image_not_found()
+    public async Task GetImage_fails_if_image_not_foundAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -47,7 +47,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task SaveImage_creates_a_compressed_image_and_blob()
+    public async Task SaveImage_creates_a_compressed_image_and_blobAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -72,7 +72,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task SaveImage_fails_if_file_is_not_image()
+    public async Task SaveImage_fails_if_file_is_not_imageAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -93,7 +93,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task SaveImage_fails_if_recipe_not_found()
+    public async Task SaveImage_fails_if_recipe_not_foundAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -112,7 +112,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task DeleteImage_deletes_the_image_and_blob()
+    public async Task DeleteImage_deletes_the_image_and_blobAsync()
     {
         // Due to the way we delete, we need a fresh dbcontext to remove tracked entities.
         await using var context1 = Deps.FoodStuffsContext("delete images success").Seed();
@@ -143,7 +143,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task DeleteImage_fails_if_recipe_not_found()
+    public async Task DeleteImage_fails_if_recipe_not_foundAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -158,7 +158,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task PinImage_pins_image_to_recipe()
+    public async Task PinImage_pins_image_to_recipeAsync()
     {
         await using var context = Deps.FoodStuffsContext("pin image success").Seed();
 
@@ -185,7 +185,7 @@ public class ImageEventTests
     }
 
     [Fact]
-    public async Task PinImage_fails_if_image_not_found()
+    public async Task PinImage_fails_if_image_not_foundAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 

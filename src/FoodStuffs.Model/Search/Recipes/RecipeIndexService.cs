@@ -27,7 +27,7 @@ public class RecipeIndexService : IRecipeIndexService
         _data = data;
     }
 
-    public async Task AddOrUpdate(int recipeId, CancellationToken cancellationToken)
+    public async Task AddOrUpdateAsync(int recipeId, CancellationToken cancellationToken)
     {
         var byId = new RecipesWithAllRelatedSpecification(recipeId);
 
@@ -72,7 +72,7 @@ public class RecipeIndexService : IRecipeIndexService
         writers.TaxonomyWriter.Commit();
     }
 
-    public async Task Rebuild(CancellationToken cancellationToken)
+    public async Task RebuildAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Starting rebuild of recipe search index.");
 
@@ -90,7 +90,7 @@ public class RecipeIndexService : IRecipeIndexService
             var withAllRelated = new RecipesWithAllRelatedSpecification();
 
             var recipes = await _data.Recipes
-                .TagWith($"{nameof(RecipeIndexService)}.{nameof(Rebuild)}({nameof(RecipesWithAllRelatedSpecification)})")
+                .TagWith($"{nameof(RecipeIndexService)}.{nameof(RebuildAsync)}({nameof(RecipesWithAllRelatedSpecification)})")
                 .AsSplitQuery()
                 .ApplyEfSpecification(withAllRelated)
                 .OrderBy(x => x.Id)

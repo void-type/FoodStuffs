@@ -17,9 +17,9 @@ public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, Entit
         _index = index;
     }
 
-    public override Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
     {
-        return _data.Images
+        return await _data.Images
             .TagWith(GetTag())
             .Include(x => x.Recipe)
             .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
@@ -30,7 +30,7 @@ public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, Entit
                 i.Recipe.PinnedImageId = i.Id;
 
                 await _data.SaveChangesAsync(cancellationToken);
-                await _index.AddOrUpdate(i.Recipe.Id, cancellationToken);
+                await _index.AddOrUpdateAsync(i.Recipe.Id, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));
     }

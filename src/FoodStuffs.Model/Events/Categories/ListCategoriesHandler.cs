@@ -18,7 +18,7 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
         _data = data;
     }
 
-    public override Task<IResult<IItemSet<ListCategoriesResponse>>> Handle(ListCategoriesRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<IItemSet<ListCategoriesResponse>>> Handle(ListCategoriesRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
@@ -26,7 +26,7 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
 
         var specification = new CategoriesSpecification(criteria: searchCriteria);
 
-        return _data.Categories
+        return await _data.Categories
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToItemSet(paginationOptions, cancellationToken)

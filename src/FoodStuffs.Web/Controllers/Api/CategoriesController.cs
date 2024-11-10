@@ -24,7 +24,7 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListCategoriesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> List([FromServices] ListCategoriesPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListCategoriesPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListCategoriesRequest(
             NameSearch: name,

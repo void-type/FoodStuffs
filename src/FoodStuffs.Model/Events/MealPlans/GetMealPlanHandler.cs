@@ -15,11 +15,11 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
         _data = data;
     }
 
-    public override Task<IResult<GetMealPlanResponse>> Handle(GetMealPlanRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<GetMealPlanResponse>> Handle(GetMealPlanRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new MealPlansWithAllRelatedSpecification(request.Id);
 
-        return _data.MealPlans
+        return await _data.MealPlans
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)

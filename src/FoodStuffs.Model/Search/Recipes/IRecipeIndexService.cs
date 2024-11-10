@@ -7,7 +7,7 @@ public interface IRecipeIndexService
     /// <summary>
     /// Query and update recipe in the index.
     /// </summary>
-    Task AddOrUpdate(int recipeId, CancellationToken cancellationToken);
+    Task AddOrUpdateAsync(int recipeId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update recipe in the index. Ensure you have a fully-hydrated recipe.
@@ -17,7 +17,7 @@ public interface IRecipeIndexService
     /// <summary>
     /// Rebuild the index.
     /// </summary>
-    Task Rebuild(CancellationToken cancellationToken);
+    Task RebuildAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Remove recipe from the index.

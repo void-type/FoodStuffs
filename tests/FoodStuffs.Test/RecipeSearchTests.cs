@@ -17,7 +17,7 @@ public class RecipeSearchTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        _queryService = await BuildQueryService();
+        _queryService = await BuildQueryServiceAsync();
     }
 
     public Task DisposeAsync()
@@ -25,7 +25,7 @@ public class RecipeSearchTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    private static async Task<IRecipeQueryService> BuildQueryService()
+    private static async Task<IRecipeQueryService> BuildQueryServiceAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -39,13 +39,13 @@ public class RecipeSearchTests : IAsyncLifetime
         var settings = new SearchSettings();
 
         var indexService = new RecipeIndexService(logger, settings, context);
-        await indexService.Rebuild(CancellationToken.None);
+        await indexService.RebuildAsync(CancellationToken.None);
 
         return new RecipeQueryService(settings, new UtcNowDateTimeService());
     }
 
     [Fact]
-    public async Task SearchRecipes_returns_a_page_of_recipes()
+    public async Task SearchRecipes_returns_a_page_of_recipesAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -60,7 +60,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_returns_all_recipes_when_paging_is_disabled()
+    public async Task SearchRecipes_returns_all_recipes_when_paging_is_disabledAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -77,7 +77,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_can_sort_by_descending()
+    public async Task SearchRecipes_can_sort_by_descendingAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -93,7 +93,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_can_sort_by_ascending()
+    public async Task SearchRecipes_can_sort_by_ascendingAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -109,7 +109,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_can_search_by_recipe_name()
+    public async Task SearchRecipes_can_search_by_recipe_nameAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -125,7 +125,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_can_search_by_category_name()
+    public async Task SearchRecipes_can_search_by_category_nameAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -145,7 +145,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_can_search_by_is_for_meal_planning()
+    public async Task SearchRecipes_can_search_by_is_for_meal_planningAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -163,7 +163,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_returns_empty_item_set_when_name_search_matches_zero_items()
+    public async Task SearchRecipes_returns_empty_item_set_when_name_search_matches_zero_itemsAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
@@ -176,7 +176,7 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task SearchRecipes_returns_empty_item_set_when_category_search_matches_zero_items()
+    public async Task SearchRecipes_returns_empty_item_set_when_category_search_matches_zero_itemsAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 

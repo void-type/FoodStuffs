@@ -36,9 +36,9 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         var recipeToEdit = maybeRecipe.Unwrap(() => new Recipe());
 
         Transfer(request, recipeToEdit);
-        await ManageCategories(request, recipeToEdit, cancellationToken);
+        await ManageCategoriesAsync(request, recipeToEdit, cancellationToken);
         ManageIngredients(request, recipeToEdit);
-        await ManageShoppingItems(request, recipeToEdit, cancellationToken);
+        await ManageShoppingItemsAsync(request, recipeToEdit, cancellationToken);
 
         if (maybeRecipe.HasValue)
         {
@@ -66,7 +66,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         recipe.IsForMealPlanning = request.IsForMealPlanning;
     }
 
-    private async Task ManageCategories(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
+    private async Task ManageCategoriesAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
     {
         var requestedNames = request.Categories
             .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -74,10 +74,10 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
             .ToArray();
 
         // Remove extra categories.
-        recipe.Categories.RemoveAll(x => !requestedNames.Contains(x.Name));
+        recipe.Categories.RemoveAll(x => !requestedNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
 
         var missingNames = requestedNames
-            .Where(n => !recipe.Categories.Select(x => x.Name).Contains(n))
+            .Where(n => !recipe.Categories.Select(x => x.Name).Contains(n, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         // Find missing categories that already exist.
@@ -94,7 +94,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         // Create missing categories that don't exist.
         var createdCategories = missingNames
-            .Where(x => !recipe.Categories.Select(x => x.Name).Contains(x))
+            .Where(x => !recipe.Categories.Select(x => x.Name).Contains(x, StringComparer.OrdinalIgnoreCase))
             .Select(x => new Category { Name = x });
 
         recipe.Categories.AddRange(createdCategories);
@@ -127,7 +127,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         recipe.Ingredients.AddRange(ingredientsToAdd);
     }
 
-    private async Task ManageShoppingItems(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
+    private async Task ManageShoppingItemsAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
     {
         var requestedItemIds = request.ShoppingItems
            .Select(x => x.Id)

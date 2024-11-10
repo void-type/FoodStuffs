@@ -24,11 +24,11 @@ public class ImagesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(FileContentResult), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Get([FromServices] GetImagePipeline getPipeline, string name)
+    public async Task<IActionResult> GetAsync([FromServices] GetImagePipeline getPipeline, string name)
     {
         var request = new GetImageRequest(name);
 
-        return getPipeline
+        return await getPipeline
             .Handle(request)
             .MapAsync(HttpResponder.RespondWithInlineFile);
     }
@@ -42,7 +42,7 @@ public class ImagesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> Upload([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
+    public async Task<IActionResult> UploadAsync([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
     {
         await using var fileStream = file
             .EnsureNotNull()
@@ -64,11 +64,11 @@ public class ImagesController : ControllerBase
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Delete([FromServices] DeleteImagePipeline deletePipeline, string name)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteImagePipeline deletePipeline, string name)
     {
         var request = new DeleteImageRequest(name);
 
-        return deletePipeline
+        return await deletePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -82,11 +82,11 @@ public class ImagesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Pin([FromServices] PinImagePipeline pinPipeline, string name)
+    public async Task<IActionResult> PinAsync([FromServices] PinImagePipeline pinPipeline, string name)
     {
         var request = new PinImageRequest(name);
 
-        return pinPipeline
+        return await pinPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

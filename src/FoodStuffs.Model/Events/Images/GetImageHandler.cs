@@ -15,9 +15,9 @@ public class GetImageHandler : CustomEventHandlerAbstract<GetImageRequest, Simpl
         _data = data;
     }
 
-    public override Task<IResult<SimpleFile>> Handle(GetImageRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<SimpleFile>> Handle(GetImageRequest request, CancellationToken cancellationToken = default)
     {
-        return _data.Images
+        return await _data.Images
             .TagWith(GetTag())
             .Include(x => x.ImageBlob)
             .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)

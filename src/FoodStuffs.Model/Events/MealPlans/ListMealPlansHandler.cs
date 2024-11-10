@@ -16,13 +16,13 @@ public class ListMealPlansHandler : CustomEventHandlerAbstract<ListMealPlansRequ
         _data = data;
     }
 
-    public override Task<IResult<IItemSet<ListMealPlansResponse>>> Handle(ListMealPlansRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<IItemSet<ListMealPlansResponse>>> Handle(ListMealPlansRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
         var specification = new MealPlansSpecification();
 
-        return _data.MealPlans
+        return await _data.MealPlans
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToItemSet(paginationOptions, cancellationToken)

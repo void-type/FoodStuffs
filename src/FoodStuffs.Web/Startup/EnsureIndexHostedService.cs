@@ -28,12 +28,12 @@ public class EnsureIndexHostedService : IHostedService
         if (!Directory.Exists(config.GetIndexFolder(RecipeSearchConstants.INDEX_NAME)) || !Directory.Exists(config.GetTaxonomyFolder(RecipeSearchConstants.INDEX_NAME)))
         {
             _logger.LogWarning("Recipe index is missing on startup. Rebuilding.");
-            await index.Rebuild(cancellationToken);
+            await index.RebuildAsync(cancellationToken);
         }
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 }

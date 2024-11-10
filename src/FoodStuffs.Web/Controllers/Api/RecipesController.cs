@@ -31,7 +31,7 @@ public class RecipesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(SearchRecipesResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Search(
+    public async Task<IActionResult> SearchAsync(
         [FromServices] SearchRecipesPipeline searchPipeline,
         [FromQuery] string? name = null,
         [FromQuery] int[]? categories = null,
@@ -52,7 +52,7 @@ public class RecipesController : ControllerBase
             Page: page,
             Take: take);
 
-        return searchPipeline
+        return await searchPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -66,11 +66,11 @@ public class RecipesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(GetRecipeResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Get([FromServices] GetRecipePipeline getPipeline, int id)
+    public async Task<IActionResult> GetAsync([FromServices] GetRecipePipeline getPipeline, int id)
     {
         var request = new GetRecipeRequest(id);
 
-        return getPipeline
+        return await getPipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -83,9 +83,9 @@ public class RecipesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Save([FromServices] SaveRecipePipeline savePipeline, [FromBody] SaveRecipeRequest request)
+    public async Task<IActionResult> SaveAsync([FromServices] SaveRecipePipeline savePipeline, [FromBody] SaveRecipeRequest request)
     {
-        return savePipeline
+        return await savePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -99,11 +99,11 @@ public class RecipesController : ControllerBase
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Delete([FromServices] DeleteRecipePipeline deletePipeline, int id)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteRecipePipeline deletePipeline, int id)
     {
         var request = new DeleteRecipeRequest(id);
 
-        return deletePipeline
+        return await deletePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -114,9 +114,9 @@ public class RecipesController : ControllerBase
     [Route("rebuild-index")]
     [HttpPost]
     [ProducesResponseType(typeof(UserMessage), 200)]
-    public async Task<IActionResult> Rebuild([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
+    public async Task<IActionResult> RebuildAsync([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
     {
-        await indexService.Rebuild(cancellationToken);
+        await indexService.RebuildAsync(cancellationToken);
 
         return HttpResponder.Respond(Result.Ok(new UserMessage("Index rebuilt.")));
     }

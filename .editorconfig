@@ -178,11 +178,28 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
-## Naming conventions
+# Analyzers
+# Remove unused usings
+dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0060.severity = warning
+
+# False-positive, base authentication should be set site-wide
+dotnet_diagnostic.SCS0012.severity = none
+
+# False-positive, AntiForgery is set site-wide
+dotnet_diagnostic.SCS0016.severity = none
+
+# We don't need ConfigureAwait(false)
+dotnet_diagnostic.RCS1090.severity = none
+dotnet_diagnostic.MA0004.severity = none
+
+# We check our API models ourselves
+dotnet_diagnostic.S6967.severity = none
+
 [*.{cs,vb}]
 
-## Naming styles
 
+## Naming styles
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 dotnet_naming_style.camel_case_style.capitalization = camel_case
 
@@ -262,19 +279,6 @@ dotnet_naming_symbols.everything_else.applicable_accessibilities = *
 dotnet_naming_rule.everything_else_naming.symbols = everything_else
 dotnet_naming_rule.everything_else_naming.style = camel_case_style
 dotnet_naming_rule.everything_else_naming.severity = suggestion
-
-# Analyzers
-# Remove unused usings
-dotnet_diagnostic.IDE0005.severity = warning
-dotnet_diagnostic.IDE0060.severity = warning
-# False-positive, base authentication should be set site-wide
-dotnet_diagnostic.SCS0012.severity = none
-# False-positive, AntiForgery is set site-wide
-dotnet_diagnostic.SCS0016.severity = none
-# We don't need ConfigureAwait(false)
-dotnet_diagnostic.RCS1090.severity = none
-# We check our API models ourselves
-dotnet_diagnostic.S6967.severity = none
 
 
 # Javascript and Vue

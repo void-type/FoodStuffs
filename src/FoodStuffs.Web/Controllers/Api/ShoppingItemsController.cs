@@ -25,7 +25,7 @@ public class ShoppingItemsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListShoppingItemsResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> List([FromServices] ListShoppingItemsPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListShoppingItemsPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListShoppingItemsRequest(
             NameSearch: name,
@@ -50,9 +50,9 @@ public class ShoppingItemsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public Task<IActionResult> Save([FromServices] SaveShoppingItemPipeline savePipeline, [FromBody] SaveShoppingItemRequest request)
+    public async Task<IActionResult> SaveAsync([FromServices] SaveShoppingItemPipeline savePipeline, [FromBody] SaveShoppingItemRequest request)
     {
-        return savePipeline
+        return await savePipeline
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

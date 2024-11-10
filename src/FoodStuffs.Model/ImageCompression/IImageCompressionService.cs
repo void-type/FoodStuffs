@@ -17,5 +17,5 @@ public interface IImageCompressionService
     /// <param name="quality">Quality value</param>
     /// <param name="resizeSettings">Resize operation settings</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    Task<MemoryStream> CompressAndResizeImage(Stream fileStream, int quality, ResizeSettings resizeSettings, CancellationToken cancellationToken);
+    Task<MemoryStream> CompressAndResizeImageAsync(Stream fileStream, int quality, ResizeSettings resizeSettings, CancellationToken cancellationToken);
 }

@@ -19,20 +19,20 @@ public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeReques
         _index = index;
     }
 
-    public override Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new RecipesSpecification(request.Id);
 
-        return _data.Recipes
+        return await _data.Recipes
             .TagWith(GetTag(byId))
             .ApplyEfSpecification(byId)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure())
-            .TeeOnSuccessAsync(r =>
+            .TeeOnSuccessAsync(async r =>
             {
                 _data.Recipes.Remove(r);
-                _data.SaveChangesAsync(cancellationToken);
+                await _data.SaveChangesAsync(cancellationToken);
             })
             .TeeOnSuccessAsync(r => _index.Remove(r.Id))
             .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
