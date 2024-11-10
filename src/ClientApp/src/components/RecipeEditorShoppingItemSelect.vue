@@ -101,7 +101,7 @@ button.form-select {
 }
 
 .dropdown-menu {
-  max-height: 300px;
+  max-height: 19rem;
   overflow-y: auto;
 }
 </style>

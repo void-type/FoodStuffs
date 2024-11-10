@@ -88,7 +88,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .category-scroll {
-  max-height: 12rem;
+  max-height: 7rem;
   row-gap: 0.1rem;
   column-gap: 0;
 }

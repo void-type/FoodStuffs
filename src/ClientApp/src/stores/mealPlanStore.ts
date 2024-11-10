@@ -43,7 +43,8 @@ export default defineStore('mealPlan', {
   }),
 
   getters: {
-    currentRecipes: (state) => state.currentMealPlan.recipes || [],
+    currentRecipes: (state) =>
+      state.currentMealPlan.recipes?.slice().sort((a, b) => (a.order || 0) - (b.order || 0)) || [],
 
     currentPantry: (state) => state.currentMealPlan.pantryShoppingItems || [],
 
@@ -182,12 +183,11 @@ export default defineStore('mealPlan', {
             return;
           }
 
-          const lastIndex = (request.recipes.length || 0) - 1;
-          const lastOrder = request.recipes[lastIndex]?.order || 0;
+          const highestOrder = Math.max(...request.recipes.map((x) => x.order || 0), 0);
 
           request.recipes?.push({
             id: additionalId,
-            order: lastOrder + 1,
+            order: highestOrder + 1,
           });
         });
       }

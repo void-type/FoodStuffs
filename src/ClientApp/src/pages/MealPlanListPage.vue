@@ -99,39 +99,37 @@ watch(
 <template>
   <div class="container-xxl">
     <h1 class="mt-4">Meal Plans</h1>
-    <div>
-      <div class="mt-4">{{ resultCountText }}</div>
-      <table
-        v-if="(listResponse.items?.length || 0) > 0"
-        :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }"
-      >
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Created on</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
-            <td>{{ currentMealPlan.id === mealPlan.id ? '* ' : '' }}{{ mealPlan.name }}</td>
-            <td>{{ DateHelpers.dateTimeForView(mealPlan.createdOn) }}</td>
-            <td>
-              <button
-                class="btn btn-sm btn-primary me-2"
-                :disabled="currentMealPlan.id === mealPlan.id"
-                @click="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
-              >
-                {{ currentMealPlan.id === mealPlan.id ? 'Is current' : 'Make current' }}
-              </button>
-              <button class="btn btn-sm btn-danger" @click="() => onDeleteMealPlan(mealPlan.id)">
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="mt-4">{{ resultCountText }}</div>
+    <table
+      v-if="(listResponse.items?.length || 0) > 0"
+      :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }"
+    >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Created on</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
+          <td>{{ currentMealPlan.id === mealPlan.id ? '* ' : '' }}{{ mealPlan.name }}</td>
+          <td>{{ DateHelpers.dateTimeForView(mealPlan.createdOn) }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-primary me-2"
+              :disabled="currentMealPlan.id === mealPlan.id"
+              @click="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
+            >
+              {{ currentMealPlan.id === mealPlan.id ? 'Is current' : 'Make current' }}
+            </button>
+            <button class="btn btn-sm btn-danger" @click="() => onDeleteMealPlan(mealPlan.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <EntityTablePager
       v-if="(listResponse.items?.length || 0) > 0"
       :list-request="listRequest"

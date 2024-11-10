@@ -242,7 +242,7 @@ watch(
       </div>
     </div>
     <div class="mt-4">{{ resultCountText }}</div>
-    <div class="form-check form-switch" title="Use list view">
+    <div class="form-check form-switch mt-3" title="Use list view">
       <label
         class="form-check-label"
         for="useListView"

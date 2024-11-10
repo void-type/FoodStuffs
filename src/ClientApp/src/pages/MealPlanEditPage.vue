@@ -8,6 +8,7 @@ import useMessageStore from '@/stores/messageStore';
 import ApiHelpers from '@/models/ApiHelpers';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
+import RecipeListItem from '@/components/RecipeListItem.vue';
 
 const mealPlanStore = useMealPlanStore();
 const messageStore = useMessageStore();
@@ -16,6 +17,8 @@ const api = ApiHelpers.client;
 const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 
 const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
+
+const useListView = ref(false);
 
 async function fetchShoppingItems() {
   try {
@@ -74,10 +77,35 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="grid mt-4">
-      <div v-if="(currentRecipes?.length || 0) < 1" class="g-col-12 p-4 text-center">
-        None selected
-      </div>
+    <div class="form-check form-switch mt-3" title="Use list view">
+      <label
+        class="form-check-label"
+        for="useListView"
+        title="Use list view"
+        aria-label="Use list view"
+        ><font-awesome-icon class="me-2" icon="fa-moon" />List view</label
+      >
+      <input
+        id="useListView"
+        v-model="useListView"
+        :checked="useListView"
+        class="form-check-input"
+        type="checkbox"
+      />
+    </div>
+    <div v-if="(currentRecipes?.length || 0) < 1" class="grid mt-4">
+      <div class="g-col-12 p-4 text-center">None selected</div>
+    </div>
+    <div v-else-if="useListView" class="grid mt-4">
+      <RecipeListItem
+        v-for="(recipe, i) in currentRecipes"
+        :key="recipe.id"
+        :recipe="recipe"
+        :lazy="i > 6"
+        class="g-col-12 g-col-sm-6 g-col-md-4 g-col-lg-3"
+      />
+    </div>
+    <div v-else class="grid mt-4">
       <RecipeCard
         v-for="(recipe, i) in currentRecipes"
         :key="recipe.id"
