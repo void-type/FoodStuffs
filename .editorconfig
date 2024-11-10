@@ -193,6 +193,9 @@ dotnet_diagnostic.SCS0016.severity = none
 dotnet_diagnostic.RCS1090.severity = none
 dotnet_diagnostic.MA0004.severity = none
 
+# We prefer the opposite, to enforce the use of the async keyword
+dotnet_diagnostic.AsyncFixer01.severity = none
+
 # We check our API models ourselves
 dotnet_diagnostic.S6967.severity = none
 
