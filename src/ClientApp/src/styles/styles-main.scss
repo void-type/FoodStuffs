@@ -5,6 +5,8 @@
 // Sticky footer
 html,
 body {
+  --bs-primary: #{$bg-navbar};
+  --bs-primary-rgb: #{red($bg-navbar), green($bg-navbar), blue($bg-navbar)};
   box-sizing: border-box;
   height: 100%;
   padding: 0;
@@ -25,6 +27,10 @@ body {
 }
 #main {
   flex-grow: 1;
+}
+
+.navbar-dark {
+  background-color: var(--bg-navbar);
 }
 
 // Bootstrap hides nav-link focus ring
@@ -90,7 +96,6 @@ body {
 
 .nav-search-button,
 .navbar-toggler {
-  color: var(--bs-gray-600);
   border: var(--bs-border-width) solid var(--bs-gray-600);
 
   &:hover {

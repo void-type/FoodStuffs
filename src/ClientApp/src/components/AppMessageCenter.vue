@@ -58,13 +58,11 @@ const { clearMessage, clearMessageTimeout } = messageStore;
     margin-right: auto;
     left: 0;
     right: 0;
-    // padding: 0.8rem;
     background-color: rgba(var(--bs-body-bg-rgb), 0.8);
     border-radius: var(--bs-border-radius);
 
     div.alert {
       margin: 0;
-      // text-align: center;
       margin-top: 0.2em;
       --bs-alert-padding-x: 1rem;
       --bs-alert-padding-y: 0.5rem;
