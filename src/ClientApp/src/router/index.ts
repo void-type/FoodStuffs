@@ -67,14 +67,14 @@ const router = createRouter({
       meta: { title: 'Search Recipes' },
     },
     {
-      name: 'planList',
+      name: 'mealPlanList',
       path: '/meal-plans',
       component: () => import('@/pages/MealPlanListPage.vue'),
       props: (route) => ({ query: route.query }),
       meta: { title: 'Meal Plans' },
     },
     {
-      name: 'planEdit',
+      name: 'mealPlanEdit',
       path: '/meal-plan-edit',
       component: () => import('@/pages/MealPlanEditPage.vue'),
       props: (route) => ({

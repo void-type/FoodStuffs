@@ -60,6 +60,9 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <h1 class="mt-4">{{ data.sourceRecipe?.name }}</h1>
+    <div class="mt-1">
+      <router-link :to="{ name: 'recipeSearch' }">Recipes</router-link>
+    </div>
     <div class="grid mt-4">
       <div class="g-col-12">
         <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" />

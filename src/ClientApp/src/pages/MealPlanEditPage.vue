@@ -9,7 +9,10 @@ import ApiHelpers from '@/models/ApiHelpers';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import RecipeListItem from '@/components/RecipeListItem.vue';
+import type { ModalParameters } from '@/models/ModalParameters';
+import useAppStore from '@/stores/appStore';
 
+const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
@@ -19,6 +22,16 @@ const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
 
 const useListView = ref(false);
+
+async function onDeleteMealPlan(id: number | null | undefined) {
+  const parameters: ModalParameters = {
+    title: 'Delete meal plan',
+    description: 'Do you really want to delete this meal plan?',
+    okAction: () => mealPlanStore.deleteMealPlan(id),
+  };
+
+  appStore.showModal(parameters);
+}
 
 async function fetchShoppingItems() {
   try {
@@ -42,6 +55,9 @@ onMounted(async () => {
 <template>
   <div class="container-xxl">
     <h1 class="mt-4">{{ (currentMealPlan?.id || 0) < 1 ? 'New' : 'Edit' }} Plan</h1>
+    <div class="mt-1">
+      <router-link :to="{ name: 'mealPlanList' }">Meal Plans</router-link>
+    </div>
     <div class="grid mt-4">
       <div class="g-col-12">
         <div class="grid">
@@ -62,17 +78,44 @@ onMounted(async () => {
               Save
             </button>
             <button
-              class="btn btn-secondary me-2"
-              @click.stop.prevent="() => mealPlanStore.newCurrentMealPlan()"
-            >
-              New
-            </button>
-            <button
+              v-if="(currentMealPlan?.id || 0) > 0"
               class="btn btn-secondary me-2"
               @click.stop.prevent="() => mealPlanStore.clearCurrentRecipes()"
             >
               Empty
             </button>
+            <button
+              v-if="(currentMealPlan?.id || 0) > 0"
+              id="overflowMenuButton"
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              More
+            </button>
+            <ul
+              v-if="(currentMealPlan?.id || 0) > 0"
+              class="dropdown-menu"
+              aria-labelledby="overflowMenuButton"
+            >
+              <li>
+                <button
+                  class="dropdown-item"
+                  @click.stop.prevent="() => mealPlanStore.newCurrentMealPlan()"
+                >
+                  New
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item text-danger"
+                  @click.stop.prevent="() => onDeleteMealPlan(currentMealPlan.id)"
+                >
+                  Delete
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

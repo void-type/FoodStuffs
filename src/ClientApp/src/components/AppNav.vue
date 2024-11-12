@@ -71,13 +71,13 @@ const { recentRecipes } = storeToRefs(recipeStore);
       <ul class="dropdown-menu">
         <li>
           <router-link
-            :to="{ name: 'planList', query: mealPlanStore.currentQueryParams }"
+            :to="{ name: 'mealPlanList', query: mealPlanStore.currentQueryParams }"
             class="dropdown-item"
             >List Meal Plans</router-link
           >
         </li>
         <li>
-          <router-link :to="{ name: 'planEdit' }" class="dropdown-item"
+          <router-link :to="{ name: 'mealPlanEdit' }" class="dropdown-item"
             >Current Plan {{ planName }}</router-link
           >
         </li>
