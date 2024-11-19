@@ -19,12 +19,12 @@ function getDotnetCertPaths() {
   const cert = path.join(baseFolder, `${certificateName}.pem`);
   const key = path.join(baseFolder, `${certificateName}.key`);
 
-  return { cert, key };
+  return { baseFolder, cert, key };
 }
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
-  const { cert, key } = getDotnetCertPaths();
+  const { baseFolder, cert, key } = getDotnetCertPaths();
 
   // If you have problems with the cert, uncomment these to clean the certs and force their re-gen. Be sure to comment when done.
   // if (fs.existsSync(cert)) {
@@ -36,6 +36,10 @@ export default defineConfig(async ({ mode }) => {
 
   // Ensure the certificate and key exist
   if (mode === 'development' && (!fs.existsSync(cert) || !fs.existsSync(key))) {
+    if (!fs.existsSync(baseFolder)) {
+      fs.mkdirSync(baseFolder, { recursive: true });
+    }
+
     // Wait for the certificate to be generated
     await new Promise((resolve) => {
       spawn(
