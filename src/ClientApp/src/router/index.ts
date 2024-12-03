@@ -33,8 +33,15 @@ const router = createRouter({
       meta: { title: 'Home' },
     },
     {
+      name: 'recipeSearch',
+      path: '/recipes',
+      component: () => import('@/pages/RecipeSearchPage.vue'),
+      props: (route) => ({ query: route.query }),
+      meta: { title: 'Search Recipes' },
+    },
+    {
       name: 'recipeView',
-      path: '/recipe/:id/:slug?',
+      path: '/recipes/view/:id/:slug?',
       component: () => import('@/pages/RecipeViewPage.vue'),
       props: (route) => ({
         id: +route.params.id,
@@ -43,7 +50,7 @@ const router = createRouter({
     },
     {
       name: 'recipeEdit',
-      path: '/recipe-edit/:id/:slug?',
+      path: '/recipes/edit/:id/:slug?',
       component: () => import('@/pages/RecipeEditPage.vue'),
       props: (route) => ({
         id: +route.params.id,
@@ -52,19 +59,12 @@ const router = createRouter({
     },
     {
       name: 'recipeNew',
-      path: '/recipe-new',
+      path: '/recipes/new',
       component: () => import('@/pages/RecipeEditPage.vue'),
       props: (route) => ({
         copy: +(route.query?.copy || 0),
       }),
       meta: { title: 'New Recipe' },
-    },
-    {
-      name: 'recipeSearch',
-      path: '/recipes',
-      component: () => import('@/pages/RecipeSearchPage.vue'),
-      props: (route) => ({ query: route.query }),
-      meta: { title: 'Search Recipes' },
     },
     {
       name: 'mealPlanList',
@@ -75,12 +75,25 @@ const router = createRouter({
     },
     {
       name: 'mealPlanEdit',
-      path: '/meal-plan-edit',
+      path: '/meal-plans/edit/:id',
       component: () => import('@/pages/MealPlanEditPage.vue'),
       props: (route) => ({
         id: +route.params.id,
       }),
       meta: { title: 'Edit Meal Plan' },
+    },
+    {
+      name: 'mealPlanNew',
+      path: '/meal-plans/new',
+      component: () => import('@/pages/MealPlanEditPage.vue'),
+      meta: { title: 'New Meal Plan' },
+    },
+    {
+      name: 'shoppingItemList',
+      path: '/shopping-items',
+      component: () => import('@/pages/ShoppingItemListPage.vue'),
+      props: (route) => ({ query: route.query }),
+      meta: { title: 'Shopping Items' },
     },
     {
       path: '/:pathMatch(.*)*',

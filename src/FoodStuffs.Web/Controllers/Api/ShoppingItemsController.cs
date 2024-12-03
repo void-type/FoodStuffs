@@ -56,4 +56,22 @@ public class ShoppingItemsController : ControllerBase
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
+
+    /// <summary>
+    /// Delete a shopping item.
+    /// </summary>
+    /// <param name="deletePipeline"></param>
+    /// <param name="id">The ID of the shopping item</param>
+    [Route("{id}")]
+    [HttpDelete]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteShoppingItemPipeline deletePipeline, int id)
+    {
+        var request = new DeleteShoppingItemRequest(id);
+
+        return await deletePipeline
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
 }

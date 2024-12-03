@@ -66,6 +66,7 @@ export interface IItemSetOfIFailure {
 export interface IFailure {
   message?: string;
   uiHandle?: string | null;
+  code?: string | null;
 }
 
 export type EntityMessageOfString = UserMessage & {
@@ -222,6 +223,7 @@ export interface GetRecipeResponse {
   id?: number;
   name?: string;
   directions?: string;
+  sides?: string;
   /** @format int32 */
   prepTimeMinutes?: number | null;
   /** @format int32 */
@@ -240,7 +242,6 @@ export interface GetRecipeResponse {
   categories?: string[];
   ingredients?: GetRecipeResponseIngredient[];
   shoppingItems?: GetRecipeResponseShoppingItem[];
-  sides?: string;
 }
 
 export interface GetRecipeResponseIngredient {
@@ -267,6 +268,7 @@ export interface SaveRecipeRequest {
   id?: number;
   name?: string;
   directions?: string;
+  sides?: string;
   /** @format int32 */
   cookTimeMinutes?: number | null;
   /** @format int32 */
@@ -275,7 +277,6 @@ export interface SaveRecipeRequest {
   ingredients?: SaveRecipeRequestIngredient[];
   shoppingItems?: SaveRecipeRequestShoppingItem[];
   categories?: string[];
-  sides?: string;
 }
 
 export interface SaveRecipeRequestIngredient {

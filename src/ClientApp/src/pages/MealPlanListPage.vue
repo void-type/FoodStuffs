@@ -86,11 +86,6 @@ function setListRequestFromQuery() {
   };
 }
 
-function newMealPlan() {
-  mealPlanStore.newCurrentMealPlan();
-  router.push({ name: 'mealPlanEdit' });
-}
-
 watch(
   props,
   () => {
@@ -103,9 +98,19 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <h1 class="mt-4">Meal Plans</h1>
+    <div class="mt-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'home' }">Home</router-link>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">Meal Plans</li>
+        </ol>
+      </nav>
+    </div>
+    <h1 class="mt-3">Meal Plans</h1>
     <div class="btn-toolbar mt-4">
-      <button class="btn btn-secondary me-2" @click.stop.prevent="newMealPlan">New</button>
+      <router-link class="btn btn-secondary me-2" :to="{ name: 'mealPlanNew' }">New</router-link>
     </div>
     <div class="mt-4">{{ resultCountText }}</div>
     <table
@@ -121,18 +126,16 @@ watch(
       </thead>
       <tbody>
         <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
-          <td>{{ mealPlan.name }}</td>
+          <td>
+            <router-link :to="{ name: 'mealPlanEdit', params: { id: mealPlan.id } }">{{
+              mealPlan.name
+            }}</router-link>
+          </td>
           <td>{{ DateHelpers.dateTimeForView(mealPlan.createdOn) }}</td>
           <td>
-            <router-link
-              v-if="currentMealPlan.id === mealPlan.id"
-              class="btn btn-sm btn-primary me-2"
-              :to="{ name: 'mealPlanEdit' }"
-              >Edit</router-link
-            >
             <button
-              v-else
               class="btn btn-sm btn-primary me-2"
+              :disabled="currentMealPlan.id === mealPlan.id"
               @click="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
             >
               Make current

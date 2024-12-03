@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
+import useShoppingItemStore from '@/stores/shoppingItemStore';
 import RouterHelpers from '@/models/RouterHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import { computed } from 'vue';
@@ -8,6 +9,7 @@ import { storeToRefs } from 'pinia';
 
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
+const shoppingItemStore = useShoppingItemStore();
 
 const planName = computed(() => {
   const name = mealPlanStore.currentMealPlan?.name;
@@ -44,13 +46,33 @@ const { recentRecipes } = storeToRefs(recipeStore);
           <router-link
             :to="{ name: 'recipeSearch', query: recipeStore.currentQueryParams }"
             class="dropdown-item"
-            >Search Recipes</router-link
+            >Recipes</router-link
           >
         </li>
         <li>
           <router-link :to="{ name: 'recipeNew' }" class="dropdown-item">New Recipe</router-link>
         </li>
         <li><hr class="dropdown-divider" /></li>
+        <li>
+          <router-link
+            :to="{ name: 'mealPlanList', query: mealPlanStore.currentQueryParams }"
+            class="dropdown-item"
+            >Meal Plans</router-link
+          >
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'mealPlanEdit', params: { id: mealPlanStore.currentMealPlan.id } }"
+            class="dropdown-item"
+            >Current Plan {{ planName }}</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'mealPlanNew' }" class="dropdown-item"
+            >New Meal Plan</router-link
+          >
+        </li>
+        <li v-if="recentRecipes"><hr class="dropdown-divider" /></li>
         <li v-for="recipe in recentRecipes" :key="recipe.id">
           <router-link :to="RouterHelpers.viewRecipe(recipe)" class="dropdown-item">{{
             recipe.name
@@ -66,19 +88,14 @@ const { recentRecipes } = storeToRefs(recipeStore);
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        Meal Plans
+        Admin
       </a>
       <ul class="dropdown-menu">
         <li>
           <router-link
-            :to="{ name: 'mealPlanList', query: mealPlanStore.currentQueryParams }"
+            :to="{ name: 'shoppingItemList', query: shoppingItemStore.currentQueryParams }"
             class="dropdown-item"
-            >List Meal Plans</router-link
-          >
-        </li>
-        <li>
-          <router-link :to="{ name: 'mealPlanEdit' }" class="dropdown-item"
-            >Current Plan {{ planName }}</router-link
+            >Shopping Items</router-link
           >
         </li>
       </ul>

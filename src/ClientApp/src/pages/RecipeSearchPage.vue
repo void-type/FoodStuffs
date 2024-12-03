@@ -33,7 +33,7 @@ const { sortOptions } = RecipeStoreHelpers;
 
 const selectedCategories = ref([] as Array<number>);
 
-const useListView = ref(false);
+const useCompactView = ref(false);
 
 const resultCountText = computed(() => {
   const itemSet = listResponse.value;
@@ -180,7 +180,17 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <h1 class="mt-4">Recipes</h1>
+    <div class="mt-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'home' }">Home</router-link>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">Recipes</li>
+        </ol>
+      </nav>
+    </div>
+    <h1 class="mt-3">Recipes</h1>
     <div class="grid mt-4">
       <div class="g-col-12">
         <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
@@ -242,23 +252,19 @@ watch(
       </div>
     </div>
     <div class="mt-4">{{ resultCountText }}</div>
-    <div class="form-check form-switch mt-3" title="Use list view">
-      <label
-        class="form-check-label"
-        for="useListView"
-        title="Use list view"
-        aria-label="Use list view"
-        ><font-awesome-icon class="me-2" icon="fa-moon" />List view</label
+    <div class="form-check form-switch mt-3">
+      <label class="form-check-label" for="useCompactView" aria-label="Use compact view"
+        ><font-awesome-icon class="me-2" icon="fa-moon" />Compact view</label
       >
       <input
-        id="useListView"
-        v-model="useListView"
-        :checked="useListView"
+        id="useCompactView"
+        v-model="useCompactView"
+        :checked="useCompactView"
         class="form-check-input"
         type="checkbox"
       />
     </div>
-    <div v-if="useListView" class="grid mt-4">
+    <div v-if="useCompactView" class="grid mt-4">
       <RecipeListItem
         v-for="(recipe, i) in listResponse.items"
         :key="recipe.id"

@@ -356,4 +356,21 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       format: 'json',
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags ShoppingItems
+   * @name ShoppingItemsDelete
+   * @summary Delete a shopping item.
+   * @request DELETE:/api/shopping-items/{id}
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  shoppingItemsDelete = (id: number, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/shopping-items/${id}`,
+      method: 'DELETE',
+      format: 'json',
+      ...params,
+    });
 }

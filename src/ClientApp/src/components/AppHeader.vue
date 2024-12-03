@@ -89,12 +89,8 @@ const searchText = ref('');
                 </button>
               </li>
               <li class="dropdown-item">
-                <div class="form-check form-switch" title="Use dark mode">
-                  <label
-                    class="form-check-label"
-                    for="useDarkMode"
-                    title="Use dark mode"
-                    aria-label="Use dark mode"
+                <div class="form-check form-switch">
+                  <label class="form-check-label" for="useDarkMode" aria-label="Use dark mode"
                     ><font-awesome-icon class="me-2" icon="fa-moon" />Dark mode</label
                   >
                   <input
