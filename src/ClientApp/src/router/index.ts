@@ -28,72 +28,107 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('@/pages/HomePage.vue'),
       meta: { title: 'Home' },
-    },
-    {
-      name: 'recipeSearch',
-      path: '/recipes',
-      component: () => import('@/pages/RecipeSearchPage.vue'),
-      props: (route) => ({ query: route.query }),
-      meta: { title: 'Search Recipes' },
-    },
-    {
-      name: 'recipeView',
-      path: '/recipes/view/:id/:slug?',
-      component: () => import('@/pages/RecipeViewPage.vue'),
-      props: (route) => ({
-        id: +route.params.id,
-      }),
-      meta: { title: 'View Recipe' },
-    },
-    {
-      name: 'recipeEdit',
-      path: '/recipes/edit/:id/:slug?',
-      component: () => import('@/pages/RecipeEditPage.vue'),
-      props: (route) => ({
-        id: +route.params.id,
-      }),
-      meta: { title: 'Edit Recipe' },
-    },
-    {
-      name: 'recipeNew',
-      path: '/recipes/new',
-      component: () => import('@/pages/RecipeEditPage.vue'),
-      props: (route) => ({
-        copy: +(route.query?.copy || 0),
-      }),
-      meta: { title: 'New Recipe' },
-    },
-    {
-      name: 'mealPlanList',
-      path: '/meal-plans',
-      component: () => import('@/pages/MealPlanListPage.vue'),
-      props: (route) => ({ query: route.query }),
-      meta: { title: 'Meal Plans' },
-    },
-    {
-      name: 'mealPlanEdit',
-      path: '/meal-plans/edit/:id',
-      component: () => import('@/pages/MealPlanEditPage.vue'),
-      props: (route) => ({
-        id: +route.params.id,
-      }),
-      meta: { title: 'Edit Meal Plan' },
-    },
-    {
-      name: 'mealPlanNew',
-      path: '/meal-plans/new',
-      component: () => import('@/pages/MealPlanEditPage.vue'),
-      meta: { title: 'New Meal Plan' },
-    },
-    {
-      name: 'shoppingItemList',
-      path: '/shopping-items',
-      component: () => import('@/pages/ShoppingItemListPage.vue'),
-      props: (route) => ({ query: route.query }),
-      meta: { title: 'Shopping Items' },
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('@/pages/HomePage.vue'),
+        },
+        {
+          path: 'recipes',
+          meta: { title: 'Recipes' },
+          props: (route) => ({ query: route.query }),
+          children: [
+            {
+              path: '',
+              name: 'recipeSearch',
+              component: () => import('@/pages/RecipeSearchPage.vue'),
+            },
+            {
+              path: 'view/:id/:slug?',
+              name: 'recipeView',
+              component: () => import('@/pages/RecipeViewPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+              meta: { title: 'View Recipe' },
+            },
+            {
+              path: 'edit/:id/:slug?',
+              name: 'recipeEdit',
+              component: () => import('@/pages/RecipeEditPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+              meta: { title: 'Edit Recipe' },
+            },
+            {
+              path: 'new',
+              name: 'recipeNew',
+              component: () => import('@/pages/RecipeEditPage.vue'),
+              props: (route) => ({
+                copy: +(route.query?.copy || 0),
+              }),
+              meta: { title: 'New Recipe' },
+            },
+          ],
+        },
+        {
+          path: 'meal-plans',
+          meta: { title: 'Meal Plans' },
+          props: (route) => ({ query: route.query }),
+          children: [
+            {
+              path: '',
+              name: 'mealPlanList',
+              component: () => import('@/pages/MealPlanListPage.vue'),
+            },
+            {
+              path: 'edit/:id',
+              name: 'mealPlanEdit',
+              component: () => import('@/pages/MealPlanEditPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+              meta: { title: 'Edit Meal Plan' },
+            },
+            {
+              path: 'new',
+              name: 'mealPlanNew',
+              component: () => import('@/pages/MealPlanEditPage.vue'),
+              meta: { title: 'New Meal Plan' },
+            },
+          ],
+        },
+        {
+          path: 'shopping-items',
+          meta: { title: 'Shopping Items' },
+          children: [
+            {
+              path: '',
+              name: 'shoppingItemList',
+              component: () => import('@/pages/ShoppingItemListPage.vue'),
+              props: (route) => ({ query: route.query }),
+            },
+            {
+              path: 'edit/:id',
+              name: 'shoppingItemEdit',
+              component: () => import('@/pages/ShoppingItemEditPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+              meta: { title: 'Edit Shopping Item' },
+            },
+            {
+              path: 'new',
+              name: 'shoppingItemNew',
+              component: () => import('@/pages/ShoppingItemEditPage.vue'),
+              meta: { title: 'New Shopping Item' },
+            },
+          ],
+        },
+      ],
     },
     {
       path: '/:pathMatch(.*)*',

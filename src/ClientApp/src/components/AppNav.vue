@@ -98,6 +98,11 @@ const { recentRecipes } = storeToRefs(recipeStore);
             >Shopping Items</router-link
           >
         </li>
+        <li>
+          <router-link :to="{ name: 'shoppingItemNew' }" class="dropdown-item"
+            >New Shopping Item</router-link
+          >
+        </li>
       </ul>
     </li>
   </ul>

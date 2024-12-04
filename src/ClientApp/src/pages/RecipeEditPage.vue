@@ -25,6 +25,7 @@ import type { HttpResponse } from '@/api/http-client';
 import { clamp } from '@/models/FormatHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 
 const props = defineProps({
   id: {
@@ -309,21 +310,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 
 <template>
   <div class="container-xxl">
-    <div class="mt-2">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'home' }">Home</router-link>
-          </li>
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'recipeSearch' }">Recipes</router-link>
-          </li>
-          <li class="breadcrumb-item" aria-current="page">
-            {{ isCreateNewMode ? 'New' : 'Edit' }}
-          </li>
-        </ol>
-      </nav>
-    </div>
+    <AppBreadcrumbs />
     <h1 class="mt-3">{{ isCreateNewMode ? 'New Recipe' : data.sourceRecipe.name }}</h1>
     <div class="grid mt-4">
       <div class="g-col-12">

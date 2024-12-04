@@ -7,7 +7,7 @@ import ApiHelpers from '@/models/ApiHelpers';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import SearchShoppingItemsRequest from '@/models/SearchShoppingItemsRequest';
-import { listRequestToQueryParams } from '@/models/MealPlanStoreHelpers';
+import listRequestToQueryParams from '@/models/ShoppingItemStoreHelpers';
 import useMessageStore from './messageStore';
 
 interface ShoppingItemStoreState {
