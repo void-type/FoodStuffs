@@ -6,19 +6,29 @@ using System.Globalization;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
+using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.ShoppingItems;
 
 public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingItemRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
+    private readonly SaveShoppingItemRequestValidator _validator;
 
-    public SaveShoppingItemHandler(FoodStuffsContext data)
+    public SaveShoppingItemHandler(FoodStuffsContext data, SaveShoppingItemRequestValidator validator)
     {
         _data = data;
+        _validator = validator;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveShoppingItemRequest request, CancellationToken cancellationToken = default)
+    {
+        return await request
+            .Validate(_validator)
+            .ThenAsync(async request => await SaveAsync(request, cancellationToken));
+    }
+
+    private async Task<IResult<EntityMessage<int>>> SaveAsync(SaveShoppingItemRequest request, CancellationToken cancellationToken)
     {
         var requestedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
 

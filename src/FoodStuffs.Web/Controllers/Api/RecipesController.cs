@@ -19,7 +19,7 @@ public class RecipesController : ControllerBase
     /// <summary>
     /// Search for recipes using the following criteria. All are optional and some have defaults.
     /// </summary>
-    /// <param name="searchPipeline"></param>
+    /// <param name="searchHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
     /// <param name="categories">Category IDs to filter on</param>
     /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
@@ -32,7 +32,7 @@ public class RecipesController : ControllerBase
     [ProducesResponseType(typeof(SearchRecipesResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> SearchAsync(
-        [FromServices] SearchRecipesPipeline searchPipeline,
+        [FromServices] SearchRecipesHandler searchHandler,
         [FromQuery] string? name = null,
         [FromQuery] int[]? categories = null,
         [FromQuery] bool? isForMealPlanning = null,
@@ -52,7 +52,7 @@ public class RecipesController : ControllerBase
             Page: page,
             Take: take);
 
-        return await searchPipeline
+        return await searchHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -60,17 +60,17 @@ public class RecipesController : ControllerBase
     /// <summary>
     /// Get a recipe.
     /// </summary>
-    /// <param name="getPipeline"></param>
+    /// <param name="getHandler"></param>
     /// <param name="id">The ID of the recipe to get</param>
     [Route("{id}")]
     [HttpGet]
     [ProducesResponseType(typeof(GetRecipeResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> GetAsync([FromServices] GetRecipePipeline getPipeline, int id)
+    public async Task<IActionResult> GetAsync([FromServices] GetRecipeHandler getHandler, int id)
     {
         var request = new GetRecipeRequest(id);
 
-        return await getPipeline
+        return await getHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -78,14 +78,14 @@ public class RecipesController : ControllerBase
     /// <summary>
     /// Save a recipe. Will update if found, otherwise a new recipe will be created.
     /// </summary>
-    /// <param name="savePipeline"></param>
+    /// <param name="saveHandler"></param>
     /// <param name="request">The recipe to save</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> SaveAsync([FromServices] SaveRecipePipeline savePipeline, [FromBody] SaveRecipeRequest request)
+    public async Task<IActionResult> SaveAsync([FromServices] SaveRecipeHandler saveHandler, [FromBody] SaveRecipeRequest request)
     {
-        return await savePipeline
+        return await saveHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -93,17 +93,17 @@ public class RecipesController : ControllerBase
     /// <summary>
     /// Delete a recipe.
     /// </summary>
-    /// <param name="deletePipeline"></param>
+    /// <param name="deleteHandler"></param>
     /// <param name="id">The ID of the recipe</param>
     [Route("{id}")]
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> DeleteAsync([FromServices] DeleteRecipePipeline deletePipeline, int id)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteRecipeHandler deleteHandler, int id)
     {
         var request = new DeleteRecipeRequest(id);
 
-        return await deletePipeline
+        return await deleteHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

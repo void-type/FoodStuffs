@@ -16,7 +16,7 @@ public class CategoriesController : ControllerBase
     /// <summary>
     /// List categories. All parameters are optional and some have defaults.
     /// </summary>
-    /// <param name="listPipeline"></param>
+    /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
     /// <param name="isPagingEnabled">False for all results</param>
     /// <param name="page">The page of results to retrieve</param>
@@ -24,7 +24,7 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListCategoriesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListCategoriesPipeline listPipeline, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListCategoriesHandler listHandler, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListCategoriesRequest(
             NameSearch: name,
@@ -36,7 +36,7 @@ public class CategoriesController : ControllerBase
         using var cts = new CancellationTokenSource()
             .Tee(c => c.CancelAfter(5000));
 
-        return await listPipeline
+        return await listHandler
             .Handle(request, cts.Token)
             .MapAsync(HttpResponder.Respond);
     }

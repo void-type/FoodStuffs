@@ -48,8 +48,7 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                         Order: rel.Order,
                         Image: rel.Recipe.DefaultImage?.FileName,
                         Categories: rel.Recipe.Categories
-                            .Select(c => c.Name)
-                            .OrderBy(n => n)
+                            .ConvertAll(c => c.Name)
                             .ToList(),
                         ShoppingItems: rel.Recipe.ShoppingItemRelations
                             .OrderBy(i => i.Order)

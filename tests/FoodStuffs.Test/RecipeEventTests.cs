@@ -90,7 +90,7 @@ public class RecipeEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveRecipeHandler(context, indexService)
+        var result = await new SaveRecipeHandler(context, indexService, new SaveRecipeRequestValidator())
             .Handle(new SaveRecipeRequest(0, "New", "New", string.Empty, null, 20, false, [new SaveRecipeRequestIngredient("New", 1, 1, false)], [], ["Category2", "Category3", "Category4"]));
 
         Assert.True(result.IsSuccess);
@@ -117,7 +117,7 @@ public class RecipeEventTests
 
         var indexService = Substitute.For<IRecipeIndexService>();
 
-        var result = await new SaveRecipeHandler(context, indexService)
+        var result = await new SaveRecipeHandler(context, indexService, new SaveRecipeRequestValidator())
             .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", string.Empty, null, 20, false, [new SaveRecipeRequestIngredient("New", 1, 1, false)], [], ["Category2", "Category3", "Category4"]));
 
         Assert.True(result.IsSuccess);

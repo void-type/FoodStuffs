@@ -18,17 +18,17 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Get an image.
     /// </summary>
-    /// <param name="getPipeline"></param>
+    /// <param name="getHandler"></param>
     /// <param name="name">The name of the image to download</param>
     [Route("{name}")]
     [HttpGet]
     [ProducesResponseType(typeof(FileContentResult), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> GetAsync([FromServices] GetImagePipeline getPipeline, string name)
+    public async Task<IActionResult> GetAsync([FromServices] GetImageHandler getHandler, string name)
     {
         var request = new GetImageRequest(name);
 
-        return await getPipeline
+        return await getHandler
             .Handle(request)
             .MapAsync(HttpResponder.RespondWithInlineFile);
     }
@@ -36,13 +36,13 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Upload an image using a multi-part form file.
     /// </summary>
-    /// <param name="savePipeline"></param>
+    /// <param name="saveHandler"></param>
     /// <param name="recipeId">The ID of the recipe of which the image belongs to</param>
     /// <param name="file">The file to upload</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> UploadAsync([FromServices] SaveImagePipeline savePipeline, int recipeId, IFormFile file)
+    public async Task<IActionResult> UploadAsync([FromServices] SaveImageHandler saveHandler, int recipeId, IFormFile file)
     {
         await using var fileStream = file
             .EnsureNotNull()
@@ -50,7 +50,7 @@ public class ImagesController : ControllerBase
 
         var request = new SaveImageRequest(recipeId, fileStream);
 
-        return await savePipeline
+        return await saveHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -58,17 +58,17 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Delete an image.
     /// </summary>
-    /// <param name="deletePipeline"></param>
+    /// <param name="deleteHandler"></param>
     /// <param name="name">The name of the image to delete</param>
     [Route("{name}")]
     [HttpDelete]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> DeleteAsync([FromServices] DeleteImagePipeline deletePipeline, string name)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteImageHandler deleteHandler, string name)
     {
         var request = new DeleteImageRequest(name);
 
-        return await deletePipeline
+        return await deleteHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
@@ -76,17 +76,17 @@ public class ImagesController : ControllerBase
     /// <summary>
     /// Pin an image for a recipe. This image will be the default image for the recipe.
     /// </summary>
-    /// <param name="pinPipeline"></param>
+    /// <param name="pinHandler"></param>
     /// <param name="name">The name of the image to pin</param>
     [Route("pin/{name}")]
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> PinAsync([FromServices] PinImagePipeline pinPipeline, string name)
+    public async Task<IActionResult> PinAsync([FromServices] PinImageHandler pinHandler, string name)
     {
         var request = new PinImageRequest(name);
 
-        return await pinPipeline
+        return await pinHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

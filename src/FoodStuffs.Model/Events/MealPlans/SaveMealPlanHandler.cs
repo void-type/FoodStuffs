@@ -5,19 +5,29 @@ using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
+using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.MealPlans;
 
 public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
+    private readonly SaveMealPlanRequestValidator _validator;
 
-    public SaveMealPlanHandler(FoodStuffsContext data)
+    public SaveMealPlanHandler(FoodStuffsContext data, SaveMealPlanRequestValidator validator)
     {
         _data = data;
+        _validator = validator;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveMealPlanRequest request, CancellationToken cancellationToken = default)
+    {
+        return await request
+            .Validate(_validator)
+            .ThenAsync(async request => await SaveAsync(request, cancellationToken));
+    }
+
+    private async Task<IResult<EntityMessage<int>>> SaveAsync(SaveMealPlanRequest request, CancellationToken cancellationToken)
     {
         var byId = new MealPlansWithAllRelatedSpecification(request.Id);
 
