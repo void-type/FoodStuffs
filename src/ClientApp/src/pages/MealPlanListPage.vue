@@ -11,6 +11,7 @@ import { toInt, toNumber } from '@/models/FormatHelpers';
 import Choices from '@/models/Choices';
 import router from '@/router';
 import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 
 const props = defineProps({
   query: {
@@ -98,16 +99,7 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <div class="mt-2">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'home' }">Home</router-link>
-          </li>
-          <li class="breadcrumb-item" aria-current="page">Meal Plans</li>
-        </ol>
-      </nav>
-    </div>
+    <AppBreadcrumbs />
     <h1 class="mt-3">Meal Plans</h1>
     <div class="btn-toolbar mt-4">
       <router-link class="btn btn-secondary me-2" :to="{ name: 'mealPlanNew' }">New</router-link>

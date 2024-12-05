@@ -12,6 +12,7 @@ import SearchShoppingItemsRequest from '@/models/SearchShoppingItemsRequest';
 import ApiHelpers from '@/models/ApiHelpers';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import useMessageStore from '@/stores/messageStore';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 
 const props = defineProps({
   query: {
@@ -149,16 +150,7 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <div class="mt-2">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'home' }">Home</router-link>
-          </li>
-          <li class="breadcrumb-item" aria-current="page">Shopping Items</li>
-        </ol>
-      </nav>
-    </div>
+    <AppBreadcrumbs />
     <h1 class="mt-3">Shopping Items</h1>
     <div class="btn-toolbar mt-4">
       <button class="btn btn-secondary me-2" @click.stop.prevent="newShoppingItem">New</button>

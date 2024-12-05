@@ -14,6 +14,7 @@ import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
 import RecipeListItem from '@/components/RecipeListItem.vue';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 
 const props = defineProps({
   query: {
@@ -180,16 +181,7 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <div class="mt-2">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'home' }">Home</router-link>
-          </li>
-          <li class="breadcrumb-item" aria-current="page">Recipes</li>
-        </ol>
-      </nav>
-    </div>
+    <AppBreadcrumbs />
     <h1 class="mt-3">Recipes</h1>
     <div class="grid mt-4">
       <div class="g-col-12">

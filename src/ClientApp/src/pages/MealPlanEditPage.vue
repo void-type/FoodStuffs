@@ -11,6 +11,7 @@ import type { HttpResponse } from '@/api/http-client';
 import RecipeListItem from '@/components/RecipeListItem.vue';
 import type { ModalParameters } from '@/models/ModalParameters';
 import useAppStore from '@/stores/appStore';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
@@ -54,21 +55,7 @@ onMounted(async () => {
 
 <template>
   <div class="container-xxl">
-    <div class="mt-2">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'home' }">Home</router-link>
-          </li>
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'mealPlanList' }">Meal Plans</router-link>
-          </li>
-          <li class="breadcrumb-item" aria-current="page">
-            {{ (currentMealPlan?.id || 0) < 1 ? 'New' : 'Edit' }}
-          </li>
-        </ol>
-      </nav>
-    </div>
+    <AppBreadcrumbs />
     <h1 class="mt-3">{{ (currentMealPlan?.id || 0) < 1 ? 'New' : 'Edit' }} Meal Plan</h1>
     <div class="grid mt-4">
       <div class="g-col-12">

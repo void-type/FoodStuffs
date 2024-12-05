@@ -38,66 +38,66 @@ const router = createRouter({
         {
           path: 'recipes',
           meta: { title: 'Recipes' },
-          props: (route) => ({ query: route.query }),
           children: [
             {
               path: '',
               name: 'recipeSearch',
               component: () => import('@/pages/RecipeSearchPage.vue'),
+              props: (route) => ({ query: route.query }),
             },
             {
               path: 'view/:id/:slug?',
               name: 'recipeView',
+              meta: { title: 'View Recipe' },
               component: () => import('@/pages/RecipeViewPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
               }),
-              meta: { title: 'View Recipe' },
             },
             {
               path: 'edit/:id/:slug?',
               name: 'recipeEdit',
+              meta: { title: 'Edit Recipe' },
               component: () => import('@/pages/RecipeEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
               }),
-              meta: { title: 'Edit Recipe' },
             },
             {
               path: 'new',
               name: 'recipeNew',
+              meta: { title: 'New Recipe' },
               component: () => import('@/pages/RecipeEditPage.vue'),
               props: (route) => ({
                 copy: +(route.query?.copy || 0),
               }),
-              meta: { title: 'New Recipe' },
             },
           ],
         },
         {
           path: 'meal-plans',
           meta: { title: 'Meal Plans' },
-          props: (route) => ({ query: route.query }),
           children: [
             {
               path: '',
               name: 'mealPlanList',
               component: () => import('@/pages/MealPlanListPage.vue'),
+              props: (route) => ({ query: route.query }),
             },
             {
               path: 'edit/:id',
               name: 'mealPlanEdit',
+              meta: { title: 'Edit Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
               }),
-              meta: { title: 'Edit Meal Plan' },
             },
             {
               path: 'new',
               name: 'mealPlanNew',
-              component: () => import('@/pages/MealPlanEditPage.vue'),
               meta: { title: 'New Meal Plan' },
+              component: () => import('@/pages/MealPlanEditPage.vue'),
             },
           ],
         },
@@ -114,17 +114,17 @@ const router = createRouter({
             {
               path: 'edit/:id',
               name: 'shoppingItemEdit',
+              meta: { title: 'Edit Shopping Item' },
               component: () => import('@/pages/ShoppingItemEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
               }),
-              meta: { title: 'Edit Shopping Item' },
             },
             {
               path: 'new',
               name: 'shoppingItemNew',
-              component: () => import('@/pages/ShoppingItemEditPage.vue'),
               meta: { title: 'New Shopping Item' },
+              component: () => import('@/pages/ShoppingItemEditPage.vue'),
             },
           ],
         },
