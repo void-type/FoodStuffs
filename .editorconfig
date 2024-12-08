@@ -199,6 +199,9 @@ dotnet_diagnostic.AsyncFixer01.severity = none
 # We check our API models ourselves
 dotnet_diagnostic.S6967.severity = none
 
+# CA2016: Forward the 'CancellationToken' parameter to methods
+dotnet_diagnostic.CA2016.severity = warning
+
 [*.{cs,vb}]
 
 
