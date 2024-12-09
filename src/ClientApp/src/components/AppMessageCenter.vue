@@ -9,13 +9,7 @@ const { clearMessage, clearMessageTimeout } = messageStore;
 </script>
 
 <template>
-  <div
-    id="message-center"
-    :class="{
-      'sticky-top': true,
-      'mb-0': true,
-    }"
-  >
+  <div id="message-center" class="sticky-top mb-0">
     <transition-group v-if="messages.length > 0" name="list" class="alert-wrapper" tag="div" appear>
       <div
         v-for="message in messages"
@@ -58,8 +52,6 @@ const { clearMessage, clearMessageTimeout } = messageStore;
     margin-right: auto;
     left: 0;
     right: 0;
-    background-color: rgba(var(--bs-body-bg-rgb), 0.8);
-    border-radius: var(--bs-border-radius);
 
     div.alert {
       margin: 0;
