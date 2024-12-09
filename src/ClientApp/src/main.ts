@@ -10,30 +10,16 @@ import {
   faRotateRight,
   faMoon,
   faSearch,
-  faTimes,
-  faEye,
-  faPencil,
-  faRotate,
-  faPlus,
-  faGripLines,
   faThumbtack,
+  faRotate,
+  faGripLines,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Prevents inline styling to appease CSP.
 fontAwesomeConfig.autoAddCss = false;
 
-library.add(
-  faTimes,
-  faThumbtack,
-  faPencil,
-  faPlus,
-  faEye,
-  faSearch,
-  faRotate,
-  faRotateRight,
-  faMoon,
-  faGripLines
-);
+library.add(faRotateRight, faMoon, faSearch, faThumbtack, faRotate, faGripLines, faPlus);
 
 const app = createApp(App);
 
