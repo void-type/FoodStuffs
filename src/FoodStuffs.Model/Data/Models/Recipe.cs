@@ -44,6 +44,4 @@ public class Recipe : IAuditableWithOffset
     public virtual List<RecipeShoppingItemRelation> ShoppingItemRelations { get; } = [];
 
     public virtual List<MealPlanRecipeRelation> MealPlanRelations { get; } = [];
-
-
 }
