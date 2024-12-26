@@ -104,6 +104,15 @@ function newShoppingItem() {
   router.push({ name: 'shoppingItemNew' });
 }
 
+function fetchList() {
+  api()
+    .shoppingItemsList(listRequest.value)
+    .then((response) => {
+      shoppingItemStore.listResponse = response.data;
+    })
+    .catch((response) => messageStore.setApiFailureMessages(response));
+}
+
 async function onDeleteShoppingItem(id: number | null | undefined) {
   function deleteShoppingItem() {
     if (!id) {
@@ -113,7 +122,7 @@ async function onDeleteShoppingItem(id: number | null | undefined) {
     api()
       .shoppingItemsDelete(id)
       .then(() => {
-        navigateSearch();
+        fetchList();
       })
       .catch((response) => {
         messageStore.setApiFailureMessages(response);
@@ -127,15 +136,6 @@ async function onDeleteShoppingItem(id: number | null | undefined) {
   };
 
   appStore.showModal(parameters);
-}
-
-function fetchList() {
-  api()
-    .shoppingItemsList(listRequest.value)
-    .then((response) => {
-      shoppingItemStore.listResponse = response.data;
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
 }
 
 watch(
