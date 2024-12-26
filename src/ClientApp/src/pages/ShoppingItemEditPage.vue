@@ -155,6 +155,10 @@ watch(
     <div class="btn-toolbar mt-4">
       <button class="btn btn-secondary me-2" @click.stop.prevent="newShoppingItem">New</button>
     </div>
+    <div class="alert alert-warning">
+      <strong>Warning:</strong>This page is a temporary placeholder until we get shopping item
+      editing finished.
+    </div>
     <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
       <template #searchForm>
         <div class="grid mb-3 gap-sm">
