@@ -334,6 +334,9 @@ onBeforeRouteLeave(async (to, from, next) => {
           :on-image-pin="onImagePin"
           class="mt-4"
         />
+        <div v-else class="alert alert-secondary mt-4">
+          <strong>Note:</strong> You can upload images after saving.
+        </div>
       </div>
     </div>
   </div>
