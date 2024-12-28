@@ -76,21 +76,6 @@ function selectSuggestion(id: number | undefined) {
           {{ suggestion.name }}
         </a>
       </li>
-      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
-        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
-          {{ suggestion.name }}
-        </a>
-      </li>
-      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
-        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
-          {{ suggestion.name }}
-        </a>
-      </li>
-      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
-        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
-          {{ suggestion.name }}
-        </a>
-      </li>
     </ul>
   </div>
 </template>
