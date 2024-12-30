@@ -66,7 +66,7 @@ function clearSearch() {
     isPagingEnabled: listRequest.value.isPagingEnabled,
   });
 
-  // selectedCategories gets it's new value from query params.
+  // selectedCategories gets its new value from query params.
 
   navigateSearch();
 }
@@ -183,67 +183,63 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <h1 class="mt-3">Recipes</h1>
-    <div class="grid mt-4">
-      <div class="g-col-12">
-        <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
-          <template #searchForm>
-            <div class="grid mb-3 gap-sm">
-              <div class="g-col-12 g-col-md-6">
-                <label for="nameSearch" class="form-label">Name</label>
-                <input
-                  id="nameSearch"
-                  v-model="listRequest.name"
-                  class="form-control"
-                  @keydown.stop.prevent.enter="startSearch"
-                />
-              </div>
-              <div class="g-col-6 g-col-md-3">
-                <label class="form-label" for="isForMealPlanning">Meals</label>
-                <select
-                  id="isForMealPlanning"
-                  v-model="listRequest.isForMealPlanning"
-                  class="form-select"
-                  @change="startSearch"
-                >
-                  <option
-                    v-for="option in Choices.boolean"
-                    :key="option.value?.toString()"
-                    :value="option.value"
-                  >
-                    {{ option.text }}{{ getMealFacetCount(option.value) }}
-                  </option>
-                </select>
-              </div>
-              <div class="g-col-6 g-col-md-3">
-                <label for="recipeSort" class="form-label">Sort</label>
-                <select
-                  id="recipeSort"
-                  :value="listRequest.sortBy"
-                  name="recipeSort"
-                  class="form-select"
-                  aria-label="Page size"
-                  @change="changeSort"
-                >
-                  <option
-                    v-for="sortOption in sortOptions"
-                    :key="sortOption.value"
-                    :value="sortOption.value"
-                  >
-                    {{ sortOption.text }}
-                  </option>
-                </select>
-              </div>
-              <RecipeSearchCategoriesFilter
-                v-model="selectedCategories"
-                :facet-values="categoryFacets"
-                class="g-col-12"
-              />
-            </div>
-          </template>
-        </EntityTableControls>
-      </div>
-    </div>
-    <div class="mt-4">{{ resultCountText }}</div>
+    <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
+      <template #searchForm>
+        <div class="grid mb-3 gap-sm">
+          <div class="g-col-12 g-col-md-6">
+            <label for="nameSearch" class="form-label">Name</label>
+            <input
+              id="nameSearch"
+              v-model="listRequest.name"
+              class="form-control"
+              @keydown.stop.prevent.enter="startSearch"
+            />
+          </div>
+          <div class="g-col-6 g-col-md-3">
+            <label class="form-label" for="isForMealPlanning">Meals</label>
+            <select
+              id="isForMealPlanning"
+              v-model="listRequest.isForMealPlanning"
+              class="form-select"
+              @change="startSearch"
+            >
+              <option
+                v-for="option in Choices.boolean"
+                :key="option.value?.toString()"
+                :value="option.value"
+              >
+                {{ option.text }}{{ getMealFacetCount(option.value) }}
+              </option>
+            </select>
+          </div>
+          <div class="g-col-6 g-col-md-3">
+            <label for="recipeSort" class="form-label">Sort</label>
+            <select
+              id="recipeSort"
+              :value="listRequest.sortBy"
+              name="recipeSort"
+              class="form-select"
+              aria-label="Page size"
+              @change="changeSort"
+            >
+              <option
+                v-for="sortOption in sortOptions"
+                :key="sortOption.value"
+                :value="sortOption.value"
+              >
+                {{ sortOption.text }}
+              </option>
+            </select>
+          </div>
+          <RecipeSearchCategoriesFilter
+            v-model="selectedCategories"
+            :facet-values="categoryFacets"
+            class="g-col-12"
+          />
+        </div>
+      </template>
+    </EntityTableControls>
+    <div class="mt-3">{{ resultCountText }}</div>
     <div class="form-check form-switch mt-3">
       <label class="form-check-label" for="useCompactView" aria-label="Use compact view"
         ><font-awesome-icon class="me-2" icon="fa-moon" />Compact view</label
@@ -256,7 +252,7 @@ watch(
         type="checkbox"
       />
     </div>
-    <div v-if="useCompactView" class="grid mt-4">
+    <div v-if="useCompactView" class="grid mt-3">
       <RecipeListItem
         v-for="(recipe, i) in listResponse.items"
         :key="recipe.id"
@@ -265,7 +261,7 @@ watch(
         class="g-col-12 g-col-sm-6 g-col-lg-4"
       />
     </div>
-    <div v-else class="grid mt-4">
+    <div v-else class="grid mt-3">
       <RecipeCard
         v-for="(recipe, i) in listResponse.items"
         :key="recipe.id"
@@ -280,7 +276,7 @@ watch(
       :total-count="toInt(listResponse.totalCount)"
       :on-change-page="changePage"
       :on-change-take="changeTake"
-      class="mt-4"
+      class="mt-3"
     />
   </div>
 </template>

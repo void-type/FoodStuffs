@@ -101,10 +101,7 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <h1 class="mt-3">Meal Plans</h1>
-    <div class="btn-toolbar mt-4">
-      <router-link class="btn btn-secondary me-2" :to="{ name: 'mealPlanNew' }">New</router-link>
-    </div>
-    <div class="mt-4">{{ resultCountText }}</div>
+    <div class="mt-3">{{ resultCountText }}</div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
       :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }"
@@ -145,7 +142,7 @@ watch(
       :total-count="toInt(listResponse.totalCount)"
       :on-change-page="changePage"
       :on-change-take="changeTake"
-      class="mt-4"
+      class="mt-3"
     />
   </div>
 </template>

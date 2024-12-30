@@ -311,8 +311,8 @@ onBeforeRouteLeave(async (to, from, next) => {
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <h1 class="mt-3">{{ isCreateNewMode ? 'New Recipe' : data.sourceRecipe.name }}</h1>
-    <div class="grid mt-4">
+    <h1 class="mt-3">{{ isCreateNewMode ? 'New' : 'Edit' }} Recipe</h1>
+    <div class="grid mt-3">
       <div class="g-col-12">
         <RecipeEditor
           :source-recipe="data.sourceRecipe"
@@ -332,9 +332,9 @@ onBeforeRouteLeave(async (to, from, next) => {
           :recipe-changed-token="data.recipeChangeToken"
           :on-image-delete="onImageDelete"
           :on-image-pin="onImagePin"
-          class="mt-4"
+          class="mt-3"
         />
-        <div v-else class="alert alert-secondary mt-4">
+        <div v-else class="alert alert-secondary mt-3">
           <strong>Note:</strong> You can upload images after saving.
         </div>
       </div>

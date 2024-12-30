@@ -57,7 +57,7 @@ onMounted(async () => {
   <div class="container-xxl">
     <AppBreadcrumbs />
     <h1 class="mt-3">{{ (currentMealPlan?.id || 0) < 1 ? 'New' : 'Edit' }} Meal Plan</h1>
-    <div class="grid mt-4">
+    <div class="grid mt-3">
       <div class="g-col-12">
         <div class="btn-toolbar sticky-top pt-1">
           <button

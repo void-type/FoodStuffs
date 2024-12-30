@@ -46,22 +46,27 @@ const router = createRouter({
               props: (route) => ({ query: route.query }),
             },
             {
-              path: 'view/:id/:slug?',
-              name: 'recipeView',
+              path: ':id/:slug?',
               meta: { title: 'View Recipe' },
-              component: () => import('@/pages/RecipeViewPage.vue'),
-              props: (route) => ({
-                id: +route.params.id,
-              }),
-            },
-            {
-              path: 'edit/:id/:slug?',
-              name: 'recipeEdit',
-              meta: { title: 'Edit Recipe' },
-              component: () => import('@/pages/RecipeEditPage.vue'),
-              props: (route) => ({
-                id: +route.params.id,
-              }),
+              children: [
+                {
+                  path: '',
+                  name: 'recipeView',
+                  component: () => import('@/pages/RecipeViewPage.vue'),
+                  props: (route) => ({
+                    id: +route.params.id,
+                  }),
+                },
+                {
+                  path: 'edit',
+                  name: 'recipeEdit',
+                  meta: { title: 'Edit Recipe' },
+                  component: () => import('@/pages/RecipeEditPage.vue'),
+                  props: (route) => ({
+                    id: +route.params.id,
+                  }),
+                },
+              ],
             },
             {
               path: 'new',
@@ -85,7 +90,7 @@ const router = createRouter({
               props: (route) => ({ query: route.query }),
             },
             {
-              path: 'edit/:id',
+              path: ':id',
               name: 'mealPlanEdit',
               meta: { title: 'Edit Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
@@ -112,7 +117,7 @@ const router = createRouter({
               props: (route) => ({ query: route.query }),
             },
             {
-              path: 'edit/:id',
+              path: ':id',
               name: 'shoppingItemEdit',
               meta: { title: 'Edit Shopping Item' },
               component: () => import('@/pages/ShoppingItemEditPage.vue'),

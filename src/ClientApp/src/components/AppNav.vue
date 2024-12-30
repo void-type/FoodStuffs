@@ -61,15 +61,16 @@ const { recentRecipes } = storeToRefs(recipeStore);
           >
         </li>
         <li>
-          <router-link
-            :to="{ name: 'mealPlanEdit', params: { id: mealPlanStore.currentMealPlan.id } }"
-            class="dropdown-item"
-            >Current Plan {{ planName }}</router-link
+          <router-link :to="{ name: 'mealPlanNew' }" class="dropdown-item"
+            >New Meal Plan</router-link
           >
         </li>
         <li>
-          <router-link :to="{ name: 'mealPlanNew' }" class="dropdown-item"
-            >New Meal Plan</router-link
+          <router-link
+            v-if="(mealPlanStore.currentMealPlan.id || 0) > 0"
+            :to="{ name: 'mealPlanEdit', params: { id: mealPlanStore.currentMealPlan.id } }"
+            class="dropdown-item"
+            >Current Plan {{ planName }}</router-link
           >
         </li>
         <li v-if="recentRecipes"><hr class="dropdown-divider" /></li>

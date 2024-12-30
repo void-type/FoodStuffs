@@ -62,11 +62,7 @@ onBeforeRouteLeave((to, from, next) => {
   <div class="container-xxl">
     <AppBreadcrumbs />
     <h1 class="mt-3">{{ data.sourceRecipe?.name }}</h1>
-    <div class="grid mt-4">
-      <div class="g-col-12">
-        <RecipeViewer v-if="data.sourceRecipe !== null" :recipe="data.sourceRecipe" />
-      </div>
-    </div>
+    <RecipeViewer v-if="data.sourceRecipe !== null" class="mt-3" :recipe="data.sourceRecipe" />
   </div>
 </template>
 

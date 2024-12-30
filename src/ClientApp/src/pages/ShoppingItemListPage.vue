@@ -100,10 +100,6 @@ function setListRequestFromQuery() {
   };
 }
 
-function newShoppingItem() {
-  router.push({ name: 'shoppingItemNew' });
-}
-
 function fetchList() {
   api()
     .shoppingItemsList(listRequest.value)
@@ -152,10 +148,7 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <h1 class="mt-3">Shopping Items</h1>
-    <div class="btn-toolbar mt-4">
-      <button class="btn btn-secondary me-2" @click.stop.prevent="newShoppingItem">New</button>
-    </div>
-    <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
+    <EntityTableControls class="mt-4" :clear-search="clearSearch" :init-search="startSearch">
       <template #searchForm>
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-md-6">
@@ -170,7 +163,7 @@ watch(
         </div>
       </template>
     </EntityTableControls>
-    <div class="mt-4">{{ resultCountText }}</div>
+    <div class="mt-3">{{ resultCountText }}</div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
       :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }"
@@ -205,7 +198,7 @@ watch(
       :total-count="toInt(listResponse.totalCount)"
       :on-change-page="changePage"
       :on-change-take="changeTake"
-      class="mt-4"
+      class="mt-3"
     />
   </div>
 </template>
