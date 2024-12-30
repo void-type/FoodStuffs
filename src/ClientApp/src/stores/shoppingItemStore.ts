@@ -39,7 +39,7 @@ export default defineStore('shoppingItem', {
   },
 
   actions: {
-    async fetchMealPlanList() {
+    async fetchShoppingItemsList() {
       try {
         const response = await api().shoppingItemsList(this.listRequest);
         this.listResponse = response.data;

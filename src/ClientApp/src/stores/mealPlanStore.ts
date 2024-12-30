@@ -3,6 +3,7 @@ import type {
   GetMealPlanResponsePantryShoppingItem,
   IItemSetOfListMealPlansResponse,
   MealPlansListParams,
+  SaveMealPlanRequest,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -80,15 +81,6 @@ export default defineStore('mealPlan', {
   },
 
   actions: {
-    async clearCurrentPantry() {
-      if (this.currentMealPlan === null) {
-        return;
-      }
-
-      this.currentMealPlan.pantryShoppingItems = [];
-      await this.saveCurrentMealPlan();
-    },
-
     async addToCurrentPantry(shoppingItemId: number | undefined, count = 1) {
       if (this.currentMealPlan === null || isNil(shoppingItemId)) {
         return;
@@ -107,12 +99,12 @@ export default defineStore('mealPlan', {
       await this.saveCurrentMealPlan([], true);
     },
 
-    async clearCurrentRecipes() {
+    async clearCurrentPantry() {
       if (this.currentMealPlan === null) {
         return;
       }
 
-      this.currentMealPlan.recipes = [];
+      this.currentMealPlan.pantryShoppingItems = [];
       await this.saveCurrentMealPlan();
     },
 
@@ -143,6 +135,15 @@ export default defineStore('mealPlan', {
         this.currentMealPlan.recipes = recipes.filter((x) => x.id !== recipeId);
       }
 
+      await this.saveCurrentMealPlan();
+    },
+
+    async clearCurrentRecipes() {
+      if (this.currentMealPlan === null) {
+        return;
+      }
+
+      this.currentMealPlan.recipes = [];
       await this.saveCurrentMealPlan();
     },
 
@@ -192,6 +193,14 @@ export default defineStore('mealPlan', {
         });
       }
 
+      await this.saveMealPlan(request, quickSave);
+    },
+
+    async saveMealPlan(request: SaveMealPlanRequest, quickSave: boolean = false) {
+      if (request === null) {
+        return;
+      }
+
       try {
         const response = await api().mealPlansSave(request);
 
@@ -199,9 +208,11 @@ export default defineStore('mealPlan', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry shoppingItems.
         if (!quickSave) {
-          await this.setCurrentMealPlan(response.data.id);
+          if (response.data.id === this.currentMealPlan.id) {
+            await this.setCurrentMealPlan(response.data.id);
+          }
+
           await this.fetchMealPlanList();
         }
       } catch (error) {

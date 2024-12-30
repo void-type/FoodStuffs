@@ -82,7 +82,7 @@ onUnmounted(() => {
 
 <template>
   <div class="container-xxl">
-    <div class="grid mt-5">
+    <div class="grid mt-4">
       <RecipeCard
         v-for="(recipe, i) in discoverList"
         :key="recipe.id"

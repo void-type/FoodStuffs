@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import RecipeCard from '@/components/RecipeCard.vue';
@@ -22,13 +22,44 @@ const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 
 const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
 
+const shoppingList = computed(() => mealPlanStore.currentShoppingList);
+
+const pantry = computed(() => mealPlanStore.currentPantry);
+
 const useCompactView = ref(false);
 
-async function onDeleteMealPlan(id: number | null | undefined) {
+// TODO: change all methods to work with local state instead of current in store.
+async function onSaveMealPlan() {
+  await mealPlanStore.saveCurrentMealPlan();
+}
+
+async function onClearRecipes() {
+  const parameters: ModalParameters = {
+    title: 'Clear meal plan',
+    description: 'Do you really want to remove all recipes from this meal plan?',
+    okAction: () => mealPlanStore.clearCurrentRecipes(),
+  };
+
+  appStore.showModal(parameters);
+}
+
+async function addToPantry(id: number) {
+  await mealPlanStore.addToCurrentPantry(id);
+}
+
+async function removeFromPantry(id: number) {
+  await mealPlanStore.removeFromCurrentPantry(id);
+}
+
+async function clearPantry() {
+  await mealPlanStore.clearCurrentPantry();
+}
+
+async function onDeleteMealPlan() {
   const parameters: ModalParameters = {
     title: 'Delete meal plan',
     description: 'Do you really want to delete this meal plan?',
-    okAction: () => mealPlanStore.deleteMealPlan(id),
+    okAction: () => mealPlanStore.deleteMealPlan(currentMealPlan.value.id),
   };
 
   appStore.showModal(parameters);
@@ -48,7 +79,6 @@ function getShoppingItem(id: number | undefined) {
 }
 
 onMounted(async () => {
-  mealPlanStore.fetchMealPlanList();
   await fetchShoppingItems();
 });
 </script>
@@ -60,18 +90,15 @@ onMounted(async () => {
     <div class="grid mt-3">
       <div class="g-col-12">
         <div class="btn-toolbar sticky-top pt-1">
-          <button
-            class="btn btn-primary me-2"
-            @click.stop.prevent="() => mealPlanStore.saveCurrentMealPlan()"
-          >
+          <button class="btn btn-primary me-2" @click.stop.prevent="() => onSaveMealPlan()">
             Save
           </button>
           <button
             v-if="(currentMealPlan?.id || 0) > 0"
             class="btn btn-secondary me-2"
-            @click.stop.prevent="() => mealPlanStore.clearCurrentRecipes()"
+            @click.stop.prevent="() => onClearRecipes()"
           >
-            Empty
+            Clear
           </button>
           <button
             v-if="(currentMealPlan?.id || 0) > 0"
@@ -91,7 +118,7 @@ onMounted(async () => {
             <li>
               <button
                 class="dropdown-item text-danger"
-                @click.stop.prevent="() => onDeleteMealPlan(currentMealPlan.id)"
+                @click.stop.prevent="() => onDeleteMealPlan()"
               >
                 Delete
               </button>
@@ -105,7 +132,7 @@ onMounted(async () => {
               id="mealPlanName"
               v-model="currentMealPlan.name"
               class="form-control"
-              @keydown.stop.prevent.enter="() => mealPlanStore.saveCurrentMealPlan()"
+              @keydown.stop.prevent.enter="() => onSaveMealPlan()"
             />
           </div>
           <div class="g-col-12">
@@ -148,8 +175,8 @@ onMounted(async () => {
                   <div class="g-col-12 g-col-md-6">
                     <MealPlanShoppingItemList
                       title="Shopping list"
-                      :shopping-items="mealPlanStore.currentShoppingList"
-                      :on-item-click="mealPlanStore.addToCurrentPantry"
+                      :shopping-items="shoppingList"
+                      :on-item-click="addToPantry"
                       :get-shopping-item-details="getShoppingItem"
                       :show-copy-list="true"
                     />
@@ -157,9 +184,9 @@ onMounted(async () => {
                   <div class="g-col-12 g-col-md-6">
                     <MealPlanShoppingItemList
                       title="Pantry"
-                      :shopping-items="mealPlanStore.currentPantry"
-                      :on-clear="mealPlanStore.clearCurrentPantry"
-                      :on-item-click="mealPlanStore.removeFromCurrentPantry"
+                      :shopping-items="pantry"
+                      :on-clear="clearPantry"
+                      :on-item-click="removeFromPantry"
                       :get-shopping-item-details="getShoppingItem"
                     />
                   </div>
