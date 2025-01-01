@@ -75,7 +75,7 @@ async function newMealPlan() {
             v-if="(mealPlanStore.currentMealPlan.id || 0) > 0"
             :to="{ name: 'mealPlanEdit' }"
             class="dropdown-item"
-            >Edit Current Plan<br/><small>{{ planName }}</small></router-link
+            >Edit Current Plan<br /><small>{{ planName }}</small></router-link
           >
         </li>
         <li v-if="recentRecipes"><hr class="dropdown-divider" /></li>
