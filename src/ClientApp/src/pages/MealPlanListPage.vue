@@ -12,6 +12,7 @@ import Choices from '@/models/Choices';
 import router from '@/router';
 import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 
 const props = defineProps({
   query: {
@@ -100,7 +101,7 @@ watch(
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <h1 class="mt-3">Meal Plans</h1>
+    <AppPageHeading />
     <div class="mt-3">{{ resultCountText }}</div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"

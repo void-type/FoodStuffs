@@ -180,7 +180,7 @@ watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);
 });
 
-onMounted(() => {
+onMounted(async () => {
   fetchCategories();
   fetchShoppingItems();
 });
@@ -267,7 +267,7 @@ onMounted(() => {
     </div>
     <div class="grid g-col-12 g-col-md-6">
       <div class="g-col-12">
-        <label for="ingredients" class="form-label">Shopping Items</label>
+        <label for="ingredients" class="form-label">Shopping items</label>
         <RecipeEditorShoppingItems
           v-model="data.workingRecipe.shoppingItems as WorkingRecipeShoppingItem[]"
           :is-field-in-error="messageStore.isFieldInError"
@@ -307,7 +307,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="g-col-12 g-col-md-6">
-      <label for="prepTimeMinutes" class="form-label">Prep Time Hours/Minutes</label>
+      <label for="prepTimeMinutes" class="form-label">Prep time hours/minutes</label>
       <RecipeTimeSpanEditor
         id="prepTimeMinutes"
         v-model="data.workingRecipe.prepTimeMinutes"
@@ -315,7 +315,7 @@ onMounted(() => {
       />
     </div>
     <div class="g-col-12 g-col-md-6">
-      <label for="cookTimeMinutes" class="form-label">Cook Time Hours/Minutes</label>
+      <label for="cookTimeMinutes" class="form-label">Cook time hours/minutes</label>
       <RecipeTimeSpanEditor
         id="cookTimeMinutes"
         v-model="data.workingRecipe.cookTimeMinutes"

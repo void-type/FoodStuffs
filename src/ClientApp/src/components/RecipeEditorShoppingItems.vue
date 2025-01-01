@@ -101,7 +101,7 @@ function onSortEnd() {
 
 <template>
   <div>
-    <label for="shoppingItemName" class="form-label visually-hidden">Create a Shopping Item</label>
+    <label for="shoppingItemName" class="form-label visually-hidden">Create a shopping item</label>
     <div class="input-group">
       <input
         id="shoppingItemName"
@@ -158,7 +158,7 @@ function onSortEnd() {
         >
           <div class="grid p-3 gap-sm">
             <div class="g-col-12 g-col-md-12">
-              <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping Item</label>
+              <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping item</label>
               <RecipeEditorShoppingItemSelect
                 v-model="item.id"
                 :item="item"

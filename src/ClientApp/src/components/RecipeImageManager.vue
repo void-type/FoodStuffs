@@ -175,7 +175,6 @@ onMounted(() => {
             'text-truncate': true,
             'is-invalid': isFieldInError('upload'),
           }"
-          placeholder="Drop file or click to browse..."
           @drop="uploadFileChange"
           @change="uploadFileChange"
         />

@@ -5,6 +5,7 @@ import { watch } from 'vue';
 import ApiHelpers from '@/models/ApiHelpers';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 
 const props = defineProps({
   id: {
@@ -41,7 +42,7 @@ watch(
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <h1 class="mt-3">{{ props.id < 1 ? 'New' : 'Edit' }} Shopping Item</h1>
+    <AppPageHeading />
     <div class="alert alert-warning mt-3">
       <strong>Warning:</strong>This page is a temporary placeholder until we get shopping item
       editing finished.

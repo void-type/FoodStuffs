@@ -15,6 +15,7 @@ import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFil
 import RecipeCard from '@/components/RecipeCard.vue';
 import RecipeListItem from '@/components/RecipeListItem.vue';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 
 const props = defineProps({
   query: {
@@ -182,7 +183,7 @@ watch(
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <h1 class="mt-3">Recipes</h1>
+    <AppPageHeading />
     <EntityTableControls :clear-search="clearSearch" :init-search="startSearch">
       <template #searchForm>
         <div class="grid mb-3 gap-sm">

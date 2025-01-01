@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { watch, reactive } from 'vue';
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import useRecipeStore from '@/stores/recipeStore';
 import RecipeViewer from '@/components/RecipeViewer.vue';
@@ -8,6 +8,7 @@ import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 
 const props = defineProps({
   id: {
@@ -18,7 +19,7 @@ const props = defineProps({
 
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
-const router = useRouter();
+const route = useRoute();
 const api = ApiHelpers.client;
 
 const data = reactive({
@@ -30,7 +31,7 @@ function fetchRecipe(id: number) {
     .recipesGet(id)
     .then((response) => {
       data.sourceRecipe = response.data;
-      RouterHelpers.setTitle(router.currentRoute.value, data.sourceRecipe.name);
+      RouterHelpers.setTitle(route, data.sourceRecipe.name);
       recipeStore.queueRecent(response.data);
     })
     .catch((response) => {
@@ -61,7 +62,7 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <h1 class="mt-3">{{ data.sourceRecipe?.name }}</h1>
+    <AppPageHeading :title="data.sourceRecipe?.name" />
     <RecipeViewer v-if="data.sourceRecipe !== null" class="mt-3" :recipe="data.sourceRecipe" />
   </div>
 </template>

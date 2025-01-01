@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
+  useRoute,
   useRouter,
   type NavigationGuardNext,
   type RouteLocationNormalized,
@@ -26,6 +27,7 @@ import { clamp } from '@/models/FormatHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 
 const props = defineProps({
   id: {
@@ -55,6 +57,7 @@ const appStore = useAppStore();
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
+const route = useRoute();
 const api = ApiHelpers.client;
 
 const { listRequest } = storeToRefs(recipeStore);
@@ -85,7 +88,7 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
     data.sourceRecipe = getRecipeResponse;
   }
 
-  RouterHelpers.setTitle(router.currentRoute.value, data.sourceRecipe.name);
+  RouterHelpers.setTitle(route, data.sourceRecipe.name);
   setImageSources(data.sourceRecipe);
   data.suggestedImage = null;
 }
@@ -311,33 +314,30 @@ onBeforeRouteLeave(async (to, from, next) => {
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <h1 class="mt-3">{{ isCreateNewMode ? 'New' : 'Edit' }} Recipe</h1>
-    <div class="grid mt-3">
-      <div class="g-col-12">
-        <RecipeEditor
-          :source-recipe="data.sourceRecipe"
-          :on-recipe-save="onRecipeSave"
-          :on-recipe-delete="onRecipeDelete"
-          :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
-          :is-edit-mode="isEditMode"
-        />
-        <RecipeImageManager
-          v-if="isEditMode"
-          :images="data.sourceImages"
-          :suggested-image="data.suggestedImage"
-          :pinned-image="data.pinnedImage"
-          :on-image-upload="onImageUpload"
-          :image-upload-success-token="data.imageUploadSuccessToken"
-          :image-upload-fail-token="data.imageUploadFailToken"
-          :recipe-changed-token="data.recipeChangeToken"
-          :on-image-delete="onImageDelete"
-          :on-image-pin="onImagePin"
-          class="mt-3"
-        />
-        <div v-else class="alert alert-secondary mt-3">
-          <strong>Note:</strong> You can upload images after saving.
-        </div>
-      </div>
+    <AppPageHeading />
+    <RecipeEditor
+      :source-recipe="data.sourceRecipe"
+      :on-recipe-save="onRecipeSave"
+      :on-recipe-delete="onRecipeDelete"
+      :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
+      :is-edit-mode="isEditMode"
+      class="mt-3"
+    />
+    <RecipeImageManager
+      v-if="isEditMode"
+      :images="data.sourceImages"
+      :suggested-image="data.suggestedImage"
+      :pinned-image="data.pinnedImage"
+      :on-image-upload="onImageUpload"
+      :image-upload-success-token="data.imageUploadSuccessToken"
+      :image-upload-fail-token="data.imageUploadFailToken"
+      :recipe-changed-token="data.recipeChangeToken"
+      :on-image-delete="onImageDelete"
+      :on-image-pin="onImagePin"
+      class="mt-3"
+    />
+    <div v-else class="alert alert-secondary mt-3">
+      <strong>Note:</strong> You can upload images after saving.
     </div>
   </div>
 </template>
