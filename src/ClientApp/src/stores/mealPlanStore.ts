@@ -3,7 +3,6 @@ import type {
   GetMealPlanResponsePantryShoppingItem,
   IItemSetOfListMealPlansResponse,
   MealPlansListParams,
-  SaveMealPlanRequest,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
@@ -105,7 +104,7 @@ export default defineStore('mealPlan', {
       }
 
       this.currentMealPlan.pantryShoppingItems = [];
-      await this.saveCurrentMealPlan();
+      await this.saveCurrentMealPlan([], true);
     },
 
     async addCurrentRecipe(recipeId: number | null | undefined) {
@@ -193,14 +192,6 @@ export default defineStore('mealPlan', {
         });
       }
 
-      await this.saveMealPlan(request, quickSave);
-    },
-
-    async saveMealPlan(request: SaveMealPlanRequest, quickSave: boolean = false) {
-      if (request === null) {
-        return;
-      }
-
       try {
         const response = await api().mealPlansSave(request);
 
@@ -208,11 +199,9 @@ export default defineStore('mealPlan', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
+        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry shoppingItems.
         if (!quickSave) {
-          if (response.data.id === this.currentMealPlan.id) {
-            await this.setCurrentMealPlan(response.data.id);
-          }
-
+          await this.setCurrentMealPlan(response.data.id);
           await this.fetchMealPlanList();
         }
       } catch (error) {

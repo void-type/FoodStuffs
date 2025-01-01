@@ -116,16 +116,19 @@ watch(
       </thead>
       <tbody>
         <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
-          <td>
-            <router-link :to="{ name: 'mealPlanEdit', params: { id: mealPlan.id } }">{{
-              mealPlan.name
-            }}</router-link>
-          </td>
+          <td>{{ mealPlan.name }}</td>
           <td>{{ DateHelpers.dateTimeForView(mealPlan.createdOn) }}</td>
           <td>
-            <button
+            <router-link
+              v-if="currentMealPlan.id === mealPlan.id"
+              :to="{ name: 'mealPlanEdit' }"
               class="btn btn-sm btn-primary me-2"
-              :disabled="currentMealPlan.id === mealPlan.id"
+            >
+              Edit current
+            </router-link>
+            <button
+              v-else
+              class="btn btn-sm btn-primary me-2"
               @click="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
             >
               Make current

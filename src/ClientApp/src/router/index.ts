@@ -90,18 +90,9 @@ const router = createRouter({
               props: (route) => ({ query: route.query }),
             },
             {
-              path: ':id',
+              path: 'current',
               name: 'mealPlanEdit',
               meta: { title: 'Edit Meal Plan' },
-              component: () => import('@/pages/MealPlanEditPage.vue'),
-              props: (route) => ({
-                id: +route.params.id,
-              }),
-            },
-            {
-              path: 'new',
-              name: 'mealPlanNew',
-              meta: { title: 'New Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
             },
           ],

@@ -6,10 +6,12 @@ import RouterHelpers from '@/models/RouterHelpers';
 import { isNil } from '@/models/FormatHelpers';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const shoppingItemStore = useShoppingItemStore();
+const router = useRouter();
 
 const planName = computed(() => {
   const name = mealPlanStore.currentMealPlan?.name;
@@ -24,6 +26,11 @@ const planName = computed(() => {
 });
 
 const { recentRecipes } = storeToRefs(recipeStore);
+
+async function newMealPlan() {
+  await mealPlanStore.newCurrentMealPlan();
+  router.push({ name: 'mealPlanEdit' });
+}
 </script>
 
 <template>
@@ -61,16 +68,14 @@ const { recentRecipes } = storeToRefs(recipeStore);
           >
         </li>
         <li>
-          <router-link :to="{ name: 'mealPlanNew' }" class="dropdown-item"
-            >New Meal Plan</router-link
-          >
+          <button class="dropdown-item" @click="newMealPlan">New Meal Plan</button>
         </li>
         <li>
           <router-link
             v-if="(mealPlanStore.currentMealPlan.id || 0) > 0"
-            :to="{ name: 'mealPlanEdit', params: { id: mealPlanStore.currentMealPlan.id } }"
+            :to="{ name: 'mealPlanEdit' }"
             class="dropdown-item"
-            >Current Plan {{ planName }}</router-link
+            >Edit Current Plan<br/><small>{{ planName }}</small></router-link
           >
         </li>
         <li v-if="recentRecipes"><hr class="dropdown-divider" /></li>
