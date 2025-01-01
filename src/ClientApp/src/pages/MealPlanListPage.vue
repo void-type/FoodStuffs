@@ -122,7 +122,7 @@ watch(
             <router-link
               v-if="currentMealPlan.id === mealPlan.id"
               :to="{ name: 'mealPlanEdit' }"
-              class="btn btn-sm btn-primary me-2"
+              class="btn btn-sm btn-secondary me-2"
             >
               Edit current
             </router-link>

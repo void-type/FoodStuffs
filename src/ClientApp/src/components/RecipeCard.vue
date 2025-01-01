@@ -10,6 +10,8 @@ import RecipeMealButton from './RecipeMealButton.vue';
 const props = defineProps({
   recipe: { type: Object as PropType<SearchRecipesResultItem>, required: true },
   imgLazy: { type: Boolean, required: false, default: false },
+  showSortHandle: { type: Boolean, required: false, default: false },
+  showCompactView: { type: Boolean, required: false, default: false },
 });
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
@@ -28,13 +30,18 @@ function flipCard() {
 <template>
   <div :id="recipeCardId" class="card card-hover">
     <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
-      <div class="card-header">{{ recipe.name }}</div>
-      <div class="card-floating-toolbar">
+      <div class="card-header">
+        <span v-if="props.showSortHandle" class="pe-3 sort-handle">
+          <div class="visually-hidden">Drag to sort</div>
+          <font-awesome-icon icon="fa-grip-lines" class="text-muted" /></span
+        >{{ recipe.name }}
+      </div>
+      <div v-if="!props.showCompactView" class="card-floating-toolbar">
         <a class="btn-card-control" href="#" aria-label="flip card" @click.stop.prevent="flipCard">
           <font-awesome-icon class="me-2" icon="fa-rotate" />
         </a>
       </div>
-      <div class="card-flip-container">
+      <div v-if="!props.showCompactView" class="card-flip-container">
         <div class="card-flip-front">
           <div class="image-container">
             <img
@@ -83,6 +90,28 @@ function flipCard() {
               >
             </div>
           </div>
+        </div>
+      </div>
+      <div v-else class="card-body">
+        <div class="btn-toolbar">
+          <router-link
+            type="button"
+            class="btn btn-sm btn-secondary me-2"
+            aria-label="edit recipe"
+            :to="RouterHelpers.editRecipe(recipe)"
+            @click.stop.prevent
+            >Edit</router-link
+          >
+          <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
+        </div>
+        <div v-if="(recipe.categories?.length || 0) > 0" class="mt-3">
+          <span
+            v-for="category in recipe.categories"
+            :key="category || ''"
+            class="badge text-bg-secondary me-2 mt-2"
+          >
+            {{ category }}</span
+          >
         </div>
       </div>
     </router-link>

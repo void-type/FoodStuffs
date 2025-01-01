@@ -43,8 +43,7 @@ export default defineStore('mealPlan', {
   }),
 
   getters: {
-    currentRecipes: (state) =>
-      state.currentMealPlan.recipes?.slice().sort((a, b) => (a.order || 0) - (b.order || 0)) || [],
+    currentRecipes: (state) => state.currentMealPlan.recipes || [],
 
     currentPantry: (state) => state.currentMealPlan.pantryShoppingItems || [],
 

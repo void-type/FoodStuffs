@@ -121,6 +121,14 @@ body {
   column-gap: 0;
 }
 
+.sort-handle {
+  cursor: grab;
+}
+
+.btn-toolbar.sticky-top {
+  z-index: 3;
+}
+
 html[data-bs-theme='dark'] {
   --bs-body-bg: #{$dark};
 

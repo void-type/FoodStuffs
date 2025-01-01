@@ -210,10 +210,6 @@ function onSortEnd() {
   .accordion-button {
     padding: 0.75em;
   }
-
-  .sort-handle {
-    cursor: grab;
-  }
 }
 
 div#shopping-item-list,

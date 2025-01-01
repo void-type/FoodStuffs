@@ -222,7 +222,7 @@ onMounted(() => {
                 @click.stop.prevent="pinImageClick(imageName)"
               >
                 <span class="visually-hidden">Pin image</span>
-                <font-awesome-icon icon="thumbtack" />
+                <font-awesome-icon icon="fa-thumbtack" />
               </button>
               <button
                 v-if="images.length > 0"
@@ -232,7 +232,7 @@ onMounted(() => {
                 @click.stop.prevent="deleteImageClick(imageName)"
               >
                 <span class="visually-hidden">Delete image</span>
-                <font-awesome-icon icon="times" />
+                <font-awesome-icon icon="fa-times" />
               </button>
               <img
                 class="img-fluid rounded"

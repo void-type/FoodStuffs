@@ -1,24 +1,38 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import RecipeCard from '@/components/RecipeCard.vue';
 import MealPlanShoppingItemList from '@/components/MealPlanShoppingItemList.vue';
 import useMessageStore from '@/stores/messageStore';
 import ApiHelpers from '@/models/ApiHelpers';
+import { VueDraggable } from 'vue-draggable-plus';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
-import RecipeListItem from '@/components/RecipeListItem.vue';
 import type { ModalParameters } from '@/models/ModalParameters';
 import useAppStore from '@/stores/appStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
 const messageStore = useMessageStore();
 const api = ApiHelpers.client;
 
-const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
+const { currentMealPlan } = storeToRefs(mealPlanStore);
+
+const currentRecipes = computed({
+  get() {
+    return currentMealPlan.value?.recipes || [];
+  },
+  set(value) {
+    if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
+      return;
+    }
+
+    currentMealPlan.value.recipes = value;
+  },
+});
 
 const shoppingList = computed(() => mealPlanStore.currentShoppingList);
 
@@ -77,6 +91,32 @@ function findShoppingItem(id: number | undefined) {
   return shoppingItemOptions.value.find((x) => x.id === id);
 }
 
+function updateOrdersByIndex() {
+  if (currentRecipes.value === undefined || currentRecipes.value === null) {
+    return;
+  }
+
+  currentRecipes.value.forEach((x, i) => {
+    // eslint-disable-next-line no-param-reassign
+    x.order = i + 1;
+  });
+}
+
+function onSortEnd() {
+  nextTick(() => {
+    updateOrdersByIndex();
+    mealPlanStore.saveCurrentMealPlan([], true);
+  });
+}
+
+const pageTitle = computed(() => {
+  if (currentMealPlan.value?.id) {
+    return '';
+  }
+
+  return 'New Meal Plan';
+});
+
 onMounted(async () => {
   await fetchShoppingItems();
 });
@@ -85,7 +125,7 @@ onMounted(async () => {
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <AppPageHeading />
+    <AppPageHeading :title="pageTitle" />
     <div class="btn-toolbar sticky-top pt-1 mt-3">
       <button class="btn btn-primary me-2" @click.stop.prevent="() => onSaveMealPlan()">
         Save
@@ -121,7 +161,7 @@ onMounted(async () => {
     </div>
     <div class="grid mt-3">
       <div class="g-col-12 g-col-md-6">
-        <label for="nameSearch" class="form-label">Meal plan name</label>
+        <label for="nameSearch" class="form-label">Name</label>
         <input
           id="mealPlanName"
           v-model="currentMealPlan.name"
@@ -132,9 +172,7 @@ onMounted(async () => {
     </div>
     <h2 class="mt-4">Recipes</h2>
     <div class="form-check form-switch mt-3">
-      <label class="form-check-label" for="useCompactView" aria-label="Use compact view"
-        ><font-awesome-icon class="me-2" icon="fa-moon" />Compact view</label
-      >
+      <label class="form-check-label" for="useCompactView">Compact view</label>
       <input
         id="useCompactView"
         v-model="useCompactView"
@@ -146,24 +184,25 @@ onMounted(async () => {
     <div v-if="(currentRecipes?.length || 0) < 1" class="grid mt-4">
       <div class="g-col-12 p-4 text-center">None selected</div>
     </div>
-    <div v-else-if="useCompactView" class="grid mt-3">
-      <RecipeListItem
-        v-for="(recipe, i) in currentRecipes"
-        :key="recipe.id"
-        :recipe="recipe"
-        :lazy="i > 6"
-        class="g-col-12 g-col-sm-6 g-col-md-4 g-col-lg-3"
-      />
-    </div>
-    <div v-else class="grid mt-3">
+    <vue-draggable
+      v-model="currentRecipes"
+      :animation="200"
+      group="item"
+      ghost-class="ghost"
+      handle=".sort-handle"
+      class="grid mt-3"
+      @end="onSortEnd"
+    >
       <RecipeCard
         v-for="(recipe, i) in currentRecipes"
         :key="recipe.id"
         :recipe="recipe"
         :lazy="i > 6"
+        :show-sort-handle="true"
+        :show-compact-view="useCompactView"
         class="g-col-12 g-col-sm-6 g-col-md-4 g-col-lg-3"
       />
-    </div>
+    </vue-draggable>
     <h2 class="mt-4">Shopping Items</h2>
     <div class="grid mt-3">
       <div class="g-col-12">

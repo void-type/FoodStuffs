@@ -13,7 +13,6 @@ import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
-import RecipeListItem from '@/components/RecipeListItem.vue';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 
@@ -242,9 +241,7 @@ watch(
     </EntityTableControls>
     <div class="mt-3">{{ resultCountText }}</div>
     <div class="form-check form-switch mt-3">
-      <label class="form-check-label" for="useCompactView" aria-label="Use compact view"
-        ><font-awesome-icon class="me-2" icon="fa-moon" />Compact view</label
-      >
+      <label class="form-check-label" for="useCompactView">Compact view</label>
       <input
         id="useCompactView"
         v-model="useCompactView"
@@ -253,21 +250,13 @@ watch(
         type="checkbox"
       />
     </div>
-    <div v-if="useCompactView" class="grid mt-3">
-      <RecipeListItem
-        v-for="(recipe, i) in listResponse.items"
-        :key="recipe.id"
-        :recipe="recipe"
-        :lazy="i > 6"
-        class="g-col-12 g-col-sm-6 g-col-lg-4"
-      />
-    </div>
-    <div v-else class="grid mt-3">
+    <div class="grid mt-3">
       <RecipeCard
         v-for="(recipe, i) in listResponse.items"
         :key="recipe.id"
         :recipe="recipe"
         :lazy="i > 6"
+        :show-compact-view="useCompactView"
         class="g-col-12 g-col-sm-6 g-col-lg-4"
       />
     </div>

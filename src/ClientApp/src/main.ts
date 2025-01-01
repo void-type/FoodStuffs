@@ -14,12 +14,13 @@ import {
   faRotate,
   faGripLines,
   faPlus,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Prevents inline styling to appease CSP.
 fontAwesomeConfig.autoAddCss = false;
 
-library.add(faRotateRight, faMoon, faSearch, faThumbtack, faRotate, faGripLines, faPlus);
+library.add(faRotateRight, faMoon, faSearch, faThumbtack, faRotate, faGripLines, faPlus, faTimes);
 
 const app = createApp(App);
 
