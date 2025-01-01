@@ -7,7 +7,7 @@ import type {
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelpers from '@/models/ApiHelpers';
 import { isNil } from '@/models/FormatHelpers';
-import WorkingMealPlan from '@/models/GetMealPlanResponseClass';
+import WorkingMealPlan from '@/models/WorkingMealPlan';
 import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
