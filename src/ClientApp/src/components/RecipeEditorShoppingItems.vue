@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
-import { computed, nextTick, ref, type PropType } from 'vue';
+import { computed, nextTick, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
@@ -28,8 +28,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const newShoppingItemName = ref('');
 
 function showInAccordion(index: number, focus: boolean = false) {
   const safeIndex = clamp(index, 0, model.value.length - 1);
@@ -63,15 +61,6 @@ function onNewClick(itemId: number | null) {
   showInAccordion(newLength - 1, itemId === null);
 }
 
-async function createShoppingItem(name: string) {
-  const itemId = await props.onCreateItem(name);
-
-  if (itemId !== null) {
-    newShoppingItemName.value = '';
-    onNewClick(itemId);
-  }
-}
-
 function updateOrdersByIndex() {
   model.value.forEach((x, i) => {
     // eslint-disable-next-line no-param-reassign
@@ -101,24 +90,6 @@ function onSortEnd() {
 
 <template>
   <div>
-    <label for="shoppingItemName" class="form-label visually-hidden">Create a shopping item</label>
-    <div class="input-group">
-      <input
-        id="shoppingItemName"
-        v-model="newShoppingItemName"
-        name="shoppingItemName"
-        :class="{ 'form-control': true, 'is-invalid': isFieldInError('shoppingItemName') }"
-        placeholder="Create a shopping item"
-        @keydown.stop.prevent.enter="createShoppingItem(newShoppingItemName)"
-      />
-      <button
-        class="btn btn-secondary"
-        type="button"
-        @click.stop.prevent="createShoppingItem(newShoppingItemName)"
-      >
-        Save
-      </button>
-    </div>
     <div v-if="model.length < 1" id="shopping-item-list" class="card p-4 text-center">
       No shopping items.
     </div>
@@ -165,6 +136,7 @@ function onSortEnd() {
                 :item-name="getShoppingItem(item.id)?.name"
                 :suggestions="suggestions"
                 :used-ids="usedIds"
+                :on-create-item="onCreateItem"
               />
             </div>
             <div class="g-col-12 g-col-md-4">

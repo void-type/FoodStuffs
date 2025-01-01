@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { ref, computed, defineProps, type PropType } from 'vue';
+import { ref, computed, type PropType } from 'vue';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
+import { Dropdown } from 'bootstrap';
 
 const model = defineModel({
   type: Number as PropType<number | undefined>,
@@ -26,6 +27,10 @@ const props = defineProps({
     type: Array as PropType<Array<number | undefined>>,
     required: true,
   },
+  onCreateItem: {
+    type: Function,
+    required: true,
+  },
 });
 
 const filterText = ref('');
@@ -36,10 +41,7 @@ const filteredSuggestions = computed(() => {
   const filterTextLow = filterText.value.toLowerCase();
 
   return props.suggestions.filter(
-    (x) =>
-      // it is the current item or (id isn't used already, and the name contains the filter text).
-      x.id === props.item.id ||
-      (!usedIds.includes(x.id) && x.name?.toLowerCase().includes(filterTextLow))
+    (x) => !usedIds.includes(x.id) && x.name?.toLowerCase().includes(filterTextLow)
   );
 });
 
@@ -47,11 +49,31 @@ function selectSuggestion(id: number | undefined) {
   filterText.value = '';
   model.value = id;
 }
+
+const dropdownButton = ref<HTMLButtonElement | null>(null);
+
+async function createShoppingItem(name: string) {
+  const newId = await props.onCreateItem(name);
+
+  if (newId) {
+    selectSuggestion(newId);
+    if (dropdownButton.value) {
+      const dropdown = Dropdown.getOrCreateInstance(dropdownButton.value);
+      dropdown.hide();
+    }
+  }
+}
 </script>
 
 <template>
   <div class="dropdown">
-    <button class="form-select" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button
+      ref="dropdownButton"
+      class="form-select"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
       {{ (item.id || 0) > 0 ? itemName : 'Select one' }}
     </button>
     <ul class="dropdown-menu pt-0 w-100">
@@ -68,8 +90,17 @@ function selectSuggestion(id: number | undefined) {
           @click.stop
         />
       </li>
-      <li v-if="filteredSuggestions.length === 0" class="dropdown-item disabled">
+      <li v-if="filteredSuggestions.length === 0" class="p-3">
         No options found
+        <div v-if="filterText.length > 0" class="btn-toolbar mt-2">
+          <button
+            class="btn btn-secondary"
+            type="button"
+            @click.stop.prevent="(event) => createShoppingItem(filterText, event)"
+          >
+            Create
+          </button>
+        </div>
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
         <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
