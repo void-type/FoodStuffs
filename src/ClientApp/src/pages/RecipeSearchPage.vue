@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import Choices from '@/models/Choices';
-import ApiHelpers from '@/models/ApiHelpers';
 import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelpers';
 import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import useRecipeStore from '@/stores/recipeStore';
@@ -9,7 +8,6 @@ import { watch, type PropType, ref, computed } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
-import useMessageStore from '@/stores/messageStore';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
@@ -24,10 +22,8 @@ const props = defineProps({
   },
 });
 
-const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
-const api = ApiHelpers.client;
 
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelpers;
@@ -130,13 +126,6 @@ function setListRequestFromQuery() {
   });
 }
 
-function fetchList() {
-  api()
-    .recipesSearch(listRequest.value)
-    .then((response) => recipeStore.setListResponse(response.data))
-    .catch((response) => messageStore.setApiFailureMessages(response));
-}
-
 const { listFacets } = storeToRefs(recipeStore);
 
 const categoryFacets = computed(() => {
@@ -171,9 +160,9 @@ watch(selectedCategories, () => {
 
 watch(
   props,
-  () => {
+  async () => {
     setListRequestFromQuery();
-    fetchList();
+    await recipeStore.fetchRecipesList();
   },
   { immediate: true }
 );

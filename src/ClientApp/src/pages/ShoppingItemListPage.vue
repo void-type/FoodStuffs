@@ -14,6 +14,7 @@ import EntityTableControls from '@/components/EntityTableControls.vue';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import type { HttpResponse } from '@/api/http-client';
 
 const props = defineProps({
   query: {
@@ -101,29 +102,18 @@ function setListRequestFromQuery() {
   };
 }
 
-function fetchList() {
-  api()
-    .shoppingItemsList(listRequest.value)
-    .then((response) => {
-      shoppingItemStore.listResponse = response.data;
-    })
-    .catch((response) => messageStore.setApiFailureMessages(response));
-}
-
 async function onDeleteShoppingItem(id: number | null | undefined) {
-  function deleteShoppingItem() {
+  async function deleteShoppingItem() {
     if (!id) {
       return;
     }
 
-    api()
-      .shoppingItemsDelete(id)
-      .then(() => {
-        fetchList();
-      })
-      .catch((response) => {
-        messageStore.setApiFailureMessages(response);
-      });
+    try {
+      await api().shoppingItemsDelete(id);
+      await shoppingItemStore.fetchShoppingItemsList();
+    } catch (error) {
+      messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    }
   }
 
   const parameters: ModalParameters = {
@@ -137,9 +127,9 @@ async function onDeleteShoppingItem(id: number | null | undefined) {
 
 watch(
   props,
-  () => {
+  async () => {
     setListRequestFromQuery();
-    fetchList();
+    await shoppingItemStore.fetchShoppingItemsList();
   },
   { immediate: true }
 );

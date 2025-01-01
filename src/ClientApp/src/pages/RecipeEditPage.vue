@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { watch, reactive, computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
@@ -60,13 +59,11 @@ const router = useRouter();
 const route = useRoute();
 const api = ApiHelpers.client;
 
-const { listRequest } = storeToRefs(recipeStore);
-
-// Editing existing recipe
+// Editing existing
 const isEditMode = computed(() => (props.id || 0) > 0);
-// Create copy of existing recipe
+// Create copy of existing
 const isCreateCopyMode = computed(() => !isEditMode.value && (props.copy || 0) > 0);
-// Create new recipe
+// Create new
 const isCreateNewMode = computed(() => !isEditMode.value && !isCreateCopyMode.value);
 
 function setImageSources(getRecipeResponse: GetRecipeResponse) {
@@ -114,15 +111,6 @@ async function fetchRecipe() {
   }
 }
 
-async function fetchRecipesList() {
-  try {
-    const response = await api().recipesSearch(listRequest.value);
-    recipeStore.setListResponse(response.data);
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-  }
-}
-
 async function fetchImages(recipeId: number) {
   try {
     const response = await api().recipesGet(recipeId);
@@ -138,7 +126,7 @@ async function onRecipeSave(recipe: SaveRecipeRequest) {
       messageStore.setSuccessMessage(response.data.message);
     }
 
-    await fetchRecipesList();
+    await recipeStore.fetchRecipesList();
     recipeStore.updateRecent(recipe);
   }
 
@@ -162,10 +150,10 @@ function onRecipeDelete(id: number) {
   function deleteRecipe() {
     api()
       .recipesDelete(id)
-      .then((response) => {
+      .then(async (response) => {
         recipeStore.removeFromRecent(props.id);
         setSources(new GetRecipeResponseClass());
-        fetchRecipesList();
+        await recipeStore.fetchRecipesList();
         router.push({ name: 'recipeSearch', query: recipeStore.currentQueryParams }).then(() => {
           if (response.data.message) {
             messageStore.setSuccessMessage(response.data.message);
@@ -193,14 +181,14 @@ function onRecipeDirtyStateChange(value: boolean) {
 function onImageUpload(file: File) {
   api()
     .imagesUpload({ recipeId: props.id }, { file })
-    .then((response) => {
+    .then(async (response) => {
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
       }
 
       data.suggestedImage = response.data.id || null;
       fetchImages(props.id);
-      fetchRecipesList();
+      await recipeStore.fetchRecipesList();
       data.imageUploadSuccessToken += 1;
     })
     .catch((response) => {
@@ -213,7 +201,7 @@ function onImageDelete(name: string) {
   function deleteImage() {
     api()
       .imagesDelete(name)
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.message) {
           messageStore.setSuccessMessage(response.data.message);
         }
@@ -225,7 +213,7 @@ function onImageDelete(name: string) {
         );
         data.suggestedImage = data.sourceImages[suggestedImageIndex];
         fetchImages(props.id);
-        fetchRecipesList();
+        await recipeStore.fetchRecipesList();
       })
       .catch((response) => {
         messageStore.setApiFailureMessages(response);
@@ -244,13 +232,13 @@ function onImageDelete(name: string) {
 function onImagePin(name: string) {
   api()
     .imagesPin(name)
-    .then((response) => {
+    .then(async (response) => {
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
       }
       data.suggestedImage = name;
       fetchImages(props.id);
-      fetchRecipesList();
+      await recipeStore.fetchRecipesList();
     })
     .catch((response) => {
       messageStore.setApiFailureMessages(response);

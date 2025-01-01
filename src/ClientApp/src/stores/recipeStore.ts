@@ -10,6 +10,9 @@ import type {
 import Choices from '@/models/Choices';
 import SearchRecipesRequest from '@/models/SearchRecipesRequest';
 import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
+import ApiHelpers from '@/models/ApiHelpers';
+import type { HttpResponse } from '@/api/http-client';
+import useMessageStore from './messageStore';
 
 const recentLimit = 7;
 
@@ -21,6 +24,8 @@ interface RecipeStoreState {
   discoverList: SearchRecipesResultItem[];
   discoverPage: number;
 }
+
+const api = ApiHelpers.client;
 
 export const useRecipeStore = defineStore('recipe', {
   state: (): RecipeStoreState => ({
@@ -162,6 +167,19 @@ export const useRecipeStore = defineStore('recipe', {
 
     queueRecent(recipe: GetRecipeResponse | null) {
       RecipeStoreHelpers.storeQueuedRecent(recipe);
+    },
+
+    async fetchRecipesList() {
+      try {
+        const response = await api().recipesSearch(this.listRequest);
+        const { results } = response.data;
+
+        if (results) {
+          this.listResponse = results;
+        }
+      } catch (error) {
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
     },
   },
 });

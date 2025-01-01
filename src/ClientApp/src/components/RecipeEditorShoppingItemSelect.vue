@@ -96,7 +96,7 @@ async function createShoppingItem(name: string) {
           <button
             class="btn btn-secondary"
             type="button"
-            @click.stop.prevent="(event) => createShoppingItem(filterText, event)"
+            @click.stop.prevent="(event) => createShoppingItem(filterText)"
           >
             Create
           </button>
