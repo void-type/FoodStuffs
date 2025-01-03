@@ -39,7 +39,7 @@ const searchText = ref('');
 </script>
 
 <template>
-  <header id="header" class="navbar navbar-expand-md navbar-dark bg-primary shadow">
+  <header id="header" class="navbar navbar-expand-md navbar-dark bg-primary shadow d-print-none">
     <nav class="container-xxl">
       <router-link :to="{ name: 'home' }" class="navbar-brand text-light">
         <img

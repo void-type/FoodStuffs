@@ -41,7 +41,7 @@ const breadcrumbs = computed(() => {
 </script>
 
 <template>
-  <div class="mt-2">
+  <div class="mt-2 d-print-none">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li

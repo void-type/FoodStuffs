@@ -52,7 +52,7 @@ watch(modalIsActive, (isActive) => {
   <Teleport to="body">
     <div
       id="app-modal"
-      class="modal fade"
+      class="modal fade d-print-none"
       tabindex="-1"
       aria-labelledby="app-modal-title"
       aria-hidden="true"

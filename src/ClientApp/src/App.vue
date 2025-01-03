@@ -57,17 +57,17 @@ onMounted(() => {
       >Skip to main content</router-link
     >
   </div>
-  <AppHeader class="d-print-none">
+  <AppHeader>
     <template #navItems>
       <AppNav />
     </template>
   </AppHeader>
-  <AppMessageCenter class="d-print-none" />
   <main id="main" tabindex="-1">
     <RouterView />
   </main>
+  <AppMessageCenter />
   <AppModal />
-  <AppFooter class="mt-4" />
+  <AppFooter />
 </template>
 
 <style lang="scss" scoped></style>

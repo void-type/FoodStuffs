@@ -9,7 +9,7 @@ const { clearMessage, clearMessageTimeout } = messageStore;
 </script>
 
 <template>
-  <div id="message-center" class="sticky-top mb-0">
+  <div id="message-center" class="sticky-bottom d-print-none">
     <transition-group v-if="messages.length > 0" name="list" class="alert-wrapper" tag="div" appear>
       <div
         v-for="message in messages"
@@ -43,19 +43,24 @@ const { clearMessage, clearMessageTimeout } = messageStore;
 <style lang="scss" scoped>
 #message-center {
   z-index: 999;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 
   div.alert-wrapper {
-    position: absolute;
     width: 90%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
+    max-width: 400px;
+    margin: 0;
+    pointer-events: auto;
 
     div.alert {
       margin: 0;
-      margin-top: 0.2em;
+      margin-bottom: 0.2em;
       --bs-alert-padding-x: 1rem;
       --bs-alert-padding-y: 0.5rem;
     }
