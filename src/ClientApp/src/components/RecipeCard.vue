@@ -6,6 +6,7 @@ import ApiHelpers from '@/models/ApiHelpers';
 import RouterHelpers from '@/models/RouterHelpers';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
+import AppSortHandle from './AppSortHandle.vue';
 
 const props = defineProps({
   recipe: { type: Object as PropType<SearchRecipesResultItem>, required: true },
@@ -30,15 +31,19 @@ function flipCard() {
 <template>
   <div :id="recipeCardId" class="card card-hover">
     <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
-      <div class="card-header">
-        <span v-if="props.showSortHandle" class="pe-3 sort-handle">
-          <div class="visually-hidden">Drag to sort</div>
-          <font-awesome-icon icon="fa-grip-lines" class="text-muted" /></span
-        >{{ recipe.name }}
+      <AppSortHandle v-if="props.showSortHandle" class="card-header-button left" />
+      <div
+        :class="{
+          'card-header': true,
+          sortable: props.showSortHandle,
+          flippable: !props.showCompactView,
+        }"
+      >
+        {{ recipe.name }}
       </div>
-      <div v-if="!props.showCompactView" class="card-floating-toolbar">
-        <a class="btn-card-control" href="#" aria-label="flip card" @click.stop.prevent="flipCard">
-          <font-awesome-icon class="me-2" icon="fa-rotate" />
+      <div v-if="!props.showCompactView" class="card-header-button right">
+        <a class="" href="#" aria-label="flip card" @click.stop.prevent="flipCard">
+          <font-awesome-icon icon="fa-rotate" />
         </a>
       </div>
       <div v-if="!props.showCompactView" class="card-flip-container">
@@ -125,22 +130,45 @@ function flipCard() {
   height: 0;
   padding-top: calc(1200 / 1600 * 100%);
   overflow: hidden;
-}
 
-.image-container img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .card-header {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 2.75rem;
+
+  &.sortable {
+    padding-left: 2.4rem;
+  }
+
+  &.flippable {
+    padding-right: 2.4rem;
+  }
+}
+
+.card-header-button {
+  padding: 0.5rem var(--bs-card-cap-padding-x);
+  display: inline-block;
+
+  position: absolute;
+  top: 0;
+
+  &.right {
+    right: 0;
+  }
+
+  &.left {
+    left: 0;
+  }
 }
 
 .card-flip-container {

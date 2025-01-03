@@ -83,15 +83,14 @@ const searchText = ref('');
               <li class="dropdown-item">Roles: {{ userRoles || 'none' }}</li>
               <li class="dropdown-item">
                 <button class="btn btn-secondary" :disabled="isRebuilding" @click="rebuildSearch">
-                  <font-awesome-icon class="me-2" icon="fa-rotate-right" />{{
-                    isRebuilding ? 'Rebuilding...' : 'Rebuild index'
-                  }}
+                  <font-awesome-icon icon="fa-rotate-right" />
+                  {{ isRebuilding ? 'Rebuilding...' : 'Rebuild index' }}
                 </button>
               </li>
               <li class="dropdown-item">
                 <div class="form-check form-switch">
                   <label class="form-check-label" for="useDarkMode" aria-label="Use dark mode"
-                    ><font-awesome-icon class="me-2" icon="fa-moon" />Dark mode</label
+                    ><font-awesome-icon icon="fa-moon" /> Dark mode</label
                   >
                   <input
                     id="useDarkMode"

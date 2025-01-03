@@ -81,17 +81,6 @@ body {
     text-decoration: none;
     color: unset;
   }
-
-  .card-floating-toolbar {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .btn-card-control {
-    padding: 0.5rem var(--bs-card-cap-padding-x);
-    display: inline-block;
-  }
 }
 
 .nav-search-button,
@@ -119,10 +108,6 @@ body {
 .gap-none {
   row-gap: 0;
   column-gap: 0;
-}
-
-.sort-handle {
-  cursor: grab;
 }
 
 .btn-toolbar.sticky-top {

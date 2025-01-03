@@ -7,6 +7,7 @@ import { clamp } from '@/models/FormatHelpers';
 import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import RecipeEditorShoppingItemSelect from './RecipeEditorShoppingItemSelect.vue';
+import AppSortHandle from './AppSortHandle.vue';
 
 const model = defineModel({
   type: Array as PropType<Array<WorkingRecipeShoppingItem>>,
@@ -114,11 +115,8 @@ function onSortEnd() {
             aria-expanded="false"
             :aria-controls="`item-${item.uiKey}-accordion-collapse`"
           >
-            <span class="pe-3 sort-handle">
-              <div class="visually-hidden">Drag to sort</div>
-              <font-awesome-icon icon="fa-grip-lines" class="text-muted"
-            /></span>
-            <span>{{ item.quantity }}x {{ getShoppingItem(item.id)?.name }}</span>
+            <AppSortHandle class="pe-3" />
+            {{ item.quantity }}x {{ getShoppingItem(item.id)?.name }}
           </button>
         </div>
         <div

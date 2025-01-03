@@ -44,7 +44,7 @@ watch(
     <AppBreadcrumbs />
     <AppPageHeading />
     <div class="alert alert-warning mt-3">
-      <strong>Warning:</strong>This page is a temporary placeholder until we get shopping item
+      <strong>Warning:</strong> This page is a temporary placeholder until we get shopping item
       editing finished.
     </div>
   </div>

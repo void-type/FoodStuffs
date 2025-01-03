@@ -5,6 +5,7 @@ import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelpers';
 import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
+import AppSortHandle from './AppSortHandle.vue';
 
 const model = defineModel({
   type: Array as PropType<Array<WorkingRecipeIngredient>>,
@@ -95,10 +96,7 @@ function onSortEnd() {
           aria-expanded="false"
           :aria-controls="`ingredient-${ing.uiKey}-accordion-collapse`"
         >
-          <span class="pe-3 sort-handle">
-            <div class="visually-hidden">Drag to sort</div>
-            <font-awesome-icon icon="fa-grip-lines" class="text-muted"
-          /></span>
+          <AppSortHandle class="pe-3" />
           <span v-if="ing.isCategory" class="fw-bold">{{ ing.name }}</span>
           <span v-else>{{ ing.quantity }}x {{ ing.name }}</span>
         </button>
