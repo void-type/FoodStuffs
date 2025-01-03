@@ -30,22 +30,24 @@ function flipCard() {
 
 <template>
   <div :id="recipeCardId" class="card card-hover">
-    <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
-      <AppSortHandle v-if="props.showSortHandle" class="card-header-button left" />
-      <div
-        :class="{
-          'card-header': true,
-          sortable: props.showSortHandle,
-          flippable: !props.showCompactView,
-        }"
-      >
+    <AppSortHandle v-if="props.showSortHandle" class="card-header-button left" />
+    <div
+      :class="{
+        'card-header': true,
+        sortable: props.showSortHandle,
+        flippable: !props.showCompactView,
+      }"
+    >
+      <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
         {{ recipe.name }}
-      </div>
-      <div v-if="!props.showCompactView" class="card-header-button right">
-        <a class="" href="#" aria-label="flip card" @click.stop.prevent="flipCard">
-          <font-awesome-icon icon="fa-rotate" />
-        </a>
-      </div>
+      </router-link>
+    </div>
+    <div v-if="!props.showCompactView" class="card-header-button right">
+      <a class="" href="#" aria-label="flip card" @click.stop.prevent="flipCard">
+        <font-awesome-icon icon="fa-rotate" />
+      </a>
+    </div>
+    <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
       <div v-if="!props.showCompactView" class="card-flip-container">
         <div class="card-flip-front">
           <div class="image-container">
