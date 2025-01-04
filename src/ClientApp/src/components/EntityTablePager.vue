@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Choices from '@/models/Choices';
-import { toInt } from '@/models/FormatHelpers';
+import { toInt } from '@/models/FormatHelper';
 import type IPaginatedRequest from '@/models/IPaginatedRequest';
 import { computed, type PropType } from 'vue';
 

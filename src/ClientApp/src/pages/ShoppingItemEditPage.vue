@@ -2,7 +2,7 @@
 import useShoppingItemStore from '@/stores/shoppingItemStore';
 import { storeToRefs } from 'pinia';
 import { watch } from 'vue';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
@@ -17,7 +17,7 @@ const props = defineProps({
 
 const messageStore = useMessageStore();
 const shoppingItemStore = useShoppingItemStore();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const { listRequest } = storeToRefs(shoppingItemStore);
 

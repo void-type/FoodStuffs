@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import DateHelpers from '@/models/DateHelpers';
+import DateHelper from '@/models/DateHelper';
 
 defineProps({
   entity: {
@@ -14,13 +14,13 @@ defineProps({
   <div v-if="entity !== null">
     <div>
       <small
-        >Created: {{ DateHelpers.dateTimeForView(entity.createdOn) }} by
+        >Created: {{ DateHelper.dateTimeForView(entity.createdOn) }} by
         {{ entity.createdBy }}</small
       >
     </div>
     <div>
       <small
-        >Modified: {{ DateHelpers.dateTimeForView(entity.modifiedOn) }} by
+        >Modified: {{ DateHelper.dateTimeForView(entity.modifiedOn) }} by
         {{ entity.modifiedBy }}</small
       >
     </div>

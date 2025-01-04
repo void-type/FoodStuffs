@@ -2,8 +2,9 @@
 import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import useShoppingItemStore from '@/stores/shoppingItemStore';
-import RouterHelpers from '@/models/RouterHelpers';
-import { isNil } from '@/models/FormatHelpers';
+import useCategoryStore from '@/stores/categoryStore';
+import RouterHelper from '@/models/RouterHelper';
+import { isNil } from '@/models/FormatHelper';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
@@ -11,6 +12,7 @@ import { useRouter } from 'vue-router';
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const shoppingItemStore = useShoppingItemStore();
+const categoryStore = useCategoryStore();
 const router = useRouter();
 
 const planName = computed(() => {
@@ -51,7 +53,7 @@ async function newMealPlan() {
       <ul class="dropdown-menu">
         <li>
           <router-link
-            :to="{ name: 'recipeSearch', query: recipeStore.currentQueryParams }"
+            :to="{ name: 'recipeList', query: recipeStore.currentQueryParams }"
             class="dropdown-item"
             >Recipes</router-link
           >
@@ -75,12 +77,12 @@ async function newMealPlan() {
             v-if="(mealPlanStore.currentMealPlan.id || 0) > 0"
             :to="{ name: 'mealPlanEdit' }"
             class="dropdown-item"
-            >Edit Current Plan<br /><small>{{ planName }}</small></router-link
+            >Edit Current Meal Plan<br /><small>{{ planName }}</small></router-link
           >
         </li>
         <li v-if="recentRecipes"><hr class="dropdown-divider" /></li>
         <li v-for="recipe in recentRecipes" :key="recipe.id">
-          <router-link :to="RouterHelpers.viewRecipe(recipe)" class="dropdown-item">{{
+          <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">{{
             recipe.name
           }}</router-link>
         </li>
@@ -97,6 +99,19 @@ async function newMealPlan() {
         Admin
       </a>
       <ul class="dropdown-menu">
+        <li>
+          <router-link
+            :to="{ name: 'categoryList', query: categoryStore.currentQueryParams }"
+            class="dropdown-item"
+            >Categories</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'categoryNew' }" class="dropdown-item"
+            >New Category</router-link
+          >
+        </li>
+        <li><hr class="dropdown-divider" /></li>
         <li>
           <router-link
             :to="{ name: 'shoppingItemList', query: shoppingItemStore.currentQueryParams }"

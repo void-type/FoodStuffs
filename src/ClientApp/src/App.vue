@@ -6,27 +6,27 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppNav from '@/components/AppNav.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
-import RouterHelpers from '@/models/RouterHelpers';
+import RouterHelper from '@/models/RouterHelper';
 import AppModal from '@/components/AppModal.vue';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import DarkModeHelpers from '@/models/DarkModeHelpers';
-import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
+import DarkModeHelper from '@/models/DarkModeHelper';
+import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import useMessageStore from '@/stores/messageStore';
-import { getCurrentMealPlanFromStorage } from './models/MealPlanStoreHelpers';
+import { getCurrentMealPlanFromStorage } from './models/MealPlanStoreHelper';
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const route = useRoute();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 onMounted(() => {
-  appStore.setDarkMode(DarkModeHelpers.getInitialDarkModeSetting());
+  appStore.setDarkMode(DarkModeHelper.getInitialDarkModeSetting());
 
-  recipeStore.addToRecent(RecipeStoreHelpers.getQueuedRecent());
+  recipeStore.addToRecent(RecipeStoreHelper.getQueuedRecent());
 
   mealPlanStore.setCurrentMealPlan(getCurrentMealPlanFromStorage());
 
@@ -34,10 +34,10 @@ onMounted(() => {
     .appGetInfo()
     .then((response) => {
       appStore.setApplicationInfo(response.data);
-      RouterHelpers.setTitle(route);
+      RouterHelper.setTitle(route);
 
       if (response.data.antiforgeryToken) {
-        ApiHelpers.setHeader(
+        ApiHelper.setHeader(
           response.data.antiforgeryTokenHeaderName || 'X-Csrf-Token',
           response.data.antiforgeryToken
         );

@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Events.Recipes.Models;
 using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -108,17 +109,6 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
             .Select(x => new Category { Name = x });
 
         recipe.Categories.AddRange(createdCategories);
-
-        // Remove categories that are no longer used.
-        var unusedCategories = await _data.Categories
-            .TagWith(GetTag())
-            .AsSingleQuery()
-            .Include(x => x.Recipes)
-            .Where(x => x.Recipes.Count == 0)
-            .ToListAsync(cancellationToken);
-
-        // Remove categories that are no longer used.
-        _data.Categories.RemoveRange(unusedCategories);
     }
 
     private static void ManageIngredients(SaveRecipeRequest request, Recipe recipe)

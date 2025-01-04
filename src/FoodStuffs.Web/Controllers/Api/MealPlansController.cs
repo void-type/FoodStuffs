@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Events.MealPlans;
+using FoodStuffs.Model.Events.MealPlans.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;

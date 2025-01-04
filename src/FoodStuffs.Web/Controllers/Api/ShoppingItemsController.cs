@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Events.ShoppingItems;
+using FoodStuffs.Model.Events.ShoppingItems.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -19,16 +20,18 @@ public class ShoppingItemsController : ControllerBase
     /// </summary>
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
+    /// <param name="isUnused">Specify to show items that have relations or no relations</param>
     /// <param name="isPagingEnabled">False for all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListShoppingItemsResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListShoppingItemsHandler listHandler, string? name = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListShoppingItemsHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListShoppingItemsRequest(
             NameSearch: name,
+            IsUnused: isUnused,
             IsPagingEnabled: isPagingEnabled,
             Page: page,
             Take: take);

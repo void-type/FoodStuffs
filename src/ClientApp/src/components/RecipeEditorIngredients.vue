@@ -3,8 +3,8 @@ import { Collapse } from 'bootstrap';
 import { nextTick, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { clamp } from '@/models/FormatHelpers';
-import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
+import { clamp } from '@/models/FormatHelper';
+import WorkingRecipeIngredient from '@/models/RecipeIngredientWorking';
 import AppSortHandle from './AppSortHandle.vue';
 
 const model = defineModel({

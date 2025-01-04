@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import ApiHelpers from '@/models/ApiHelpers';
-import SearchRecipesRequest from '@/models/SearchRecipesRequest';
+import ApiHelper from '@/models/ApiHelper';
+import RecipesListRequest from '@/models/RecipesListRequest';
 import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
@@ -10,7 +10,7 @@ import type { HttpResponse } from '@/api/http-client';
 
 const recipeStore = useRecipeStore();
 const messageStore = useMessageStore();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const { discoverList, discoverPage } = storeToRefs(recipeStore);
 
@@ -27,7 +27,7 @@ async function fetchRecipes() {
 
   try {
     const response = await api().recipesSearch({
-      ...new SearchRecipesRequest(),
+      ...new RecipesListRequest(),
       page: discoverPage.value + 1,
       take: 12,
       sortBy: 'random',

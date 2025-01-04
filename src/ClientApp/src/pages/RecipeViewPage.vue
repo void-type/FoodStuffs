@@ -4,8 +4,8 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
 import useRecipeStore from '@/stores/recipeStore';
 import RecipeViewer from '@/components/RecipeViewer.vue';
-import ApiHelpers from '@/models/ApiHelpers';
-import RouterHelpers from '@/models/RouterHelpers';
+import ApiHelper from '@/models/ApiHelper';
+import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
@@ -20,7 +20,7 @@ const props = defineProps({
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const route = useRoute();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const data = reactive({
   sourceRecipe: null as GetRecipeResponse | null,
@@ -31,7 +31,7 @@ function fetchRecipe(id: number) {
     .recipesGet(id)
     .then((response) => {
       data.sourceRecipe = response.data;
-      RouterHelpers.setTitle(route, data.sourceRecipe.name);
+      RouterHelper.setTitle(route, data.sourceRecipe.name);
       recipeStore.queueRecent(response.data);
     })
     .catch((response) => {

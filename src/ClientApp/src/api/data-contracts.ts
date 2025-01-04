@@ -69,13 +69,44 @@ export interface IFailure {
   code?: string | null;
 }
 
-export type EntityMessageOfString = UserMessage & {
-  id?: string | null;
+export interface GetCategoryResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  recipes?: GetCategoryResponseRecipe[];
+}
+
+export interface GetCategoryResponseRecipe {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  image?: string | null;
+}
+
+export type EntityMessageOfInteger = UserMessage & {
+  /** @format int32 */
+  id?: number;
 };
 
 export interface UserMessage {
   message?: string;
 }
+
+export interface SaveCategoryRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export type EntityMessageOfString = UserMessage & {
+  id?: string | null;
+};
 
 export interface IItemSetOfListMealPlansResponse {
   /** @format int32 */
@@ -140,11 +171,6 @@ export interface GetMealPlanResponseRecipeShoppingItem {
   /** @format decimal */
   quantity?: number;
 }
-
-export type EntityMessageOfInteger = UserMessage & {
-  /** @format int32 */
-  id?: number;
-};
 
 export interface SaveMealPlanRequest {
   /** @format int32 */
@@ -316,6 +342,26 @@ export interface ListShoppingItemsResponse {
   name?: string;
 }
 
+export interface GetShoppingItemResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  recipes?: GetShoppingItemResponseRecipe[];
+}
+
+export interface GetShoppingItemResponseRecipe {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  image?: string | null;
+}
+
 export interface SaveShoppingItemRequest {
   /** @format int32 */
   id?: number;
@@ -325,6 +371,8 @@ export interface SaveShoppingItemRequest {
 export interface CategoriesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
   /**
    * False for all results
    * @default true
@@ -405,6 +453,8 @@ export interface RecipesSearchParams {
 export interface ShoppingItemsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
   /**
    * False for all results
    * @default true

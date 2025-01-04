@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useRecipeStore from '@/stores/recipeStore';
 import router from '@/router';
-import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
+import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const searchText = defineModel<string>();
@@ -9,14 +9,14 @@ const searchText = defineModel<string>();
 const recipeStore = useRecipeStore();
 
 function initSearch() {
-  const query = RecipeStoreHelpers.listRequestToQueryParams({
+  const query = RecipeStoreHelper.listRequestToQueryParams({
     name: searchText.value,
     take: recipeStore.listRequest.take,
   });
 
   router
     .push({
-      name: 'recipeSearch',
+      name: 'recipeList',
       query,
     })
     .then(() => {

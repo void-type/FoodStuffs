@@ -5,7 +5,7 @@ namespace FoodStuffs.Model.Events;
 public class ShoppingItemNotFoundFailure : Failure
 {
     public ShoppingItemNotFoundFailure()
-        : base(errorMessage: "Meal plan not found.", uiHandle: "ShoppingItemId")
+        : base(errorMessage: "Shopping item not found.", uiHandle: "ShoppingItemId")
     {
     }
 }

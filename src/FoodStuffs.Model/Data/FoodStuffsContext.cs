@@ -20,11 +20,11 @@ public class FoodStuffsContext : DbContext
         ChangeTracker.LazyLoadingEnabled = false;
     }
 
-    public virtual DbSet<Category> Categories { get; set; }
-    public virtual DbSet<Image> Images { get; set; }
-    public virtual DbSet<MealPlan> MealPlans { get; set; }
-    public virtual DbSet<Recipe> Recipes { get; set; }
-    public virtual DbSet<ShoppingItem> ShoppingItems { get; set; }
+    public virtual DbSet<Category> Categories { get; set; } = null!;
+    public virtual DbSet<Image> Images { get; set; } = null!;
+    public virtual DbSet<MealPlan> MealPlans { get; set; } = null!;
+    public virtual DbSet<Recipe> Recipes { get; set; } = null!;
+    public virtual DbSet<ShoppingItem> ShoppingItems { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

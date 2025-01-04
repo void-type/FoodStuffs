@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
+using FoodStuffs.Model.Events.Recipes.Models;
 using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;

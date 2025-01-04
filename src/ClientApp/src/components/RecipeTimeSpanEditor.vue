@@ -4,7 +4,7 @@ import {
   clampMinutes,
   getTotalMinutes,
   toTimeSpanString,
-} from '@/models/TimeSpanHelpers';
+} from '@/models/TimeSpanHelper';
 import { computed, type PropType } from 'vue';
 
 const props = defineProps({

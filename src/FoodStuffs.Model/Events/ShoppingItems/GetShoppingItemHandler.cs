@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Events.ShoppingItems.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;

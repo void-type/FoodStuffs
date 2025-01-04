@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import useAppStore from '@/stores/appStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import DateHelpers from '@/models/DateHelpers';
+import DateHelper from '@/models/DateHelper';
 import { storeToRefs } from 'pinia';
 import { computed, watch, type PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
 import type { ModalParameters } from '@/models/ModalParameters';
 import EntityTablePager from '@/components/EntityTablePager.vue';
-import { toInt, toNumber } from '@/models/FormatHelpers';
+import { toInt, toNumber } from '@/models/FormatHelper';
 import Choices from '@/models/Choices';
 import router from '@/router';
-import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
+import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 
@@ -81,7 +81,7 @@ function changeTake(take: number) {
 
 function setListRequestFromQuery() {
   mealPlanStore.listRequest = {
-    ...new SearchMealPlansRequest(),
+    ...new ListMealPlansRequest(),
     ...props.query,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
@@ -117,7 +117,7 @@ watch(
       <tbody>
         <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
           <td>{{ mealPlan.name }}</td>
-          <td>{{ DateHelpers.dateTimeForView(mealPlan.createdOn) }}</td>
+          <td>{{ DateHelper.dateTimeForView(mealPlan.createdOn) }}</td>
           <td>
             <router-link
               v-if="currentMealPlan.id === mealPlan.id"

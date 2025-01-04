@@ -1,8 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Events.Categories.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
@@ -22,9 +21,7 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
     {
         var paginationOptions = request.GetPaginationOptions();
 
-        var searchCriteria = GetSearchCriteria(request);
-
-        var specification = new CategoriesSpecification(criteria: searchCriteria);
+        var specification = new CategoriesSpecification(request);
 
         return await _data.Categories
             .TagWith(GetTag(specification))
@@ -34,23 +31,5 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
                 Id: c.Id,
                 Name: c.Name))
             .MapAsync(Ok);
-    }
-
-    private static Expression<Func<Category, bool>>[] GetSearchCriteria(ListCategoriesRequest request)
-    {
-        var searchCriteria = new List<Expression<Func<Category, bool>>>();
-
-        // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
-        // Need to use Linq methods for EF
-#pragma warning disable S6605, RCS1155, CA1862
-
-        if (!string.IsNullOrWhiteSpace(request.NameSearch))
-        {
-            searchCriteria.Add(m => m.Name.ToLower().Contains(request.NameSearch.ToLower()));
-        }
-
-#pragma warning restore S6605, RCS1155, CA1862
-
-        return searchCriteria.ToArray();
     }
 }

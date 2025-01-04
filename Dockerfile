@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 # Install Node in the build container
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
   && apt-get update \
   && apt-get install -y nodejs
 
@@ -35,7 +35,7 @@ COPY ./ ./
 RUN pwsh ./build/build.ps1
 
 # Copy output from the build container to the run container
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 ARG env="Production"
 WORKDIR /app
 COPY --from=build-env /app/artifacts/dist/release .

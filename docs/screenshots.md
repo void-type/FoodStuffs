@@ -1,5 +1,0 @@
-![Home page](img/home_page.png)
-![Search page](img/search_page.png)
-![Viewer page](img/recipe_viewer.png)
-![Viewer page print preview](img/recipe_viewer_print_preview.png)
-![Edit page](img/recipe_editor.png)

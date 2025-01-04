@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Events.Images;
+using FoodStuffs.Model.Events.Images.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;

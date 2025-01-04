@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import type { SearchRecipesResultItem } from '@/api/data-contracts';
-import RouterHelpers from '@/models/RouterHelpers';
+import RouterHelper from '@/models/RouterHelper';
 
 defineProps({
   recipes: {
@@ -30,7 +30,7 @@ defineProps({
         v-for="recipe in recipes"
         :key="recipe.id"
         class="list-group-item card-hover"
-        :to="RouterHelpers.viewRecipe(recipe)"
+        :to="RouterHelper.viewRecipe(recipe)"
       >
         {{ recipe.name }}
       </router-link>

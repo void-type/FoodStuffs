@@ -27,6 +27,7 @@ public class RecipeIndexService : IRecipeIndexService
         _data = data;
     }
 
+    /// <inheritdoc/>
     public async Task AddOrUpdateAsync(int recipeId, CancellationToken cancellationToken)
     {
         var byId = new RecipesWithAllRelatedSpecification(recipeId);
@@ -48,6 +49,7 @@ public class RecipeIndexService : IRecipeIndexService
         AddOrUpdate(recipe);
     }
 
+    /// <inheritdoc/>
     public void AddOrUpdate(Recipe recipe)
     {
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
@@ -55,7 +57,7 @@ public class RecipeIndexService : IRecipeIndexService
         writers.IndexWriter.Commit();
         writers.TaxonomyWriter.Commit();
 
-        var facetsConfig = RecipeSearchHelpers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
 
         var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
 
@@ -72,13 +74,14 @@ public class RecipeIndexService : IRecipeIndexService
         writers.TaxonomyWriter.Commit();
     }
 
+    /// <inheritdoc/>
     public async Task RebuildAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Starting rebuild of recipe search index.");
 
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
 
-        var facetsConfig = RecipeSearchHelpers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
 
         var page = 1;
         var numIndexed = 0;
@@ -114,6 +117,7 @@ public class RecipeIndexService : IRecipeIndexService
         _logger.LogInformation("Finished rebuild of recipe search index. {DocCount} documents.", numIndexed);
     }
 
+    /// <inheritdoc/>
     public void Remove(int recipeId)
     {
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);

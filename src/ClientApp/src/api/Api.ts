@@ -14,8 +14,10 @@ import type {
   CategoriesListParams,
   EntityMessageOfInteger,
   EntityMessageOfString,
+  GetCategoryResponse,
   GetMealPlanResponse,
   GetRecipeResponse,
+  GetShoppingItemResponse,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
   IItemSetOfListMealPlansResponse,
@@ -23,6 +25,7 @@ import type {
   ImagesUploadParams,
   MealPlansListParams,
   RecipesSearchParams,
+  SaveCategoryRequest,
   SaveMealPlanRequest,
   SaveRecipeRequest,
   SaveShoppingItemRequest,
@@ -81,6 +84,59 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       path: `/api/categories`,
       method: 'GET',
       query: query,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Categories
+   * @name CategoriesSave
+   * @summary Save a shopping item. Will update if found, otherwise a new item will be created.
+   * @request POST:/api/categories
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  categoriesSave = (data: SaveCategoryRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/categories`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Categories
+   * @name CategoriesGet
+   * @summary Get a shopping item.
+   * @request GET:/api/categories/{id}
+   * @response `200` `GetCategoryResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  categoriesGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetCategoryResponse, IItemSetOfIFailure>({
+      path: `/api/categories/${id}`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Categories
+   * @name CategoriesDelete
+   * @summary Delete a shopping item.
+   * @request DELETE:/api/categories/{id}
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  categoriesDelete = (id: number, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/categories/${id}`,
+      method: 'DELETE',
       format: 'json',
       ...params,
     });
@@ -353,6 +409,23 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags ShoppingItems
+   * @name ShoppingItemsGet
+   * @summary Get a shopping item.
+   * @request GET:/api/shopping-items/{id}
+   * @response `200` `GetShoppingItemResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  shoppingItemsGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetShoppingItemResponse, IItemSetOfIFailure>({
+      path: `/api/shopping-items/${id}`,
+      method: 'GET',
       format: 'json',
       ...params,
     });

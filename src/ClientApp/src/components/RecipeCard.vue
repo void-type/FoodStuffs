@@ -2,8 +2,8 @@
 import type { SearchRecipesResultItem } from '@/api/data-contracts';
 import { computed, type PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import ApiHelpers from '@/models/ApiHelpers';
-import RouterHelpers from '@/models/RouterHelpers';
+import ApiHelper from '@/models/ApiHelper';
+import RouterHelper from '@/models/RouterHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 import AppSortHandle from './AppSortHandle.vue';
@@ -38,7 +38,7 @@ function flipCard() {
         flippable: !props.showCompactView,
       }"
     >
-      <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
+      <router-link class="card-link" :to="RouterHelper.viewRecipe(recipe)">
         {{ recipe.name }}
       </router-link>
     </div>
@@ -47,14 +47,14 @@ function flipCard() {
         <font-awesome-icon icon="fa-rotate" />
       </a>
     </div>
-    <router-link class="card-link" :to="RouterHelpers.viewRecipe(recipe)">
+    <router-link class="card-link" :to="RouterHelper.viewRecipe(recipe)">
       <div v-if="!props.showCompactView" class="card-flip-container">
         <div class="card-flip-front">
           <div class="image-container">
             <img
               v-if="recipe.image != null"
               class="img-fluid rounded-bottom"
-              :src="ApiHelpers.imageUrl(recipe.image)"
+              :src="ApiHelper.imageUrl(recipe.image)"
               :alt="`Image of ${recipe.name}`"
               :loading="imgLazy ? 'lazy' : 'eager'"
               width="1600"
@@ -73,7 +73,7 @@ function flipCard() {
                 type="button"
                 class="btn btn-sm btn-secondary me-2"
                 aria-label="edit recipe"
-                :to="RouterHelpers.editRecipe(recipe)"
+                :to="RouterHelper.editRecipe(recipe)"
                 @click.stop.prevent
                 >Edit</router-link
               >
@@ -105,7 +105,7 @@ function flipCard() {
             type="button"
             class="btn btn-sm btn-secondary me-2"
             aria-label="edit recipe"
-            :to="RouterHelpers.editRecipe(recipe)"
+            :to="RouterHelper.editRecipe(recipe)"
             @click.stop.prevent
             >Edit</router-link
           >

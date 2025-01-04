@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
+using FoodStuffs.Model.Events.Recipes.Models;
 using Xunit;
 
 namespace FoodStuffs.Test;

@@ -5,10 +5,10 @@ import type {
   MealPlansListParams,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
-import ApiHelpers from '@/models/ApiHelpers';
-import { isNil } from '@/models/FormatHelpers';
-import WorkingMealPlan from '@/models/WorkingMealPlan';
-import SearchMealPlansRequest from '@/models/SearchMealPlansRequest';
+import ApiHelper from '@/models/ApiHelper';
+import { isNil } from '@/models/FormatHelper';
+import WorkingMealPlan from '@/models/MealPlanWorking';
+import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import {
@@ -17,7 +17,7 @@ import {
   listRequestToQueryParams,
   storeCurrentMealPlanInStorage,
   subtractShoppingItem,
-} from '@/models/MealPlanStoreHelpers';
+} from '@/models/MealPlanStoreHelper';
 import useMessageStore from './messageStore';
 
 interface MealPlanStoreState {
@@ -26,7 +26,7 @@ interface MealPlanStoreState {
   currentMealPlan: GetMealPlanResponse;
 }
 
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 export default defineStore('mealPlan', {
   state: (): MealPlanStoreState => ({
@@ -38,7 +38,7 @@ export default defineStore('mealPlan', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new SearchMealPlansRequest() },
+    listRequest: { ...new ListMealPlansRequest() },
     currentMealPlan: WorkingMealPlan.createForStore(),
   }),
 

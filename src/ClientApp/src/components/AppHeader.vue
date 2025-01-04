@@ -7,7 +7,7 @@ import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import AppHeaderSearch from './AppHeaderSearch.vue';
 
 const appStore = useAppStore();
@@ -15,7 +15,7 @@ const messageStore = useMessageStore();
 const { applicationName, user, useDarkMode } = storeToRefs(appStore);
 const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const isRebuilding = ref(false);
 

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import { ref, onMounted } from 'vue';
 import useMessageStore from '@/stores/messageStore';
 import { type ListCategoriesResponse, type SearchFacetValue } from '@/api/data-contracts';
-import { toNumberOrNull } from '@/models/FormatHelpers';
+import { toNumberOrNull } from '@/models/FormatHelper';
 
 const props = defineProps({
   facetValues: {
@@ -20,7 +20,7 @@ const model = defineModel({
 });
 
 const messageStore = useMessageStore();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const categoryOptions = ref([] as Array<ListCategoriesResponse>);
 

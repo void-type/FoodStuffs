@@ -1,4 +1,5 @@
-﻿using VoidCore.Model.Functional;
+﻿using FoodStuffs.Model.Events.MealPlans.Models;
+using VoidCore.Model.Functional;
 using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.MealPlans;

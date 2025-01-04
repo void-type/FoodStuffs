@@ -21,6 +21,7 @@ public class RecipeQueryService : IRecipeQueryService
         _settings = settings;
     }
 
+    /// <inheritdoc/>
     public SearchRecipesResponse Search(SearchRecipesRequest request)
     {
         using (var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME))
@@ -34,7 +35,7 @@ public class RecipeQueryService : IRecipeQueryService
         var searcher = readers.IndexSearcher;
         var facetsCollector = new FacetsCollector();
 
-        var facetsConfig = RecipeSearchHelpers.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
 
         var query = new BooleanQuery()
         {
@@ -74,7 +75,7 @@ public class RecipeQueryService : IRecipeQueryService
             .Select(x => searcher.Doc(x.Doc).ToSearchRecipesResultItem())
             .ToItemSet(pagination, topDocs.TotalHits);
 
-        var resultFacets = SearchHelpers.GetFacets(readers, facetsCollector, facetsConfig);
+        var resultFacets = SearchHelper.GetFacets(readers, facetsCollector, facetsConfig);
 
         return new(resultItems, resultFacets);
     }

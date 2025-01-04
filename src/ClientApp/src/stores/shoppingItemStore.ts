@@ -3,11 +3,11 @@ import type {
   ShoppingItemsListParams,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
-import SearchShoppingItemsRequest from '@/models/SearchShoppingItemsRequest';
-import listRequestToQueryParams from '@/models/ShoppingItemStoreHelpers';
+import ShoppingItemsListRequest from '@/models/ShoppingItemsListRequest';
+import listRequestToQueryParams from '@/models/ShoppingItemStoreHelper';
 import useMessageStore from './messageStore';
 
 interface ShoppingItemStoreState {
@@ -15,7 +15,7 @@ interface ShoppingItemStoreState {
   listRequest: ShoppingItemsListParams;
 }
 
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 export default defineStore('shoppingItem', {
   state: (): ShoppingItemStoreState => ({
@@ -27,7 +27,7 @@ export default defineStore('shoppingItem', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new SearchShoppingItemsRequest() },
+    listRequest: { ...new ShoppingItemsListRequest() },
   }),
 
   getters: {

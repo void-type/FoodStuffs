@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Events.MealPlans.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;

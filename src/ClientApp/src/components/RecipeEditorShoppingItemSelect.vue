@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref, computed, type PropType } from 'vue';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
-import type WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
+import type WorkingRecipeShoppingItem from '@/models/RecipeShoppingItemWorking';
 import { Dropdown } from 'bootstrap';
+import { trimAndTitleCase } from '@/models/FormatHelper';
 
 const model = defineModel({
   type: Number as PropType<number | undefined>,
@@ -96,9 +97,9 @@ async function createShoppingItem(name: string) {
           <button
             class="btn btn-secondary"
             type="button"
-            @click.stop.prevent="(event) => createShoppingItem(filterText)"
+            @click.stop.prevent="(event) => createShoppingItem(trimAndTitleCase(filterText))"
           >
-            Create
+            Create {{ trimAndTitleCase(filterText) }}
           </button>
         </div>
       </li>

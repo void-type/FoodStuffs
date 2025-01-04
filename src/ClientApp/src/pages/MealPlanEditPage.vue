@@ -5,7 +5,7 @@ import useMealPlanStore from '@/stores/mealPlanStore';
 import RecipeCard from '@/components/RecipeCard.vue';
 import MealPlanShoppingItemList from '@/components/MealPlanShoppingItemList.vue';
 import useMessageStore from '@/stores/messageStore';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import { VueDraggable } from 'vue-draggable-plus';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
@@ -17,7 +17,7 @@ import AppPageHeading from '@/components/AppPageHeading.vue';
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
 const messageStore = useMessageStore();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const { currentMealPlan } = storeToRefs(mealPlanStore);
 

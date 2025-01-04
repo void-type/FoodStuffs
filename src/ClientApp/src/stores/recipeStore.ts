@@ -8,9 +8,9 @@ import type {
   SearchFacet,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
-import SearchRecipesRequest from '@/models/SearchRecipesRequest';
-import RecipeStoreHelpers from '@/models/RecipeStoreHelpers';
-import ApiHelpers from '@/models/ApiHelpers';
+import RecipesListRequest from '@/models/RecipesListRequest';
+import RecipeStoreHelper from '@/models/RecipeStoreHelper';
+import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
 import useMessageStore from './messageStore';
 
@@ -25,7 +25,7 @@ interface RecipeStoreState {
   discoverPage: number;
 }
 
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 export const useRecipeStore = defineStore('recipe', {
   state: (): RecipeStoreState => ({
@@ -38,8 +38,8 @@ export const useRecipeStore = defineStore('recipe', {
       totalCount: 0,
     },
     listFacets: [],
-    listRequest: { ...new SearchRecipesRequest(), take: Choices.defaultPaginationTake.value },
-    recentRecipes: RecipeStoreHelpers.getRecents(),
+    listRequest: { ...new RecipesListRequest(), take: Choices.defaultPaginationTake.value },
+    recentRecipes: RecipeStoreHelper.getRecents(),
     discoverList: [],
     discoverPage: 0,
   }),
@@ -48,7 +48,7 @@ export const useRecipeStore = defineStore('recipe', {
     currentQueryParams(state) {
       const { listRequest } = state;
 
-      return RecipeStoreHelpers.listRequestToQueryParams(listRequest);
+      return RecipeStoreHelper.listRequestToQueryParams(listRequest);
     },
   },
 
@@ -122,7 +122,7 @@ export const useRecipeStore = defineStore('recipe', {
       const limitedRecipes = recentRecipes.slice(0, recentLimit);
 
       this.recentRecipes = limitedRecipes;
-      RecipeStoreHelpers.storeRecents(this.recentRecipes);
+      RecipeStoreHelper.storeRecents(this.recentRecipes);
     },
 
     removeFromRecent(id: number) {
@@ -137,7 +137,7 @@ export const useRecipeStore = defineStore('recipe', {
       }
 
       this.recentRecipes = recentRecipes;
-      RecipeStoreHelpers.storeRecents(this.recentRecipes);
+      RecipeStoreHelper.storeRecents(this.recentRecipes);
     },
 
     updateRecent(recipe: GetRecipeResponse | null) {
@@ -162,11 +162,11 @@ export const useRecipeStore = defineStore('recipe', {
       recentRecipes[indexOfCurrentInRecents] = recipeListItem;
 
       this.recentRecipes = recentRecipes;
-      RecipeStoreHelpers.storeRecents(this.recentRecipes);
+      RecipeStoreHelper.storeRecents(this.recentRecipes);
     },
 
     queueRecent(recipe: GetRecipeResponse | null) {
-      RecipeStoreHelpers.storeQueuedRecent(recipe);
+      RecipeStoreHelper.storeQueuedRecent(recipe);
     },
 
     async fetchRecipesList() {

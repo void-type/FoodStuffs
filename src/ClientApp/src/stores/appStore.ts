@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { AppVersion, DomainUser, WebClientInfo } from '@/api/data-contracts';
 import type { ModalParameters } from '@/models/ModalParameters';
-import DarkModeHelpers from '@/models/DarkModeHelpers';
+import DarkModeHelper from '@/models/DarkModeHelper';
 
 interface AppStoreState {
   applicationName: string;
@@ -63,7 +63,7 @@ export const useAppStore = defineStore('app', {
     },
 
     setDarkMode(setting: boolean) {
-      DarkModeHelpers.setDarkMode(setting);
+      DarkModeHelper.setDarkMode(setting);
       this.useDarkMode = setting;
     },
 

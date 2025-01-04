@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Events.ShoppingItems.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;

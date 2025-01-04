@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Events.Images.Models;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;

@@ -6,10 +6,10 @@ import { computed, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import type { ModalParameters } from '@/models/ModalParameters';
 import EntityTablePager from '@/components/EntityTablePager.vue';
-import { toInt, toNumber } from '@/models/FormatHelpers';
+import { toInt, toNumber } from '@/models/FormatHelper';
 import Choices from '@/models/Choices';
-import SearchShoppingItemsRequest from '@/models/SearchShoppingItemsRequest';
-import ApiHelpers from '@/models/ApiHelpers';
+import ShoppingItemsListRequest from '@/models/ShoppingItemsListRequest';
+import ApiHelper from '@/models/ApiHelper';
 import EntityTableControls from '@/components/EntityTableControls.vue';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
@@ -28,7 +28,7 @@ const appStore = useAppStore();
 const messageStore = useMessageStore();
 const shoppingItemStore = useShoppingItemStore();
 const router = useRouter();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 const { useDarkMode } = storeToRefs(appStore);
 
@@ -59,7 +59,7 @@ function navigateSearch() {
 
 function clearSearch() {
   shoppingItemStore.listRequest = {
-    ...new SearchShoppingItemsRequest(),
+    ...new ShoppingItemsListRequest(),
     take: listRequest.value.take,
     isPagingEnabled: listRequest.value.isPagingEnabled,
   };
@@ -95,7 +95,7 @@ function changeTake(take: number) {
 
 function setListRequestFromQuery() {
   shoppingItemStore.listRequest = {
-    ...new SearchShoppingItemsRequest(),
+    ...new ShoppingItemsListRequest(),
     ...props.query,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
@@ -139,7 +139,7 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <AppPageHeading />
-    <EntityTableControls class="mt-4" :clear-search="clearSearch" :init-search="startSearch">
+    <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
       <template #searchForm>
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-md-6">
@@ -150,6 +150,23 @@ watch(
               class="form-control"
               @keydown.stop.prevent.enter="startSearch"
             />
+          </div>
+          <div class="g-col-6 g-col-md-3">
+            <label class="form-label" for="isUnused">Unused</label>
+            <select
+              id="isUnused"
+              v-model="listRequest.isUnused"
+              class="form-select"
+              @change="startSearch"
+            >
+              <option
+                v-for="option in Choices.boolean"
+                :key="option.value?.toString()"
+                :value="option.value"
+              >
+                {{ option.text }}
+              </option>
+            </select>
           </div>
         </div>
       </template>

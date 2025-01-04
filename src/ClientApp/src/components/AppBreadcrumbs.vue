@@ -22,7 +22,7 @@ const breadcrumbs = computed(() => {
         query: {},
       };
 
-      if (name === 'recipeSearch') {
+      if (name === 'recipeList') {
         routeData.query = recipeStore.currentQueryParams;
       } else if (name === 'mealPlanList') {
         routeData.query = mealPlanStore.currentQueryParams;

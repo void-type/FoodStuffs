@@ -15,28 +15,29 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 - Meal cards to build weekly shopping list.
 - Category tags on recipes. Appear as facets in search.
-- Images for recipes.
+- Images for recipes with automatic cropping/compression.
 - Copy recipes.
-- Random sort and infinite scroll for recipe discovery on home page.
-- Paginated and robust search.
-- Recent history list.
+- Home page has random sort and infinite scroll for recipe discovery.
+- Paginated and robust search backed by Lucene.
+- Recent recipe history list.
 - Unsaved change detection.
 - Responsive UI using Bootstrap grid.
 - Dark mode.
 - Printer-friendly views.
-- See screenshots [here](docs/screenshots.md).
 
-## Build and Run FoodStuffs
+## Build and Run
 
 ### Make a Database
 
-This project now uses Entity Framework Code First, but used to use Database First.
+This project uses Entity Framework Code First.
 
-To create a new database, uncomment the up/down method bodies in the initial migration and run `./build/dbApplyMigration.ps1`.
+To create a new database, or to update your existing database, run `./build/dbApplyMigration.ps1`.
 
-To update your database after v9.0.0, run `./build/dbCreateMigration.ps1`.
+#### Database update history
 
-If upgrading a database from before v9.0.0, migration scripts in /build/sql in order by date, then run `./build/dbApplyMigration.ps1`.
+Note that prior to v9, this project used Database First and SQL scripts.
+
+v9 and onwards uses EF Code First with EF migrations, but there may be SQL scripts or migrator console apps that need to be run.
 
 ### Local build (production and development)
 
@@ -47,7 +48,7 @@ Install the following tools:
 
 See the /build folder for scripts used to test and build this project.
 
-There are [VSCode](https://code.visualstudio.com/) tasks for each script. The build task (ctrl + shift + b) performs the standard CI build.
+There are [VSCode](https://code.visualstudio.com/) tasks for each script. The build task (ctrl + shift + b) performs the standard production CI build.
 
 Run build.ps1 to make a production build.
 

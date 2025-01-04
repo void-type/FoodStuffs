@@ -18,12 +18,12 @@ import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
-import GetRecipeResponseClass from '@/models/GetRecipeResponseClass';
+import RecipeGetResponse from '@/models/RecipeGetResponse';
 import type { ModalParameters } from '@/models/ModalParameters';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
-import { clamp } from '@/models/FormatHelpers';
-import RouterHelpers from '@/models/RouterHelpers';
+import { clamp } from '@/models/FormatHelper';
+import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
@@ -42,7 +42,7 @@ const props = defineProps({
 });
 
 const data = reactive({
-  sourceRecipe: new GetRecipeResponseClass() as GetRecipeResponse,
+  sourceRecipe: new RecipeGetResponse() as GetRecipeResponse,
   sourceImages: [] as string[],
   isRecipeDirty: false,
   suggestedImage: null as string | null,
@@ -57,7 +57,7 @@ const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
 const route = useRoute();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 // Editing existing
 const isEditMode = computed(() => (props.id || 0) > 0);
@@ -85,14 +85,14 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
     data.sourceRecipe = getRecipeResponse;
   }
 
-  RouterHelpers.setTitle(route, data.sourceRecipe.name);
+  RouterHelper.setTitle(route, data.sourceRecipe.name);
   setImageSources(data.sourceRecipe);
   data.suggestedImage = null;
 }
 
 async function fetchRecipe() {
   if (isCreateNewMode.value) {
-    setSources(new GetRecipeResponseClass());
+    setSources(new RecipeGetResponse());
     return;
   }
 
@@ -107,7 +107,7 @@ async function fetchRecipe() {
     }
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-    data.sourceRecipe = new GetRecipeResponseClass();
+    data.sourceRecipe = new RecipeGetResponse();
   }
 }
 
@@ -152,9 +152,9 @@ function onRecipeDelete(id: number) {
       .recipesDelete(id)
       .then(async (response) => {
         recipeStore.removeFromRecent(props.id);
-        setSources(new GetRecipeResponseClass());
+        setSources(new RecipeGetResponse());
         await recipeStore.fetchRecipesList();
-        router.push({ name: 'recipeSearch', query: recipeStore.currentQueryParams }).then(() => {
+        router.push({ name: 'recipeList', query: recipeStore.currentQueryParams }).then(() => {
           if (response.data.message) {
             messageStore.setSuccessMessage(response.data.message);
           }

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import RouterHelpers from '@/models/RouterHelpers';
+import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import { Collapse } from 'bootstrap';
 
@@ -41,8 +41,8 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: 'recipeSearch',
-              component: () => import('@/pages/RecipeSearchPage.vue'),
+              name: 'recipeList',
+              component: () => import('@/pages/RecipeListPage.vue'),
               props: (route) => ({ query: route.query }),
             },
             {
@@ -92,8 +92,35 @@ const router = createRouter({
             {
               path: 'current',
               name: 'mealPlanEdit',
-              meta: { title: 'Edit Meal Plan' },
+              meta: { title: 'Edit Current Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
+            },
+          ],
+        },
+        {
+          path: 'categories',
+          meta: { title: 'Categories' },
+          children: [
+            {
+              path: '',
+              name: 'categoryList',
+              component: () => import('@/pages/CategoryListPage.vue'),
+              props: (route) => ({ query: route.query }),
+            },
+            {
+              path: ':id',
+              name: 'categoryEdit',
+              meta: { title: 'Edit Category' },
+              component: () => import('@/pages/CategoryEditPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+            },
+            {
+              path: 'new',
+              name: 'categoryNew',
+              meta: { title: 'New Category' },
+              component: () => import('@/pages/CategoryEditPage.vue'),
             },
           ],
         },
@@ -143,7 +170,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to) => {
   Collapse.getOrCreateInstance('#navbar-menu', { toggle: false }).hide();
 
-  RouterHelpers.setTitle(to);
+  RouterHelper.setTitle(to);
 });
 
 export default router;

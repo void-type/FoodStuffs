@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import WorkingRecipe from '@/models/WorkingRecipe';
+import WorkingRecipe from '@/models/RecipeWorking';
 import type { GetRecipeResponse, ListShoppingItemsResponse } from '@/api/data-contracts';
-import { isNil, trimAndTitleCase } from '@/models/FormatHelpers';
+import { isNil, trimAndTitleCase } from '@/models/FormatHelper';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
 import type { HttpResponse } from '@/api/http-client';
-import ApiHelpers from '@/models/ApiHelpers';
-import RouterHelpers from '@/models/RouterHelpers';
+import ApiHelper from '@/models/ApiHelper';
+import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import WorkingRecipeIngredient from '@/models/WorkingRecipeIngredient';
-import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelpers';
-import WorkingRecipeShoppingItem from '@/models/WorkingRecipeShoppingItem';
+import WorkingRecipeIngredient from '@/models/RecipeIngredientWorking';
+import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
+import WorkingRecipeShoppingItem from '@/models/RecipeShoppingItemWorking';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
@@ -46,7 +46,7 @@ const props = defineProps({
 
 const messageStore = useMessageStore();
 const mealPlanStore = useMealPlanStore();
-const api = ApiHelpers.client;
+const api = ApiHelper.client;
 
 // This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
 let workingRecipeInitial = '';
@@ -206,7 +206,7 @@ onMounted(async () => {
         </button>
         <ul class="dropdown-menu" aria-labelledby="overflowMenuButton">
           <li>
-            <router-link class="dropdown-item" :to="RouterHelpers.viewRecipe(sourceRecipe)">
+            <router-link class="dropdown-item" :to="RouterHelper.viewRecipe(sourceRecipe)">
               View
             </router-link>
           </li>
@@ -230,8 +230,8 @@ onMounted(async () => {
       </div>
     </div>
     <div class="grid mt-3">
-      <div class="g-col-12 g-col-md-6">
-        <div>
+      <div class="grid g-col-12 g-col-md-6">
+        <div class="g-col-12">
           <label for="name" class="form-label">Name</label>
           <input
             id="name"
@@ -241,7 +241,7 @@ onMounted(async () => {
             :class="{ 'form-control': true, 'is-invalid': messageStore.isFieldInError('name') }"
           />
         </div>
-        <div class="mt-4">
+        <div class="g-col-12">
           <label for="directions" class="form-label">Directions</label>
           <textarea
             id="directions"
@@ -253,7 +253,7 @@ onMounted(async () => {
             }"
           />
         </div>
-        <div class="mt-4">
+        <div class="g-col-12">
           <label for="sides" class="form-label">Sides</label>
           <textarea
             id="sides"
@@ -285,29 +285,6 @@ onMounted(async () => {
         </div>
       </div>
       <div class="g-col-12 g-col-md-6">
-        <TagEditor
-          :class="{ danger: messageStore.isFieldInError('categories') }"
-          :tags="data.workingRecipe.categories || []"
-          :on-add-tag="addCategory"
-          :on-remove-tag="removeCategory"
-          :suggestions="categoryOptions"
-          field-name="categories"
-          label="Categories"
-        />
-      </div>
-      <div class="g-col-12 g-col-md-6">
-        <div class="form-check mt-4">
-          <input
-            id="isForMealPlanning"
-            v-model="data.workingRecipe.isForMealPlanning"
-            class="form-check-input"
-            type="checkbox"
-            :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
-          />
-          <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
-        </div>
-      </div>
-      <div class="g-col-12 g-col-md-6">
         <label for="prepTimeMinutes" class="form-label">Prep time hours/minutes</label>
         <RecipeTimeSpanEditor
           id="prepTimeMinutes"
@@ -322,6 +299,31 @@ onMounted(async () => {
           v-model="data.workingRecipe.cookTimeMinutes"
           :is-invalid="messageStore.isFieldInError('cookTimeMinutes')"
         />
+      </div>
+      <TagEditor
+        :class="{
+          'g-col-12': true,
+          'g-col-md-6': true,
+          danger: messageStore.isFieldInError('categories'),
+        }"
+        :tags="data.workingRecipe.categories || []"
+        :on-add-tag="addCategory"
+        :on-remove-tag="removeCategory"
+        :suggestions="categoryOptions"
+        field-name="categories"
+        label="Categories"
+      />
+      <div class="g-col-12">
+        <div class="form-check">
+          <input
+            id="isForMealPlanning"
+            v-model="data.workingRecipe.isForMealPlanning"
+            class="form-check-input"
+            type="checkbox"
+            :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
+          />
+          <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
+        </div>
       </div>
       <EntityAuditInfo v-if="sourceRecipe.id" class="g-col-12" :entity="sourceRecipe" />
     </div>

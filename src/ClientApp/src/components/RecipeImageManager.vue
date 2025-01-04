@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch, type PropType, type Ref } from 'vue';
-import { clamp } from '@/models/FormatHelpers';
+import { clamp } from '@/models/FormatHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import ApiHelpers from '@/models/ApiHelpers';
+import ApiHelper from '@/models/ApiHelper';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import type bootstrap from 'bootstrap';
 import useMessageStore from '@/stores/messageStore';
@@ -236,7 +236,7 @@ onMounted(() => {
               </button>
               <img
                 class="img-fluid rounded"
-                :src="ApiHelpers.imageUrl(imageName)"
+                :src="ApiHelper.imageUrl(imageName)"
                 :alt="`image ${i}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
                 width="1600"

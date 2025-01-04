@@ -2,14 +2,14 @@
 import { ref, computed, type PropType, onMounted, watch } from 'vue';
 import type bootstrap from 'bootstrap';
 import type { GetRecipeResponse } from '@/api/data-contracts';
-import ApiHelpers from '@/models/ApiHelpers';
-import { isNil } from '@/models/FormatHelpers';
-import { toTimeSpanString } from '@/models/TimeSpanHelpers';
+import ApiHelper from '@/models/ApiHelper';
+import { isNil } from '@/models/FormatHelper';
+import { toTimeSpanString } from '@/models/TimeSpanHelper';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RecipeViewerIngredients from '@/components/RecipeViewerIngredients.vue';
 import useAppStore from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
-import RouterHelpers from '@/models/RouterHelpers';
+import RouterHelper from '@/models/RouterHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 
@@ -72,11 +72,7 @@ onMounted(() => {
 <template>
   <div>
     <div class="btn-toolbar sticky-top pt-1">
-      <router-link
-        :to="RouterHelpers.editRecipe(recipe)"
-        class="btn btn-primary me-2"
-        type="button"
-      >
+      <router-link :to="RouterHelper.editRecipe(recipe)" class="btn btn-primary me-2" type="button">
         Edit
       </router-link>
       <RecipeMealButton class="me-2" :recipe-id="recipe.id" />
@@ -123,7 +119,7 @@ onMounted(() => {
               <div class="image-wrapper">
                 <img
                   class="img-fluid rounded"
-                  :src="ApiHelpers.imageUrl(imageName)"
+                  :src="ApiHelper.imageUrl(imageName)"
                   :alt="`image ${i} of ${recipe.name}`"
                   :loading="i > 0 ? 'lazy' : 'eager'"
                   width="1600"
