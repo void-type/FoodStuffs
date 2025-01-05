@@ -1,8 +1,8 @@
 import type { SaveRecipeRequest } from '@/api/data-contracts';
-import type WorkingRecipeIngredient from './RecipeIngredientWorking';
-import type WorkingRecipeShoppingItem from './RecipeShoppingItemWorking';
+import type RecipeIngredientWorking from './RecipeIngredientWorking';
+import type RecipeShoppingItemWorking from './RecipeShoppingItemWorking';
 
-export default class WorkingRecipe implements SaveRecipeRequest {
+export default class RecipeWorking implements SaveRecipeRequest {
   public id = 0;
 
   public name: string = '';
@@ -17,9 +17,9 @@ export default class WorkingRecipe implements SaveRecipeRequest {
 
   public isForMealPlanning = false;
 
-  public ingredients: WorkingRecipeIngredient[] = [];
+  public ingredients: RecipeIngredientWorking[] = [];
 
-  public shoppingItems: WorkingRecipeShoppingItem[] = [];
+  public shoppingItems: RecipeShoppingItemWorking[] = [];
 
   public categories: string[] = [];
 }

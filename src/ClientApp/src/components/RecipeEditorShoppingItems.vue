@@ -4,13 +4,13 @@ import { computed, nextTick, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelper';
-import WorkingRecipeShoppingItem from '@/models/RecipeShoppingItemWorking';
+import RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import RecipeEditorShoppingItemSelect from './RecipeEditorShoppingItemSelect.vue';
 import AppSortHandle from './AppSortHandle.vue';
 
 const model = defineModel({
-  type: Array as PropType<Array<WorkingRecipeShoppingItem>>,
+  type: Array as PropType<Array<RecipeShoppingItemWorking>>,
   required: true,
 });
 
@@ -50,7 +50,7 @@ function showInAccordion(index: number, focus: boolean = false) {
 }
 
 function onNewClick(itemId: number | null) {
-  const newItem = new WorkingRecipeShoppingItem();
+  const newItem = new RecipeShoppingItemWorking();
   newItem.order = model.value.length + 1;
 
   if (itemId !== null) {
@@ -130,6 +130,7 @@ function onSortEnd() {
               <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping item</label>
               <RecipeEditorShoppingItemSelect
                 v-model="item.id"
+                :is-field-in-error="(name: string) => isFieldInError(`shoppingItems-${name}`)"
                 :item="item"
                 :item-name="getShoppingItem(item.id)?.name"
                 :suggestions="suggestions"

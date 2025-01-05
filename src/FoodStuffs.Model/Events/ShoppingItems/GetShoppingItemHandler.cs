@@ -39,6 +39,7 @@ public class GetShoppingItemHandler : CustomEventHandlerAbstract<GetShoppingItem
                     .ConvertAll(r => new GetShoppingItemResponseRecipe(
                         Id: r.Id,
                         Name: r.Name,
+                        Slug: r.Slug,
                         Image: r.DefaultImage?.FileName))));
     }
 }

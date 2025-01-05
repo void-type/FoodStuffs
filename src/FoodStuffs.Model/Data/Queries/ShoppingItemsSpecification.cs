@@ -45,7 +45,7 @@ public class ShoppingItemsSpecification : QuerySpecificationAbstract<ShoppingIte
 
         if (request.IsUnused is not null)
         {
-            AddCriteria(m => (m.Recipes.Any() || m.MealPlansWhereInPantry.Any()) != request.IsUnused);
+            AddCriteria(m => m.Recipes.Any() != request.IsUnused);
         }
 
 #pragma warning restore CA1860 // Avoid using 'Enumerable.Any()' extension method

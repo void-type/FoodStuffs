@@ -39,6 +39,7 @@ public class GetCategoryHandler : CustomEventHandlerAbstract<GetCategoryRequest,
                     .ConvertAll(r => new GetCategoryResponseRecipe(
                         Id: r.Id,
                         Name: r.Name,
+                        Slug: r.Slug,
                         Image: r.DefaultImage?.FileName))));
     }
 }

@@ -1,6 +1,10 @@
 <script lang="ts" setup>
-import WorkingRecipe from '@/models/RecipeWorking';
-import type { GetRecipeResponse, ListShoppingItemsResponse } from '@/api/data-contracts';
+import RecipeWorking from '@/models/RecipeWorking';
+import type {
+  GetRecipeResponse,
+  IItemSetOfIFailure,
+  ListShoppingItemsResponse,
+} from '@/api/data-contracts';
 import { isNil, trimAndTitleCase } from '@/models/FormatHelper';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
 import type { HttpResponse } from '@/api/http-client';
@@ -8,9 +12,9 @@ import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import WorkingRecipeIngredient from '@/models/RecipeIngredientWorking';
+import RecipeIngredientWorking from '@/models/RecipeIngredientWorking';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
-import WorkingRecipeShoppingItem from '@/models/RecipeShoppingItemWorking';
+import RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
@@ -48,11 +52,10 @@ const messageStore = useMessageStore();
 const mealPlanStore = useMealPlanStore();
 const api = ApiHelper.client;
 
-// This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
-let workingRecipeInitial = '';
-
 const data = reactive({
-  workingRecipe: new WorkingRecipe(),
+  workingRecipe: new RecipeWorking(),
+  // This is a snapshot of our source recipe right after it became a working recipe so we can check if working is dirty.
+  workingRecipeInitial: '',
 });
 
 const categoryOptions = ref([] as Array<string>);
@@ -81,7 +84,7 @@ async function fetchShoppingItems() {
 function reset() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(props.sourceRecipe));
 
-  const newWorkingClass = new WorkingRecipe();
+  const newWorkingClass = new RecipeWorking();
 
   const validProperties = Object.keys(newWorkingClass);
 
@@ -93,20 +96,20 @@ function reset() {
   });
 
   const ingredients = (props.sourceRecipe.ingredients || []).map((x) => ({
-    ...new WorkingRecipeIngredient(),
+    ...new RecipeIngredientWorking(),
     ...x,
   }));
 
   ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const shoppingItems = (props.sourceRecipe.shoppingItems || []).map((x) => ({
-    ...new WorkingRecipeShoppingItem(),
+    ...new RecipeShoppingItemWorking(),
     ...x,
   }));
 
   shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const newWorking: WorkingRecipe = {
+  const newWorking: RecipeWorking = {
     ...newWorkingClass,
     ...sourceCopy,
     ingredients,
@@ -115,7 +118,7 @@ function reset() {
     shoppingItems,
   };
 
-  workingRecipeInitial = JSON.stringify(newWorking);
+  data.workingRecipeInitial = JSON.stringify(newWorking);
 
   data.workingRecipe = newWorking;
 }
@@ -130,7 +133,18 @@ async function createShoppingItem(name: string) {
     await fetchShoppingItems();
     return response.data.id;
   } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    const response = error as HttpResponse<unknown, unknown>;
+    const failureSet = response.error as IItemSetOfIFailure;
+
+    // Add sub-type prefix to uiHandle
+    if (typeof failureSet !== 'undefined' && failureSet !== null) {
+      failureSet.items?.forEach((failure) => {
+        // eslint-disable-next-line no-param-reassign
+        failure.uiHandle = `shoppingItems-${failure.uiHandle}`;
+      });
+    }
+
+    messageStore.setApiFailureMessages(response);
     return null;
   }
 }
@@ -174,7 +188,9 @@ watch(
   { immediate: true }
 );
 
-const isRecipeDirty = computed(() => JSON.stringify(data.workingRecipe) !== workingRecipeInitial);
+const isRecipeDirty = computed(
+  () => JSON.stringify(data.workingRecipe) !== data.workingRecipeInitial
+);
 
 watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);
@@ -270,7 +286,7 @@ onMounted(async () => {
         <div class="g-col-12">
           <label for="ingredients" class="form-label">Shopping items</label>
           <RecipeEditorShoppingItems
-            v-model="data.workingRecipe.shoppingItems as WorkingRecipeShoppingItem[]"
+            v-model="data.workingRecipe.shoppingItems as RecipeShoppingItemWorking[]"
             :is-field-in-error="messageStore.isFieldInError"
             :suggestions="shoppingItemOptions"
             :on-create-item="createShoppingItem"

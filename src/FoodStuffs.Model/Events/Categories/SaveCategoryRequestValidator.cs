@@ -8,10 +8,10 @@ public class SaveCategoryRequestValidator : RuleValidatorAbstract<SaveCategoryRe
 {
     public SaveCategoryRequestValidator()
     {
-        CreateRule(new Failure("Category must have a name.", "categoryName"))
+        CreateRule(new Failure("Category must have a name.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-        CreateRule(new Failure("Category name can't be longer than 450 characters.", "categoryName"))
+        CreateRule(new Failure("Category name can't be longer than 450 characters.", "name"))
             .InvalidWhen(entity => entity.Name.Length > 450);
     }
 }

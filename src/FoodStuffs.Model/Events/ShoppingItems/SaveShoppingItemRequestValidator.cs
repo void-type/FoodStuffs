@@ -8,10 +8,10 @@ public class SaveShoppingItemRequestValidator : RuleValidatorAbstract<SaveShoppi
 {
     public SaveShoppingItemRequestValidator()
     {
-        CreateRule(new Failure("Shopping item must have a name.", "shoppingItemName"))
+        CreateRule(new Failure("Shopping item must have a name.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-        CreateRule(new Failure("Shopping item name can't be longer than 450 characters.", "shoppingItemName"))
+        CreateRule(new Failure("Shopping item name can't be longer than 450 characters.", "name"))
             .InvalidWhen(entity => entity.Name.Length > 450);
     }
 }

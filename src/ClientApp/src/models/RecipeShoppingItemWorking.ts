@@ -1,7 +1,6 @@
-/* eslint-disable no-underscore-dangle */
 import type { SaveRecipeRequestShoppingItem } from '@/api/data-contracts';
 
-export default class WorkingRecipeShoppingItem implements SaveRecipeRequestShoppingItem {
+export default class RecipeShoppingItemWorking implements SaveRecipeRequestShoppingItem {
   // Used so Vue can track in editor.
   public uiKey = crypto.randomUUID();
 

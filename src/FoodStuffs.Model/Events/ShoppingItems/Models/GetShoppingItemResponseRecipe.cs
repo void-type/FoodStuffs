@@ -3,4 +3,5 @@
 public record GetShoppingItemResponseRecipe(
     int Id,
     string Name,
+    string Slug,
     string? Image);

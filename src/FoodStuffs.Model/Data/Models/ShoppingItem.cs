@@ -17,6 +17,4 @@ public class ShoppingItem : IAuditableWithOffset
     public DateTimeOffset ModifiedOn { get; set; }
 
     public virtual List<Recipe> Recipes { get; set; } = [];
-
-    public virtual List<MealPlan> MealPlansWhereInPantry { get; set; } = [];
 }

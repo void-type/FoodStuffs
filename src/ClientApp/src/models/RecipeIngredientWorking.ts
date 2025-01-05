@@ -1,6 +1,6 @@
 import type { SaveRecipeRequestIngredient } from '@/api/data-contracts';
 
-export default class WorkingRecipeIngredient implements SaveRecipeRequestIngredient {
+export default class RecipeIngredientWorking implements SaveRecipeRequestIngredient {
   // Used so Vue can track in editor.
   public uiKey = crypto.randomUUID();
 

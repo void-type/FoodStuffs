@@ -86,6 +86,7 @@ export interface GetCategoryResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string;
+  slug?: string;
   image?: string | null;
 }
 
@@ -359,6 +360,7 @@ export interface GetShoppingItemResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string;
+  slug?: string;
   image?: string | null;
 }
 

@@ -7,7 +7,7 @@ import type {
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelper from '@/models/ApiHelper';
 import { isNil } from '@/models/FormatHelper';
-import WorkingMealPlan from '@/models/MealPlanWorking';
+import MealPlanWorking from '@/models/MealPlanWorking';
 import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
@@ -39,7 +39,7 @@ export default defineStore('mealPlan', {
       totalCount: 0,
     },
     listRequest: { ...new ListMealPlansRequest() },
-    currentMealPlan: WorkingMealPlan.createForStore(),
+    currentMealPlan: MealPlanWorking.createForStore(),
   }),
 
   getters: {
@@ -146,7 +146,7 @@ export default defineStore('mealPlan', {
     },
 
     async newCurrentMealPlan() {
-      this.currentMealPlan = WorkingMealPlan.createForStore();
+      this.currentMealPlan = MealPlanWorking.createForStore();
       storeCurrentMealPlanInStorage(null);
     },
 

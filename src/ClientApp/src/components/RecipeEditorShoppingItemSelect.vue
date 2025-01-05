@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, type PropType } from 'vue';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
-import type WorkingRecipeShoppingItem from '@/models/RecipeShoppingItemWorking';
+import type RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import { Dropdown } from 'bootstrap';
 import { trimAndTitleCase } from '@/models/FormatHelper';
 
@@ -11,8 +11,12 @@ const model = defineModel({
 });
 
 const props = defineProps({
+  isFieldInError: {
+    type: Function,
+    required: true,
+  },
   item: {
-    type: Object as PropType<WorkingRecipeShoppingItem>,
+    type: Object as PropType<RecipeShoppingItemWorking>,
     required: true,
   },
   itemName: {
