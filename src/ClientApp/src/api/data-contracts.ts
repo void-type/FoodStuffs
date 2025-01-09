@@ -245,6 +245,27 @@ export interface SearchFacetValue {
   count?: number;
 }
 
+export interface IItemSetOfSuggestRecipesResultItem {
+  /** @format int32 */
+  count?: number;
+  items?: SuggestRecipesResultItem[];
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
+export interface SuggestRecipesResultItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  slug?: string;
+  image?: string | null;
+}
+
 export interface GetRecipeResponse {
   /** @format int32 */
   id?: number;
@@ -376,7 +397,7 @@ export interface CategoriesListParams {
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
   /**
-   * False for all results
+   * Set false to get all results
    * @default true
    */
   isPagingEnabled?: boolean;
@@ -404,7 +425,7 @@ export interface ImagesUploadParams {
 
 export interface MealPlansListParams {
   /**
-   * False for all results
+   * Set false to get all results
    * @default true
    */
   isPagingEnabled?: boolean;
@@ -423,8 +444,8 @@ export interface MealPlansListParams {
 }
 
 export interface RecipesSearchParams {
-  /** Name contains (case-insensitive) */
-  name?: string | null;
+  /** Search text (case-insensitive) */
+  searchText?: string | null;
   /** Category IDs to filter on */
   categories?: number[] | null;
   /** If the recipes should be enabled for meal planning */
@@ -434,7 +455,7 @@ export interface RecipesSearchParams {
   /** Give a seed for stable random sorting. By default is stable for 24 hours on the server. */
   randomSortSeed?: string | null;
   /**
-   * False for all results
+   * Set false to get all results
    * @default true
    */
   isPagingEnabled?: boolean;
@@ -452,13 +473,29 @@ export interface RecipesSearchParams {
   take?: number;
 }
 
+export interface RecipesSuggestParams {
+  /** Search text (case-insensitive) */
+  searchText?: string | null;
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 5
+   */
+  take?: number;
+}
+
 export interface ShoppingItemsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
   /**
-   * False for all results
+   * Set false to get all results
    * @default true
    */
   isPagingEnabled?: boolean;

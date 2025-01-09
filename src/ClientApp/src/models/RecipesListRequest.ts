@@ -3,7 +3,7 @@ import Choices from '@/models/Choices';
 import RecipeStoreHelper from './RecipeStoreHelper';
 
 export default class RecipesListRequest implements RecipesSearchParams {
-  public name = '';
+  public searchText = '';
 
   public categories = [];
 

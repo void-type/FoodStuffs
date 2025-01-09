@@ -22,9 +22,11 @@ import type {
   IItemSetOfListCategoriesResponse,
   IItemSetOfListMealPlansResponse,
   IItemSetOfListShoppingItemsResponse,
+  IItemSetOfSuggestRecipesResultItem,
   ImagesUploadParams,
   MealPlansListParams,
   RecipesSearchParams,
+  RecipesSuggestParams,
   SaveCategoryRequest,
   SaveMealPlanRequest,
   SaveRecipeRequest,
@@ -322,6 +324,24 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
+   * @name RecipesSuggest
+   * @summary Suggest recipes based on search.
+   * @request GET:/api/recipes/suggest
+   * @response `200` `IItemSetOfSuggestRecipesResultItem`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  recipesSuggest = (query: RecipesSuggestParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfSuggestRecipesResultItem, IItemSetOfIFailure>({
+      path: `/api/recipes/suggest`,
+      method: 'GET',
+      query: query,
       format: 'json',
       ...params,
     });

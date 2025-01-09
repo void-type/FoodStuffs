@@ -2,12 +2,8 @@
 
 namespace FoodStuffs.Model.Search.Recipes.Models;
 
-public record SearchRecipesRequest(
+public record SuggestRecipesRequest(
     string? SearchText,
-    int[]? CategoryIds,
-    bool? IsForMealPlanning,
-    string? SortBy,
-    string? RandomSortSeed,
     bool IsPagingEnabled,
     int Page,
     int Take) : IPaginatedRequest;

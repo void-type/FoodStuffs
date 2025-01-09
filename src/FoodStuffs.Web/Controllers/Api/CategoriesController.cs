@@ -21,7 +21,7 @@ public class CategoriesController : ControllerBase
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
     /// <param name="isUnused">Specify to show items that have relations or no relations</param>
-    /// <param name="isPagingEnabled">False for all results</param>
+    /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]

@@ -176,10 +176,10 @@ watch(
       <template #searchForm>
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-md-6">
-            <label for="nameSearch" class="form-label">Name</label>
+            <label for="searchText" class="form-label">Search</label>
             <input
-              id="nameSearch"
-              v-model="listRequest.name"
+              id="searchText"
+              v-model="listRequest.searchText"
               class="form-control"
               @keydown.stop.prevent.enter="startSearch"
             />

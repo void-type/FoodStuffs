@@ -19,7 +19,7 @@ public class MealPlansController : ControllerBase
     /// List meal plans. All parameters are optional and some have defaults.
     /// </summary>
     /// <param name="listHandler"></param>
-    /// <param name="isPagingEnabled">False for all results</param>
+    /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]

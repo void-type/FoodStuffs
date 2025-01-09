@@ -91,6 +91,17 @@ public static class RecipeSearchHelper
         );
     }
 
+    public static SuggestRecipesResultItem ToSuggestRecipesResultItem(this Document doc)
+    {
+        return new SuggestRecipesResultItem
+        (
+            Id: int.Parse(doc.Get(C.FIELD_ID)),
+            Name: doc.Get(C.FIELD_NAME),
+            Slug: doc.Get(C.FIELD_SLUG),
+            Image: doc.Get(C.FIELD_IMAGE)
+        );
+    }
+
     public static FacetsConfig RecipeFacetsConfig()
     {
         var facetConfig = new FacetsConfig();

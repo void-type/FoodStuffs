@@ -21,12 +21,12 @@ public class RecipesController : ControllerBase
     /// Search for recipes using the following criteria. All are optional and some have defaults.
     /// </summary>
     /// <param name="searchHandler"></param>
-    /// <param name="name">Name contains (case-insensitive)</param>
+    /// <param name="searchText">Search text (case-insensitive)</param>
     /// <param name="categories">Category IDs to filter on</param>
     /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
     /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
     /// <param name="randomSortSeed">Give a seed for stable random sorting. By default is stable for 24 hours on the server.</param>
-    /// <param name="isPagingEnabled">False for all results</param>
+    /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
@@ -34,7 +34,7 @@ public class RecipesController : ControllerBase
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> SearchAsync(
         [FromServices] SearchRecipesHandler searchHandler,
-        [FromQuery] string? name = null,
+        [FromQuery] string? searchText = null,
         [FromQuery] int[]? categories = null,
         [FromQuery] bool? isForMealPlanning = null,
         [FromQuery] string? sortBy = null,
@@ -44,7 +44,7 @@ public class RecipesController : ControllerBase
         [FromQuery] int take = 30)
     {
         var request = new SearchRecipesRequest(
-            NameSearch: name,
+            SearchText: searchText,
             CategoryIds: categories,
             IsForMealPlanning: isForMealPlanning,
             SortBy: sortBy,
@@ -54,6 +54,34 @@ public class RecipesController : ControllerBase
             Take: take);
 
         return await searchHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Suggest recipes based on search.
+    /// </summary>
+    /// <param name="suggestHandler"></param>
+    /// <param name="searchText">Search text (case-insensitive)</param>
+    /// <param name="isPagingEnabled">Set false to get all results</param>
+    /// <param name="take">How many items in a page</param>
+    [Route("suggest")]
+    [HttpGet]
+    [ProducesResponseType(typeof(IItemSet<SuggestRecipesResultItem>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> SuggestAsync(
+        [FromServices] SuggestRecipesHandler suggestHandler,
+        [FromQuery] string? searchText = null,
+        [FromQuery] bool isPagingEnabled = true,
+        [FromQuery] int take = 5)
+    {
+        var request = new SuggestRecipesRequest(
+            SearchText: searchText,
+            IsPagingEnabled: isPagingEnabled,
+            Page: 1,
+            Take: take);
+
+        return await suggestHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

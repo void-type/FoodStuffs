@@ -24,13 +24,6 @@ public class RecipeQueryService : IRecipeQueryService
     /// <inheritdoc/>
     public SearchRecipesResponse Search(SearchRecipesRequest request)
     {
-        using (var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME))
-        {
-            // Ensure index
-            writers.IndexWriter.Commit();
-            writers.TaxonomyWriter.Commit();
-        }
-
         using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
         var searcher = readers.IndexSearcher;
         var facetsCollector = new FacetsCollector();
@@ -39,7 +32,7 @@ public class RecipeQueryService : IRecipeQueryService
 
         var query = new BooleanQuery()
         {
-            { BuildTextQuery(request), Occur.MUST },
+            { BuildTextQuery(request.SearchText), Occur.MUST },
         };
 
         var filter = BuildFilter(request, facetsConfig);
@@ -80,21 +73,51 @@ public class RecipeQueryService : IRecipeQueryService
         return new(resultItems, resultFacets);
     }
 
-    private Query BuildTextQuery(SearchRecipesRequest request)
+    public IItemSet<SuggestRecipesResultItem> Suggest(SuggestRecipesRequest request)
     {
+        // In the future we should use Lucene suggester.
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.SearchText) || request.SearchText.Length <= 1)
+            {
+                return new List<SuggestRecipesResultItem>().ToItemSet(request.GetPaginationOptions());
+            }
+
+            using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
+            var searcher = readers.IndexSearcher;
+
+            var query = new BooleanQuery()
+            {
+                { BuildTextQuery(request.SearchText), Occur.MUST },
+            };
+
+            var topDocs = searcher.Search(query, _settings.MaxResults);
+
+            return topDocs.ScoreDocs
+                .Select(x => searcher.Doc(x.Doc).ToSuggestRecipesResultItem())
+                .ToItemSet();
+        }
+        catch
+        {
+            return new List<SuggestRecipesResultItem>().ToItemSet(request.GetPaginationOptions());
+        }
+    }
+
+    private Query BuildTextQuery(string? requestText)
+    {
+        var searchText = requestText?.Trim()?.ToLowerInvariant();
+
         var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
         var queryBuilder = new QueryBuilder(analyzer);
         var query = new BooleanQuery();
 
         // Exclude small queries that break the query builders.
-        if (!string.IsNullOrWhiteSpace(request.NameSearch) && request.NameSearch.Length > 1)
+        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length > 1)
         {
-            var searchText = request.NameSearch.Trim().ToLowerInvariant();
-
             // If the exact phrase is found (with the given slop), it will be boosted by the given amount.
+            // CreatePhraseQuery can return null in some cases.
             var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
 
-            // CreatePhraseQuery can return null in some cases.
             phraseQuery.Boost = 9;
             query.Add(phraseQuery, Occur.SHOULD);
 
