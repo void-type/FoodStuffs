@@ -34,6 +34,11 @@ function initSearch() {
     });
 }
 
+function clearSearch() {
+  searchText.value = '';
+  suggestions.value = [];
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 const debounce = (fn: Function, ms = 300) => {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -59,7 +64,7 @@ const suggest = debounce(async () => {
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
-}, 300);
+}, 200);
 </script>
 
 <template>
@@ -82,15 +87,24 @@ const suggest = debounce(async () => {
       >
         <font-awesome-icon icon="fa-search" />
       </button>
-      <ul v-if="suggestions.length" class="suggestions-list">
-        <li v-for="suggestion in suggestions" :key="suggestion.id">
-          <router-link :to="RouterHelper.viewRecipe(suggestion)">
+    </div>
+    <ul v-if="suggestions.length" class="dropdown-menu show">
+      <li v-for="suggestion in suggestions" :key="suggestion.id" class="dropdown-item">
+        <span
+          ><router-link :to="RouterHelper.viewRecipe(suggestion)" @click="clearSearch">
             {{ suggestion.name }}
           </router-link>
-        </li>
-      </ul>
-    </div>
+        </span>
+      </li>
+    </ul>
   </form>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dropdown-item span {
+  display: block;
+  max-width: 15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
