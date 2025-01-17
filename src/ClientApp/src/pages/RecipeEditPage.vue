@@ -16,6 +16,7 @@ import type {
 } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
+import useDiscoveryStore from '@/stores/discoveryStore';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
 import RecipeGetResponse from '@/models/RecipeGetResponse';
@@ -55,6 +56,7 @@ const data = reactive({
 const appStore = useAppStore();
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
+const discoveryStore = useDiscoveryStore();
 const router = useRouter();
 const route = useRoute();
 const api = ApiHelper.client;
@@ -151,6 +153,7 @@ function onRecipeDelete(id: number) {
     api()
       .recipesDelete(id)
       .then(async (response) => {
+        discoveryStore.removeFromList(props.id);
         recipeStore.removeFromRecent(props.id);
         setSources(new RecipeGetResponse());
         await recipeStore.fetchRecipesList();

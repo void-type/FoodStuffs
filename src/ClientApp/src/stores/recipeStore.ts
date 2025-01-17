@@ -21,8 +21,6 @@ interface RecipeStoreState {
   listRequest: RecipesSearchParams;
   listFacets: SearchFacet[];
   recentRecipes: Array<SearchRecipesResultItem>;
-  discoverList: SearchRecipesResultItem[];
-  discoverPage: number;
 }
 
 const api = ApiHelper.client;
@@ -40,8 +38,6 @@ export const useRecipeStore = defineStore('recipe', {
     listFacets: [],
     listRequest: { ...new RecipesListRequest(), take: Choices.defaultPaginationTake.value },
     recentRecipes: RecipeStoreHelper.getRecents(),
-    discoverList: [],
-    discoverPage: 0,
   }),
 
   getters: {
@@ -65,35 +61,6 @@ export const useRecipeStore = defineStore('recipe', {
 
     setListRequest(data: RecipesSearchParams) {
       this.listRequest = data;
-    },
-
-    setDiscoverListResponse(data: SearchRecipesResponse) {
-      const { results } = data;
-
-      if (!results?.items) {
-        this.discoverPage = 0;
-        this.discoverList = [];
-        return;
-      }
-
-      if (results.page === 1) {
-        this.discoverList = [];
-      }
-
-      this.discoverPage = results.page || 0;
-
-      // If it wasn't a full page, make the next request load this page again.
-      if ((results.count || 0) < (results.take || 1) && this.discoverPage > 1) {
-        this.discoverPage -= 1;
-      }
-
-      const newItems = results.items.filter(
-        (newItem) => !this.discoverList.some((existingItem) => existingItem.id === newItem.id)
-      );
-
-      if (newItems.length > 0) {
-        this.discoverList = [...this.discoverList, ...newItems];
-      }
     },
 
     addToRecent(recipe: GetRecipeResponse | null) {
@@ -128,9 +95,9 @@ export const useRecipeStore = defineStore('recipe', {
     removeFromRecent(id: number) {
       const recentRecipes = this.recentRecipes.slice();
 
-      const indexOfCurrentInRecents = recentRecipes
-        .map((recentRecipe) => recentRecipe.id)
-        .indexOf(id);
+      const indexOfCurrentInRecents = recentRecipes.findIndex(
+        (recentRecipe) => recentRecipe.id === id
+      );
 
       if (indexOfCurrentInRecents > -1) {
         recentRecipes.splice(indexOfCurrentInRecents, 1);
@@ -172,10 +139,9 @@ export const useRecipeStore = defineStore('recipe', {
     async fetchRecipesList() {
       try {
         const response = await api().recipesSearch(this.listRequest);
-        const { results } = response.data;
 
-        if (results) {
-          this.listResponse = results;
+        if (response.data) {
+          this.setListResponse(response.data);
         }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);

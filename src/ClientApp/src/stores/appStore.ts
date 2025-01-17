@@ -14,7 +14,7 @@ interface AppStoreState {
   modalParameters: ModalParameters;
 }
 
-export const useAppStore = defineStore('app', {
+export default defineStore('app', {
   state: (): AppStoreState => ({
     applicationName: '',
     fieldsInError: [],
@@ -87,5 +87,3 @@ export const useAppStore = defineStore('app', {
     },
   },
 });
-
-export default useAppStore;

@@ -1,46 +1,12 @@
 <script lang="ts" setup>
-import ApiHelper from '@/models/ApiHelper';
-import RecipesListRequest from '@/models/RecipesListRequest';
-import useMessageStore from '@/stores/messageStore';
-import useRecipeStore from '@/stores/recipeStore';
+import useDiscoveryStore from '@/stores/discoveryStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import RecipeCard from '@/components/RecipeCard.vue';
-import type { HttpResponse } from '@/api/http-client';
 
-const recipeStore = useRecipeStore();
-const messageStore = useMessageStore();
-const api = ApiHelper.client;
+const discoveryStore = useDiscoveryStore();
 
-const { discoverList, discoverPage } = storeToRefs(recipeStore);
-
-const isFetchingRecipes = ref(false);
-
-const randomSortSeed = crypto.randomUUID();
-
-async function fetchRecipes() {
-  if (isFetchingRecipes.value) {
-    return;
-  }
-
-  isFetchingRecipes.value = true;
-
-  try {
-    const response = await api().recipesSearch({
-      ...new RecipesListRequest(),
-      page: discoverPage.value + 1,
-      take: 12,
-      sortBy: 'random',
-      randomSortSeed,
-    });
-
-    recipeStore.setDiscoverListResponse(response.data);
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-  } finally {
-    isFetchingRecipes.value = false;
-  }
-}
+const { list, take, isFetchingRecipes } = storeToRefs(discoveryStore);
 
 const loadMoreTriggerElement: Ref<Element | undefined> = ref();
 let loadMoreObserver: IntersectionObserver | null = null;
@@ -51,9 +17,9 @@ function setupLoadMoreObserver() {
   }
 
   loadMoreObserver = new IntersectionObserver(
-    (entries) => {
+    async (entries) => {
       if (entries[0].isIntersecting) {
-        fetchRecipes();
+        await discoveryStore.fetchNext();
       }
     },
     {
@@ -71,8 +37,11 @@ function tearDownLoadMoreObserver() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   setupLoadMoreObserver();
+  if (list.value.length < take.value) {
+    await discoveryStore.fetchNext();
+  }
 });
 
 onUnmounted(() => {
@@ -84,7 +53,7 @@ onUnmounted(() => {
   <div class="container-xxl">
     <div class="grid mt-4">
       <RecipeCard
-        v-for="(recipe, i) in discoverList"
+        v-for="(recipe, i) in list"
         :key="recipe.id"
         :recipe="recipe"
         :lazy="i > 6"
@@ -97,7 +66,7 @@ onUnmounted(() => {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <p v-if="discoverList.length > 0" class="m-0 mt-4 text-center">
+    <p v-if="list.length > 0" class="m-0 mt-4 text-center">
       <a href="#main">Back to top</a>
     </p>
   </div>

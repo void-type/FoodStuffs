@@ -20,7 +20,7 @@ interface MessageStoreState {
   messages: Array<Message>;
 }
 
-export const useMessageStore = defineStore('message', {
+export default defineStore('message', {
   state: (): MessageStoreState => ({
     messages: [],
   }),
@@ -132,5 +132,3 @@ export const useMessageStore = defineStore('message', {
     },
   },
 });
-
-export default useMessageStore;

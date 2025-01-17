@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { useMessageStore } from '@/stores/messageStore';
+import useMessageStore from '@/stores/messageStore';
 
 const messageStore = useMessageStore();
 const { messages } = storeToRefs(messageStore);
