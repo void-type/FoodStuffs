@@ -1,5 +1,5 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /source
 
 # Install Node in the build container
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
@@ -18,14 +18,20 @@ COPY ./nuget.config ./
 COPY ./src/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./src/${file%.*}/ && mv $file ./src/${file%.*}/; done
 
+COPY ./analyzers/*/*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p ./analyzers/${file%.*}/ && mv $file ./analyzers/${file%.*}/; done
+
 COPY ./tests/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./tests/${file%.*}/ && mv $file ./tests/${file%.*}/; done
 
-COPY ./src/FoodStuffs.Web/ClientApp/package.json ./src/FoodStuffs.Web/ClientApp/
-COPY ./src/FoodStuffs.Web/ClientApp/package-lock.json ./src/FoodStuffs.Web/ClientApp/
+COPY ./Directory.Build.props ./
+COPY ./src/Directory.Build.props ./src/
+
+COPY ./src/ClientApp/package.json ./src/ClientApp/
+COPY ./src/ClientApp/package-lock.json ./src/ClientApp/
 
 # Restore dependencies.
-RUN cd ./src/FoodStuffs.Web/ClientApp && npm install --no-audit
+RUN cd ./src/ClientApp && npm install --no-audit
 RUN dotnet restore
 
 # Copy everything to the build container
@@ -35,9 +41,11 @@ COPY ./ ./
 RUN pwsh ./build/build.ps1
 
 # Copy output from the build container to the run container
+ARG ENTRY_POINT
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-ARG env="Production"
 WORKDIR /app
-COPY --from=build-env /app/artifacts/dist/release .
-ENV ASPNETCORE_ENVIRONMENT=$env
-ENTRYPOINT ["dotnet", "FoodStuffs.Web.dll"]/./
+
+COPY --from=build /source/artifacts/dist/release .
+
+ENTRYPOINT ["dotnet", "${ENTRY_POINT}.dll"]
