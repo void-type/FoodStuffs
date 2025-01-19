@@ -74,7 +74,7 @@ function flipCard() {
                 class="btn btn-sm btn-secondary me-2"
                 aria-label="edit recipe"
                 :to="RouterHelper.editRecipe(recipe)"
-                @click.stop.prevent
+                @click.stop
                 >Edit</router-link
               >
               <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
@@ -106,7 +106,7 @@ function flipCard() {
             class="btn btn-sm btn-secondary me-2"
             aria-label="edit recipe"
             :to="RouterHelper.editRecipe(recipe)"
-            @click.stop.prevent
+            @click.stop
             >Edit</router-link
           >
           <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
