@@ -15,23 +15,23 @@
     "generate-api-client": "sta -p https://localhost:5001/swagger/v1/swagger.json -o ./src/api/ --modular --responses --extract-request-params --disableStrictSSL"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.7.1",
-    "@fortawesome/free-regular-svg-icons": "^6.7.1",
-    "@fortawesome/free-solid-svg-icons": "^6.7.1",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "date-fns": "^3.6.0",
-    "pinia": "^2.3.0",
+    "pinia": "^2.3.1",
     "vue": "^3.5.13",
     "vue-draggable-plus": "^0.6.0",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.10.4",
+    "@rushstack/eslint-patch": "^1.10.5",
     "@tsconfig/node18": "^18.2.4",
     "@types/bootstrap": "^5.2.10",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.16",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
@@ -45,10 +45,10 @@
     "npm-check-updates": "^16.14.20",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.4.2",
-    "sass": "^1.82.0",
+    "sass": "^1.83.4",
     "swagger-typescript-api": "^13.0.23",
-    "typescript": "~5.6.3",
-    "vite": "^5.4.11",
-    "vue-tsc": "^2.1.10"
+    "typescript": "~5.7.3",
+    "vite": "^5.4.14",
+    "vue-tsc": "^2.2.0"
   }
 }
