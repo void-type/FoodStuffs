@@ -95,9 +95,20 @@ async function createShoppingItem(name: string) {
           @click.stop
         />
       </li>
-      <li v-if="filteredSuggestions.length === 0" class="p-3">
-        No options found
-        <div v-if="filterText.length > 0" class="btn-toolbar mt-2">
+      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
+        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
+          {{ suggestion.name }}
+        </a>
+      </li>
+      <li v-if="filteredSuggestions.length === 0" class="p-3">No options found</li>
+      <li
+        v-if="
+          filterText.length > 0 &&
+          filteredSuggestions.find((x) => x.name === filterText) === undefined
+        "
+        class="px-3 py-2"
+      >
+        <div class="btn-toolbar">
           <button
             class="btn btn-secondary"
             type="button"
@@ -106,11 +117,6 @@ async function createShoppingItem(name: string) {
             Create {{ trimAndTitleCase(filterText) }}
           </button>
         </div>
-      </li>
-      <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
-        <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
-          {{ suggestion.name }}
-        </a>
       </li>
     </ul>
   </div>
