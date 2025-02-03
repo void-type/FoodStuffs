@@ -152,15 +152,15 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
-    <RecipeViewerIngredients
-      v-if="(recipe.ingredients?.length || 0) > 0"
-      :ingredients="recipe.ingredients || []"
-    />
     <h3 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-4">Shopping Items</h3>
     <RecipeViewerIngredients
       v-if="(recipe.shoppingItems?.length || 0) > 0"
       :ingredients="recipe.shoppingItems || []"
+    />
+    <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
+    <RecipeViewerIngredients
+      v-if="(recipe.ingredients?.length || 0) > 0"
+      :ingredients="recipe.ingredients || []"
     />
     <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
     <div
