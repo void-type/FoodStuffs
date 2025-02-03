@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, type PropType } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, type PropType } from 'vue';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import { Dropdown } from 'bootstrap';
@@ -55,7 +55,9 @@ function selectSuggestion(id: number | undefined) {
   model.value = id;
 }
 
+const dropdownParent = ref<HTMLElement | null>(null);
 const dropdownButton = ref<HTMLButtonElement | null>(null);
+const filterInput = ref<HTMLInputElement | null>(null);
 
 async function createShoppingItem(name: string) {
   const newId = await props.onCreateItem(name);
@@ -68,13 +70,31 @@ async function createShoppingItem(name: string) {
     }
   }
 }
+
+function onShow() {
+  if (filterInput.value) {
+    filterInput.value.focus();
+  }
+}
+
+onMounted(() => {
+  if (dropdownParent.value) {
+    dropdownParent.value.addEventListener('shown.bs.dropdown', onShow);
+  }
+});
+
+onBeforeUnmount(() => {
+  if (dropdownParent.value) {
+    dropdownParent.value.removeEventListener('shown.bs.dropdown', onShow);
+  }
+});
 </script>
 
 <template>
-  <div class="dropdown">
+  <div ref="dropdownParent" class="dropdown">
     <button
       ref="dropdownButton"
-      class="form-select"
+      class="form-select first-form-item"
       type="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
@@ -88,6 +108,7 @@ async function createShoppingItem(name: string) {
         >
         <input
           :id="`item-${item.uiKey}-name-filter`"
+          ref="filterInput"
           v-model="filterText"
           type="text"
           class="form-control"

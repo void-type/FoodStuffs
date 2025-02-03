@@ -56,6 +56,7 @@ function removeTagClick(tag: string) {
         list="tagSuggestions"
         class="form-control"
         :disabled="false"
+        @change="addTagClick(newTag)"
         @keydown.stop.prevent.enter="addTagClick(newTag)"
       />
       <datalist id="tagSuggestions">

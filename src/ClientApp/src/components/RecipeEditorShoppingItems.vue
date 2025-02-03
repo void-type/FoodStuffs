@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Collapse } from 'bootstrap';
-import { computed, nextTick, type PropType } from 'vue';
+import { ref, computed, nextTick, onMounted, onBeforeUnmount, type PropType } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelper';
@@ -87,10 +87,34 @@ function onSortEnd() {
     updateOrdersByIndex();
   });
 }
+
+function onShow(event: Event) {
+  if (event.target instanceof HTMLElement) {
+    const target = event.target as HTMLElement;
+    const focusableElement = target.querySelector('.first-form-item') as HTMLElement;
+    if (focusableElement) {
+      focusableElement.focus();
+    }
+  }
+}
+
+const shoppingItemList = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  if (shoppingItemList.value) {
+    shoppingItemList.value.addEventListener('shown.bs.collapse', onShow);
+  }
+});
+
+onBeforeUnmount(() => {
+  if (shoppingItemList.value) {
+    shoppingItemList.value.removeEventListener('shown.bs.collapse', onShow);
+  }
+});
 </script>
 
 <template>
-  <div>
+  <div ref="shoppingItemList">
     <div v-if="model.length < 1" id="shopping-item-list" class="card p-4 text-center">
       No shopping items.
     </div>
