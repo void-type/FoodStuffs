@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Categories.Models;
+using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -15,11 +16,13 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveCategoryRequestValidator _validator;
+    private readonly IRecipeIndexService _index;
 
-    public SaveCategoryHandler(FoodStuffsContext data, SaveCategoryRequestValidator validator)
+    public SaveCategoryHandler(FoodStuffsContext data, SaveCategoryRequestValidator validator, IRecipeIndexService index)
     {
         _data = data;
         _validator = validator;
+        _index = index;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveCategoryRequest request, CancellationToken cancellationToken = default)
@@ -39,6 +42,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
+            .Include(c => c.Recipes)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
@@ -65,6 +69,11 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
         if (maybeCategory.HasValue)
         {
             _data.Categories.Update(categoryToEdit);
+
+            foreach (var id in categoryToEdit.Recipes.ConvertAll(r => r.Id))
+            {
+                await _index.AddOrUpdateAsync(id, cancellationToken);
+            }
         }
         else
         {

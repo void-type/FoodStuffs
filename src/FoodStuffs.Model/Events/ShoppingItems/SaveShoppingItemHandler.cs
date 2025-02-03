@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.ShoppingItems.Models;
+using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -15,11 +16,13 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveShoppingItemRequestValidator _validator;
+    private readonly IRecipeIndexService _index;
 
-    public SaveShoppingItemHandler(FoodStuffsContext data, SaveShoppingItemRequestValidator validator)
+    public SaveShoppingItemHandler(FoodStuffsContext data, SaveShoppingItemRequestValidator validator, IRecipeIndexService index)
     {
         _data = data;
         _validator = validator;
+        _index = index;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveShoppingItemRequest request, CancellationToken cancellationToken = default)
@@ -39,6 +42,7 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
+            .Include(si => si.Recipes)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
@@ -65,6 +69,11 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
         if (maybeShoppingItem.HasValue)
         {
             _data.ShoppingItems.Update(shoppingItemToEdit);
+
+            foreach (var id in shoppingItemToEdit.Recipes.ConvertAll(r => r.Id))
+            {
+                await _index.AddOrUpdateAsync(id, cancellationToken);
+            }
         }
         else
         {
