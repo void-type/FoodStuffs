@@ -14,10 +14,10 @@ const props = defineProps({
 const shoppingItemsSorted = computed(() => {
   const sortableItems = props.shoppingItems.map((x) => ({
     value: x,
-    sort: props.getShoppingItemDetails(x.id),
+    sortValue: props.getShoppingItemDetails(x.id)?.name || '',
   }));
 
-  sortableItems.sort((a, b) => a.sort.localeCompare(b.sort));
+  sortableItems.sort((a, b) => a?.sortValue.localeCompare(b?.sortValue));
 
   return sortableItems.map((x) => x.value);
 });
