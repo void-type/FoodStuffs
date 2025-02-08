@@ -159,41 +159,27 @@ public class RecipeQueryService : IRecipeQueryService
 
     private static QueryWrapperFilter BuildFilter(SearchRecipesRequest request, FacetsConfig facetsConfig)
     {
-        var query = new BooleanQuery();
+        var drillDownQuery = new DrillDownQuery(facetsConfig);
 
         if (request.CategoryIds?.Length > 0)
         {
-            var categoriesQuery = new BooleanQuery();
-
             foreach (var categoryId in request.CategoryIds)
             {
-                var drillDownQuery = new DrillDownQuery(facetsConfig)
-                {
-                    { C.FIELD_CATEGORY_IDS, categoryId.ToString() }
-                };
-
-                categoriesQuery.Add(drillDownQuery, Occur.SHOULD);
+                drillDownQuery.Add(C.FIELD_CATEGORY_IDS, categoryId.ToString());
             }
-
-            query.Add(categoriesQuery, Occur.MUST);
         }
 
         if (request.IsForMealPlanning is not null)
         {
-            var drillDownQuery = new DrillDownQuery(facetsConfig)
-            {
-                { C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString() }
-            };
-
-            query.Add(drillDownQuery, Occur.MUST);
+            drillDownQuery.Add(C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString());
         }
 
-        if (query.Clauses.Count < 1)
+        if (!(drillDownQuery as IEnumerable<BooleanClause>).Any())
         {
             return new QueryWrapperFilter(new MatchAllDocsQuery());
         }
 
-        return new QueryWrapperFilter(query);
+        return new QueryWrapperFilter(drillDownQuery);
     }
 
     private static Sort? BuildSortCriteria(SearchRecipesRequest request)
