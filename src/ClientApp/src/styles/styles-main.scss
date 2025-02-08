@@ -5,8 +5,6 @@
 // Sticky footer
 html,
 body {
-  --bs-primary: #{$bg-navbar};
-  --bs-primary-rgb: #{red($bg-navbar), green($bg-navbar), blue($bg-navbar)};
   box-sizing: border-box;
   height: 100%;
   padding: 0;
@@ -29,8 +27,10 @@ body {
   flex-grow: 1;
 }
 
-.navbar-dark {
-  background-color: var(--bg-navbar);
+// Replace primary color in header
+header {
+  --bs-primary: #{$bg-navbar};
+  --bs-primary-rgb: #{red($bg-navbar), green($bg-navbar), blue($bg-navbar)};
 }
 
 // Bootstrap hides nav-link focus ring
@@ -83,19 +83,6 @@ body {
   }
 }
 
-.nav-search-button,
-.navbar-toggler {
-  border: var(--bs-border-width) solid var(--bs-gray-600);
-
-  &:hover {
-    border-color: var(--bs-border-color);
-  }
-
-  &:focus {
-    box-shadow: none;
-  }
-}
-
 .spinner-border {
   color: rgba(var(--bs-body-color-rgb), 0.3);
 }
@@ -114,10 +101,11 @@ body {
   z-index: 3;
 }
 
+// Dark theme
 html[data-bs-theme='dark'] {
   --bs-body-bg: #{$dark};
+  --bs-body-bg-rgb: #{red($dark), green($dark), blue($dark)};
 
-  // Pagination active link
   .page-item.active > .page-link {
     border-color: unset;
   }

@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
         @keydown.enter.stop.prevent="initSearch"
       />
       <button
-        class="btn btn-secondary nav-search-button text-light bg-primary"
+        class="btn btn-outline-secondary nav-search-button"
         type="button"
         aria-label="Start search"
         @click.stop.prevent="initSearch"
@@ -141,6 +141,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+.nav-search-button {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
 .dropdown-item span {
   display: block;
   max-width: 15rem;
