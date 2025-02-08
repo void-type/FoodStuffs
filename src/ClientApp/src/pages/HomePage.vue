@@ -66,9 +66,6 @@ onUnmounted(() => {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <p v-if="list.length > 0" class="m-0 mt-4 text-center">
-      <a href="#main">Back to top</a>
-    </p>
   </div>
 </template>
 

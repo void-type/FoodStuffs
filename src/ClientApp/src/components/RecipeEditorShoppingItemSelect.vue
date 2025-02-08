@@ -113,7 +113,6 @@ onBeforeUnmount(() => {
           type="text"
           class="form-control"
           placeholder="Type to filter options"
-          @click.stop
         />
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">

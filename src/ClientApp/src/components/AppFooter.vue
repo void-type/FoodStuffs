@@ -8,6 +8,9 @@ const { version } = storeToRefs(appStore);
 
 <template>
   <footer id="footer" class="mt-4 d-print-none">
+    <div class="m-0 mb-4 text-center">
+      <a class="btn btn-secondary" href="#main">Back to top</a>
+    </div>
     <div>
       <a href="https://github.com/void-type/foodstuffs">
         FoodStuffs {{ version }} is open source!</a
