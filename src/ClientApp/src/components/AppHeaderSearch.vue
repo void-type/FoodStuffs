@@ -67,6 +67,7 @@ const suggest = debounce(async () => {
   try {
     const response = await api().recipesSuggest({
       searchText: searchText.value,
+      take: 10,
     });
 
     if (cancelInFlightSuggestions) {
