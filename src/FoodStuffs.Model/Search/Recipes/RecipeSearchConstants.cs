@@ -8,6 +8,7 @@ public static class RecipeSearchConstants
 
     public const string FIELD_ID = nameof(Recipe.Id);
     public const string FIELD_NAME = nameof(Recipe.Name);
+    public const string FIELD_NAME_PREFIX = nameof(Recipe.Name) + "_PREFIX";
     public const string FIELD_IS_FOR_MEAL_PLANNING = nameof(Recipe.IsForMealPlanning);
     public const string FIELD_CREATED_ON = nameof(Recipe.CreatedOn);
     public const string FIELD_CATEGORY_NAMES = nameof(Category) + "_" + nameof(Category.Name) + "s";

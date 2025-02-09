@@ -26,6 +26,8 @@ public static class RecipeSearchHelper
             new TextField(C.FIELD_NAME, recipe.Name, Field.Store.YES),
             // Name: sortable
             new SortedDocValuesField(C.FIELD_NAME, new BytesRef(recipe.Name)),
+            // Name: Verbatim string for prefix search, needs to be lowercase
+            new StringField(C.FIELD_NAME_PREFIX, recipe.Name.ToLower(), Field.Store.NO),
 
             // IsForMealPlanning: retrievable
             new StoredField(C.FIELD_IS_FOR_MEAL_PLANNING, isForMealPlanning),

@@ -32,7 +32,7 @@ public class RecipeQueryService : IRecipeQueryService
 
         var query = new BooleanQuery()
         {
-            { BuildTextQuery(request.SearchText), Occur.MUST },
+            { BuildSearchTextQuery(request.SearchText), Occur.MUST },
         };
 
         var filter = BuildFilter(request, facetsConfig);
@@ -88,7 +88,7 @@ public class RecipeQueryService : IRecipeQueryService
 
             var query = new BooleanQuery()
             {
-                { BuildTextQuery(request.SearchText), Occur.MUST },
+                { BuildSuggestTextQuery(request.SearchText), Occur.MUST },
             };
 
             var pagination = request.GetPaginationOptions();
@@ -106,7 +106,7 @@ public class RecipeQueryService : IRecipeQueryService
         }
     }
 
-    private Query BuildTextQuery(string? requestText)
+    private Query BuildSearchTextQuery(string? requestText)
     {
         var searchText = requestText?.Trim()?.ToLowerInvariant();
 
@@ -117,39 +117,93 @@ public class RecipeQueryService : IRecipeQueryService
         // Exclude small queries that break the query builders.
         if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length > 1)
         {
-            // If the exact phrase is found (with the given slop), it will be boosted by the given amount.
+            // If the exact phrase is found (with the given word slop), it will be boosted by the given amount.
+            // Word slop is the number of intervening words allowed between the terms in the phrase.
             // CreatePhraseQuery can return null in some cases.
             var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
-
             phraseQuery.Boost = 9;
             query.Add(phraseQuery, Occur.SHOULD);
 
-            // Also add searching for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
+            // Query for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
             // If you would like ALL terms to match, use MUST instead of SHOULD.
             var wordQuery = queryBuilder.CreateBooleanQuery(C.FIELD_NAME, searchText, Occur.SHOULD);
             wordQuery.Boost = 3;
             query.Add(wordQuery, Occur.SHOULD);
 
-            // Append a wildcard to the last term.
+            // Append a wildcard to the last term for incomplete text matches.
             var lastTerm = searchText.Split(" ").LastOrDefault();
 
             if (!string.IsNullOrWhiteSpace(lastTerm))
             {
                 var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
                 {
-                    Boost = 1
+                    Boost = 3
                 };
 
                 query.Add(lastWildcard, Occur.SHOULD);
             }
 
-            // Partial word matches using fuzzy queries
+            // Partial word matches using fuzzy queries to account for spelling errors and similar words.
+            // The Levenshtein distance is the number of single-character edits (insertions, deletions, or substitutions) required to change one word into the other.
             var fuzzyQuery = new FuzzyQuery(new Term(C.FIELD_NAME, searchText), 2)
             {
                 Boost = 0.3f
             };
 
             query.Add(fuzzyQuery, Occur.SHOULD);
+        }
+
+        if (query.Clauses.Count < 1)
+        {
+            return new MatchAllDocsQuery();
+        }
+
+        return query;
+    }
+
+    private Query BuildSuggestTextQuery(string? requestText)
+    {
+        var searchText = requestText?.Trim()?.ToLowerInvariant();
+
+        var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
+        var queryBuilder = new QueryBuilder(analyzer);
+        var query = new BooleanQuery();
+
+        // Exclude small queries that break the query builders.
+        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length > 1)
+        {
+            // Boost when the exact phrase is at the beginning of the field.
+            var prefixQuery = new PrefixQuery(new Term(C.FIELD_NAME_PREFIX, searchText.ToLower()))
+            {
+                Boost = 18
+            };
+            query.Add(prefixQuery, Occur.SHOULD);
+
+            // If the exact phrase is found (with the given word slop), it will be boosted by the given amount.
+            // Word slop is the number of intervening words allowed between the terms in the phrase.
+            // CreatePhraseQuery can return null in some cases.
+            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
+            phraseQuery.Boost = 9;
+            query.Add(phraseQuery, Occur.SHOULD);
+
+            // Query for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
+            // If you would like ALL terms to match, use MUST instead of SHOULD.
+            var wordQuery = queryBuilder.CreateBooleanQuery(C.FIELD_NAME, searchText, Occur.SHOULD);
+            wordQuery.Boost = 3;
+            query.Add(wordQuery, Occur.SHOULD);
+
+            // Append a wildcard to the last term for incomplete text matches.
+            var lastTerm = searchText.Split(" ").LastOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(lastTerm))
+            {
+                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
+                {
+                    Boost = 3
+                };
+
+                query.Add(lastWildcard, Occur.SHOULD);
+            }
         }
 
         if (query.Clauses.Count < 1)
