@@ -59,7 +59,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         if (conflictingCategory is not null && conflictingCategory.Id != request.Id)
         {
-            return Fail(new Failure("Category name already exists.", "categoryName"));
+            return Fail(new Failure("Category name already exists.", "name"));
         }
 
         var categoryToEdit = maybeCategory.Unwrap(() => new Category());

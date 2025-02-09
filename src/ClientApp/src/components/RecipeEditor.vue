@@ -220,7 +220,7 @@ onMounted(async () => {
         >
           More
         </button>
-        <ul class="dropdown-menu" aria-labelledby="overflowMenuButton">
+        <ul v-if="isEditMode" class="dropdown-menu" aria-labelledby="overflowMenuButton">
           <li>
             <router-link class="dropdown-item" :to="RouterHelper.viewRecipe(sourceRecipe)">
               View

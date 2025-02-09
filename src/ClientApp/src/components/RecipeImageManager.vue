@@ -171,7 +171,7 @@ onMounted(() => {
           type="file"
           :class="{
             'form-control text-nowrap text-truncate': true,
-            'is-invalid': isFieldInError('upload'),
+            'is-invalid': isFieldInError('upload-file'),
           }"
           @drop="uploadFileChange"
           @change="uploadFileChange"

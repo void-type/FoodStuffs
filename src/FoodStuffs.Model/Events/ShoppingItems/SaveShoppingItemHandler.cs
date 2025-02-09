@@ -59,7 +59,7 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
 
         if (conflictingShoppingItem is not null && conflictingShoppingItem.Id != request.Id)
         {
-            return Fail(new Failure("Shopping item name already exists.", "shoppingItemName"));
+            return Fail(new Failure("Shopping item name already exists.", "name"));
         }
 
         var shoppingItemToEdit = maybeShoppingItem.Unwrap(() => new ShoppingItem());
