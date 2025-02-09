@@ -63,14 +63,14 @@ const minutes = computed({
       <input
         :id="`hours-${id}`"
         v-model="hours"
-        :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
+        :class="{ 'is-invalid': isInvalid, 'form-control text-center': true }"
         type="number"
         min="0"
       />
       <input
         :id="`minutes-${id}`"
         v-model="minutes"
-        :class="{ 'is-invalid': isInvalid, 'text-center': true, 'form-control': true }"
+        :class="{ 'is-invalid': isInvalid, 'form-control text-center': true }"
         type="number"
         min="-1"
       />

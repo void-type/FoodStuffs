@@ -301,7 +301,7 @@ onBeforeRouteLeave(async (to, from, next) => {
   beforeRouteChange(to, from, next);
 });
 
-function handleBeforeUnload(event) {
+function handleBeforeUnload(event: BeforeUnloadEvent) {
   if (data.isRecipeDirty) {
     event.preventDefault();
     // Required for Chrome to show the confirmation dialog

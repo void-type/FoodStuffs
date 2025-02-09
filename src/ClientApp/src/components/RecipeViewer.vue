@@ -86,9 +86,7 @@ onMounted(() => {
     <div v-if="showImage" class="mb-5">
       <div
         :class="{
-          'col-12': true,
-          'text-center': true,
-          'mt-4': true,
+          'col-12 text-center mt-4': true,
           'd-print-none': !(images.length > 0),
         }"
       >
@@ -165,14 +163,14 @@ onMounted(() => {
     <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
     <div
       v-if="!isNil(recipe.directions)"
-      :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
+      :class="{ 'form-control-plaintext p-0': true, 'text-light': useDarkMode }"
     >
       {{ recipe.directions }}
     </div>
     <h3 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h3>
     <div
       v-if="!isNil(recipe.sides)"
-      :class="{ 'form-control-plaintext': true, 'p-0': true, 'text-light': useDarkMode }"
+      :class="{ 'form-control-plaintext p-0': true, 'text-light': useDarkMode }"
     >
       {{ recipe.sides }}
     </div>

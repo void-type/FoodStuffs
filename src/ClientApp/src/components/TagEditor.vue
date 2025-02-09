@@ -68,13 +68,13 @@ function removeTagClick(tag: string) {
         Add
       </button>
     </div>
-    <div class="tags mt-2">
+    <div class="tags">
       <button
         v-for="tag in tags"
         :key="tag"
         type="button"
         :aria-label="`Click to remove ${tag}.`"
-        class="btn btn-sm btn-secondary me-2 mb-2"
+        class="badge text-bg-secondary me-2 mt-2"
         @click.stop.prevent="removeTagClick(tag)"
       >
         {{ tag }}

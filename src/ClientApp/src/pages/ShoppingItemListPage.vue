@@ -174,7 +174,7 @@ watch(
     <div class="mt-3">{{ resultCountText }}</div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
-      :class="{ table: true, 'table-dark': useDarkMode, ' mt-3': true }"
+      :class="{ 'table mt-3': true, 'table-dark': useDarkMode }"
     >
       <thead>
         <tr>

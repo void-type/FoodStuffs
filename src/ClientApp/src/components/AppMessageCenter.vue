@@ -15,8 +15,7 @@ const { clearMessage, clearMessageTimeout } = messageStore;
         v-for="message in messages"
         :key="message.id"
         :class="{
-          alert: true,
-          'alert-dismissible': true,
+          'alert alert-dismissible': true,
           'alert-danger': message.isError,
           'alert-success': !message.isError,
         }"

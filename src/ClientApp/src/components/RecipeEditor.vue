@@ -258,8 +258,7 @@ onMounted(async () => {
       </div>
       <TagEditor
         :class="{
-          'g-col-12': true,
-          'g-col-md-6': true,
+          'g-col-12 g-col-md-6': true,
           danger: messageStore.isFieldInError('categories'),
         }"
         :tags="data.workingRecipe.categories || []"

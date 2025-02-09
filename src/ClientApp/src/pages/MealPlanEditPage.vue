@@ -200,7 +200,7 @@ onMounted(async () => {
         :lazy="i > 6"
         :show-sort-handle="true"
         :show-compact-view="useCompactView"
-        class="g-col-12 g-col-sm-6 g-col-md-4 g-col-lg-3"
+        class="g-col-6 g-col-sm-4 g-col-md-3 g-col-lg-2"
       />
     </vue-draggable>
     <h2 class="mt-4">Shopping Items</h2>

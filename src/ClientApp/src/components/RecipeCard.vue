@@ -43,7 +43,7 @@ function flipCard() {
       </router-link>
     </div>
     <div v-if="!props.showCompactView" class="card-header-button right">
-      <a class="" href="#" aria-label="flip card" @click.stop.prevent="flipCard">
+      <a href="#" aria-label="flip card" @click.stop.prevent="flipCard">
         <font-awesome-icon icon="fa-rotate" />
       </a>
     </div>
@@ -103,15 +103,15 @@ function flipCard() {
         <div class="btn-toolbar">
           <router-link
             type="button"
-            class="btn btn-sm btn-secondary me-2"
+            class="btn btn-sm btn-secondary me-2 mb-2"
             aria-label="edit recipe"
             :to="RouterHelper.editRecipe(recipe)"
             @click.stop
             >Edit</router-link
           >
-          <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
+          <RecipeMealButton class="btn-sm mb-2" :recipe-id="recipe.id" />
         </div>
-        <div v-if="(recipe.categories?.length || 0) > 0" class="mt-3">
+        <div v-if="(recipe.categories?.length || 0) > 0">
           <span
             v-for="category in recipe.categories"
             :key="category || ''"
@@ -160,6 +160,7 @@ function flipCard() {
 .card-header-button {
   padding: 0.5rem var(--bs-card-cap-padding-x);
   display: inline-block;
+  z-index: 5;
 
   position: absolute;
   top: 0;
