@@ -91,11 +91,14 @@ public class RecipeQueryService : IRecipeQueryService
                 { BuildTextQuery(request.SearchText), Occur.MUST },
             };
 
-            var topDocs = searcher.Search(query, _settings.MaxResults);
+            var pagination = request.GetPaginationOptions();
+
+            var topDocs = searcher.Search(query, request.Take);
 
             return topDocs.ScoreDocs
+                .GetPage(pagination)
                 .Select(x => searcher.Doc(x.Doc).ToSuggestRecipesResultItem())
-                .ToItemSet();
+                .ToItemSet(pagination, topDocs.TotalHits);
         }
         catch
         {

@@ -73,7 +73,7 @@ public class RecipesController : ControllerBase
         [FromServices] SuggestRecipesHandler suggestHandler,
         [FromQuery] string? searchText = null,
         [FromQuery] bool isPagingEnabled = true,
-        [FromQuery] int take = 5)
+        [FromQuery] int take = 8)
     {
         var request = new SuggestRecipesRequest(
             SearchText: searchText,
