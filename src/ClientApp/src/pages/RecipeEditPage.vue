@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { watch, reactive, computed } from 'vue';
+import { watch, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
@@ -248,6 +248,14 @@ function onImagePin(name: string) {
     });
 }
 
+watch(
+  () => props.id,
+  () => {
+    fetchRecipe();
+  },
+  { immediate: true }
+);
+
 let forceImmediateRouteChange = false;
 
 function changeRouteFromModal(t: RouteLocationNormalized) {
@@ -285,20 +293,33 @@ function beforeRouteChange(
   next();
 }
 
-watch(
-  () => props.id,
-  () => {
-    fetchRecipe();
-  },
-  { immediate: true }
-);
-
 onBeforeRouteUpdate(async (to, from, next) => {
   beforeRouteChange(to, from, next);
 });
 
 onBeforeRouteLeave(async (to, from, next) => {
   beforeRouteChange(to, from, next);
+});
+
+function handleBeforeUnload(event) {
+  if (data.isRecipeDirty) {
+    event.preventDefault();
+    // Required for Chrome to show the confirmation dialog
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = '';
+    // Required for Firefox to show the confirmation dialog
+    return '';
+  }
+
+  return null;
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 </script>
 

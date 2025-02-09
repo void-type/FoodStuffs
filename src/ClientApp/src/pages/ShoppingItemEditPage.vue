@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import useAppStore from '@/stores/appStore';
 import useMessageStore from '@/stores/messageStore';
@@ -204,6 +204,27 @@ onBeforeRouteUpdate(async (to, from, next) => {
 
 onBeforeRouteLeave(async (to, from, next) => {
   beforeRouteChange(to, from, next);
+});
+
+function handleBeforeUnload(event) {
+  if (isDirty.value) {
+    event.preventDefault();
+    // Required for Chrome to show the confirmation dialog
+    // eslint-disable-next-line no-param-reassign
+    event.returnValue = '';
+    // Required for Firefox to show the confirmation dialog
+    return '';
+  }
+
+  return null;
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 </script>
 

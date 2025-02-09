@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div id="headerSearch" @focusout="handleFocusOut">
-    <div class="input-group">
+    <div class="input-group" title="Use control + shift + F to focus the search.">
       <input
         ref="inputRef"
         v-model="searchText"
