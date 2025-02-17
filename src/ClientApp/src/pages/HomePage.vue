@@ -2,6 +2,7 @@
 import useDiscoveryStore from '@/stores/discoveryStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import RecipeCard from '@/components/RecipeCard.vue';
 
 const discoveryStore = useDiscoveryStore();
@@ -37,6 +38,10 @@ function tearDownLoadMoreObserver() {
   }
 }
 
+async function randomize() {
+  await discoveryStore.rollRandomSortSeed();
+}
+
 onMounted(async () => {
   setupLoadMoreObserver();
   if (list.value.length < take.value) {
@@ -51,7 +56,17 @@ onUnmounted(() => {
 
 <template>
   <div class="container-xxl">
-    <div class="grid mt-4">
+    <div class="btn-toolbar mt-2">
+      <button
+        class="btn btn-outline-primary py-0 px-2"
+        aria-label="Randomize"
+        title="Randomize"
+        @click="randomize"
+      >
+        <font-awesome-icon icon="fa-dice-three" />
+      </button>
+    </div>
+    <div class="grid mt-2">
       <RecipeCard
         v-for="(recipe, i) in list"
         :key="recipe.id"

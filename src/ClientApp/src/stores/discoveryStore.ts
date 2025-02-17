@@ -10,7 +10,7 @@ interface DiscoveryStoreState {
   page: number;
   take: number;
   isFetchingRecipes: boolean;
-  randomSortSeed: string;
+  randomSortSeed: string | null;
 }
 
 const api = ApiHelper.client;
@@ -21,7 +21,7 @@ export default defineStore('discovery', {
     page: 0,
     take: 12,
     isFetchingRecipes: false,
-    randomSortSeed: crypto.randomUUID(),
+    randomSortSeed: null,
   }),
 
   actions: {
@@ -90,6 +90,13 @@ export default defineStore('discovery', {
       } finally {
         this.isFetchingRecipes = false;
       }
+    },
+
+    async rollRandomSortSeed() {
+      this.randomSortSeed = Math.random().toString(36).substring(2);
+      this.page = 0;
+      this.list = [];
+      await this.fetchNext();
     },
   },
 });

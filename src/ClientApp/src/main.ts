@@ -15,6 +15,7 @@ import {
   faGripVertical,
   faPlus,
   faTimes,
+  faDiceThree,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Prevents inline styling to appease CSP.
@@ -28,7 +29,8 @@ library.add(
   faRotate,
   faGripVertical,
   faPlus,
-  faTimes
+  faTimes,
+  faDiceThree
 );
 
 const app = createApp(App);
