@@ -63,8 +63,8 @@ const searchText = ref('');
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+      <AppHeaderSearch v-model="searchText" class="mt-2 d-sm-none w-100" />
       <div id="navbar-menu" class="navbar-collapse collapse">
-        <AppHeaderSearch v-model="searchText" class="mt-3 d-sm-none" />
         <slot name="navItems"></slot>
         <AppHeaderSearch v-model="searchText" class="ms-auto me-2 d-none d-md-block" />
         <ul class="navbar-nav">
