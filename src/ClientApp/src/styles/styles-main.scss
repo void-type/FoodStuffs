@@ -106,16 +106,10 @@ html[data-bs-theme='dark'] {
   --bs-body-bg: #{$dark};
   --bs-body-bg-rgb: #{red($dark), green($dark), blue($dark)};
 
-  .page-item.active > .page-link {
-    border-color: unset;
-  }
-
   .card,
   .list-group,
   .list-group-item:not(.active) {
-    background-color: inherit;
-    color: inherit;
-    outline: var(--bs-gray-800) 1px solid;
+    --bs-list-group-border-color: var(--bs-card-border-color);
 
     &.card-hover,
     .card-hover {
@@ -133,11 +127,6 @@ html[data-bs-theme='dark'] {
         outline: auto;
       }
     }
-  }
-
-  .pagination {
-    --bs-pagination-bg: unset;
-    --bs-pagination-disabled-bg: unset;
   }
 
   .accordion,

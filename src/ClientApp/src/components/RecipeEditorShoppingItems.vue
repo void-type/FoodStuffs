@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="shoppingItemList">
-    <div v-if="model.length < 1" id="shopping-item-list" class="card p-4 text-center">
+    <div v-if="model.length < 1" id="shopping-item-list" class="card p-4 text-center border">
       No shopping items.
     </div>
     <vue-draggable

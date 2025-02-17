@@ -54,7 +54,7 @@ const searchText = ref('');
       <AppHeaderSearch v-model="searchText" class="ms-auto me-2 d-none d-sm-block d-md-none" />
       <button
         type="button"
-        class="navbar-toggler"
+        class="navbar-toggler border"
         data-bs-toggle="collapse"
         data-bs-target="#navbar-menu"
         aria-controls="navbar-menu"
@@ -89,7 +89,7 @@ const searchText = ref('');
               </li>
               <li class="dropdown-item">
                 <div class="form-check form-switch">
-                  <label class="form-check-label" for="useDarkMode" aria-label="Use dark mode"
+                  <label class="w-100" for="useDarkMode" aria-label="Use dark mode"
                     ><font-awesome-icon icon="fa-moon" /> Dark mode</label
                   >
                   <input
@@ -111,12 +111,4 @@ const searchText = ref('');
   </header>
 </template>
 
-<style lang="scss" scoped>
-.navbar-toggler {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-}
-
-.form-check-label {
-  width: 100%;
-}
-</style>
+<style lang="scss" scoped></style>

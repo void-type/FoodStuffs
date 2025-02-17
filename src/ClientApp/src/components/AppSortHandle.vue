@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 <style lang="scss" scoped>
 html[data-bs-theme='dark'] .text-muted {
-  color: rgba(var(--bs-secondary-color-rgb), 0.5) !important;
+  color: rgba(var(--bs-secondary-color-rgb), 0.4) !important;
 }
 
 .sort-handle {

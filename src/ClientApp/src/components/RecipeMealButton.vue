@@ -33,13 +33,4 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
   </button>
 </template>
 
-<style lang="scss" scoped>
-div.form-control-plaintext {
-  white-space: pre-wrap;
-}
-
-div.carousel-item img,
-.img-placeholder-wrapper {
-  max-width: 27rem;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -7,7 +7,7 @@ const { version } = storeToRefs(appStore);
 </script>
 
 <template>
-  <footer id="footer" class="mt-4 d-print-none">
+  <footer id="footer" class="mt-4 d-print-none border-top text-center py-3 px-0">
     <div class="m-0 mb-4 text-center">
       <a class="btn btn-secondary" href="#main">Back to top</a>
     </div>
@@ -23,10 +23,4 @@ const { version } = storeToRefs(appStore);
   </footer>
 </template>
 
-<style lang="scss" scoped>
-footer {
-  padding: 1em 0rem;
-  text-align: center;
-  border-top: var(--bs-border-width) solid var(--bs-border-color);
-}
-</style>
+<style lang="scss" scoped></style>

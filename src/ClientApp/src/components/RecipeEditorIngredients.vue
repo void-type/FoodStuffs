@@ -72,7 +72,7 @@ function onSortEnd() {
 </script>
 
 <template>
-  <div v-if="model.length < 1" id="ingredient-list" class="card p-4 text-center">
+  <div v-if="model.length < 1" id="ingredient-list" class="card p-4 text-center border">
     No ingredients.
   </div>
   <vue-draggable

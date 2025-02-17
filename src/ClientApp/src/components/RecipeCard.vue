@@ -160,7 +160,7 @@ function flipCard() {
 .card-header-button {
   padding: 0.5rem var(--bs-card-cap-padding-x);
   display: inline-block;
-  z-index: 5;
+  z-index: 2;
 
   position: absolute;
   top: 0;

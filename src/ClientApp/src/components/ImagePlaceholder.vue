@@ -26,8 +26,4 @@ defineProps({
   display: flex;
   outline: var(--bs-border-width) solid var(--bs-border-color);
 }
-
-html[data-bs-theme='dark'] .img-placeholder {
-  outline: var(--bs-gray-800) 1px solid;
-}
 </style>

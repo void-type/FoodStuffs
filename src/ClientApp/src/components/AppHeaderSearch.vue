@@ -121,7 +121,7 @@ onBeforeUnmount(() => {
         @keydown.enter.stop.prevent="initSearch"
       />
       <button
-        class="btn btn-outline-secondary nav-search-button"
+        class="btn btn-outline-secondary text-body bg-body border"
         type="button"
         aria-label="Start search"
         @click.stop.prevent="initSearch"
@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
       </button>
     </div>
     <ul v-if="suggestions.length" class="dropdown-menu show">
-      <li v-for="suggestion in suggestions" :key="suggestion.id" class="dropdown-item">
+      <li v-for="suggestion in suggestions" :key="suggestion.id" class="dropdown-item suggestion">
         <span
           ><router-link :to="RouterHelper.viewRecipe(suggestion)" @click="clearSearch">
             {{ suggestion.name }}
@@ -142,13 +142,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
-.nav-search-button {
-  background-color: var(--bs-body-bg);
-  color: var(--bs-body-color);
-  border: var(--bs-border-width) solid var(--bs-border-color);
-}
-
-.dropdown-item span {
+.suggestion {
   display: block;
   max-width: 15rem;
   overflow: hidden;
