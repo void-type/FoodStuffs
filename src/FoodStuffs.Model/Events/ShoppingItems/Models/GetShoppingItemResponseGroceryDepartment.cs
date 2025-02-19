@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Model.Events.ShoppingItems.Models;
 
-public record ListShoppingItemsResponse(
+public record GetShoppingItemResponseGroceryDepartment(
     int Id,
     string Name,
-    int InventoryQuantity);
+    int Order);

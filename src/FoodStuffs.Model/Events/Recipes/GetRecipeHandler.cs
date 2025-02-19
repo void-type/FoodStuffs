@@ -45,26 +45,23 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                 PinnedImage: r.PinnedImage?.FileName,
                 Images: r.Images
                     .ConvertAll(i => i.FileName),
-                Categories: r.Categories
+                Categories: [.. r.Categories
                     .Select(c => c.Name)
-                    .Order(StringComparer.Ordinal)
-                    .ToList(),
-                Ingredients: r.Ingredients
+                    .Order(StringComparer.Ordinal)],
+                Ingredients: [.. r.Ingredients
                     .Select(i => new GetRecipeResponseIngredient(
                         Name: i.Name,
                         Quantity: i.Quantity,
                         Order: i.Order,
                         IsCategory: i.IsCategory))
-                    .OrderBy(i => i.Order)
-                    .ToList(),
-                ShoppingItems: r.ShoppingItemRelations
+                    .OrderBy(i => i.Order)],
+                ShoppingItems: [.. r.ShoppingItemRelations
                     .Select(i => new GetRecipeResponseShoppingItem(
                         Id: i.ShoppingItem.Id,
                         Name: i.ShoppingItem.Name,
                         Quantity: i.Quantity,
                         Order: i.Order))
-                    .OrderBy(i => i.Order)
-                    .ToList()
+                    .OrderBy(i => i.Order)]
                 ));
     }
 }

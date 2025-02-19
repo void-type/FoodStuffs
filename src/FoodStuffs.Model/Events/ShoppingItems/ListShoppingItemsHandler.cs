@@ -29,7 +29,8 @@ public class ListShoppingItemsHandler : CustomEventHandlerAbstract<ListShoppingI
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(c => new ListShoppingItemsResponse(
                 Id: c.Id,
-                Name: c.Name))
+                Name: c.Name,
+                InventoryQuantity: c.InventoryQuantity))
             .MapAsync(Ok);
     }
 }
