@@ -84,9 +84,7 @@ public static class RecipeSearchHelper
             IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
-            Categories: doc.GetValues(C.FIELD_CATEGORY_NAMES)
-                .OrderBy(n => n)
-                .ToList(),
+            Categories: [.. doc.GetValues(C.FIELD_CATEGORY_NAMES).OrderBy(n => n)],
             ShoppingItems: doc.Get(C.FIELD_MEAL_SHOPPING_ITEMS_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemShoppingItem>>(x) ?? []),
             Image: doc.Get(C.FIELD_IMAGE)

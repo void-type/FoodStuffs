@@ -48,17 +48,16 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                         Name: rel.Recipe.Name,
                         Order: rel.Order,
                         Image: rel.Recipe.DefaultImage?.FileName,
-                        Categories: rel.Recipe.Categories
-                            .ConvertAll(c => c.Name)
-                            .ToList(),
-                        ShoppingItems: rel.Recipe.ShoppingItemRelations
+                        Categories: [.. rel.Recipe.Categories.ConvertAll(c => c.Name)],
+                        ShoppingItems: [.. rel.Recipe.ShoppingItemRelations
                             .OrderBy(i => i.Order)
                             .Select(i =>
                                 new GetMealPlanResponseRecipeShoppingItem(
                                     Id: i.ShoppingItem.Id,
                                     Name: i.ShoppingItem.Name,
-                                    Quantity: i.Quantity)
-                            )
-                            .ToList()))));
+                                    InventoryQuantity: i.ShoppingItem.InventoryQuantity,
+                                    Quantity: i.Quantity,
+                                    GroceryDepartmentId: i.ShoppingItem?.GroceryDepartment?.Id)
+                            )]))));
     }
 }

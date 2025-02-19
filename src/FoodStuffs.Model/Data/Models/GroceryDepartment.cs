@@ -2,13 +2,13 @@
 
 namespace FoodStuffs.Model.Data.Models;
 
-public class ShoppingItem : IAuditableWithOffset
+public class GroceryDepartment : IAuditableWithOffset
 {
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public int InventoryQuantity { get; set; }
+    public int Order { get; set; }
 
     public string CreatedBy { get; set; } = null!;
 
@@ -18,9 +18,5 @@ public class ShoppingItem : IAuditableWithOffset
 
     public DateTimeOffset ModifiedOn { get; set; }
 
-    public int? GroceryDepartmentId { get; set; }
-
-    public virtual GroceryDepartment? GroceryDepartment { get; set; } = null!;
-
-    public virtual List<Recipe> Recipes { get; set; } = [];
+    public virtual List<ShoppingItem> ShoppingItems { get; } = [];
 }

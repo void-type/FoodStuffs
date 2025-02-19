@@ -15,6 +15,6 @@ public class MealPlansWithAllRelatedSpecification : QuerySpecificationAbstract<M
         AddInclude($"{recipe}.{nameof(Recipe.Categories)}");
         AddInclude($"{recipe}.{nameof(Recipe.Images)}");
         AddInclude($"{recipe}.{nameof(Recipe.PinnedImage)}");
-        AddInclude($"{recipe}.{nameof(Recipe.ShoppingItemRelations)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}");
+        AddInclude($"{recipe}.{nameof(Recipe.ShoppingItemRelations)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}.{nameof(ShoppingItem.GroceryDepartment)}");
     }
 }
