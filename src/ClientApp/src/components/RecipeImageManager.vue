@@ -281,4 +281,8 @@ onMounted(() => {
     left: 0;
   }
 }
+
+.carousel-indicators {
+  margin-bottom: 0.1rem;
+}
 </style>
