@@ -71,8 +71,16 @@ async function createShoppingItem(name: string) {
   }
 }
 
+function onDropdownKeydown() {
+  if (dropdownButton.value) {
+    const dropdown = Dropdown.getOrCreateInstance(dropdownButton.value);
+    dropdown.toggle();
+  }
+}
+
 function onShow() {
   if (filterInput.value) {
+    filterInput.value.value = '';
     filterInput.value.focus();
   }
 }
@@ -98,6 +106,7 @@ onBeforeUnmount(() => {
       type="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
+      @keydown="onDropdownKeydown"
     >
       {{ (item.id || 0) > 0 ? itemName : 'Select one' }}
     </button>
