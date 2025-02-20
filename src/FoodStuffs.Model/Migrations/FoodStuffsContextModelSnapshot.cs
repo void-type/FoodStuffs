@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -54,43 +54,6 @@ namespace FoodStuffs.Model.Migrations
                         .IsUnique();
 
                     b.ToTable("Category", (string)null);
-                });
-
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.GroceryDepartment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("ModifiedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("GroceryDepartment", (string)null);
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
@@ -290,12 +253,6 @@ namespace FoodStuffs.Model.Migrations
                     b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("GroceryDepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InventoryQuantity")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -308,8 +265,6 @@ namespace FoodStuffs.Model.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroceryDepartmentId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -408,7 +363,7 @@ namespace FoodStuffs.Model.Migrations
                             b1.Property<int>("RecipeId")
                                 .HasColumnType("int");
 
-                            b1.Property<int>("__synthesizedOrdinal")
+                            b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int");
 
@@ -426,7 +381,7 @@ namespace FoodStuffs.Model.Migrations
                                 .HasPrecision(18, 2)
                                 .HasColumnType("decimal(18,2)");
 
-                            b1.HasKey("RecipeId", "__synthesizedOrdinal");
+                            b1.HasKey("RecipeId", "Id");
 
                             b1.ToTable("Recipe");
 
@@ -458,15 +413,6 @@ namespace FoodStuffs.Model.Migrations
                     b.Navigation("ShoppingItem");
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.ShoppingItem", b =>
-                {
-                    b.HasOne("FoodStuffs.Model.Data.Models.GroceryDepartment", "GroceryDepartment")
-                        .WithMany("ShoppingItems")
-                        .HasForeignKey("GroceryDepartmentId");
-
-                    b.Navigation("GroceryDepartment");
-                });
-
             modelBuilder.Entity("RecipeCategoryRelation", b =>
                 {
                     b.HasOne("FoodStuffs.Model.Data.Models.Category", null)
@@ -480,11 +426,6 @@ namespace FoodStuffs.Model.Migrations
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.GroceryDepartment", b =>
-                {
-                    b.Navigation("ShoppingItems");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlan", b =>

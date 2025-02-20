@@ -35,12 +35,11 @@ public class GetCategoryHandler : CustomEventHandlerAbstract<GetCategoryRequest,
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                Recipes: [.. m.Recipes
-                    .OrderBy(r => r.Name)
-                    .Select(r => new GetCategoryResponseRecipe(
+                Recipes: m.Recipes
+                    .ConvertAll(r => new GetCategoryResponseRecipe(
                         Id: r.Id,
                         Name: r.Name,
                         Slug: r.Slug,
-                        Image: r.DefaultImage?.FileName))]));
+                        Image: r.DefaultImage?.FileName))));
     }
 }

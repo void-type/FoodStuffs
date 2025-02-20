@@ -169,12 +169,8 @@ export interface GetMealPlanResponseRecipeShoppingItem {
   /** @format int32 */
   id?: number;
   name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
   /** @format decimal */
   quantity?: number;
-  /** @format int32 */
-  groceryDepartmentId?: number | null;
 }
 
 export interface SaveMealPlanRequest {
@@ -366,16 +362,12 @@ export interface ListShoppingItemsResponse {
   /** @format int32 */
   id?: number;
   name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
 }
 
 export interface GetShoppingItemResponse {
   /** @format int32 */
   id?: number;
   name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
   createdBy?: string;
   /** @format date-time */
   createdOn?: string;
@@ -383,7 +375,6 @@ export interface GetShoppingItemResponse {
   /** @format date-time */
   modifiedOn?: string;
   recipes?: GetShoppingItemResponseRecipe[];
-  groceryDepartment?: GetShoppingItemResponseGroceryDepartment | null;
 }
 
 export interface GetShoppingItemResponseRecipe {
@@ -394,22 +385,10 @@ export interface GetShoppingItemResponseRecipe {
   image?: string | null;
 }
 
-export interface GetShoppingItemResponseGroceryDepartment {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  /** @format int32 */
-  order?: number;
-}
-
 export interface SaveShoppingItemRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
-  /** @format int32 */
-  groceryDepartmentId?: number | null;
 }
 
 export interface CategoriesListParams {
@@ -505,7 +484,7 @@ export interface RecipesSuggestParams {
   /**
    * How many items in a page
    * @format int32
-   * @default 8
+   * @default 5
    */
   take?: number;
 }

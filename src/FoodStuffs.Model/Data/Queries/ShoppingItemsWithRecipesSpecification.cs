@@ -3,12 +3,11 @@ using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Data.Queries;
 
-public class ShoppingItemsWithRecipesAndGroceryDepartmentsSpecification : QuerySpecificationAbstract<ShoppingItem>
+public class ShoppingItemsWithRecipesSpecification : QuerySpecificationAbstract<ShoppingItem>
 {
-    public ShoppingItemsWithRecipesAndGroceryDepartmentsSpecification(int id)
+    public ShoppingItemsWithRecipesSpecification(int id)
     {
         AddCriteria(r => r.Id == id);
         AddInclude(nameof(ShoppingItem.Recipes));
-        AddInclude(nameof(ShoppingItem.GroceryDepartment));
     }
 }

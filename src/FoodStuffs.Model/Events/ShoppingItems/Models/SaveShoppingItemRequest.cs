@@ -2,6 +2,4 @@
 
 public record SaveShoppingItemRequest(
     int Id,
-    string Name,
-    int InventoryQuantity,
-    int? GroceryDepartmentId);
+    string Name);

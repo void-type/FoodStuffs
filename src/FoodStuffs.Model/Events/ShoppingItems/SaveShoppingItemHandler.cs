@@ -66,20 +66,6 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
 
         Transfer(requestedName, shoppingItemToEdit);
 
-        if (request.GroceryDepartmentId is not null)
-        {
-            var groceryDepartment = await _data.GroceryDepartments
-                .TagWith(GetTag(byName))
-                .FirstOrDefaultAsync(gd => gd.Id == request.GroceryDepartmentId, cancellationToken);
-
-            if (groceryDepartment is null)
-            {
-                return Fail(new GroceryDepartmentNotFoundFailure());
-            }
-
-            shoppingItemToEdit.GroceryDepartment = groceryDepartment;
-        }
-
         if (maybeShoppingItem.HasValue)
         {
             _data.ShoppingItems.Update(shoppingItemToEdit);

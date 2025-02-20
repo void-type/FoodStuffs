@@ -28,18 +28,20 @@ public static class SearchHelper
     {
         var facetCounts = new TaxonomyFacetCounts(new DocValuesOrdinalsReader(), readers.TaxonomyReader, facetsConfig, facetsCollector);
 
-        return [.. facetsConfig.DimConfigs.Keys
+        return facetsConfig.DimConfigs.Keys
             .Select(fieldName => new SearchFacet
             {
                 FieldName = fieldName,
-                Values = [.. (facetCounts
+                Values = (facetCounts
                     .GetTopChildren(int.MaxValue, fieldName)?
                     .LabelValues ?? [])
                     .Select(x => new SearchFacetValue
                     {
                         FieldValue = x.Label,
                         Count = (int)x.Value
-                    })]
-            })];
+                    })
+                    .ToList()
+            })
+            .ToList();
     }
 }

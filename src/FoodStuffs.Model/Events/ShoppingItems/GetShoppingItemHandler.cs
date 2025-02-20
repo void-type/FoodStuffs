@@ -18,7 +18,7 @@ public class GetShoppingItemHandler : CustomEventHandlerAbstract<GetShoppingItem
 
     public override async Task<IResult<GetShoppingItemResponse>> Handle(GetShoppingItemRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new ShoppingItemsWithRecipesAndGroceryDepartmentsSpecification(request.Id);
+        var byId = new ShoppingItemsWithRecipesSpecification(request.Id);
 
         return await _data.ShoppingItems
             .TagWith(GetTag(byId))
@@ -31,23 +31,15 @@ public class GetShoppingItemHandler : CustomEventHandlerAbstract<GetShoppingItem
             .SelectAsync(m => new GetShoppingItemResponse(
                 Id: m.Id,
                 Name: m.Name,
-                InventoryQuantity: m.InventoryQuantity,
                 CreatedBy: m.CreatedBy,
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                Recipes: [.. m.Recipes
-                    .OrderBy(r => r.Name)
-                    .Select(r => new GetShoppingItemResponseRecipe(
+                Recipes: m.Recipes
+                    .ConvertAll(r => new GetShoppingItemResponseRecipe(
                         Id: r.Id,
                         Name: r.Name,
                         Slug: r.Slug,
-                        Image: r.DefaultImage?.FileName))],
-                GroceryDepartment: m.GroceryDepartment is not null
-                    ? new GetShoppingItemResponseGroceryDepartment(
-                        Id: m.GroceryDepartment.Id,
-                        Name: m.GroceryDepartment.Name,
-                        Order: m.GroceryDepartment.Order)
-                    : null));
+                        Image: r.DefaultImage?.FileName))));
     }
 }

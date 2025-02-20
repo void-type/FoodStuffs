@@ -2,5 +2,4 @@
 
 public record ListShoppingItemsResponse(
     int Id,
-    string Name,
-    int InventoryQuantity);
+    string Name);
