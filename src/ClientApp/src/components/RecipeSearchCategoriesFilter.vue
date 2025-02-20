@@ -52,35 +52,60 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <label for="categorySearch" class="form-label"
-      >Categories
-      <span v-if="model.length">({{ model.length }} selected)</span>
-    </label>
-    <div class="mb-2">
-      <button v-if="model.length" class="btn btn-sm btn-secondary" @click.stop.prevent="model = []">
-        Select none
-      </button>
-      <button v-else class="btn btn-sm btn-secondary" @click.stop.prevent="selectAll">
-        Select all
-      </button>
-    </div>
-    <div class="grid slim-scroll category-scroll">
-      <div
-        v-for="categoryOption in categoryOptions"
-        :key="categoryOption.id"
-        class="g-col-6 form-check m-0"
-      >
-        <input
-          :id="`category-${categoryOption.id}`"
-          v-model.lazy.number="model"
-          class="form-check-input"
-          type="checkbox"
-          :value="categoryOption.id"
-        />
-        <label class="form-check-label" :for="`category-${categoryOption.id}`"
-          >{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label
+  <div id="categoriesAccordion" class="accordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#categoriesCollapse"
+          aria-expanded="false"
+          aria-controls="categoriesCollapse"
         >
+          <label for="categorySearch"
+            >Categories
+            <span v-if="model.length">({{ model.length }} selected)</span>
+          </label>
+        </button>
+      </h2>
+      <div
+        id="categoriesCollapse"
+        class="accordion-collapse collapse"
+        data-bs-parent="#categoriesAccordion"
+      >
+        <div class="accordion-body">
+          <div class="btn-toolbar mb-3">
+            <button
+              v-if="model.length"
+              class="btn btn-sm btn-secondary"
+              @click.stop.prevent="model = []"
+            >
+              Select none
+            </button>
+            <button v-else class="btn btn-sm btn-secondary" @click.stop.prevent="selectAll">
+              Select all
+            </button>
+          </div>
+          <div class="grid slim-scroll category-scroll">
+            <div
+              v-for="categoryOption in categoryOptions"
+              :key="categoryOption.id"
+              class="g-col-6 g-col-md-4 form-check m-0"
+            >
+              <input
+                :id="`category-${categoryOption.id}`"
+                v-model.lazy.number="model"
+                class="form-check-input"
+                type="checkbox"
+                :value="categoryOption.id"
+              />
+              <label class="form-check-label" :for="`category-${categoryOption.id}`"
+                >{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -88,7 +113,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .category-scroll {
-  max-height: 9rem;
   row-gap: 0.1rem;
   column-gap: 0;
 }

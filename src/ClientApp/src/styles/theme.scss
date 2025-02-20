@@ -29,5 +29,10 @@ $carousel-indicator-height: 4px;
 $carousel-control-prev-icon-bg: url('@/img/carousel-control-prev.svg');
 $carousel-control-next-icon-bg: url('@/img/carousel-control-next.svg');
 
+$accordion-button-active-bg: none;
+$accordion-button-active-color: none;
+$accordion-icon-color-dark: $gray-300;
+$accordion-icon-active-color-dark: $gray-300;
+
 $enable-grid-classes: false;
 $enable-cssgrid: true;
