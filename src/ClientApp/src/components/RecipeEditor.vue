@@ -188,9 +188,23 @@ watch(
   { immediate: true }
 );
 
-const isRecipeDirty = computed(
-  () => JSON.stringify(data.workingRecipe) !== data.workingRecipeInitial
-);
+const isRecipeDirty = computed(() => {
+  const working: RecipeWorking = JSON.parse(JSON.stringify(data.workingRecipe));
+  working.shoppingItems.forEach((x) => {
+    // eslint-disable-next-line no-param-reassign
+    delete x.inventoryQuantity;
+  });
+  const workingJson = JSON.stringify(working);
+
+  const initial: RecipeWorking = JSON.parse(data.workingRecipeInitial);
+  initial.shoppingItems?.forEach((x) => {
+    // eslint-disable-next-line no-param-reassign
+    delete x.inventoryQuantity;
+  });
+  const initialJson = JSON.stringify(working);
+
+  return workingJson !== initialJson;
+});
 
 watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);

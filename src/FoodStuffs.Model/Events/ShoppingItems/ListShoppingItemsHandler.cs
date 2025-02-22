@@ -30,7 +30,10 @@ public class ListShoppingItemsHandler : CustomEventHandlerAbstract<ListShoppingI
             .SelectAsync(c => new ListShoppingItemsResponse(
                 Id: c.Id,
                 Name: c.Name,
-                InventoryQuantity: c.InventoryQuantity))
+                InventoryQuantity: c.InventoryQuantity,
+                PantryLocations: [.. c.PantryLocations
+                    .Select(pl => pl.Name)
+                    .Order(StringComparer.Ordinal)]))
             .MapAsync(Ok);
     }
 }

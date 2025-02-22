@@ -170,7 +170,6 @@ onMounted(async () => {
         />
       </div>
     </div>
-    <h2 class="mt-4">Recipes</h2>
     <div class="form-check form-switch mt-3">
       <label class="form-check-label" for="useCompactView">Compact view</label>
       <input
@@ -190,7 +189,7 @@ onMounted(async () => {
       group="item"
       ghost-class="ghost"
       handle=".sort-handle"
-      class="grid mt-3"
+      class="grid mt-3 gap-sm"
       @end="onSortEnd"
     >
       <RecipeCard
@@ -203,29 +202,24 @@ onMounted(async () => {
         class="g-col-6 g-col-sm-4 g-col-md-3 g-col-lg-2"
       />
     </vue-draggable>
-    <h2 class="mt-4">Shopping Items</h2>
-    <div class="grid mt-3">
-      <div class="g-col-12">
-        <div class="grid">
-          <div class="g-col-12 g-col-md-6">
-            <MealPlanShoppingItemList
-              title="Shopping List"
-              :shopping-items="shoppingList"
-              :on-item-click="addToPantry"
-              :get-shopping-item-details="findShoppingItem"
-              :show-copy-list="true"
-            />
-          </div>
-          <div class="g-col-12 g-col-md-6">
-            <MealPlanShoppingItemList
-              title="Pantry"
-              :shopping-items="pantry"
-              :on-clear="clearPantry"
-              :on-item-click="removeFromPantry"
-              :get-shopping-item-details="findShoppingItem"
-            />
-          </div>
-        </div>
+    <div class="grid mt-3 gap-sm">
+      <div class="g-col-12 g-col-md-6">
+        <MealPlanShoppingItemList
+          title="Shopping List"
+          :shopping-items="shoppingList"
+          :on-item-click="addToPantry"
+          :get-shopping-item-details="findShoppingItem"
+          :show-copy-list="true"
+        />
+      </div>
+      <div class="g-col-12 g-col-md-6">
+        <MealPlanShoppingItemList
+          title="Excluded Items"
+          :shopping-items="pantry"
+          :on-clear="clearPantry"
+          :on-item-click="removeFromPantry"
+          :get-shopping-item-details="findShoppingItem"
+        />
       </div>
     </div>
   </div>

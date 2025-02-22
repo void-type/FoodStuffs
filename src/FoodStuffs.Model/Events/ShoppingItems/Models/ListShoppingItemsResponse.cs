@@ -3,4 +3,5 @@
 public record ListShoppingItemsResponse(
     int Id,
     string Name,
-    int InventoryQuantity);
+    int InventoryQuantity,
+    List<string> PantryLocations);

@@ -316,6 +316,7 @@ onBeforeUnmount(() => {
             v-model="data.working.inventoryQuantity"
             required
             type="number"
+            min="0"
             :class="{
               'form-control': true,
               'is-invalid': messageStore.isFieldInError('inventoryQuantity'),

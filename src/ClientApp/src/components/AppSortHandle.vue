@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 </template>
 
 <style lang="scss" scoped>
-html[data-bs-theme='dark'] .text-muted {
+.text-muted {
   color: rgba(var(--bs-secondary-color-rgb), 0.4) !important;
 }
 

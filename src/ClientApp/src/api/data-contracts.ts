@@ -466,6 +466,7 @@ export interface ListShoppingItemsResponse {
   name?: string;
   /** @format int32 */
   inventoryQuantity?: number;
+  pantryLocations?: string[];
 }
 
 export interface GetShoppingItemResponse {

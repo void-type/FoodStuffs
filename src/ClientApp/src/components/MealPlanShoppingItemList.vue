@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { SaveMealPlanRequestPantryShoppingItem } from '@/api/data-contracts';
 import { computed, reactive, type PropType } from 'vue';
+import ShoppingItemInventoryQuantity from './ShoppingItemInventoryQuantity.vue';
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -48,12 +49,12 @@ function copyList() {
 <template>
   <div>
     <div class="card">
-      <h5 class="card-header d-flex justify-content-between align-items-center">
+      <div class="card-header fw-bold d-flex justify-content-between align-items-center">
         {{ title }}
         <button
           v-if="onClear !== null"
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-sm btn-secondary"
           @click.stop.prevent="clear()"
         >
           Clear
@@ -61,7 +62,7 @@ function copyList() {
         <div v-if="showCopyList" class="copy-tooltip">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-sm btn-secondary"
             :title="data.copyTooltipText"
             @click.stop.prevent="copyList()"
             @mouseout="data.copyTooltipText = defaultCopyTooltip"
@@ -71,18 +72,30 @@ function copyList() {
             Copy
           </button>
         </div>
-      </h5>
+      </div>
       <ul class="list-group list-group-flush">
         <li
           v-for="{ id, quantity } in shoppingItemsSorted"
           :key="id"
           tabindex="0"
           role="button"
-          class="list-group-item card-hover"
+          class="list-group-item card-hover p-3"
           @keydown.stop.prevent.enter="onItemClick(id)"
           @click="onItemClick(id)"
         >
-          {{ quantity }}x {{ getShoppingItemDetails(id)?.name }}
+          <div class="grid gap-sm">
+            <div class="g-col-12 g-col-xl-8">
+              {{ quantity }}x {{ getShoppingItemDetails(id)?.name }}
+            </div>
+            <ShoppingItemInventoryQuantity
+              :id="`inventory-${id}`"
+              v-model="(getShoppingItemDetails(id) || { inventoryQuantity: 0 }).inventoryQuantity"
+              class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-4"
+              :inline="true"
+              :item="{ id, inventoryQuantity: getShoppingItemDetails(id)?.inventoryQuantity }"
+              @click.stop.prevent
+            />
+          </div>
         </li>
         <li v-if="shoppingItemsSorted.length < 1" class="list-group-item p-4 text-center">
           No shopping items.

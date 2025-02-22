@@ -15,6 +15,7 @@ import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import type { HttpResponse } from '@/api/http-client';
+import ShoppingItemInventoryQuantity from '@/components/ShoppingItemInventoryQuantity.vue';
 
 const props = defineProps({
   query: {
@@ -29,8 +30,6 @@ const messageStore = useMessageStore();
 const shoppingItemStore = useShoppingItemStore();
 const router = useRouter();
 const api = ApiHelper.client;
-
-const { useDarkMode } = storeToRefs(appStore);
 
 const { listResponse, listRequest } = storeToRefs(shoppingItemStore);
 
@@ -172,36 +171,47 @@ watch(
       </template>
     </EntityTableControls>
     <div class="mt-3">{{ resultCountText }}</div>
-    <table
-      v-if="(listResponse.items?.length || 0) > 0"
-      :class="{ 'table mt-3': true, 'table-dark': useDarkMode }"
-    >
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Inventory</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="shoppingItem in listResponse.items" :key="shoppingItem.id">
-          <td>
-            <router-link :to="{ name: 'shoppingItemEdit', params: { id: shoppingItem.id } }">
-              {{ shoppingItem.name }}
-            </router-link>
-          </td>
-          <td>TODO: inventory control {{ shoppingItem.inventoryQuantity }}</td>
-          <td>
+    <div class="grid mt-3">
+      <div
+        v-for="shoppingItem in listResponse.items"
+        :key="shoppingItem.id"
+        class="card g-col-12 g-col-md-6"
+      >
+        <div class="card-header">
+          <router-link :to="{ name: 'shoppingItemEdit', params: { id: shoppingItem.id } }">
+            {{ shoppingItem.name }}
+          </router-link>
+        </div>
+        <div class="card-body">
+          <div class="btn-toolbar d-none">
             <button
-              class="btn btn-sm btn-danger"
+              class="btn btn-sm btn-danger ms-auto"
               @click="() => onDeleteShoppingItem(shoppingItem.id)"
             >
               Delete
             </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+          <div class="grid">
+            <ShoppingItemInventoryQuantity
+              :id="`${shoppingItem.id}-inventoryQuantity`"
+              v-model="shoppingItem.inventoryQuantity"
+              :item="shoppingItem"
+              :inline="true"
+              class="g-col-12 g-col-sm-6 g-col-md-12 g-col-lg-6"
+            />
+          </div>
+          <div v-if="(shoppingItem.pantryLocations?.length || 0) > 0" class="mt-3">
+            <span
+              v-for="location in shoppingItem.pantryLocations"
+              :key="location || ''"
+              class="badge rounded-pill text-bg-secondary me-2 mt-2"
+            >
+              {{ location }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
     <EntityTablePager
       v-if="(listResponse.items?.length || 0) > 0"
       :list-request="listRequest"

@@ -8,6 +8,7 @@ import RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import RecipeEditorShoppingItemSelect from './RecipeEditorShoppingItemSelect.vue';
 import AppSortHandle from './AppSortHandle.vue';
+import ShoppingItemInventoryQuantity from './ShoppingItemInventoryQuantity.vue';
 
 const model = defineModel({
   type: Array as PropType<Array<RecipeShoppingItemWorking>>,
@@ -176,23 +177,12 @@ onBeforeUnmount(() => {
                 }"
               />
             </div>
-            <div class="g-col-12 g-col-md-6">
-              <label :for="`item-${item.uiKey}-inventory-quantity`" class="form-label"
-                >TODO: Inventory Quantity</label
-              >
-              <input
-                :id="`item-${item.uiKey}-inventory-quantity`"
-                v-model="item.inventoryQuantity"
-                required
-                type="number"
-                min="0"
-                disabled
-                :class="{
-                  'form-control': true,
-                  'is-invalid': isFieldInError('shoppingItems'),
-                }"
-              />
-            </div>
+            <ShoppingItemInventoryQuantity
+              :id="`item-${item.uiKey}-inventoryQuantity`"
+              v-model="item.inventoryQuantity"
+              class="g-col-12 g-col-md-6"
+              :item="item"
+            />
             <div class="btn-toolbar g-col-12">
               <router-link
                 :to="{ name: 'shoppingItemEdit', params: { id: item.id } }"

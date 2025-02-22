@@ -29,7 +29,7 @@ function flipCard() {
 </script>
 
 <template>
-  <div :id="recipeCardId" class="card card-hover">
+  <div :id="recipeCardId" class="card">
     <AppSortHandle v-if="props.showSortHandle" class="card-header-button left" />
     <div
       :class="{
@@ -38,7 +38,7 @@ function flipCard() {
         flippable: !props.showCompactView,
       }"
     >
-      <router-link class="card-link" :to="RouterHelper.viewRecipe(recipe)">
+      <router-link :to="RouterHelper.viewRecipe(recipe)">
         {{ recipe.name }}
       </router-link>
     </div>
@@ -47,7 +47,7 @@ function flipCard() {
         <font-awesome-icon icon="fa-rotate" />
       </a>
     </div>
-    <router-link class="card-link" :to="RouterHelper.viewRecipe(recipe)">
+    <router-link class="card-link card-hover" :to="RouterHelper.viewRecipe(recipe)">
       <div v-if="!props.showCompactView" class="card-flip-container">
         <div class="card-flip-front">
           <div class="image-container">
@@ -66,7 +66,7 @@ function flipCard() {
             />
           </div>
         </div>
-        <div class="card-flip-back p-3 d-none">
+        <div class="card-flip-back card-body d-none">
           <div class="card-flip-back-inner slim-scroll">
             <div class="btn-toolbar">
               <router-link
@@ -87,11 +87,11 @@ function flipCard() {
                 </li>
               </ul>
             </div>
-            <div v-if="(recipe.categories?.length || 0) > 0" class="mt-3">
+            <div v-if="(recipe.categories?.length || 0) > 0">
               <span
                 v-for="category in recipe.categories"
                 :key="category || ''"
-                class="badge text-bg-secondary me-2 mt-2"
+                class="badge rounded-pill text-bg-secondary me-2 mt-2"
               >
                 {{ category }}</span
               >
@@ -111,11 +111,11 @@ function flipCard() {
           >
           <RecipeMealButton class="btn-sm mb-2" :recipe-id="recipe.id" />
         </div>
-        <div v-if="(recipe.categories?.length || 0) > 0">
+        <div v-if="(recipe.categories?.length || 0) > 0" class="mt-3">
           <span
             v-for="category in recipe.categories"
             :key="category || ''"
-            class="badge text-bg-secondary me-2 mt-2"
+            class="badge rounded-pill text-bg-secondary me-2 mt-2"
           >
             {{ category }}</span
           >
