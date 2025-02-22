@@ -9,4 +9,5 @@ public record GetShoppingItemResponse(
     string ModifiedBy,
     DateTimeOffset ModifiedOn,
     List<GetShoppingItemResponseRecipe> Recipes,
-    GetShoppingItemResponseGroceryDepartment? GroceryDepartment);
+    GetShoppingItemResponseGroceryDepartment? GroceryDepartment,
+    List<string> PantryLocations);

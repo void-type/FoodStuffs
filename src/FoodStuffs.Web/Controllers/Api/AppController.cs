@@ -15,8 +15,7 @@ public class AppController : ControllerBase
     /// <summary>
     /// Get information to bootstrap the SPA client like application name and user data.
     /// </summary>
-    [HttpGet]
-    [Route("info")]
+    [HttpGet("info")]
     [ProducesResponseType(typeof(GetWebClientInfo.WebClientInfo), 200)]
     public async Task<IActionResult> GetInfoAsync([FromServices] GetWebClientInfo.Pipeline getPipeline)
     {
@@ -28,8 +27,7 @@ public class AppController : ControllerBase
     /// <summary>
     /// Get the version of the application.
     /// </summary>
-    [HttpGet]
-    [Route("version")]
+    [HttpGet("version")]
     [ProducesResponseType(typeof(AppVersion), 200)]
     public IActionResult GetVersion()
     {

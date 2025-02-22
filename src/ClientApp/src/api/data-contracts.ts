@@ -105,6 +105,56 @@ export interface SaveCategoryRequest {
   name?: string;
 }
 
+export interface IItemSetOfListGroceryDepartmentsResponse {
+  /** @format int32 */
+  count?: number;
+  items?: ListGroceryDepartmentsResponse[];
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
+export interface ListGroceryDepartmentsResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  order?: number;
+}
+
+export interface GetGroceryDepartmentResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  order?: number;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  shoppingItems?: GetGroceryDepartmentResponseShoppingItem[];
+}
+
+export interface GetGroceryDepartmentResponseShoppingItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SaveGroceryDepartmentRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  order?: number;
+}
+
 export type EntityMessageOfString = UserMessage & {
   id?: string | null;
 };
@@ -174,6 +224,8 @@ export interface GetMealPlanResponseRecipeShoppingItem {
   /** @format decimal */
   quantity?: number;
   /** @format int32 */
+  order?: number;
+  /** @format int32 */
   groceryDepartmentId?: number | null;
 }
 
@@ -197,6 +249,50 @@ export interface SaveMealPlanRequestRecipe {
   id?: number;
   /** @format int32 */
   order?: number;
+}
+
+export interface IItemSetOfListPantryLocationsResponse {
+  /** @format int32 */
+  count?: number;
+  items?: ListPantryLocationsResponse[];
+  isPagingEnabled?: boolean;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  take?: number;
+  /** @format int32 */
+  totalCount?: number;
+}
+
+export interface ListPantryLocationsResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface GetPantryLocationResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  shoppingItems?: GetPantryLocationResponseShoppingItem[];
+}
+
+export interface GetPantryLocationResponseShoppingItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SavePantryLocationRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
 }
 
 export interface SearchRecipesResponse {
@@ -309,6 +405,8 @@ export interface GetRecipeResponseShoppingItem {
   /** @format int32 */
   id?: number;
   name?: string;
+  /** @format int32 */
+  inventoryQuantity?: number;
   /** @format decimal */
   quantity?: number;
   /** @format int32 */
@@ -384,6 +482,7 @@ export interface GetShoppingItemResponse {
   modifiedOn?: string;
   recipes?: GetShoppingItemResponseRecipe[];
   groceryDepartment?: GetShoppingItemResponseGroceryDepartment | null;
+  pantryLocations?: string[];
 }
 
 export interface GetShoppingItemResponseRecipe {
@@ -410,9 +509,41 @@ export interface SaveShoppingItemRequest {
   inventoryQuantity?: number;
   /** @format int32 */
   groceryDepartmentId?: number | null;
+  pantryLocations?: string[];
+}
+
+export interface SaveShoppingItemInventoryRequest {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
+  inventoryQuantity?: number;
 }
 
 export interface CategoriesListParams {
+  /** Name contains (case-insensitive) */
+  name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
+export interface GroceryDepartmentsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /** Specify to show items that have relations or no relations */
@@ -445,6 +576,30 @@ export interface ImagesUploadParams {
 }
 
 export interface MealPlansListParams {
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
+export interface PantryLocationsListParams {
+  /** Name contains (case-insensitive) */
+  name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
   /**
    * Set false to get all results
    * @default true

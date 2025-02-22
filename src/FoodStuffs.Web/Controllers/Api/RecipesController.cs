@@ -65,8 +65,7 @@ public class RecipesController : ControllerBase
     /// <param name="searchText">Search text (case-insensitive)</param>
     /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="take">How many items in a page</param>
-    [Route("suggest")]
-    [HttpGet]
+    [HttpGet("suggest")]
     [ProducesResponseType(typeof(IItemSet<SuggestRecipesResultItem>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> SuggestAsync(
@@ -91,8 +90,7 @@ public class RecipesController : ControllerBase
     /// </summary>
     /// <param name="getHandler"></param>
     /// <param name="id">The ID of the recipe to get</param>
-    [Route("{id}")]
-    [HttpGet]
+    [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetRecipeResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> GetAsync([FromServices] GetRecipeHandler getHandler, int id)
@@ -124,8 +122,7 @@ public class RecipesController : ControllerBase
     /// </summary>
     /// <param name="deleteHandler"></param>
     /// <param name="id">The ID of the recipe</param>
-    [Route("{id}")]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> DeleteAsync([FromServices] DeleteRecipeHandler deleteHandler, int id)
@@ -140,8 +137,7 @@ public class RecipesController : ControllerBase
     /// <summary>
     /// Rebuild the recipe search index.
     /// </summary>
-    [Route("rebuild-index")]
-    [HttpPost]
+    [HttpPost("rebuild-index")]
     [ProducesResponseType(typeof(UserMessage), 200)]
     public async Task<IActionResult> RebuildAsync([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
     {

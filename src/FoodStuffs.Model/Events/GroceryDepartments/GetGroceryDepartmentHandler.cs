@@ -18,7 +18,7 @@ public class GetGroceryDepartmentHandler : CustomEventHandlerAbstract<GetGrocery
 
     public override async Task<IResult<GetGroceryDepartmentResponse>> Handle(GetGroceryDepartmentRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new GroceryDepartmentsWithShoppingItemsSpecification(request.Id);
+        var byId = new GroceryDepartmentsWithAllRelatedSpecification(request.Id);
 
         return await _data.GroceryDepartments
             .TagWith(GetTag(byId))
@@ -36,9 +36,10 @@ public class GetGroceryDepartmentHandler : CustomEventHandlerAbstract<GetGrocery
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                ShoppingItems: m.ShoppingItems
-                    .ConvertAll(r => new GetGroceryDepartmentResponseShoppingItem(
+                ShoppingItems: [.. m.ShoppingItems
+                    .OrderBy(r => r.Name)
+                    .Select(r => new GetGroceryDepartmentResponseShoppingItem(
                         Id: r.Id,
-                        Name: r.Name))));
+                        Name: r.Name))]));
     }
 }

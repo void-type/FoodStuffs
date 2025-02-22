@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
                 :on-create-item="onCreateItem"
               />
             </div>
-            <div class="g-col-12 g-col-md-4">
+            <div class="g-col-12 g-col-md-6">
               <label :for="`item-${item.uiKey}-quantity`" class="form-label">Quantity</label>
               <input
                 :id="`item-${item.uiKey}-quantity`"
@@ -176,7 +176,29 @@ onBeforeUnmount(() => {
                 }"
               />
             </div>
+            <div class="g-col-12 g-col-md-6">
+              <label :for="`item-${item.uiKey}-inventory-quantity`" class="form-label"
+                >TODO: Inventory Quantity</label
+              >
+              <input
+                :id="`item-${item.uiKey}-inventory-quantity`"
+                v-model="item.inventoryQuantity"
+                required
+                type="number"
+                min="0"
+                disabled
+                :class="{
+                  'form-control': true,
+                  'is-invalid': isFieldInError('shoppingItems'),
+                }"
+              />
+            </div>
             <div class="btn-toolbar g-col-12">
+              <router-link
+                :to="{ name: 'shoppingItemEdit', params: { id: item.id } }"
+                class="btn btn-secondary btn-sm"
+                >Edit</router-link
+              >
               <button
                 type="button"
                 class="btn btn-danger btn-sm ms-auto"

@@ -5,4 +5,5 @@ public record GetMealPlanResponseRecipeShoppingItem(
     string Name,
     int InventoryQuantity,
     decimal Quantity,
+    int Order,
     int? GroceryDepartmentId);

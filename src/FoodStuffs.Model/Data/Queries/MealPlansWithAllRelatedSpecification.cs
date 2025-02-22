@@ -7,6 +7,8 @@ public class MealPlansWithAllRelatedSpecification : QuerySpecificationAbstract<M
 {
     public MealPlansWithAllRelatedSpecification(int id)
     {
+        AddOrderBy(r => r.Id);
+
         AddCriteria(r => r.Id == id);
 
         AddInclude($"{nameof(MealPlan.PantryShoppingItemRelations)}.{nameof(MealPlanPantryShoppingItemRelation.ShoppingItem)}");

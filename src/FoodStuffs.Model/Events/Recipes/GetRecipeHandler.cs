@@ -59,6 +59,7 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                     .Select(i => new GetRecipeResponseShoppingItem(
                         Id: i.ShoppingItem.Id,
                         Name: i.ShoppingItem.Name,
+                        InventoryQuantity: i.ShoppingItem.InventoryQuantity,
                         Quantity: i.Quantity,
                         Order: i.Order))
                     .OrderBy(i => i.Order)]

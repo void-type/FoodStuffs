@@ -62,8 +62,11 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         }
 
         Transfer(request, recipeToEdit);
-        await ManageCategoriesAsync(request, recipeToEdit, cancellationToken);
+
         ManageIngredients(request, recipeToEdit);
+
+        await ManageCategoriesAsync(request, recipeToEdit, cancellationToken);
+
         await ManageShoppingItemsAsync(request, recipeToEdit, cancellationToken);
 
         if (maybeRecipe.HasValue)
@@ -72,7 +75,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         }
         else
         {
-            await _data.Recipes.AddAsync(recipeToEdit, cancellationToken);
+            _data.Recipes.Add(recipeToEdit);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

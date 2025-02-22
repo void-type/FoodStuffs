@@ -20,7 +20,9 @@ public class ShoppingItem : IAuditableWithOffset
 
     public int? GroceryDepartmentId { get; set; }
 
-    public virtual GroceryDepartment? GroceryDepartment { get; set; } = null!;
+    public virtual GroceryDepartment? GroceryDepartment { get; set; }
 
-    public virtual List<Recipe> Recipes { get; set; } = [];
+    public virtual List<PantryLocation> PantryLocations { get; } = [];
+
+    public virtual List<Recipe> Recipes { get; } = [];
 }

@@ -50,8 +50,7 @@ public class ShoppingItemsController : ControllerBase
     /// </summary>
     /// <param name="getHandler"></param>
     /// <param name="id">The ID of the shopping item to get</param>
-    [Route("{id}")]
-    [HttpGet]
+    [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetShoppingItemResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> GetAsync([FromServices] GetShoppingItemHandler getHandler, int id)
@@ -79,12 +78,26 @@ public class ShoppingItemsController : ControllerBase
     }
 
     /// <summary>
+    /// Update a shopping item inventory.
+    /// </summary>
+    /// <param name="saveHandler"></param>
+    /// <param name="request">The shopping item to save</param>
+    [HttpPost("inventory")]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> SaveInventoryAsync([FromServices] SaveShoppingItemInventoryHandler saveHandler, [FromBody] SaveShoppingItemInventoryRequest request)
+    {
+        return await saveHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
     /// Delete a shopping item.
     /// </summary>
     /// <param name="deleteHandler"></param>
     /// <param name="id">The ID of the shopping item</param>
-    [Route("{id}")]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> DeleteAsync([FromServices] DeleteShoppingItemHandler deleteHandler, int id)

@@ -1,19 +1,16 @@
 <script lang="ts" setup>
-import { computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
+import { computed, reactive, watch, onMounted, onBeforeUnmount, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import useAppStore from '@/stores/appStore';
 import useMessageStore from '@/stores/messageStore';
 import useShoppingItemStore from '@/stores/shoppingItemStore';
+import { trimAndTitleCase, isNil } from '@/models/FormatHelper';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import ShoppingItemGetResponse from '@/models/ShoppingItemGetResponse';
 import ShoppingItemWorking from '@/models/ShoppingItemWorking';
 import type { HttpResponse } from '@/api/http-client';
-import type {
-  EntityMessageOfInteger,
-  IItemSetOfIFailure,
-  GetShoppingItemResponse,
-} from '@/api/data-contracts';
+import type { GetShoppingItemResponse } from '@/api/data-contracts';
 import type { ModalParameters } from '@/models/ModalParameters';
 import router from '@/router';
 import {
@@ -23,7 +20,9 @@ import {
   onBeforeRouteLeave,
 } from 'vue-router';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
+import TagEditor from '@/components/TagEditor.vue';
 import RouterHelper from '@/models/RouterHelper';
+import ShoppingItemGroceryDepartmentSelect from '@/components/ShoppingItemGroceryDepartmentSelect.vue';
 
 const props = defineProps({
   id: {
@@ -52,6 +51,18 @@ const isCreateNewMode = computed(() => !isEditMode.value);
 
 const isDirty = computed(() => JSON.stringify(data.working) !== data.workingInitial);
 
+const pantryLocationOptions = ref([] as Array<string>);
+
+async function fetchPantryLocations() {
+  try {
+    const response = await api().pantryLocationsList({ isPagingEnabled: false });
+    pantryLocationOptions.value =
+      response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
 async function fetch() {
   if (isCreateNewMode.value) {
     data.source = new ShoppingItemGetResponse();
@@ -72,14 +83,6 @@ async function fetch() {
 let forceImmediateRouteChange = false;
 
 async function onSaveClick() {
-  async function onPostSave(response: HttpResponse<EntityMessageOfInteger, IItemSetOfIFailure>) {
-    if (response.data.message) {
-      messageStore.setSuccessMessage(response.data.message);
-    }
-
-    await shoppingItemStore.fetchShoppingItemsList();
-  }
-
   try {
     const response = await api().shoppingItemsSave(data.working);
 
@@ -90,7 +93,13 @@ async function onSaveClick() {
       await fetch();
     }
 
-    await onPostSave(response);
+    if (response.data.message) {
+      messageStore.setSuccessMessage(response.data.message);
+    }
+
+    fetchPantryLocations();
+
+    await shoppingItemStore.fetchShoppingItemsList();
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -142,11 +151,37 @@ function reset() {
   const newWorking: ShoppingItemWorking = {
     ...newWorkingClass,
     ...sourceCopy,
+    groceryDepartmentId: data.source.groceryDepartment?.id || null,
   };
 
   data.workingInitial = JSON.stringify(newWorking);
 
   data.working = newWorking;
+}
+
+function addPantryLocation(tag: string) {
+  const pantryLocationName = trimAndTitleCase(tag);
+
+  const pantryLocations = data.working.pantryLocations?.slice() || [];
+
+  const pantryLocationDoesNotExist =
+    pantryLocations.map((value) => value.toUpperCase()).indexOf(pantryLocationName.toUpperCase()) <
+    0;
+
+  if (pantryLocationDoesNotExist && pantryLocationName.length > 0) {
+    pantryLocations.push(pantryLocationName);
+    data.working.pantryLocations = pantryLocations;
+  }
+}
+
+function removePantryLocation(pantryLocationName: string) {
+  const pantryLocations = data.working.pantryLocations?.slice() || [];
+  const pantryLocationIndex = pantryLocations.indexOf(pantryLocationName);
+
+  if (pantryLocationIndex > -1) {
+    pantryLocations.splice(pantryLocationIndex, 1);
+    data.working.pantryLocations = pantryLocations;
+  }
 }
 
 function changeRouteFromModal(t: RouteLocationNormalized) {
@@ -274,6 +309,35 @@ onBeforeUnmount(() => {
             }"
           />
         </div>
+        <div class="g-col-12 g-col-md-6">
+          <label for="inventoryQuantity" class="form-label">Inventory</label>
+          <input
+            id="inventoryQuantity"
+            v-model="data.working.inventoryQuantity"
+            required
+            type="number"
+            :class="{
+              'form-control': true,
+              'is-invalid': messageStore.isFieldInError('inventoryQuantity'),
+            }"
+          />
+        </div>
+        <div class="g-col-12 g-col-md-6">
+          <label for="groceryDepartmentId" class="form-label">Grocery Department</label>
+          <ShoppingItemGroceryDepartmentSelect v-model="data.working.groceryDepartmentId" />
+        </div>
+        <TagEditor
+          :class="{
+            'g-col-12 g-col-md-6': true,
+            danger: messageStore.isFieldInError('pantryLocations'),
+          }"
+          :tags="data.working.pantryLocations || []"
+          :on-add-tag="addPantryLocation"
+          :on-remove-tag="removePantryLocation"
+          :suggestions="pantryLocationOptions"
+          field-name="pantryLocations"
+          label="Pantry Locations"
+        />
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
         <div v-if="data.source.recipes?.length" class="g-col-12 g-col-md-6">
           Used in recipes

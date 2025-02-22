@@ -36,13 +36,12 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
     {
         var requestedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
 
-        var byId = new ShoppingItemsSpecification(request.Id);
+        var byId = new ShoppingItemsWithAllRelatedSpecification(request.Id);
 
         var maybeShoppingItem = await _data.ShoppingItems
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
-            .Include(si => si.Recipes)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
@@ -64,12 +63,14 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
 
         var shoppingItemToEdit = maybeShoppingItem.Unwrap(() => new ShoppingItem());
 
-        Transfer(requestedName, shoppingItemToEdit);
+        Transfer(requestedName, request, shoppingItemToEdit);
+
+        await ManagePantryLocationsAsync(request, shoppingItemToEdit, cancellationToken);
 
         if (request.GroceryDepartmentId is not null)
         {
             var groceryDepartment = await _data.GroceryDepartments
-                .TagWith(GetTag(byName))
+                .TagWith(GetTag())
                 .FirstOrDefaultAsync(gd => gd.Id == request.GroceryDepartmentId, cancellationToken);
 
             if (groceryDepartment is null)
@@ -83,24 +84,56 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
         if (maybeShoppingItem.HasValue)
         {
             _data.ShoppingItems.Update(shoppingItemToEdit);
-
-            foreach (var id in shoppingItemToEdit.Recipes.ConvertAll(r => r.Id))
-            {
-                await _index.AddOrUpdateAsync(id, cancellationToken);
-            }
         }
         else
         {
-            await _data.ShoppingItems.AddAsync(shoppingItemToEdit, cancellationToken);
+            _data.ShoppingItems.Add(shoppingItemToEdit);
         }
 
         await _data.SaveChangesAsync(cancellationToken);
 
+        await _index.AddOrUpdateAsync(shoppingItemToEdit.Recipes.Select(r => r.Id), cancellationToken);
+
         return Ok(EntityMessage.Create($"Shopping item {(maybeShoppingItem.HasValue ? "updated" : "added")}.", shoppingItemToEdit.Id));
     }
 
-    private static void Transfer(string formattedName, ShoppingItem shoppingItem)
+    private static void Transfer(string formattedName, SaveShoppingItemRequest request, ShoppingItem shoppingItem)
     {
         shoppingItem.Name = formattedName;
+        shoppingItem.InventoryQuantity = request.InventoryQuantity;
+    }
+
+    private async Task ManagePantryLocationsAsync(SaveShoppingItemRequest request, ShoppingItem shoppingItem, CancellationToken cancellationToken)
+    {
+        var requestedNames = request.PantryLocations
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x).Trim())
+            .ToArray();
+
+        // Remove extra pantry locations.
+        shoppingItem.PantryLocations.RemoveAll(x => !requestedNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
+
+        var missingNames = requestedNames
+            .Where(n => !shoppingItem.PantryLocations.Select(x => x.Name).Contains(n, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        // Find missing pantry locations that already exist.
+        var existingPantryLocations = await _data.PantryLocations
+            .TagWith(GetTag())
+            .Where(x => missingNames.Contains(x.Name))
+            .OrderBy(x => x.Id)
+            // In case there are duplicates, add only the first.
+            .GroupBy(x => x.Name)
+            .Select(g => g.First())
+            .ToListAsync(cancellationToken);
+
+        shoppingItem.PantryLocations.AddRange(existingPantryLocations);
+
+        // Create missing PantryLocations that don't exist.
+        var createdPantryLocations = missingNames
+            .Where(x => !shoppingItem.PantryLocations.Select(x => x.Name).Contains(x, StringComparer.OrdinalIgnoreCase))
+            .Select(x => new PantryLocation { Name = x });
+
+        shoppingItem.PantryLocations.AddRange(createdPantryLocations);
     }
 }

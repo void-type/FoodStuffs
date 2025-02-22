@@ -32,6 +32,13 @@ public class LuceneWriters : IDisposable
 
         _taxonomyDir = FSDirectory.Open(taxonomyFolder);
         TaxonomyWriter = new DirectoryTaxonomyWriter(_taxonomyDir, openMode);
+
+        if (openMode != OpenMode.CREATE)
+        {
+            // Ensure index
+            IndexWriter.Commit();
+            TaxonomyWriter.Commit();
+        }
     }
 
     protected virtual void Dispose(bool disposing)

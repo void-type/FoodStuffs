@@ -46,12 +46,11 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Get a shopping item.
+    /// Get a category.
     /// </summary>
     /// <param name="getHandler"></param>
-    /// <param name="id">The ID of the shopping item to get</param>
-    [Route("{id}")]
-    [HttpGet]
+    /// <param name="id">The ID of the category to get</param>
+    [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetCategoryResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> GetAsync([FromServices] GetCategoryHandler getHandler, int id)
@@ -64,10 +63,10 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Save a shopping item. Will update if found, otherwise a new item will be created.
+    /// Save a category. Will update if found, otherwise a new item will be created.
     /// </summary>
     /// <param name="saveHandler"></param>
-    /// <param name="request">The shopping item to save</param>
+    /// <param name="request">The category to save</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -79,12 +78,11 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a shopping item.
+    /// Delete a category.
     /// </summary>
     /// <param name="deleteHandler"></param>
-    /// <param name="id">The ID of the shopping item</param>
-    [Route("{id}")]
-    [HttpDelete]
+    /// <param name="id">The ID of the category</param>
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> DeleteAsync([FromServices] DeleteCategoryHandler deleteHandler, int id)

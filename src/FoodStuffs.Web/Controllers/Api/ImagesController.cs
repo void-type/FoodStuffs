@@ -11,7 +11,7 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage images.
+/// Manage recipe images.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/images")]
 public class ImagesController : ControllerBase
@@ -21,8 +21,7 @@ public class ImagesController : ControllerBase
     /// </summary>
     /// <param name="getHandler"></param>
     /// <param name="name">The name of the image to download</param>
-    [Route("{name}")]
-    [HttpGet]
+    [HttpGet("{name}")]
     [ProducesResponseType(typeof(FileContentResult), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> GetAsync([FromServices] GetImageHandler getHandler, string name)
@@ -61,8 +60,7 @@ public class ImagesController : ControllerBase
     /// </summary>
     /// <param name="deleteHandler"></param>
     /// <param name="name">The name of the image to delete</param>
-    [Route("{name}")]
-    [HttpDelete]
+    [HttpDelete("{name}")]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> DeleteAsync([FromServices] DeleteImageHandler deleteHandler, string name)
@@ -79,8 +77,7 @@ public class ImagesController : ControllerBase
     /// </summary>
     /// <param name="pinHandler"></param>
     /// <param name="name">The name of the image to pin</param>
-    [Route("pin/{name}")]
-    [HttpPost]
+    [HttpPost("pin/{name}")]
     [ProducesResponseType(typeof(EntityMessage<string>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> PinAsync([FromServices] PinImageHandler pinHandler, string name)

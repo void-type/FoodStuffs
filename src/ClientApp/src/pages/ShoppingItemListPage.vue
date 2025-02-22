@@ -179,6 +179,7 @@ watch(
       <thead>
         <tr>
           <th>Name</th>
+          <th>Inventory</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -189,6 +190,7 @@ watch(
               {{ shoppingItem.name }}
             </router-link>
           </td>
+          <td>TODO: inventory control {{ shoppingItem.inventoryQuantity }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"

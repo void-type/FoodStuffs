@@ -31,12 +31,10 @@ public class DeleteShoppingItemHandler : CustomEventHandlerAbstract<DeleteShoppi
                 var recipeIds = si.Recipes.ConvertAll(r => r.Id);
 
                 _data.ShoppingItems.Remove(si);
+
                 await _data.SaveChangesAsync(cancellationToken);
 
-                foreach (var id in recipeIds)
-                {
-                    await _index.AddOrUpdateAsync(id, cancellationToken);
-                }
+                await _index.AddOrUpdateAsync(recipeIds, cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Shopping item deleted.", r.Id));
     }

@@ -33,6 +33,7 @@ public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeReques
             .TeeOnSuccessAsync(async r =>
             {
                 _data.Recipes.Remove(r);
+
                 await _data.SaveChangesAsync(cancellationToken);
             })
             .TeeOnSuccessAsync(r => _index.Remove(r.Id))

@@ -31,12 +31,10 @@ public class DeleteCategoryHandler : CustomEventHandlerAbstract<DeleteCategoryRe
                 var recipeIds = c.Recipes.ConvertAll(r => r.Id);
 
                 _data.Categories.Remove(c);
+
                 await _data.SaveChangesAsync(cancellationToken);
 
-                foreach (var id in recipeIds)
-                {
-                    await _index.AddOrUpdateAsync(id, cancellationToken);
-                }
+                await _index.AddOrUpdateAsync(recipeIds, cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Category deleted.", r.Id));
     }

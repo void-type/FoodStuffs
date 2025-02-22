@@ -18,7 +18,7 @@ public class GetCategoryHandler : CustomEventHandlerAbstract<GetCategoryRequest,
 
     public override async Task<IResult<GetCategoryResponse>> Handle(GetCategoryRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new CategoriesWithRecipesSpecification(request.Id);
+        var byId = new CategoriesWithAllRelatedSpecification(request.Id);
 
         return await _data.Categories
             .TagWith(GetTag(byId))

@@ -3,6 +3,8 @@ import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import useShoppingItemStore from '@/stores/shoppingItemStore';
 import useCategoryStore from '@/stores/categoryStore';
+import usePantryLocationStore from '@/stores/pantryLocationStore';
+import useGroceryDepartmentStore from '@/stores/groceryDepartmentStore';
 import RouterHelper from '@/models/RouterHelper';
 import { isNil } from '@/models/FormatHelper';
 import { computed } from 'vue';
@@ -13,6 +15,8 @@ const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const shoppingItemStore = useShoppingItemStore();
 const categoryStore = useCategoryStore();
+const pantryLocationStore = usePantryLocationStore();
+const groceryDepartmentStore = useGroceryDepartmentStore();
 const router = useRouter();
 
 const planName = computed(() => {
@@ -109,6 +113,35 @@ async function newMealPlan() {
         <li>
           <router-link :to="{ name: 'categoryNew' }" class="dropdown-item"
             >New Category</router-link
+          >
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <router-link
+            :to="{
+              name: 'groceryDepartmentList',
+              query: groceryDepartmentStore.currentQueryParams,
+            }"
+            class="dropdown-item"
+            >Grocery Departments</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'groceryDepartmentNew' }" class="dropdown-item"
+            >New Grocery Department</router-link
+          >
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <router-link
+            :to="{ name: 'pantryLocationList', query: pantryLocationStore.currentQueryParams }"
+            class="dropdown-item"
+            >Pantry Locations</router-link
+          >
+        </li>
+        <li>
+          <router-link :to="{ name: 'pantryLocationNew' }" class="dropdown-item"
+            >New Pantry Location</router-link
           >
         </li>
         <li><hr class="dropdown-divider" /></li>

@@ -10,6 +10,11 @@ public interface IRecipeIndexService
     Task AddOrUpdateAsync(int recipeId, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Query and update multiple recipes in the index.
+    /// </summary>
+    Task AddOrUpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update recipe in the index. Ensure you have a fully-hydrated recipe.
     /// </summary>
     void AddOrUpdate(Recipe recipe);

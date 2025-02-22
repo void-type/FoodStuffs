@@ -36,8 +36,9 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
                 _data.Remove(i);
 
                 await _data.SaveChangesAsync(cancellationToken);
+
                 await _index.AddOrUpdateAsync(i.RecipeId, cancellationToken);
             })
-            .SelectAsync(i => EntityMessage.Create("Image deleted.", request.Name));
+            .SelectAsync(_ => EntityMessage.Create("Image deleted.", request.Name));
     }
 }

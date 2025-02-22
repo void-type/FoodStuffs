@@ -26,6 +26,7 @@ public class FoodStuffsContext : DbContext
     public virtual DbSet<MealPlan> MealPlans { get; set; } = null!;
     public virtual DbSet<Recipe> Recipes { get; set; } = null!;
     public virtual DbSet<ShoppingItem> ShoppingItems { get; set; } = null!;
+    public virtual DbSet<PantryLocation> PantryLocations { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -63,10 +64,7 @@ public class FoodStuffsContext : DbContext
                 .AutoInclude(false);
         });
 
-        modelBuilder.Entity<MealPlan>(entity =>
-        {
-            entity.ToTable(nameof(MealPlan));
-        });
+        modelBuilder.Entity<MealPlan>(entity => entity.ToTable(nameof(MealPlan)));
 
         modelBuilder.Entity<MealPlanPantryShoppingItemRelation>(entity =>
         {
@@ -96,6 +94,14 @@ public class FoodStuffsContext : DbContext
             entity.HasOne(mpr => mpr.Recipe)
                 .WithMany(r => r.MealPlanRelations)
                 .HasForeignKey(mpr => mpr.RecipeId);
+        });
+
+        modelBuilder.Entity<PantryLocation>(entity =>
+        {
+            entity.ToTable(nameof(PantryLocation));
+
+            entity.HasIndex(si => si.Name)
+                .IsUnique();
         });
 
         modelBuilder.Entity<Recipe>(entity =>
@@ -151,6 +157,13 @@ public class FoodStuffsContext : DbContext
 
             entity.HasIndex(si => si.Name)
                 .IsUnique();
+
+            entity.HasMany(r => r.PantryLocations)
+                .WithMany(i => i.ShoppingItems)
+                .UsingEntity<Dictionary<string, object>>(
+                    "ShoppingItemPantryLocationRelation",
+                    r => r.HasOne<PantryLocation>().WithMany().HasForeignKey("PantryLocationId"),
+                    c => c.HasOne<ShoppingItem>().WithMany().HasForeignKey("ShoppingItemId"));
         });
     }
 

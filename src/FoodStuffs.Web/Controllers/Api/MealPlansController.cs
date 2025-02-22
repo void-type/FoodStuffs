@@ -46,8 +46,7 @@ public class MealPlansController : ControllerBase
     /// </summary>
     /// <param name="getHandler"></param>
     /// <param name="id">The ID of the meal plan to get</param>
-    [Route("{id}")]
-    [HttpGet]
+    [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetMealPlanResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> GetAsync([FromServices] GetMealPlanHandler getHandler, int id)
@@ -79,8 +78,7 @@ public class MealPlansController : ControllerBase
     /// </summary>
     /// <param name="deleteHandler"></param>
     /// <param name="id">The ID of the meal plan</param>
-    [Route("{id}")]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> DeleteAsync([FromServices] DeleteMealPlanHandler deleteHandler, int id)

@@ -25,7 +25,6 @@ public partial class HomeController : Controller
     /// Home page.
     /// </summary>
     [HttpGet]
-    [Route("")]
     public IActionResult Index()
     {
         LogHomePage();
@@ -36,7 +35,7 @@ public partial class HomeController : Controller
     /// Static error page.
     /// </summary>
     [AllowAnonymous]
-    [Route("error/{statusCode}")]
+    [HttpGet("error/{statusCode}")]
     public IActionResult Error(int statusCode)
     {
         var model = statusCode switch

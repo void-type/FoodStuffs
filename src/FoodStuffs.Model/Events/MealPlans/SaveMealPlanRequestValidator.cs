@@ -8,10 +8,10 @@ public class SaveMealPlanRequestValidator : RuleValidatorAbstract<SaveMealPlanRe
 {
     public SaveMealPlanRequestValidator()
     {
-        CreateRule(new Failure("Meal plan must have a name.", "name"))
+        CreateRule(new Failure("Name is required.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-        CreateRule(new Failure("Pantry shopping items quantity must be positive.", "pantryShoppingItemsQuantity"))
+        CreateRule(new Failure("Pantry shopping items quantity must 1 or greater.", "pantryShoppingItemsQuantity"))
             .InvalidWhen(entity => entity.PantryShoppingItems.Exists(x => x.Quantity <= 0));
     }
 }

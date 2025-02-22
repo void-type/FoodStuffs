@@ -125,6 +125,60 @@ const router = createRouter({
           ],
         },
         {
+          path: 'grocery-departments',
+          meta: { title: 'Grocery Departments' },
+          children: [
+            {
+              path: '',
+              name: 'groceryDepartmentList',
+              component: () => import('@/pages/GroceryDepartmentListPage.vue'),
+              props: (route) => ({ query: route.query }),
+            },
+            {
+              path: ':id',
+              name: 'groceryDepartmentEdit',
+              meta: { title: 'Edit Grocery Department' },
+              component: () => import('@/pages/GroceryDepartmentEditPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+            },
+            {
+              path: 'new',
+              name: 'groceryDepartmentNew',
+              meta: { title: 'New Grocery Department' },
+              component: () => import('@/pages/GroceryDepartmentEditPage.vue'),
+            },
+          ],
+        },
+        {
+          path: 'pantry-locations',
+          meta: { title: 'Pantry Locations' },
+          children: [
+            {
+              path: '',
+              name: 'pantryLocationList',
+              component: () => import('@/pages/PantryLocationListPage.vue'),
+              props: (route) => ({ query: route.query }),
+            },
+            {
+              path: ':id',
+              name: 'pantryLocationEdit',
+              meta: { title: 'Edit Pantry Location' },
+              component: () => import('@/pages/PantryLocationEditPage.vue'),
+              props: (route) => ({
+                id: +route.params.id,
+              }),
+            },
+            {
+              path: 'new',
+              name: 'pantryLocationNew',
+              meta: { title: 'New Pantry Location' },
+              component: () => import('@/pages/PantryLocationEditPage.vue'),
+            },
+          ],
+        },
+        {
           path: 'shopping-items',
           meta: { title: 'Shopping Items' },
           children: [

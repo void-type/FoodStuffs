@@ -8,5 +8,7 @@ export default class RecipeShoppingItemWorking implements SaveRecipeRequestShopp
 
   public quantity?: number = 1;
 
+  public inventoryQuantity?: number = 0;
+
   public order?: number = Number.MAX_SAFE_INTEGER;
 }

@@ -7,6 +7,8 @@ public class RecipesWithAllRelatedSpecification : QuerySpecificationAbstract<Rec
 {
     public RecipesWithAllRelatedSpecification()
     {
+        AddOrderBy(r => r.Id);
+
         AddInclude(nameof(Recipe.PinnedImage));
         AddInclude(nameof(Recipe.Images));
         AddInclude(nameof(Recipe.Categories));
@@ -16,5 +18,10 @@ public class RecipesWithAllRelatedSpecification : QuerySpecificationAbstract<Rec
     public RecipesWithAllRelatedSpecification(int id) : this()
     {
         AddCriteria(r => r.Id == id);
+    }
+
+    public RecipesWithAllRelatedSpecification(IEnumerable<int> ids) : this()
+    {
+        AddCriteria(r => ids.Contains(r.Id));
     }
 }

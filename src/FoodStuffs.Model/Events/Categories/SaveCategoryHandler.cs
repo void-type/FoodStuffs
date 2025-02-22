@@ -36,13 +36,12 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
     {
         var requestedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
 
-        var byId = new CategoriesSpecification(request.Id);
+        var byId = new CategoriesWithAllRelatedSpecification(request.Id);
 
         var maybeCategory = await _data.Categories
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
-            .Include(c => c.Recipes)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
@@ -69,18 +68,15 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
         if (maybeCategory.HasValue)
         {
             _data.Categories.Update(categoryToEdit);
-
-            foreach (var id in categoryToEdit.Recipes.ConvertAll(r => r.Id))
-            {
-                await _index.AddOrUpdateAsync(id, cancellationToken);
-            }
         }
         else
         {
-            await _data.Categories.AddAsync(categoryToEdit, cancellationToken);
+            _data.Categories.Add(categoryToEdit);
         }
 
         await _data.SaveChangesAsync(cancellationToken);
+
+        await _index.AddOrUpdateAsync(categoryToEdit.Recipes.Select(r => r.Id), cancellationToken);
 
         return Ok(EntityMessage.Create($"Category {(maybeCategory.HasValue ? "updated" : "added")}.", categoryToEdit.Id));
     }

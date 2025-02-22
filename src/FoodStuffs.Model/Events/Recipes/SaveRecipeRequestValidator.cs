@@ -8,22 +8,22 @@ public class SaveRecipeRequestValidator : RuleValidatorAbstract<SaveRecipeReques
 {
     public SaveRecipeRequestValidator()
     {
-        CreateRule(new Failure("Please enter a name.", "name"))
+        CreateRule(new Failure("Name is required.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-        CreateRule(new Failure("Please enter a name for all ingredients.", "ingredients"))
+        CreateRule(new Failure("Name is required for all ingredients.", "ingredients"))
             .InvalidWhen(entity => entity.Ingredients.Exists(i => string.IsNullOrWhiteSpace(i.Name)));
 
-        CreateRule(new Failure("Please enter a quantity greater than 1 for all ingredients.", "ingredients"))
+        CreateRule(new Failure("Ingredients quantity must be 1 or greater.", "ingredients"))
             .InvalidWhen(entity => entity.Ingredients.Exists(i => i.Quantity <= 0));
 
-        CreateRule(new Failure("Please enter a quantity greater than 1 for all shopping items.", "shoppingItems"))
+        CreateRule(new Failure("Shopping items quantity must be 1 or greater.", "shoppingItems"))
             .InvalidWhen(entity => entity.ShoppingItems.Exists(i => i.Quantity <= 0));
 
-        CreateRule(new Failure("Cook time must be positive.", "cookTimeMinutes"))
+        CreateRule(new Failure("Cook time must be 0 or greater.", "cookTimeMinutes"))
             .InvalidWhen(entity => entity.CookTimeMinutes < 0);
 
-        CreateRule(new Failure("Prep time must be positive.", "prepTimeMinutes"))
+        CreateRule(new Failure("Prep time must be 0 or greater.", "prepTimeMinutes"))
             .InvalidWhen(entity => entity.PrepTimeMinutes < 0);
 
         CreateRule(new Failure("Category names can't be longer than 450 characters.", "categories"))

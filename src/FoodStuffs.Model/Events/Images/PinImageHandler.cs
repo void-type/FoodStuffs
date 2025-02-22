@@ -31,6 +31,7 @@ public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, Entit
                 i.Recipe.PinnedImageId = i.Id;
 
                 await _data.SaveChangesAsync(cancellationToken);
+
                 await _index.AddOrUpdateAsync(i.Recipe.Id, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));

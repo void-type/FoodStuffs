@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -201,6 +201,40 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("MealPlanRecipeRelation", (string)null);
                 });
 
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.PantryLocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("PantryLocation", (string)null);
+                });
+
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
@@ -330,6 +364,21 @@ namespace FoodStuffs.Model.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("RecipeCategoryRelation");
+                });
+
+            modelBuilder.Entity("ShoppingItemPantryLocationRelation", b =>
+                {
+                    b.Property<int>("PantryLocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShoppingItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PantryLocationId", "ShoppingItemId");
+
+                    b.HasIndex("ShoppingItemId");
+
+                    b.ToTable("ShoppingItemPantryLocationRelation");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
@@ -478,6 +527,21 @@ namespace FoodStuffs.Model.Migrations
                     b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
                         .WithMany()
                         .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ShoppingItemPantryLocationRelation", b =>
+                {
+                    b.HasOne("FoodStuffs.Model.Data.Models.PantryLocation", null)
+                        .WithMany()
+                        .HasForeignKey("PantryLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", null)
+                        .WithMany()
+                        .HasForeignKey("ShoppingItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

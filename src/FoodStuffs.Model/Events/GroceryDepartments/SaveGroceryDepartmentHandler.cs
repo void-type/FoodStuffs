@@ -2,7 +2,6 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.GroceryDepartments.Models;
-using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -16,13 +15,11 @@ public class SaveGroceryDepartmentHandler : CustomEventHandlerAbstract<SaveGroce
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveGroceryDepartmentRequestValidator _validator;
-    private readonly IRecipeIndexService _index;
 
-    public SaveGroceryDepartmentHandler(FoodStuffsContext data, SaveGroceryDepartmentRequestValidator validator, IRecipeIndexService index)
+    public SaveGroceryDepartmentHandler(FoodStuffsContext data, SaveGroceryDepartmentRequestValidator validator)
     {
         _data = data;
         _validator = validator;
-        _index = index;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryDepartmentRequest request, CancellationToken cancellationToken = default)
@@ -69,15 +66,10 @@ public class SaveGroceryDepartmentHandler : CustomEventHandlerAbstract<SaveGroce
         if (maybeGroceryDepartment.HasValue)
         {
             _data.GroceryDepartments.Update(groceryDepartmentToEdit);
-
-            foreach (var id in groceryDepartmentToEdit.ShoppingItems.ConvertAll(r => r.Id))
-            {
-                await _index.AddOrUpdateAsync(id, cancellationToken);
-            }
         }
         else
         {
-            await _data.GroceryDepartments.AddAsync(groceryDepartmentToEdit, cancellationToken);
+            _data.GroceryDepartments.Add(groceryDepartmentToEdit);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

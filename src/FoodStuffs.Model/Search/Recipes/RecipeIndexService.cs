@@ -46,16 +46,32 @@ public class RecipeIndexService : IRecipeIndexService
         }
 
         var recipe = maybeRecipe.Value;
+
         AddOrUpdate(recipe);
+    }
+
+    /// <inheritdoc/>
+    public async Task AddOrUpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken)
+    {
+        var byId = new RecipesWithAllRelatedSpecification(recipeId);
+
+        var recipes = await _data.Recipes
+            .TagWith($"{nameof(RecipeIndexService)}.{nameof(AddOrUpdate)}({nameof(RecipesWithAllRelatedSpecification)})")
+            .AsSplitQuery()
+            .ApplyEfSpecification(byId)
+            .OrderBy(x => x.Id)
+            .ToListAsync(cancellationToken);
+
+        foreach (var recipe in recipes)
+        {
+            AddOrUpdate(recipe);
+        }
     }
 
     /// <inheritdoc/>
     public void AddOrUpdate(Recipe recipe)
     {
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
-        // Ensure index
-        writers.IndexWriter.Commit();
-        writers.TaxonomyWriter.Commit();
 
         var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
 
@@ -121,9 +137,6 @@ public class RecipeIndexService : IRecipeIndexService
     public void Remove(int recipeId)
     {
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
-        // Ensure index
-        writers.IndexWriter.Commit();
-        writers.TaxonomyWriter.Commit();
 
         writers.IndexWriter.DeleteDocuments(new Term(C.FIELD_ID, recipeId.ToString()));
 
