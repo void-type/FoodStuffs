@@ -35,9 +35,9 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                PantryShoppingItems: m.PantryShoppingItemRelations
+                ExcludedShoppingItems: m.ExcludedShoppingItemRelations
                     .ConvertAll(i =>
-                        new GetMealPlanResponsePantryShoppingItem(
+                        new GetMealPlanResponseExcludedShoppingItem(
                             Id: i.ShoppingItem.Id,
                             Name: i.ShoppingItem.Name,
                             Quantity: i.Quantity)

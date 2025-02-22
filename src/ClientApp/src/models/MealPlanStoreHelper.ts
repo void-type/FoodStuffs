@@ -1,6 +1,6 @@
 import type {
   MealPlansListParams,
-  SaveMealPlanRequestPantryShoppingItem,
+  SaveMealPlanRequestExcludedShoppingItem,
 } from '@/api/data-contracts';
 import MealPlansListRequest from './MealPlansListRequest';
 import { isNil } from './FormatHelper';
@@ -38,8 +38,8 @@ export function listRequestToQueryParams(listRequest: MealPlansListParams) {
 }
 
 export function countShoppingItems(
-  acc: SaveMealPlanRequestPantryShoppingItem[],
-  curr: SaveMealPlanRequestPantryShoppingItem
+  acc: SaveMealPlanRequestExcludedShoppingItem[],
+  curr: SaveMealPlanRequestExcludedShoppingItem
 ) {
   const { id, quantity } = curr;
 
@@ -63,7 +63,7 @@ export function countShoppingItems(
 }
 
 export function addShoppingItem(
-  shoppingItems: SaveMealPlanRequestPantryShoppingItem[],
+  shoppingItems: SaveMealPlanRequestExcludedShoppingItem[],
   id: number,
   count = 1
 ) {
@@ -82,7 +82,7 @@ export function addShoppingItem(
 }
 
 export function subtractShoppingItem(
-  shoppingItems: SaveMealPlanRequestPantryShoppingItem[],
+  shoppingItems: SaveMealPlanRequestExcludedShoppingItem[],
   id: number,
   count = 1
 ) {

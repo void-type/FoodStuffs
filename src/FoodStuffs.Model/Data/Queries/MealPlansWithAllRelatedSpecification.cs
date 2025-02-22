@@ -11,7 +11,7 @@ public class MealPlansWithAllRelatedSpecification : QuerySpecificationAbstract<M
 
         AddCriteria(r => r.Id == id);
 
-        AddInclude($"{nameof(MealPlan.PantryShoppingItemRelations)}.{nameof(MealPlanPantryShoppingItemRelation.ShoppingItem)}");
+        AddInclude($"{nameof(MealPlan.ExcludedShoppingItemRelations)}.{nameof(MealPlanExcludedShoppingItemRelation.ShoppingItem)}");
 
         var recipe = $"{nameof(MealPlan.RecipeRelations)}.{nameof(MealPlanRecipeRelation.Recipe)}";
         AddInclude($"{recipe}.{nameof(Recipe.Categories)}");

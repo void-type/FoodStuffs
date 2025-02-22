@@ -7,5 +7,5 @@ public record GetMealPlanResponse(
     DateTimeOffset CreatedOn,
     string ModifiedBy,
     DateTimeOffset ModifiedOn,
-    List<GetMealPlanResponsePantryShoppingItem> PantryShoppingItems,
+    List<GetMealPlanResponseExcludedShoppingItem> ExcludedShoppingItems,
     List<GetMealPlanResponseRecipe> Recipes);

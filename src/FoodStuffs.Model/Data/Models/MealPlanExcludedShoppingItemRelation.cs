@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Model.Data.Models;
 
-public class MealPlanPantryShoppingItemRelation
+public class MealPlanExcludedShoppingItemRelation
 {
     public int Quantity { get; set; }
 

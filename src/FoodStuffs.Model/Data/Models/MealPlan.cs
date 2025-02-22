@@ -16,7 +16,7 @@ public class MealPlan : IAuditableWithOffset
 
     public DateTimeOffset ModifiedOn { get; set; }
 
-    public virtual List<MealPlanPantryShoppingItemRelation> PantryShoppingItemRelations { get; } = [];
+    public virtual List<MealPlanExcludedShoppingItemRelation> ExcludedShoppingItemRelations { get; } = [];
 
     public virtual List<MealPlanRecipeRelation> RecipeRelations { get; } = [];
 }

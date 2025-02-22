@@ -66,14 +66,14 @@ public class FoodStuffsContext : DbContext
 
         modelBuilder.Entity<MealPlan>(entity => entity.ToTable(nameof(MealPlan)));
 
-        modelBuilder.Entity<MealPlanPantryShoppingItemRelation>(entity =>
+        modelBuilder.Entity<MealPlanExcludedShoppingItemRelation>(entity =>
         {
-            entity.ToTable(nameof(MealPlanPantryShoppingItemRelation));
+            entity.ToTable(nameof(MealPlanExcludedShoppingItemRelation));
 
             entity.HasKey(mp => new { mp.MealPlanId, mp.ShoppingItemId });
 
             entity.HasOne<MealPlan>()
-                .WithMany(mp => mp.PantryShoppingItemRelations)
+                .WithMany(mp => mp.ExcludedShoppingItemRelations)
                 .HasForeignKey(mps => mps.MealPlanId);
 
             entity.HasOne(mps => mps.ShoppingItem)

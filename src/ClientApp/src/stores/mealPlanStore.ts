@@ -1,6 +1,6 @@
 import type {
   GetMealPlanResponse,
-  GetMealPlanResponsePantryShoppingItem,
+  GetMealPlanResponseExcludedShoppingItem,
   IItemSetOfListMealPlansResponse,
   MealPlansListParams,
 } from '@/api/data-contracts';
@@ -45,7 +45,7 @@ export default defineStore('mealPlan', {
   getters: {
     currentRecipes: (state) => state.currentMealPlan.recipes || [],
 
-    currentPantry: (state) => state.currentMealPlan.pantryShoppingItems || [],
+    currentPantry: (state) => state.currentMealPlan.excludedShoppingItems || [],
 
     currentRecipesContains: (state) => (recipeId: number | null | undefined) => {
       if (isNil(recipeId)) {
@@ -55,12 +55,12 @@ export default defineStore('mealPlan', {
       return (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId!);
     },
 
-    currentShoppingList(state): GetMealPlanResponsePantryShoppingItem[] {
+    currentShoppingList(state): GetMealPlanResponseExcludedShoppingItem[] {
       const shoppingItemCounts = this.currentRecipes
         .flatMap((c) => c.shoppingItems || [])
         .reduce(countShoppingItems, []);
 
-      (state.currentMealPlan.pantryShoppingItems || []).forEach((x) => {
+      (state.currentMealPlan.excludedShoppingItems || []).forEach((x) => {
         if (!x.id) {
           return;
         }
@@ -84,7 +84,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      addShoppingItem(this.currentMealPlan.pantryShoppingItems || [], shoppingItemId, count);
+      addShoppingItem(this.currentMealPlan.excludedShoppingItems || [], shoppingItemId, count);
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -93,7 +93,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      subtractShoppingItem(this.currentMealPlan.pantryShoppingItems || [], shoppingItemId, count);
+      subtractShoppingItem(this.currentMealPlan.excludedShoppingItems || [], shoppingItemId, count);
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -102,7 +102,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      this.currentMealPlan.pantryShoppingItems = [];
+      this.currentMealPlan.excludedShoppingItems = [];
       await this.saveCurrentMealPlan([], true);
     },
 

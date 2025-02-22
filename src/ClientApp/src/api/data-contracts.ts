@@ -192,11 +192,11 @@ export interface GetMealPlanResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  pantryShoppingItems?: GetMealPlanResponsePantryShoppingItem[];
+  excludedShoppingItems?: GetMealPlanResponseExcludedShoppingItem[];
   recipes?: GetMealPlanResponseRecipe[];
 }
 
-export interface GetMealPlanResponsePantryShoppingItem {
+export interface GetMealPlanResponseExcludedShoppingItem {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -233,11 +233,11 @@ export interface SaveMealPlanRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  pantryShoppingItems?: SaveMealPlanRequestPantryShoppingItem[];
+  excludedShoppingItems?: SaveMealPlanRequestExcludedShoppingItem[];
   recipes?: SaveMealPlanRequestRecipe[];
 }
 
-export interface SaveMealPlanRequestPantryShoppingItem {
+export interface SaveMealPlanRequestExcludedShoppingItem {
   /** @format int32 */
   id?: number;
   /** @format int32 */

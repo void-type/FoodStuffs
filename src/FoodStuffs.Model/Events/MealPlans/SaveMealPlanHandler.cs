@@ -44,7 +44,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         Transfer(request, mealPlanToEdit);
         await ManageRecipesAsync(request, mealPlanToEdit, cancellationToken);
-        await ManagePantryShoppingItemsAsync(request, mealPlanToEdit, cancellationToken);
+        await ManageExcludedShoppingItemsAsync(request, mealPlanToEdit, cancellationToken);
 
         if (maybeMealPlan.HasValue)
         {
@@ -96,18 +96,18 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
                 }));
     }
 
-    private async Task ManagePantryShoppingItemsAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    private async Task ManageExcludedShoppingItemsAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
     {
-        var requestedItemIds = request.PantryShoppingItems
+        var requestedItemIds = request.ExcludedShoppingItems
             .Select(x => x.Id)
             .ToArray();
 
         // Remove extra items.
-        mealPlan.PantryShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
+        mealPlan.ExcludedShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
 
         // Add missing items. We'll let the database throw when ID's don't exist.
         var missingItemIds = requestedItemIds
-            .Where(x => !mealPlan.PantryShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x))
+            .Where(x => !mealPlan.ExcludedShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x))
             .ToList();
 
         var specification = new ShoppingItemsSpecification(missingItemIds);
@@ -120,18 +120,18 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         var missingItemRelations = missingItems
             .Select(item =>
             {
-                return new MealPlanPantryShoppingItemRelation
+                return new MealPlanExcludedShoppingItemRelation
                 {
                     ShoppingItem = item
                 };
             });
 
-        mealPlan.PantryShoppingItemRelations.AddRange(missingItemRelations);
+        mealPlan.ExcludedShoppingItemRelations.AddRange(missingItemRelations);
 
         // Set properties
-        foreach (var item in mealPlan.PantryShoppingItemRelations)
+        foreach (var item in mealPlan.ExcludedShoppingItemRelations)
         {
-            var requestedItem = request.PantryShoppingItems
+            var requestedItem = request.ExcludedShoppingItems
                 .Find(x => x.Id == item.ShoppingItem.Id);
 
             if (requestedItem == null)

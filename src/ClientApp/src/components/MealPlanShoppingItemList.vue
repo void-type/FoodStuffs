@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { SaveMealPlanRequestPantryShoppingItem } from '@/api/data-contracts';
+import type { SaveMealPlanRequestExcludedShoppingItem } from '@/api/data-contracts';
 import { computed, reactive, type PropType } from 'vue';
 import ShoppingItemInventoryQuantity from './ShoppingItemInventoryQuantity.vue';
 
 const props = defineProps({
   title: { type: String, required: true },
-  shoppingItems: { type: Array<SaveMealPlanRequestPantryShoppingItem>, required: true },
+  shoppingItems: { type: Array<SaveMealPlanRequestExcludedShoppingItem>, required: true },
   onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
   onItemClick: { type: Function, required: true },
   getShoppingItemDetails: { type: Function, required: true },
