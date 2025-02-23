@@ -36,7 +36,6 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
-            .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
 
@@ -90,10 +89,16 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
                 .Select(recipe => new MealPlanRecipeRelation
                 {
                     Recipe = recipe,
-                    Order = request.Recipes
-                        .Find(req => req.Id == recipe.Id)?
-                        .Order ?? int.MaxValue,
+                    Order = 0,
                 }));
+
+        mealPlan.RecipeRelations
+            .ForEach(relation =>
+            {
+                relation.Order = request.Recipes
+                    .Find(req => req.Id == relation.Recipe.Id)?
+                    .Order ?? int.MaxValue;
+            });
     }
 
     private async Task ManageExcludedShoppingItemsAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)

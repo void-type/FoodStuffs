@@ -31,7 +31,7 @@ const messageStore = useMessageStore();
 const api = ApiHelper.client;
 
 async function onInventoryChange(item: ShoppingItemInventoryWorking) {
-  const inventoryQuantity = Math.max(0, item.inventoryQuantity || 0);
+  const inventoryQuantity = Math.max(0, model.value || 0);
 
   const request = {
     id: item.id,

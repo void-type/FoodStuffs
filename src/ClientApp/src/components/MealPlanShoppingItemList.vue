@@ -16,28 +16,28 @@ const props = defineProps({
   getGroceryDepartmentDetails: { type: Function, required: true },
 });
 
-const shoppingItemsSorted = computed(() => {
-  const sortableItems = props.shoppingItems.map((x) => {
+interface GroupItem extends GetMealPlanResponseExcludedShoppingItem {
+  details: GetMealPlanResponseRecipeShoppingItem;
+}
+
+const shoppingItemsGrouped = computed(() => {
+  const items = props.shoppingItems.map((x) => {
     return {
-      ...(props.getShoppingItemDetails(x.id) || {}),
-      quantity: x.quantity,
+      ...x,
+      details: props.getShoppingItemDetails(x.id) || {},
     };
   });
 
-  sortableItems.sort((a, b) => (a?.name || '').localeCompare(b?.name || ''));
+  items.sort((a, b) => (a?.details.name || '').localeCompare(b?.details.name || ''));
 
-  return sortableItems;
-});
+  const groupedById = new Map<number, Array<GroupItem>>();
 
-const shoppingItemsGrouped = computed(() => {
-  const groupedById = new Map<number, Array<GetMealPlanResponseRecipeShoppingItem>>();
-
-  shoppingItemsSorted.value.forEach((item) => {
-    if (!groupedById.has(item.groceryDepartmentId)) {
-      groupedById.set(item.groceryDepartmentId, []);
+  items.forEach((item) => {
+    if (!groupedById.has(item.details.groceryDepartmentId)) {
+      groupedById.set(item.details.groceryDepartmentId, []);
     }
 
-    groupedById.get(item.groceryDepartmentId)?.push(item);
+    groupedById.get(item.details.groceryDepartmentId)?.push(item);
   });
 
   const grouped = Array.from(groupedById).map((x) => ({
@@ -80,7 +80,7 @@ function copyList() {
     lines.push(`# ${group.groceryDepartment.name}`);
 
     group.items.forEach((item) => {
-      lines.push(`${item.quantity}x ${item.name}`);
+      lines.push(`${item.quantity}x ${item.details.name}`);
     });
   });
 
@@ -134,10 +134,10 @@ function copyList() {
             @click="onItemClick(item.id)"
           >
             <div class="grid gap-sm">
-              <div class="g-col-12 g-col-xl-8">{{ item.quantity }}x {{ item.name }}</div>
+              <div class="g-col-12 g-col-xl-8">{{ item.quantity }}x {{ item.details.name }}</div>
               <ShoppingItemInventoryQuantity
                 :id="`inventory-${item.id}`"
-                v-model="item.inventoryQuantity"
+                v-model="item.details.inventoryQuantity"
                 class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-4"
                 :inline="true"
                 :item="item"
