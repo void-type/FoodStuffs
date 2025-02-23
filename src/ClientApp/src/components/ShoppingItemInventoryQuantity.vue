@@ -4,6 +4,7 @@ import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import type ShoppingItemInventoryWorking from '@/models/ShoppingItemInventoryWorking';
+import debounce from '@/models/DebounceHelper';
 
 const model = defineModel({
   type: Number as PropType<number | null | undefined>,
@@ -30,7 +31,7 @@ defineProps({
 const messageStore = useMessageStore();
 const api = ApiHelper.client;
 
-async function onInventoryChange(item: ShoppingItemInventoryWorking) {
+const onInventoryChange = debounce(async (item: ShoppingItemInventoryWorking) => {
   const inventoryQuantity = Math.max(0, model.value || 0);
 
   const request = {
@@ -47,7 +48,7 @@ async function onInventoryChange(item: ShoppingItemInventoryWorking) {
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
-}
+});
 </script>
 
 <template>

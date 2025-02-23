@@ -9,6 +9,7 @@ import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
 import type { SuggestRecipesResultItem } from '@/api/data-contracts';
 import RouterHelper from '@/models/RouterHelper';
+import debounce from '@/models/DebounceHelper';
 
 const searchText = defineModel<string>();
 
@@ -43,16 +44,6 @@ function clearSearch() {
   cancelInFlightSuggestions = true;
   searchText.value = '';
   suggestions.value = [];
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-function debounce(fn: Function, ms = 300) {
-  let debounceTimeoutId: ReturnType<typeof setTimeout>;
-  // eslint-disable-next-line func-names
-  return function (this: unknown, ...args: unknown[]) {
-    clearTimeout(debounceTimeoutId);
-    debounceTimeoutId = setTimeout(() => fn.apply(this, args), ms);
-  };
 }
 
 const suggest = debounce(async () => {
