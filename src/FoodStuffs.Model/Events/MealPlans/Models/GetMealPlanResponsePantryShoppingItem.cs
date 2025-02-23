@@ -2,5 +2,4 @@
 
 public record GetMealPlanResponseExcludedShoppingItem(
     int Id,
-    string Name,
     decimal Quantity);

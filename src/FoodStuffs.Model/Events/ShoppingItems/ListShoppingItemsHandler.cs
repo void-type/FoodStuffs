@@ -33,7 +33,8 @@ public class ListShoppingItemsHandler : CustomEventHandlerAbstract<ListShoppingI
                 InventoryQuantity: c.InventoryQuantity,
                 PantryLocations: [.. c.PantryLocations
                     .Select(pl => pl.Name)
-                    .Order(StringComparer.Ordinal)]))
+                    .Order(StringComparer.Ordinal)],
+                GroceryDepartmentId: c.GroceryDepartmentId))
             .MapAsync(Ok);
     }
 }

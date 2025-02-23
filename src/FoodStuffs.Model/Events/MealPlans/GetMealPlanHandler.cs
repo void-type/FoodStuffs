@@ -39,7 +39,6 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                     .ConvertAll(i =>
                         new GetMealPlanResponseExcludedShoppingItem(
                             Id: i.ShoppingItem.Id,
-                            Name: i.ShoppingItem.Name,
                             Quantity: i.Quantity)
                     ),
                 Recipes: [.. m.RecipeRelations

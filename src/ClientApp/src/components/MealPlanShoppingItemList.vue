@@ -1,26 +1,64 @@
 <script lang="ts" setup>
-import type { SaveMealPlanRequestExcludedShoppingItem } from '@/api/data-contracts';
+import type {
+  GetMealPlanResponseExcludedShoppingItem,
+  GetMealPlanResponseRecipeShoppingItem,
+} from '@/api/data-contracts';
 import { computed, reactive, type PropType } from 'vue';
 import ShoppingItemInventoryQuantity from './ShoppingItemInventoryQuantity.vue';
 
 const props = defineProps({
   title: { type: String, required: true },
-  shoppingItems: { type: Array<SaveMealPlanRequestExcludedShoppingItem>, required: true },
-  onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
+  shoppingItems: { type: Array<GetMealPlanResponseExcludedShoppingItem>, required: true },
   onItemClick: { type: Function, required: true },
-  getShoppingItemDetails: { type: Function, required: true },
   showCopyList: { type: Boolean, required: false, default: false },
+  onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
+  getShoppingItemDetails: { type: Function, required: true },
+  getGroceryDepartmentDetails: { type: Function, required: true },
 });
 
 const shoppingItemsSorted = computed(() => {
-  const sortableItems = props.shoppingItems.map((x) => ({
-    value: x,
-    sortValue: props.getShoppingItemDetails(x.id)?.name || '',
+  const sortableItems = props.shoppingItems.map((x) => {
+    return {
+      ...(props.getShoppingItemDetails(x.id) || {}),
+      quantity: x.quantity,
+    };
+  });
+
+  sortableItems.sort((a, b) => (a?.name || '').localeCompare(b?.name || ''));
+
+  return sortableItems;
+});
+
+const shoppingItemsGrouped = computed(() => {
+  const groupedById = new Map<number, Array<GetMealPlanResponseRecipeShoppingItem>>();
+
+  shoppingItemsSorted.value.forEach((item) => {
+    if (!groupedById.has(item.groceryDepartmentId)) {
+      groupedById.set(item.groceryDepartmentId, []);
+    }
+
+    groupedById.get(item.groceryDepartmentId)?.push(item);
+  });
+
+  const grouped = Array.from(groupedById).map((x) => ({
+    groceryDepartmentId: x[0],
+    groceryDepartment: props.getGroceryDepartmentDetails(x[0]) || {
+      name: 'No department',
+      order: Number.MAX_VALUE,
+      id: 0,
+    },
+    items: x[1],
   }));
 
-  sortableItems.sort((a, b) => a?.sortValue.localeCompare(b?.sortValue));
+  grouped.sort((a, b) => {
+    if (a.groceryDepartment === null || b.groceryDepartment === null) {
+      return 0;
+    }
 
-  return sortableItems.map((x) => x.value);
+    return a.groceryDepartment.order - b.groceryDepartment.order;
+  });
+
+  return grouped;
 });
 
 const defaultCopyTooltip = 'Copy list';
@@ -36,10 +74,18 @@ function clear() {
 }
 
 function copyList() {
+  const lines: string[] = [];
+
+  shoppingItemsGrouped.value.forEach((group) => {
+    lines.push(`# ${group.groceryDepartment.name}`);
+
+    group.items.forEach((item) => {
+      lines.push(`${item.quantity}x ${item.name}`);
+    });
+  });
+
   // This doesn't paste as multiple items from firefox (chrome works)
-  const text = shoppingItemsSorted.value
-    .map((x) => `${x.quantity}x ${props.getShoppingItemDetails(x.id)?.name}`)
-    .join(`\n`);
+  const text = lines.join(`\n`);
 
   navigator.clipboard.writeText(text);
   data.copyTooltipText = 'List copied!';
@@ -73,31 +119,36 @@ function copyList() {
           </button>
         </div>
       </div>
-      <ul class="list-group list-group-flush">
-        <li
-          v-for="{ id, quantity } in shoppingItemsSorted"
-          :key="id"
-          tabindex="0"
-          role="button"
-          class="list-group-item card-hover p-3"
-          @keydown.stop.prevent.enter="onItemClick(id)"
-          @click="onItemClick(id)"
-        >
-          <div class="grid gap-sm">
-            <div class="g-col-12 g-col-xl-8">
-              {{ quantity }}x {{ getShoppingItemDetails(id)?.name }}
+      <div v-for="group in shoppingItemsGrouped" :key="group.groceryDepartmentId">
+        <div class="card-header">
+          {{ group.groceryDepartment.name }}
+        </div>
+        <ul class="list-group list-group-flush">
+          <li
+            v-for="item in group.items"
+            :key="item.id"
+            tabindex="0"
+            role="button"
+            class="list-group-item card-hover p-3"
+            @keydown.stop.prevent.enter="onItemClick(item.id)"
+            @click="onItemClick(item.id)"
+          >
+            <div class="grid gap-sm">
+              <div class="g-col-12 g-col-xl-8">{{ item.quantity }}x {{ item.name }}</div>
+              <ShoppingItemInventoryQuantity
+                :id="`inventory-${item.id}`"
+                v-model="item.inventoryQuantity"
+                class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-4"
+                :inline="true"
+                :item="item"
+                @click.stop.prevent
+              />
             </div>
-            <ShoppingItemInventoryQuantity
-              :id="`inventory-${id}`"
-              v-model="(getShoppingItemDetails(id) || { inventoryQuantity: 0 }).inventoryQuantity"
-              class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-4"
-              :inline="true"
-              :item="{ id, inventoryQuantity: getShoppingItemDetails(id)?.inventoryQuantity }"
-              @click.stop.prevent
-            />
-          </div>
-        </li>
-        <li v-if="shoppingItemsSorted.length < 1" class="list-group-item p-4 text-center">
+          </li>
+        </ul>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li v-if="shoppingItemsGrouped.length < 1" class="list-group-item p-4 text-center">
           No shopping items.
         </li>
       </ul>

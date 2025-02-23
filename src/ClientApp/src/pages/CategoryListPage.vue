@@ -109,8 +109,12 @@ async function onDeleteCategory(id: number | null | undefined) {
     }
 
     try {
-      await api().categoriesDelete(id);
+      const response = await api().categoriesDelete(id);
       await categoryStore.fetchCategoriesList();
+
+      if (response.data.message) {
+        messageStore.setSuccessMessage(response.data.message);
+      }
     } catch (error) {
       messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
     }

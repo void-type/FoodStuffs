@@ -108,8 +108,12 @@ async function onDeleteShoppingItem(id: number | null | undefined) {
     }
 
     try {
-      await api().shoppingItemsDelete(id);
+      const response = await api().shoppingItemsDelete(id);
       await shoppingItemStore.fetchShoppingItemsList();
+
+      if (response.data.message) {
+        messageStore.setSuccessMessage(response.data.message);
+      }
     } catch (error) {
       messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
     }

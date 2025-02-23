@@ -29,6 +29,6 @@ public class DeleteGroceryDepartmentHandler : CustomEventHandlerAbstract<DeleteG
 
                 await _data.SaveChangesAsync(cancellationToken);
             })
-            .SelectAsync(r => EntityMessage.Create("Grocery Department deleted.", r.Id));
+            .SelectAsync(r => EntityMessage.Create("Grocery department deleted.", r.Id));
     }
 }

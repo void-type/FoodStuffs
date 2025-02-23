@@ -109,8 +109,12 @@ async function onDeleteGroceryDepartment(id: number | null | undefined) {
     }
 
     try {
-      await api().groceryDepartmentsDelete(id);
+      const response = await api().groceryDepartmentsDelete(id);
       await groceryDepartmentStore.fetchGroceryDepartmentsList();
+
+      if (response.data.message) {
+        messageStore.setSuccessMessage(response.data.message);
+      }
     } catch (error) {
       messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
     }
@@ -179,6 +183,7 @@ watch(
       <thead>
         <tr>
           <th>Name</th>
+          <th>Order</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -191,6 +196,7 @@ watch(
               {{ groceryDepartment.name }}
             </router-link>
           </td>
+          <td>{{ groceryDepartment.order }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"

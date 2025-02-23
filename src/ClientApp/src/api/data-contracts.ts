@@ -199,7 +199,6 @@ export interface GetMealPlanResponse {
 export interface GetMealPlanResponseExcludedShoppingItem {
   /** @format int32 */
   id?: number;
-  name?: string;
   /** @format decimal */
   quantity?: number;
 }
@@ -467,6 +466,8 @@ export interface ListShoppingItemsResponse {
   /** @format int32 */
   inventoryQuantity?: number;
   pantryLocations?: string[];
+  /** @format int32 */
+  groceryDepartmentId?: number | null;
 }
 
 export interface GetShoppingItemResponse {

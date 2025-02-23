@@ -55,7 +55,7 @@ public class SavePantryLocationHandler : CustomEventHandlerAbstract<SavePantryLo
 
         if (conflictingPantryLocation is not null && conflictingPantryLocation.Id != request.Id)
         {
-            return Fail(new Failure("Pantry Location name already exists.", "name"));
+            return Fail(new Failure("Pantry location name already exists.", "name"));
         }
 
         var pantryLocationToEdit = maybePantryLocation.Unwrap(() => new PantryLocation());
@@ -73,7 +73,7 @@ public class SavePantryLocationHandler : CustomEventHandlerAbstract<SavePantryLo
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        return Ok(EntityMessage.Create($"Pantry Location {(maybePantryLocation.HasValue ? "updated" : "added")}.", pantryLocationToEdit.Id));
+        return Ok(EntityMessage.Create($"Pantry location {(maybePantryLocation.HasValue ? "updated" : "added")}.", pantryLocationToEdit.Id));
     }
 
     private static void Transfer(string formattedName, PantryLocation pantryLocation)
