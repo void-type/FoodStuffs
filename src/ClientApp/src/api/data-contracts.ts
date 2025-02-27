@@ -105,6 +105,11 @@ export interface SaveCategoryRequest {
   name?: string;
 }
 
+export interface AddCategoryToAllRecipesRequest {
+  /** @format int32 */
+  id?: number;
+}
+
 export interface IItemSetOfListGroceryDepartmentsResponse {
   /** @format int32 */
   count?: number;

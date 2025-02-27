@@ -123,6 +123,31 @@ function onDeleteClick(id: number) {
   appStore.showModal(parameters);
 }
 
+function onAddToAllClick(id: number) {
+  function saveNow() {
+    api()
+      .categoriesAddToAllRecipes({ id })
+      .then(async (response) => {
+        await fetch();
+        await categoryStore.fetchCategoriesList();
+        if (response.data.message) {
+          messageStore.setSuccessMessage(response.data.message);
+        }
+      })
+      .catch((response) => {
+        messageStore.setApiFailureMessages(response);
+      });
+  }
+
+  const parameters: ModalParameters = {
+    title: 'Add category to all recipes',
+    description: 'Do you really want to add this category to all recipes?',
+    okAction: saveNow,
+  };
+
+  appStore.showModal(parameters);
+}
+
 function reset() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(data.source));
 
@@ -253,6 +278,11 @@ onBeforeUnmount(() => {
                 @click.stop.prevent="onDeleteClick(data.working.id)"
               >
                 Delete
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item" @click.stop.prevent="onAddToAllClick(data.working.id)">
+                Add to all recipes
               </button>
             </li>
           </ul>

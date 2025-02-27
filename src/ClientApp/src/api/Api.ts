@@ -10,6 +10,7 @@
  */
 
 import type {
+  AddCategoryToAllRecipesRequest,
   AppVersion,
   CategoriesListParams,
   EntityMessageOfInteger,
@@ -148,6 +149,25 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/categories/${id}`,
       method: 'DELETE',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Categories
+   * @name CategoriesAddToAllRecipes
+   * @summary Add category to all recipes.
+   * @request POST:/api/categories/add-to-all-recipes
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  categoriesAddToAllRecipes = (data: AddCategoryToAllRecipesRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/categories/add-to-all-recipes`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
       format: 'json',
       ...params,
     });

@@ -93,4 +93,19 @@ public class CategoriesController : ControllerBase
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
+
+    /// <summary>
+    /// Add category to all recipes.
+    /// </summary>
+    /// <param name="saveHandler"></param>
+    /// <param name="request">The category to save</param>
+    [HttpPost("add-to-all-recipes")]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> AddToAllRecipesAsync([FromServices] AddCategoryToAllRecipesHandler saveHandler, [FromBody] AddCategoryToAllRecipesRequest request)
+    {
+        return await saveHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
 }
