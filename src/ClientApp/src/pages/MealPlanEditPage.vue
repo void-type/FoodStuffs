@@ -149,8 +149,8 @@ onMounted(async () => {
   <div class="container-xxl">
     <AppBreadcrumbs />
     <AppPageHeading :title="pageTitle" />
-    <div v-if="initialized">
-      <div class="btn-toolbar sticky-top pt-1 mt-3">
+    <div v-if="initialized" class="mt-3">
+      <div class="btn-toolbar sticky-top pt-1">
         <button class="btn btn-primary me-2" @click.stop.prevent="() => onSaveMealPlan()">
           Save
         </button>

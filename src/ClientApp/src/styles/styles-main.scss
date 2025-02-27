@@ -108,7 +108,12 @@ header {
 }
 
 .btn-toolbar.sticky-top {
-  z-index: 3;
+  z-index: 5;
+  pointer-events: none;
+
+  * {
+    pointer-events: auto;
+  }
 }
 
 // Dark theme
