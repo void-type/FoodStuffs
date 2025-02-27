@@ -215,7 +215,7 @@ onMounted(() => {
               <button
                 v-if="images.length > 0 && imageName != pinnedImage"
                 type="button"
-                class="btn btn-light btn-sm image-button image-button-pin d-print-none"
+                class="btn btn-light btn-sm image-button image-button-left d-print-none"
                 title="Pin image"
                 @click.stop.prevent="pinImageClick(imageName)"
               >
@@ -225,7 +225,7 @@ onMounted(() => {
               <button
                 v-if="images.length > 0"
                 type="button"
-                class="btn btn-danger btn-sm image-button image-button-delete d-print-none"
+                class="btn btn-danger btn-sm image-button image-button-right d-print-none"
                 title="Delete image"
                 @click.stop.prevent="deleteImageClick(imageName)"
               >
@@ -233,12 +233,13 @@ onMounted(() => {
                 <font-awesome-icon icon="fa-times" />
               </button>
               <img
-                class="img-fluid rounded"
+                class="img-fluid rounded object-fit-cover"
                 :src="ApiHelper.imageUrl(imageName)"
                 :alt="`image ${i}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
                 width="1600"
                 height="1200"
+                style="aspect-ratio: 4 / 3"
               />
             </div>
           </div>
@@ -273,16 +274,12 @@ onMounted(() => {
   top: 0;
   z-index: 2;
 
-  &.image-button-delete {
+  &.image-button-right {
     right: 0;
   }
 
-  &.image-button-pin {
+  &.image-button-left {
     left: 0;
   }
-}
-
-.carousel-indicators {
-  margin-bottom: 0.1rem;
 }
 </style>

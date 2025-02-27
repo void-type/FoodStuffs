@@ -54,6 +54,16 @@ header {
   }
 }
 
+.carousel .carousel-indicators,
+[data-bs-theme='dark'] .carousel .carousel-indicators {
+  margin-bottom: 0;
+
+  [data-bs-target] {
+    background-color: var(--bs-body-color);
+    box-shadow: inset 0 0 0 2px var(--bs-body-bg);
+  }
+}
+
 .card {
   --bs-accordion-btn-icon-width: #{$accordion-icon-width};
   --bs-accordion-btn-icon: #{escape-svg($accordion-button-icon)};

@@ -83,13 +83,14 @@ onMounted(() => {
         <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
       </div>
     </div>
-    <div v-if="showImage" class="mb-5">
-      <div
-        :class="{
-          'col-12 text-center mt-4': true,
-          'd-print-none': !(images.length > 0),
-        }"
-      >
+    <div
+      v-if="showImage"
+      :class="{
+        'g-col-12 text-center mt-4 mb-5': true,
+        'd-print-none': !(images.length > 0),
+      }"
+    >
+      <div class="carousel-wrapper mx-auto">
         <div
           v-if="images.length > 0"
           :id="`image-carousel-${uniqueId}`"
@@ -114,16 +115,15 @@ onMounted(() => {
               :key="imageName"
               :class="{ 'carousel-item': true, active: i === carouselIndex }"
             >
-              <div class="image-wrapper">
-                <img
-                  class="img-fluid rounded"
-                  :src="ApiHelper.imageUrl(imageName)"
-                  :alt="`image ${i} of ${recipe.name}`"
-                  :loading="i > 0 ? 'lazy' : 'eager'"
-                  width="1600"
-                  height="1200"
-                />
-              </div>
+              <img
+                class="img-fluid rounded object-fit-cover"
+                :src="ApiHelper.imageUrl(imageName)"
+                :alt="`image ${i} of ${recipe.name}`"
+                :loading="i > 0 ? 'lazy' : 'eager'"
+                width="1600"
+                height="1200"
+                style="aspect-ratio: 4 / 3"
+              />
             </div>
           </div>
           <button
@@ -145,9 +145,7 @@ onMounted(() => {
             <span class="visually-hidden">Next image</span>
           </button>
         </div>
-        <div v-else class="img-placeholder-wrapper m-auto w-100">
-          <ImagePlaceholder class="img-fluid rounded" />
-        </div>
+        <ImagePlaceholder v-else class="img-fluid rounded" />
       </div>
     </div>
     <h3 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-4">Shopping Items</h3>
@@ -206,8 +204,7 @@ div.form-control-plaintext {
   white-space: pre-wrap;
 }
 
-div.carousel-item img,
-.img-placeholder-wrapper {
+.carousel-wrapper {
   max-width: 27rem;
 }
 </style>
