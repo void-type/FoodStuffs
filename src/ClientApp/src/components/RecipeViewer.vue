@@ -6,9 +6,6 @@ import ApiHelper from '@/models/ApiHelper';
 import { isNil } from '@/models/FormatHelper';
 import { toTimeSpanString } from '@/models/TimeSpanHelper';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
-import RecipeViewerIngredients from '@/components/RecipeViewerIngredients.vue';
-import useAppStore from '@/stores/appStore';
-import { storeToRefs } from 'pinia';
 import RouterHelper from '@/models/RouterHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
@@ -19,9 +16,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const appStore = useAppStore();
-const { useDarkMode } = storeToRefs(appStore);
 
 const showImage = ref(true);
 const carouselIndex = ref(0);
@@ -148,31 +142,25 @@ onMounted(() => {
         <ImagePlaceholder v-else class="img-fluid rounded" />
       </div>
     </div>
-    <h3 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-4">Shopping Items</h3>
-    <RecipeViewerIngredients
-      v-if="(recipe.shoppingItems?.length || 0) > 0"
-      :ingredients="recipe.shoppingItems || []"
-    />
-    <h3 v-if="(recipe.ingredients?.length || 0) > 0" class="mt-4">Ingredients</h3>
-    <RecipeViewerIngredients
-      v-if="(recipe.ingredients?.length || 0) > 0"
-      :ingredients="recipe.ingredients || []"
-    />
-    <h3 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h3>
-    <div
-      v-if="!isNil(recipe.directions)"
-      :class="{ 'form-control-plaintext p-0': true, 'text-light': useDarkMode }"
-    >
-      {{ recipe.directions }}
-    </div>
-    <h3 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h3>
-    <div
-      v-if="!isNil(recipe.sides)"
-      :class="{ 'form-control-plaintext p-0': true, 'text-light': useDarkMode }"
-    >
+    <h2 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h2>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <div v-if="!isNil(recipe.directions)" class="rich-text" v-html="recipe.directions"></div>
+    <h2 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h2>
+    <div v-if="!isNil(recipe.sides)" :class="{ 'form-control-plaintext p-0': true }">
       {{ recipe.sides }}
     </div>
-    <h3
+    <h2 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3 mb-0 d-print-none">
+      Shopping Items
+    </h2>
+    <div class="badge p-0 mb-2 text-muted">
+      <small>Not printed.</small>
+    </div>
+    <ul>
+      <li v-for="item in recipe.shoppingItems || []" :key="item.id">
+        {{ item.quantity }}x {{ item.name }}
+      </li>
+    </ul>
+    <h2
       v-if="
         recipe.prepTimeMinutes ||
         0 > 0 ||
@@ -183,7 +171,7 @@ onMounted(() => {
       class="mt-3"
     >
       Stats
-    </h3>
+    </h2>
     <div v-if="recipe.prepTimeMinutes || 0 > 0">
       Prep Time: {{ timeSpanFormat(recipe.prepTimeMinutes) }}
     </div>

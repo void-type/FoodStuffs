@@ -18,9 +18,9 @@ import RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
-import RecipeEditorIngredients from './RecipeEditorIngredients.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 import RecipeEditorShoppingItems from './RecipeEditorShoppingItems.vue';
+import RichTextEditor from './RichTextEditor.vue';
 
 const props = defineProps({
   sourceRecipe: {
@@ -295,7 +295,7 @@ onMounted(async () => {
         </div>
       </div>
       <div class="g-col-12 g-col-md-6">
-        <label for="ingredients" class="form-label">Shopping items</label>
+        <label for="shopping-item-list" class="form-label">Shopping items</label>
         <RecipeEditorShoppingItems
           v-model="data.workingRecipe.shoppingItems as RecipeShoppingItemWorking[]"
           :is-field-in-error="messageStore.isFieldInError"
@@ -304,51 +304,46 @@ onMounted(async () => {
         />
       </div>
       <div class="g-col-12 g-col-md-6">
-        <label for="ingredients" class="form-label">Ingredients</label>
-        <RecipeEditorIngredients
-          v-model="data.workingRecipe.ingredients"
-          :is-field-in-error="messageStore.isFieldInError"
-        />
-      </div>
-      <div class="g-col-12 g-col-md-6">
-        <label for="directions" class="form-label">Directions</label>
-        <textarea
-          id="directions"
-          v-model="data.workingRecipe.directions"
-          rows="10"
-          :class="{
-            'form-control': true,
-            'is-invalid': messageStore.isFieldInError('directions'),
-          }"
-        />
-      </div>
-      <div class="g-col-12 g-col-md-6">
         <label for="sides" class="form-label">Sides</label>
         <textarea
           id="sides"
           v-model="data.workingRecipe.sides"
-          rows="10"
+          rows="5"
           :class="{
             'form-control': true,
             'is-invalid': messageStore.isFieldInError('sides'),
           }"
         />
       </div>
-      <div class="g-col-12 g-col-md-6">
-        <label for="prepTimeMinutes" class="form-label">Prep time hours/minutes</label>
-        <RecipeTimeSpanEditor
-          id="prepTimeMinutes"
-          v-model="data.workingRecipe.prepTimeMinutes"
-          :is-invalid="messageStore.isFieldInError('prepTimeMinutes')"
+      <div class="g-col-12">
+        <label for="directions" class="form-label">Directions</label>
+        <RichTextEditor
+          id="directions"
+          v-model="data.workingRecipe.directions"
+          :class="{
+            'is-invalid': messageStore.isFieldInError('directions'),
+          }"
         />
       </div>
-      <div class="g-col-12 g-col-md-6">
-        <label for="cookTimeMinutes" class="form-label">Cook time hours/minutes</label>
-        <RecipeTimeSpanEditor
-          id="cookTimeMinutes"
-          v-model="data.workingRecipe.cookTimeMinutes"
-          :is-invalid="messageStore.isFieldInError('cookTimeMinutes')"
-        />
+      <div class="g-col-12">
+        <div class="grid">
+          <div class="g-col-12 g-col-md-6">
+            <label for="prepTimeMinutes" class="form-label">Prep time hours/minutes</label>
+            <RecipeTimeSpanEditor
+              id="prepTimeMinutes"
+              v-model="data.workingRecipe.prepTimeMinutes"
+              :is-invalid="messageStore.isFieldInError('prepTimeMinutes')"
+            />
+          </div>
+          <div class="g-col-12 g-col-md-6">
+            <label for="cookTimeMinutes" class="form-label">Cook time hours/minutes</label>
+            <RecipeTimeSpanEditor
+              id="cookTimeMinutes"
+              v-model="data.workingRecipe.cookTimeMinutes"
+              :is-invalid="messageStore.isFieldInError('cookTimeMinutes')"
+            />
+          </div>
+        </div>
       </div>
       <EntityAuditInfo v-if="sourceRecipe.id" class="g-col-12" :entity="sourceRecipe" />
     </div>

@@ -116,6 +116,30 @@ header {
   }
 }
 
+.btn-outline-secondary {
+  --bs-btn-color: var(--bs-body-color);
+}
+
+.rich-text {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol,
+  blockquote,
+  pre {
+    margin-bottom: 1rem;
+  }
+
+  li > p {
+    margin-bottom: 0;
+  }
+}
+
 // Dark theme
 html[data-bs-theme='dark'] {
   --bs-body-bg: #{$dark};
