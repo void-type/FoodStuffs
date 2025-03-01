@@ -14,7 +14,7 @@ Console.WriteLine("Take a backup of your V13 database, restore it (source) next 
 Console.WriteLine("Then run the migration against the current database. This will delete current recipe ingredients, but they will be restored with this migration.");
 
 Console.WriteLine("Press any key to continue. Or press Ctrl+C to exit.");
-// Console.ReadKey();
+Console.ReadKey();
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
