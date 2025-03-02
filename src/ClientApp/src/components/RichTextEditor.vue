@@ -4,7 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Typography from '@tiptap/extension-typography';
 import { useEditor, EditorContent, Extension, textInputRule } from '@tiptap/vue-3';
 
-const model = defineModel<string>();
+const model = defineModel<string | null | undefined>();
 
 defineProps({
   id: {

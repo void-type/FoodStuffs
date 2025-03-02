@@ -98,7 +98,8 @@ const searchText = ref('');
                     class="form-check-input"
                     type="checkbox"
                     @change="
-                      (e) => appStore.setDarkMode((e as HTMLInputEvent).target?.checked === true)
+                      (e: Event) =>
+                        appStore.setDarkMode((e as HTMLInputEvent).target?.checked === true)
                     "
                   />
                 </div>

@@ -192,7 +192,7 @@ const isRecipeDirty = computed(() => {
     // eslint-disable-next-line no-param-reassign
     delete x.inventoryQuantity;
   });
-  const initialJson = JSON.stringify(working);
+  const initialJson = JSON.stringify(initial);
 
   return workingJson !== initialJson;
 });
@@ -242,7 +242,7 @@ onMounted(async () => {
           <li>
             <button
               class="dropdown-item text-danger"
-              @click.stop.prevent="onRecipeDelete(data.workingRecipe.id)"
+              @click.stop.prevent="onRecipeDelete(data.sourceRecipe.id)"
             >
               Delete
             </button>

@@ -11,7 +11,7 @@ import type { SuggestRecipesResultItem } from '@/api/data-contracts';
 import RouterHelper from '@/models/RouterHelper';
 import debounce from '@/models/DebounceHelper';
 
-const searchText = defineModel<string>();
+const searchText = defineModel<string | null | undefined>();
 
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
