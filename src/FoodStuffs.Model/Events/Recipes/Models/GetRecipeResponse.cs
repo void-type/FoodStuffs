@@ -17,5 +17,4 @@ public record GetRecipeResponse(
     string? PinnedImage,
     List<string> Images,
     List<string> Categories,
-    List<GetRecipeResponseIngredient> Ingredients,
     List<GetRecipeResponseShoppingItem> ShoppingItems);

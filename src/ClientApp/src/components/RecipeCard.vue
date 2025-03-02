@@ -82,8 +82,8 @@ function flipCard() {
             <div v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3">
               <div>Shopping Items</div>
               <ul>
-                <li v-for="ingredient in recipe.shoppingItems" :key="ingredient.name || ''">
-                  {{ ingredient.quantity }}x {{ ingredient.name }}
+                <li v-for="shoppingItem in recipe.shoppingItems" :key="shoppingItem.name || ''">
+                  {{ shoppingItem.quantity }}x {{ shoppingItem.name }}
                 </li>
               </ul>
             </div>

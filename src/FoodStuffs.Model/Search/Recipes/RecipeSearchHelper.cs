@@ -61,7 +61,7 @@ public static class RecipeSearchHelper
                 Order: x.Order
             ));
 
-        // Ingredients: retrievable
+        // Shopping items: retrievable
         doc.AddStoredField(C.FIELD_MEAL_SHOPPING_ITEMS_JSON, JsonSerializer.Serialize(shoppingItems));
 
         var image = recipe.DefaultImage;

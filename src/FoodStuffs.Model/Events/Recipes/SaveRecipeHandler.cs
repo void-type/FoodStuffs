@@ -63,8 +63,6 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         Transfer(request, recipeToEdit);
 
-        ManageIngredients(request, recipeToEdit);
-
         await ManageCategoriesAsync(request, recipeToEdit, cancellationToken);
 
         await ManageShoppingItemsAsync(request, recipeToEdit, cancellationToken);
@@ -127,22 +125,6 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
             .Select(x => new Category { Name = x });
 
         recipe.Categories.AddRange(createdCategories);
-    }
-
-    private static void ManageIngredients(SaveRecipeRequest request, Recipe recipe)
-    {
-        recipe.Ingredients.Clear();
-
-        var ingredientsToAdd = request.Ingredients
-            .Select(x => new RecipeIngredient
-            {
-                Name = x.Name,
-                Quantity = x.Quantity,
-                Order = x.Order,
-                IsCategory = x.IsCategory,
-            });
-
-        recipe.Ingredients.AddRange(ingredientsToAdd);
     }
 
     private async Task ManageShoppingItemsAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)

@@ -12,7 +12,6 @@ import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import RecipeIngredientWorking from '@/models/RecipeIngredientWorking';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import EntityAuditInfo from './EntityAuditInfo.vue';
@@ -95,13 +94,6 @@ function reset() {
     }
   });
 
-  const ingredients = (props.sourceRecipe.ingredients || []).map((x) => ({
-    ...new RecipeIngredientWorking(),
-    ...x,
-  }));
-
-  ingredients.sort((a, b) => (a.order || 0) - (b.order || 0));
-
   const shoppingItems = (props.sourceRecipe.shoppingItems || []).map((x) => ({
     ...new RecipeShoppingItemWorking(),
     ...x,
@@ -112,7 +104,6 @@ function reset() {
   const newWorking: RecipeWorking = {
     ...newWorkingClass,
     ...sourceCopy,
-    ingredients,
     directions: props.sourceRecipe.directions || '',
     sides: props.sourceRecipe.sides || '',
     shoppingItems,

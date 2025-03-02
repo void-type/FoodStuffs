@@ -392,17 +392,7 @@ export interface GetRecipeResponse {
   pinnedImage?: string | null;
   images?: string[];
   categories?: string[];
-  ingredients?: GetRecipeResponseIngredient[];
   shoppingItems?: GetRecipeResponseShoppingItem[];
-}
-
-export interface GetRecipeResponseIngredient {
-  name?: string;
-  /** @format decimal */
-  quantity?: number;
-  /** @format int32 */
-  order?: number;
-  isCategory?: boolean;
 }
 
 export interface GetRecipeResponseShoppingItem {
@@ -428,18 +418,8 @@ export interface SaveRecipeRequest {
   /** @format int32 */
   prepTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
-  ingredients?: SaveRecipeRequestIngredient[];
   shoppingItems?: SaveRecipeRequestShoppingItem[];
   categories?: string[];
-}
-
-export interface SaveRecipeRequestIngredient {
-  name?: string;
-  /** @format decimal */
-  quantity?: number;
-  /** @format int32 */
-  order?: number;
-  isCategory?: boolean;
 }
 
 export interface SaveRecipeRequestShoppingItem {

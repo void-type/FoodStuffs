@@ -122,14 +122,6 @@ public class FoodStuffsContext : DbContext
                     "RecipeCategoryRelation",
                     r => r.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
                     c => c.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"));
-
-            entity.OwnsMany(r => r.Ingredients, rel =>
-            {
-                rel.ToJson();
-
-                rel.Property(d => d.Quantity)
-                    .HasPrecision(18, 2);
-            });
         });
 
         modelBuilder.Entity<RecipeShoppingItemRelation>(entity =>

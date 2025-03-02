@@ -60,7 +60,6 @@ public static class Deps
             ModifiedBy = "12"
         }).Entity;
 
-        recipe1.Ingredients.Add(new RecipeIngredient { Name = "ing", Quantity = 1, Order = 1 });
         recipe1.Categories.Add(category1);
         recipe1.Categories.Add(category2);
 
@@ -78,10 +77,9 @@ public static class Deps
             ModifiedBy = "11"
         }).Entity;
 
-        recipe1.Ingredients.Add(new RecipeIngredient { Name = "ing", Quantity = 1, Order = 1 });
         recipe2.Categories.Add(category3);
 
-        var recipe3 = context.Recipes.Add(new Recipe
+        context.Recipes.Add(new Recipe
         {
             Name = "Sandwich",
             Directions = "some",
@@ -92,9 +90,7 @@ public static class Deps
             ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",
             ModifiedBy = "11"
-        }).Entity;
-
-        recipe3.Ingredients.Add(new RecipeIngredient { Name = "some", Quantity = 1, Order = 1 });
+        });
 
         var fileBytes = Convert.FromBase64String(PngBase64String);
         var file = new SimpleFile(fileBytes, "my-image.png");

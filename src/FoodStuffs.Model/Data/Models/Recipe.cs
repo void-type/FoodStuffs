@@ -39,8 +39,6 @@ public class Recipe : IAuditableWithOffset
 
     public virtual List<Category> Categories { get; } = [];
 
-    public virtual List<RecipeIngredient> Ingredients { get; } = [];
-
     public virtual List<RecipeShoppingItemRelation> ShoppingItemRelations { get; } = [];
 
     public virtual List<MealPlanRecipeRelation> MealPlanRelations { get; } = [];
