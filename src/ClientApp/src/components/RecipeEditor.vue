@@ -242,7 +242,7 @@ onMounted(async () => {
           <li>
             <button
               class="dropdown-item text-danger"
-              @click.stop.prevent="onRecipeDelete(data.sourceRecipe.id)"
+              @click.stop.prevent="onRecipeDelete(sourceRecipe.id)"
             >
               Delete
             </button>
