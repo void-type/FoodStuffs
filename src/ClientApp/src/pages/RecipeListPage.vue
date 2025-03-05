@@ -178,6 +178,9 @@ watch(
           <input
             id="searchText"
             v-model="listRequest.searchText"
+            type="search"
+            inputmode="search"
+            enterkeyhint="search"
             class="form-control"
             @keydown.stop.prevent.enter="startSearch"
           />

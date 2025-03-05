@@ -4,6 +4,7 @@ import useMessageStore from '@/stores/messageStore';
 import router from '@/router';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { onClickOutside } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
@@ -22,29 +23,36 @@ const suggestions = ref<SuggestRecipesResultItem[]>([]);
 // Prevent suggestions from showing if they were requested but now no longer useful.
 let cancelInFlightSuggestions = false;
 
-function initSearch() {
+function closeSearch() {
   cancelInFlightSuggestions = true;
+  suggestions.value = [];
+}
 
+function clearSearch() {
+  closeSearch();
+  searchText.value = '';
+}
+
+function navigateSearchPage() {
   const query = RecipeStoreHelper.listRequestToQueryParams({
     searchText: searchText.value,
     take: recipeStore.listRequest.take,
   });
 
-  router
-    .push({
-      name: 'recipeList',
-      query,
-    })
-    .then(() => {
-      searchText.value = '';
-    });
+  clearSearch();
+
+  router.push({
+    name: 'recipeList',
+    query,
+  });
 }
 
-function clearSearch() {
-  cancelInFlightSuggestions = true;
-  searchText.value = '';
-  suggestions.value = [];
+function navigateRecipe() {
+  clearSearch();
 }
+
+// Keep your existing refs and add searchContainerRef if not already defined
+const searchContainerRef = ref<HTMLElement | null>(null);
 
 const suggest = debounce(async () => {
   if (!searchText.value || searchText.value.length <= 1) {
@@ -52,7 +60,6 @@ const suggest = debounce(async () => {
     return;
   }
 
-  // Reset if cancelled.
   cancelInFlightSuggestions = false;
 
   try {
@@ -60,6 +67,11 @@ const suggest = debounce(async () => {
       searchText: searchText.value,
       take: 8,
     });
+
+    // If we're not focused on the search input, don't show suggestions.
+    if (!searchContainerRef.value?.contains(document.activeElement)) {
+      return;
+    }
 
     if (cancelInFlightSuggestions) {
       return;
@@ -72,16 +84,23 @@ const suggest = debounce(async () => {
 }, 200);
 
 function handleFocusOut(event: FocusEvent) {
-  const relatedTarget = event.relatedTarget as HTMLElement;
-  const isChildOfForm = relatedTarget?.closest('#headerSearch') !== null;
+  const target = event.relatedTarget as HTMLElement;
+  const isChildOfForm =
+    searchContainerRef.value?.contains(document.activeElement) ||
+    (target && searchContainerRef.value?.contains(target));
 
   if (!isChildOfForm) {
-    suggestions.value = [];
+    closeSearch();
   }
 }
 
-const inputRef = ref<HTMLInputElement | null>(null);
+// Replace your focusout handler with this
+onClickOutside(searchContainerRef, () => {
+  closeSearch();
+});
 
+// Global Ctrl + Shift + F to focus the search input.
+const inputRef = ref<HTMLInputElement | null>(null);
 const handleKeydown = (event: KeyboardEvent) => {
   if (event.ctrlKey && event.shiftKey && event.key === 'F') {
     event.preventDefault();
@@ -99,23 +118,25 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="headerSearch" @focusout="handleFocusOut">
+  <div ref="searchContainerRef" @focusout="handleFocusOut">
     <div class="input-group" title="Use control + shift + F to focus the search.">
       <input
         ref="inputRef"
         v-model="searchText"
         class="form-control"
-        type="text"
+        type="search"
+        inputmode="search"
+        enterkeyhint="search"
         placeholder="Search"
         aria-label="Search text"
         @input="suggest"
-        @keydown.enter.stop.prevent="initSearch"
+        @keydown.enter.stop.prevent="navigateSearchPage"
       />
       <button
         class="btn btn-outline-secondary text-body bg-body border"
         type="button"
         aria-label="Start search"
-        @click.stop.prevent="initSearch"
+        @click.stop.prevent="navigateSearchPage"
       >
         <font-awesome-icon icon="fa-search" />
       </button>
@@ -123,7 +144,7 @@ onBeforeUnmount(() => {
     <ul v-if="suggestions.length" class="dropdown-menu show">
       <li v-for="suggestion in suggestions" :key="suggestion.id" class="dropdown-item suggestion">
         <span
-          ><router-link :to="RouterHelper.viewRecipe(suggestion)" @click="clearSearch">
+          ><router-link :to="RouterHelper.viewRecipe(suggestion)" @click="navigateRecipe">
             {{ suggestion.name }}
           </router-link>
         </span>
