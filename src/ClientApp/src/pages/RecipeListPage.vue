@@ -6,7 +6,6 @@ import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
 import { watch, type PropType, ref, computed } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
-import EntityTableControls from '@/components/EntityTableControls.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
@@ -172,62 +171,69 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <AppPageHeading />
-    <EntityTableControls class="mt-3" :clear-search="clearSearch" :init-search="startSearch">
-      <template #searchForm>
-        <div class="grid mb-3 gap-sm">
-          <div class="g-col-12 g-col-md-6">
-            <label for="searchText" class="form-label">Search</label>
-            <input
-              id="searchText"
-              v-model="listRequest.searchText"
-              class="form-control"
-              @keydown.stop.prevent.enter="startSearch"
-            />
-          </div>
-          <div class="g-col-6 g-col-md-3">
-            <label class="form-label" for="isForMealPlanning">Meals</label>
-            <select
-              id="isForMealPlanning"
-              v-model="listRequest.isForMealPlanning"
-              class="form-select"
-              @change="startSearch"
-            >
-              <option
-                v-for="option in Choices.boolean"
-                :key="option.value?.toString()"
-                :value="option.value"
-              >
-                {{ option.text }}{{ getMealFacetCount(option.value) }}
-              </option>
-            </select>
-          </div>
-          <div class="g-col-6 g-col-md-3">
-            <label for="recipeSort" class="form-label">Sort</label>
-            <select
-              id="recipeSort"
-              :value="listRequest.sortBy"
-              name="recipeSort"
-              class="form-select"
-              aria-label="Page size"
-              @change="changeSort"
-            >
-              <option
-                v-for="sortOption in sortOptions"
-                :key="sortOption.value"
-                :value="sortOption.value"
-              >
-                {{ sortOption.text }}
-              </option>
-            </select>
-          </div>
-          <RecipeSearchCategoriesFilter
-            v-model="selectedCategories"
-            :facet-values="categoryFacets"
-            class="g-col-12"
+    <div class="mt-3">
+      <div class="grid mb-3 gap-sm">
+        <div class="g-col-12 g-col-md-6">
+          <label for="searchText" class="form-label">Search</label>
+          <input
+            id="searchText"
+            v-model="listRequest.searchText"
+            class="form-control"
+            @keydown.stop.prevent.enter="startSearch"
           />
         </div>
-      </template>
-    </EntityTableControls>
+        <div class="g-col-6 g-col-md-3">
+          <label class="form-label" for="isForMealPlanning">Meals</label>
+          <select
+            id="isForMealPlanning"
+            v-model="listRequest.isForMealPlanning"
+            class="form-select"
+            @change="startSearch"
+          >
+            <option
+              v-for="option in Choices.boolean"
+              :key="option.value?.toString()"
+              :value="option.value"
+            >
+              {{ option.text }}{{ getMealFacetCount(option.value) }}
+            </option>
+          </select>
+        </div>
+        <div class="g-col-6 g-col-md-3">
+          <label for="recipeSort" class="form-label">Sort</label>
+          <select
+            id="recipeSort"
+            :value="listRequest.sortBy"
+            name="recipeSort"
+            class="form-select"
+            aria-label="Page size"
+            @change="changeSort"
+          >
+            <option
+              v-for="sortOption in sortOptions"
+              :key="sortOption.value"
+              :value="sortOption.value"
+            >
+              {{ sortOption.text }}
+            </option>
+          </select>
+        </div>
+        <RecipeSearchCategoriesFilter
+          v-model="selectedCategories"
+          :facet-values="categoryFacets"
+          class="g-col-12"
+        />
+      </div>
+      <div class="btn-toolbar">
+        <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
+          Search
+        </button>
+        <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
+          Clear
+        </button>
+        <router-link :to="{ name: 'recipeNew' }" class="btn btn-secondary">New</router-link>
+      </div>
+    </div>
     <div class="mt-3">{{ resultCountText }}</div>
     <div class="form-check form-switch mt-3">
       <label class="form-check-label" for="useCompactView">Compact view</label>

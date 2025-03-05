@@ -88,6 +88,11 @@ function setListRequestFromQuery() {
   };
 }
 
+async function newMealPlan() {
+  await mealPlanStore.newCurrentMealPlan();
+  router.push({ name: 'mealPlanEdit' });
+}
+
 watch(
   props,
   () => {
@@ -102,6 +107,11 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <AppPageHeading />
+    <div class="mt-3">
+      <div class="btn-toolbar">
+        <button class="btn btn-secondary" @click="newMealPlan">New</button>
+      </div>
+    </div>
     <div class="mt-3">{{ resultCountText }}</div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
