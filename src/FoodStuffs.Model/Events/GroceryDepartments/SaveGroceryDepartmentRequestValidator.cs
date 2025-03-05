@@ -12,6 +12,6 @@ public class SaveGroceryDepartmentRequestValidator : RuleValidatorAbstract<SaveG
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
         CreateRule(new Failure("Name can't be longer than 450 characters.", "name"))
-            .InvalidWhen(entity => entity.Name.Length > 450);
+            .InvalidWhen(entity => entity.Name?.Length > 450);
     }
 }
