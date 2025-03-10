@@ -5,7 +5,9 @@ import RecipeStoreHelper from './RecipeStoreHelper';
 export default class RecipesListRequest implements RecipesSearchParams {
   public searchText = '';
 
-  public categories = [];
+  public categories = [] as number[];
+
+  public allCategories = false;
 
   public isForMealPlanning = null;
 

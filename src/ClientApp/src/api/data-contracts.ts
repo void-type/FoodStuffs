@@ -611,6 +611,8 @@ export interface RecipesSearchParams {
   searchText?: string | null;
   /** Category IDs to filter on */
   categories?: number[] | null;
+  /** @default false */
+  allCategories?: boolean;
   /** If the recipes should be enabled for meal planning */
   isForMealPlanning?: boolean | null;
   /** Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score. */

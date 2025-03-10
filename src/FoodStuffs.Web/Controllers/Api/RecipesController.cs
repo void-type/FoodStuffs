@@ -23,6 +23,7 @@ public class RecipesController : ControllerBase
     /// <param name="searchHandler"></param>
     /// <param name="searchText">Search text (case-insensitive)</param>
     /// <param name="categories">Category IDs to filter on</param>
+    /// <param name="allCategories">When true, recipes returned will match all selected categories</param>
     /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
     /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
     /// <param name="randomSortSeed">Give a seed for stable random sorting. By default is stable for 24 hours on the server.</param>
@@ -36,6 +37,7 @@ public class RecipesController : ControllerBase
         [FromServices] SearchRecipesHandler searchHandler,
         [FromQuery] string? searchText = null,
         [FromQuery] int[]? categories = null,
+        [FromQuery] bool allCategories = false,
         [FromQuery] bool? isForMealPlanning = null,
         [FromQuery] string? sortBy = null,
         [FromQuery] string? randomSortSeed = null,
@@ -46,6 +48,7 @@ public class RecipesController : ControllerBase
         var request = new SearchRecipesRequest(
             SearchText: searchText,
             CategoryIds: categories,
+            AllCategories: allCategories,
             IsForMealPlanning: isForMealPlanning,
             SortBy: sortBy,
             RandomSortSeed: randomSortSeed,

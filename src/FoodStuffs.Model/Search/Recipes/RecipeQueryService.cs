@@ -216,27 +216,52 @@ public class RecipeQueryService : IRecipeQueryService
 
     private static QueryWrapperFilter BuildFilter(SearchRecipesRequest request, FacetsConfig facetsConfig)
     {
-        var drillDownQuery = new DrillDownQuery(facetsConfig);
+        // Used when other filters are AND'd between fields, but OR'd within the field.
+        // Otherwise, the field needs to add it's own filter to the outerQuery.
+        var mainDrillDownQuery = new DrillDownQuery(facetsConfig);
 
-        if (request.CategoryIds?.Length > 0)
+        var outerQuery = new BooleanQuery()
         {
-            foreach (var categoryId in request.CategoryIds)
-            {
-                drillDownQuery.Add(C.FIELD_CATEGORY_IDS, categoryId.ToString());
-            }
-        }
+            { mainDrillDownQuery, Occur.MUST }
+        };
 
         if (request.IsForMealPlanning is not null)
         {
-            drillDownQuery.Add(C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString());
+            mainDrillDownQuery.Add(C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString());
         }
 
-        if (!(drillDownQuery as IEnumerable<BooleanClause>).Any())
+        if (request.CategoryIds?.Length > 0)
         {
-            return new QueryWrapperFilter(new MatchAllDocsQuery());
+            if (!request.AllCategories)
+            {
+                // OR - matches recipes with ANY of the selected categories
+                foreach (var categoryId in request.CategoryIds)
+                {
+                    mainDrillDownQuery.Add(C.FIELD_CATEGORY_IDS, categoryId.ToString());
+                }
+            }
+            else
+            {
+                // AND - matches recipes with ALL of the selected categories
+                foreach (var categoryId in request.CategoryIds)
+                {
+                    var singleCategoryQuery = new DrillDownQuery(facetsConfig)
+                    {
+                        { C.FIELD_CATEGORY_IDS, categoryId.ToString() }
+                    };
+
+                    outerQuery.Add(singleCategoryQuery, Occur.MUST);
+                }
+            }
         }
 
-        return new QueryWrapperFilter(drillDownQuery);
+        if ((mainDrillDownQuery as IEnumerable<BooleanClause>).Any() || outerQuery.Clauses.Count > 1)
+        {
+            return new QueryWrapperFilter(outerQuery);
+        }
+
+        // No filters selected.
+        return new QueryWrapperFilter(new MatchAllDocsQuery());
     }
 
     private static Sort? BuildSortCriteria(SearchRecipesRequest request)

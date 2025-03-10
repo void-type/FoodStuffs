@@ -46,6 +46,7 @@ public static class Deps
         var category1 = context.Categories.Add(new Category { Id = 1, Name = "Category1" }).Entity;
         var category2 = context.Categories.Add(new Category { Id = 2, Name = "Category2" }).Entity;
         var category3 = context.Categories.Add(new Category { Id = 3, Name = "Category3" }).Entity;
+        var category4 = context.Categories.Add(new Category { Id = 4, Name = "Category4" }).Entity;
 
         var recipe1 = context.Recipes.Add(new Recipe
         {
@@ -62,6 +63,7 @@ public static class Deps
 
         recipe1.Categories.Add(category1);
         recipe1.Categories.Add(category2);
+        recipe1.Categories.Add(category4);
 
         var recipe2 = context.Recipes.Add(new Recipe
         {
@@ -79,7 +81,7 @@ public static class Deps
 
         recipe2.Categories.Add(category3);
 
-        context.Recipes.Add(new Recipe
+        var recipe3 = context.Recipes.Add(new Recipe
         {
             Name = "Sandwich",
             Directions = "some",
@@ -90,7 +92,9 @@ public static class Deps
             ModifiedOn = DateTimeServiceLate.Moment,
             CreatedBy = "11",
             ModifiedBy = "11"
-        });
+        }).Entity;
+
+        recipe3.Categories.Add(category4);
 
         var fileBytes = Convert.FromBase64String(PngBase64String);
         var file = new SimpleFile(fileBytes, "my-image.png");
