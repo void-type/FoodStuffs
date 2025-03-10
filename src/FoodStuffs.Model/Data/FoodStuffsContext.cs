@@ -161,13 +161,19 @@ public class FoodStuffsContext : DbContext
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        ChangeTracker.Entries().SetAuditableProperties(_dateTimeService, _currentUserAccessor.User.Login);
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+        var user = _currentUserAccessor.GetUser().GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+
+        ChangeTracker.Entries().SetAuditableProperties(_dateTimeService, user.Login);
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
-        ChangeTracker.Entries().SetAuditableProperties(_dateTimeService, _currentUserAccessor.User.Login);
+        var user = await _currentUserAccessor.GetUser();
+
+        ChangeTracker.Entries().SetAuditableProperties(_dateTimeService, user.Login);
         return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }
