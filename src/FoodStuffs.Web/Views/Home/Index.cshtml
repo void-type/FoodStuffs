@@ -4,21 +4,22 @@
 @inject IHostEnvironment env
 @{
     ViewData["Title"] = $"Home | {appConfig.Name}";
-    var useVueDevServer = env.IsDevelopment() && !config.GetValue<bool>("DisableVueDevServer", false);
+    var vueDevServerEnabled = env.IsDevelopment() && config.GetSection("VueDevServer").GetValue<bool>("Enabled", true);
+    var vueDevServerHost = config.GetSection("VueDevServer").GetValue<string>("Host", string.Empty);
 }
 
 @section Style
 {
     @* Vue dev server *@
-    @if(useVueDevServer)
+    @if(vueDevServerEnabled)
     {
-        <script type="module" src="https://localhost:5173/@@vite/client"></script>
-        <link rel="stylesheet" href="https://localhost:5173/src/styles/styles-main.scss" />
-        <script type="module"src="https://localhost:5173/src/main.ts"></script>
+        <script type="module" src="https://@vueDevServerHost/@@vite/client"></script>
+        <link rel="stylesheet" href="https://@vueDevServerHost/src/styles/styles-main.scss" />
+        <script type="module" src="https://@vueDevServerHost/src/main.ts"></script>
     }
 
     @* Deployed styles *@
-    @if(!useVueDevServer)
+    @if(!vueDevServerEnabled)
     {
         <link rel="preload" as="style" asp-href-include="~/assets/styles-main-*.css" />
         <link rel="stylesheet" asp-href-include="~/assets/styles-main-*.css" />
@@ -31,7 +32,7 @@
 @section Script
 {
     @* Deployed scripts *@
-    @if(!useVueDevServer)
+    @if(!vueDevServerEnabled)
     {
         <script type="module" asp-src-include="~/assets/main-*.js"></script>
     }

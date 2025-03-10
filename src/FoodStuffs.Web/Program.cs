@@ -73,7 +73,7 @@ try
     app.UseAlwaysOnShortCircuit();
     app.UseSpaExceptionPage(env);
     app.UseSecureTransport(env);
-    app.UseSecurityHeaders(env);
+    app.UseSecurityHeaders(env, config);
     app.UseStaticFiles();
     app.UseRouting();
     app.UseRequestLoggingScope();

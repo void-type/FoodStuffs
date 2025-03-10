@@ -4,8 +4,10 @@ namespace FoodStuffs.Web.Startup;
 
 public static class SecurityStartupExtensions
 {
-    public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment)
+    public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment, IConfiguration config)
     {
+        var vueDevServerHost = config.GetSection("VueDevServer").GetValue<string>("Host", string.Empty);
+
         app.UseContentSecurityPolicy(options =>
         {
             options.BaseUri
@@ -39,23 +41,23 @@ public static class SecurityStartupExtensions
                 // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
                 options.ScriptSources
                     // Vite dev server
-                    .Allow("https://localhost:5173")
+                    .Allow("https://" + vueDevServerHost)
                     .AllowUnsafeInline()
                     .AllowUnsafeEval();
 
                 options.StyleSources
                     // Vite dev server
-                    .Allow("https://localhost:5173")
+                    .Allow("https://" + vueDevServerHost)
                     .AllowUnsafeInline();
 
                 options.ImageSources
-                    .Allow("https://localhost:5173");
+                    .Allow("https://" + vueDevServerHost);
 
                 // .NET and Vite hot reloading use web sockets
                 options.Custom("connect-src")
                     .AllowSelf()
                     // Vite dev server
-                    .Allow("https://localhost:5173")
+                    .Allow("https://" + vueDevServerHost)
                     .Allow("ws:")
                     .Allow("wss:");
             }
