@@ -24,7 +24,7 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-    <PackageReference Include="VoidCore.AspNet" Version="15.0.1-gb9eb465023" />
+    <PackageReference Include="VoidCore.AspNet" Version="15.0.1" />
 
     <!-- <ProjectReference Include="..\..\..\VoidCore\src\VoidCore.AspNet\VoidCore.AspNet.csproj" /> -->
   </ItemGroup>
