@@ -4,9 +4,10 @@ namespace FoodStuffs.Web.Startup;
 
 public static class SecurityStartupExtensions
 {
-    public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment environment, IConfiguration config)
+    public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, IHostEnvironment env, IConfiguration config)
     {
-        var vueDevServerHost = config.GetSection("VueDevServer").GetValue<string>("Host", string.Empty);
+        var vueDevServerEnabled = env.IsDevelopment() && config.GetSection("VueDevServer").GetValue("Enabled", true);
+        var vueDevServerHost = config.GetSection("VueDevServer").GetValue("Host", string.Empty);
 
         app.UseContentSecurityPolicy(options =>
         {
@@ -36,7 +37,7 @@ public static class SecurityStartupExtensions
             options.FrameAncestors
                 .AllowNone();
 
-            if (environment.IsDevelopment())
+            if (vueDevServerEnabled)
             {
                 // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
                 options.ScriptSources
@@ -54,7 +55,7 @@ public static class SecurityStartupExtensions
                     .Allow("https://" + vueDevServerHost);
 
                 // .NET and Vite hot reloading use web sockets
-                options.Custom("connect-src")
+                options.ConnectSources
                     .AllowSelf()
                     // Vite dev server
                     .Allow("https://" + vueDevServerHost)
@@ -73,7 +74,7 @@ public static class SecurityStartupExtensions
             }
         });
 
-        app.UseXContentTypeOptionsNoSniff();
+        app.UseRecommendedSecurityHeaders();
 
         return app;
     }
