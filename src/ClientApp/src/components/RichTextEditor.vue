@@ -45,6 +45,7 @@ const CustomReplacer = Extension.create({
 });
 
 const editor = useEditor({
+  injectCSS: false,
   extensions: [StarterKit, Typography, CustomReplacer],
   content: model.value,
   onUpdate: () => {
