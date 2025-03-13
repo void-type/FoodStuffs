@@ -118,6 +118,7 @@ header {
 
 .btn-outline-secondary {
   --bs-btn-color: var(--bs-body-color);
+  border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
 }
 
 .rich-text {
@@ -138,6 +139,12 @@ header {
   li > p {
     margin-bottom: 0;
   }
+}
+
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
 }
 
 // Dark theme

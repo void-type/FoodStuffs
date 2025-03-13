@@ -133,7 +133,7 @@ onBeforeUnmount(() => {
         @keydown.enter.stop.prevent="navigateSearchPage"
       />
       <button
-        class="btn btn-outline-secondary text-body bg-body border"
+        class="btn btn-outline-secondary text-body bg-body"
         type="button"
         aria-label="Start search"
         @click.stop.prevent="navigateSearchPage"

@@ -14,7 +14,7 @@ defineProps({
   disabledButtons: {
     type: Array<string>,
     required: false,
-    default: () => ['h1', 'h2', 'clearMarks', 'clearNodes', 'blockquote', 'codeBlock'],
+    default: () => ['h1', 'h2', 'h6', 'clearMarks', 'clearNodes', 'blockquote', 'codeBlock'],
   },
 });
 
@@ -67,6 +67,8 @@ watch(
     editor.value?.commands?.setContent(value || '', false);
   }
 );
+
+const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
 </script>
 
 <template>
@@ -76,14 +78,14 @@ watch(
       <div class="btn-toolbar">
         <button
           v-if="!disabledButtons.includes('source')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           @click="showSource = !showSource"
         >
           Source
         </button>
         <button
           v-if="!disabledButtons.includes('undo')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           :disabled="!editor.can().chain().focus().undo().run()"
           @click="editor.chain().focus().undo().run()"
         >
@@ -91,7 +93,7 @@ watch(
         </button>
         <button
           v-if="!disabledButtons.includes('redo')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           :disabled="!editor.can().chain().focus().redo().run()"
           @click="editor.chain().focus().redo().run()"
         >
@@ -100,8 +102,7 @@ watch(
         <button
           v-if="!disabledButtons.includes('bold')"
           :disabled="!editor.can().chain().focus().toggleBold().run()"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('bold') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bold') }"
           @click="editor.chain().focus().toggleBold().run()"
         >
           Bold
@@ -109,8 +110,7 @@ watch(
         <button
           v-if="!disabledButtons.includes('italic')"
           :disabled="!editor.can().chain().focus().toggleItalic().run()"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('italic') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('italic') }"
           @click="editor.chain().focus().toggleItalic().run()"
         >
           Italic
@@ -118,8 +118,7 @@ watch(
         <button
           v-if="!disabledButtons.includes('underline')"
           :disabled="!editor.can().chain().focus().toggleStrike().run()"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('strike') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('strike') }"
           @click="editor.chain().focus().toggleStrike().run()"
         >
           Strike
@@ -127,126 +126,130 @@ watch(
         <button
           v-if="!disabledButtons.includes('code')"
           :disabled="!editor.can().chain().focus().toggleCode().run()"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('code') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('code') }"
           @click="editor.chain().focus().toggleCode().run()"
         >
           Code
         </button>
         <button
           v-if="!disabledButtons.includes('horizontalRule')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           @click="editor.chain().focus().setHorizontalRule().run()"
         >
           Rule
         </button>
         <button
           v-if="!disabledButtons.includes('hardBreak')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           @click="editor.chain().focus().setHardBreak().run()"
         >
           Break
         </button>
         <button
           v-if="!disabledButtons.includes('clearMarks')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           @click="editor.chain().focus().unsetAllMarks().run()"
         >
           Clear marks
         </button>
         <button
           v-if="!disabledButtons.includes('clearNodes')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           @click="editor.chain().focus().clearNodes().run()"
         >
           Clear nodes
         </button>
-      </div>
-      <div class="btn-toolbar">
         <button
           v-if="!disabledButtons.includes('paragraph')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('paragraph') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('paragraph') }"
           @click="editor.chain().focus().setParagraph().run()"
         >
           Paragraph
         </button>
         <button
           v-if="!disabledButtons.includes('h1')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 1 }),
+          }"
           @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
         >
           H1
         </button>
         <button
           v-if="!disabledButtons.includes('h2')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 2 }),
+          }"
           @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
         >
           H2
         </button>
         <button
           v-if="!disabledButtons.includes('h3')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 3 }),
+          }"
           @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
         >
           H3
         </button>
         <button
           v-if="!disabledButtons.includes('h4')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 4 }),
+          }"
           @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
         >
           H4
         </button>
         <button
           v-if="!disabledButtons.includes('h5')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 5 }),
+          }"
           @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
         >
           H5
         </button>
         <button
           v-if="!disabledButtons.includes('h6')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 6 }),
+          }"
           @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
         >
           H6
         </button>
         <button
           v-if="!disabledButtons.includes('bullet')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('bulletList') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bulletList') }"
           @click="editor.chain().focus().toggleBulletList().run()"
         >
           Bullet
         </button>
         <button
           v-if="!disabledButtons.includes('ordered')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('orderedList') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('orderedList') }"
           @click="editor.chain().focus().toggleOrderedList().run()"
         >
           Number
         </button>
         <button
           v-if="!disabledButtons.includes('codeBlock')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('codeBlock') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('codeBlock') }"
           @click="editor.chain().focus().toggleCodeBlock().run()"
         >
           Code block
         </button>
         <button
           v-if="!disabledButtons.includes('blockquote')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
-          :class="{ 'is-active': editor.isActive('blockquote') }"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('blockquote') }"
           @click="editor.chain().focus().toggleBlockquote().run()"
         >
           Blockquote
@@ -260,7 +263,7 @@ watch(
       <div class="btn-toolbar">
         <button
           v-if="!disabledButtons.includes('source')"
-          class="btn btn-sm btn-outline-secondary rounded-0"
+          :class="toolbarButtonClass"
           @click="showSource = !showSource"
         >
           HTML
