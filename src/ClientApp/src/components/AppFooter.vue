@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
 import useAppStore from '@/stores/appStore';
 
 const appStore = useAppStore();
+const route = useRoute();
 const { version } = storeToRefs(appStore);
 </script>
 
 <template>
   <footer id="footer" class="mt-4 d-print-none border-top text-center py-3 px-0">
     <div class="m-0 mb-4 text-center">
-      <a class="btn btn-secondary" href="#main">Back to top</a>
+      <router-link class="btn btn-secondary" :to="{ hash: '#main', query: route.query }"
+        >Back to top</router-link
+      >
     </div>
     <div>
       <a href="https://github.com/void-type/foodstuffs">
