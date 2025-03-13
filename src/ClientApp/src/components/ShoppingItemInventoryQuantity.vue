@@ -11,7 +11,7 @@ const model = defineModel({
   required: true,
 });
 
-defineProps({
+const props = defineProps({
   id: {
     type: String,
     required: true,
@@ -49,28 +49,25 @@ const onInventoryChange = debounce(async (item: ShoppingItemInventoryWorking) =>
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
 });
+
+const changeInventory = (amount: number) => {
+  model.value = Math.max(0, (model.value || 0) + amount);
+  onInventoryChange(props.item);
+};
 </script>
 
 <template>
   <div v-if="!inline">
     <label :for="id" class="form-label">Inventory</label>
-    <input
-      :id="id"
-      v-model="model"
-      required
-      type="number"
-      min="0"
-      :class="{
-        'form-control': true,
-        'is-invalid': messageStore.isFieldInError(id),
-      }"
-      @change="onInventoryChange(item)"
-    />
-  </div>
-  <div v-else>
-    <label :for="id" class="visually-hidden">Inventory</label>
     <div class="input-group">
-      <div class="input-group-text">Inventory</div>
+      <button
+        class="btn btn-outline-secondary text-monospace"
+        aria-label="Decrement inventory by one."
+        type="button"
+        @click="changeInventory(-1)"
+      >
+        -
+      </button>
       <input
         :id="id"
         v-model="model"
@@ -83,6 +80,48 @@ const onInventoryChange = debounce(async (item: ShoppingItemInventoryWorking) =>
         }"
         @change="onInventoryChange(item)"
       />
+      <button
+        class="btn btn-outline-secondary text-monospace"
+        aria-label="Decrement inventory by one."
+        type="button"
+        @click="changeInventory(1)"
+      >
+        +
+      </button>
+    </div>
+  </div>
+  <div v-else>
+    <label :for="id" class="visually-hidden">Inventory</label>
+    <div class="input-group">
+      <div class="input-group-text">Inventory</div>
+      <button
+        class="btn btn-outline-secondary text-monospace"
+        aria-label="Decrement inventory by one."
+        type="button"
+        @click="changeInventory(-1)"
+      >
+        -
+      </button>
+      <input
+        :id="id"
+        v-model="model"
+        required
+        type="number"
+        min="0"
+        :class="{
+          'form-control': true,
+          'is-invalid': messageStore.isFieldInError(id),
+        }"
+        @change="onInventoryChange(item)"
+      />
+      <button
+        class="btn btn-outline-secondary text-monospace"
+        aria-label="Decrement inventory by one."
+        type="button"
+        @click="changeInventory(1)"
+      >
+        +
+      </button>
     </div>
   </div>
 </template>
