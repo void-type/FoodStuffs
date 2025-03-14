@@ -4,6 +4,7 @@ import type { ListShoppingItemsResponse } from '@/api/data-contracts';
 import type RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
 import { Dropdown } from 'bootstrap';
 import { trimAndTitleCase } from '@/models/FormatHelper';
+import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 
 const model = defineModel({
   type: Number as PropType<number | undefined>,
@@ -111,17 +112,18 @@ onBeforeUnmount(() => {
       {{ (item.id || 0) > 0 ? itemName : 'Select one' }}
     </button>
     <ul class="dropdown-menu pt-0 w-100">
-      <li>
+      <li class="mb-2">
         <label :for="`item-${item.uiKey}-name-filter`" class="visually-hidden"
           >Type to filter options</label
         >
         <input
           :id="`item-${item.uiKey}-name-filter`"
           ref="filterInput"
-          v-model="filterText"
+          :value="filterText"
           type="text"
           class="form-control"
           placeholder="Type to filter options"
+          @input="(e) => (filterText = (e as HTMLInputEvent).target.value)"
         />
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
@@ -135,16 +137,18 @@ onBeforeUnmount(() => {
           filterText.length > 0 &&
           filteredSuggestions.find((x) => x.name === filterText) === undefined
         "
-        class="px-3 py-2"
+        class="mt-2"
       >
-        <div class="btn-toolbar">
-          <button
-            class="btn btn-secondary"
-            type="button"
-            @click.stop.prevent="(event) => createShoppingItem(trimAndTitleCase(filterText))"
-          >
-            Create {{ trimAndTitleCase(filterText) }}
-          </button>
+        <div class="dropdown-item-text">
+          <div class="btn-toolbar">
+            <button
+              class="btn btn-sm btn-secondary"
+              type="button"
+              @click.stop.prevent="(event) => createShoppingItem(trimAndTitleCase(filterText))"
+            >
+              Create {{ trimAndTitleCase(filterText) }}
+            </button>
+          </div>
         </div>
       </li>
     </ul>
