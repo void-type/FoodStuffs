@@ -150,7 +150,7 @@ onMounted(() => {
       {{ recipe.sides }}
     </div>
     <h2 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3 mb-0 d-print-none">
-      Shopping Items
+      Grocery Items
     </h2>
     <div class="badge p-0 mb-2 text-muted">
       <small>Not printed.</small>

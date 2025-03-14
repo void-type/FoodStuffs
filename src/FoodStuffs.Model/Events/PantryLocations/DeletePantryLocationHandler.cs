@@ -29,6 +29,6 @@ public class DeletePantryLocationHandler : CustomEventHandlerAbstract<DeletePant
 
                 await _data.SaveChangesAsync(cancellationToken);
             })
-            .SelectAsync(r => EntityMessage.Create("Pantry location deleted.", r.Id));
+            .SelectAsync(r => EntityMessage.Create("Storage location deleted.", r.Id));
     }
 }

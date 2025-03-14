@@ -40,14 +40,14 @@ const resultCountText = computed(() => {
 
   // If NaN or less than 0.
   if (!(totalCount > 0)) {
-    return 'Found no grocery departments.';
+    return 'Found no grocery aisles.';
   }
 
   const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
   const start = base + 1;
   const end = base + (itemSet.count || 0);
 
-  return `Showing ${start}-${end} of ${totalCount} grocery departments.`;
+  return `Showing ${start}-${end} of ${totalCount} grocery aisles.`;
 });
 
 function navigateSearch() {
@@ -120,8 +120,8 @@ async function onDeleteGroceryDepartment(id: number | null | undefined) {
   }
 
   const parameters: ModalParameters = {
-    title: 'Delete grocery department',
-    description: 'Do you really want to delete this grocery department?',
+    title: 'Delete grocery aisle',
+    description: 'Do you really want to delete this grocery aisle?',
     okAction: () => deleteGroceryDepartment(),
   };
 

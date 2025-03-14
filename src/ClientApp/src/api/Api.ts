@@ -176,7 +176,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags GroceryDepartments
    * @name GroceryDepartmentsList
-   * @summary List grocery departments. All parameters are optional and some have defaults.
+   * @summary List grocery aisles. All parameters are optional and some have defaults.
    * @request GET:/api/grocery-departments
    * @response `200` `IItemSetOfListGroceryDepartmentsResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -194,7 +194,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags GroceryDepartments
    * @name GroceryDepartmentsSave
-   * @summary Save a grocery department. Will update if found, otherwise a new item will be created.
+   * @summary Save a grocery aisle. Will update if found, otherwise a new item will be created.
    * @request POST:/api/grocery-departments
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -213,7 +213,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags GroceryDepartments
    * @name GroceryDepartmentsGet
-   * @summary Get a grocery department.
+   * @summary Get a grocery aisle.
    * @request GET:/api/grocery-departments/{id}
    * @response `200` `GetGroceryDepartmentResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -230,7 +230,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags GroceryDepartments
    * @name GroceryDepartmentsDelete
-   * @summary Delete a grocery department.
+   * @summary Delete a grocery aisle.
    * @request DELETE:/api/grocery-departments/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -395,7 +395,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags PantryLocations
    * @name PantryLocationsList
-   * @summary List pantry locations. All parameters are optional and some have defaults.
+   * @summary List storage locations. All parameters are optional and some have defaults.
    * @request GET:/api/pantry-locations
    * @response `200` `IItemSetOfListPantryLocationsResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -413,7 +413,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags PantryLocations
    * @name PantryLocationsSave
-   * @summary Save a pantry location. Will update if found, otherwise a new item will be created.
+   * @summary Save a storage location. Will update if found, otherwise a new item will be created.
    * @request POST:/api/pantry-locations
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -432,7 +432,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags PantryLocations
    * @name PantryLocationsGet
-   * @summary Get a pantry location.
+   * @summary Get a storage location.
    * @request GET:/api/pantry-locations/{id}
    * @response `200` `GetPantryLocationResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -449,7 +449,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags PantryLocations
    * @name PantryLocationsDelete
-   * @summary Delete a pantry location.
+   * @summary Delete a storage location.
    * @request DELETE:/api/pantry-locations/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -571,7 +571,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags ShoppingItems
    * @name ShoppingItemsList
-   * @summary List shopping items. All parameters are optional and some have defaults.
+   * @summary List grocery items. All parameters are optional and some have defaults.
    * @request GET:/api/shopping-items
    * @response `200` `IItemSetOfListShoppingItemsResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -589,7 +589,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags ShoppingItems
    * @name ShoppingItemsSave
-   * @summary Save a shopping item. Will update if found, otherwise a new item will be created.
+   * @summary Save a grocery item. Will update if found, otherwise a new item will be created.
    * @request POST:/api/shopping-items
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -608,7 +608,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags ShoppingItems
    * @name ShoppingItemsGet
-   * @summary Get a shopping item.
+   * @summary Get a grocery item.
    * @request GET:/api/shopping-items/{id}
    * @response `200` `GetShoppingItemResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -625,7 +625,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags ShoppingItems
    * @name ShoppingItemsDelete
-   * @summary Delete a shopping item.
+   * @summary Delete a grocery item.
    * @request DELETE:/api/shopping-items/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -642,7 +642,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    *
    * @tags ShoppingItems
    * @name ShoppingItemsSaveInventory
-   * @summary Update a shopping item inventory.
+   * @summary Update a grocery item inventory.
    * @request POST:/api/shopping-items/inventory
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`

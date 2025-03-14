@@ -58,7 +58,7 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
 
         if (conflictingShoppingItem is not null && conflictingShoppingItem.Id != request.Id)
         {
-            return Fail(new Failure("Shopping item name already exists.", "name"));
+            return Fail(new Failure("Grocery item name already exists.", "name"));
         }
 
         var shoppingItemToEdit = maybeShoppingItem.Unwrap(() => new ShoppingItem());
@@ -94,7 +94,7 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
 
         await _index.AddOrUpdateAsync(shoppingItemToEdit.Recipes.Select(r => r.Id), cancellationToken);
 
-        return Ok(EntityMessage.Create($"Shopping item {(maybeShoppingItem.HasValue ? "updated" : "added")}.", shoppingItemToEdit.Id));
+        return Ok(EntityMessage.Create($"Grocery Item {(maybeShoppingItem.HasValue ? "updated" : "added")}.", shoppingItemToEdit.Id));
     }
 
     private static void Transfer(string formattedName, SaveShoppingItemRequest request, ShoppingItem shoppingItem)
@@ -110,14 +110,14 @@ public class SaveShoppingItemHandler : CustomEventHandlerAbstract<SaveShoppingIt
             .Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x).Trim())
             .ToArray();
 
-        // Remove extra pantry locations.
+        // Remove extra storage locations.
         shoppingItem.PantryLocations.RemoveAll(x => !requestedNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
 
         var missingNames = requestedNames
             .Where(n => !shoppingItem.PantryLocations.Select(x => x.Name).Contains(n, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
-        // Find missing pantry locations that already exist.
+        // Find missing storage locations that already exist.
         var existingPantryLocations = await _data.PantryLocations
             .TagWith(GetTag())
             .Where(x => missingNames.Contains(x.Name))

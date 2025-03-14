@@ -126,7 +126,7 @@ const router = createRouter({
         },
         {
           path: 'grocery-departments',
-          meta: { title: 'Grocery Departments' },
+          meta: { title: 'Grocery Aisles' },
           children: [
             {
               path: '',
@@ -137,7 +137,7 @@ const router = createRouter({
             {
               path: ':id',
               name: 'groceryDepartmentEdit',
-              meta: { title: 'Edit Grocery Department' },
+              meta: { title: 'Edit Grocery Aisle' },
               component: () => import('@/pages/GroceryDepartmentEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
@@ -146,14 +146,14 @@ const router = createRouter({
             {
               path: 'new',
               name: 'groceryDepartmentNew',
-              meta: { title: 'New Grocery Department' },
+              meta: { title: 'New Grocery Aisle' },
               component: () => import('@/pages/GroceryDepartmentEditPage.vue'),
             },
           ],
         },
         {
           path: 'pantry-locations',
-          meta: { title: 'Pantry Locations' },
+          meta: { title: 'Storage Locations' },
           children: [
             {
               path: '',
@@ -164,7 +164,7 @@ const router = createRouter({
             {
               path: ':id',
               name: 'pantryLocationEdit',
-              meta: { title: 'Edit Pantry Location' },
+              meta: { title: 'Edit Storage Location' },
               component: () => import('@/pages/PantryLocationEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
@@ -173,14 +173,14 @@ const router = createRouter({
             {
               path: 'new',
               name: 'pantryLocationNew',
-              meta: { title: 'New Pantry Location' },
+              meta: { title: 'New Storage Location' },
               component: () => import('@/pages/PantryLocationEditPage.vue'),
             },
           ],
         },
         {
           path: 'shopping-items',
-          meta: { title: 'Shopping Items' },
+          meta: { title: 'Grocery Items' },
           children: [
             {
               path: '',
@@ -191,7 +191,7 @@ const router = createRouter({
             {
               path: ':id',
               name: 'shoppingItemEdit',
-              meta: { title: 'Edit Shopping Item' },
+              meta: { title: 'Edit Grocery Item' },
               component: () => import('@/pages/ShoppingItemEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
@@ -200,7 +200,7 @@ const router = createRouter({
             {
               path: 'new',
               name: 'shoppingItemNew',
-              meta: { title: 'New Shopping Item' },
+              meta: { title: 'New Grocery Item' },
               component: () => import('@/pages/ShoppingItemEditPage.vue'),
             },
           ],

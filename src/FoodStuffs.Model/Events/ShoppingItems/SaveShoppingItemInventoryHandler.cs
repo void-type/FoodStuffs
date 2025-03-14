@@ -53,7 +53,7 @@ public class SaveShoppingItemInventoryHandler : CustomEventHandlerAbstract<SaveS
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        return Ok(EntityMessage.Create($"Shopping item {(maybeShoppingItem.HasValue ? "updated" : "added")}.", shoppingItemToEdit.Id));
+        return Ok(EntityMessage.Create($"Grocery item {(maybeShoppingItem.HasValue ? "updated" : "added")}.", shoppingItemToEdit.Id));
     }
 
     private static void Transfer(SaveShoppingItemInventoryRequest request, ShoppingItem shoppingItem)

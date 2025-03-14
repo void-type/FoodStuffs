@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="shoppingItemList">
     <div v-if="model.length < 1" id="shopping-item-list" class="card p-4 text-center border">
-      No shopping items.
+      No grocery items.
     </div>
     <vue-draggable
       v-else
@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
         >
           <div class="grid p-3 gap-sm">
             <div class="g-col-12 g-col-md-12">
-              <label :for="`item-${item.uiKey}-name`" class="form-label">Shopping item</label>
+              <label :for="`item-${item.uiKey}-name`" class="form-label">Grocery item</label>
               <RecipeEditorShoppingItemSelect
                 v-model="item.id"
                 :is-field-in-error="(name: string) => isFieldInError(`shoppingItems-${name}`)"
@@ -204,7 +204,7 @@ onBeforeUnmount(() => {
     <button
       type="button"
       class="btn btn-secondary btn-sm btn-add-item"
-      aria-label="add shopping item"
+      aria-label="add grocery item"
       @click.stop.prevent="onNewClick(null)"
     >
       <font-awesome-icon icon="fa-plus" />

@@ -39,14 +39,14 @@ const resultCountText = computed(() => {
 
   // If NaN or less than 0.
   if (!(totalCount > 0)) {
-    return 'Found no shopping items.';
+    return 'Found no grocery items.';
   }
 
   const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
   const start = base + 1;
   const end = base + (itemSet.count || 0);
 
-  return `Showing ${start}-${end} of ${totalCount} shopping items.`;
+  return `Showing ${start}-${end} of ${totalCount} grocery items.`;
 });
 
 function navigateSearch() {
@@ -119,8 +119,8 @@ async function onDeleteShoppingItem(id: number | null | undefined) {
   }
 
   const parameters: ModalParameters = {
-    title: 'Delete shopping item',
-    description: 'Do you really want to delete this shopping item?',
+    title: 'Delete grocery item',
+    description: 'Do you really want to delete this grocery item?',
     okAction: () => deleteShoppingItem(),
   };
 

@@ -40,14 +40,14 @@ const resultCountText = computed(() => {
 
   // If NaN or less than 0.
   if (!(totalCount > 0)) {
-    return 'Found no pantry locations.';
+    return 'Found no storage locations.';
   }
 
   const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
   const start = base + 1;
   const end = base + (itemSet.count || 0);
 
-  return `Showing ${start}-${end} of ${totalCount} pantry locations.`;
+  return `Showing ${start}-${end} of ${totalCount} storage locations.`;
 });
 
 function navigateSearch() {
@@ -120,8 +120,8 @@ async function onDeletePantryLocation(id: number | null | undefined) {
   }
 
   const parameters: ModalParameters = {
-    title: 'Delete pantry location',
-    description: 'Do you really want to delete this pantry location?',
+    title: 'Delete storage location',
+    description: 'Do you really want to delete this storage location?',
     okAction: () => deletePantryLocation(),
   };
 

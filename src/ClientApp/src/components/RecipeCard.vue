@@ -80,7 +80,7 @@ function flipCard() {
               <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
             </div>
             <div v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3">
-              <div>Shopping Items</div>
+              <div>Grocery Items</div>
               <ul>
                 <li v-for="shoppingItem in recipe.shoppingItems" :key="shoppingItem.name || ''">
                   {{ shoppingItem.quantity }}x {{ shoppingItem.name }}

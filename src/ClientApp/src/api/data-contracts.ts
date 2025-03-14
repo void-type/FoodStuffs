@@ -611,7 +611,10 @@ export interface RecipesSearchParams {
   searchText?: string | null;
   /** Category IDs to filter on */
   categories?: number[] | null;
-  /** @default false */
+  /**
+   * When true, recipes returned will match all selected categories
+   * @default false
+   */
   allCategories?: boolean;
   /** If the recipes should be enabled for meal planning */
   isForMealPlanning?: boolean | null;

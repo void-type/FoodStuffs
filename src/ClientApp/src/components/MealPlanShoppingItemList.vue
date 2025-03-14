@@ -149,7 +149,7 @@ function copyList() {
       </div>
       <ul class="list-group list-group-flush">
         <li v-if="shoppingItemsGrouped.length < 1" class="list-group-item p-4 text-center">
-          No shopping items.
+          No grocery items.
         </li>
       </ul>
     </div>

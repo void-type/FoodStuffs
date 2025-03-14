@@ -286,7 +286,7 @@ onMounted(async () => {
         </div>
       </div>
       <div class="g-col-12 g-col-md-6">
-        <label for="shopping-item-list" class="form-label">Shopping items</label>
+        <label for="shopping-item-list" class="form-label">Grocery items</label>
         <RecipeEditorShoppingItems
           v-model="data.workingRecipe.shoppingItems as RecipeShoppingItemWorking[]"
           :is-field-in-error="messageStore.isFieldInError"

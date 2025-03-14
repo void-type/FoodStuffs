@@ -56,7 +56,7 @@ public class SaveGroceryDepartmentHandler : CustomEventHandlerAbstract<SaveGroce
 
         if (conflictingGroceryDepartment is not null && conflictingGroceryDepartment.Id != request.Id)
         {
-            return Fail(new Failure("Grocery department name already exists.", "name"));
+            return Fail(new Failure("Grocery aisle name already exists.", "name"));
         }
 
         var groceryDepartmentToEdit = maybeGroceryDepartment.Unwrap(() => new GroceryDepartment());
@@ -74,7 +74,7 @@ public class SaveGroceryDepartmentHandler : CustomEventHandlerAbstract<SaveGroce
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        return Ok(EntityMessage.Create($"Grocery department {(maybeGroceryDepartment.HasValue ? "updated" : "added")}.", groceryDepartmentToEdit.Id));
+        return Ok(EntityMessage.Create($"Grocery Aisle {(maybeGroceryDepartment.HasValue ? "updated" : "added")}.", groceryDepartmentToEdit.Id));
     }
 
     private static void Transfer(SaveGroceryDepartmentRequest request, string formattedName, GroceryDepartment groceryDepartment)

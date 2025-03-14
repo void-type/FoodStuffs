@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import logoSvg from '@/img/logo.svg';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import useAppStore from '@/stores/appStore';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import useMessageStore from '@/stores/messageStore';
@@ -13,7 +13,6 @@ import AppHeaderSearch from './AppHeaderSearch.vue';
 const appStore = useAppStore();
 const messageStore = useMessageStore();
 const { applicationName, user, useDarkMode } = storeToRefs(appStore);
-const userRoles = computed(() => (user.value?.authorizedAs || []).join(', '));
 
 const api = ApiHelper.client;
 
@@ -80,13 +79,14 @@ const searchText = ref('');
               ><span>{{ user.login }}</span></a
             >
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <li class="dropdown-item">Roles: {{ userRoles || 'none' }}</li>
-              <li class="dropdown-item">
-                <button class="btn btn-secondary" :disabled="isRebuilding" @click="rebuildSearch">
-                  <font-awesome-icon icon="fa-rotate-right" />
-                  {{ isRebuilding ? 'Rebuilding...' : 'Rebuild index' }}
-                </button>
+              <!-- <li class="dropdown-item-text fw-bold">Roles</li>
+              <li v-for="role in user.authorizedAs" :key="role" class="dropdown-item-text">
+                {{ role }}
               </li>
+              <li v-if="(user.authorizedAs?.length || 0) < 1" class="dropdown-item-text text-muted">
+                No roles.
+              </li>
+              <li><hr class="dropdown-divider" /></li> -->
               <li class="dropdown-item">
                 <div class="form-check form-switch">
                   <label class="w-100" for="useDarkMode" aria-label="Use dark mode"
@@ -103,6 +103,12 @@ const searchText = ref('');
                     "
                   />
                 </div>
+              </li>
+              <li class="dropdown-item">
+                <button class="btn btn-secondary" :disabled="isRebuilding" @click="rebuildSearch">
+                  <font-awesome-icon icon="fa-rotate-right" />
+                  {{ isRebuilding ? 'Rebuilding...' : 'Rebuild index' }}
+                </button>
               </li>
             </ul>
           </li>

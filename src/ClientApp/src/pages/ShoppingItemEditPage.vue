@@ -126,8 +126,8 @@ function onDeleteClick(id: number) {
   }
 
   const parameters: ModalParameters = {
-    title: 'Delete shopping item',
-    description: 'Do you really want to delete this shopping item?',
+    title: 'Delete grocery item',
+    description: 'Do you really want to delete this grocery item?',
     okAction: deleteNow,
   };
 
@@ -324,7 +324,7 @@ onBeforeUnmount(() => {
           />
         </div>
         <div class="g-col-12 g-col-md-6">
-          <label for="groceryDepartmentId" class="form-label">Grocery Department</label>
+          <label for="groceryDepartmentId" class="form-label">Grocery Aisle</label>
           <ShoppingItemGroceryDepartmentSelect v-model="data.working.groceryDepartmentId" />
         </div>
         <TagEditor
@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
           :on-remove-tag="removePantryLocation"
           :suggestions="pantryLocationOptions"
           field-name="pantryLocations"
-          label="Pantry Locations"
+          label="Storage Locations"
         />
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
         <div v-if="data.source.recipes?.length" class="g-col-12 g-col-md-6">

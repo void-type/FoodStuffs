@@ -9,7 +9,6 @@ import RouterHelper from '@/models/RouterHelper';
 import { isNil } from '@/models/FormatHelper';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
 
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
@@ -17,7 +16,6 @@ const shoppingItemStore = useShoppingItemStore();
 const categoryStore = useCategoryStore();
 const pantryLocationStore = usePantryLocationStore();
 const groceryDepartmentStore = useGroceryDepartmentStore();
-const router = useRouter();
 
 const planName = computed(() => {
   const name = mealPlanStore.currentMealPlan?.name;
@@ -32,18 +30,10 @@ const planName = computed(() => {
 });
 
 const { recentRecipes } = storeToRefs(recipeStore);
-
-async function newMealPlan() {
-  await mealPlanStore.newCurrentMealPlan();
-  router.push({ name: 'mealPlanEdit' });
-}
 </script>
 
 <template>
   <ul class="navbar-nav">
-    <li class="nav-item">
-      <router-link :to="{ name: 'home' }" class="nav-link">Home</router-link>
-    </li>
     <li class="nav-item dropdown">
       <a
         class="nav-link dropdown-toggle"
@@ -62,9 +52,6 @@ async function newMealPlan() {
             >Recipes</router-link
           >
         </li>
-        <li>
-          <router-link :to="{ name: 'recipeNew' }" class="dropdown-item">New Recipe</router-link>
-        </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
           <router-link
@@ -74,9 +61,6 @@ async function newMealPlan() {
           >
         </li>
         <li>
-          <button class="dropdown-item" @click="newMealPlan">New Meal Plan</button>
-        </li>
-        <li>
           <router-link
             v-if="(mealPlanStore.currentMealPlan.id || 0) > 0"
             :to="{ name: 'mealPlanEdit' }"
@@ -84,11 +68,13 @@ async function newMealPlan() {
             >Edit Current Meal Plan<br /><small>{{ planName }}</small></router-link
           >
         </li>
-        <li v-if="recentRecipes"><hr class="dropdown-divider" /></li>
-        <li v-for="recipe in recentRecipes" :key="recipe.id">
-          <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">{{
-            recipe.name
-          }}</router-link>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <router-link
+            :to="{ name: 'shoppingItemList', query: shoppingItemStore.currentQueryParams }"
+            class="dropdown-item"
+            >Grocery Items</router-link
+          >
         </li>
       </ul>
     </li>
@@ -110,11 +96,6 @@ async function newMealPlan() {
             >Categories</router-link
           >
         </li>
-        <li>
-          <router-link :to="{ name: 'categoryNew' }" class="dropdown-item"
-            >New Category</router-link
-          >
-        </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
           <router-link
@@ -123,12 +104,7 @@ async function newMealPlan() {
               query: groceryDepartmentStore.currentQueryParams,
             }"
             class="dropdown-item"
-            >Grocery Departments</router-link
-          >
-        </li>
-        <li>
-          <router-link :to="{ name: 'groceryDepartmentNew' }" class="dropdown-item"
-            >New Grocery Department</router-link
+            >Grocery Aisles</router-link
           >
         </li>
         <li><hr class="dropdown-divider" /></li>
@@ -136,26 +112,26 @@ async function newMealPlan() {
           <router-link
             :to="{ name: 'pantryLocationList', query: pantryLocationStore.currentQueryParams }"
             class="dropdown-item"
-            >Pantry Locations</router-link
+            >Storage Locations</router-link
           >
         </li>
-        <li>
-          <router-link :to="{ name: 'pantryLocationNew' }" class="dropdown-item"
-            >New Pantry Location</router-link
-          >
-        </li>
-        <li><hr class="dropdown-divider" /></li>
-        <li>
-          <router-link
-            :to="{ name: 'shoppingItemList', query: shoppingItemStore.currentQueryParams }"
-            class="dropdown-item"
-            >Shopping Items</router-link
-          >
-        </li>
-        <li>
-          <router-link :to="{ name: 'shoppingItemNew' }" class="dropdown-item"
-            >New Shopping Item</router-link
-          >
+      </ul>
+    </li>
+    <li class="nav-item dropdown">
+      <a
+        class="nav-link dropdown-toggle"
+        href="#"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Recent
+      </a>
+      <ul class="dropdown-menu">
+        <li v-for="recipe in recentRecipes" :key="recipe.id">
+          <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">{{
+            recipe.name
+          }}</router-link>
         </li>
       </ul>
     </li>

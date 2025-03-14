@@ -114,8 +114,8 @@ function onDeleteClick(id: number) {
   }
 
   const parameters: ModalParameters = {
-    title: 'Delete grocery department',
-    description: 'Do you really want to delete this grocery department?',
+    title: 'Delete grocery aisle',
+    description: 'Do you really want to delete this grocery aisle?',
     okAction: deleteNow,
   };
 
@@ -286,7 +286,7 @@ onBeforeUnmount(() => {
         </div>
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
         <div v-if="data.source.shoppingItems?.length" class="g-col-12 g-col-md-6">
-          Used in shopping items
+          Used in grocery items
           <ul>
             <li v-for="recipe in data.source.shoppingItems" :key="recipe.id">
               <router-link :to="RouterHelper.viewRecipe(recipe)">

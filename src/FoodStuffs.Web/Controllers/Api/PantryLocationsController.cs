@@ -10,13 +10,13 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage shopping item pantry locations.
+/// Manage grocery item storage locations.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/pantry-locations")]
 public class PantryLocationsController : ControllerBase
 {
     /// <summary>
-    /// List pantry locations. All parameters are optional and some have defaults.
+    /// List storage locations. All parameters are optional and some have defaults.
     /// </summary>
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
@@ -46,10 +46,10 @@ public class PantryLocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Get a pantry location.
+    /// Get a storage location.
     /// </summary>
     /// <param name="getHandler"></param>
-    /// <param name="id">The ID of the pantry location to get</param>
+    /// <param name="id">The ID of the storage location to get</param>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetPantryLocationResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -63,10 +63,10 @@ public class PantryLocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Save a pantry location. Will update if found, otherwise a new item will be created.
+    /// Save a storage location. Will update if found, otherwise a new item will be created.
     /// </summary>
     /// <param name="saveHandler"></param>
-    /// <param name="request">The pantry location to save</param>
+    /// <param name="request">The storage location to save</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -78,10 +78,10 @@ public class PantryLocationsController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a pantry location.
+    /// Delete a storage location.
     /// </summary>
     /// <param name="deleteHandler"></param>
-    /// <param name="id">The ID of the pantry location</param>
+    /// <param name="id">The ID of the storage location</param>
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]

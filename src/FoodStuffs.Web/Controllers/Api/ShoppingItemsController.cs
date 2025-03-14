@@ -10,13 +10,13 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage recipe shopping items.
+/// Manage recipe grocery items.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/shopping-items")]
 public class ShoppingItemsController : ControllerBase
 {
     /// <summary>
-    /// List shopping items. All parameters are optional and some have defaults.
+    /// List grocery items. All parameters are optional and some have defaults.
     /// </summary>
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
@@ -46,10 +46,10 @@ public class ShoppingItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Get a shopping item.
+    /// Get a grocery item.
     /// </summary>
     /// <param name="getHandler"></param>
-    /// <param name="id">The ID of the shopping item to get</param>
+    /// <param name="id">The ID of the grocery item to get</param>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetShoppingItemResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -63,10 +63,10 @@ public class ShoppingItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Save a shopping item. Will update if found, otherwise a new item will be created.
+    /// Save a grocery item. Will update if found, otherwise a new item will be created.
     /// </summary>
     /// <param name="saveHandler"></param>
-    /// <param name="request">The shopping item to save</param>
+    /// <param name="request">The grocery item to save</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -78,10 +78,10 @@ public class ShoppingItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Update a shopping item inventory.
+    /// Update a grocery item inventory.
     /// </summary>
     /// <param name="saveHandler"></param>
-    /// <param name="request">The shopping item to save</param>
+    /// <param name="request">The grocery item to save</param>
     [HttpPost("inventory")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -93,10 +93,10 @@ public class ShoppingItemsController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a shopping item.
+    /// Delete a grocery item.
     /// </summary>
     /// <param name="deleteHandler"></param>
-    /// <param name="id">The ID of the shopping item</param>
+    /// <param name="id">The ID of the grocery item</param>
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]

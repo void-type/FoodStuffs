@@ -36,6 +36,6 @@ public class DeleteShoppingItemHandler : CustomEventHandlerAbstract<DeleteShoppi
 
                 await _index.AddOrUpdateAsync(recipeIds, cancellationToken);
             })
-            .SelectAsync(r => EntityMessage.Create("Shopping item deleted.", r.Id));
+            .SelectAsync(r => EntityMessage.Create("Grocery item deleted.", r.Id));
     }
 }

@@ -10,13 +10,13 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage shopping item grocery departments.
+/// Manage grocery item grocery aisles.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/grocery-departments")]
 public class GroceryDepartmentsController : ControllerBase
 {
     /// <summary>
-    /// List grocery departments. All parameters are optional and some have defaults.
+    /// List grocery aisles. All parameters are optional and some have defaults.
     /// </summary>
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
@@ -46,10 +46,10 @@ public class GroceryDepartmentsController : ControllerBase
     }
 
     /// <summary>
-    /// Get a grocery department.
+    /// Get a grocery aisle.
     /// </summary>
     /// <param name="getHandler"></param>
-    /// <param name="id">The ID of the grocery department to get</param>
+    /// <param name="id">The ID of the grocery aisle to get</param>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(GetGroceryDepartmentResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -63,10 +63,10 @@ public class GroceryDepartmentsController : ControllerBase
     }
 
     /// <summary>
-    /// Save a grocery department. Will update if found, otherwise a new item will be created.
+    /// Save a grocery aisle. Will update if found, otherwise a new item will be created.
     /// </summary>
     /// <param name="saveHandler"></param>
-    /// <param name="request">The grocery department to save</param>
+    /// <param name="request">The grocery aisle to save</param>
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
@@ -78,10 +78,10 @@ public class GroceryDepartmentsController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a grocery department.
+    /// Delete a grocery aisle.
     /// </summary>
     /// <param name="deleteHandler"></param>
-    /// <param name="id">The ID of the grocery department</param>
+    /// <param name="id">The ID of the grocery aisle</param>
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]

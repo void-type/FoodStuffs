@@ -17,7 +17,7 @@ public class SaveShoppingItemRequestValidator : RuleValidatorAbstract<SaveShoppi
         CreateRule(new Failure("Inventory quantity must be 0 or greater.", "inventoryQuantity"))
             .InvalidWhen(entity => entity.InventoryQuantity < 0);
 
-        CreateRule(new Failure("Pantry location names can't be longer than 450 characters.", "pantryLocations"))
+        CreateRule(new Failure("Storage location names can't be longer than 450 characters.", "pantryLocations"))
             .InvalidWhen(entity => entity.PantryLocations?.Exists(x => x.Length > 450) ?? false);
     }
 }
