@@ -12,11 +12,6 @@ public class CategoriesSpecification : QuerySpecificationAbstract<Category>
         AddOrderBy(c => c.Name);
     }
 
-    public CategoriesSpecification(int id)
-    {
-        AddCriteria(r => r.Id == id);
-    }
-
     public CategoriesSpecification(string name)
     {
         AddCriteria(r => r.Name == name);
@@ -24,6 +19,8 @@ public class CategoriesSpecification : QuerySpecificationAbstract<Category>
 
     public CategoriesSpecification(ListCategoriesRequest request) : this(criteria: [])
     {
+        AddInclude(nameof(Category.Recipes));
+
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
         // Need to use Linq methods for EF
 #pragma warning disable S6605, RCS1155, CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparison

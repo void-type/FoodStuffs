@@ -26,11 +26,17 @@ public class ListGroceryDepartmentsHandler : CustomEventHandlerAbstract<ListGroc
         return await _data.GroceryDepartments
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
+            .Select(gd => new
+            {
+                GroceryDepartment = gd,
+                ShoppingItemCount = gd.ShoppingItems.Count
+            })
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(x => new ListGroceryDepartmentsResponse(
-                Id: x.Id,
-                Name: x.Name,
-                Order: x.Order))
+                Id: x.GroceryDepartment.Id,
+                Name: x.GroceryDepartment.Name,
+                Order: x.GroceryDepartment.Order,
+                ShoppingItemCount: x.ShoppingItemCount))
             .MapAsync(Ok);
     }
 }

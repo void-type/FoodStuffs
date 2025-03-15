@@ -26,15 +26,22 @@ public class ListShoppingItemsHandler : CustomEventHandlerAbstract<ListShoppingI
         return await _data.ShoppingItems
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
+            .AsSplitQuery()
+            .Select(si => new
+            {
+                ShoppingItem = si,
+                RecipeCount = si.Recipes.Count
+            })
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(c => new ListShoppingItemsResponse(
-                Id: c.Id,
-                Name: c.Name,
-                InventoryQuantity: c.InventoryQuantity,
-                PantryLocations: [.. c.PantryLocations
+                Id: c.ShoppingItem.Id,
+                Name: c.ShoppingItem.Name,
+                InventoryQuantity: c.ShoppingItem.InventoryQuantity,
+                PantryLocations: [.. c.ShoppingItem.PantryLocations
                     .Select(pl => pl.Name)
                     .Order(StringComparer.Ordinal)],
-                GroceryDepartmentId: c.GroceryDepartmentId))
+                GroceryDepartmentId: c.ShoppingItem.GroceryDepartmentId,
+                RecipeCount: c.RecipeCount))
             .MapAsync(Ok);
     }
 }

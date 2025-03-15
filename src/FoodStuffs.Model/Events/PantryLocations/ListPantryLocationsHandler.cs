@@ -26,10 +26,16 @@ public class ListPantryLocationsHandler : CustomEventHandlerAbstract<ListPantryL
         return await _data.PantryLocations
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
+            .Select(pl => new
+            {
+                PantryLocation = pl,
+                ShoppingItemCount = pl.ShoppingItems.Count
+            })
             .ToItemSet(paginationOptions, cancellationToken)
-            .SelectAsync(c => new ListPantryLocationsResponse(
-                Id: c.Id,
-                Name: c.Name))
+            .SelectAsync(x => new ListPantryLocationsResponse(
+                Id: x.PantryLocation.Id,
+                Name: x.PantryLocation.Name,
+                ShoppingItemCount: x.ShoppingItemCount))
             .MapAsync(Ok);
     }
 }

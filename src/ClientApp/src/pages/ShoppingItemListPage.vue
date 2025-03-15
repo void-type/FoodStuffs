@@ -209,6 +209,9 @@ watch(
               :inline="true"
               class="g-col-12 g-col-sm-6 g-col-md-12 g-col-lg-6"
             />
+            <div class="g-col-12 g-col-sm-6 g-col-md-12 g-col-lg-6">
+              Used in {{ shoppingItem.recipeCount }} recipes.
+            </div>
           </div>
           <div v-if="(shoppingItem.pantryLocations?.length || 0) > 0" class="mt-3">
             <span

@@ -1,5 +1,4 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.MealPlans.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
@@ -21,17 +20,22 @@ public class ListMealPlansHandler : CustomEventHandlerAbstract<ListMealPlansRequ
     {
         var paginationOptions = request.GetPaginationOptions();
 
-        var specification = new MealPlansSpecification();
-
         return await _data.MealPlans
-            .TagWith(GetTag(specification))
-            .ApplyEfSpecification(specification)
+            .TagWith(GetTag())
+            .Include(mp => mp.RecipeRelations)
+            .OrderByDescending(mp => mp.CreatedOn)
+            .Select(mp => new
+            {
+                MealPlan = mp,
+                RecipeCount = mp.RecipeRelations.Count
+            })
             .ToItemSet(paginationOptions, cancellationToken)
-            .SelectAsync(ms => new ListMealPlansResponse(
-                Id: ms.Id,
-                Name: ms.Name,
-                CreatedOn: ms.CreatedOn,
-                ModifiedOn: ms.ModifiedOn))
+            .SelectAsync(x => new ListMealPlansResponse(
+                Id: x.MealPlan.Id,
+                Name: x.MealPlan.Name,
+                CreatedOn: x.MealPlan.CreatedOn,
+                ModifiedOn: x.MealPlan.ModifiedOn,
+                RecipeCount: x.RecipeCount))
             .MapAsync(Ok);
     }
 }

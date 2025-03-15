@@ -189,6 +189,7 @@ watch(
       <thead>
         <tr>
           <th>Name</th>
+          <th>Recipes</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -199,6 +200,7 @@ watch(
               {{ category.name }}
             </router-link>
           </td>
+          <td>{{ category.recipeCount }}</td>
           <td>
             <button class="btn btn-sm btn-danger" @click="() => onDeleteCategory(category.id)">
               Delete

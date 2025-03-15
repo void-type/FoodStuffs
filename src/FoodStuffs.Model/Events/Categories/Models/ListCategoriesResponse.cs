@@ -2,4 +2,5 @@
 
 public record ListCategoriesResponse(
     int Id,
-    string Name);
+    string Name,
+    int RecipeCount);

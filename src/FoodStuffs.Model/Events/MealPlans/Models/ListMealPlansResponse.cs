@@ -4,4 +4,5 @@ public record ListMealPlansResponse(
     int Id,
     string Name,
     DateTimeOffset CreatedOn,
-    DateTimeOffset ModifiedOn);
+    DateTimeOffset ModifiedOn,
+    int RecipeCount);

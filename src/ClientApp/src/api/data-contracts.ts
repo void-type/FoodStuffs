@@ -48,6 +48,8 @@ export interface ListCategoriesResponse {
   /** @format int32 */
   id?: number;
   name?: string;
+  /** @format int32 */
+  recipeCount?: number;
 }
 
 export interface IItemSetOfIFailure {
@@ -129,6 +131,8 @@ export interface ListGroceryDepartmentsResponse {
   name?: string;
   /** @format int32 */
   order?: number;
+  /** @format int32 */
+  shoppingItemCount?: number;
 }
 
 export interface GetGroceryDepartmentResponse {
@@ -185,6 +189,8 @@ export interface ListMealPlansResponse {
   createdOn?: string;
   /** @format date-time */
   modifiedOn?: string;
+  /** @format int32 */
+  recipeCount?: number;
 }
 
 export interface GetMealPlanResponse {
@@ -272,6 +278,8 @@ export interface ListPantryLocationsResponse {
   /** @format int32 */
   id?: number;
   name?: string;
+  /** @format int32 */
+  shoppingItemCount?: number;
 }
 
 export interface GetPantryLocationResponse {
@@ -453,6 +461,8 @@ export interface ListShoppingItemsResponse {
   pantryLocations?: string[];
   /** @format int32 */
   groceryDepartmentId?: number | null;
+  /** @format int32 */
+  recipeCount?: number;
 }
 
 export interface GetShoppingItemResponse {

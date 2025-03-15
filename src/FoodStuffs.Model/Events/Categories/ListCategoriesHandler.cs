@@ -26,10 +26,16 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
         return await _data.Categories
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
+            .Select(c => new
+            {
+                Category = c,
+                RecipeCount = c.Recipes.Count
+            })
             .ToItemSet(paginationOptions, cancellationToken)
-            .SelectAsync(c => new ListCategoriesResponse(
-                Id: c.Id,
-                Name: c.Name))
+            .SelectAsync(x => new ListCategoriesResponse(
+                Id: x.Category.Id,
+                Name: x.Category.Name,
+                RecipeCount: x.RecipeCount))
             .MapAsync(Ok);
     }
 }

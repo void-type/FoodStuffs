@@ -2,4 +2,5 @@
 
 public record ListPantryLocationsResponse(
     int Id,
-    string Name);
+    string Name,
+    int ShoppingItemCount);

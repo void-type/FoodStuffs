@@ -192,6 +192,7 @@ watch(
         <tr>
           <th>Name</th>
           <th>Order</th>
+          <th>Grocery Items</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -205,6 +206,7 @@ watch(
             </router-link>
           </td>
           <td>{{ groceryDepartment.order }}</td>
+          <td>{{ groceryDepartment.shoppingItemCount }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"

@@ -121,6 +121,7 @@ watch(
         <tr>
           <th>Name</th>
           <th>Created on</th>
+          <th>Recipes</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -128,6 +129,7 @@ watch(
         <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
           <td>{{ mealPlan.name }}</td>
           <td>{{ DateHelper.dateTimeForView(mealPlan.createdOn) }}</td>
+          <td>{{ mealPlan.recipeCount }}</td>
           <td>
             <router-link
               v-if="currentMealPlan.id === mealPlan.id"

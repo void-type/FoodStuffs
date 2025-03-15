@@ -3,4 +3,5 @@
 public record ListGroceryDepartmentsResponse(
     int Id,
     string Name,
-    int Order);
+    int Order,
+    int ShoppingItemCount);
