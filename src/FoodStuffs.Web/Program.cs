@@ -74,7 +74,7 @@ try
     app.UseSpaExceptionPage(env);
     app.UseSecureTransport(env);
     app.UseSecurityHeaders(env, config);
-    app.UseStaticFiles();
+    app.MapStaticAssets();
     app.UseRouting();
     app.UseRequestLoggingScope();
     app.UseSerilogRequestLogging();
