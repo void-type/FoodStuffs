@@ -4,7 +4,7 @@ import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
 import RecipesListRequest from '@/models/RecipesListRequest';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
-import { watch, type PropType, ref, computed, reactive } from 'vue';
+import { watch, type PropType, ref, computed } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
@@ -27,7 +27,7 @@ const router = useRouter();
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelper;
 
-const categoriesFilterModel = reactive({
+const categoriesFilterModel = ref({
   categories: [] as Array<number>,
   allCategories: false,
 });
@@ -117,7 +117,7 @@ function setListRequestFromQuery() {
         return n ? [n] : [];
       }) || [];
 
-  categoriesFilterModel.categories = categories;
+  categoriesFilterModel.value.categories = categories;
 
   recipeStore.setListRequest({
     ...new RecipesListRequest(),
@@ -148,24 +148,28 @@ function getMealFacetCount(facetValue: boolean | null) {
   return ` (${count})`;
 }
 
-watch(categoriesFilterModel, () => {
-  const { categories, allCategories } = listRequest.value;
+watch(
+  categoriesFilterModel,
+  () => {
+    const { categories, allCategories } = listRequest.value;
 
-  const initialModel = {
-    categories,
-    allCategories,
-  };
+    const initialModel = {
+      categories,
+      allCategories,
+    };
 
-  if (JSON.stringify(initialModel) !== JSON.stringify(categoriesFilterModel)) {
-    recipeStore.setListRequest({
-      ...listRequest.value,
-      ...categoriesFilterModel,
-      page: 1,
-    });
+    if (JSON.stringify(initialModel) !== JSON.stringify(categoriesFilterModel.value)) {
+      recipeStore.setListRequest({
+        ...listRequest.value,
+        ...categoriesFilterModel.value,
+        page: 1,
+      });
 
-    navigateSearch();
-  }
-});
+      navigateSearch();
+    }
+  },
+  { deep: true }
+);
 
 watch(
   props,
