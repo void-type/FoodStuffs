@@ -40,9 +40,9 @@ function flipCard() {
         {{ recipe.name }}
       </router-link>
     </div>
-    <router-link class="card-link card-hover" :to="RouterHelper.viewRecipe(recipe)">
-      <div v-if="!props.showCompactView" class="card-flip-container">
-        <div class="card-flip-front">
+    <div v-if="!props.showCompactView" class="card-flip-container">
+      <div class="card-flip-front">
+        <router-link class="card-link card-hover" :to="RouterHelper.viewRecipe(recipe)">
           <div class="image-container">
             <img
               v-if="recipe.image != null"
@@ -55,52 +55,41 @@ function flipCard() {
             />
             <ImagePlaceholder v-else class="img-fluid position-absolute top-0 left-0" />
           </div>
-        </div>
-        <div class="card-flip-back card-body d-none">
-          <div class="card-flip-back-inner slim-scroll">
-            <div v-if="(recipe.shoppingItems?.length || 0) > 0">
-              <div>Grocery Items</div>
-              <ul>
-                <li v-for="shoppingItem in recipe.shoppingItems" :key="shoppingItem.name || ''">
-                  {{ shoppingItem.quantity }}x {{ shoppingItem.name }}
-                </li>
-              </ul>
-            </div>
-            <div v-if="(recipe.categories?.length || 0) > 0">
-              <span
-                v-for="category in recipe.categories"
-                :key="category || ''"
-                class="badge rounded-pill text-bg-secondary me-2 mt-2"
-              >
-                {{ category }}</span
-              >
-            </div>
+        </router-link>
+      </div>
+      <div class="card-flip-back card-body d-none">
+        <div class="card-flip-back-inner slim-scroll">
+          <div v-if="(recipe.shoppingItems?.length || 0) > 0">
+            <div>Grocery Items</div>
+            <ul>
+              <li v-for="shoppingItem in recipe.shoppingItems" :key="shoppingItem.name || ''">
+                {{ shoppingItem.quantity }}x {{ shoppingItem.name }}
+              </li>
+            </ul>
+          </div>
+          <div v-if="(recipe.categories?.length || 0) > 0">
+            <span
+              v-for="category in recipe.categories"
+              :key="category || ''"
+              class="badge rounded-pill text-bg-secondary m-1"
+            >
+              {{ category }}</span
+            >
           </div>
         </div>
       </div>
-      <div v-else class="card-body">
-        <div class="btn-toolbar">
-          <router-link
-            type="button"
-            class="btn btn-sm btn-secondary me-2 mb-2"
-            aria-label="edit recipe"
-            :to="RouterHelper.editRecipe(recipe)"
-            @click.stop
-            >Edit</router-link
-          >
-          <RecipeMealButton class="btn-sm mb-2" :recipe-id="recipe.id" />
-        </div>
-        <div v-if="(recipe.categories?.length || 0) > 0" class="mt-3">
-          <span
-            v-for="category in recipe.categories"
-            :key="category || ''"
-            class="badge rounded-pill text-bg-secondary me-2 mt-2"
-          >
-            {{ category }}</span
-          >
-        </div>
+    </div>
+    <div v-else class="card-body">
+      <div v-if="(recipe.categories?.length || 0) > 0">
+        <span
+          v-for="category in recipe.categories"
+          :key="category || ''"
+          class="badge rounded-pill text-bg-secondary m-1"
+        >
+          {{ category }}</span
+        >
       </div>
-    </router-link>
+    </div>
     <div class="card-footer">
       <div class="btn-toolbar">
         <router-link
