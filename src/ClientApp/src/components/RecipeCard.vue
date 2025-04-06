@@ -30,22 +30,15 @@ function flipCard() {
 
 <template>
   <div :id="recipeCardId" class="card">
-    <AppSortHandle v-if="props.showSortHandle" class="card-header-button left" />
     <div
       :class="{
         'card-header': true,
-        sortable: props.showSortHandle,
-        flippable: !props.showCompactView,
       }"
     >
+      <AppSortHandle v-if="props.showSortHandle" class="card-header-sort-handle" />
       <router-link :to="RouterHelper.viewRecipe(recipe)">
         {{ recipe.name }}
       </router-link>
-    </div>
-    <div v-if="!props.showCompactView" class="card-header-button right">
-      <a href="#" aria-label="flip card" @click.stop.prevent="flipCard">
-        <font-awesome-icon icon="fa-rotate" />
-      </a>
     </div>
     <router-link class="card-link card-hover" :to="RouterHelper.viewRecipe(recipe)">
       <div v-if="!props.showCompactView" class="card-flip-container">
@@ -53,33 +46,19 @@ function flipCard() {
           <div class="image-container">
             <img
               v-if="recipe.image != null"
-              class="img-fluid rounded-bottom"
+              class="img-fluid"
               :src="ApiHelper.imageUrl(recipe.image)"
               :alt="`Image of ${recipe.name}`"
               :loading="imgLazy ? 'lazy' : 'eager'"
               width="1600"
               height="1200"
             />
-            <ImagePlaceholder
-              v-else
-              class="img-fluid rounded-bottom position-absolute top-0 left-0"
-            />
+            <ImagePlaceholder v-else class="img-fluid position-absolute top-0 left-0" />
           </div>
         </div>
         <div class="card-flip-back card-body d-none">
           <div class="card-flip-back-inner slim-scroll">
-            <div class="btn-toolbar">
-              <router-link
-                type="button"
-                class="btn btn-sm btn-secondary me-2"
-                aria-label="edit recipe"
-                :to="RouterHelper.editRecipe(recipe)"
-                @click.stop
-                >Edit</router-link
-              >
-              <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
-            </div>
-            <div v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3">
+            <div v-if="(recipe.shoppingItems?.length || 0) > 0">
               <div>Grocery Items</div>
               <ul>
                 <li v-for="shoppingItem in recipe.shoppingItems" :key="shoppingItem.name || ''">
@@ -122,6 +101,28 @@ function flipCard() {
         </div>
       </div>
     </router-link>
+    <div class="card-footer">
+      <div class="btn-toolbar">
+        <router-link
+          type="button"
+          class="btn btn-sm btn-secondary me-2"
+          aria-label="edit recipe"
+          :to="RouterHelper.editRecipe(recipe)"
+          @click.stop
+          >Edit</router-link
+        >
+        <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
+        <div v-if="!props.showCompactView" class="ms-auto">
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            aria-label="flip card"
+            @click.stop.prevent="flipCard"
+          >
+            <font-awesome-icon icon="fa-rotate" />
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -148,28 +149,17 @@ function flipCard() {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  &.sortable {
+  &:has(.card-header-sort-handle) {
     padding-left: 2.4rem;
   }
 
-  &.flippable {
-    padding-right: 2.4rem;
-  }
-}
+  .card-header-sort-handle {
+    padding: var(--bs-card-cap-padding-y) 0.75rem;
+    display: inline-block;
+    z-index: 2;
 
-.card-header-button {
-  padding: 0.5rem var(--bs-card-cap-padding-x);
-  display: inline-block;
-  z-index: 2;
-
-  position: absolute;
-  top: 0;
-
-  &.right {
-    right: 0;
-  }
-
-  &.left {
+    position: absolute;
+    top: 0;
     left: 0;
   }
 }

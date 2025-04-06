@@ -14,6 +14,7 @@ import {
   faRotate,
   faGripVertical,
   faPlus,
+  faMinus,
   faTimes,
   faDiceThree,
 } from '@fortawesome/free-solid-svg-icons';
@@ -29,6 +30,7 @@ library.add(
   faRotate,
   faGripVertical,
   faPlus,
+  faMinus,
   faTimes,
   faDiceThree
 );

@@ -58,7 +58,7 @@ onUnmounted(() => {
   <div class="container-xxl">
     <div class="btn-toolbar mt-2">
       <button
-        class="btn btn-outline-primary py-0 px-2 ms-auto"
+        class="btn btn-outline-secondary py-0 px-2 ms-auto"
         aria-label="Randomize"
         title="Randomize"
         @click="randomize"

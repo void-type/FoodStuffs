@@ -2,6 +2,7 @@
 import { type PropType } from 'vue';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import { storeToRefs } from 'pinia';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
   recipeId: {
@@ -21,7 +22,7 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
     :aria-label="`Remove recipe from current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.removeCurrentRecipe(props.recipeId)"
   >
-    Plan: Remove
+    <font-awesome-icon icon="fa-minus" /> Plan
   </button>
   <button
     v-else
@@ -29,7 +30,7 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
     :aria-label="`Add recipe to current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.addCurrentRecipe(props.recipeId)"
   >
-    Plan: Add
+    <font-awesome-icon icon="fa-plus" /> Plan
   </button>
 </template>
 
