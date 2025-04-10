@@ -125,7 +125,7 @@ const router = createRouter({
           ],
         },
         {
-          path: 'grocery-departments',
+          path: 'grocery-aisles',
           meta: { title: 'Grocery Aisles' },
           children: [
             {
@@ -152,7 +152,7 @@ const router = createRouter({
           ],
         },
         {
-          path: 'pantry-locations',
+          path: 'storage-locations',
           meta: { title: 'Storage Locations' },
           children: [
             {
@@ -179,7 +179,7 @@ const router = createRouter({
           ],
         },
         {
-          path: 'shopping-items',
+          path: 'grocery-items',
           meta: { title: 'Grocery Items' },
           children: [
             {
