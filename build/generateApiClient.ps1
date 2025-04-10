@@ -10,8 +10,10 @@ try {
   # Fix because --disableStrictSSL doesn't seem to work, so we'll set the env var directly.
   # Issue noted: https://github.com/acacode/swagger-typescript-api/issues/669
   # Fix from different package: https://github.com/openapi-ts/openapi-typescript/issues/1512
-  $env:NODE_TLS_REJECT_UNAUTHORIZED = 0
-  npx sta -p https://localhost:5001/swagger/v1/swagger.json -o ./src/api/ --modular --responses --extract-request-params --disableStrictSSL
+  # Now set in the npm script
+  # $env:NODE_TLS_REJECT_UNAUTHORIZED = 0
+
+  npm run generate-api-client
 
 } finally {
   Set-Location -Path $originalLocation
