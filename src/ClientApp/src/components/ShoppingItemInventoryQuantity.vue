@@ -5,6 +5,7 @@ import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import type ShoppingItemInventoryWorking from '@/models/ShoppingItemInventoryWorking';
 import debounce from '@/models/DebounceHelper';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const model = defineModel({
   type: Number as PropType<number | null | undefined>,
@@ -66,7 +67,7 @@ const changeInventory = (amount: number) => {
         type="button"
         @click="changeInventory(-1)"
       >
-        -
+        <font-awesome-icon icon="fa-minus" />
       </button>
       <input
         :id="id"
@@ -86,7 +87,7 @@ const changeInventory = (amount: number) => {
         type="button"
         @click="changeInventory(1)"
       >
-        +
+        <font-awesome-icon icon="fa-plus" />
       </button>
     </div>
   </div>
@@ -100,7 +101,7 @@ const changeInventory = (amount: number) => {
         type="button"
         @click="changeInventory(-1)"
       >
-        -
+        <font-awesome-icon icon="fa-minus" />
       </button>
       <input
         :id="id"
@@ -120,7 +121,7 @@ const changeInventory = (amount: number) => {
         type="button"
         @click="changeInventory(1)"
       >
-        +
+        <font-awesome-icon icon="fa-plus" />
       </button>
     </div>
   </div>

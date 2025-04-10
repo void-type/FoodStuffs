@@ -134,11 +134,13 @@ function copyList() {
             @click="onItemClick(item.id)"
           >
             <div class="grid gap-sm">
-              <div class="g-col-12 g-col-xl-8">{{ item.quantity }}x {{ item.details.name }}</div>
+              <div class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6">
+                {{ item.quantity }}x {{ item.details.name }}
+              </div>
               <ShoppingItemInventoryQuantity
                 :id="`inventory-${item.id}`"
                 v-model="item.details.inventoryQuantity"
-                class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-4"
+                class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6"
                 :inline="true"
                 :item="item"
                 @click.stop.prevent
