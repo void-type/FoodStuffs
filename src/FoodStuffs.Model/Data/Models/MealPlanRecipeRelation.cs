@@ -4,6 +4,8 @@ public class MealPlanRecipeRelation
 {
     public int Order { get; set; }
 
+    public bool IsComplete { get; set; }
+
     public int MealPlanId { get; set; }
 
     public int RecipeId { get; set; }

@@ -46,6 +46,7 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                         Id: rel.Recipe.Id,
                         Name: rel.Recipe.Name,
                         Order: rel.Order,
+                        IsComplete: rel.IsComplete,
                         Image: rel.Recipe.DefaultImage?.FileName,
                         Categories: [.. rel.Recipe.Categories.ConvertAll(c => c.Name)],
                         ShoppingItems: [.. rel.Recipe.ShoppingItemRelations

@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -9,15 +10,23 @@
  * ---------------------------------------------------------------
  */
 
+/** Information for bootstrapping a web client. */
 export interface WebClientInfo {
+  /** The value of the header antiforgery token */
   antiforgeryToken?: string;
+  /** The header name of the antiforgery token */
   antiforgeryTokenHeaderName?: string;
+  /** The UI-friendly application name. */
   applicationName?: string;
+  /** The current user */
   user?: DomainUser;
 }
 
+/** A user for use in the domain layer and model services. */
 export interface DomainUser {
+  /** UI-friendly name for the current user */
   login?: string;
+  /** Names of the authorization policies that the user fulfills. */
   authorizedAs?: string[];
 }
 
@@ -31,16 +40,31 @@ export interface AppVersion {
   assemblyConfiguration?: string;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListCategoriesResponse {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: ListCategoriesResponse[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
@@ -52,22 +76,41 @@ export interface ListCategoriesResponse {
   recipeCount?: number;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfIFailure {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: IFailure[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
+/** A domain logic failure with UI-friendly error message and optional field name or UI handle. */
 export interface IFailure {
+  /** The UI-friendly error message to be displayed to the user. */
   message?: string;
+  /** The name of the UI field corresponding to the invalid user input. */
   uiHandle?: string | null;
+  /** A A code name or identifier for the error for programmatic error discrimination. */
   code?: string | null;
 }
 
@@ -92,12 +135,18 @@ export interface GetCategoryResponseRecipe {
   image?: string | null;
 }
 
+/** A UI-friendly message and the Id of the entity that was affected during an event. */
 export type EntityMessageOfInteger = UserMessage & {
-  /** @format int32 */
+  /**
+   * The Id of the entity affected during an event.
+   * @format int32
+   */
   id?: number;
 };
 
+/** A UI-friendly message. */
 export interface UserMessage {
+  /** The UI-friendly message. */
   message?: string;
 }
 
@@ -112,16 +161,31 @@ export interface AddCategoryToAllRecipesRequest {
   id?: number;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListGroceryDepartmentsResponse {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: ListGroceryDepartmentsResponse[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
@@ -164,20 +228,37 @@ export interface SaveGroceryDepartmentRequest {
   order?: number;
 }
 
+/** A UI-friendly message and the Id of the entity that was affected during an event. */
 export type EntityMessageOfString = UserMessage & {
+  /** The Id of the entity affected during an event. */
   id?: string | null;
 };
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListMealPlansResponse {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: ListMealPlansResponse[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
@@ -220,6 +301,7 @@ export interface GetMealPlanResponseRecipe {
   name?: string;
   /** @format int32 */
   order?: number;
+  isComplete?: boolean;
   image?: string | null;
   categories?: string[];
   shoppingItems?: GetMealPlanResponseRecipeShoppingItem[];
@@ -259,18 +341,34 @@ export interface SaveMealPlanRequestRecipe {
   id?: number;
   /** @format int32 */
   order?: number;
+  isComplete?: boolean;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListPantryLocationsResponse {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: ListPantryLocationsResponse[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
@@ -308,20 +406,36 @@ export interface SavePantryLocationRequest {
 }
 
 export interface SearchRecipesResponse {
+  /** A set of items. Can optionally by a page of a full set. */
   results?: IItemSetOfSearchRecipesResultItem;
   facets?: SearchFacet[];
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfSearchRecipesResultItem {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: SearchRecipesResultItem[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
@@ -357,16 +471,31 @@ export interface SearchFacetValue {
   count?: number;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfSuggestRecipesResultItem {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: SuggestRecipesResultItem[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 
@@ -439,16 +568,31 @@ export interface SaveRecipeRequestShoppingItem {
   order?: number;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListShoppingItemsResponse {
-  /** @format int32 */
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
   count?: number;
+  /** The items in this set. */
   items?: ListShoppingItemsResponse[];
+  /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
-  /** @format int32 */
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
   page?: number;
-  /** @format int32 */
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
   take?: number;
-  /** @format int32 */
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
   totalCount?: number;
 }
 

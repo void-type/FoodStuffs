@@ -95,9 +95,16 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         mealPlan.RecipeRelations
             .ForEach(relation =>
             {
-                relation.Order = request.Recipes
-                    .Find(req => req.Id == relation.Recipe.Id)?
-                    .Order ?? int.MaxValue;
+                var requestedRecipe = request.Recipes
+                    .Find(x => x.Id == relation.Recipe.Id);
+
+                if (requestedRecipe == null)
+                {
+                    return;
+                }
+
+                relation.Order = requestedRecipe.Order;
+                relation.IsComplete = requestedRecipe.IsComplete;
             });
     }
 
