@@ -16,6 +16,7 @@ import {
   faPlus,
   faMinus,
   faTimes,
+  faCheck,
   faDiceThree,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -32,6 +33,7 @@ library.add(
   faPlus,
   faMinus,
   faTimes,
+  faCheck,
   faDiceThree
 );
 

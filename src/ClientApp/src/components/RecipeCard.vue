@@ -30,11 +30,7 @@ function flipCard() {
 
 <template>
   <div :id="recipeCardId" class="card">
-    <div
-      :class="{
-        'card-header': true,
-      }"
-    >
+    <div class="card-header position-relative">
       <AppSortHandle v-if="props.showSortHandle" class="card-header-sort-handle" />
       <router-link :to="RouterHelper.viewRecipe(recipe)">
         {{ recipe.name }}
@@ -84,7 +80,7 @@ function flipCard() {
         <span
           v-for="category in recipe.categories"
           :key="category || ''"
-          class="badge rounded-pill text-bg-secondary m-1"
+          class="badge rounded-pill text-bg-secondary mb-1 me-1"
         >
           {{ category }}</span
         >

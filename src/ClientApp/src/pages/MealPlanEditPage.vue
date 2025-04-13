@@ -2,7 +2,7 @@
 import { computed, nextTick, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import RecipeCard from '@/components/RecipeCard.vue';
+import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
 import MealPlanShoppingItemList from '@/components/MealPlanShoppingItemList.vue';
 import useMessageStore from '@/stores/messageStore';
 import ApiHelper from '@/models/ApiHelper';
@@ -219,14 +219,19 @@ onMounted(async () => {
         class="grid mt-3 gap-sm"
         @end="onSortEnd"
       >
-        <RecipeCard
+        <MealPlanRecipeCard
           v-for="(recipe, i) in currentRecipes"
           :key="recipe.id"
           :recipe="recipe"
           :lazy="i > 6"
           :show-sort-handle="true"
-          :show-compact-view="useCompactView"
-          class="g-col-6 g-col-sm-4 g-col-md-3 g-col-lg-2"
+          class="g-col-12 g-col-lg-6"
+          @recipe-checked="
+            (recipe) => {
+              recipe.isComplete = !recipe.isComplete;
+              mealPlanStore.saveCurrentMealPlan([], true);
+            }
+          "
         />
       </vue-draggable>
       <div class="grid mt-3 gap-sm">
