@@ -35,7 +35,7 @@ try {
     $connectionString = Get-Content -Path $webSettingsTest |
       ConvertFrom-Json |
       Select-Object -ExpandProperty ConnectionStrings |
-      Select-Object -ExpandProperty FoodStuffs
+      Select-Object -ExpandProperty $shortAppName
 
     $censoredConnectionString = $connectionString -replace '(?<=Password=)(.*?)(?=;)', '***'
 
