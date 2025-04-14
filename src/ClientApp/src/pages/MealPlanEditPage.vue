@@ -10,6 +10,7 @@ import { VueDraggable } from 'vue-draggable-plus';
 import type {
   ListGroceryDepartmentsResponse,
   ListShoppingItemsResponse,
+  GetMealPlanResponseRecipe,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
@@ -130,6 +131,20 @@ function onSortEnd() {
   });
 }
 
+function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
+  // eslint-disable-next-line no-param-reassign
+  recipe.isComplete = !recipe.isComplete;
+  const newList = currentRecipes.value.filter((x) => x.id !== recipe.id);
+  if (recipe.isComplete) {
+    newList.push(recipe);
+  } else {
+    newList.unshift(recipe);
+  }
+  currentRecipes.value = newList;
+  updateOrdersByIndex();
+  mealPlanStore.saveCurrentMealPlan([], true);
+}
+
 const pageTitle = computed(() => {
   if (currentMealPlan.value?.id) {
     return '';
@@ -226,12 +241,7 @@ onMounted(async () => {
           :lazy="i > 6"
           :show-sort-handle="true"
           class="g-col-12 g-col-lg-6"
-          @recipe-checked="
-            (recipe) => {
-              recipe.isComplete = !recipe.isComplete;
-              mealPlanStore.saveCurrentMealPlan([], true);
-            }
-          "
+          @recipe-completed="onRecipeCompleted"
         />
       </vue-draggable>
       <div class="grid mt-3 gap-sm">

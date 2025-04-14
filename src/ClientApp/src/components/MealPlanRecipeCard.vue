@@ -14,7 +14,7 @@ const props = defineProps({
   showSortHandle: { type: Boolean, required: false, default: false },
 });
 
-const emit = defineEmits(['recipeChecked']);
+const emit = defineEmits(['recipeCompleted']);
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 </script>
@@ -81,7 +81,7 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
                 type="checkbox"
                 class="form-check-input"
                 :checked="recipe.isComplete"
-                @change.stop.prevent="() => emit('recipeChecked', recipe)"
+                @change.stop.prevent="() => emit('recipeCompleted', recipe)"
               />
               <label class="form-check-label" :for="`recipe-complete-${recipe.id}`">Complete</label>
             </div>
