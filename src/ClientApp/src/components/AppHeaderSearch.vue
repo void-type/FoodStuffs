@@ -10,7 +10,7 @@ import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
 import type { SuggestRecipesResultItem } from '@/api/data-contracts';
 import RouterHelper from '@/models/RouterHelper';
-import { debounce } from '@/models/InputHelper';
+import { debounce, composeFix } from '@/models/InputHelper';
 
 const searchText = defineModel<string | null | undefined>();
 
@@ -54,7 +54,11 @@ function navigateRecipe() {
 const searchContainerRef = ref<HTMLElement | null>(null);
 
 function suggest(event: Event) {
-  searchText.value = (event.target as HTMLInputElement).value;
+  // Fix for IME input on some Android keyboards
+  if (event.target instanceof HTMLInputElement) {
+    // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-explicit-any
+    (event.target as any).composing = false;
+  }
 
   debounce(async () => {
     if (!searchText.value || searchText.value.length <= 1) {

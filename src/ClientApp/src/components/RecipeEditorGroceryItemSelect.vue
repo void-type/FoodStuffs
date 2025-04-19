@@ -4,7 +4,7 @@ import type { ListGroceryItemsResponse } from '@/api/data-contracts';
 import type RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
 import { Dropdown } from 'bootstrap';
 import { trimAndTitleCase } from '@/models/FormatHelper';
-import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import { composeFix } from '@/models/InputHelper';
 
 const model = defineModel({
   type: Number as PropType<number | undefined>,
@@ -119,11 +119,11 @@ onBeforeUnmount(() => {
         <input
           :id="`item-${item.uiKey}-name-filter`"
           ref="filterInput"
-          :value="filterText"
+          v-model="filterText"
           type="text"
           class="form-control"
           placeholder="Type to filter options"
-          @input="(e) => (filterText = (e as HTMLInputEvent).target.value)"
+          @input="composeFix"
         />
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
