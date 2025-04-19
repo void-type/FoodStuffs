@@ -4,7 +4,7 @@ import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import type ShoppingItemInventoryWorking from '@/models/ShoppingItemInventoryWorking';
-import debounce from '@/models/DebounceHelper';
+import { debounce } from '@/models/InputHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const model = defineModel({

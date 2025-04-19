@@ -30,18 +30,18 @@ module.exports = {
     'vue/setup-compiler-macros': true,
   },
   rules: {
-    "vue/comment-directive": 0,
+    'vue/comment-directive': 0,
     'vuejs-accessibility/no-onchange': ['off'],
-    "vuejs-accessibility/label-has-for": [
-      "error",
+    'vuejs-accessibility/label-has-for': [
+      'error',
       {
-        "components": ["VLabel"],
-        "controlComponents": ["VInput"],
-        "required": {
-          "every": ["id"]
+        components: ['VLabel'],
+        controlComponents: ['VInput'],
+        required: {
+          every: ['id'],
         },
-        "allowChildren": false
-      }
+        allowChildren: false,
+      },
     ],
     'import/extensions': [
       'error',
@@ -50,5 +50,6 @@ module.exports = {
         ts: 'never',
       },
     ],
+    'import/prefer-default-export': 'off',
   },
 };

@@ -10,7 +10,7 @@ import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
 import type { SuggestRecipesResultItem } from '@/api/data-contracts';
 import RouterHelper from '@/models/RouterHelper';
-import debounce from '@/models/DebounceHelper';
+import { debounce } from '@/models/InputHelper';
 
 const searchText = defineModel<string | null | undefined>();
 
@@ -51,37 +51,40 @@ function navigateRecipe() {
   clearSearch();
 }
 
-// Keep your existing refs and add searchContainerRef if not already defined
 const searchContainerRef = ref<HTMLElement | null>(null);
 
-const suggest = debounce(async () => {
-  if (!searchText.value || searchText.value.length <= 1) {
-    suggestions.value = [];
-    return;
-  }
+function suggest(event: Event) {
+  searchText.value = (event.target as HTMLInputElement).value;
 
-  cancelInFlightSuggestions = false;
-
-  try {
-    const response = await api().recipesSuggest({
-      searchText: searchText.value,
-      take: 8,
-    });
-
-    // If we're not focused on the search input, don't show suggestions.
-    if (!searchContainerRef.value?.contains(document.activeElement)) {
+  debounce(async () => {
+    if (!searchText.value || searchText.value.length <= 1) {
+      suggestions.value = [];
       return;
     }
 
-    if (cancelInFlightSuggestions) {
-      return;
-    }
+    cancelInFlightSuggestions = false;
 
-    suggestions.value = response.data?.items || [];
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-  }
-}, 200);
+    try {
+      const response = await api().recipesSuggest({
+        searchText: searchText.value,
+        take: 8,
+      });
+
+      // If we're not focused on the search input, don't show suggestions.
+      if (!searchContainerRef.value?.contains(document.activeElement)) {
+        return;
+      }
+
+      if (cancelInFlightSuggestions) {
+        return;
+      }
+
+      suggestions.value = response.data?.items || [];
+    } catch (error) {
+      messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    }
+  }, 200)();
+}
 
 function handleFocusOut(event: FocusEvent) {
   const target = event.relatedTarget as HTMLElement;
@@ -122,11 +125,11 @@ onBeforeUnmount(() => {
     <div class="input-group" title="Use control + shift + F to focus the search.">
       <input
         ref="inputRef"
-        v-model="searchText"
-        class="form-control"
+        :value="searchText"
         type="search"
         inputmode="search"
         enterkeyhint="search"
+        class="form-control"
         placeholder="Search"
         aria-label="Search text"
         @input="suggest"

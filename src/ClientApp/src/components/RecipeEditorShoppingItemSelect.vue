@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
             <button
               class="btn btn-sm btn-secondary"
               type="button"
-              @click.stop.prevent="(event) => createShoppingItem(trimAndTitleCase(filterText))"
+              @click.stop.prevent="() => createShoppingItem(trimAndTitleCase(filterText))"
             >
               Create {{ trimAndTitleCase(filterText) }}
             </button>
