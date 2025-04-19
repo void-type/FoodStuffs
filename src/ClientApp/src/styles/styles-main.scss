@@ -119,6 +119,11 @@ header {
 .btn-outline-secondary {
   --bs-btn-color: var(--bs-body-color);
   border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  background-color: var(--bs-body-bg);
+}
+
+.input-group-text {
+  background-color: var(--bs-body-bg);
 }
 
 .rich-text {

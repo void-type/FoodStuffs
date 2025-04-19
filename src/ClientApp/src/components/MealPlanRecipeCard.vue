@@ -21,7 +21,7 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 
 <template>
   <div :id="recipeCardId" class="card">
-    <div class="card-header position-relative d-md-none">
+    <div class="card-header position-relative d-md-none d-lg-block d-xl-none">
       <AppSortHandle v-if="props.showSortHandle" class="card-header-sort-handle" />
       <router-link :to="RouterHelper.viewRecipe(recipe)">
         {{ recipe.name }}
@@ -36,7 +36,7 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
           <div class="image-container rounded-start w-100 h-100">
             <img
               v-if="recipe.image != null"
-              class="img-fluid"
+              class="img-fluid position-absolute top-0 left-0 bottom-0 right-0 w-100 h-100 object-fit-cover"
               :class="{ greyscale: recipe.isComplete }"
               :src="ApiHelper.imageUrl(recipe.image)"
               :alt="`Image of ${recipe.name}`"
@@ -46,7 +46,7 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
             />
             <ImagePlaceholder
               v-else
-              class="img-fluid position-absolute top-0 left-0"
+              class="img-fluid position-absolute top-0 left-0 bottom-0 right-0"
               :class="{ greyscale: recipe.isComplete }"
             />
             <div v-if="recipe.isComplete" class="completion-overlay">
@@ -56,7 +56,7 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
         </router-link>
       </div>
       <div class="g-col-9">
-        <div class="card-header position-relative d-none d-md-block">
+        <div class="card-header position-relative d-none d-md-block d-lg-none d-xl-block">
           <AppSortHandle v-if="props.showSortHandle" class="card-header-sort-handle" />
           <router-link :to="RouterHelper.viewRecipe(recipe)">
             {{ recipe.name }}
@@ -99,18 +99,10 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
   height: 0;
   padding-top: calc(1200 / 1600 * 100%);
   overflow: hidden;
+  border-right: var(--bs-card-border-width) solid var(--bs-card-border-color);
 
   .greyscale {
     filter: grayscale(100%);
-  }
-
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 }
 

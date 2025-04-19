@@ -129,6 +129,6 @@ const changeInventory = (amount: number) => {
 
 <style scoped>
 .input-group-text {
-  background-color: unset;
+  cursor: default;
 }
 </style>

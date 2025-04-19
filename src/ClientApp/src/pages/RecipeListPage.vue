@@ -253,7 +253,7 @@ watch(
     </div>
     <div class="mt-3">{{ resultCountText }}</div>
     <div class="form-check form-switch mt-3">
-      <label class="form-check-label" for="useCompactView">Compact view</label>
+      <label class="form-check-label" for="useCompactView">Compact</label>
       <input
         id="useCompactView"
         v-model="useCompactView"

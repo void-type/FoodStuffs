@@ -44,7 +44,7 @@ const shoppingList = computed(() => mealPlanStore.currentShoppingList);
 
 const pantry = computed(() => mealPlanStore.currentPantry);
 
-const useCompactView = ref(false);
+const showSortHandle = ref(false);
 
 async function addToPantry(id: number) {
   await mealPlanStore.addToCurrentPantry(id);
@@ -213,11 +213,11 @@ onMounted(async () => {
         </div>
       </div>
       <div class="form-check form-switch mt-3">
-        <label class="form-check-label" for="useCompactView">Compact view</label>
+        <label class="form-check-label" for="showSortHandle">Sort</label>
         <input
-          id="useCompactView"
-          v-model="useCompactView"
-          :checked="useCompactView"
+          id="showSortHandle"
+          v-model="showSortHandle"
+          :checked="showSortHandle"
           class="form-check-input"
           type="checkbox"
         />
@@ -239,7 +239,7 @@ onMounted(async () => {
           :key="recipe.id"
           :recipe="recipe"
           :lazy="i > 6"
-          :show-sort-handle="true"
+          :show-sort-handle="showSortHandle"
           class="g-col-12 g-col-lg-6"
           @recipe-completed="onRecipeCompleted"
         />
