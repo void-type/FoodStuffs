@@ -17,10 +17,12 @@ import type { ModalParameters } from '@/models/ModalParameters';
 import useAppStore from '@/stores/appStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import { useRouter } from 'vue-router';
 
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
 const messageStore = useMessageStore();
+const router = useRouter();
 const api = ApiHelper.client;
 
 const initialized = ref(false);
@@ -143,6 +145,18 @@ function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
   currentRecipes.value = newList;
   updateOrdersByIndex();
   mealPlanStore.saveCurrentMealPlan([], true);
+
+  const modalParameters: ModalParameters = {
+    title: 'Recipe Completed',
+    description: 'Would you like to update inventory?',
+    okAction: () => {
+      router.push({
+        name: 'shoppingItemList',
+      });
+    },
+  };
+
+  appStore.showModal(modalParameters);
 }
 
 const pageTitle = computed(() => {
