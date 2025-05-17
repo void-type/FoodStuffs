@@ -18,32 +18,32 @@ import type {
   EntityMessageOfString,
   GetCategoryResponse,
   GetGroceryAisleResponse,
-  GetMealPlanResponse,
-  GetStorageLocationResponse,
-  GetRecipeResponse,
   GetGroceryItemResponse,
+  GetMealPlanResponse,
+  GetRecipeResponse,
+  GetStorageLocationResponse,
   GroceryAislesListParams,
+  GroceryItemsListParams,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
   IItemSetOfListGroceryAislesResponse,
+  IItemSetOfListGroceryItemsResponse,
   IItemSetOfListMealPlansResponse,
   IItemSetOfListStorageLocationsResponse,
-  IItemSetOfListGroceryItemsResponse,
   IItemSetOfSuggestRecipesResultItem,
   ImagesUploadParams,
   MealPlansListParams,
-  StorageLocationsListParams,
   RecipesSearchParams,
   RecipesSuggestParams,
   SaveCategoryRequest,
   SaveGroceryAisleRequest,
-  SaveMealPlanRequest,
-  SaveStorageLocationRequest,
-  SaveRecipeRequest,
   SaveGroceryItemInventoryRequest,
   SaveGroceryItemRequest,
+  SaveMealPlanRequest,
+  SaveRecipeRequest,
+  SaveStorageLocationRequest,
   SearchRecipesResponse,
-  GroceryItemsListParams,
+  StorageLocationsListParams,
   UserMessage,
   WebClientInfo,
 } from './data-contracts';
@@ -240,6 +240,96 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-aisles/${id}`,
       method: 'DELETE',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsList
+   * @summary List grocery items. All parameters are optional and some have defaults.
+   * @request GET:/api/grocery-items
+   * @response `200` `IItemSetOfListGroceryItemsResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryItemsList = (query: GroceryItemsListParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListGroceryItemsResponse, IItemSetOfIFailure>({
+      path: `/api/grocery-items`,
+      method: 'GET',
+      query: query,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsSave
+   * @summary Save a grocery item. Will update if found, otherwise a new item will be created.
+   * @request POST:/api/grocery-items
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryItemsSave = (data: SaveGroceryItemRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/grocery-items`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsGet
+   * @summary Get a grocery item.
+   * @request GET:/api/grocery-items/{id}
+   * @response `200` `GetGroceryItemResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryItemsGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetGroceryItemResponse, IItemSetOfIFailure>({
+      path: `/api/grocery-items/${id}`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsDelete
+   * @summary Delete a grocery item.
+   * @request DELETE:/api/grocery-items/{id}
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryItemsDelete = (id: number, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/grocery-items/${id}`,
+      method: 'DELETE',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsSaveInventory
+   * @summary Update a grocery item inventory.
+   * @request POST:/api/grocery-items/inventory
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryItemsSaveInventory = (data: SaveGroceryItemInventoryRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/grocery-items/inventory`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
       format: 'json',
       ...params,
     });
@@ -564,96 +654,6 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<UserMessage, any>({
       path: `/api/recipes/rebuild-index`,
       method: 'POST',
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags GroceryItems
-   * @name GroceryItemsList
-   * @summary List grocery items. All parameters are optional and some have defaults.
-   * @request GET:/api/grocery-items
-   * @response `200` `IItemSetOfListGroceryItemsResponse`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  groceryItemsList = (query: GroceryItemsListParams, params: RequestParams = {}) =>
-    this.request<IItemSetOfListGroceryItemsResponse, IItemSetOfIFailure>({
-      path: `/api/grocery-items`,
-      method: 'GET',
-      query: query,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags GroceryItems
-   * @name GroceryItemsSave
-   * @summary Save a grocery item. Will update if found, otherwise a new item will be created.
-   * @request POST:/api/grocery-items
-   * @response `200` `EntityMessageOfInteger`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  groceryItemsSave = (data: SaveGroceryItemRequest, params: RequestParams = {}) =>
-    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/grocery-items`,
-      method: 'POST',
-      body: data,
-      type: ContentType.Json,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags GroceryItems
-   * @name GroceryItemsGet
-   * @summary Get a grocery item.
-   * @request GET:/api/grocery-items/{id}
-   * @response `200` `GetGroceryItemResponse`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  groceryItemsGet = (id: number, params: RequestParams = {}) =>
-    this.request<GetGroceryItemResponse, IItemSetOfIFailure>({
-      path: `/api/grocery-items/${id}`,
-      method: 'GET',
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags GroceryItems
-   * @name GroceryItemsDelete
-   * @summary Delete a grocery item.
-   * @request DELETE:/api/grocery-items/{id}
-   * @response `200` `EntityMessageOfInteger`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  groceryItemsDelete = (id: number, params: RequestParams = {}) =>
-    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/grocery-items/${id}`,
-      method: 'DELETE',
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags GroceryItems
-   * @name GroceryItemsSaveInventory
-   * @summary Update a grocery item inventory.
-   * @request POST:/api/grocery-items/inventory
-   * @response `200` `EntityMessageOfInteger`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  groceryItemsSaveInventory = (data: SaveGroceryItemInventoryRequest, params: RequestParams = {}) =>
-    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/grocery-items/inventory`,
-      method: 'POST',
-      body: data,
-      type: ContentType.Json,
       format: 'json',
       ...params,
     });

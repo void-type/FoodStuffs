@@ -228,6 +228,98 @@ export interface SaveGroceryAisleRequest {
   order?: number;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
+export interface IItemSetOfListGroceryItemsResponse {
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
+  count?: number;
+  /** The items in this set. */
+  items?: ListGroceryItemsResponse[];
+  /** When true, this is a page of a full set. */
+  isPagingEnabled?: boolean;
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
+  page?: number;
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
+  take?: number;
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
+  totalCount?: number;
+}
+
+export interface ListGroceryItemsResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  inventoryQuantity?: number;
+  storageLocations?: string[];
+  /** @format int32 */
+  groceryAisleId?: number | null;
+  /** @format int32 */
+  recipeCount?: number;
+}
+
+export interface GetGroceryItemResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  inventoryQuantity?: number;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  recipes?: GetGroceryItemResponseRecipe[];
+  groceryAisle?: GetGroceryItemResponseGroceryAisle | null;
+  storageLocations?: string[];
+}
+
+export interface GetGroceryItemResponseRecipe {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  slug?: string;
+  image?: string | null;
+}
+
+export interface GetGroceryItemResponseGroceryAisle {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  order?: number;
+}
+
+export interface SaveGroceryItemRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  inventoryQuantity?: number;
+  /** @format int32 */
+  groceryAisleId?: number | null;
+  storageLocations?: string[];
+}
+
+export interface SaveGroceryItemInventoryRequest {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
+  inventoryQuantity?: number;
+}
+
 /** A UI-friendly message and the Id of the entity that was affected during an event. */
 export type EntityMessageOfString = UserMessage & {
   /** The Id of the entity affected during an event. */
@@ -568,98 +660,6 @@ export interface SaveRecipeRequestGroceryItem {
   order?: number;
 }
 
-/** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListGroceryItemsResponse {
-  /**
-   * The count of items in this set.
-   * @format int32
-   */
-  count?: number;
-  /** The items in this set. */
-  items?: ListGroceryItemsResponse[];
-  /** When true, this is a page of a full set. */
-  isPagingEnabled?: boolean;
-  /**
-   * If paging is enabled, this represents the page number in the total set.
-   * @format int32
-   */
-  page?: number;
-  /**
-   * If paging is enabled, the requested number of results per page.
-   * @format int32
-   */
-  take?: number;
-  /**
-   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
-   * @format int32
-   */
-  totalCount?: number;
-}
-
-export interface ListGroceryItemsResponse {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
-  storageLocations?: string[];
-  /** @format int32 */
-  groceryAisleId?: number | null;
-  /** @format int32 */
-  recipeCount?: number;
-}
-
-export interface GetGroceryItemResponse {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
-  createdBy?: string;
-  /** @format date-time */
-  createdOn?: string;
-  modifiedBy?: string;
-  /** @format date-time */
-  modifiedOn?: string;
-  recipes?: GetGroceryItemResponseRecipe[];
-  groceryAisle?: GetGroceryItemResponseGroceryAisle | null;
-  storageLocations?: string[];
-}
-
-export interface GetGroceryItemResponseRecipe {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  slug?: string;
-  image?: string | null;
-}
-
-export interface GetGroceryItemResponseGroceryAisle {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  /** @format int32 */
-  order?: number;
-}
-
-export interface SaveGroceryItemRequest {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  /** @format int32 */
-  inventoryQuantity?: number;
-  /** @format int32 */
-  groceryAisleId?: number | null;
-  storageLocations?: string[];
-}
-
-export interface SaveGroceryItemInventoryRequest {
-  /** @format int32 */
-  id?: number;
-  /** @format int32 */
-  inventoryQuantity?: number;
-}
-
 export interface CategoriesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
@@ -685,6 +685,30 @@ export interface CategoriesListParams {
 }
 
 export interface GroceryAislesListParams {
+  /** Name contains (case-insensitive) */
+  name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
+export interface GroceryItemsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /** Specify to show items that have relations or no relations */
@@ -807,30 +831,6 @@ export interface RecipesSuggestParams {
    * How many items in a page
    * @format int32
    * @default 8
-   */
-  take?: number;
-}
-
-export interface GroceryItemsListParams {
-  /** Name contains (case-insensitive) */
-  name?: string | null;
-  /** Specify to show items that have relations or no relations */
-  isUnused?: boolean | null;
-  /**
-   * Set false to get all results
-   * @default true
-   */
-  isPagingEnabled?: boolean;
-  /**
-   * The page of results to retrieve
-   * @format int32
-   * @default 1
-   */
-  page?: number;
-  /**
-   * How many items in a page
-   * @format int32
-   * @default 30
    */
   take?: number;
 }
