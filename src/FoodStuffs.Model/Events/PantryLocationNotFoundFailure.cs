@@ -2,10 +2,10 @@
 
 namespace FoodStuffs.Model.Events;
 
-public class PantryLocationNotFoundFailure : Failure
+public class StorageLocationNotFoundFailure : Failure
 {
-    public PantryLocationNotFoundFailure()
-        : base(errorMessage: "Storage location not found.", uiHandle: "PantryLocationId")
+    public StorageLocationNotFoundFailure()
+        : base(errorMessage: "Storage location not found.", uiHandle: "StorageLocationId")
     {
     }
 }

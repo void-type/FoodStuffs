@@ -1,7 +1,7 @@
-import type { PantryLocationsListParams } from '@/api/data-contracts';
+import type { StorageLocationsListParams } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 
-export default class PantryLocationsListRequest implements PantryLocationsListParams {
+export default class StorageLocationsListRequest implements StorageLocationsListParams {
   public name = '';
 
   public isUnused = null;

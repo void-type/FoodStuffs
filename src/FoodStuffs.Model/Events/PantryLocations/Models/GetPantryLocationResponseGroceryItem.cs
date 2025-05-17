@@ -1,5 +1,5 @@
-﻿namespace FoodStuffs.Model.Events.PantryLocations.Models;
+﻿namespace FoodStuffs.Model.Events.StorageLocations.Models;
 
-public record GetPantryLocationResponseGroceryItem(
+public record GetStorageLocationResponseGroceryItem(
     int Id,
     string Name);

@@ -1,10 +1,10 @@
-﻿namespace FoodStuffs.Model.Events.PantryLocations.Models;
+﻿namespace FoodStuffs.Model.Events.StorageLocations.Models;
 
-public record GetPantryLocationResponse(
+public record GetStorageLocationResponse(
     int Id,
     string Name,
     string CreatedBy,
     DateTimeOffset CreatedOn,
     string ModifiedBy,
     DateTimeOffset ModifiedOn,
-    List<GetPantryLocationResponseGroceryItem> GroceryItems);
+    List<GetStorageLocationResponseGroceryItem> GroceryItems);

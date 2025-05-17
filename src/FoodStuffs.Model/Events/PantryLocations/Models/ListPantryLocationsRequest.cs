@@ -1,8 +1,8 @@
 ﻿using VoidCore.Model.Responses.Collections;
 
-namespace FoodStuffs.Model.Events.PantryLocations.Models;
+namespace FoodStuffs.Model.Events.StorageLocations.Models;
 
-public record ListPantryLocationsRequest(
+public record ListStorageLocationsRequest(
     string? NameSearch,
     bool? IsUnused,
     bool IsPagingEnabled,

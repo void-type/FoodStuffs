@@ -1,12 +1,12 @@
-﻿using FoodStuffs.Model.Events.PantryLocations.Models;
+﻿using FoodStuffs.Model.Events.StorageLocations.Models;
 using VoidCore.Model.Functional;
 using VoidCore.Model.RuleValidator;
 
-namespace FoodStuffs.Model.Events.PantryLocations;
+namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class SavePantryLocationRequestValidator : RuleValidatorAbstract<SavePantryLocationRequest>
+public class SaveStorageLocationRequestValidator : RuleValidatorAbstract<SaveStorageLocationRequest>
 {
-    public SavePantryLocationRequestValidator()
+    public SaveStorageLocationRequestValidator()
     {
         CreateRule(new Failure("Name is required.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));

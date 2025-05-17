@@ -1,9 +1,9 @@
 import type {
-  GetPantryLocationResponse,
-  GetPantryLocationResponseGroceryItem,
+  GetStorageLocationResponse,
+  GetStorageLocationResponseGroceryItem,
 } from '@/api/data-contracts';
 
-export default class PantryLocationGetResponse implements GetPantryLocationResponse {
+export default class StorageLocationGetResponse implements GetStorageLocationResponse {
   public id = 0;
 
   public name: string = '';
@@ -16,5 +16,5 @@ export default class PantryLocationGetResponse implements GetPantryLocationRespo
 
   public modifiedOn = '';
 
-  public recipes: GetPantryLocationResponseGroceryItem[] = [];
+  public recipes: GetStorageLocationResponseGroceryItem[] = [];
 }

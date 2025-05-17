@@ -1,14 +1,14 @@
-import type { PantryLocationsListParams } from '@/api/data-contracts';
-import PantryLocationsListRequest from './PantryLocationsListRequest';
+import type { StorageLocationsListParams } from '@/api/data-contracts';
+import StorageLocationsListRequest from './StorageLocationsListRequest';
 
-export default function listRequestToQueryParams(listRequest: PantryLocationsListParams) {
+export default function listRequestToQueryParams(listRequest: StorageLocationsListParams) {
   // Query params need to be string or number
   const requestEntries = Object.entries({
     ...listRequest,
   });
 
   const defaultEntries = Object.entries({
-    ...new PantryLocationsListRequest(),
+    ...new StorageLocationsListRequest(),
   });
 
   const cleanedEntries = requestEntries

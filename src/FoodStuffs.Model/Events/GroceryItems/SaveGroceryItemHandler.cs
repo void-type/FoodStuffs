@@ -65,7 +65,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         Transfer(requestedName, request, groceryItemToEdit);
 
-        await ManagePantryLocationsAsync(request, groceryItemToEdit, cancellationToken);
+        await ManageStorageLocationsAsync(request, groceryItemToEdit, cancellationToken);
 
         if (request.GroceryAisleId is not null)
         {
@@ -103,22 +103,22 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
         groceryItem.InventoryQuantity = request.InventoryQuantity;
     }
 
-    private async Task ManagePantryLocationsAsync(SaveGroceryItemRequest request, GroceryItem groceryItem, CancellationToken cancellationToken)
+    private async Task ManageStorageLocationsAsync(SaveGroceryItemRequest request, GroceryItem groceryItem, CancellationToken cancellationToken)
     {
-        var requestedNames = request.PantryLocations
+        var requestedNames = request.StorageLocations
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x).Trim())
             .ToArray();
 
         // Remove extra storage locations.
-        groceryItem.PantryLocations.RemoveAll(x => !requestedNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
+        groceryItem.StorageLocations.RemoveAll(x => !requestedNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
 
         var missingNames = requestedNames
-            .Where(n => !groceryItem.PantryLocations.Select(x => x.Name).Contains(n, StringComparer.OrdinalIgnoreCase))
+            .Where(n => !groceryItem.StorageLocations.Select(x => x.Name).Contains(n, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         // Find missing storage locations that already exist.
-        var existingPantryLocations = await _data.PantryLocations
+        var existingStorageLocations = await _data.StorageLocations
             .TagWith(GetTag())
             .Where(x => missingNames.Contains(x.Name))
             .OrderBy(x => x.Id)
@@ -127,13 +127,13 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
             .Select(g => g.First())
             .ToListAsync(cancellationToken);
 
-        groceryItem.PantryLocations.AddRange(existingPantryLocations);
+        groceryItem.StorageLocations.AddRange(existingStorageLocations);
 
-        // Create missing PantryLocations that don't exist.
-        var createdPantryLocations = missingNames
-            .Where(x => !groceryItem.PantryLocations.Select(x => x.Name).Contains(x, StringComparer.OrdinalIgnoreCase))
-            .Select(x => new PantryLocation { Name = x });
+        // Create missing StorageLocations that don't exist.
+        var createdStorageLocations = missingNames
+            .Where(x => !groceryItem.StorageLocations.Select(x => x.Name).Contains(x, StringComparer.OrdinalIgnoreCase))
+            .Select(x => new StorageLocation { Name = x });
 
-        groceryItem.PantryLocations.AddRange(createdPantryLocations);
+        groceryItem.StorageLocations.AddRange(createdStorageLocations);
     }
 }

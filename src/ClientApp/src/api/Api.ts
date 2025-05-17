@@ -19,7 +19,7 @@ import type {
   GetCategoryResponse,
   GetGroceryAisleResponse,
   GetMealPlanResponse,
-  GetPantryLocationResponse,
+  GetStorageLocationResponse,
   GetRecipeResponse,
   GetGroceryItemResponse,
   GroceryAislesListParams,
@@ -27,18 +27,18 @@ import type {
   IItemSetOfListCategoriesResponse,
   IItemSetOfListGroceryAislesResponse,
   IItemSetOfListMealPlansResponse,
-  IItemSetOfListPantryLocationsResponse,
+  IItemSetOfListStorageLocationsResponse,
   IItemSetOfListGroceryItemsResponse,
   IItemSetOfSuggestRecipesResultItem,
   ImagesUploadParams,
   MealPlansListParams,
-  PantryLocationsListParams,
+  StorageLocationsListParams,
   RecipesSearchParams,
   RecipesSuggestParams,
   SaveCategoryRequest,
   SaveGroceryAisleRequest,
   SaveMealPlanRequest,
-  SavePantryLocationRequest,
+  SaveStorageLocationRequest,
   SaveRecipeRequest,
   SaveGroceryItemInventoryRequest,
   SaveGroceryItemRequest,
@@ -394,16 +394,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags PantryLocations
-   * @name PantryLocationsList
+   * @tags StorageLocations
+   * @name StorageLocationsList
    * @summary List storage locations. All parameters are optional and some have defaults.
-   * @request GET:/api/pantry-locations
-   * @response `200` `IItemSetOfListPantryLocationsResponse`
+   * @request GET:/api/storage-locations
+   * @response `200` `IItemSetOfListStorageLocationsResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  pantryLocationsList = (query: PantryLocationsListParams, params: RequestParams = {}) =>
-    this.request<IItemSetOfListPantryLocationsResponse, IItemSetOfIFailure>({
-      path: `/api/pantry-locations`,
+  storageLocationsList = (query: StorageLocationsListParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListStorageLocationsResponse, IItemSetOfIFailure>({
+      path: `/api/storage-locations`,
       method: 'GET',
       query: query,
       format: 'json',
@@ -412,16 +412,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags PantryLocations
-   * @name PantryLocationsSave
+   * @tags StorageLocations
+   * @name StorageLocationsSave
    * @summary Save a storage location. Will update if found, otherwise a new item will be created.
-   * @request POST:/api/pantry-locations
+   * @request POST:/api/storage-locations
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  pantryLocationsSave = (data: SavePantryLocationRequest, params: RequestParams = {}) =>
+  storageLocationsSave = (data: SaveStorageLocationRequest, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/pantry-locations`,
+      path: `/api/storage-locations`,
       method: 'POST',
       body: data,
       type: ContentType.Json,
@@ -431,16 +431,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags PantryLocations
-   * @name PantryLocationsGet
+   * @tags StorageLocations
+   * @name StorageLocationsGet
    * @summary Get a storage location.
-   * @request GET:/api/pantry-locations/{id}
-   * @response `200` `GetPantryLocationResponse`
+   * @request GET:/api/storage-locations/{id}
+   * @response `200` `GetStorageLocationResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  pantryLocationsGet = (id: number, params: RequestParams = {}) =>
-    this.request<GetPantryLocationResponse, IItemSetOfIFailure>({
-      path: `/api/pantry-locations/${id}`,
+  storageLocationsGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetStorageLocationResponse, IItemSetOfIFailure>({
+      path: `/api/storage-locations/${id}`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -448,16 +448,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags PantryLocations
-   * @name PantryLocationsDelete
+   * @tags StorageLocations
+   * @name StorageLocationsDelete
    * @summary Delete a storage location.
-   * @request DELETE:/api/pantry-locations/{id}
+   * @request DELETE:/api/storage-locations/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  pantryLocationsDelete = (id: number, params: RequestParams = {}) =>
+  storageLocationsDelete = (id: number, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/pantry-locations/${id}`,
+      path: `/api/storage-locations/${id}`,
       method: 'DELETE',
       format: 'json',
       ...params,

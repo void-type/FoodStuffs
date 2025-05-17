@@ -1,24 +1,24 @@
 import type {
-  IItemSetOfListPantryLocationsResponse,
-  PantryLocationsListParams,
+  IItemSetOfListStorageLocationsResponse,
+  StorageLocationsListParams,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
-import PantryLocationsListRequest from '@/models/PantryLocationsListRequest';
-import listRequestToQueryParams from '@/models/PantryLocationStoreHelper';
+import StorageLocationsListRequest from '@/models/StorageLocationsListRequest';
+import listRequestToQueryParams from '@/models/StorageLocationStoreHelper';
 import useMessageStore from './messageStore';
 
-interface PantryLocationStoreState {
-  listResponse: IItemSetOfListPantryLocationsResponse;
-  listRequest: PantryLocationsListParams;
+interface StorageLocationStoreState {
+  listResponse: IItemSetOfListStorageLocationsResponse;
+  listRequest: StorageLocationsListParams;
 }
 
 const api = ApiHelper.client;
 
-export default defineStore('pantryLocation', {
-  state: (): PantryLocationStoreState => ({
+export default defineStore('storageLocation', {
+  state: (): StorageLocationStoreState => ({
     listResponse: {
       count: 0,
       items: [],
@@ -27,7 +27,7 @@ export default defineStore('pantryLocation', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new PantryLocationsListRequest() },
+    listRequest: { ...new StorageLocationsListRequest() },
   }),
 
   getters: {
@@ -39,9 +39,9 @@ export default defineStore('pantryLocation', {
   },
 
   actions: {
-    async fetchPantryLocationsList() {
+    async fetchStorageLocationsList() {
       try {
-        const response = await api().pantryLocationsList(this.listRequest);
+        const response = await api().storageLocationsList(this.listRequest);
         this.listResponse = response.data;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);

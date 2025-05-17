@@ -157,24 +157,24 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: 'pantryLocationList',
-              component: () => import('@/pages/PantryLocationListPage.vue'),
+              name: 'storageLocationList',
+              component: () => import('@/pages/StorageLocationListPage.vue'),
               props: (route) => ({ query: route.query }),
             },
             {
               path: ':id',
-              name: 'pantryLocationEdit',
+              name: 'storageLocationEdit',
               meta: { title: 'Edit Storage Location' },
-              component: () => import('@/pages/PantryLocationEditPage.vue'),
+              component: () => import('@/pages/StorageLocationEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
               }),
             },
             {
               path: 'new',
-              name: 'pantryLocationNew',
+              name: 'storageLocationNew',
               meta: { title: 'New Storage Location' },
-              component: () => import('@/pages/PantryLocationEditPage.vue'),
+              component: () => import('@/pages/StorageLocationEditPage.vue'),
             },
           ],
         },

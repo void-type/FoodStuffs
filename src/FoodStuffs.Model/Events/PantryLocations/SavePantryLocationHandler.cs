@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
-using FoodStuffs.Model.Events.PantryLocations.Models;
+using FoodStuffs.Model.Events.StorageLocations.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -9,33 +9,33 @@ using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 using VoidCore.Model.RuleValidator;
 
-namespace FoodStuffs.Model.Events.PantryLocations;
+namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class SavePantryLocationHandler : CustomEventHandlerAbstract<SavePantryLocationRequest, EntityMessage<int>>
+public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorageLocationRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly SavePantryLocationRequestValidator _validator;
+    private readonly SaveStorageLocationRequestValidator _validator;
 
-    public SavePantryLocationHandler(FoodStuffsContext data, SavePantryLocationRequestValidator validator)
+    public SaveStorageLocationHandler(FoodStuffsContext data, SaveStorageLocationRequestValidator validator)
     {
         _data = data;
         _validator = validator;
     }
 
-    public override async Task<IResult<EntityMessage<int>>> Handle(SavePantryLocationRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<int>>> Handle(SaveStorageLocationRequest request, CancellationToken cancellationToken = default)
     {
         return await request
             .Validate(_validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
-    private async Task<IResult<EntityMessage<int>>> SaveAsync(SavePantryLocationRequest request, CancellationToken cancellationToken)
+    private async Task<IResult<EntityMessage<int>>> SaveAsync(SaveStorageLocationRequest request, CancellationToken cancellationToken)
     {
         var requestedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
 
-        var byId = new PantryLocationsWithAllRelatedSpecification(request.Id);
+        var byId = new StorageLocationsWithAllRelatedSpecification(request.Id);
 
-        var maybePantryLocation = await _data.PantryLocations
+        var maybeStorageLocation = await _data.StorageLocations
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -44,40 +44,40 @@ public class SavePantryLocationHandler : CustomEventHandlerAbstract<SavePantryLo
             .MapAsync(Maybe.From);
 
         // Check for conflicting items by name
-        var byName = new PantryLocationsSpecification(requestedName);
+        var byName = new StorageLocationsSpecification(requestedName);
 
-        var conflictingPantryLocation = await _data.PantryLocations
+        var conflictingStorageLocation = await _data.StorageLocations
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (conflictingPantryLocation is not null && conflictingPantryLocation.Id != request.Id)
+        if (conflictingStorageLocation is not null && conflictingStorageLocation.Id != request.Id)
         {
             return Fail(new Failure("Storage location name already exists.", "name"));
         }
 
-        var pantryLocationToEdit = maybePantryLocation.Unwrap(() => new PantryLocation());
+        var storageLocationToEdit = maybeStorageLocation.Unwrap(() => new StorageLocation());
 
-        Transfer(requestedName, pantryLocationToEdit);
+        Transfer(requestedName, storageLocationToEdit);
 
-        if (maybePantryLocation.HasValue)
+        if (maybeStorageLocation.HasValue)
         {
-            _data.PantryLocations.Update(pantryLocationToEdit);
+            _data.StorageLocations.Update(storageLocationToEdit);
         }
         else
         {
-            _data.PantryLocations.Add(pantryLocationToEdit);
+            _data.StorageLocations.Add(storageLocationToEdit);
         }
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        return Ok(EntityMessage.Create($"Storage Location {(maybePantryLocation.HasValue ? "updated" : "added")}.", pantryLocationToEdit.Id));
+        return Ok(EntityMessage.Create($"Storage Location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
     }
 
-    private static void Transfer(string formattedName, PantryLocation pantryLocation)
+    private static void Transfer(string formattedName, StorageLocation storageLocation)
     {
-        pantryLocation.Name = formattedName;
+        storageLocation.Name = formattedName;
     }
 }

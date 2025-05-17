@@ -51,12 +51,12 @@ const isCreateNewMode = computed(() => !isEditMode.value);
 
 const isDirty = computed(() => JSON.stringify(data.working) !== data.workingInitial);
 
-const pantryLocationOptions = ref([] as Array<string>);
+const storageLocationOptions = ref([] as Array<string>);
 
-async function fetchPantryLocations() {
+async function fetchStorageLocations() {
   try {
-    const response = await api().pantryLocationsList({ isPagingEnabled: false });
-    pantryLocationOptions.value =
+    const response = await api().storageLocationsList({ isPagingEnabled: false });
+    storageLocationOptions.value =
       response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -97,7 +97,7 @@ async function onSaveClick() {
       messageStore.setSuccessMessage(response.data.message);
     }
 
-    fetchPantryLocations();
+    fetchStorageLocations();
 
     await groceryItemStore.fetchGroceryItemsList();
   } catch (error) {
@@ -159,28 +159,29 @@ function reset() {
   data.working = newWorking;
 }
 
-function addPantryLocation(tag: string) {
-  const pantryLocationName = trimAndTitleCase(tag);
+function addStorageLocation(tag: string) {
+  const storageLocationName = trimAndTitleCase(tag);
 
-  const pantryLocations = data.working.pantryLocations?.slice() || [];
+  const storageLocations = data.working.storageLocations?.slice() || [];
 
-  const pantryLocationDoesNotExist =
-    pantryLocations.map((value) => value.toUpperCase()).indexOf(pantryLocationName.toUpperCase()) <
-    0;
+  const storageLocationDoesNotExist =
+    storageLocations
+      .map((value) => value.toUpperCase())
+      .indexOf(storageLocationName.toUpperCase()) < 0;
 
-  if (pantryLocationDoesNotExist && pantryLocationName.length > 0) {
-    pantryLocations.push(pantryLocationName);
-    data.working.pantryLocations = pantryLocations;
+  if (storageLocationDoesNotExist && storageLocationName.length > 0) {
+    storageLocations.push(storageLocationName);
+    data.working.storageLocations = storageLocations;
   }
 }
 
-function removePantryLocation(pantryLocationName: string) {
-  const pantryLocations = data.working.pantryLocations?.slice() || [];
-  const pantryLocationIndex = pantryLocations.indexOf(pantryLocationName);
+function removeStorageLocation(storageLocationName: string) {
+  const storageLocations = data.working.storageLocations?.slice() || [];
+  const storageLocationIndex = storageLocations.indexOf(storageLocationName);
 
-  if (pantryLocationIndex > -1) {
-    pantryLocations.splice(pantryLocationIndex, 1);
-    data.working.pantryLocations = pantryLocations;
+  if (storageLocationIndex > -1) {
+    storageLocations.splice(storageLocationIndex, 1);
+    data.working.storageLocations = storageLocations;
   }
 }
 
@@ -330,13 +331,13 @@ onBeforeUnmount(() => {
         <TagEditor
           :class="{
             'g-col-12 g-col-md-6': true,
-            danger: messageStore.isFieldInError('pantryLocations'),
+            danger: messageStore.isFieldInError('storageLocations'),
           }"
-          :tags="data.working.pantryLocations || []"
-          :on-add-tag="addPantryLocation"
-          :on-remove-tag="removePantryLocation"
-          :suggestions="pantryLocationOptions"
-          field-name="pantryLocations"
+          :tags="data.working.storageLocations || []"
+          :on-add-tag="addStorageLocation"
+          :on-remove-tag="removeStorageLocation"
+          :suggestions="storageLocationOptions"
+          field-name="storageLocations"
           label="Storage Locations"
         />
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />

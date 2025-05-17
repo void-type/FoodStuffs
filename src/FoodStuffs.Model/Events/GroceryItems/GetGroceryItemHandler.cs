@@ -49,7 +49,7 @@ public class GetGroceryItemHandler : CustomEventHandlerAbstract<GetGroceryItemRe
                         Name: m.GroceryAisle.Name,
                         Order: m.GroceryAisle.Order)
                     : null,
-                PantryLocations: [.. m.PantryLocations
+                StorageLocations: [.. m.StorageLocations
                     .Select(c => c.Name)
                     .Order(StringComparer.Ordinal)]));
     }

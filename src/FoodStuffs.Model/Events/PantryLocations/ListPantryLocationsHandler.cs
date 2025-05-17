@@ -1,40 +1,40 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
-using FoodStuffs.Model.Events.PantryLocations.Models;
+using FoodStuffs.Model.Events.StorageLocations.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 
-namespace FoodStuffs.Model.Events.PantryLocations;
+namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class ListPantryLocationsHandler : CustomEventHandlerAbstract<ListPantryLocationsRequest, IItemSet<ListPantryLocationsResponse>>
+public class ListStorageLocationsHandler : CustomEventHandlerAbstract<ListStorageLocationsRequest, IItemSet<ListStorageLocationsResponse>>
 {
     private readonly FoodStuffsContext _data;
 
-    public ListPantryLocationsHandler(FoodStuffsContext data)
+    public ListStorageLocationsHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
-    public override async Task<IResult<IItemSet<ListPantryLocationsResponse>>> Handle(ListPantryLocationsRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<IItemSet<ListStorageLocationsResponse>>> Handle(ListStorageLocationsRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
-        var specification = new PantryLocationsSpecification(request);
+        var specification = new StorageLocationsSpecification(request);
 
-        return await _data.PantryLocations
+        return await _data.StorageLocations
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .Select(pl => new
             {
-                PantryLocation = pl,
+                StorageLocation = pl,
                 GroceryItemCount = pl.GroceryItems.Count
             })
             .ToItemSet(paginationOptions, cancellationToken)
-            .SelectAsync(x => new ListPantryLocationsResponse(
-                Id: x.PantryLocation.Id,
-                Name: x.PantryLocation.Name,
+            .SelectAsync(x => new ListStorageLocationsResponse(
+                Id: x.StorageLocation.Id,
+                Name: x.StorageLocation.Name,
                 GroceryItemCount: x.GroceryItemCount))
             .MapAsync(Ok);
     }

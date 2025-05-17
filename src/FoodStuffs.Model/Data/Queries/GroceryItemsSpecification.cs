@@ -29,7 +29,7 @@ public class GroceryItemsSpecification : QuerySpecificationAbstract<GroceryItem>
 
     public GroceryItemsSpecification(ListGroceryItemsRequest request) : this(criteria: [])
     {
-        AddInclude(nameof(GroceryItem.PantryLocations));
+        AddInclude(nameof(GroceryItem.StorageLocations));
         AddInclude(nameof(GroceryItem.Recipes));
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation

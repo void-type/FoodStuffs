@@ -3,13 +3,13 @@ import { computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import useAppStore from '@/stores/appStore';
 import useMessageStore from '@/stores/messageStore';
-import usePantryLocationStore from '@/stores/pantryLocationStore';
+import useStorageLocationStore from '@/stores/storageLocationStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import PantryLocationGetResponse from '@/models/PantryLocationGetResponse';
-import PantryLocationWorking from '@/models/PantryLocationWorking';
+import StorageLocationGetResponse from '@/models/StorageLocationGetResponse';
+import StorageLocationWorking from '@/models/StorageLocationWorking';
 import type { HttpResponse } from '@/api/http-client';
-import type { GetPantryLocationResponse } from '@/api/data-contracts';
+import type { GetStorageLocationResponse } from '@/api/data-contracts';
 import type { ModalParameters } from '@/models/ModalParameters';
 import router from '@/router';
 import {
@@ -30,15 +30,15 @@ const props = defineProps({
 });
 
 const data = reactive({
-  source: new PantryLocationGetResponse() as GetPantryLocationResponse,
-  working: new PantryLocationWorking(),
+  source: new StorageLocationGetResponse() as GetStorageLocationResponse,
+  working: new StorageLocationWorking(),
   // This is a snapshot of our source right after it became working so we can check if working is dirty.
   workingInitial: '',
 });
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
-const pantryLocationStore = usePantryLocationStore();
+const storageLocationStore = useStorageLocationStore();
 const api = ApiHelper.client;
 
 // Editing existing
@@ -50,18 +50,18 @@ const isDirty = computed(() => JSON.stringify(data.working) !== data.workingInit
 
 async function fetch() {
   if (isCreateNewMode.value) {
-    data.source = new PantryLocationGetResponse();
+    data.source = new StorageLocationGetResponse();
     return;
   }
 
   const { id } = props;
 
   try {
-    const response = await api().pantryLocationsGet(id);
+    const response = await api().storageLocationsGet(id);
     data.source = response.data;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-    data.source = new PantryLocationGetResponse();
+    data.source = new StorageLocationGetResponse();
   }
 }
 
@@ -69,11 +69,11 @@ let forceImmediateRouteChange = false;
 
 async function onSaveClick() {
   try {
-    const response = await api().pantryLocationsSave(data.working);
+    const response = await api().storageLocationsSave(data.working);
 
     if (!isEditMode.value) {
       forceImmediateRouteChange = true;
-      await router.push({ name: 'pantryLocationEdit', params: { id: response.data.id } });
+      await router.push({ name: 'storageLocationEdit', params: { id: response.data.id } });
     } else {
       await fetch();
     }
@@ -82,7 +82,7 @@ async function onSaveClick() {
       messageStore.setSuccessMessage(response.data.message);
     }
 
-    await pantryLocationStore.fetchPantryLocationsList();
+    await storageLocationStore.fetchStorageLocationsList();
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -91,12 +91,12 @@ async function onSaveClick() {
 function onDeleteClick(id: number) {
   function deleteNow() {
     api()
-      .pantryLocationsDelete(id)
+      .storageLocationsDelete(id)
       .then(async (response) => {
-        data.source = new PantryLocationGetResponse();
-        await pantryLocationStore.fetchPantryLocationsList();
+        data.source = new StorageLocationGetResponse();
+        await storageLocationStore.fetchStorageLocationsList();
         router
-          .push({ name: 'pantryLocationList', query: pantryLocationStore.currentQueryParams })
+          .push({ name: 'storageLocationList', query: storageLocationStore.currentQueryParams })
           .then(() => {
             if (response.data.message) {
               messageStore.setSuccessMessage(response.data.message);
@@ -120,7 +120,7 @@ function onDeleteClick(id: number) {
 function reset() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(data.source));
 
-  const newWorkingClass = new PantryLocationWorking();
+  const newWorkingClass = new StorageLocationWorking();
 
   const validProperties = Object.keys(newWorkingClass);
 
@@ -131,7 +131,7 @@ function reset() {
     }
   });
 
-  const newWorking: PantryLocationWorking = {
+  const newWorking: StorageLocationWorking = {
     ...newWorkingClass,
     ...sourceCopy,
   };

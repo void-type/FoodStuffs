@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Events.PantryLocations;
-using FoodStuffs.Model.Events.PantryLocations.Models;
+﻿using FoodStuffs.Model.Events.StorageLocations;
+using FoodStuffs.Model.Events.StorageLocations.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -12,8 +12,8 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Manage grocery item storage locations.
 /// </summary>
-[Route(ApiRouteAttribute.BasePath + "/pantry-locations")]
-public class PantryLocationsController : ControllerBase
+[Route(ApiRouteAttribute.BasePath + "/storage-locations")]
+public class StorageLocationsController : ControllerBase
 {
     /// <summary>
     /// List storage locations. All parameters are optional and some have defaults.
@@ -25,11 +25,11 @@ public class PantryLocationsController : ControllerBase
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
-    [ProducesResponseType(typeof(IItemSet<ListPantryLocationsResponse>), 200)]
+    [ProducesResponseType(typeof(IItemSet<ListStorageLocationsResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListPantryLocationsHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListStorageLocationsHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
-        var request = new ListPantryLocationsRequest(
+        var request = new ListStorageLocationsRequest(
             NameSearch: name,
             IsUnused: isUnused,
             IsPagingEnabled: isPagingEnabled,
@@ -51,11 +51,11 @@ public class PantryLocationsController : ControllerBase
     /// <param name="getHandler"></param>
     /// <param name="id">The ID of the storage location to get</param>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(GetPantryLocationResponse), 200)]
+    [ProducesResponseType(typeof(GetStorageLocationResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> GetAsync([FromServices] GetPantryLocationHandler getHandler, int id)
+    public async Task<IActionResult> GetAsync([FromServices] GetStorageLocationHandler getHandler, int id)
     {
-        var request = new GetPantryLocationRequest(id);
+        var request = new GetStorageLocationRequest(id);
 
         return await getHandler
             .Handle(request)
@@ -70,7 +70,7 @@ public class PantryLocationsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> SaveAsync([FromServices] SavePantryLocationHandler saveHandler, [FromBody] SavePantryLocationRequest request)
+    public async Task<IActionResult> SaveAsync([FromServices] SaveStorageLocationHandler saveHandler, [FromBody] SaveStorageLocationRequest request)
     {
         return await saveHandler
             .Handle(request)
@@ -85,9 +85,9 @@ public class PantryLocationsController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> DeleteAsync([FromServices] DeletePantryLocationHandler deleteHandler, int id)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteStorageLocationHandler deleteHandler, int id)
     {
-        var request = new DeletePantryLocationRequest(id);
+        var request = new DeleteStorageLocationRequest(id);
 
         return await deleteHandler
             .Handle(request)

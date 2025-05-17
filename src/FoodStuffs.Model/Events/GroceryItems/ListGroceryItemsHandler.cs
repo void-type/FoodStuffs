@@ -37,7 +37,7 @@ public class ListGroceryItemsHandler : CustomEventHandlerAbstract<ListGroceryIte
                 Id: c.GroceryItem.Id,
                 Name: c.GroceryItem.Name,
                 InventoryQuantity: c.GroceryItem.InventoryQuantity,
-                PantryLocations: [.. c.GroceryItem.PantryLocations
+                StorageLocations: [.. c.GroceryItem.StorageLocations
                     .Select(pl => pl.Name)
                     .Order(StringComparer.Ordinal)],
                 GroceryAisleId: c.GroceryItem.GroceryAisleId,

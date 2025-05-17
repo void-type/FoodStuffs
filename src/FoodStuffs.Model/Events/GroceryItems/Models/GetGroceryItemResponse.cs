@@ -10,4 +10,4 @@ public record GetGroceryItemResponse(
     DateTimeOffset ModifiedOn,
     List<GetGroceryItemResponseRecipe> Recipes,
     GetGroceryItemResponseGroceryAisle? GroceryAisle,
-    List<string> PantryLocations);
+    List<string> StorageLocations);

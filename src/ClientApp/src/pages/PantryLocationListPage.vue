@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import useAppStore from '@/stores/appStore';
-import usePantryLocationStore from '@/stores/pantryLocationStore';
+import useStorageLocationStore from '@/stores/storageLocationStore';
 import { storeToRefs } from 'pinia';
 import { computed, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
@@ -8,7 +8,7 @@ import type { ModalParameters } from '@/models/ModalParameters';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import { toInt, toNumber } from '@/models/FormatHelper';
 import Choices from '@/models/Choices';
-import PantryLocationsListRequest from '@/models/PantryLocationsListRequest';
+import StorageLocationsListRequest from '@/models/StorageLocationsListRequest';
 import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
@@ -25,13 +25,13 @@ const props = defineProps({
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
-const pantryLocationStore = usePantryLocationStore();
+const storageLocationStore = useStorageLocationStore();
 const router = useRouter();
 const api = ApiHelper.client;
 
 const { useDarkMode } = storeToRefs(appStore);
 
-const { listResponse, listRequest } = storeToRefs(pantryLocationStore);
+const { listResponse, listRequest } = storeToRefs(storageLocationStore);
 
 const resultCountText = computed(() => {
   const itemSet = listResponse.value;
@@ -52,13 +52,13 @@ const resultCountText = computed(() => {
 
 function navigateSearch() {
   router.push({
-    query: pantryLocationStore.currentQueryParams,
+    query: storageLocationStore.currentQueryParams,
   });
 }
 
 function clearSearch() {
-  pantryLocationStore.listRequest = {
-    ...new PantryLocationsListRequest(),
+  storageLocationStore.listRequest = {
+    ...new StorageLocationsListRequest(),
     take: listRequest.value.take,
     isPagingEnabled: listRequest.value.isPagingEnabled,
   };
@@ -67,7 +67,7 @@ function clearSearch() {
 }
 
 function startSearch() {
-  pantryLocationStore.listRequest = {
+  storageLocationStore.listRequest = {
     ...listRequest.value,
     page: 1,
   };
@@ -76,13 +76,13 @@ function startSearch() {
 }
 
 function changePage(page: number) {
-  pantryLocationStore.listRequest = { ...listRequest.value, page };
+  storageLocationStore.listRequest = { ...listRequest.value, page };
 
   navigateSearch();
 }
 
 function changeTake(take: number) {
-  pantryLocationStore.listRequest = {
+  storageLocationStore.listRequest = {
     ...listRequest.value,
     isPagingEnabled: toInt(take) > 1,
     take,
@@ -93,23 +93,23 @@ function changeTake(take: number) {
 }
 
 function setListRequestFromQuery() {
-  pantryLocationStore.listRequest = {
-    ...new PantryLocationsListRequest(),
+  storageLocationStore.listRequest = {
+    ...new StorageLocationsListRequest(),
     ...props.query,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   };
 }
 
-async function onDeletePantryLocation(id: number | null | undefined) {
-  async function deletePantryLocation() {
+async function onDeleteStorageLocation(id: number | null | undefined) {
+  async function deleteStorageLocation() {
     if (!id) {
       return;
     }
 
     try {
-      const response = await api().pantryLocationsDelete(id);
-      await pantryLocationStore.fetchPantryLocationsList();
+      const response = await api().storageLocationsDelete(id);
+      await storageLocationStore.fetchStorageLocationsList();
 
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
@@ -122,7 +122,7 @@ async function onDeletePantryLocation(id: number | null | undefined) {
   const parameters: ModalParameters = {
     title: 'Delete storage location',
     description: 'Do you really want to delete this storage location?',
-    okAction: () => deletePantryLocation(),
+    okAction: () => deleteStorageLocation(),
   };
 
   appStore.showModal(parameters);
@@ -132,7 +132,7 @@ watch(
   props,
   async () => {
     setListRequestFromQuery();
-    await pantryLocationStore.fetchPantryLocationsList();
+    await storageLocationStore.fetchStorageLocationsList();
   },
   { immediate: true }
 );
@@ -178,7 +178,9 @@ watch(
         <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
           Clear
         </button>
-        <router-link :to="{ name: 'pantryLocationNew' }" class="btn btn-secondary">New</router-link>
+        <router-link :to="{ name: 'storageLocationNew' }" class="btn btn-secondary"
+          >New</router-link
+        >
       </div>
     </div>
     <div class="mt-3">{{ resultCountText }}</div>
@@ -194,17 +196,17 @@ watch(
         </tr>
       </thead>
       <tbody>
-        <tr v-for="pantryLocation in listResponse.items" :key="pantryLocation.id">
+        <tr v-for="storageLocation in listResponse.items" :key="storageLocation.id">
           <td>
-            <router-link :to="{ name: 'pantryLocationEdit', params: { id: pantryLocation.id } }">
-              {{ pantryLocation.name }}
+            <router-link :to="{ name: 'storageLocationEdit', params: { id: storageLocation.id } }">
+              {{ storageLocation.name }}
             </router-link>
           </td>
-          <td>{{ pantryLocation.groceryItemCount }}</td>
+          <td>{{ storageLocation.groceryItemCount }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"
-              @click="() => onDeletePantryLocation(pantryLocation.id)"
+              @click="() => onDeleteStorageLocation(storageLocation.id)"
             >
               Delete
             </button>

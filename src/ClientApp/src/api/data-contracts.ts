@@ -345,14 +345,14 @@ export interface SaveMealPlanRequestRecipe {
 }
 
 /** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListPantryLocationsResponse {
+export interface IItemSetOfListStorageLocationsResponse {
   /**
    * The count of items in this set.
    * @format int32
    */
   count?: number;
   /** The items in this set. */
-  items?: ListPantryLocationsResponse[];
+  items?: ListStorageLocationsResponse[];
   /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
   /**
@@ -372,7 +372,7 @@ export interface IItemSetOfListPantryLocationsResponse {
   totalCount?: number;
 }
 
-export interface ListPantryLocationsResponse {
+export interface ListStorageLocationsResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -380,7 +380,7 @@ export interface ListPantryLocationsResponse {
   groceryItemCount?: number;
 }
 
-export interface GetPantryLocationResponse {
+export interface GetStorageLocationResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -390,16 +390,16 @@ export interface GetPantryLocationResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  groceryItems?: GetPantryLocationResponseGroceryItem[];
+  groceryItems?: GetStorageLocationResponseGroceryItem[];
 }
 
-export interface GetPantryLocationResponseGroceryItem {
+export interface GetStorageLocationResponseGroceryItem {
   /** @format int32 */
   id?: number;
   name?: string;
 }
 
-export interface SavePantryLocationRequest {
+export interface SaveStorageLocationRequest {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -602,7 +602,7 @@ export interface ListGroceryItemsResponse {
   name?: string;
   /** @format int32 */
   inventoryQuantity?: number;
-  pantryLocations?: string[];
+  storageLocations?: string[];
   /** @format int32 */
   groceryAisleId?: number | null;
   /** @format int32 */
@@ -623,7 +623,7 @@ export interface GetGroceryItemResponse {
   modifiedOn?: string;
   recipes?: GetGroceryItemResponseRecipe[];
   groceryAisle?: GetGroceryItemResponseGroceryAisle | null;
-  pantryLocations?: string[];
+  storageLocations?: string[];
 }
 
 export interface GetGroceryItemResponseRecipe {
@@ -650,7 +650,7 @@ export interface SaveGroceryItemRequest {
   inventoryQuantity?: number;
   /** @format int32 */
   groceryAisleId?: number | null;
-  pantryLocations?: string[];
+  storageLocations?: string[];
 }
 
 export interface SaveGroceryItemInventoryRequest {
@@ -736,7 +736,7 @@ export interface MealPlansListParams {
   take?: number;
 }
 
-export interface PantryLocationsListParams {
+export interface StorageLocationsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /** Specify to show items that have relations or no relations */

@@ -3,7 +3,7 @@ import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import useGroceryItemStore from '@/stores/groceryItemStore';
 import useCategoryStore from '@/stores/categoryStore';
-import usePantryLocationStore from '@/stores/pantryLocationStore';
+import useStorageLocationStore from '@/stores/storageLocationStore';
 import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import RouterHelper from '@/models/RouterHelper';
 import { isNil } from '@/models/FormatHelper';
@@ -14,7 +14,7 @@ const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const groceryItemStore = useGroceryItemStore();
 const categoryStore = useCategoryStore();
-const pantryLocationStore = usePantryLocationStore();
+const storageLocationStore = useStorageLocationStore();
 const groceryAisleStore = useGroceryAisleStore();
 
 const planName = computed(() => {
@@ -110,7 +110,7 @@ const { recentRecipes } = storeToRefs(recipeStore);
         <li><hr class="dropdown-divider" /></li>
         <li>
           <router-link
-            :to="{ name: 'pantryLocationList', query: pantryLocationStore.currentQueryParams }"
+            :to="{ name: 'storageLocationList', query: storageLocationStore.currentQueryParams }"
             class="dropdown-item"
             >Storage Locations</router-link
           >

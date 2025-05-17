@@ -1,34 +1,34 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
-using FoodStuffs.Model.Events.PantryLocations.Models;
+using FoodStuffs.Model.Events.StorageLocations.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
 
-namespace FoodStuffs.Model.Events.PantryLocations;
+namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class GetPantryLocationHandler : CustomEventHandlerAbstract<GetPantryLocationRequest, GetPantryLocationResponse>
+public class GetStorageLocationHandler : CustomEventHandlerAbstract<GetStorageLocationRequest, GetStorageLocationResponse>
 {
     private readonly FoodStuffsContext _data;
 
-    public GetPantryLocationHandler(FoodStuffsContext data)
+    public GetStorageLocationHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
-    public override async Task<IResult<GetPantryLocationResponse>> Handle(GetPantryLocationRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<GetStorageLocationResponse>> Handle(GetStorageLocationRequest request, CancellationToken cancellationToken = default)
     {
-        var byId = new PantryLocationsWithAllRelatedSpecification(request.Id);
+        var byId = new StorageLocationsWithAllRelatedSpecification(request.Id);
 
-        return await _data.PantryLocations
+        return await _data.StorageLocations
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)
-            .ToResultAsync(new PantryLocationNotFoundFailure())
-            .SelectAsync(m => new GetPantryLocationResponse(
+            .ToResultAsync(new StorageLocationNotFoundFailure())
+            .SelectAsync(m => new GetStorageLocationResponse(
                 Id: m.Id,
                 Name: m.Name,
                 CreatedBy: m.CreatedBy,
@@ -36,7 +36,7 @@ public class GetPantryLocationHandler : CustomEventHandlerAbstract<GetPantryLoca
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
                 GroceryItems: [.. m.GroceryItems
-                    .Select(r => new GetPantryLocationResponseGroceryItem(
+                    .Select(r => new GetStorageLocationResponseGroceryItem(
                         Id: r.Id,
                         Name: r.Name))
                     .OrderBy(r => r.Name)]));

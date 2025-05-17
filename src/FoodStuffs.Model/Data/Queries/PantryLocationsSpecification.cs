@@ -1,30 +1,30 @@
 ﻿using FoodStuffs.Model.Data.Models;
-using FoodStuffs.Model.Events.PantryLocations.Models;
+using FoodStuffs.Model.Events.StorageLocations.Models;
 using System.Linq.Expressions;
 using VoidCore.Model.Data;
 
 namespace FoodStuffs.Model.Data.Queries;
 
-public class PantryLocationsSpecification : QuerySpecificationAbstract<PantryLocation>
+public class StorageLocationsSpecification : QuerySpecificationAbstract<StorageLocation>
 {
-    public PantryLocationsSpecification(Expression<Func<PantryLocation, bool>>[] criteria) : base(criteria)
+    public StorageLocationsSpecification(Expression<Func<StorageLocation, bool>>[] criteria) : base(criteria)
     {
         AddOrderBy(c => c.Name);
     }
 
-    public PantryLocationsSpecification(int id)
+    public StorageLocationsSpecification(int id)
     {
         AddCriteria(r => r.Id == id);
     }
 
-    public PantryLocationsSpecification(string name)
+    public StorageLocationsSpecification(string name)
     {
         AddCriteria(r => r.Name == name);
     }
 
-    public PantryLocationsSpecification(ListPantryLocationsRequest request) : this(criteria: [])
+    public StorageLocationsSpecification(ListStorageLocationsRequest request) : this(criteria: [])
     {
-        AddInclude(nameof(PantryLocation.GroceryItems));
+        AddInclude(nameof(StorageLocation.GroceryItems));
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
         // Need to use Linq methods for EF

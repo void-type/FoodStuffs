@@ -213,9 +213,9 @@ watch(
               Used in {{ groceryItem.recipeCount }} recipes.
             </div>
           </div>
-          <div v-if="(groceryItem.pantryLocations?.length || 0) > 0" class="mt-3">
+          <div v-if="(groceryItem.storageLocations?.length || 0) > 0" class="mt-3">
             <span
-              v-for="location in groceryItem.pantryLocations"
+              v-for="location in groceryItem.storageLocations"
               :key="location || ''"
               class="badge rounded-pill text-bg-secondary me-2 mt-2"
             >

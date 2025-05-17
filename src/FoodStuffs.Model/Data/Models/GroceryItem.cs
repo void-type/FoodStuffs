@@ -22,7 +22,7 @@ public class GroceryItem : IAuditableWithOffset
 
     public virtual GroceryAisle? GroceryAisle { get; set; }
 
-    public virtual List<PantryLocation> PantryLocations { get; } = [];
+    public virtual List<StorageLocation> StorageLocations { get; } = [];
 
     public virtual List<Recipe> Recipes { get; } = [];
 }

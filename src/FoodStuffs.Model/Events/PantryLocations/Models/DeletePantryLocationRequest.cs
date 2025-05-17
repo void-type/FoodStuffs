@@ -1,3 +1,3 @@
-﻿namespace FoodStuffs.Model.Events.PantryLocations.Models;
+﻿namespace FoodStuffs.Model.Events.StorageLocations.Models;
 
-public record DeletePantryLocationRequest(int Id);
+public record DeleteStorageLocationRequest(int Id);
