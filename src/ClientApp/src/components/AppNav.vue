@@ -4,7 +4,7 @@ import useMealPlanStore from '@/stores/mealPlanStore';
 import useGroceryItemStore from '@/stores/groceryItemStore';
 import useCategoryStore from '@/stores/categoryStore';
 import usePantryLocationStore from '@/stores/pantryLocationStore';
-import useGroceryDepartmentStore from '@/stores/groceryDepartmentStore';
+import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import RouterHelper from '@/models/RouterHelper';
 import { isNil } from '@/models/FormatHelper';
 import { computed } from 'vue';
@@ -15,7 +15,7 @@ const mealPlanStore = useMealPlanStore();
 const groceryItemStore = useGroceryItemStore();
 const categoryStore = useCategoryStore();
 const pantryLocationStore = usePantryLocationStore();
-const groceryDepartmentStore = useGroceryDepartmentStore();
+const groceryAisleStore = useGroceryAisleStore();
 
 const planName = computed(() => {
   const name = mealPlanStore.currentMealPlan?.name;
@@ -100,8 +100,8 @@ const { recentRecipes } = storeToRefs(recipeStore);
         <li>
           <router-link
             :to="{
-              name: 'groceryDepartmentList',
-              query: groceryDepartmentStore.currentQueryParams,
+              name: 'groceryAisleList',
+              query: groceryAisleStore.currentQueryParams,
             }"
             class="dropdown-item"
             >Grocery Aisles</router-link

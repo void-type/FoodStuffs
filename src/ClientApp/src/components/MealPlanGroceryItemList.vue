@@ -13,7 +13,7 @@ const props = defineProps({
   showCopyList: { type: Boolean, required: false, default: false },
   onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
   getGroceryItemDetails: { type: Function, required: true },
-  getGroceryDepartmentDetails: { type: Function, required: true },
+  getGroceryAisleDetails: { type: Function, required: true },
 });
 
 interface GroupItem extends GetMealPlanResponseExcludedGroceryItem {
@@ -33,17 +33,17 @@ const groceryItemsGrouped = computed(() => {
   const groupedById = new Map<number, Array<GroupItem>>();
 
   items.forEach((item) => {
-    if (!groupedById.has(item.details.groceryDepartmentId)) {
-      groupedById.set(item.details.groceryDepartmentId, []);
+    if (!groupedById.has(item.details.groceryAisleId)) {
+      groupedById.set(item.details.groceryAisleId, []);
     }
 
-    groupedById.get(item.details.groceryDepartmentId)?.push(item);
+    groupedById.get(item.details.groceryAisleId)?.push(item);
   });
 
   const grouped = Array.from(groupedById).map((x) => ({
-    groceryDepartmentId: x[0],
-    groceryDepartment: props.getGroceryDepartmentDetails(x[0]) || {
-      name: 'No department',
+    groceryAisleId: x[0],
+    groceryAisle: props.getGroceryAisleDetails(x[0]) || {
+      name: 'No aisle',
       order: Number.MAX_VALUE,
       id: 0,
     },
@@ -51,11 +51,11 @@ const groceryItemsGrouped = computed(() => {
   }));
 
   grouped.sort((a, b) => {
-    if (a.groceryDepartment === null || b.groceryDepartment === null) {
+    if (a.groceryAisle === null || b.groceryAisle === null) {
       return 0;
     }
 
-    return a.groceryDepartment.order - b.groceryDepartment.order;
+    return a.groceryAisle.order - b.groceryAisle.order;
   });
 
   return grouped;
@@ -77,7 +77,7 @@ function copyList() {
   const lines: string[] = [];
 
   groceryItemsGrouped.value.forEach((group) => {
-    lines.push(`# ${group.groceryDepartment.name}`);
+    lines.push(`# ${group.groceryAisle.name}`);
 
     group.items.forEach((item) => {
       lines.push(`${item.quantity}x ${item.details.name}`);
@@ -119,9 +119,9 @@ function copyList() {
           </button>
         </div>
       </div>
-      <div v-for="group in groceryItemsGrouped" :key="group.groceryDepartmentId">
+      <div v-for="group in groceryItemsGrouped" :key="group.groceryAisleId">
         <div class="card-header">
-          {{ group.groceryDepartment.name }}
+          {{ group.groceryAisle.name }}
         </div>
         <ul class="list-group list-group-flush">
           <li

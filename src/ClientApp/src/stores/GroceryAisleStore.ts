@@ -1,24 +1,24 @@
 import type {
-  IItemSetOfListGroceryDepartmentsResponse,
-  GroceryDepartmentsListParams,
+  IItemSetOfListGroceryAislesResponse,
+  GroceryAislesListParams,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
-import GroceryDepartmentsListRequest from '@/models/GroceryDepartmentsListRequest';
-import listRequestToQueryParams from '@/models/GroceryDepartmentStoreHelper';
+import GroceryAislesListRequest from '@/models/GroceryAislesListRequest';
+import listRequestToQueryParams from '@/models/GroceryAisleStoreHelper';
 import useMessageStore from './messageStore';
 
-interface GroceryDepartmentStoreState {
-  listResponse: IItemSetOfListGroceryDepartmentsResponse;
-  listRequest: GroceryDepartmentsListParams;
+interface GroceryAisleStoreState {
+  listResponse: IItemSetOfListGroceryAislesResponse;
+  listRequest: GroceryAislesListParams;
 }
 
 const api = ApiHelper.client;
 
-export default defineStore('groceryDepartment', {
-  state: (): GroceryDepartmentStoreState => ({
+export default defineStore('groceryAisle', {
+  state: (): GroceryAisleStoreState => ({
     listResponse: {
       count: 0,
       items: [],
@@ -27,7 +27,7 @@ export default defineStore('groceryDepartment', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new GroceryDepartmentsListRequest() },
+    listRequest: { ...new GroceryAislesListRequest() },
   }),
 
   getters: {
@@ -39,9 +39,9 @@ export default defineStore('groceryDepartment', {
   },
 
   actions: {
-    async fetchGroceryDepartmentsList() {
+    async fetchGroceryAislesList() {
       try {
-        const response = await api().groceryDepartmentsList(this.listRequest);
+        const response = await api().groceryAislesList(this.listRequest);
         this.listResponse = response.data;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);

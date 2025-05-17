@@ -22,7 +22,7 @@ import {
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import TagEditor from '@/components/TagEditor.vue';
 import RouterHelper from '@/models/RouterHelper';
-import GroceryItemGroceryDepartmentSelect from '@/components/GroceryItemGroceryDepartmentSelect.vue';
+import GroceryItemGroceryAisleSelect from '@/components/GroceryItemGroceryAisleSelect.vue';
 
 const props = defineProps({
   id: {
@@ -151,7 +151,7 @@ function reset() {
   const newWorking: GroceryItemWorking = {
     ...newWorkingClass,
     ...sourceCopy,
-    groceryDepartmentId: data.source.groceryDepartment?.id || null,
+    groceryAisleId: data.source.groceryAisle?.id || null,
   };
 
   data.workingInitial = JSON.stringify(newWorking);
@@ -324,8 +324,8 @@ onBeforeUnmount(() => {
           />
         </div>
         <div class="g-col-12 g-col-md-6">
-          <label for="groceryDepartmentId" class="form-label">Grocery Aisle</label>
-          <GroceryItemGroceryDepartmentSelect v-model="data.working.groceryDepartmentId" />
+          <label for="groceryAisleId" class="form-label">Grocery Aisle</label>
+          <GroceryItemGroceryAisleSelect v-model="data.working.groceryAisleId" />
         </div>
         <TagEditor
           :class="{

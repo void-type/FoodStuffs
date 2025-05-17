@@ -57,7 +57,7 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                                     InventoryQuantity: i.GroceryItem.InventoryQuantity,
                                     Quantity: i.Quantity,
                                     Order: i.Order,
-                                    GroceryDepartmentId: i.GroceryItem?.GroceryDepartment?.Id)
+                                    GroceryAisleId: i.GroceryItem?.GroceryAisle?.Id)
                             )
                             .OrderBy(i => i.Order)]))
                     .OrderBy(rel => rel.Order)]));

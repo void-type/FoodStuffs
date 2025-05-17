@@ -40,7 +40,7 @@ public class ListGroceryItemsHandler : CustomEventHandlerAbstract<ListGroceryIte
                 PantryLocations: [.. c.GroceryItem.PantryLocations
                     .Select(pl => pl.Name)
                     .Order(StringComparer.Ordinal)],
-                GroceryDepartmentId: c.GroceryItem.GroceryDepartmentId,
+                GroceryAisleId: c.GroceryItem.GroceryAisleId,
                 RecipeCount: c.RecipeCount))
             .MapAsync(Ok);
     }

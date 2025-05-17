@@ -1,5 +1,5 @@
-﻿using FoodStuffs.Model.Events.GroceryDepartments;
-using FoodStuffs.Model.Events.GroceryDepartments.Models;
+﻿using FoodStuffs.Model.Events.GroceryAisles;
+using FoodStuffs.Model.Events.GroceryAisles.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -12,8 +12,8 @@ namespace FoodStuffs.Web.Controllers.Api;
 /// <summary>
 /// Manage grocery item grocery aisles.
 /// </summary>
-[Route(ApiRouteAttribute.BasePath + "/grocery-departments")]
-public class GroceryDepartmentsController : ControllerBase
+[Route(ApiRouteAttribute.BasePath + "/grocery-aisles")]
+public class GroceryAislesController : ControllerBase
 {
     /// <summary>
     /// List grocery aisles. All parameters are optional and some have defaults.
@@ -25,11 +25,11 @@ public class GroceryDepartmentsController : ControllerBase
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
-    [ProducesResponseType(typeof(IItemSet<ListGroceryDepartmentsResponse>), 200)]
+    [ProducesResponseType(typeof(IItemSet<ListGroceryAislesResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListGroceryDepartmentsHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListGroceryAislesHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
-        var request = new ListGroceryDepartmentsRequest(
+        var request = new ListGroceryAislesRequest(
             NameSearch: name,
             IsUnused: isUnused,
             IsPagingEnabled: isPagingEnabled,
@@ -51,11 +51,11 @@ public class GroceryDepartmentsController : ControllerBase
     /// <param name="getHandler"></param>
     /// <param name="id">The ID of the grocery aisle to get</param>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(GetGroceryDepartmentResponse), 200)]
+    [ProducesResponseType(typeof(GetGroceryAisleResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> GetAsync([FromServices] GetGroceryDepartmentHandler getHandler, int id)
+    public async Task<IActionResult> GetAsync([FromServices] GetGroceryAisleHandler getHandler, int id)
     {
-        var request = new GetGroceryDepartmentRequest(id);
+        var request = new GetGroceryAisleRequest(id);
 
         return await getHandler
             .Handle(request)
@@ -70,7 +70,7 @@ public class GroceryDepartmentsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> SaveAsync([FromServices] SaveGroceryDepartmentHandler saveHandler, [FromBody] SaveGroceryDepartmentRequest request)
+    public async Task<IActionResult> SaveAsync([FromServices] SaveGroceryAisleHandler saveHandler, [FromBody] SaveGroceryAisleRequest request)
     {
         return await saveHandler
             .Handle(request)
@@ -85,9 +85,9 @@ public class GroceryDepartmentsController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(EntityMessage<int>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> DeleteAsync([FromServices] DeleteGroceryDepartmentHandler deleteHandler, int id)
+    public async Task<IActionResult> DeleteAsync([FromServices] DeleteGroceryAisleHandler deleteHandler, int id)
     {
-        var request = new DeleteGroceryDepartmentRequest(id);
+        var request = new DeleteGroceryAisleRequest(id);
 
         return await deleteHandler
             .Handle(request)

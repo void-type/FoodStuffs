@@ -1,12 +1,12 @@
-﻿using FoodStuffs.Model.Events.GroceryDepartments.Models;
+﻿using FoodStuffs.Model.Events.GroceryAisles.Models;
 using VoidCore.Model.Functional;
 using VoidCore.Model.RuleValidator;
 
-namespace FoodStuffs.Model.Events.GroceryDepartments;
+namespace FoodStuffs.Model.Events.GroceryAisles;
 
-public class SaveGroceryDepartmentRequestValidator : RuleValidatorAbstract<SaveGroceryDepartmentRequest>
+public class SaveGroceryAisleRequestValidator : RuleValidatorAbstract<SaveGroceryAisleRequest>
 {
-    public SaveGroceryDepartmentRequestValidator()
+    public SaveGroceryAisleRequestValidator()
     {
         CreateRule(new Failure("Name is required.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));

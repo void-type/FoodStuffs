@@ -130,24 +130,24 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: 'groceryDepartmentList',
-              component: () => import('@/pages/GroceryDepartmentListPage.vue'),
+              name: 'groceryAisleList',
+              component: () => import('@/pages/GroceryAisleListPage.vue'),
               props: (route) => ({ query: route.query }),
             },
             {
               path: ':id',
-              name: 'groceryDepartmentEdit',
+              name: 'groceryAisleEdit',
               meta: { title: 'Edit Grocery Aisle' },
-              component: () => import('@/pages/GroceryDepartmentEditPage.vue'),
+              component: () => import('@/pages/GroceryAisleEditPage.vue'),
               props: (route) => ({
                 id: +route.params.id,
               }),
             },
             {
               path: 'new',
-              name: 'groceryDepartmentNew',
+              name: 'groceryAisleNew',
               meta: { title: 'New Grocery Aisle' },
-              component: () => import('@/pages/GroceryDepartmentEditPage.vue'),
+              component: () => import('@/pages/GroceryAisleEditPage.vue'),
             },
           ],
         },

@@ -3,14 +3,14 @@ import { computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import useAppStore from '@/stores/appStore';
 import useMessageStore from '@/stores/messageStore';
-import useGroceryDepartmentStore from '@/stores/groceryDepartmentStore';
+import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import { isNil } from '@/models/FormatHelper';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import GroceryDepartmentGetResponse from '@/models/GroceryDepartmentGetResponse';
-import GroceryDepartmentWorking from '@/models/GroceryDepartmentWorking';
+import GroceryAisleGetResponse from '@/models/GroceryAisleGetResponse';
+import GroceryAisleWorking from '@/models/GroceryAisleWorking';
 import type { HttpResponse } from '@/api/http-client';
-import type { GetGroceryDepartmentResponse } from '@/api/data-contracts';
+import type { GetGroceryAisleResponse } from '@/api/data-contracts';
 import type { ModalParameters } from '@/models/ModalParameters';
 import router from '@/router';
 import {
@@ -31,15 +31,15 @@ const props = defineProps({
 });
 
 const data = reactive({
-  source: new GroceryDepartmentGetResponse() as GetGroceryDepartmentResponse,
-  working: new GroceryDepartmentWorking(),
+  source: new GroceryAisleGetResponse() as GetGroceryAisleResponse,
+  working: new GroceryAisleWorking(),
   // This is a snapshot of our source right after it became working so we can check if working is dirty.
   workingInitial: '',
 });
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
-const groceryDepartmentStore = useGroceryDepartmentStore();
+const groceryAisleStore = useGroceryAisleStore();
 const api = ApiHelper.client;
 
 // Editing existing
@@ -51,18 +51,18 @@ const isDirty = computed(() => JSON.stringify(data.working) !== data.workingInit
 
 async function fetch() {
   if (isCreateNewMode.value) {
-    data.source = new GroceryDepartmentGetResponse();
+    data.source = new GroceryAisleGetResponse();
     return;
   }
 
   const { id } = props;
 
   try {
-    const response = await api().groceryDepartmentsGet(id);
+    const response = await api().groceryAislesGet(id);
     data.source = response.data;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-    data.source = new GroceryDepartmentGetResponse();
+    data.source = new GroceryAisleGetResponse();
   }
 }
 
@@ -74,11 +74,11 @@ async function onSaveClick() {
       data.working.order = 0;
     }
 
-    const response = await api().groceryDepartmentsSave(data.working);
+    const response = await api().groceryAislesSave(data.working);
 
     if (!isEditMode.value) {
       forceImmediateRouteChange = true;
-      await router.push({ name: 'groceryDepartmentEdit', params: { id: response.data.id } });
+      await router.push({ name: 'groceryAisleEdit', params: { id: response.data.id } });
     } else {
       await fetch();
     }
@@ -87,7 +87,7 @@ async function onSaveClick() {
       messageStore.setSuccessMessage(response.data.message);
     }
 
-    await groceryDepartmentStore.fetchGroceryDepartmentsList();
+    await groceryAisleStore.fetchGroceryAislesList();
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -96,12 +96,12 @@ async function onSaveClick() {
 function onDeleteClick(id: number) {
   function deleteNow() {
     api()
-      .groceryDepartmentsDelete(id)
+      .groceryAislesDelete(id)
       .then(async (response) => {
-        data.source = new GroceryDepartmentGetResponse();
-        await groceryDepartmentStore.fetchGroceryDepartmentsList();
+        data.source = new GroceryAisleGetResponse();
+        await groceryAisleStore.fetchGroceryAislesList();
         router
-          .push({ name: 'groceryDepartmentList', query: groceryDepartmentStore.currentQueryParams })
+          .push({ name: 'groceryAisleList', query: groceryAisleStore.currentQueryParams })
           .then(() => {
             if (response.data.message) {
               messageStore.setSuccessMessage(response.data.message);
@@ -125,7 +125,7 @@ function onDeleteClick(id: number) {
 function reset() {
   const sourceCopy: Record<string, unknown> = JSON.parse(JSON.stringify(data.source));
 
-  const newWorkingClass = new GroceryDepartmentWorking();
+  const newWorkingClass = new GroceryAisleWorking();
 
   const validProperties = Object.keys(newWorkingClass);
 
@@ -136,7 +136,7 @@ function reset() {
     }
   });
 
-  const newWorking: GroceryDepartmentWorking = {
+  const newWorking: GroceryAisleWorking = {
     ...newWorkingClass,
     ...sourceCopy,
   };

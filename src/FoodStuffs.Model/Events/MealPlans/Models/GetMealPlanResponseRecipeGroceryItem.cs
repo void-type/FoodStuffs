@@ -6,4 +6,4 @@ public record GetMealPlanResponseRecipeGroceryItem(
     int InventoryQuantity,
     decimal Quantity,
     int Order,
-    int? GroceryDepartmentId);
+    int? GroceryAisleId);

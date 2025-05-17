@@ -1,7 +1,7 @@
-import type { GroceryDepartmentsListParams } from '@/api/data-contracts';
+import type { GroceryAislesListParams } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
 
-export default class GroceryDepartmentsListRequest implements GroceryDepartmentsListParams {
+export default class GroceryAislesListRequest implements GroceryAislesListParams {
   public name = '';
 
   public isUnused = null;

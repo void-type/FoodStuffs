@@ -4,5 +4,5 @@ public record SaveGroceryItemRequest(
     int Id,
     string Name,
     int InventoryQuantity,
-    int? GroceryDepartmentId,
+    int? GroceryAisleId,
     List<string> PantryLocations);

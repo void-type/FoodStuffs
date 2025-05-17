@@ -21,7 +21,7 @@ public class FoodStuffsContext : DbContext
     }
 
     public virtual DbSet<Category> Categories { get; set; } = null!;
-    public virtual DbSet<GroceryDepartment> GroceryDepartments { get; set; } = null!;
+    public virtual DbSet<GroceryAisle> GroceryAisles { get; set; } = null!;
     public virtual DbSet<Image> Images { get; set; } = null!;
     public virtual DbSet<MealPlan> MealPlans { get; set; } = null!;
     public virtual DbSet<Recipe> Recipes { get; set; } = null!;
@@ -38,9 +38,9 @@ public class FoodStuffsContext : DbContext
                 .IsUnique();
         });
 
-        modelBuilder.Entity<GroceryDepartment>(entity =>
+        modelBuilder.Entity<GroceryAisle>(entity =>
         {
-            entity.ToTable(nameof(GroceryDepartment));
+            entity.ToTable(nameof(GroceryAisle));
 
             entity.HasIndex(si => si.Name)
                 .IsUnique();

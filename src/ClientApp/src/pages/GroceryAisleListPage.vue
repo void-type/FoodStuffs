@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import useAppStore from '@/stores/appStore';
-import useGroceryDepartmentStore from '@/stores/groceryDepartmentStore';
+import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import { storeToRefs } from 'pinia';
 import { computed, watch, type PropType } from 'vue';
 import { useRouter, type LocationQuery } from 'vue-router';
@@ -8,7 +8,7 @@ import type { ModalParameters } from '@/models/ModalParameters';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import { toInt, toNumber } from '@/models/FormatHelper';
 import Choices from '@/models/Choices';
-import GroceryDepartmentsListRequest from '@/models/GroceryDepartmentsListRequest';
+import GroceryAislesListRequest from '@/models/GroceryAislesListRequest';
 import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
@@ -25,13 +25,13 @@ const props = defineProps({
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
-const groceryDepartmentStore = useGroceryDepartmentStore();
+const groceryAisleStore = useGroceryAisleStore();
 const router = useRouter();
 const api = ApiHelper.client;
 
 const { useDarkMode } = storeToRefs(appStore);
 
-const { listResponse, listRequest } = storeToRefs(groceryDepartmentStore);
+const { listResponse, listRequest } = storeToRefs(groceryAisleStore);
 
 const resultCountText = computed(() => {
   const itemSet = listResponse.value;
@@ -52,13 +52,13 @@ const resultCountText = computed(() => {
 
 function navigateSearch() {
   router.push({
-    query: groceryDepartmentStore.currentQueryParams,
+    query: groceryAisleStore.currentQueryParams,
   });
 }
 
 function clearSearch() {
-  groceryDepartmentStore.listRequest = {
-    ...new GroceryDepartmentsListRequest(),
+  groceryAisleStore.listRequest = {
+    ...new GroceryAislesListRequest(),
     take: listRequest.value.take,
     isPagingEnabled: listRequest.value.isPagingEnabled,
   };
@@ -67,7 +67,7 @@ function clearSearch() {
 }
 
 function startSearch() {
-  groceryDepartmentStore.listRequest = {
+  groceryAisleStore.listRequest = {
     ...listRequest.value,
     page: 1,
   };
@@ -76,13 +76,13 @@ function startSearch() {
 }
 
 function changePage(page: number) {
-  groceryDepartmentStore.listRequest = { ...listRequest.value, page };
+  groceryAisleStore.listRequest = { ...listRequest.value, page };
 
   navigateSearch();
 }
 
 function changeTake(take: number) {
-  groceryDepartmentStore.listRequest = {
+  groceryAisleStore.listRequest = {
     ...listRequest.value,
     isPagingEnabled: toInt(take) > 1,
     take,
@@ -93,23 +93,23 @@ function changeTake(take: number) {
 }
 
 function setListRequestFromQuery() {
-  groceryDepartmentStore.listRequest = {
-    ...new GroceryDepartmentsListRequest(),
+  groceryAisleStore.listRequest = {
+    ...new GroceryAislesListRequest(),
     ...props.query,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   };
 }
 
-async function onDeleteGroceryDepartment(id: number | null | undefined) {
-  async function deleteGroceryDepartment() {
+async function onDeleteGroceryAisle(id: number | null | undefined) {
+  async function deleteGroceryAisle() {
     if (!id) {
       return;
     }
 
     try {
-      const response = await api().groceryDepartmentsDelete(id);
-      await groceryDepartmentStore.fetchGroceryDepartmentsList();
+      const response = await api().groceryAislesDelete(id);
+      await groceryAisleStore.fetchGroceryAislesList();
 
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
@@ -122,7 +122,7 @@ async function onDeleteGroceryDepartment(id: number | null | undefined) {
   const parameters: ModalParameters = {
     title: 'Delete grocery aisle',
     description: 'Do you really want to delete this grocery aisle?',
-    okAction: () => deleteGroceryDepartment(),
+    okAction: () => deleteGroceryAisle(),
   };
 
   appStore.showModal(parameters);
@@ -132,7 +132,7 @@ watch(
   props,
   async () => {
     setListRequestFromQuery();
-    await groceryDepartmentStore.fetchGroceryDepartmentsList();
+    await groceryAisleStore.fetchGroceryAislesList();
   },
   { immediate: true }
 );
@@ -178,9 +178,7 @@ watch(
         <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
           Clear
         </button>
-        <router-link :to="{ name: 'groceryDepartmentNew' }" class="btn btn-secondary"
-          >New</router-link
-        >
+        <router-link :to="{ name: 'groceryAisleNew' }" class="btn btn-secondary">New</router-link>
       </div>
     </div>
     <div class="mt-3">{{ resultCountText }}</div>
@@ -197,20 +195,18 @@ watch(
         </tr>
       </thead>
       <tbody>
-        <tr v-for="groceryDepartment in listResponse.items" :key="groceryDepartment.id">
+        <tr v-for="groceryAisle in listResponse.items" :key="groceryAisle.id">
           <td>
-            <router-link
-              :to="{ name: 'groceryDepartmentEdit', params: { id: groceryDepartment.id } }"
-            >
-              {{ groceryDepartment.name }}
+            <router-link :to="{ name: 'groceryAisleEdit', params: { id: groceryAisle.id } }">
+              {{ groceryAisle.name }}
             </router-link>
           </td>
-          <td>{{ groceryDepartment.order }}</td>
-          <td>{{ groceryDepartment.groceryItemCount }}</td>
+          <td>{{ groceryAisle.order }}</td>
+          <td>{{ groceryAisle.groceryItemCount }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"
-              @click="() => onDeleteGroceryDepartment(groceryDepartment.id)"
+              @click="() => onDeleteGroceryAisle(groceryAisle.id)"
             >
               Delete
             </button>

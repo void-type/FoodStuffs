@@ -8,7 +8,7 @@ import useMessageStore from '@/stores/messageStore';
 import ApiHelper from '@/models/ApiHelper';
 import { VueDraggable } from 'vue-draggable-plus';
 import type {
-  ListGroceryDepartmentsResponse,
+  ListGroceryAislesResponse,
   ListGroceryItemsResponse,
   GetMealPlanResponseRecipe,
 } from '@/api/data-contracts';
@@ -100,20 +100,19 @@ function findGroceryItem(id: number | undefined) {
   return groceryItemOptions.value.find((x) => x.id === id);
 }
 
-const groceryDepartmentOptions = ref([] as Array<ListGroceryDepartmentsResponse>);
+const groceryAisleOptions = ref([] as Array<ListGroceryAislesResponse>);
 
-async function fetchGroceryDepartments() {
+async function fetchGroceryAisles() {
   try {
-    const response = await api().groceryDepartmentsList({ isPagingEnabled: false });
-    groceryDepartmentOptions.value = (response.data.items ||
-      []) as Array<ListGroceryDepartmentsResponse>;
+    const response = await api().groceryAislesList({ isPagingEnabled: false });
+    groceryAisleOptions.value = (response.data.items || []) as Array<ListGroceryAislesResponse>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
 }
 
-function findGroceryDepartment(id: number | undefined) {
-  return groceryDepartmentOptions.value.find((x) => x.id === id);
+function findGroceryAisle(id: number | undefined) {
+  return groceryAisleOptions.value.find((x) => x.id === id);
 }
 
 function updateOrdersByIndex() {
@@ -168,7 +167,7 @@ const pageTitle = computed(() => {
 
 onMounted(async () => {
   await fetchGroceryItems();
-  await fetchGroceryDepartments();
+  await fetchGroceryAisles();
   initialized.value = true;
 });
 </script>
@@ -265,7 +264,7 @@ onMounted(async () => {
             :on-item-click="addToPantry"
             :show-copy-list="true"
             :get-grocery-item-details="findGroceryItem"
-            :get-grocery-department-details="findGroceryDepartment"
+            :get-grocery-aisle-details="findGroceryAisle"
           />
         </div>
         <div class="g-col-12 g-col-md-6">
@@ -275,7 +274,7 @@ onMounted(async () => {
             :on-item-click="removeFromPantry"
             :on-clear="clearPantry"
             :get-grocery-item-details="findGroceryItem"
-            :get-grocery-department-details="findGroceryDepartment"
+            :get-grocery-aisle-details="findGroceryAisle"
           />
         </div>
       </div>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount, type PropType } from 'vue';
-import type { ListGroceryDepartmentsResponse } from '@/api/data-contracts';
+import type { ListGroceryAislesResponse } from '@/api/data-contracts';
 import { Dropdown } from 'bootstrap';
 import { trimAndTitleCase } from '@/models/FormatHelper';
 import ApiHelper from '@/models/ApiHelper';
@@ -18,14 +18,14 @@ const api = ApiHelper.client;
 
 const filterText = ref('');
 
-const suggestions = ref([] as ListGroceryDepartmentsResponse[]);
+const suggestions = ref([] as ListGroceryAislesResponse[]);
 
 const selectedSuggestion = computed(() => suggestions.value.find((x) => x.id === model.value));
 
 async function fetchSuggestions() {
   try {
-    const response = await api().groceryDepartmentsList({ isPagingEnabled: false });
-    suggestions.value = (response.data.items || []) as Array<ListGroceryDepartmentsResponse>;
+    const response = await api().groceryAislesList({ isPagingEnabled: false });
+    suggestions.value = (response.data.items || []) as Array<ListGroceryAislesResponse>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -48,7 +48,7 @@ const filterInput = ref<HTMLInputElement | null>(null);
 
 async function createItem(name: string) {
   try {
-    const response = await api().groceryDepartmentsSave({ name, order: 0 });
+    const response = await api().groceryAislesSave({ name, order: 0 });
 
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);

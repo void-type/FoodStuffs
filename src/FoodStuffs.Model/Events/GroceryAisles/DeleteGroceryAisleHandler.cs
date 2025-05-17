@@ -1,31 +1,31 @@
 ﻿using FoodStuffs.Model.Data;
-using FoodStuffs.Model.Events.GroceryDepartments.Models;
+using FoodStuffs.Model.Events.GroceryAisles.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
 
-namespace FoodStuffs.Model.Events.GroceryDepartments;
+namespace FoodStuffs.Model.Events.GroceryAisles;
 
-public class DeleteGroceryDepartmentHandler : CustomEventHandlerAbstract<DeleteGroceryDepartmentRequest, EntityMessage<int>>
+public class DeleteGroceryAisleHandler : CustomEventHandlerAbstract<DeleteGroceryAisleRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
 
-    public DeleteGroceryDepartmentHandler(FoodStuffsContext data)
+    public DeleteGroceryAisleHandler(FoodStuffsContext data)
     {
         _data = data;
     }
 
-    public override async Task<IResult<EntityMessage<int>>> Handle(DeleteGroceryDepartmentRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityMessage<int>>> Handle(DeleteGroceryAisleRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.GroceryDepartments
+        return await _data.GroceryAisles
             .TagWith(GetTag())
             .Include(c => c.GroceryItems)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             .MapAsync(Maybe.From)
-            .ToResultAsync(new GroceryDepartmentNotFoundFailure())
+            .ToResultAsync(new GroceryAisleNotFoundFailure())
             .TeeOnSuccessAsync(async c =>
             {
-                _data.GroceryDepartments.Remove(c);
+                _data.GroceryAisles.Remove(c);
 
                 await _data.SaveChangesAsync(cancellationToken);
             })

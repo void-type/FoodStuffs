@@ -1,6 +1,6 @@
 import type {
   GetGroceryItemResponse,
-  GetGroceryItemResponseGroceryDepartment,
+  GetGroceryItemResponseGroceryAisle,
   GetGroceryItemResponseRecipe,
 } from '@/api/data-contracts';
 
@@ -21,7 +21,7 @@ export default class GroceryItemGetResponse implements GetGroceryItemResponse {
 
   public recipes: GetGroceryItemResponseRecipe[] = [];
 
-  public groceryDepartment: GetGroceryItemResponseGroceryDepartment | null = null;
+  public groceryAisle: GetGroceryItemResponseGroceryAisle | null = null;
 
   public pantryLocations: string[] = [];
 }

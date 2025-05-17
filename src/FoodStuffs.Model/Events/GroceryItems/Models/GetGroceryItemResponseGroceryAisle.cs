@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Model.Events.GroceryItems.Models;
 
-public record GetGroceryItemResponseGroceryDepartment(
+public record GetGroceryItemResponseGroceryAisle(
     int Id,
     string Name,
     int Order);

@@ -11,7 +11,7 @@ public class GroceryItemsWithAllRelatedSpecification : QuerySpecificationAbstrac
 
         AddCriteria(r => r.Id == id);
         AddInclude(nameof(GroceryItem.Recipes));
-        AddInclude(nameof(GroceryItem.GroceryDepartment));
+        AddInclude(nameof(GroceryItem.GroceryAisle));
         AddInclude(nameof(GroceryItem.PantryLocations));
     }
 }

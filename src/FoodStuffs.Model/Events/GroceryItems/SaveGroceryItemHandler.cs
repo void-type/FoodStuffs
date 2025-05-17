@@ -67,18 +67,18 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         await ManagePantryLocationsAsync(request, groceryItemToEdit, cancellationToken);
 
-        if (request.GroceryDepartmentId is not null)
+        if (request.GroceryAisleId is not null)
         {
-            var groceryDepartment = await _data.GroceryDepartments
+            var groceryAisle = await _data.GroceryAisles
                 .TagWith(GetTag())
-                .FirstOrDefaultAsync(gd => gd.Id == request.GroceryDepartmentId, cancellationToken);
+                .FirstOrDefaultAsync(gd => gd.Id == request.GroceryAisleId, cancellationToken);
 
-            if (groceryDepartment is null)
+            if (groceryAisle is null)
             {
-                return Fail(new GroceryDepartmentNotFoundFailure());
+                return Fail(new GroceryAisleNotFoundFailure());
             }
 
-            groceryItemToEdit.GroceryDepartment = groceryDepartment;
+            groceryItemToEdit.GroceryAisle = groceryAisle;
         }
 
         if (maybeGroceryItem.HasValue)

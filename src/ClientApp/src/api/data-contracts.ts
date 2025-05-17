@@ -162,14 +162,14 @@ export interface AddCategoryToAllRecipesRequest {
 }
 
 /** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListGroceryDepartmentsResponse {
+export interface IItemSetOfListGroceryAislesResponse {
   /**
    * The count of items in this set.
    * @format int32
    */
   count?: number;
   /** The items in this set. */
-  items?: ListGroceryDepartmentsResponse[];
+  items?: ListGroceryAislesResponse[];
   /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
   /**
@@ -189,7 +189,7 @@ export interface IItemSetOfListGroceryDepartmentsResponse {
   totalCount?: number;
 }
 
-export interface ListGroceryDepartmentsResponse {
+export interface ListGroceryAislesResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -199,7 +199,7 @@ export interface ListGroceryDepartmentsResponse {
   groceryItemCount?: number;
 }
 
-export interface GetGroceryDepartmentResponse {
+export interface GetGroceryAisleResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -211,16 +211,16 @@ export interface GetGroceryDepartmentResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  groceryItems?: GetGroceryDepartmentResponseGroceryItem[];
+  groceryItems?: GetGroceryAisleResponseGroceryItem[];
 }
 
-export interface GetGroceryDepartmentResponseGroceryItem {
+export interface GetGroceryAisleResponseGroceryItem {
   /** @format int32 */
   id?: number;
   name?: string;
 }
 
-export interface SaveGroceryDepartmentRequest {
+export interface SaveGroceryAisleRequest {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -318,7 +318,7 @@ export interface GetMealPlanResponseRecipeGroceryItem {
   /** @format int32 */
   order?: number;
   /** @format int32 */
-  groceryDepartmentId?: number | null;
+  groceryAisleId?: number | null;
 }
 
 export interface SaveMealPlanRequest {
@@ -604,7 +604,7 @@ export interface ListGroceryItemsResponse {
   inventoryQuantity?: number;
   pantryLocations?: string[];
   /** @format int32 */
-  groceryDepartmentId?: number | null;
+  groceryAisleId?: number | null;
   /** @format int32 */
   recipeCount?: number;
 }
@@ -622,7 +622,7 @@ export interface GetGroceryItemResponse {
   /** @format date-time */
   modifiedOn?: string;
   recipes?: GetGroceryItemResponseRecipe[];
-  groceryDepartment?: GetGroceryItemResponseGroceryDepartment | null;
+  groceryAisle?: GetGroceryItemResponseGroceryAisle | null;
   pantryLocations?: string[];
 }
 
@@ -634,7 +634,7 @@ export interface GetGroceryItemResponseRecipe {
   image?: string | null;
 }
 
-export interface GetGroceryItemResponseGroceryDepartment {
+export interface GetGroceryItemResponseGroceryAisle {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -649,7 +649,7 @@ export interface SaveGroceryItemRequest {
   /** @format int32 */
   inventoryQuantity?: number;
   /** @format int32 */
-  groceryDepartmentId?: number | null;
+  groceryAisleId?: number | null;
   pantryLocations?: string[];
 }
 
@@ -684,7 +684,7 @@ export interface CategoriesListParams {
   take?: number;
 }
 
-export interface GroceryDepartmentsListParams {
+export interface GroceryAislesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /** Specify to show items that have relations or no relations */

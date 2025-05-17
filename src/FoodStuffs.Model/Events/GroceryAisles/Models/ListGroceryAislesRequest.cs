@@ -1,8 +1,8 @@
 ﻿using VoidCore.Model.Responses.Collections;
 
-namespace FoodStuffs.Model.Events.GroceryDepartments.Models;
+namespace FoodStuffs.Model.Events.GroceryAisles.Models;
 
-public record ListGroceryDepartmentsRequest(
+public record ListGroceryAislesRequest(
     string? NameSearch,
     bool? IsUnused,
     bool IsPagingEnabled,

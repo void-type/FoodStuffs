@@ -43,11 +43,11 @@ public class GetGroceryItemHandler : CustomEventHandlerAbstract<GetGroceryItemRe
                         Slug: r.Slug,
                         Image: r.DefaultImage?.FileName))
                     .OrderBy(r => r.Name)],
-                GroceryDepartment: m.GroceryDepartment is not null
-                    ? new GetGroceryItemResponseGroceryDepartment(
-                        Id: m.GroceryDepartment.Id,
-                        Name: m.GroceryDepartment.Name,
-                        Order: m.GroceryDepartment.Order)
+                GroceryAisle: m.GroceryAisle is not null
+                    ? new GetGroceryItemResponseGroceryAisle(
+                        Id: m.GroceryAisle.Id,
+                        Name: m.GroceryAisle.Name,
+                        Order: m.GroceryAisle.Order)
                     : null,
                 PantryLocations: [.. m.PantryLocations
                     .Select(c => c.Name)

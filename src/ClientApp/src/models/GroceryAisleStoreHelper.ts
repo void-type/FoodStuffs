@@ -1,14 +1,14 @@
-import type { GroceryDepartmentsListParams } from '@/api/data-contracts';
-import GroceryDepartmentsListRequest from './GroceryDepartmentsListRequest';
+import type { GroceryAislesListParams } from '@/api/data-contracts';
+import GroceryAislesListRequest from './GroceryAislesListRequest';
 
-export default function listRequestToQueryParams(listRequest: GroceryDepartmentsListParams) {
+export default function listRequestToQueryParams(listRequest: GroceryAislesListParams) {
   // Query params need to be string or number
   const requestEntries = Object.entries({
     ...listRequest,
   });
 
   const defaultEntries = Object.entries({
-    ...new GroceryDepartmentsListRequest(),
+    ...new GroceryAislesListRequest(),
   });
 
   const cleanedEntries = requestEntries
