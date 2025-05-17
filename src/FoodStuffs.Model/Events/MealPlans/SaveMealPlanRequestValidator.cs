@@ -11,7 +11,7 @@ public class SaveMealPlanRequestValidator : RuleValidatorAbstract<SaveMealPlanRe
         CreateRule(new Failure("Name is required.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
-        CreateRule(new Failure("Excluded grocery items quantity must 1 or greater.", "excludedShoppingItemsQuantity"))
-            .InvalidWhen(entity => entity.ExcludedShoppingItems?.Exists(x => x.Quantity <= 0) ?? false);
+        CreateRule(new Failure("Excluded grocery items quantity must 1 or greater.", "excludedGroceryItemsQuantity"))
+            .InvalidWhen(entity => entity.ExcludedGroceryItems?.Exists(x => x.Quantity <= 0) ?? false);
     }
 }

@@ -29,14 +29,14 @@ public class ListGroceryDepartmentsHandler : CustomEventHandlerAbstract<ListGroc
             .Select(gd => new
             {
                 GroceryDepartment = gd,
-                ShoppingItemCount = gd.ShoppingItems.Count
+                GroceryItemCount = gd.GroceryItems.Count
             })
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(x => new ListGroceryDepartmentsResponse(
                 Id: x.GroceryDepartment.Id,
                 Name: x.GroceryDepartment.Name,
                 Order: x.GroceryDepartment.Order,
-                ShoppingItemCount: x.ShoppingItemCount))
+                GroceryItemCount: x.GroceryItemCount))
             .MapAsync(Ok);
     }
 }

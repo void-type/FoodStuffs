@@ -1,6 +1,6 @@
 import type {
   MealPlansListParams,
-  SaveMealPlanRequestExcludedShoppingItem,
+  SaveMealPlanRequestExcludedGroceryItem,
 } from '@/api/data-contracts';
 import MealPlansListRequest from './MealPlansListRequest';
 import { isNil } from './FormatHelper';
@@ -37,9 +37,9 @@ export function listRequestToQueryParams(listRequest: MealPlansListParams) {
   return Object.fromEntries(cleanedEntries);
 }
 
-export function countShoppingItems(
-  acc: SaveMealPlanRequestExcludedShoppingItem[],
-  curr: SaveMealPlanRequestExcludedShoppingItem
+export function countGroceryItems(
+  acc: SaveMealPlanRequestExcludedGroceryItem[],
+  curr: SaveMealPlanRequestExcludedGroceryItem
 ) {
   const { id, quantity } = curr;
 
@@ -62,43 +62,43 @@ export function countShoppingItems(
   return acc;
 }
 
-export function addShoppingItem(
-  shoppingItems: SaveMealPlanRequestExcludedShoppingItem[],
+export function addGroceryItem(
+  groceryItems: SaveMealPlanRequestExcludedGroceryItem[],
   id: number,
   count = 1
 ) {
-  let shoppingItem = shoppingItems.find((x) => x.id === id);
+  let groceryItem = groceryItems.find((x) => x.id === id);
 
-  if (!shoppingItem) {
-    shoppingItem = { id, quantity: 0 };
-    shoppingItems.push(shoppingItem);
+  if (!groceryItem) {
+    groceryItem = { id, quantity: 0 };
+    groceryItems.push(groceryItem);
   }
 
-  if (shoppingItem.quantity === undefined) {
-    shoppingItem.quantity = 0;
+  if (groceryItem.quantity === undefined) {
+    groceryItem.quantity = 0;
   }
 
-  shoppingItem.quantity += count;
+  groceryItem.quantity += count;
 }
 
-export function subtractShoppingItem(
-  shoppingItems: SaveMealPlanRequestExcludedShoppingItem[],
+export function subtractGroceryItem(
+  groceryItems: SaveMealPlanRequestExcludedGroceryItem[],
   id: number,
   count = 1
 ) {
-  const shoppingItem = shoppingItems.find((x) => x.id === id);
+  const groceryItem = groceryItems.find((x) => x.id === id);
 
-  if (!shoppingItem) {
+  if (!groceryItem) {
     return;
   }
 
-  if (shoppingItem.quantity === undefined) {
-    shoppingItem.quantity = 0;
+  if (groceryItem.quantity === undefined) {
+    groceryItem.quantity = 0;
   }
 
-  shoppingItem.quantity -= count;
+  groceryItem.quantity -= count;
 
-  if (shoppingItem.quantity < 1) {
-    shoppingItems.splice(shoppingItems.indexOf(shoppingItem), 1);
+  if (groceryItem.quantity < 1) {
+    groceryItems.splice(groceryItems.indexOf(groceryItem), 1);
   }
 }

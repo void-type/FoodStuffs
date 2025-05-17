@@ -3,13 +3,13 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
-import MealPlanShoppingItemList from '@/components/MealPlanShoppingItemList.vue';
+import MealPlanGroceryItemList from '@/components/MealPlanGroceryItemList.vue';
 import useMessageStore from '@/stores/messageStore';
 import ApiHelper from '@/models/ApiHelper';
 import { VueDraggable } from 'vue-draggable-plus';
 import type {
   ListGroceryDepartmentsResponse,
-  ListShoppingItemsResponse,
+  ListGroceryItemsResponse,
   GetMealPlanResponseRecipe,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
@@ -85,19 +85,19 @@ async function onDeleteMealPlan() {
   appStore.showModal(parameters);
 }
 
-const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
+const groceryItemOptions = ref([] as Array<ListGroceryItemsResponse>);
 
-async function fetchShoppingItems() {
+async function fetchGroceryItems() {
   try {
-    const response = await api().shoppingItemsList({ isPagingEnabled: false });
-    shoppingItemOptions.value = (response.data.items || []) as Array<ListShoppingItemsResponse>;
+    const response = await api().groceryItemsList({ isPagingEnabled: false });
+    groceryItemOptions.value = (response.data.items || []) as Array<ListGroceryItemsResponse>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
 }
 
-function findShoppingItem(id: number | undefined) {
-  return shoppingItemOptions.value.find((x) => x.id === id);
+function findGroceryItem(id: number | undefined) {
+  return groceryItemOptions.value.find((x) => x.id === id);
 }
 
 const groceryDepartmentOptions = ref([] as Array<ListGroceryDepartmentsResponse>);
@@ -167,7 +167,7 @@ const pageTitle = computed(() => {
 });
 
 onMounted(async () => {
-  await fetchShoppingItems();
+  await fetchGroceryItems();
   await fetchGroceryDepartments();
   initialized.value = true;
 });
@@ -259,22 +259,22 @@ onMounted(async () => {
       </vue-draggable>
       <div class="grid mt-3 gap-sm">
         <div class="g-col-12 g-col-md-6">
-          <MealPlanShoppingItemList
+          <MealPlanGroceryItemList
             title="Shopping List"
-            :shopping-items="shoppingList"
+            :grocery-items="shoppingList"
             :on-item-click="addToPantry"
             :show-copy-list="true"
-            :get-shopping-item-details="findShoppingItem"
+            :get-grocery-item-details="findGroceryItem"
             :get-grocery-department-details="findGroceryDepartment"
           />
         </div>
         <div class="g-col-12 g-col-md-6">
-          <MealPlanShoppingItemList
+          <MealPlanGroceryItemList
             title="Excluded Items"
-            :shopping-items="pantry"
+            :grocery-items="pantry"
             :on-item-click="removeFromPantry"
             :on-clear="clearPantry"
-            :get-shopping-item-details="findShoppingItem"
+            :get-grocery-item-details="findGroceryItem"
             :get-grocery-department-details="findGroceryDepartment"
           />
         </div>

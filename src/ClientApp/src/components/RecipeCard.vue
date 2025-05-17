@@ -55,11 +55,11 @@ function flipCard() {
       </div>
       <div class="card-flip-back card-body d-none">
         <div class="card-flip-back-inner slim-scroll">
-          <div v-if="(recipe.shoppingItems?.length || 0) > 0">
+          <div v-if="(recipe.groceryItems?.length || 0) > 0">
             <div>Grocery Items</div>
             <ul>
-              <li v-for="shoppingItem in recipe.shoppingItems" :key="shoppingItem.name || ''">
-                {{ shoppingItem.quantity }}x {{ shoppingItem.name }}
+              <li v-for="groceryItem in recipe.groceryItems" :key="groceryItem.name || ''">
+                {{ groceryItem.quantity }}x {{ groceryItem.name }}
               </li>
             </ul>
           </div>

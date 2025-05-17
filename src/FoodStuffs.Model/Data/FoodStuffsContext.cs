@@ -25,7 +25,7 @@ public class FoodStuffsContext : DbContext
     public virtual DbSet<Image> Images { get; set; } = null!;
     public virtual DbSet<MealPlan> MealPlans { get; set; } = null!;
     public virtual DbSet<Recipe> Recipes { get; set; } = null!;
-    public virtual DbSet<ShoppingItem> ShoppingItems { get; set; } = null!;
+    public virtual DbSet<GroceryItem> GroceryItems { get; set; } = null!;
     public virtual DbSet<PantryLocation> PantryLocations { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -66,19 +66,19 @@ public class FoodStuffsContext : DbContext
 
         modelBuilder.Entity<MealPlan>(entity => entity.ToTable(nameof(MealPlan)));
 
-        modelBuilder.Entity<MealPlanExcludedShoppingItemRelation>(entity =>
+        modelBuilder.Entity<MealPlanExcludedGroceryItemRelation>(entity =>
         {
-            entity.ToTable(nameof(MealPlanExcludedShoppingItemRelation));
+            entity.ToTable(nameof(MealPlanExcludedGroceryItemRelation));
 
-            entity.HasKey(mp => new { mp.MealPlanId, mp.ShoppingItemId });
+            entity.HasKey(mp => new { mp.MealPlanId, mp.GroceryItemId });
 
             entity.HasOne<MealPlan>()
-                .WithMany(mp => mp.ExcludedShoppingItemRelations)
+                .WithMany(mp => mp.ExcludedGroceryItemRelations)
                 .HasForeignKey(mps => mps.MealPlanId);
 
-            entity.HasOne(mps => mps.ShoppingItem)
+            entity.HasOne(mps => mps.GroceryItem)
                 .WithMany()
-                .HasForeignKey(mps => mps.ShoppingItemId);
+                .HasForeignKey(mps => mps.GroceryItemId);
         });
 
         modelBuilder.Entity<MealPlanRecipeRelation>(entity =>
@@ -124,38 +124,38 @@ public class FoodStuffsContext : DbContext
                     c => c.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"));
         });
 
-        modelBuilder.Entity<RecipeShoppingItemRelation>(entity =>
+        modelBuilder.Entity<RecipeGroceryItemRelation>(entity =>
         {
-            entity.ToTable(nameof(RecipeShoppingItemRelation));
+            entity.ToTable(nameof(RecipeGroceryItemRelation));
 
-            entity.HasKey(mp => new { mp.RecipeId, mp.ShoppingItemId });
+            entity.HasKey(mp => new { mp.RecipeId, mp.GroceryItemId });
 
             entity.HasOne<Recipe>()
-                .WithMany(r => r.ShoppingItemRelations)
+                .WithMany(r => r.GroceryItemRelations)
                 .HasForeignKey(rsi => rsi.RecipeId);
 
-            entity.HasOne(rsi => rsi.ShoppingItem)
+            entity.HasOne(rsi => rsi.GroceryItem)
                 .WithMany()
-                .HasForeignKey(rsi => rsi.ShoppingItemId);
+                .HasForeignKey(rsi => rsi.GroceryItemId);
         });
 
-        modelBuilder.Entity<ShoppingItem>(entity =>
+        modelBuilder.Entity<GroceryItem>(entity =>
         {
-            entity.ToTable(nameof(ShoppingItem));
+            entity.ToTable(nameof(GroceryItem));
 
             entity.HasMany(si => si.Recipes)
                 .WithMany()
-                .UsingEntity<RecipeShoppingItemRelation>();
+                .UsingEntity<RecipeGroceryItemRelation>();
 
             entity.HasIndex(si => si.Name)
                 .IsUnique();
 
             entity.HasMany(r => r.PantryLocations)
-                .WithMany(i => i.ShoppingItems)
+                .WithMany(i => i.GroceryItems)
                 .UsingEntity<Dictionary<string, object>>(
-                    "ShoppingItemPantryLocationRelation",
+                    "GroceryItemPantryLocationRelation",
                     r => r.HasOne<PantryLocation>().WithMany().HasForeignKey("PantryLocationId"),
-                    c => c.HasOne<ShoppingItem>().WithMany().HasForeignKey("ShoppingItemId"));
+                    c => c.HasOne<GroceryItem>().WithMany().HasForeignKey("GroceryItemId"));
         });
     }
 

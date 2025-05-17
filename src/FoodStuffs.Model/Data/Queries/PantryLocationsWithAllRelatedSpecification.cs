@@ -9,6 +9,6 @@ public class PantryLocationsWithAllRelatedSpecification : QuerySpecificationAbst
     {
         AddOrderBy(r => r.Id);
         AddCriteria(r => r.Id == id);
-        AddInclude(nameof(PantryLocation.ShoppingItems));
+        AddInclude(nameof(PantryLocation.GroceryItems));
     }
 }

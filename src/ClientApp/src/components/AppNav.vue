@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import useShoppingItemStore from '@/stores/shoppingItemStore';
+import useGroceryItemStore from '@/stores/groceryItemStore';
 import useCategoryStore from '@/stores/categoryStore';
 import usePantryLocationStore from '@/stores/pantryLocationStore';
 import useGroceryDepartmentStore from '@/stores/groceryDepartmentStore';
@@ -12,7 +12,7 @@ import { storeToRefs } from 'pinia';
 
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
-const shoppingItemStore = useShoppingItemStore();
+const groceryItemStore = useGroceryItemStore();
 const categoryStore = useCategoryStore();
 const pantryLocationStore = usePantryLocationStore();
 const groceryDepartmentStore = useGroceryDepartmentStore();
@@ -71,7 +71,7 @@ const { recentRecipes } = storeToRefs(recipeStore);
         <li><hr class="dropdown-divider" /></li>
         <li>
           <router-link
-            :to="{ name: 'shoppingItemList', query: shoppingItemStore.currentQueryParams }"
+            :to="{ name: 'groceryItemList', query: groceryItemStore.currentQueryParams }"
             class="dropdown-item"
             >Grocery Items</router-link
           >

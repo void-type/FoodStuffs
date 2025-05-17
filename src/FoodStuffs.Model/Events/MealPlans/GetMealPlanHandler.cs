@@ -35,10 +35,10 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                ExcludedShoppingItems: m.ExcludedShoppingItemRelations
+                ExcludedGroceryItems: m.ExcludedGroceryItemRelations
                     .ConvertAll(i =>
-                        new GetMealPlanResponseExcludedShoppingItem(
-                            Id: i.ShoppingItem.Id,
+                        new GetMealPlanResponseExcludedGroceryItem(
+                            Id: i.GroceryItem.Id,
                             Quantity: i.Quantity)
                     ),
                 Recipes: [.. m.RecipeRelations
@@ -49,15 +49,15 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                         IsComplete: rel.IsComplete,
                         Image: rel.Recipe.DefaultImage?.FileName,
                         Categories: [.. rel.Recipe.Categories.ConvertAll(c => c.Name)],
-                        ShoppingItems: [.. rel.Recipe.ShoppingItemRelations
+                        GroceryItems: [.. rel.Recipe.GroceryItemRelations
                             .Select(i =>
-                                new GetMealPlanResponseRecipeShoppingItem(
-                                    Id: i.ShoppingItem.Id,
-                                    Name: i.ShoppingItem.Name,
-                                    InventoryQuantity: i.ShoppingItem.InventoryQuantity,
+                                new GetMealPlanResponseRecipeGroceryItem(
+                                    Id: i.GroceryItem.Id,
+                                    Name: i.GroceryItem.Name,
+                                    InventoryQuantity: i.GroceryItem.InventoryQuantity,
                                     Quantity: i.Quantity,
                                     Order: i.Order,
-                                    GroceryDepartmentId: i.ShoppingItem?.GroceryDepartment?.Id)
+                                    GroceryDepartmentId: i.GroceryItem?.GroceryDepartment?.Id)
                             )
                             .OrderBy(i => i.Order)]))
                     .OrderBy(rel => rel.Order)]));

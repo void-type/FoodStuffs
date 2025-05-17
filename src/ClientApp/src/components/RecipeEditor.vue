@@ -3,7 +3,7 @@ import RecipeWorking from '@/models/RecipeWorking';
 import type {
   GetRecipeResponse,
   IItemSetOfIFailure,
-  ListShoppingItemsResponse,
+  ListGroceryItemsResponse,
 } from '@/api/data-contracts';
 import { isNil, trimAndTitleCase } from '@/models/FormatHelper';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
@@ -13,12 +13,12 @@ import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
-import RecipeShoppingItemWorking from '@/models/RecipeShoppingItemWorking';
+import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
-import RecipeEditorShoppingItems from './RecipeEditorShoppingItems.vue';
+import RecipeEditorGroceryItems from './RecipeEditorGroceryItems.vue';
 import RichTextEditor from './RichTextEditor.vue';
 
 const props = defineProps({
@@ -69,12 +69,12 @@ async function fetchCategories() {
   }
 }
 
-const shoppingItemOptions = ref([] as Array<ListShoppingItemsResponse>);
+const groceryItemOptions = ref([] as Array<ListGroceryItemsResponse>);
 
-async function fetchShoppingItems() {
+async function fetchGroceryItems() {
   try {
-    const response = await api().shoppingItemsList({ isPagingEnabled: false });
-    shoppingItemOptions.value = (response.data.items || []) as Array<ListShoppingItemsResponse>;
+    const response = await api().groceryItemsList({ isPagingEnabled: false });
+    groceryItemOptions.value = (response.data.items || []) as Array<ListGroceryItemsResponse>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -94,19 +94,19 @@ function reset() {
     }
   });
 
-  const shoppingItems = (props.sourceRecipe.shoppingItems || []).map((x) => ({
-    ...new RecipeShoppingItemWorking(),
+  const groceryItems = (props.sourceRecipe.groceryItems || []).map((x) => ({
+    ...new RecipeGroceryItemWorking(),
     ...x,
   }));
 
-  shoppingItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+  groceryItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const newWorking: RecipeWorking = {
     ...newWorkingClass,
     ...sourceCopy,
     directions: props.sourceRecipe.directions || '',
     sides: props.sourceRecipe.sides || '',
-    shoppingItems,
+    groceryItems,
   };
 
   data.workingRecipeInitial = JSON.stringify(newWorking);
@@ -114,14 +114,14 @@ function reset() {
   data.workingRecipe = newWorking;
 }
 
-async function createShoppingItem(name: string) {
+async function createGroceryItem(name: string) {
   try {
-    const response = await api().shoppingItemsSave({ name, pantryLocations: [] });
+    const response = await api().groceryItemsSave({ name, pantryLocations: [] });
 
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
     }
-    await fetchShoppingItems();
+    await fetchGroceryItems();
     return response.data.id;
   } catch (error) {
     const response = error as HttpResponse<unknown, unknown>;
@@ -131,7 +131,7 @@ async function createShoppingItem(name: string) {
     if (typeof failureSet !== 'undefined' && failureSet !== null) {
       failureSet.items?.forEach((failure) => {
         // eslint-disable-next-line no-param-reassign
-        failure.uiHandle = `shoppingItems-${failure.uiHandle}`;
+        failure.uiHandle = `groceryItems-${failure.uiHandle}`;
       });
     }
 
@@ -167,7 +167,7 @@ function removeCategory(categoryName: string) {
 async function saveClick() {
   await props.onRecipeSave(data.workingRecipe);
   fetchCategories();
-  fetchShoppingItems();
+  fetchGroceryItems();
   await mealPlanStore.setCurrentMealPlan(getCurrentMealPlanFromStorage());
 }
 
@@ -181,14 +181,14 @@ watch(
 
 const isRecipeDirty = computed(() => {
   const working: RecipeWorking = JSON.parse(JSON.stringify(data.workingRecipe));
-  working.shoppingItems.forEach((x) => {
+  working.groceryItems.forEach((x) => {
     // eslint-disable-next-line no-param-reassign
     delete x.inventoryQuantity;
   });
   const workingJson = JSON.stringify(working);
 
   const initial: RecipeWorking = JSON.parse(data.workingRecipeInitial);
-  initial.shoppingItems?.forEach((x) => {
+  initial.groceryItems?.forEach((x) => {
     // eslint-disable-next-line no-param-reassign
     delete x.inventoryQuantity;
   });
@@ -203,7 +203,7 @@ watch(isRecipeDirty, () => {
 
 onMounted(async () => {
   fetchCategories();
-  fetchShoppingItems();
+  fetchGroceryItems();
 });
 </script>
 
@@ -286,12 +286,12 @@ onMounted(async () => {
         </div>
       </div>
       <div class="g-col-12 g-col-md-6">
-        <label for="shopping-item-list" class="form-label">Grocery items</label>
-        <RecipeEditorShoppingItems
-          v-model="data.workingRecipe.shoppingItems as RecipeShoppingItemWorking[]"
+        <label for="grocery-item-list" class="form-label">Grocery items</label>
+        <RecipeEditorGroceryItems
+          v-model="data.workingRecipe.groceryItems as RecipeGroceryItemWorking[]"
           :is-field-in-error="messageStore.isFieldInError"
-          :suggestions="shoppingItemOptions"
-          :on-create-item="createShoppingItem"
+          :suggestions="groceryItemOptions"
+          :on-create-item="createGroceryItem"
         />
       </div>
       <div class="g-col-12 g-col-md-6">

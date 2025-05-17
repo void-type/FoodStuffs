@@ -9,6 +9,6 @@ public class GroceryDepartmentsWithAllRelatedSpecification : QuerySpecificationA
     {
         AddOrderBy(r => r.Id);
         AddCriteria(r => r.Id == id);
-        AddInclude(nameof(GroceryDepartment.ShoppingItems));
+        AddInclude(nameof(GroceryDepartment.GroceryItems));
     }
 }

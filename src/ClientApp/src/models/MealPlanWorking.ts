@@ -1,6 +1,6 @@
 import type {
   SaveMealPlanRequest,
-  SaveMealPlanRequestExcludedShoppingItem,
+  SaveMealPlanRequestExcludedGroceryItem,
   SaveMealPlanRequestRecipe,
 } from '@/api/data-contracts';
 import DateHelper from '@/models/DateHelper';
@@ -20,7 +20,7 @@ export default class MealPlanWorking implements SaveMealPlanRequest {
 
   public recipes: SaveMealPlanRequestRecipe[] = [];
 
-  public excludedShoppingItems: SaveMealPlanRequestExcludedShoppingItem[] = [];
+  public excludedGroceryItems: SaveMealPlanRequestExcludedGroceryItem[] = [];
 
   public static createForStore() {
     const newPlan = new MealPlanWorking();

@@ -12,7 +12,7 @@ public class RecipesWithAllRelatedSpecification : QuerySpecificationAbstract<Rec
         AddInclude(nameof(Recipe.PinnedImage));
         AddInclude(nameof(Recipe.Images));
         AddInclude(nameof(Recipe.Categories));
-        AddInclude($"{nameof(Recipe.ShoppingItemRelations)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}");
+        AddInclude($"{nameof(Recipe.GroceryItemRelations)}.{nameof(RecipeGroceryItemRelation.GroceryItem)}");
     }
 
     public RecipesWithAllRelatedSpecification(int id) : this()

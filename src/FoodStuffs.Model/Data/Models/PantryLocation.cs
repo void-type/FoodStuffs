@@ -16,5 +16,5 @@ public class PantryLocation : IAuditableWithOffset
 
     public DateTimeOffset ModifiedOn { get; set; }
 
-    public virtual List<ShoppingItem> ShoppingItems { get; } = [];
+    public virtual List<GroceryItem> GroceryItems { get; } = [];
 }

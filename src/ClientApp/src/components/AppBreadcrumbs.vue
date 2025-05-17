@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import useRecipeStore from '@/stores/recipeStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import useShoppingItemStore from '@/stores/shoppingItemStore';
+import useGroceryItemStore from '@/stores/groceryItemStore';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
-const shoppingItemStore = useShoppingItemStore();
+const groceryItemStore = useGroceryItemStore();
 
 const breadcrumbs = computed(() => {
   const matched = route.matched
@@ -26,8 +26,8 @@ const breadcrumbs = computed(() => {
         routeData.query = recipeStore.currentQueryParams;
       } else if (name === 'mealPlanList') {
         routeData.query = mealPlanStore.currentQueryParams;
-      } else if (name === 'shoppingItemList') {
-        routeData.query = shoppingItemStore.currentQueryParams;
+      } else if (name === 'groceryItemList') {
+        routeData.query = groceryItemStore.currentQueryParams;
       }
 
       return {

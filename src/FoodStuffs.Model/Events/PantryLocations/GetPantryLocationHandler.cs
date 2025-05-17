@@ -35,8 +35,8 @@ public class GetPantryLocationHandler : CustomEventHandlerAbstract<GetPantryLoca
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                ShoppingItems: [.. m.ShoppingItems
-                    .Select(r => new GetPantryLocationResponseShoppingItem(
+                GroceryItems: [.. m.GroceryItems
+                    .Select(r => new GetPantryLocationResponseGroceryItem(
                         Id: r.Id,
                         Name: r.Name))
                     .OrderBy(r => r.Name)]));

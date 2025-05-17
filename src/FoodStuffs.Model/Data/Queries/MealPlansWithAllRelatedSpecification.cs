@@ -11,12 +11,12 @@ public class MealPlansWithAllRelatedSpecification : QuerySpecificationAbstract<M
 
         AddCriteria(r => r.Id == id);
 
-        AddInclude($"{nameof(MealPlan.ExcludedShoppingItemRelations)}.{nameof(MealPlanExcludedShoppingItemRelation.ShoppingItem)}");
+        AddInclude($"{nameof(MealPlan.ExcludedGroceryItemRelations)}.{nameof(MealPlanExcludedGroceryItemRelation.GroceryItem)}");
 
         var recipe = $"{nameof(MealPlan.RecipeRelations)}.{nameof(MealPlanRecipeRelation.Recipe)}";
         AddInclude($"{recipe}.{nameof(Recipe.Categories)}");
         AddInclude($"{recipe}.{nameof(Recipe.Images)}");
         AddInclude($"{recipe}.{nameof(Recipe.PinnedImage)}");
-        AddInclude($"{recipe}.{nameof(Recipe.ShoppingItemRelations)}.{nameof(RecipeShoppingItemRelation.ShoppingItem)}.{nameof(ShoppingItem.GroceryDepartment)}");
+        AddInclude($"{recipe}.{nameof(Recipe.GroceryItemRelations)}.{nameof(RecipeGroceryItemRelation.GroceryItem)}.{nameof(GroceryItem.GroceryDepartment)}");
     }
 }

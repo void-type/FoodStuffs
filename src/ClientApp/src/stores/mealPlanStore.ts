@@ -1,6 +1,6 @@
 import type {
   GetMealPlanResponse,
-  GetMealPlanResponseExcludedShoppingItem,
+  GetMealPlanResponseExcludedGroceryItem,
   IItemSetOfListMealPlansResponse,
   MealPlansListParams,
 } from '@/api/data-contracts';
@@ -12,11 +12,11 @@ import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import {
-  addShoppingItem,
-  countShoppingItems,
+  addGroceryItem,
+  countGroceryItems,
   listRequestToQueryParams,
   storeCurrentMealPlanInStorage,
-  subtractShoppingItem,
+  subtractGroceryItem,
 } from '@/models/MealPlanStoreHelper';
 import useMessageStore from './messageStore';
 
@@ -45,7 +45,7 @@ export default defineStore('mealPlan', {
   getters: {
     currentRecipes: (state) => state.currentMealPlan.recipes || [],
 
-    currentPantry: (state) => state.currentMealPlan.excludedShoppingItems || [],
+    currentPantry: (state) => state.currentMealPlan.excludedGroceryItems || [],
 
     currentRecipesContains: (state) => (recipeId: number | null | undefined) => {
       if (isNil(recipeId)) {
@@ -55,20 +55,20 @@ export default defineStore('mealPlan', {
       return (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId!);
     },
 
-    currentShoppingList(state): GetMealPlanResponseExcludedShoppingItem[] {
-      const shoppingItemCounts = this.currentRecipes
-        .flatMap((c) => c.shoppingItems || [])
-        .reduce(countShoppingItems, []);
+    currentShoppingList(state): GetMealPlanResponseExcludedGroceryItem[] {
+      const groceryItemCounts = this.currentRecipes
+        .flatMap((c) => c.groceryItems || [])
+        .reduce(countGroceryItems, []);
 
-      (state.currentMealPlan.excludedShoppingItems || []).forEach((x) => {
+      (state.currentMealPlan.excludedGroceryItems || []).forEach((x) => {
         if (!x.id) {
           return;
         }
 
-        subtractShoppingItem(shoppingItemCounts, x.id, x.quantity);
+        subtractGroceryItem(groceryItemCounts, x.id, x.quantity);
       });
 
-      return shoppingItemCounts;
+      return groceryItemCounts;
     },
 
     currentQueryParams(state) {
@@ -79,21 +79,21 @@ export default defineStore('mealPlan', {
   },
 
   actions: {
-    async addToCurrentPantry(shoppingItemId: number | undefined, count = 1) {
-      if (this.currentMealPlan === null || isNil(shoppingItemId)) {
+    async addToCurrentPantry(groceryItemId: number | undefined, count = 1) {
+      if (this.currentMealPlan === null || isNil(groceryItemId)) {
         return;
       }
 
-      addShoppingItem(this.currentMealPlan.excludedShoppingItems || [], shoppingItemId, count);
+      addGroceryItem(this.currentMealPlan.excludedGroceryItems || [], groceryItemId, count);
       await this.saveCurrentMealPlan([], true);
     },
 
-    async removeFromCurrentPantry(shoppingItemId: number | undefined, count = 1) {
-      if (this.currentMealPlan === null || isNil(shoppingItemId)) {
+    async removeFromCurrentPantry(groceryItemId: number | undefined, count = 1) {
+      if (this.currentMealPlan === null || isNil(groceryItemId)) {
         return;
       }
 
-      subtractShoppingItem(this.currentMealPlan.excludedShoppingItems || [], shoppingItemId, count);
+      subtractGroceryItem(this.currentMealPlan.excludedGroceryItems || [], groceryItemId, count);
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -102,7 +102,7 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      this.currentMealPlan.excludedShoppingItems = [];
+      this.currentMealPlan.excludedGroceryItems = [];
       await this.saveCurrentMealPlan([], true);
     },
 
@@ -198,7 +198,7 @@ export default defineStore('mealPlan', {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
-        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry shoppingItems.
+        // Quick save can be used for rapid changes that don't need refreshed data returned like updating pantry groceryItems.
         if (!quickSave) {
           await this.setCurrentMealPlan(response.data.id);
           await this.fetchMealPlanList();

@@ -48,11 +48,11 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                 Categories: [.. r.Categories
                     .Select(c => c.Name)
                     .Order(StringComparer.Ordinal)],
-                ShoppingItems: [.. r.ShoppingItemRelations
-                    .Select(i => new GetRecipeResponseShoppingItem(
-                        Id: i.ShoppingItem.Id,
-                        Name: i.ShoppingItem.Name,
-                        InventoryQuantity: i.ShoppingItem.InventoryQuantity,
+                GroceryItems: [.. r.GroceryItemRelations
+                    .Select(i => new GetRecipeResponseGroceryItem(
+                        Id: i.GroceryItem.Id,
+                        Name: i.GroceryItem.Name,
+                        InventoryQuantity: i.GroceryItem.InventoryQuantity,
                         Quantity: i.Quantity,
                         Order: i.Order))
                     .OrderBy(i => i.Order)]

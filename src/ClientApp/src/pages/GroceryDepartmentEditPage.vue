@@ -285,10 +285,10 @@ onBeforeUnmount(() => {
           />
         </div>
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
-        <div v-if="data.source.shoppingItems?.length" class="g-col-12 g-col-md-6">
+        <div v-if="data.source.groceryItems?.length" class="g-col-12 g-col-md-6">
           Used in grocery items
           <ul>
-            <li v-for="recipe in data.source.shoppingItems" :key="recipe.id">
+            <li v-for="recipe in data.source.groceryItems" :key="recipe.id">
               <router-link :to="RouterHelper.viewRecipe(recipe)">
                 {{ recipe.name }}
               </router-link>

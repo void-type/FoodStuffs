@@ -7,4 +7,4 @@ public record GetPantryLocationResponse(
     DateTimeOffset CreatedOn,
     string ModifiedBy,
     DateTimeOffset ModifiedOn,
-    List<GetPantryLocationResponseShoppingItem> ShoppingItems);
+    List<GetPantryLocationResponseGroceryItem> GroceryItems);

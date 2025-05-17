@@ -19,7 +19,7 @@ public class DeletePantryLocationHandler : CustomEventHandlerAbstract<DeletePant
     {
         return await _data.PantryLocations
             .TagWith(GetTag())
-            .Include(c => c.ShoppingItems)
+            .Include(c => c.GroceryItems)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new PantryLocationNotFoundFailure())

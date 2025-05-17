@@ -19,7 +19,7 @@ public class DeleteGroceryDepartmentHandler : CustomEventHandlerAbstract<DeleteG
     {
         return await _data.GroceryDepartments
             .TagWith(GetTag())
-            .Include(c => c.ShoppingItems)
+            .Include(c => c.GroceryItems)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new GroceryDepartmentNotFoundFailure())

@@ -200,7 +200,7 @@ watch(
               {{ pantryLocation.name }}
             </router-link>
           </td>
-          <td>{{ pantryLocation.shoppingItemCount }}</td>
+          <td>{{ pantryLocation.groceryItemCount }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"

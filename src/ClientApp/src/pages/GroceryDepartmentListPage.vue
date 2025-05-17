@@ -206,7 +206,7 @@ watch(
             </router-link>
           </td>
           <td>{{ groceryDepartment.order }}</td>
-          <td>{{ groceryDepartment.shoppingItemCount }}</td>
+          <td>{{ groceryDepartment.groceryItemCount }}</td>
           <td>
             <button
               class="btn btn-sm btn-danger"

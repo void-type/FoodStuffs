@@ -24,7 +24,7 @@ public class PantryLocationsSpecification : QuerySpecificationAbstract<PantryLoc
 
     public PantryLocationsSpecification(ListPantryLocationsRequest request) : this(criteria: [])
     {
-        AddInclude(nameof(PantryLocation.ShoppingItems));
+        AddInclude(nameof(PantryLocation.GroceryItems));
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
         // Need to use Linq methods for EF
@@ -42,7 +42,7 @@ public class PantryLocationsSpecification : QuerySpecificationAbstract<PantryLoc
 
         if (request.IsUnused is not null)
         {
-            AddCriteria(m => m.ShoppingItems.Any() != request.IsUnused);
+            AddCriteria(m => m.GroceryItems.Any() != request.IsUnused);
         }
 
 #pragma warning restore CA1860 // Avoid using 'Enumerable.Any()' extension method

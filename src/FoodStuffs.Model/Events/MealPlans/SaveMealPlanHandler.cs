@@ -43,7 +43,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         Transfer(request, mealPlanToEdit);
         await ManageRecipesAsync(request, mealPlanToEdit, cancellationToken);
-        await ManageExcludedShoppingItemsAsync(request, mealPlanToEdit, cancellationToken);
+        await ManageExcludedGroceryItemsAsync(request, mealPlanToEdit, cancellationToken);
 
         if (maybeMealPlan.HasValue)
         {
@@ -108,23 +108,23 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
             });
     }
 
-    private async Task ManageExcludedShoppingItemsAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    private async Task ManageExcludedGroceryItemsAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
     {
-        var requestedItemIds = request.ExcludedShoppingItems
+        var requestedItemIds = request.ExcludedGroceryItems
             .Select(x => x.Id)
             .ToArray();
 
         // Remove extra items.
-        mealPlan.ExcludedShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
+        mealPlan.ExcludedGroceryItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.GroceryItem.Id));
 
         // Add missing items. We'll let the database throw when ID's don't exist.
         var missingItemIds = requestedItemIds
-            .Where(x => !mealPlan.ExcludedShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x))
+            .Where(x => !mealPlan.ExcludedGroceryItemRelations.Select(x => x.GroceryItem.Id).Contains(x))
             .ToList();
 
-        var specification = new ShoppingItemsSpecification(missingItemIds);
+        var specification = new GroceryItemsSpecification(missingItemIds);
 
-        var missingItems = await _data.ShoppingItems
+        var missingItems = await _data.GroceryItems
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);
@@ -132,19 +132,19 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         var missingItemRelations = missingItems
             .Select(item =>
             {
-                return new MealPlanExcludedShoppingItemRelation
+                return new MealPlanExcludedGroceryItemRelation
                 {
-                    ShoppingItem = item
+                    GroceryItem = item
                 };
             });
 
-        mealPlan.ExcludedShoppingItemRelations.AddRange(missingItemRelations);
+        mealPlan.ExcludedGroceryItemRelations.AddRange(missingItemRelations);
 
         // Set properties
-        foreach (var item in mealPlan.ExcludedShoppingItemRelations)
+        foreach (var item in mealPlan.ExcludedGroceryItemRelations)
         {
-            var requestedItem = request.ExcludedShoppingItems
-                .Find(x => x.Id == item.ShoppingItem.Id);
+            var requestedItem = request.ExcludedGroceryItems
+                .Find(x => x.Id == item.GroceryItem.Id);
 
             if (requestedItem == null)
             {

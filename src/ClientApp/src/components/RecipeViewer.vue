@@ -149,14 +149,14 @@ onMounted(() => {
     <div v-if="!isNil(recipe.sides)" :class="{ 'form-control-plaintext p-0': true }">
       {{ recipe.sides }}
     </div>
-    <h2 v-if="(recipe.shoppingItems?.length || 0) > 0" class="mt-3 mb-0 d-print-none">
+    <h2 v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-3 mb-0 d-print-none">
       Grocery Items
     </h2>
     <div class="badge p-0 mb-2 text-muted">
       <small>Not printed.</small>
     </div>
     <ul>
-      <li v-for="item in recipe.shoppingItems || []" :key="item.id">
+      <li v-for="item in recipe.groceryItems || []" :key="item.id">
         {{ item.quantity }}x {{ item.name }}
       </li>
     </ul>

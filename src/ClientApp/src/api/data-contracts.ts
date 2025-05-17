@@ -196,7 +196,7 @@ export interface ListGroceryDepartmentsResponse {
   /** @format int32 */
   order?: number;
   /** @format int32 */
-  shoppingItemCount?: number;
+  groceryItemCount?: number;
 }
 
 export interface GetGroceryDepartmentResponse {
@@ -211,10 +211,10 @@ export interface GetGroceryDepartmentResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  shoppingItems?: GetGroceryDepartmentResponseShoppingItem[];
+  groceryItems?: GetGroceryDepartmentResponseGroceryItem[];
 }
 
-export interface GetGroceryDepartmentResponseShoppingItem {
+export interface GetGroceryDepartmentResponseGroceryItem {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -284,11 +284,11 @@ export interface GetMealPlanResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  excludedShoppingItems?: GetMealPlanResponseExcludedShoppingItem[];
+  excludedGroceryItems?: GetMealPlanResponseExcludedGroceryItem[];
   recipes?: GetMealPlanResponseRecipe[];
 }
 
-export interface GetMealPlanResponseExcludedShoppingItem {
+export interface GetMealPlanResponseExcludedGroceryItem {
   /** @format int32 */
   id?: number;
   /** @format decimal */
@@ -304,10 +304,10 @@ export interface GetMealPlanResponseRecipe {
   isComplete?: boolean;
   image?: string | null;
   categories?: string[];
-  shoppingItems?: GetMealPlanResponseRecipeShoppingItem[];
+  groceryItems?: GetMealPlanResponseRecipeGroceryItem[];
 }
 
-export interface GetMealPlanResponseRecipeShoppingItem {
+export interface GetMealPlanResponseRecipeGroceryItem {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -325,11 +325,11 @@ export interface SaveMealPlanRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  excludedShoppingItems?: SaveMealPlanRequestExcludedShoppingItem[];
+  excludedGroceryItems?: SaveMealPlanRequestExcludedGroceryItem[];
   recipes?: SaveMealPlanRequestRecipe[];
 }
 
-export interface SaveMealPlanRequestExcludedShoppingItem {
+export interface SaveMealPlanRequestExcludedGroceryItem {
   /** @format int32 */
   id?: number;
   /** @format int32 */
@@ -377,7 +377,7 @@ export interface ListPantryLocationsResponse {
   id?: number;
   name?: string;
   /** @format int32 */
-  shoppingItemCount?: number;
+  groceryItemCount?: number;
 }
 
 export interface GetPantryLocationResponse {
@@ -390,10 +390,10 @@ export interface GetPantryLocationResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  shoppingItems?: GetPantryLocationResponseShoppingItem[];
+  groceryItems?: GetPantryLocationResponseGroceryItem[];
 }
 
-export interface GetPantryLocationResponseShoppingItem {
+export interface GetPantryLocationResponseGroceryItem {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -448,11 +448,11 @@ export interface SearchRecipesResultItem {
   createdOn?: string;
   slug?: string;
   categories?: string[];
-  shoppingItems?: SearchRecipesResultItemShoppingItem[];
+  groceryItems?: SearchRecipesResultItemGroceryItem[];
   image?: string | null;
 }
 
-export interface SearchRecipesResultItemShoppingItem {
+export interface SearchRecipesResultItemGroceryItem {
   name?: string;
   /** @format int32 */
   quantity?: number;
@@ -529,10 +529,10 @@ export interface GetRecipeResponse {
   pinnedImage?: string | null;
   images?: string[];
   categories?: string[];
-  shoppingItems?: GetRecipeResponseShoppingItem[];
+  groceryItems?: GetRecipeResponseGroceryItem[];
 }
 
-export interface GetRecipeResponseShoppingItem {
+export interface GetRecipeResponseGroceryItem {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -555,11 +555,11 @@ export interface SaveRecipeRequest {
   /** @format int32 */
   prepTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
-  shoppingItems?: SaveRecipeRequestShoppingItem[];
+  groceryItems?: SaveRecipeRequestGroceryItem[];
   categories?: string[];
 }
 
-export interface SaveRecipeRequestShoppingItem {
+export interface SaveRecipeRequestGroceryItem {
   /** @format int32 */
   id?: number;
   /** @format int32 */
@@ -569,14 +569,14 @@ export interface SaveRecipeRequestShoppingItem {
 }
 
 /** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListShoppingItemsResponse {
+export interface IItemSetOfListGroceryItemsResponse {
   /**
    * The count of items in this set.
    * @format int32
    */
   count?: number;
   /** The items in this set. */
-  items?: ListShoppingItemsResponse[];
+  items?: ListGroceryItemsResponse[];
   /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
   /**
@@ -596,7 +596,7 @@ export interface IItemSetOfListShoppingItemsResponse {
   totalCount?: number;
 }
 
-export interface ListShoppingItemsResponse {
+export interface ListGroceryItemsResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -609,7 +609,7 @@ export interface ListShoppingItemsResponse {
   recipeCount?: number;
 }
 
-export interface GetShoppingItemResponse {
+export interface GetGroceryItemResponse {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -621,12 +621,12 @@ export interface GetShoppingItemResponse {
   modifiedBy?: string;
   /** @format date-time */
   modifiedOn?: string;
-  recipes?: GetShoppingItemResponseRecipe[];
-  groceryDepartment?: GetShoppingItemResponseGroceryDepartment | null;
+  recipes?: GetGroceryItemResponseRecipe[];
+  groceryDepartment?: GetGroceryItemResponseGroceryDepartment | null;
   pantryLocations?: string[];
 }
 
-export interface GetShoppingItemResponseRecipe {
+export interface GetGroceryItemResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -634,7 +634,7 @@ export interface GetShoppingItemResponseRecipe {
   image?: string | null;
 }
 
-export interface GetShoppingItemResponseGroceryDepartment {
+export interface GetGroceryItemResponseGroceryDepartment {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -642,7 +642,7 @@ export interface GetShoppingItemResponseGroceryDepartment {
   order?: number;
 }
 
-export interface SaveShoppingItemRequest {
+export interface SaveGroceryItemRequest {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -653,7 +653,7 @@ export interface SaveShoppingItemRequest {
   pantryLocations?: string[];
 }
 
-export interface SaveShoppingItemInventoryRequest {
+export interface SaveGroceryItemInventoryRequest {
   /** @format int32 */
   id?: number;
   /** @format int32 */
@@ -811,7 +811,7 @@ export interface RecipesSuggestParams {
   take?: number;
 }
 
-export interface ShoppingItemsListParams {
+export interface GroceryItemsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
   /** Specify to show items that have relations or no relations */

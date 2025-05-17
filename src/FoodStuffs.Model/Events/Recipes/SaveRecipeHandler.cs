@@ -65,7 +65,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         await ManageCategoriesAsync(request, recipeToEdit, cancellationToken);
 
-        await ManageShoppingItemsAsync(request, recipeToEdit, cancellationToken);
+        await ManageGroceryItemsAsync(request, recipeToEdit, cancellationToken);
 
         if (maybeRecipe.HasValue)
         {
@@ -127,23 +127,23 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         recipe.Categories.AddRange(createdCategories);
     }
 
-    private async Task ManageShoppingItemsAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
+    private async Task ManageGroceryItemsAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
     {
-        var requestedItemIds = request.ShoppingItems
+        var requestedItemIds = request.GroceryItems
            .Select(x => x.Id)
            .ToArray();
 
         // Remove extra items.
-        recipe.ShoppingItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.ShoppingItem.Id));
+        recipe.GroceryItemRelations.RemoveAll(x => !requestedItemIds.Contains(x.GroceryItem.Id));
 
         // Relate missing items.
         var missingItemIds = requestedItemIds
-            .Where(x => !recipe.ShoppingItemRelations.Select(x => x.ShoppingItem.Id).Contains(x))
+            .Where(x => !recipe.GroceryItemRelations.Select(x => x.GroceryItem.Id).Contains(x))
             .ToList();
 
-        var specification = new ShoppingItemsSpecification(missingItemIds);
+        var specification = new GroceryItemsSpecification(missingItemIds);
 
-        var missingItems = await _data.ShoppingItems
+        var missingItems = await _data.GroceryItems
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);
@@ -151,19 +151,19 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         var missingItemRelations = missingItems
             .Select(item =>
             {
-                return new RecipeShoppingItemRelation
+                return new RecipeGroceryItemRelation
                 {
-                    ShoppingItem = item
+                    GroceryItem = item
                 };
             });
 
-        recipe.ShoppingItemRelations.AddRange(missingItemRelations);
+        recipe.GroceryItemRelations.AddRange(missingItemRelations);
 
         // Set properties
-        foreach (var item in recipe.ShoppingItemRelations)
+        foreach (var item in recipe.GroceryItemRelations)
         {
-            var requestedItem = request.ShoppingItems
-                .Find(x => x.Id == item.ShoppingItem.Id);
+            var requestedItem = request.GroceryItems
+                .Find(x => x.Id == item.GroceryItem.Id);
 
             if (requestedItem == null)
             {

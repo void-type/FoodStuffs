@@ -1,6 +1,6 @@
 import type {
   GetGroceryDepartmentResponse,
-  GetGroceryDepartmentResponseShoppingItem,
+  GetGroceryDepartmentResponseGroceryItem,
 } from '@/api/data-contracts';
 
 export default class GroceryDepartmentGetResponse implements GetGroceryDepartmentResponse {
@@ -18,5 +18,5 @@ export default class GroceryDepartmentGetResponse implements GetGroceryDepartmen
 
   public modifiedOn = '';
 
-  public recipes: GetGroceryDepartmentResponseShoppingItem[] = [];
+  public recipes: GetGroceryDepartmentResponseGroceryItem[] = [];
 }

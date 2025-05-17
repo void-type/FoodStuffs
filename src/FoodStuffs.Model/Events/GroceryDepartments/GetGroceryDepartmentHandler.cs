@@ -36,9 +36,9 @@ public class GetGroceryDepartmentHandler : CustomEventHandlerAbstract<GetGrocery
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
-                ShoppingItems: [.. m.ShoppingItems
+                GroceryItems: [.. m.GroceryItems
                     .OrderBy(r => r.Name)
-                    .Select(r => new GetGroceryDepartmentResponseShoppingItem(
+                    .Select(r => new GetGroceryDepartmentResponseGroceryItem(
                         Id: r.Id,
                         Name: r.Name))]));
     }

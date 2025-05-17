@@ -29,13 +29,13 @@ public class ListPantryLocationsHandler : CustomEventHandlerAbstract<ListPantryL
             .Select(pl => new
             {
                 PantryLocation = pl,
-                ShoppingItemCount = pl.ShoppingItems.Count
+                GroceryItemCount = pl.GroceryItems.Count
             })
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(x => new ListPantryLocationsResponse(
                 Id: x.PantryLocation.Id,
                 Name: x.PantryLocation.Name,
-                ShoppingItemCount: x.ShoppingItemCount))
+                GroceryItemCount: x.GroceryItemCount))
             .MapAsync(Ok);
     }
 }

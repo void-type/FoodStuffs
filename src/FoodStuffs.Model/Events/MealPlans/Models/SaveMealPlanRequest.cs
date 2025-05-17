@@ -3,5 +3,5 @@
 public record SaveMealPlanRequest(
     int Id,
     string Name,
-    List<SaveMealPlanRequestExcludedShoppingItem> ExcludedShoppingItems,
+    List<SaveMealPlanRequestExcludedGroceryItem> ExcludedGroceryItems,
     List<SaveMealPlanRequestRecipe> Recipes);

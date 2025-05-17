@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -93,6 +93,48 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("GroceryDepartment", (string)null);
                 });
 
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.GroceryItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("GroceryDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InventoryQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroceryDepartmentId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("GroceryItem", (string)null);
+                });
+
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -165,22 +207,22 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("MealPlan", (string)null);
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanExcludedShoppingItemRelation", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanExcludedGroceryItemRelation", b =>
                 {
                     b.Property<int>("MealPlanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShoppingItemId")
+                    b.Property<int>("GroceryItemId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("MealPlanId", "ShoppingItemId");
+                    b.HasKey("MealPlanId", "GroceryItemId");
 
-                    b.HasIndex("ShoppingItemId");
+                    b.HasIndex("GroceryItemId");
 
-                    b.ToTable("MealPlanExcludedShoppingItemRelation", (string)null);
+                    b.ToTable("MealPlanExcludedGroceryItemRelation", (string)null);
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanRecipeRelation", b =>
@@ -291,12 +333,12 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("Recipe", (string)null);
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.RecipeShoppingItemRelation", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.RecipeGroceryItemRelation", b =>
                 {
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShoppingItemId")
+                    b.Property<int>("GroceryItemId")
                         .HasColumnType("int");
 
                     b.Property<int>("Order")
@@ -305,53 +347,26 @@ namespace FoodStuffs.Model.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("RecipeId", "ShoppingItemId");
+                    b.HasKey("RecipeId", "GroceryItemId");
 
-                    b.HasIndex("ShoppingItemId");
+                    b.HasIndex("GroceryItemId");
 
-                    b.ToTable("RecipeShoppingItemRelation", (string)null);
+                    b.ToTable("RecipeGroceryItemRelation", (string)null);
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.ShoppingItem", b =>
+            modelBuilder.Entity("GroceryItemPantryLocationRelation", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("GroceryItemId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreatedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("GroceryDepartmentId")
+                    b.Property<int>("PantryLocationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("InventoryQuantity")
-                        .HasColumnType("int");
+                    b.HasKey("GroceryItemId", "PantryLocationId");
 
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("PantryLocationId");
 
-                    b.Property<DateTimeOffset>("ModifiedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroceryDepartmentId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("ShoppingItem", (string)null);
+                    b.ToTable("GroceryItemPantryLocationRelation");
                 });
 
             modelBuilder.Entity("RecipeCategoryRelation", b =>
@@ -369,19 +384,13 @@ namespace FoodStuffs.Model.Migrations
                     b.ToTable("RecipeCategoryRelation");
                 });
 
-            modelBuilder.Entity("ShoppingItemPantryLocationRelation", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.GroceryItem", b =>
                 {
-                    b.Property<int>("PantryLocationId")
-                        .HasColumnType("int");
+                    b.HasOne("FoodStuffs.Model.Data.Models.GroceryDepartment", "GroceryDepartment")
+                        .WithMany("GroceryItems")
+                        .HasForeignKey("GroceryDepartmentId");
 
-                    b.Property<int>("ShoppingItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PantryLocationId", "ShoppingItemId");
-
-                    b.HasIndex("ShoppingItemId");
-
-                    b.ToTable("ShoppingItemPantryLocationRelation");
+                    b.Navigation("GroceryDepartment");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Image", b =>
@@ -415,21 +424,21 @@ namespace FoodStuffs.Model.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanExcludedShoppingItemRelation", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanExcludedGroceryItemRelation", b =>
                 {
+                    b.HasOne("FoodStuffs.Model.Data.Models.GroceryItem", "GroceryItem")
+                        .WithMany()
+                        .HasForeignKey("GroceryItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FoodStuffs.Model.Data.Models.MealPlan", null)
-                        .WithMany("ExcludedShoppingItemRelations")
+                        .WithMany("ExcludedGroceryItemRelations")
                         .HasForeignKey("MealPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", "ShoppingItem")
-                        .WithMany()
-                        .HasForeignKey("ShoppingItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ShoppingItem");
+                    b.Navigation("GroceryItem");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlanRecipeRelation", b =>
@@ -458,30 +467,36 @@ namespace FoodStuffs.Model.Migrations
                     b.Navigation("PinnedImage");
                 });
 
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.RecipeShoppingItemRelation", b =>
+            modelBuilder.Entity("FoodStuffs.Model.Data.Models.RecipeGroceryItemRelation", b =>
                 {
+                    b.HasOne("FoodStuffs.Model.Data.Models.GroceryItem", "GroceryItem")
+                        .WithMany()
+                        .HasForeignKey("GroceryItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FoodStuffs.Model.Data.Models.Recipe", null)
-                        .WithMany("ShoppingItemRelations")
+                        .WithMany("GroceryItemRelations")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", "ShoppingItem")
+                    b.Navigation("GroceryItem");
+                });
+
+            modelBuilder.Entity("GroceryItemPantryLocationRelation", b =>
+                {
+                    b.HasOne("FoodStuffs.Model.Data.Models.GroceryItem", null)
                         .WithMany()
-                        .HasForeignKey("ShoppingItemId")
+                        .HasForeignKey("GroceryItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ShoppingItem");
-                });
-
-            modelBuilder.Entity("FoodStuffs.Model.Data.Models.ShoppingItem", b =>
-                {
-                    b.HasOne("FoodStuffs.Model.Data.Models.GroceryDepartment", "GroceryDepartment")
-                        .WithMany("ShoppingItems")
-                        .HasForeignKey("GroceryDepartmentId");
-
-                    b.Navigation("GroceryDepartment");
+                    b.HasOne("FoodStuffs.Model.Data.Models.PantryLocation", null)
+                        .WithMany()
+                        .HasForeignKey("PantryLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RecipeCategoryRelation", b =>
@@ -499,40 +514,25 @@ namespace FoodStuffs.Model.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ShoppingItemPantryLocationRelation", b =>
-                {
-                    b.HasOne("FoodStuffs.Model.Data.Models.PantryLocation", null)
-                        .WithMany()
-                        .HasForeignKey("PantryLocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FoodStuffs.Model.Data.Models.ShoppingItem", null)
-                        .WithMany()
-                        .HasForeignKey("ShoppingItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.GroceryDepartment", b =>
                 {
-                    b.Navigation("ShoppingItems");
+                    b.Navigation("GroceryItems");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.MealPlan", b =>
                 {
-                    b.Navigation("ExcludedShoppingItemRelations");
+                    b.Navigation("ExcludedGroceryItemRelations");
 
                     b.Navigation("RecipeRelations");
                 });
 
             modelBuilder.Entity("FoodStuffs.Model.Data.Models.Recipe", b =>
                 {
+                    b.Navigation("GroceryItemRelations");
+
                     b.Navigation("Images");
 
                     b.Navigation("MealPlanRelations");
-
-                    b.Navigation("ShoppingItemRelations");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,5 +7,5 @@ public record SearchRecipesResultItem(
     DateTimeOffset CreatedOn,
     string Slug,
     List<string> Categories,
-    List<SearchRecipesResultItemShoppingItem> ShoppingItems,
+    List<SearchRecipesResultItemGroceryItem> GroceryItems,
     string? Image);

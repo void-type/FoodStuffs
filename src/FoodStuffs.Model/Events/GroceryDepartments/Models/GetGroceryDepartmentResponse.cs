@@ -8,4 +8,4 @@ public record GetGroceryDepartmentResponse(
     DateTimeOffset CreatedOn,
     string ModifiedBy,
     DateTimeOffset ModifiedOn,
-    List<GetGroceryDepartmentResponseShoppingItem> ShoppingItems);
+    List<GetGroceryDepartmentResponseGroceryItem> GroceryItems);

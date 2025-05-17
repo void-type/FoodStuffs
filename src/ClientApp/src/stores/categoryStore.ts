@@ -4,7 +4,7 @@ import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import CategoriesListRequest from '@/models/CategoriesListRequest';
-import listRequestToQueryParams from '@/models/ShoppingItemStoreHelper';
+import listRequestToQueryParams from '@/models/GroceryItemStoreHelper';
 import useMessageStore from './messageStore';
 
 interface CategoryStoreState {

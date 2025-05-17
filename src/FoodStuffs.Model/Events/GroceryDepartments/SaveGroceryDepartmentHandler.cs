@@ -39,7 +39,7 @@ public class SaveGroceryDepartmentHandler : CustomEventHandlerAbstract<SaveGroce
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
-            .Include(x => x.ShoppingItems)
+            .Include(x => x.GroceryItems)
             .OrderBy(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);

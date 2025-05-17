@@ -14,6 +14,6 @@ public static class RecipeSearchConstants
     public const string FIELD_CATEGORY_NAMES = nameof(Category) + "_" + nameof(Category.Name) + "s";
     public const string FIELD_CATEGORY_IDS = nameof(Category) + "_" + nameof(Category.Id) + "s";
     public const string FIELD_IMAGE = nameof(Recipe.DefaultImage);
-    public const string FIELD_MEAL_SHOPPING_ITEMS_JSON = nameof(RecipeShoppingItemRelation.ShoppingItem) + "_JSON";
+    public const string FIELD_MEAL_SHOPPING_ITEMS_JSON = nameof(RecipeGroceryItemRelation.GroceryItem) + "_JSON";
     public const string FIELD_SLUG = nameof(Recipe.Slug);
 }

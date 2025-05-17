@@ -1,6 +1,6 @@
 import type {
   GetPantryLocationResponse,
-  GetPantryLocationResponseShoppingItem,
+  GetPantryLocationResponseGroceryItem,
 } from '@/api/data-contracts';
 
 export default class PantryLocationGetResponse implements GetPantryLocationResponse {
@@ -16,5 +16,5 @@ export default class PantryLocationGetResponse implements GetPantryLocationRespo
 
   public modifiedOn = '';
 
-  public recipes: GetPantryLocationResponseShoppingItem[] = [];
+  public recipes: GetPantryLocationResponseGroceryItem[] = [];
 }
