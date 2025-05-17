@@ -62,7 +62,7 @@ public static class RecipeSearchHelper
             ));
 
         // Grocery items: retrievable
-        doc.AddStoredField(C.FIELD_MEAL_SHOPPING_ITEMS_JSON, JsonSerializer.Serialize(groceryItems));
+        doc.AddStoredField(C.FIELD_MEAL_GROCERY_ITEMS_JSON, JsonSerializer.Serialize(groceryItems));
 
         var image = recipe.DefaultImage;
 
@@ -85,7 +85,7 @@ public static class RecipeSearchHelper
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
             Categories: [.. doc.GetValues(C.FIELD_CATEGORY_NAMES).OrderBy(n => n)],
-            GroceryItems: doc.Get(C.FIELD_MEAL_SHOPPING_ITEMS_JSON)
+            GroceryItems: doc.Get(C.FIELD_MEAL_GROCERY_ITEMS_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemGroceryItem>>(x) ?? []),
             Image: doc.Get(C.FIELD_IMAGE)
         );

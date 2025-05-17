@@ -10,282 +10,358 @@ public partial class RenameShoppingItemEntities : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropTable(
-            name: "MealPlanExcludedShoppingItemRelation");
+        migrationBuilder.DropForeignKey(
+            name: "FK_ShoppingItem_GroceryDepartment_GroceryDepartmentId",
+            table: "ShoppingItem");
 
-        migrationBuilder.DropTable(
-            name: "RecipeShoppingItemRelation");
+        migrationBuilder.DropForeignKey(
+            name: "FK_ShoppingItemPantryLocationRelation_PantryLocation_PantryLocationId",
+            table: "ShoppingItemPantryLocationRelation");
 
-        migrationBuilder.DropTable(
-            name: "ShoppingItemPantryLocationRelation");
+        migrationBuilder.DropForeignKey(
+            name: "FK_ShoppingItemPantryLocationRelation_ShoppingItem_ShoppingItemId",
+            table: "ShoppingItemPantryLocationRelation");
 
-        migrationBuilder.DropTable(
-            name: "ShoppingItem");
+        migrationBuilder.DropForeignKey(
+            name: "FK_MealPlanExcludedShoppingItemRelation_MealPlan_MealPlanId",
+            table: "MealPlanExcludedShoppingItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "GroceryItem",
-            columns: table => new
-            {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("SqlServer:Identity", "1, 1"),
-                Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                InventoryQuantity = table.Column<int>(type: "int", nullable: false),
-                CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                GroceryDepartmentId = table.Column<int>(type: "int", nullable: true)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GroceryItem", x => x.Id);
-                table.ForeignKey(
-                    name: "FK_GroceryItem_GroceryDepartment_GroceryDepartmentId",
-                    column: x => x.GroceryDepartmentId,
-                    principalTable: "GroceryDepartment",
-                    principalColumn: "Id");
-            });
+        migrationBuilder.DropForeignKey(
+            name: "FK_MealPlanExcludedShoppingItemRelation_ShoppingItem_ShoppingItemId",
+            table: "MealPlanExcludedShoppingItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "GroceryItemPantryLocationRelation",
-            columns: table => new
-            {
-                GroceryItemId = table.Column<int>(type: "int", nullable: false),
-                PantryLocationId = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GroceryItemPantryLocationRelation", x => new { x.GroceryItemId, x.PantryLocationId });
-                table.ForeignKey(
-                    name: "FK_GroceryItemPantryLocationRelation_GroceryItem_GroceryItemId",
-                    column: x => x.GroceryItemId,
-                    principalTable: "GroceryItem",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-                table.ForeignKey(
-                    name: "FK_GroceryItemPantryLocationRelation_PantryLocation_PantryLocationId",
-                    column: x => x.PantryLocationId,
-                    principalTable: "PantryLocation",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+        migrationBuilder.DropForeignKey(
+            name: "FK_RecipeShoppingItemRelation_Recipe_RecipeId",
+            table: "RecipeShoppingItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "MealPlanExcludedGroceryItemRelation",
-            columns: table => new
-            {
-                MealPlanId = table.Column<int>(type: "int", nullable: false),
-                GroceryItemId = table.Column<int>(type: "int", nullable: false),
-                Quantity = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_MealPlanExcludedGroceryItemRelation", x => new { x.MealPlanId, x.GroceryItemId });
-                table.ForeignKey(
-                    name: "FK_MealPlanExcludedGroceryItemRelation_GroceryItem_GroceryItemId",
-                    column: x => x.GroceryItemId,
-                    principalTable: "GroceryItem",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-                table.ForeignKey(
-                    name: "FK_MealPlanExcludedGroceryItemRelation_MealPlan_MealPlanId",
-                    column: x => x.MealPlanId,
-                    principalTable: "MealPlan",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+        migrationBuilder.DropForeignKey(
+            name: "FK_RecipeShoppingItemRelation_ShoppingItem_ShoppingItemId",
+            table: "RecipeShoppingItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "RecipeGroceryItemRelation",
-            columns: table => new
-            {
-                RecipeId = table.Column<int>(type: "int", nullable: false),
-                GroceryItemId = table.Column<int>(type: "int", nullable: false),
-                Quantity = table.Column<int>(type: "int", nullable: false),
-                Order = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_RecipeGroceryItemRelation", x => new { x.RecipeId, x.GroceryItemId });
-                table.ForeignKey(
-                    name: "FK_RecipeGroceryItemRelation_GroceryItem_GroceryItemId",
-                    column: x => x.GroceryItemId,
-                    principalTable: "GroceryItem",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-                table.ForeignKey(
-                    name: "FK_RecipeGroceryItemRelation_Recipe_RecipeId",
-                    column: x => x.RecipeId,
-                    principalTable: "Recipe",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_ShoppingItemPantryLocationRelation",
+            table: "ShoppingItemPantryLocationRelation");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_GroceryItem_GroceryDepartmentId",
-            table: "GroceryItem",
-            column: "GroceryDepartmentId");
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_MealPlanExcludedShoppingItemRelation",
+            table: "MealPlanExcludedShoppingItemRelation");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_GroceryItem_Name",
-            table: "GroceryItem",
-            column: "Name",
-            unique: true);
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_RecipeShoppingItemRelation",
+            table: "RecipeShoppingItemRelation");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_GroceryItemPantryLocationRelation_PantryLocationId",
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_ShoppingItem",
+            table: "ShoppingItem");
+
+        migrationBuilder.RenameTable(
+            name: "ShoppingItem",
+            newName: "GroceryItem");
+
+        migrationBuilder.RenameTable(
+            name: "ShoppingItemPantryLocationRelation",
+            newName: "GroceryItemPantryLocationRelation");
+
+        migrationBuilder.RenameTable(
+            name: "MealPlanExcludedShoppingItemRelation",
+            newName: "MealPlanExcludedGroceryItemRelation");
+
+        migrationBuilder.RenameTable(
+            name: "RecipeShoppingItemRelation",
+            newName: "RecipeGroceryItemRelation");
+
+        migrationBuilder.RenameColumn(
+            name: "ShoppingItemId",
             table: "GroceryItemPantryLocationRelation",
-            column: "PantryLocationId");
+            newName: "GroceryItemId");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_MealPlanExcludedGroceryItemRelation_GroceryItemId",
+        migrationBuilder.RenameColumn(
+            name: "ShoppingItemId",
             table: "MealPlanExcludedGroceryItemRelation",
-            column: "GroceryItemId");
+            newName: "GroceryItemId");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_RecipeGroceryItemRelation_GroceryItemId",
+        migrationBuilder.RenameColumn(
+            name: "ShoppingItemId",
             table: "RecipeGroceryItemRelation",
-            column: "GroceryItemId");
+            newName: "GroceryItemId");
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_GroceryItem",
+            table: "GroceryItem",
+            column: "Id");
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_GroceryItemPantryLocationRelation",
+            table: "GroceryItemPantryLocationRelation",
+            columns: new[] { "GroceryItemId", "PantryLocationId" });
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_MealPlanExcludedGroceryItemRelation",
+            table: "MealPlanExcludedGroceryItemRelation",
+            columns: new[] { "MealPlanId", "GroceryItemId" });
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_RecipeGroceryItemRelation",
+            table: "RecipeGroceryItemRelation",
+            columns: new[] { "RecipeId", "GroceryItemId" });
+
+        migrationBuilder.RenameIndex(
+            name: "IX_ShoppingItem_Name",
+            table: "GroceryItem",
+            newName: "IX_GroceryItem_Name");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_ShoppingItem_GroceryDepartmentId",
+            table: "GroceryItem",
+            newName: "IX_GroceryItem_GroceryDepartmentId");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_ShoppingItemPantryLocationRelation_ShoppingItemId",
+            table: "GroceryItemPantryLocationRelation",
+            newName: "IX_GroceryItemPantryLocationRelation_PantryLocationId");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_MealPlanExcludedShoppingItemRelation_ShoppingItemId",
+            table: "MealPlanExcludedGroceryItemRelation",
+            newName: "IX_MealPlanExcludedGroceryItemRelation_GroceryItemId");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_RecipeShoppingItemRelation_ShoppingItemId",
+            table: "RecipeGroceryItemRelation",
+            newName: "IX_RecipeGroceryItemRelation_GroceryItemId");
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_GroceryItem_GroceryDepartment_GroceryDepartmentId",
+            table: "GroceryItem",
+            column: "GroceryDepartmentId",
+            principalTable: "GroceryDepartment",
+            principalColumn: "Id");
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_GroceryItemPantryLocationRelation_GroceryItem_GroceryItemId",
+            table: "GroceryItemPantryLocationRelation",
+            column: "GroceryItemId",
+            principalTable: "GroceryItem",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_GroceryItemPantryLocationRelation_PantryLocation_PantryLocationId",
+            table: "GroceryItemPantryLocationRelation",
+            column: "PantryLocationId",
+            principalTable: "PantryLocation",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_MealPlanExcludedGroceryItemRelation_GroceryItem_GroceryItemId",
+            table: "MealPlanExcludedGroceryItemRelation",
+            column: "GroceryItemId",
+            principalTable: "GroceryItem",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_MealPlanExcludedGroceryItemRelation_MealPlan_MealPlanId",
+            table: "MealPlanExcludedGroceryItemRelation",
+            column: "MealPlanId",
+            principalTable: "MealPlan",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_RecipeGroceryItemRelation_GroceryItem_GroceryItemId",
+            table: "RecipeGroceryItemRelation",
+            column: "GroceryItemId",
+            principalTable: "GroceryItem",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_RecipeGroceryItemRelation_Recipe_RecipeId",
+            table: "RecipeGroceryItemRelation",
+            column: "RecipeId",
+            principalTable: "Recipe",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
     }
 
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropTable(
-            name: "GroceryItemPantryLocationRelation");
+        migrationBuilder.DropForeignKey(
+            name: "FK_GroceryItem_GroceryDepartment_GroceryDepartmentId",
+            table: "GroceryItem");
 
-        migrationBuilder.DropTable(
-            name: "MealPlanExcludedGroceryItemRelation");
+        migrationBuilder.DropForeignKey(
+            name: "FK_GroceryItemPantryLocationRelation_GroceryItem_GroceryItemId",
+            table: "GroceryItemPantryLocationRelation");
 
-        migrationBuilder.DropTable(
-            name: "RecipeGroceryItemRelation");
+        migrationBuilder.DropForeignKey(
+            name: "FK_GroceryItemPantryLocationRelation_PantryLocation_PantryLocationId",
+            table: "GroceryItemPantryLocationRelation");
 
-        migrationBuilder.DropTable(
-            name: "GroceryItem");
+        migrationBuilder.DropForeignKey(
+            name: "FK_MealPlanExcludedGroceryItemRelation_GroceryItem_GroceryItemId",
+            table: "MealPlanExcludedGroceryItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "ShoppingItem",
-            columns: table => new
-            {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("SqlServer:Identity", "1, 1"),
-                GroceryDepartmentId = table.Column<int>(type: "int", nullable: true),
-                CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                InventoryQuantity = table.Column<int>(type: "int", nullable: false),
-                ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_ShoppingItem", x => x.Id);
-                table.ForeignKey(
-                    name: "FK_ShoppingItem_GroceryDepartment_GroceryDepartmentId",
-                    column: x => x.GroceryDepartmentId,
-                    principalTable: "GroceryDepartment",
-                    principalColumn: "Id");
-            });
+        migrationBuilder.DropForeignKey(
+            name: "FK_MealPlanExcludedGroceryItemRelation_MealPlan_MealPlanId",
+            table: "MealPlanExcludedGroceryItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "MealPlanExcludedShoppingItemRelation",
-            columns: table => new
-            {
-                MealPlanId = table.Column<int>(type: "int", nullable: false),
-                ShoppingItemId = table.Column<int>(type: "int", nullable: false),
-                Quantity = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_MealPlanExcludedShoppingItemRelation", x => new { x.MealPlanId, x.ShoppingItemId });
-                table.ForeignKey(
-                    name: "FK_MealPlanExcludedShoppingItemRelation_MealPlan_MealPlanId",
-                    column: x => x.MealPlanId,
-                    principalTable: "MealPlan",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-                table.ForeignKey(
-                    name: "FK_MealPlanExcludedShoppingItemRelation_ShoppingItem_ShoppingItemId",
-                    column: x => x.ShoppingItemId,
-                    principalTable: "ShoppingItem",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+        migrationBuilder.DropForeignKey(
+            name: "FK_RecipeGroceryItemRelation_GroceryItem_GroceryItemId",
+            table: "RecipeGroceryItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "RecipeShoppingItemRelation",
-            columns: table => new
-            {
-                RecipeId = table.Column<int>(type: "int", nullable: false),
-                ShoppingItemId = table.Column<int>(type: "int", nullable: false),
-                Order = table.Column<int>(type: "int", nullable: false),
-                Quantity = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_RecipeShoppingItemRelation", x => new { x.RecipeId, x.ShoppingItemId });
-                table.ForeignKey(
-                    name: "FK_RecipeShoppingItemRelation_Recipe_RecipeId",
-                    column: x => x.RecipeId,
-                    principalTable: "Recipe",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-                table.ForeignKey(
-                    name: "FK_RecipeShoppingItemRelation_ShoppingItem_ShoppingItemId",
-                    column: x => x.ShoppingItemId,
-                    principalTable: "ShoppingItem",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+        migrationBuilder.DropForeignKey(
+            name: "FK_RecipeGroceryItemRelation_Recipe_RecipeId",
+            table: "RecipeGroceryItemRelation");
 
-        migrationBuilder.CreateTable(
-            name: "ShoppingItemPantryLocationRelation",
-            columns: table => new
-            {
-                PantryLocationId = table.Column<int>(type: "int", nullable: false),
-                ShoppingItemId = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_ShoppingItemPantryLocationRelation", x => new { x.PantryLocationId, x.ShoppingItemId });
-                table.ForeignKey(
-                    name: "FK_ShoppingItemPantryLocationRelation_PantryLocation_PantryLocationId",
-                    column: x => x.PantryLocationId,
-                    principalTable: "PantryLocation",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-                table.ForeignKey(
-                    name: "FK_ShoppingItemPantryLocationRelation_ShoppingItem_ShoppingItemId",
-                    column: x => x.ShoppingItemId,
-                    principalTable: "ShoppingItem",
-                    principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade);
-            });
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_GroceryItem",
+            table: "GroceryItem");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_MealPlanExcludedShoppingItemRelation_ShoppingItemId",
-            table: "MealPlanExcludedShoppingItemRelation",
-            column: "ShoppingItemId");
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_GroceryItemPantryLocationRelation",
+            table: "GroceryItemPantryLocationRelation");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_RecipeShoppingItemRelation_ShoppingItemId",
-            table: "RecipeShoppingItemRelation",
-            column: "ShoppingItemId");
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_MealPlanExcludedGroceryItemRelation",
+            table: "MealPlanExcludedGroceryItemRelation");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_ShoppingItem_GroceryDepartmentId",
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_RecipeGroceryItemRelation",
+            table: "RecipeGroceryItemRelation");
+
+        migrationBuilder.RenameColumn(
+            name: "GroceryItemId",
+            table: "RecipeGroceryItemRelation",
+            newName: "ShoppingItemId");
+
+        migrationBuilder.RenameColumn(
+            name: "GroceryItemId",
+            table: "MealPlanExcludedGroceryItemRelation",
+            newName: "ShoppingItemId");
+
+        migrationBuilder.RenameColumn(
+            name: "GroceryItemId",
+            table: "GroceryItemPantryLocationRelation",
+            newName: "ShoppingItemId");
+
+        migrationBuilder.RenameTable(
+            name: "RecipeGroceryItemRelation",
+            newName: "RecipeShoppingItemRelation");
+
+        migrationBuilder.RenameTable(
+            name: "MealPlanExcludedGroceryItemRelation",
+            newName: "MealPlanExcludedShoppingItemRelation");
+
+        migrationBuilder.RenameTable(
+            name: "GroceryItemPantryLocationRelation",
+            newName: "ShoppingItemPantryLocationRelation");
+
+        migrationBuilder.RenameTable(
+            name: "GroceryItem",
+            newName: "ShoppingItem");
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_ShoppingItem",
             table: "ShoppingItem",
-            column: "GroceryDepartmentId");
+            column: "Id");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_ShoppingItem_Name",
-            table: "ShoppingItem",
-            column: "Name",
-            unique: true);
-
-        migrationBuilder.CreateIndex(
-            name: "IX_ShoppingItemPantryLocationRelation_ShoppingItemId",
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_ShoppingItemPantryLocationRelation",
             table: "ShoppingItemPantryLocationRelation",
-            column: "ShoppingItemId");
+            columns: new[] { "PantryLocationId", "ShoppingItemId" });
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_MealPlanExcludedShoppingItemRelation",
+            table: "MealPlanExcludedShoppingItemRelation",
+            columns: new[] { "MealPlanId", "ShoppingItemId" });
+
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_RecipeShoppingItemRelation",
+            table: "RecipeShoppingItemRelation",
+            columns: new[] { "RecipeId", "ShoppingItemId" });
+
+        migrationBuilder.RenameIndex(
+            name: "IX_RecipeGroceryItemRelation_GroceryItemId",
+            table: "RecipeShoppingItemRelation",
+            newName: "IX_RecipeShoppingItemRelation_ShoppingItemId");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_MealPlanExcludedGroceryItemRelation_GroceryItemId",
+            table: "MealPlanExcludedShoppingItemRelation",
+            newName: "IX_MealPlanExcludedShoppingItemRelation_ShoppingItemId");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_GroceryItemPantryLocationRelation_PantryLocationId",
+            table: "ShoppingItemPantryLocationRelation",
+            newName: "IX_ShoppingItemPantryLocationRelation_ShoppingItemId");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_GroceryItem_Name",
+            table: "ShoppingItem",
+            newName: "IX_ShoppingItem_Name");
+
+        migrationBuilder.RenameIndex(
+            name: "IX_GroceryItem_GroceryDepartmentId",
+            table: "ShoppingItem",
+            newName: "IX_ShoppingItem_GroceryDepartmentId");
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_ShoppingItem_GroceryDepartment_GroceryDepartmentId",
+            table: "ShoppingItem",
+            column: "GroceryDepartmentId",
+            principalTable: "GroceryDepartment",
+            principalColumn: "Id");
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_ShoppingItemPantryLocationRelation_PantryLocation_PantryLocationId",
+            table: "ShoppingItemPantryLocationRelation",
+            column: "PantryLocationId",
+            principalTable: "PantryLocation",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_ShoppingItemPantryLocationRelation_ShoppingItem_ShoppingItemId",
+            table: "ShoppingItemPantryLocationRelation",
+            column: "ShoppingItemId",
+            principalTable: "ShoppingItem",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_MealPlanExcludedShoppingItemRelation_MealPlan_MealPlanId",
+            table: "MealPlanExcludedShoppingItemRelation",
+            column: "MealPlanId",
+            principalTable: "MealPlan",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_MealPlanExcludedShoppingItemRelation_ShoppingItem_ShoppingItemId",
+            table: "MealPlanExcludedShoppingItemRelation",
+            column: "ShoppingItemId",
+            principalTable: "ShoppingItem",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_RecipeShoppingItemRelation_Recipe_RecipeId",
+            table: "RecipeShoppingItemRelation",
+            column: "RecipeId",
+            principalTable: "Recipe",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_RecipeShoppingItemRelation_ShoppingItem_ShoppingItemId",
+            table: "RecipeShoppingItemRelation",
+            column: "ShoppingItemId",
+            principalTable: "ShoppingItem",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
     }
 }
