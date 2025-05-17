@@ -18,6 +18,7 @@ import useAppStore from '@/stores/appStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import { useRouter } from 'vue-router';
+import RouterHelper from '@/models/RouterHelper';
 
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
@@ -150,9 +151,7 @@ function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
     title: 'Recipe Completed',
     description: 'Would you like to update inventory?',
     okAction: () => {
-      router.push({
-        name: 'shoppingItemList',
-      });
+      router.push(RouterHelper.editRecipe(recipe));
     },
   };
 
