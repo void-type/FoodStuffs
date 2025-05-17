@@ -14,8 +14,17 @@ public partial class RenameGroceryDepartmentEntities : Migration
             name: "FK_GroceryItem_GroceryDepartment_GroceryDepartmentId",
             table: "GroceryItem");
 
-        migrationBuilder.DropTable(
-            name: "GroceryDepartment");
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_GroceryDepartment",
+            table: "GroceryDepartment");
+
+        migrationBuilder.DropIndex(
+            name: "IX_GroceryDepartment_Name",
+            table: "GroceryDepartment");
+
+        migrationBuilder.RenameTable(
+            name: "GroceryDepartment",
+            newName: "GroceryAisle");
 
         migrationBuilder.RenameColumn(
             name: "GroceryDepartmentId",
@@ -27,23 +36,10 @@ public partial class RenameGroceryDepartmentEntities : Migration
             table: "GroceryItem",
             newName: "IX_GroceryItem_GroceryAisleId");
 
-        migrationBuilder.CreateTable(
-            name: "GroceryAisle",
-            columns: table => new
-            {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("SqlServer:Identity", "1, 1"),
-                Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                Order = table.Column<int>(type: "int", nullable: false),
-                CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GroceryAisle", x => x.Id);
-            });
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_GroceryAisle",
+            table: "GroceryAisle",
+            column: "Id");
 
         migrationBuilder.CreateIndex(
             name: "IX_GroceryAisle_Name",
@@ -66,8 +62,17 @@ public partial class RenameGroceryDepartmentEntities : Migration
             name: "FK_GroceryItem_GroceryAisle_GroceryAisleId",
             table: "GroceryItem");
 
-        migrationBuilder.DropTable(
-            name: "GroceryAisle");
+        migrationBuilder.DropPrimaryKey(
+            name: "PK_GroceryAisle",
+            table: "GroceryAisle");
+
+        migrationBuilder.DropIndex(
+            name: "IX_GroceryAisle_Name",
+            table: "GroceryAisle");
+
+        migrationBuilder.RenameTable(
+            name: "GroceryAisle",
+            newName: "GroceryDepartment");
 
         migrationBuilder.RenameColumn(
             name: "GroceryAisleId",
@@ -79,23 +84,10 @@ public partial class RenameGroceryDepartmentEntities : Migration
             table: "GroceryItem",
             newName: "IX_GroceryItem_GroceryDepartmentId");
 
-        migrationBuilder.CreateTable(
-            name: "GroceryDepartment",
-            columns: table => new
-            {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("SqlServer:Identity", "1, 1"),
-                CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                ModifiedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                Order = table.Column<int>(type: "int", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GroceryDepartment", x => x.Id);
-            });
+        migrationBuilder.AddPrimaryKey(
+            name: "PK_GroceryDepartment",
+            table: "GroceryDepartment",
+            column: "Id");
 
         migrationBuilder.CreateIndex(
             name: "IX_GroceryDepartment_Name",
