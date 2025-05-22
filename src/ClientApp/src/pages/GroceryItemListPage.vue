@@ -231,7 +231,6 @@ watch(
       :total-count="toInt(listResponse.totalCount)"
       :on-change-page="changePage"
       :on-change-take="changeTake"
-      class="mt-3"
     />
   </div>
 </template>

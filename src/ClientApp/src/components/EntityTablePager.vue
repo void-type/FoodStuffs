@@ -87,7 +87,7 @@ const pageRange = computed(() => {
 </script>
 
 <template>
-  <nav aria-label="Table pagination" class="d-print-none">
+  <nav aria-label="Table pagination" class="mt-4 d-print-none">
     <ul class="pagination justify-content-center">
       <li :class="{ 'page-item': true, disabled: isPrevDisabled }">
         <button

@@ -142,25 +142,29 @@ onMounted(() => {
         <ImagePlaceholder v-else class="img-fluid rounded" />
       </div>
     </div>
-    <h2 v-if="!isNil(recipe.directions)" class="mt-3">Directions</h2>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-if="!isNil(recipe.directions)" class="rich-text" v-html="recipe.directions"></div>
-    <h2 v-if="!isNil(recipe.sides)" class="mt-3">Sides</h2>
-    <div v-if="!isNil(recipe.sides)" :class="{ 'form-control-plaintext p-0': true }">
-      {{ recipe.sides }}
+    <div v-if="!isNil(recipe.directions)" class="mt-3">
+      <h2>Directions</h2>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div class="rich-text" v-html="recipe.directions"></div>
     </div>
-    <h2 v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-3 mb-0 d-print-none">
-      Grocery Items
-    </h2>
-    <div class="badge p-0 mb-2 text-muted">
-      <small>Not printed.</small>
+    <div v-if="!isNil(recipe.sides)" class="mt-3">
+      <h2>Sides</h2>
+      <div :class="{ 'form-control-plaintext p-0': true }">
+        {{ recipe.sides }}
+      </div>
     </div>
-    <ul>
-      <li v-for="item in recipe.groceryItems || []" :key="item.id">
-        {{ item.quantity }}x {{ item.name }}
-      </li>
-    </ul>
-    <h2
+    <div v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-3 d-print-none">
+      <h2 class="mb-0">Grocery Items</h2>
+      <div class="badge p-0 mb-2 text-muted">
+        <small>Not printed.</small>
+      </div>
+      <ul>
+        <li v-for="item in recipe.groceryItems || []" :key="item.id">
+          {{ item.quantity }}x {{ item.name }}
+        </li>
+      </ul>
+    </div>
+    <div
       v-if="
         recipe.prepTimeMinutes ||
         0 > 0 ||
@@ -170,20 +174,18 @@ onMounted(() => {
       "
       class="mt-3"
     >
-      Stats
-    </h2>
-    <div v-if="recipe.prepTimeMinutes || 0 > 0">
-      Prep Time: {{ timeSpanFormat(recipe.prepTimeMinutes) }}
+      <h2>Stats</h2>
+      <div v-if="recipe.prepTimeMinutes || 0 > 0">
+        Prep Time: {{ timeSpanFormat(recipe.prepTimeMinutes) }}
+      </div>
+      <div v-if="recipe.cookTimeMinutes || 0 > 0">
+        Cook Time: {{ timeSpanFormat(recipe.cookTimeMinutes) }}
+      </div>
+      <div v-if="(recipe.categories || []).length > 0">
+        Categories: {{ (recipe.categories || []).join(', ') }}
+      </div>
     </div>
-    <div v-if="recipe.cookTimeMinutes || 0 > 0">
-      Cook Time: {{ timeSpanFormat(recipe.cookTimeMinutes) }}
-    </div>
-    <div v-if="(recipe.categories || []).length > 0">
-      Categories: {{ (recipe.categories || []).join(', ') }}
-    </div>
-    <div>
-      <EntityAuditInfo class="mt-3" :entity="recipe" />
-    </div>
+    <EntityAuditInfo class="mt-3" :entity="recipe" />
   </div>
 </template>
 

@@ -1,19 +1,26 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { useRoute } from 'vue-router';
 import useAppStore from '@/stores/appStore';
 
 const appStore = useAppStore();
-const route = useRoute();
 const { version } = storeToRefs(appStore);
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+
+  document.getElementById('main')?.focus();
+}
 </script>
 
 <template>
-  <footer id="footer" class="mt-4 d-print-none border-top text-center py-3 px-0">
+  <footer id="footer" class="mt-5 d-print-none border-top text-center py-3 px-0">
     <div class="m-0 mb-4 text-center">
-      <router-link class="btn btn-secondary" :to="{ hash: '#main', query: route.query }"
-        >Back to top</router-link
-      >
+      <button class="btn btn-outline-secondary" type="button" @click="scrollToTop">
+        Back to top
+      </button>
     </div>
     <div>
       <a href="https://github.com/void-type/foodstuffs">
