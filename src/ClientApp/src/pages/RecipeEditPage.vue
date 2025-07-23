@@ -94,7 +94,9 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
 
 async function fetchRecipe() {
   if (isCreateNewMode.value) {
-    setSources(new RecipeGetResponse());
+    const newRecipe = new RecipeGetResponse();
+    newRecipe.isForMealPlanning = true;
+    setSources(newRecipe);
     return;
   }
 
