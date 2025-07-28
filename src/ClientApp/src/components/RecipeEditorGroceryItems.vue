@@ -8,6 +8,7 @@ import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
 import type { ListGroceryItemsResponse } from '@/api/data-contracts';
 import RecipeEditorGroceryItemSelect from './RecipeEditorGroceryItemSelect.vue';
 import AppSortHandle from './AppSortHandle.vue';
+import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
 import GroceryItemInventoryQuantity from './GroceryItemInventoryQuantity.vue';
 
 const model = defineModel({
@@ -163,20 +164,14 @@ onBeforeUnmount(() => {
                 :on-create-item="onCreateItem"
               />
             </div>
-            <div class="g-col-12 g-col-md-6">
-              <label :for="`item-${item.uiKey}-quantity`" class="form-label">Quantity</label>
-              <input
-                :id="`item-${item.uiKey}-quantity`"
-                v-model="item.quantity"
-                required
-                type="number"
-                min="1"
-                :class="{
-                  'form-control': true,
-                  'is-invalid': isFieldInError('groceryItems'),
-                }"
-              />
-            </div>
+            <AppInputNumberWithButtons
+              :id="`item-${item.uiKey}-quantity`"
+              v-model="item.quantity"
+              label="Quantity"
+              class="g-col-12 g-col-md-6"
+              :item="item"
+              :min="1"
+            />
             <GroceryItemInventoryQuantity
               :id="`item-${item.uiKey}-inventoryQuantity`"
               v-model="item.inventoryQuantity"
