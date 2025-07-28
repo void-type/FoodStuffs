@@ -23,13 +23,13 @@ const suggestions = ref<SuggestRecipesResultItem[]>([]);
 // Prevent suggestions from showing if they were requested but now no longer useful.
 let cancelInFlightSuggestions = false;
 
-function closeSearch() {
+function closeSuggestions() {
   cancelInFlightSuggestions = true;
   suggestions.value = [];
 }
 
 function clearSearch() {
-  closeSearch();
+  closeSuggestions();
   searchText.value = '';
 }
 
@@ -93,13 +93,12 @@ function handleFocusOut(event: FocusEvent) {
     (target && searchContainerRef.value?.contains(target));
 
   if (!isChildOfForm) {
-    closeSearch();
+    closeSuggestions();
   }
 }
 
-// Replace your focusout handler with this
 onClickOutside(searchContainerRef, () => {
-  closeSearch();
+  closeSuggestions();
 });
 
 // Global Ctrl + Shift + F to focus the search input.
@@ -145,7 +144,13 @@ onBeforeUnmount(() => {
       </button>
     </div>
     <ul v-if="suggestions.length" class="dropdown-menu show">
-      <li v-for="suggestion in suggestions" :key="suggestion.id" class="dropdown-item suggestion">
+      <li
+        v-for="suggestion in suggestions"
+        :key="suggestion.id"
+        class="dropdown-item suggestion"
+        role="option"
+        aria-selected="false"
+      >
         <span
           ><router-link :to="RouterHelper.viewRecipe(suggestion)" @click="navigateRecipe">
             {{ suggestion.name }}
