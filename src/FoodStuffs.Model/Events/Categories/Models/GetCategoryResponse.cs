@@ -3,6 +3,8 @@
 public record GetCategoryResponse(
     int Id,
     string Name,
+    bool ShowInMealPlan,
+    string Color,
     string CreatedBy,
     DateTimeOffset CreatedOn,
     string ModifiedBy,

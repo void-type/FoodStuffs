@@ -34,7 +34,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
     private async Task<IResult<EntityMessage<int>>> SaveAsync(SaveCategoryRequest request, CancellationToken cancellationToken)
     {
-        var requestedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
+        var formattedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
 
         var byId = new CategoriesWithAllRelatedSpecification(request.Id);
 
@@ -47,7 +47,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
             .MapAsync(Maybe.From);
 
         // Check for conflicting items by name
-        var byName = new CategoriesSpecification(requestedName);
+        var byName = new CategoriesSpecification(formattedName);
 
         var conflictingCategory = await _data.Categories
             .TagWith(GetTag(byName))
@@ -63,7 +63,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         var categoryToEdit = maybeCategory.Unwrap(() => new Category());
 
-        Transfer(requestedName, categoryToEdit);
+        Transfer(formattedName, request, categoryToEdit);
 
         if (maybeCategory.HasValue)
         {
@@ -81,8 +81,10 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
         return Ok(EntityMessage.Create($"Category {(maybeCategory.HasValue ? "updated" : "added")}.", categoryToEdit.Id));
     }
 
-    private static void Transfer(string formattedName, Category category)
+    private static void Transfer(string formattedName, SaveCategoryRequest request, Category category)
     {
         category.Name = formattedName;
+        category.ShowInMealPlan = request.ShowInMealPlan;
+        category.Color = request.Color;
     }
 }

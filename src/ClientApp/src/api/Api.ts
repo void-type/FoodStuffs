@@ -484,77 +484,6 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags StorageLocations
-   * @name StorageLocationsList
-   * @summary List storage locations. All parameters are optional and some have defaults.
-   * @request GET:/api/storage-locations
-   * @response `200` `IItemSetOfListStorageLocationsResponse`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  storageLocationsList = (query: StorageLocationsListParams, params: RequestParams = {}) =>
-    this.request<IItemSetOfListStorageLocationsResponse, IItemSetOfIFailure>({
-      path: `/api/storage-locations`,
-      method: 'GET',
-      query: query,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags StorageLocations
-   * @name StorageLocationsSave
-   * @summary Save a storage location. Will update if found, otherwise a new item will be created.
-   * @request POST:/api/storage-locations
-   * @response `200` `EntityMessageOfInteger`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  storageLocationsSave = (data: SaveStorageLocationRequest, params: RequestParams = {}) =>
-    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/storage-locations`,
-      method: 'POST',
-      body: data,
-      type: ContentType.Json,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags StorageLocations
-   * @name StorageLocationsGet
-   * @summary Get a storage location.
-   * @request GET:/api/storage-locations/{id}
-   * @response `200` `GetStorageLocationResponse`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  storageLocationsGet = (id: number, params: RequestParams = {}) =>
-    this.request<GetStorageLocationResponse, IItemSetOfIFailure>({
-      path: `/api/storage-locations/${id}`,
-      method: 'GET',
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags StorageLocations
-   * @name StorageLocationsDelete
-   * @summary Delete a storage location.
-   * @request DELETE:/api/storage-locations/{id}
-   * @response `200` `EntityMessageOfInteger`
-   * @response `400` `IItemSetOfIFailure`
-   */
-  storageLocationsDelete = (id: number, params: RequestParams = {}) =>
-    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
-      path: `/api/storage-locations/${id}`,
-      method: 'DELETE',
-      format: 'json',
-      ...params,
-    });
-  /**
-   * No description
-   *
    * @tags Recipes
    * @name RecipesSearch
    * @summary Search for recipes using the following criteria. All are optional and some have defaults.
@@ -654,6 +583,77 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<UserMessage, any>({
       path: `/api/recipes/rebuild-index`,
       method: 'POST',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags StorageLocations
+   * @name StorageLocationsList
+   * @summary List storage locations. All parameters are optional and some have defaults.
+   * @request GET:/api/storage-locations
+   * @response `200` `IItemSetOfListStorageLocationsResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  storageLocationsList = (query: StorageLocationsListParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfListStorageLocationsResponse, IItemSetOfIFailure>({
+      path: `/api/storage-locations`,
+      method: 'GET',
+      query: query,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags StorageLocations
+   * @name StorageLocationsSave
+   * @summary Save a storage location. Will update if found, otherwise a new item will be created.
+   * @request POST:/api/storage-locations
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  storageLocationsSave = (data: SaveStorageLocationRequest, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/storage-locations`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags StorageLocations
+   * @name StorageLocationsGet
+   * @summary Get a storage location.
+   * @request GET:/api/storage-locations/{id}
+   * @response `200` `GetStorageLocationResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  storageLocationsGet = (id: number, params: RequestParams = {}) =>
+    this.request<GetStorageLocationResponse, IItemSetOfIFailure>({
+      path: `/api/storage-locations/${id}`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags StorageLocations
+   * @name StorageLocationsDelete
+   * @summary Delete a storage location.
+   * @request DELETE:/api/storage-locations/{id}
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  storageLocationsDelete = (id: number, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/storage-locations/${id}`,
+      method: 'DELETE',
       format: 'json',
       ...params,
     });

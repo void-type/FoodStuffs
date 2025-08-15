@@ -2,4 +2,6 @@
 
 public record SaveCategoryRequest(
     int Id,
-    string Name);
+    string Name,
+    bool ShowInMealPlan,
+    string Color);

@@ -72,6 +72,7 @@ export interface ListCategoriesResponse {
   /** @format int32 */
   id?: number;
   name?: string;
+  color?: string;
   /** @format int32 */
   recipeCount?: number;
 }
@@ -118,6 +119,8 @@ export interface GetCategoryResponse {
   /** @format int32 */
   id?: number;
   name?: string;
+  showInMealPlan?: boolean;
+  color?: string;
   createdBy?: string;
   /** @format date-time */
   createdOn?: string;
@@ -154,6 +157,8 @@ export interface SaveCategoryRequest {
   /** @format int32 */
   id?: number;
   name?: string;
+  showInMealPlan?: boolean;
+  color?: string;
 }
 
 export interface AddCategoryToAllRecipesRequest {
@@ -436,67 +441,6 @@ export interface SaveMealPlanRequestRecipe {
   isComplete?: boolean;
 }
 
-/** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListStorageLocationsResponse {
-  /**
-   * The count of items in this set.
-   * @format int32
-   */
-  count?: number;
-  /** The items in this set. */
-  items?: ListStorageLocationsResponse[];
-  /** When true, this is a page of a full set. */
-  isPagingEnabled?: boolean;
-  /**
-   * If paging is enabled, this represents the page number in the total set.
-   * @format int32
-   */
-  page?: number;
-  /**
-   * If paging is enabled, the requested number of results per page.
-   * @format int32
-   */
-  take?: number;
-  /**
-   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
-   * @format int32
-   */
-  totalCount?: number;
-}
-
-export interface ListStorageLocationsResponse {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  /** @format int32 */
-  groceryItemCount?: number;
-}
-
-export interface GetStorageLocationResponse {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-  createdBy?: string;
-  /** @format date-time */
-  createdOn?: string;
-  modifiedBy?: string;
-  /** @format date-time */
-  modifiedOn?: string;
-  groceryItems?: GetStorageLocationResponseGroceryItem[];
-}
-
-export interface GetStorageLocationResponseGroceryItem {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-}
-
-export interface SaveStorageLocationRequest {
-  /** @format int32 */
-  id?: number;
-  name?: string;
-}
-
 export interface SearchRecipesResponse {
   /** A set of items. Can optionally by a page of a full set. */
   results?: IItemSetOfSearchRecipesResultItem;
@@ -660,6 +604,67 @@ export interface SaveRecipeRequestGroceryItem {
   order?: number;
 }
 
+/** A set of items. Can optionally by a page of a full set. */
+export interface IItemSetOfListStorageLocationsResponse {
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
+  count?: number;
+  /** The items in this set. */
+  items?: ListStorageLocationsResponse[];
+  /** When true, this is a page of a full set. */
+  isPagingEnabled?: boolean;
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
+  page?: number;
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
+  take?: number;
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
+  totalCount?: number;
+}
+
+export interface ListStorageLocationsResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  groceryItemCount?: number;
+}
+
+export interface GetStorageLocationResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  groceryItems?: GetStorageLocationResponseGroceryItem[];
+}
+
+export interface GetStorageLocationResponseGroceryItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SaveStorageLocationRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
 export interface CategoriesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
@@ -760,30 +765,6 @@ export interface MealPlansListParams {
   take?: number;
 }
 
-export interface StorageLocationsListParams {
-  /** Name contains (case-insensitive) */
-  name?: string | null;
-  /** Specify to show items that have relations or no relations */
-  isUnused?: boolean | null;
-  /**
-   * Set false to get all results
-   * @default true
-   */
-  isPagingEnabled?: boolean;
-  /**
-   * The page of results to retrieve
-   * @format int32
-   * @default 1
-   */
-  page?: number;
-  /**
-   * How many items in a page
-   * @format int32
-   * @default 30
-   */
-  take?: number;
-}
-
 export interface RecipesSearchParams {
   /** Search text (case-insensitive) */
   searchText?: string | null;
@@ -831,6 +812,30 @@ export interface RecipesSuggestParams {
    * How many items in a page
    * @format int32
    * @default 8
+   */
+  take?: number;
+}
+
+export interface StorageLocationsListParams {
+  /** Name contains (case-insensitive) */
+  name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
    */
   take?: number;
 }

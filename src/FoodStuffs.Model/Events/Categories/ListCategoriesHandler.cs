@@ -35,6 +35,7 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
             .SelectAsync(x => new ListCategoriesResponse(
                 Id: x.Category.Id,
                 Name: x.Category.Name,
+                Color: x.Category.Color,
                 RecipeCount: x.RecipeCount))
             .MapAsync(Ok);
     }

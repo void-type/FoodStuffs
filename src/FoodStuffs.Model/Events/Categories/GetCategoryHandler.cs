@@ -31,6 +31,8 @@ public class GetCategoryHandler : CustomEventHandlerAbstract<GetCategoryRequest,
             .SelectAsync(m => new GetCategoryResponse(
                 Id: m.Id,
                 Name: m.Name,
+                ShowInMealPlan: m.ShowInMealPlan,
+                Color: m.Color,
                 CreatedBy: m.CreatedBy,
                 CreatedOn: m.CreatedOn,
                 ModifiedBy: m.ModifiedBy,
