@@ -11,7 +11,7 @@ export default class RecipesListRequest implements RecipesSearchParams {
 
   public isForMealPlanning = null;
 
-  public sortBy = RecipeStoreHelper.sortOptions[0].value;
+  public sortBy = RecipeStoreHelper.sortOptions[0]!.value;
 
   public isPagingEnabled = true;
 

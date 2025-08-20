@@ -216,7 +216,7 @@ function onImageDelete(name: string) {
           0,
           data.sourceImages.length - 1
         );
-        data.suggestedImage = data.sourceImages[suggestedImageIndex];
+        data.suggestedImage = data.sourceImages[suggestedImageIndex] || null;
         fetchImages(props.id);
         await recipeStore.fetchRecipesList();
       })

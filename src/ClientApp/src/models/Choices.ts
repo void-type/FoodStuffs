@@ -21,7 +21,7 @@ export default class Choices {
   }
 
   static get defaultPaginationTake() {
-    return this.paginationTake[1];
+    return this.paginationTake[1]!;
   }
 
   static get boolean() {

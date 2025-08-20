@@ -25,7 +25,7 @@ export function trimAndTitleCase(value: string) {
     .trim()
     .split(' ')
     .filter((word) => word.length > 0)
-    .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+    .map((word) => (word[0] || '').toUpperCase() + word.substring(1).toLowerCase())
     .join(' ');
 }
 

@@ -54,7 +54,7 @@ const router = createRouter({
                   name: 'recipeView',
                   component: () => import('@/pages/RecipeViewPage.vue'),
                   props: (route) => ({
-                    id: +route.params.id,
+                    id: RouterHelper.paramToInt(route.params.id),
                   }),
                 },
                 {
@@ -63,7 +63,7 @@ const router = createRouter({
                   meta: { title: 'Edit Recipe' },
                   component: () => import('@/pages/RecipeEditPage.vue'),
                   props: (route) => ({
-                    id: +route.params.id,
+                    id: RouterHelper.paramToInt(route.params.id),
                   }),
                 },
               ],
@@ -113,7 +113,7 @@ const router = createRouter({
               meta: { title: 'Edit Category' },
               component: () => import('@/pages/CategoryEditPage.vue'),
               props: (route) => ({
-                id: +route.params.id,
+                id: RouterHelper.paramToInt(route.params.id),
               }),
             },
             {
@@ -140,7 +140,7 @@ const router = createRouter({
               meta: { title: 'Edit Grocery Aisle' },
               component: () => import('@/pages/GroceryAisleEditPage.vue'),
               props: (route) => ({
-                id: +route.params.id,
+                id: RouterHelper.paramToInt(route.params.id),
               }),
             },
             {
@@ -167,7 +167,7 @@ const router = createRouter({
               meta: { title: 'Edit Storage Location' },
               component: () => import('@/pages/StorageLocationEditPage.vue'),
               props: (route) => ({
-                id: +route.params.id,
+                id: RouterHelper.paramToInt(route.params.id),
               }),
             },
             {
@@ -194,7 +194,7 @@ const router = createRouter({
               meta: { title: 'Edit Grocery Item' },
               component: () => import('@/pages/GroceryItemEditPage.vue'),
               props: (route) => ({
-                id: +route.params.id,
+                id: RouterHelper.paramToInt(route.params.id),
               }),
             },
             {

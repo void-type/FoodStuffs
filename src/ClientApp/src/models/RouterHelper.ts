@@ -27,4 +27,16 @@ export default class RouterHelper {
   static editRecipe(recipe: RouteRecipe) {
     return { name: 'recipeEdit', params: { id: recipe.id, slug: recipe.slug } };
   }
+
+  static paramToInt(param: string | string[] | undefined | null) {
+    if (Array.isArray(param)) {
+      return param.length > 0 && param[0] ? parseInt(param[0], 10) : 0;
+    }
+
+    if (typeof param === 'string') {
+      return parseInt(param, 10);
+    }
+
+    return 0;
+  }
 }

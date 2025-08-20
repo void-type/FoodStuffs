@@ -106,7 +106,7 @@ function uploadFileChange(event: Event | DragEvent) {
   }
 
   // eslint-disable-next-line prefer-destructuring
-  uploadFile.value = files[0];
+  uploadFile.value = files[0] || null;
 }
 
 function deleteImageClick(name: string) {

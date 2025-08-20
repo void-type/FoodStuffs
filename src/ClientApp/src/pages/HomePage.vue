@@ -19,7 +19,7 @@ function setupLoadMoreObserver() {
 
   loadMoreObserver = new IntersectionObserver(
     async (entries) => {
-      if (entries[0].isIntersecting) {
+      if (entries.length > 0 && entries[0]?.isIntersecting) {
         await discoveryStore.fetchNext();
       }
     },

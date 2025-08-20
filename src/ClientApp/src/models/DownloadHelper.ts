@@ -12,10 +12,12 @@ export default class DownloadHelper {
   static saveDownloadedFile(response: HttpResponse<Blob, unknown>) {
     const headerValue = response.headers.get('content-disposition') || '';
 
-    let filename = headerValue
-      .split('; ')
-      .filter((part) => part.startsWith('filename='))[0]
-      .split('=')[1];
+    const filenameDirective =
+      headerValue.split('; ').find((part) => part.startsWith('filename=')) || '';
+
+    const filenameDirectiveParts = filenameDirective.split('=');
+
+    let filename = filenameDirectiveParts[1] || 'downloaded-file';
 
     if (filename.startsWith('"')) {
       filename = filename.slice(1, -1);
