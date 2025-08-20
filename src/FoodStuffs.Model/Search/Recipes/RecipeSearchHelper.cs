@@ -43,15 +43,22 @@ public static class RecipeSearchHelper
             new StoredField(C.FIELD_SLUG, recipe.Slug),
         };
 
-        foreach (var category in recipe.Categories)
+        var categories = recipe.Categories
+            .Select(c => new SearchRecipesResultItemCategory(
+                Id: c.Id,
+                Name: c.Name,
+                Color: c.Color
+            ))
+            .OrderBy(c => c.Name)
+            .ToArray();
+
+        // Categories: retrievable
+        doc.AddStoredField(C.FIELD_CATEGORIES, JsonSerializer.Serialize(categories));
+
+        foreach (var category in categories)
         {
-            // CategoryName: retrievable
-            doc.AddStoredField(C.FIELD_CATEGORY_NAMES, category.Name);
-
-            var categoryId = category.Id.ToString();
-
             // CategoryId: facetable
-            doc.AddFacetField(C.FIELD_CATEGORY_IDS, categoryId);
+            doc.AddFacetField(C.FIELD_CATEGORY_IDS, category.Id.ToString());
         }
 
         var groceryItems = recipe.GroceryItemRelations
@@ -84,7 +91,8 @@ public static class RecipeSearchHelper
             IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
-            Categories: [.. doc.GetValues(C.FIELD_CATEGORY_NAMES).OrderBy(n => n)],
+            Categories: doc.Get(C.FIELD_CATEGORIES)
+                .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemCategory>>(x) ?? []),
             GroceryItems: doc.Get(C.FIELD_MEAL_GROCERY_ITEMS_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemGroceryItem>>(x) ?? []),
             Image: doc.Get(C.FIELD_IMAGE)

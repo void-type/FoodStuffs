@@ -6,5 +6,5 @@ public record GetMealPlanResponseRecipe(
     int Order,
     bool IsComplete,
     string? Image,
-    List<string> Categories,
+    List<GetMealPlanResponseRecipeCategory> Categories,
     List<GetMealPlanResponseRecipeGroceryItem> GroceryItems);

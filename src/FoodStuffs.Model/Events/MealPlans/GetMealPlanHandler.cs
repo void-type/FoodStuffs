@@ -48,7 +48,14 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                         Order: rel.Order,
                         IsComplete: rel.IsComplete,
                         Image: rel.Recipe.DefaultImage?.FileName,
-                        Categories: [.. rel.Recipe.Categories.ConvertAll(c => c.Name)],
+                        Categories: [.. rel.Recipe.Categories
+                            .Where(c => c.ShowInMealPlan)
+                            .Select(c => new GetMealPlanResponseRecipeCategory(
+                                Id: c.Id,
+                                Name: c.Name,
+                                Color: c.Color
+                            ))
+                            .OrderBy(c => c.Name)],
                         GroceryItems: [.. rel.Recipe.GroceryItemRelations
                             .Select(i =>
                                 new GetMealPlanResponseRecipeGroceryItem(

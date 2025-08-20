@@ -349,7 +349,7 @@ const badgeClasses = computed(() => {
               {{ data.working.name }}
             </div>
           </div>
-          <small class="form-text text-muted">Use black (#000000) for default color.</small>
+          <div class="form-text text-muted mt-2">Use black for default color.</div>
         </div>
         <div class="g-col-12">
           <div class="form-check">

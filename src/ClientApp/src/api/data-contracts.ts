@@ -400,8 +400,15 @@ export interface GetMealPlanResponseRecipe {
   order?: number;
   isComplete?: boolean;
   image?: string | null;
-  categories?: string[];
+  categories?: GetMealPlanResponseRecipeCategory[];
   groceryItems?: GetMealPlanResponseRecipeGroceryItem[];
+}
+
+export interface GetMealPlanResponseRecipeCategory {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  color?: string;
 }
 
 export interface GetMealPlanResponseRecipeGroceryItem {
@@ -483,9 +490,16 @@ export interface SearchRecipesResultItem {
   /** @format date-time */
   createdOn?: string;
   slug?: string;
-  categories?: string[];
+  categories?: SearchRecipesResultItemCategory[];
   groceryItems?: SearchRecipesResultItemGroceryItem[];
   image?: string | null;
+}
+
+export interface SearchRecipesResultItemCategory {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  color?: string;
 }
 
 export interface SearchRecipesResultItemGroceryItem {
@@ -564,8 +578,15 @@ export interface GetRecipeResponse {
   defaultImage?: string | null;
   pinnedImage?: string | null;
   images?: string[];
-  categories?: string[];
+  categories?: GetRecipeResponseCategory[];
   groceryItems?: GetRecipeResponseGroceryItem[];
+}
+
+export interface GetRecipeResponseCategory {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  color?: string;
 }
 
 export interface GetRecipeResponseGroceryItem {

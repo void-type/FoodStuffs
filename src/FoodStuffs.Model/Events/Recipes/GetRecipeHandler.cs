@@ -46,8 +46,12 @@ public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, Get
                 Images: r.Images
                     .ConvertAll(i => i.FileName),
                 Categories: [.. r.Categories
-                    .Select(c => c.Name)
-                    .Order(StringComparer.Ordinal)],
+                    .Select(c => new GetRecipeResponseCategory(
+                        Id: c.Id,
+                        Name: c.Name,
+                        Color: c.Color
+                    ))
+                    .OrderBy(c => c.Name)],
                 GroceryItems: [.. r.GroceryItemRelations
                     .Select(i => new GetRecipeResponseGroceryItem(
                         Id: i.GroceryItem.Id,

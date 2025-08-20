@@ -6,6 +6,6 @@ public record SearchRecipesResultItem(
     bool IsForMealPlanning,
     DateTimeOffset CreatedOn,
     string Slug,
-    List<string> Categories,
+    List<SearchRecipesResultItemCategory> Categories,
     List<SearchRecipesResultItemGroceryItem> GroceryItems,
     string? Image);
