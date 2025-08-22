@@ -601,6 +601,10 @@ export interface GetRecipeResponseGroceryItem {
   order?: number;
 }
 
+export type EntityResponseOfGetRecipeResponse = UserMessage & {
+  entity?: GetRecipeResponse | null;
+};
+
 export interface SaveRecipeRequest {
   /** @format int32 */
   id?: number;

@@ -11,8 +11,8 @@ import {
 import type {
   GetRecipeResponse,
   IItemSetOfIFailure,
-  EntityMessageOfInteger,
   SaveRecipeRequest,
+  EntityResponseOfGetRecipeResponse,
 } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import useRecipeStore from '@/stores/recipeStore';
@@ -28,6 +28,7 @@ import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import type RecipeWorking from '@/models/RecipeWorking';
 
 const props = defineProps({
   id: {
@@ -124,22 +125,30 @@ async function fetchImages(recipeId: number) {
   }
 }
 
-async function onRecipeSave(recipe: SaveRecipeRequest) {
-  async function onPostSave(response: HttpResponse<EntityMessageOfInteger, IItemSetOfIFailure>) {
+async function onRecipeSave(recipe: RecipeWorking) {
+  async function onPostSave(
+    response: HttpResponse<EntityResponseOfGetRecipeResponse, IItemSetOfIFailure>
+  ) {
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
     }
 
     await recipeStore.fetchRecipesList();
-    recipeStore.updateRecent(recipe);
+
+    if (response.data.entity) {
+      recipeStore.updateRecent(response.data.entity);
+    }
   }
 
   try {
-    const response = await api().recipesSave(recipe);
+    const response = await api().recipesSave({
+      ...recipe,
+      categories: recipe.categories.map((x) => x.name || ''),
+    });
     data.isRecipeDirty = false;
 
     if (!isEditMode.value) {
-      await router.push({ name: 'recipeEdit', params: { id: response.data.id } });
+      await router.push({ name: 'recipeEdit', params: { id: response.data.entity?.id } });
     } else {
       await fetchRecipe();
     }

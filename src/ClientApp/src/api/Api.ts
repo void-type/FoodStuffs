@@ -16,6 +16,7 @@ import type {
   CategoriesListParams,
   EntityMessageOfInteger,
   EntityMessageOfString,
+  EntityResponseOfGetRecipeResponse,
   GetCategoryResponse,
   GetGroceryAisleResponse,
   GetGroceryItemResponse,
@@ -506,11 +507,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name RecipesSave
    * @summary Save a recipe. Will update if found, otherwise a new recipe will be created.
    * @request POST:/api/recipes
-   * @response `200` `EntityMessageOfInteger`
+   * @response `200` `EntityResponseOfGetRecipeResponse`
    * @response `400` `IItemSetOfIFailure`
    */
   recipesSave = (data: SaveRecipeRequest, params: RequestParams = {}) =>
-    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+    this.request<EntityResponseOfGetRecipeResponse, IItemSetOfIFailure>({
       path: `/api/recipes`,
       method: 'POST',
       body: data,

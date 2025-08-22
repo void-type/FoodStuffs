@@ -1,4 +1,8 @@
-import type { GetRecipeResponse, GetRecipeResponseGroceryItem } from '@/api/data-contracts';
+import type {
+  GetRecipeResponse,
+  GetRecipeResponseCategory,
+  GetRecipeResponseGroceryItem,
+} from '@/api/data-contracts';
 
 export default class RecipeGetResponse implements GetRecipeResponse {
   public id = 0;
@@ -25,7 +29,7 @@ export default class RecipeGetResponse implements GetRecipeResponse {
 
   public images: string[] = [];
 
-  public categories: string[] = [];
+  public categories: GetRecipeResponseCategory[] = [];
 
   public groceryItems: GetRecipeResponseGroceryItem[] = [];
 }

@@ -146,17 +146,17 @@ function addCategory(tag: string) {
   const categories = data.workingRecipe.categories?.slice() || [];
 
   const categoryDoesNotExist =
-    categories.map((value) => value.toUpperCase()).indexOf(categoryName.toUpperCase()) < 0;
+    categories.map((value) => value?.name?.toUpperCase()).indexOf(categoryName.toUpperCase()) < 0;
 
   if (categoryDoesNotExist && categoryName.length > 0) {
-    categories.push(categoryName);
+    categories.push({ id: 0, name: categoryName, color: '#000000' });
     data.workingRecipe.categories = categories;
   }
 }
 
 function removeCategory(categoryName: string) {
   const categories = data.workingRecipe.categories?.slice() || [];
-  const categoryIndex = categories.indexOf(categoryName);
+  const categoryIndex = categories.findIndex((x) => x.name === categoryName);
 
   if (categoryIndex > -1) {
     categories.splice(categoryIndex, 1);
@@ -266,7 +266,7 @@ onMounted(async () => {
           'g-col-12 g-col-md-6': true,
           danger: messageStore.isFieldInError('categories'),
         }"
-        :tags="data.workingRecipe.categories || []"
+        :tags="data.workingRecipe.categories.map((x) => x.name || '')"
         :on-add-tag="addCategory"
         :on-remove-tag="removeCategory"
         :suggestions="categoryOptions"

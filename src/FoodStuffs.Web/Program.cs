@@ -18,6 +18,9 @@ using VoidCore.Model.Time;
 
 try
 {
+    // Suppress browser refresh during development
+    Environment.SetEnvironmentVariable("DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH", "1");
+
     var builder = WebApplication.CreateBuilder(args);
     var env = builder.Environment;
     var config = builder.Configuration;

@@ -7,12 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
-using VoidCore.Model.Responses.Messages;
 using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, EntityMessage<int>>
+public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, EntityResponse<GetRecipeResponse>>
 {
     private readonly FoodStuffsContext _data;
     private readonly IRecipeIndexService _index;
@@ -25,14 +24,14 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         _validator = validator;
     }
 
-    public override async Task<IResult<EntityMessage<int>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
+    public override async Task<IResult<EntityResponse<GetRecipeResponse>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
     {
         return await request
             .Validate(_validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
-    private async Task<IResult<EntityMessage<int>>> SaveAsync(SaveRecipeRequest request, CancellationToken cancellationToken)
+    private async Task<IResult<EntityResponse<GetRecipeResponse>>> SaveAsync(SaveRecipeRequest request, CancellationToken cancellationToken)
     {
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
@@ -80,7 +79,11 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         _index.AddOrUpdate(recipeToEdit);
 
-        return Ok(EntityMessage.Create($"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.", recipeToEdit.Id));
+        var response = EntityResponse.Create(
+            $"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.",
+            recipeToEdit.ToGetRecipeResponse());
+
+        return Ok(response);
     }
 
     private static void Transfer(SaveRecipeRequest request, Recipe recipe)
@@ -122,7 +125,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         // Create missing categories that don't exist.
         var createdCategories = missingNames
             .Where(x => !recipe.Categories.Select(x => x.Name).Contains(x, StringComparer.OrdinalIgnoreCase))
-            .Select(x => new Category { Name = x });
+            .Select(x => new Category { Name = x, Color = "#000000" });
 
         recipe.Categories.AddRange(createdCategories);
     }

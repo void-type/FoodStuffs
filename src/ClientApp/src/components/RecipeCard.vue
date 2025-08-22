@@ -66,10 +66,10 @@ function flipCard() {
           <div v-if="(recipe.categories?.length || 0) > 0">
             <span
               v-for="category in recipe.categories"
-              :key="category || ''"
+              :key="category.name || ''"
               class="badge rounded-pill text-bg-secondary m-1"
             >
-              {{ category }}</span
+              {{ category.name }}</span
             >
           </div>
         </div>
@@ -79,10 +79,10 @@ function flipCard() {
       <div v-if="(recipe.categories?.length || 0) > 0">
         <span
           v-for="category in recipe.categories"
-          :key="category || ''"
+          :key="category.name || ''"
           class="badge rounded-pill text-bg-secondary mb-1 me-1"
         >
-          {{ category }}</span
+          {{ category.name }}</span
         >
       </div>
     </div>

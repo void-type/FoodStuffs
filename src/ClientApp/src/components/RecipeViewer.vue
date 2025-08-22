@@ -182,7 +182,7 @@ onMounted(() => {
         Cook Time: {{ timeSpanFormat(recipe.cookTimeMinutes) }}
       </div>
       <div v-if="(recipe.categories || []).length > 0">
-        Categories: {{ (recipe.categories || []).join(', ') }}
+        Categories: {{ (recipe.categories?.map((x) => x.name || '') || []).join(', ') }}
       </div>
     </div>
     <EntityAuditInfo class="mt-3" :entity="recipe" />

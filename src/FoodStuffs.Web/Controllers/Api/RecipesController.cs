@@ -1,4 +1,5 @@
-﻿using FoodStuffs.Model.Events.Recipes;
+﻿using FoodStuffs.Model.Events;
+using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Events.Recipes.Models;
 using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Model.Search.Recipes.Models;
@@ -111,7 +112,7 @@ public class RecipesController : ControllerBase
     /// <param name="saveHandler"></param>
     /// <param name="request">The recipe to save</param>
     [HttpPost]
-    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(EntityResponse<GetRecipeResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> SaveAsync([FromServices] SaveRecipeHandler saveHandler, [FromBody] SaveRecipeRequest request)
     {
