@@ -18,8 +18,8 @@ using VoidCore.Model.Time;
 
 try
 {
-    // Suppress browser refresh during development
-    Environment.SetEnvironmentVariable("DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH", "1");
+    // Suppress browser refresh during development because it refreshes the page during Lucene indexing.
+    Environment.SetEnvironmentVariable("ASPNETCORE_HOSTINGSTARTUPEXCLUDEASSEMBLIES", "Microsoft.AspNetCore.Watch.BrowserRefresh");
 
     var builder = WebApplication.CreateBuilder(args);
     var env = builder.Environment;
