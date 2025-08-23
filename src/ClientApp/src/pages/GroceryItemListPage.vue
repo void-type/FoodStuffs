@@ -13,6 +13,7 @@ import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import TagBadge from '@/components/TagBadge.vue';
 import type { HttpResponse } from '@/api/http-client';
 import GroceryItemInventoryQuantity from '@/components/GroceryItemInventoryQuantity.vue';
 
@@ -214,13 +215,12 @@ watch(
             </div>
           </div>
           <div v-if="(groceryItem.storageLocations?.length || 0) > 0" class="mt-3">
-            <span
+            <TagBadge
               v-for="location in groceryItem.storageLocations"
               :key="location || ''"
-              class="badge rounded-pill text-bg-secondary me-2 mt-2"
-            >
-              {{ location }}</span
-            >
+              class="me-2 mt-2"
+              :tag="{ name: location }"
+            />
           </div>
         </div>
       </div>

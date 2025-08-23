@@ -3,9 +3,10 @@ import RecipeWorking from '@/models/RecipeWorking';
 import type {
   GetRecipeResponse,
   IItemSetOfIFailure,
+  ListCategoriesResponse,
   ListGroceryItemsResponse,
 } from '@/api/data-contracts';
-import { isNil, trimAndTitleCase } from '@/models/FormatHelper';
+import { trimAndTitleCase } from '@/models/FormatHelper';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelper from '@/models/ApiHelper';
@@ -14,6 +15,7 @@ import useMessageStore from '@/stores/messageStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
+import type { Tag } from '@/models/Tag';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
@@ -57,13 +59,12 @@ const data = reactive({
   workingRecipeInitial: '',
 });
 
-const categoryOptions = ref([] as Array<string>);
+const categoryOptions = ref([] as Array<ListCategoriesResponse>);
 
 async function fetchCategories() {
   try {
     const response = await api().categoriesList({ isPagingEnabled: false });
-    categoryOptions.value =
-      response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+    categoryOptions.value = response.data.items || [];
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -154,9 +155,9 @@ function addCategory(tag: string) {
   }
 }
 
-function removeCategory(categoryName: string) {
+function removeCategory(category: Tag) {
   const categories = data.workingRecipe.categories?.slice() || [];
-  const categoryIndex = categories.findIndex((x) => x.name === categoryName);
+  const categoryIndex = categories.findIndex((x) => x.name === category.name);
 
   if (categoryIndex > -1) {
     categories.splice(categoryIndex, 1);
@@ -266,7 +267,7 @@ onMounted(async () => {
           'g-col-12 g-col-md-6': true,
           danger: messageStore.isFieldInError('categories'),
         }"
-        :tags="data.workingRecipe.categories.map((x) => x.name || '')"
+        :tags="data.workingRecipe.categories"
         :on-add-tag="addCategory"
         :on-remove-tag="removeCategory"
         :suggestions="categoryOptions"

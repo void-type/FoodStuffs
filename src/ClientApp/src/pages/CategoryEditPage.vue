@@ -22,6 +22,7 @@ import {
   onBeforeRouteUpdate,
   onBeforeRouteLeave,
 } from 'vue-router';
+import TagBadge from '@/components/TagBadge.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RouterHelper from '@/models/RouterHelper';
 
@@ -249,36 +250,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload);
 });
-
-// Add these computed properties after the existing computed properties
-const badgeStyle = computed(() => {
-  const { color } = data.working;
-  if (!color || color === '#000000') {
-    return {};
-  }
-  return {
-    '--badge-bg-color': color,
-  };
-});
-
-const badgeClasses = computed(() => {
-  const { color } = data.working;
-  if (!color || color === '#000000') {
-    return 'badge rounded-pill text-bg-secondary';
-  }
-
-  // Calculate if the color is light or dark for text contrast
-  const hex = color.replace('#', '');
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
-
-  // Calculate relative luminance
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  const textColor = luminance > 0.5 ? 'text-dark' : 'text-light';
-
-  return `badge rounded-pill custom-badge ${textColor}`;
-});
 </script>
 
 <template>
@@ -345,9 +316,7 @@ const badgeClasses = computed(() => {
               }"
               title="Choose your color"
             />
-            <div :class="badgeClasses" :style="badgeStyle">
-              {{ data.working.name }}
-            </div>
+            <TagBadge :tag="data.working" />
           </div>
           <div class="form-text text-muted mt-2">Use black for default color.</div>
         </div>
@@ -381,8 +350,4 @@ const badgeClasses = computed(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.custom-badge {
-  background-color: var(--badge-bg-color, var(--bs-secondary-bg, #6c757d));
-}
-</style>
+<style lang="scss" scoped></style>

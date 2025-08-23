@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import type { Tag } from '@/models/Tag';
 import { onClickOutside } from '@vueuse/core';
 import { computed, ref, watch, type PropType } from 'vue';
+import TagBadge from './TagBadge.vue';
 
 const props = defineProps({
   label: {
@@ -12,7 +14,7 @@ const props = defineProps({
     required: true,
   },
   tags: {
-    type: Array as PropType<Array<string>>,
+    type: Array as PropType<Array<Tag>>,
     required: true,
   },
   onAddTag: {
@@ -24,7 +26,7 @@ const props = defineProps({
     required: true,
   },
   suggestions: {
-    type: Array as PropType<Array<string>>,
+    type: Array as PropType<Array<Tag>>,
     required: false,
     default: () => [],
   },
@@ -37,7 +39,7 @@ function addTagClick(tag: string) {
   newTag.value = '';
 }
 
-function removeTagClick(tag: string) {
+function removeTagClick(tag: Tag) {
   props.onRemoveTag(tag);
 }
 
@@ -46,7 +48,7 @@ const showSuggestions = ref(true);
 const availableSuggestions = computed(() =>
   props.suggestions
     .filter((x) => !props.tags.includes(x))
-    .filter((x) => newTag.value && x.toLowerCase().includes(newTag.value.toLowerCase()))
+    .filter((x) => newTag.value && x.name?.toLowerCase()?.includes(newTag.value.toLowerCase()))
 );
 
 const tagEditorRef = ref<HTMLElement | null>(null);
@@ -103,30 +105,29 @@ watch(
     >
       <li
         v-for="suggestion in availableSuggestions"
-        :key="suggestion"
+        :key="suggestion.name"
         role="option"
         aria-selected="false"
       >
         <button
           type="button"
           class="dropdown-item suggestion"
-          @click.prevent.stop="addTagClick(suggestion)"
+          @click.prevent.stop="addTagClick(suggestion.name || '')"
         >
-          {{ suggestion }}
+          {{ suggestion.name }}
         </button>
       </li>
     </ul>
     <div>
-      <button
+      <TagBadge
         v-for="tag in tags"
-        :key="tag"
+        :key="tag.name"
         type="button"
-        :aria-label="`Click to remove ${tag}.`"
-        class="badge rounded-pill text-bg-secondary me-2 mt-2"
+        :aria-label="`Click to remove ${tag.name}.`"
+        class="me-2 mt-2"
+        :tag="tag"
         @click.stop.prevent="removeTagClick(tag)"
-      >
-        {{ tag }}
-      </button>
+      />
     </div>
   </div>
 </template>

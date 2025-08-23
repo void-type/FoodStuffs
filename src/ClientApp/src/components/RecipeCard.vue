@@ -6,6 +6,7 @@ import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
+import TagBadge from './TagBadge.vue';
 import AppSortHandle from './AppSortHandle.vue';
 
 const props = defineProps({
@@ -64,26 +65,24 @@ function flipCard() {
             </ul>
           </div>
           <div v-if="(recipe.categories?.length || 0) > 0">
-            <span
+            <TagBadge
               v-for="category in recipe.categories"
               :key="category.name || ''"
-              class="badge rounded-pill text-bg-secondary m-1"
-            >
-              {{ category.name }}</span
-            >
+              class="m-1"
+              :tag="category"
+            />
           </div>
         </div>
       </div>
     </div>
     <div v-else class="card-body">
       <div v-if="(recipe.categories?.length || 0) > 0">
-        <span
+        <TagBadge
           v-for="category in recipe.categories"
           :key="category.name || ''"
-          class="badge rounded-pill text-bg-secondary mb-1 me-1"
-        >
-          {{ category.name }}</span
-        >
+          class="mb-1 me-1"
+          :tag="category"
+        />
       </div>
     </div>
     <div class="card-footer">

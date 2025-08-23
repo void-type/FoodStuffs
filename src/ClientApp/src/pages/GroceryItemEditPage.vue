@@ -333,10 +333,10 @@ onBeforeUnmount(() => {
             'g-col-12 g-col-md-6': true,
             danger: messageStore.isFieldInError('storageLocations'),
           }"
-          :tags="data.working.storageLocations || []"
+          :tags="(data.working.storageLocations || []).map((name) => ({ name }))"
           :on-add-tag="addStorageLocation"
           :on-remove-tag="removeStorageLocation"
-          :suggestions="storageLocationOptions"
+          :suggestions="storageLocationOptions.map((name) => ({ name }))"
           field-name="storageLocations"
           label="Storage Locations"
         />
