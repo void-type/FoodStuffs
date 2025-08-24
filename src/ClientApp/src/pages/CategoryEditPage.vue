@@ -322,6 +322,7 @@ onBeforeUnmount(() => {
               class="btn btn-outline-secondary dropdown-toggle"
               type="button"
               data-bs-toggle="dropdown"
+              data-bs-auto-close="outside"
               aria-expanded="false"
               aria-label="Open color picker"
             >
