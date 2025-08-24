@@ -22,8 +22,12 @@ export default class DarkModeHelper {
 
     if (setting) {
       html.setAttribute('data-bs-theme', 'dark');
+      // For vue-color picker
+      html.classList.add('dark');
     } else {
       html.removeAttribute('data-bs-theme');
+      // For vue-color picker
+      html.classList.remove('dark');
     }
   }
 }

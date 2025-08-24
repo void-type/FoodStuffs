@@ -25,6 +25,8 @@ import {
 import TagBadge from '@/components/TagBadge.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RouterHelper from '@/models/RouterHelper';
+import { ChromePicker } from 'vue-color';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
   id: {
@@ -305,20 +307,41 @@ onBeforeUnmount(() => {
         </div>
         <div class="g-col-12 g-col-md-6">
           <label for="color" class="form-label">Color</label>
-          <div class="d-flex align-items-center gap-3">
+          <div class="input-group">
             <input
               id="color"
               v-model="data.working.color"
-              type="color"
+              type="text"
               :class="{
-                'form-control form-control-color': true,
+                'form-control': true,
                 'is-invalid': messageStore.isFieldInError('color'),
               }"
-              title="Choose your color"
+              title="Enter color hex code"
             />
+            <button
+              class="btn btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Open color picker"
+            >
+              <font-awesome-icon icon="fa-palette" />
+            </button>
+            <div class="dropdown-menu dropdown-menu-end p-3">
+              <div class="mb-2">
+                <small class="text-muted">Use black for default color.</small>
+              </div>
+              <ChromePicker
+                v-model="data.working.color"
+                :disable-alpha="true"
+                :disable-fields="true"
+                :formats="['hex']"
+              />
+            </div>
+          </div>
+          <div class="mt-2">
             <TagBadge :tag="data.working" />
           </div>
-          <div class="form-text text-muted mt-2">Use black for default color.</div>
         </div>
         <div class="g-col-12">
           <div class="form-check">
@@ -350,4 +373,9 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// .color-picker-dropdown {
+//   min-width: auto;
+//   width: max-content;
+// }
+</style>

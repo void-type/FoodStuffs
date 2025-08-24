@@ -18,7 +18,9 @@ import {
   faTimes,
   faCheck,
   faDiceThree,
+  faPalette,
 } from '@fortawesome/free-solid-svg-icons';
+import 'vue-color/style.css';
 
 // Prevents inline styling to appease CSP.
 fontAwesomeConfig.autoAddCss = false;
@@ -34,7 +36,8 @@ library.add(
   faMinus,
   faTimes,
   faCheck,
-  faDiceThree
+  faDiceThree,
+  faPalette
 );
 
 const app = createApp(App);
