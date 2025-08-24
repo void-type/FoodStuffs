@@ -146,9 +146,13 @@ function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
   updateOrdersByIndex();
   mealPlanStore.saveCurrentMealPlan([], true);
 
+  if (!recipe.isComplete) {
+    return;
+  }
+
   const modalParameters: ModalParameters = {
     title: 'Recipe Completed',
-    description: 'Would you like to update inventory?',
+    description: 'Would you like to go to the recipe to update inventory?',
     okAction: () => {
       router.push(RouterHelper.editRecipe(recipe));
     },
