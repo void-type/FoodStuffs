@@ -232,6 +232,71 @@
         "watch-web-server-with-client-build"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "create-migration",
+      "command": "./dbCreateMigration.ps1",
+      "args": ["-MigrationName", "${input:migrationName}"],
+      "options": {
+        "cwd": "./build"
+      },
+      "type": "shell",
+      "problemMatcher": ["$msCompile"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "database"
+      }
+    },
+    {
+      "label": "apply-migration",
+      "command": "./dbApplyMigration.ps1",
+      "args": ["-MigrationName", "'${input:migrationName}'"],
+      "options": {
+        "cwd": "./build"
+      },
+      "type": "shell",
+      "problemMatcher": ["$msCompile"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "database"
+      }
+    },
+    {
+      "label": "remove-migration",
+      "command": "./dbRemoveMigration.ps1",
+      "args": ["-MigrationName", "'${input:migrationName}'"],
+      "options": {
+        "cwd": "./build"
+      },
+      "type": "shell",
+      "problemMatcher": ["$msCompile"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "database"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "migrationName",
+      "description": "Migration name",
+      "default": "",
+      "type": "promptString"
     }
   ]
 }
