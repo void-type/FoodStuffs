@@ -16,6 +16,8 @@ export default class RecipeWorking {
 
   public isForMealPlanning = false;
 
+  public mealPlanningSidesCount = 0;
+
   public groceryItems: RecipeGroceryItemWorking[] = [];
 
   public categories: GetRecipeResponseCategory[] = [];

@@ -169,6 +169,33 @@ const pageTitle = computed(() => {
   return 'New Meal Plan';
 });
 
+const sidesNeeded = computed(() => {
+  if (!currentMealPlan.value) {
+    return 0;
+  }
+
+  return (
+    currentMealPlan.value.recipes?.reduce(
+      (acc, recipe) => acc + (recipe.mealPlanningSidesCount || 0),
+      0
+    ) || 0
+  );
+});
+
+const sidesHave = computed(() => {
+  if (!currentMealPlan.value) {
+    return 0;
+  }
+
+  // Count how many sides are included in the meal plan. A side is recipe with Category that looks like {name: 'Side'}
+  return (
+    currentMealPlan.value.recipes?.reduce(
+      (acc, recipe) => acc + (recipe.categories?.some((cat) => cat.name === 'Side') ? 1 : 0),
+      0
+    ) || 0
+  );
+});
+
 onMounted(async () => {
   await fetchGroceryItems();
   await fetchGroceryAisles();
@@ -216,6 +243,12 @@ onMounted(async () => {
             </button>
           </li>
         </ul>
+      </div>
+      <div class="mt-3">
+        {{ sidesNeeded }} side{{ sidesNeeded !== 1 ? 's' : '' }} needed.
+        <span v-if="sidesHave < sidesNeeded" class="text-danger">
+          ({{ sidesNeeded - sidesHave }} more needed)
+        </span>
       </div>
       <div class="grid mt-3">
         <div class="g-col-12 g-col-md-6">

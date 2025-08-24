@@ -101,7 +101,15 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
               </div>
             </div>
           </div>
-          <div class="mt-3">
+          <div class="mt-3 d-flex justify-content-between align-items-center">
+            <div>
+              <span v-if="(recipe.mealPlanningSidesCount || 0) > 0"
+                >{{ recipe.mealPlanningSidesCount }} side{{
+                  recipe.mealPlanningSidesCount !== 1 ? 's' : ''
+                }}
+                needed.</span
+              >
+            </div>
             <div class="form-check my-auto">
               <input
                 :id="`recipe-complete-${recipe.id}`"

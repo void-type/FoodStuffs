@@ -34,6 +34,9 @@ public static class RecipeSearchHelper
             // IsForMealPlanning: facetable
             new FacetField(C.FIELD_IS_FOR_MEAL_PLANNING, isForMealPlanning),
 
+            // MealPlanningSidesCount: retrievable
+            new StoredField(C.FIELD_MEAL_PLANNING_SIDES_COUNT, recipe.MealPlanningSidesCount.ToString()),
+
             // CreatedOn: retrievable
             new StoredField(C.FIELD_CREATED_ON, createdOn),
             // CreatedOn: sortable
@@ -89,6 +92,7 @@ public static class RecipeSearchHelper
             Id: int.Parse(doc.Get(C.FIELD_ID)),
             Name: doc.Get(C.FIELD_NAME),
             IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
+            MealPlanningSidesCount: int.Parse(doc.Get(C.FIELD_MEAL_PLANNING_SIDES_COUNT) ?? "0"),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
             Categories: doc.Get(C.FIELD_CATEGORIES)

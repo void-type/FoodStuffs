@@ -22,6 +22,7 @@ import TagEditor from './TagEditor.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 import RecipeEditorGroceryItems from './RecipeEditorGroceryItems.vue';
 import RichTextEditor from './RichTextEditor.vue';
+import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
 
 const props = defineProps({
   sourceRecipe: {
@@ -278,6 +279,13 @@ onMounted(async () => {
           <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
         </div>
       </div>
+      <AppInputNumberWithButtons
+        id="mealPlanningSidesCount"
+        v-model="data.workingRecipe.mealPlanningSidesCount"
+        label="Sides count"
+        class="g-col-12 g-col-md-6"
+        :min="0"
+      />
       <div class="g-col-12 g-col-md-6">
         <label for="grocery-item-list" class="form-label">Grocery items</label>
         <RecipeEditorGroceryItems

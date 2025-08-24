@@ -64,6 +64,14 @@ function flipCard() {
               </li>
             </ul>
           </div>
+          <div v-if="(recipe.mealPlanningSidesCount || 0) > 0" class="mb-3">
+            <div>
+              {{ recipe.mealPlanningSidesCount }} side{{
+                recipe.mealPlanningSidesCount !== 1 ? 's' : ''
+              }}
+              needed.
+            </div>
+          </div>
           <div v-if="(recipe.categories?.length || 0) > 0">
             <TagBadge
               v-for="category in recipe.categories"

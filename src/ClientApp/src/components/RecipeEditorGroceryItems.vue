@@ -183,7 +183,6 @@ onBeforeUnmount(() => {
               v-model="item.quantity"
               label="Quantity"
               class="g-col-12 g-col-md-6"
-              :item="item"
               :min="1"
             />
             <GroceryItemInventoryQuantity

@@ -17,6 +17,8 @@ export default class RecipeGetResponse implements GetRecipeResponse {
 
   public isForMealPlanning = false;
 
+  public mealPlanningSidesCount = 0;
+
   public createdBy: string = '';
 
   public createdOn = '';

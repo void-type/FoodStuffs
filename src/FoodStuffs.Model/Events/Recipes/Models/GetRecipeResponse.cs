@@ -8,6 +8,7 @@ public record GetRecipeResponse(
     int? PrepTimeMinutes,
     int? CookTimeMinutes,
     bool IsForMealPlanning,
+    int MealPlanningSidesCount,
     string CreatedBy,
     DateTimeOffset CreatedOn,
     string ModifiedBy,

@@ -14,6 +14,7 @@ public static class RecipeEventModelMappers
             PrepTimeMinutes: r.PrepTimeMinutes,
             CookTimeMinutes: r.CookTimeMinutes,
             IsForMealPlanning: r.IsForMealPlanning,
+            MealPlanningSidesCount: r.MealPlanningSidesCount,
             CreatedBy: r.CreatedBy,
             CreatedOn: r.CreatedOn,
             ModifiedBy: r.ModifiedBy,

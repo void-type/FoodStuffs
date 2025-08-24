@@ -149,6 +149,17 @@ onMounted(() => {
     </div>
     <div v-if="!isNil(recipe.sides)" class="mt-3">
       <h2>Sides</h2>
+      <div v-if="(recipe.mealPlanningSidesCount || 0) > 0" class="mb-3 d-print-none">
+        <div>
+          {{ recipe.mealPlanningSidesCount }} side{{
+            recipe.mealPlanningSidesCount !== 1 ? 's' : ''
+          }}
+          needed.
+          <span class="badge p-0 mb-2 text-muted">
+            <small>Not printed.</small>
+          </span>
+        </div>
+      </div>
       <div :class="{ 'form-control-plaintext p-0': true }">
         {{ recipe.sides }}
       </div>

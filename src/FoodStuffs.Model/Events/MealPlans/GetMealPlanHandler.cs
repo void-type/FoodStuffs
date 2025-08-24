@@ -47,6 +47,7 @@ public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest,
                         Name: rel.Recipe.Name,
                         Order: rel.Order,
                         IsComplete: rel.IsComplete,
+                        mealPlanningSidesCount: rel.Recipe.MealPlanningSidesCount,
                         Image: rel.Recipe.DefaultImage?.FileName,
                         Categories: [.. rel.Recipe.Categories
                             .Where(c => c.ShowInMealPlan)

@@ -399,6 +399,8 @@ export interface GetMealPlanResponseRecipe {
   /** @format int32 */
   order?: number;
   isComplete?: boolean;
+  /** @format int32 */
+  mealPlanningSidesCount?: number;
   image?: string | null;
   categories?: GetMealPlanResponseRecipeCategory[];
   groceryItems?: GetMealPlanResponseRecipeGroceryItem[];
@@ -487,6 +489,8 @@ export interface SearchRecipesResultItem {
   id?: number;
   name?: string;
   isForMealPlanning?: boolean;
+  /** @format int32 */
+  mealPlanningSidesCount?: number;
   /** @format date-time */
   createdOn?: string;
   slug?: string;
@@ -568,6 +572,8 @@ export interface GetRecipeResponse {
   /** @format int32 */
   cookTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
+  /** @format int32 */
+  mealPlanningSidesCount?: number;
   createdBy?: string;
   /** @format date-time */
   createdOn?: string;
@@ -616,6 +622,8 @@ export interface SaveRecipeRequest {
   /** @format int32 */
   prepTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
+  /** @format int32 */
+  mealPlanningSidesCount?: number;
   groceryItems?: SaveRecipeRequestGroceryItem[];
   categories?: string[];
 }

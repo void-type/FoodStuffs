@@ -19,6 +19,8 @@ public class Recipe : IAuditableWithOffset
 
     public bool IsForMealPlanning { get; set; }
 
+    public int MealPlanningSidesCount { get; set; }
+
     public string CreatedBy { get; set; } = null!;
 
     public DateTimeOffset CreatedOn { get; set; }

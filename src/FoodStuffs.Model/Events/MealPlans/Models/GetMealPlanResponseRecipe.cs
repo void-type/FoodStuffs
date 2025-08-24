@@ -5,6 +5,7 @@ public record GetMealPlanResponseRecipe(
     string Name,
     int Order,
     bool IsComplete,
+    int mealPlanningSidesCount,
     string? Image,
     List<GetMealPlanResponseRecipeCategory> Categories,
     List<GetMealPlanResponseRecipeGroceryItem> GroceryItems);

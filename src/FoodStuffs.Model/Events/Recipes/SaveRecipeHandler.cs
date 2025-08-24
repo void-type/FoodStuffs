@@ -94,6 +94,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.IsForMealPlanning = request.IsForMealPlanning;
+        recipe.MealPlanningSidesCount = request.MealPlanningSidesCount;
     }
 
     private async Task ManageCategoriesAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
