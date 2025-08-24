@@ -43,10 +43,10 @@ public static class Deps
 
     public static FoodStuffsContext Seed(this FoodStuffsContext context)
     {
-        var category1 = context.Categories.Add(new Category { Id = 1, Name = "Category1" }).Entity;
-        var category2 = context.Categories.Add(new Category { Id = 2, Name = "Category2" }).Entity;
-        var category3 = context.Categories.Add(new Category { Id = 3, Name = "Category3" }).Entity;
-        var category4 = context.Categories.Add(new Category { Id = 4, Name = "Category4" }).Entity;
+        var category1 = context.Categories.Add(new Category { Id = 1, Name = "Category1", Color = "#FF5733" }).Entity;
+        var category2 = context.Categories.Add(new Category { Id = 2, Name = "Category2", Color = "#33FF57" }).Entity;
+        var category3 = context.Categories.Add(new Category { Id = 3, Name = "Category3", Color = "#3357FF" }).Entity;
+        var category4 = context.Categories.Add(new Category { Id = 4, Name = "Category4", Color = "#F1C40F" }).Entity;
 
         var recipe1 = context.Recipes.Add(new Recipe
         {

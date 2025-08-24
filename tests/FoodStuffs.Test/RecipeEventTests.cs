@@ -95,9 +95,9 @@ public class RecipeEventTests
             .Handle(new SaveRecipeRequest(0, "New", "New", string.Empty, null, 20, false, [], ["Category2", "Category3", "Category4"]));
 
         Assert.True(result.IsSuccess);
-        Assert.True(result.Value.Id > 0);
+        Assert.True(result.Value.Entity.Id > 0);
 
-        var recipe = await context.Recipes.FindAsync(result.Value.Id);
+        var recipe = await context.Recipes.FindAsync(result.Value.Entity.Id);
 
         Assert.NotNull(recipe);
 
@@ -122,7 +122,7 @@ public class RecipeEventTests
             .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", string.Empty, null, 20, false, [], ["Category2", "Category3", "Category4"]));
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(existingRecipeId, result.Value.Id);
+        Assert.Equal(existingRecipeId, result.Value.Entity.Id);
 
         var updatedRecipe = await context.Recipes.FindAsync(existingRecipeId);
         Assert.NotNull(updatedRecipe);

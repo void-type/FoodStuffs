@@ -73,7 +73,7 @@ public class RecipeSearchTests : IAsyncLifetime
         Assert.Contains("Cheeseburger", result.Value.Results.Items.Select(r => r.Name));
         Assert.Contains("Hotdog", result.Value.Results.Items.Select(r => r.Name));
         Assert.Contains("Sandwich", result.Value.Results.Items.Select(r => r.Name));
-        Assert.Contains("Category1", result.Value.Results.Items.SelectMany(r => r.Categories));
+        Assert.Contains("Category1", result.Value.Results.Items.SelectMany(r => r.Categories.Select(c => c.Name)));
     }
 
     [Fact]
