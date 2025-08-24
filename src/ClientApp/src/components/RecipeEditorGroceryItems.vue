@@ -100,6 +100,20 @@ function onShow(event: Event) {
   }
 }
 
+function getInventoryQuantity(itemId: number | undefined) {
+  if (!itemId) return 0;
+  const groceryItem = props.suggestions.find((x) => x.id === itemId);
+  return groceryItem?.inventoryQuantity ?? 0;
+}
+
+function setInventoryQuantity(itemId: number | undefined, quantity: number) {
+  if (!itemId) return;
+  const groceryItem = props.suggestions.find((x) => x.id === itemId);
+  if (groceryItem) {
+    groceryItem.inventoryQuantity = quantity;
+  }
+}
+
 const groceryItemList = ref<HTMLElement | null>(null);
 
 onMounted(() => {
@@ -173,10 +187,12 @@ onBeforeUnmount(() => {
               :min="1"
             />
             <GroceryItemInventoryQuantity
+              v-if="item.id"
               :id="`item-${item.uiKey}-inventoryQuantity`"
-              v-model="item.inventoryQuantity"
+              :model-value="getInventoryQuantity(item.id)"
+              :item-id="item.id"
               class="g-col-12 g-col-md-6"
-              :item="item"
+              @update:model-value="setInventoryQuantity(item.id, $event || 0)"
             />
             <div class="btn-toolbar g-col-12">
               <router-link

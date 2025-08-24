@@ -206,7 +206,7 @@ watch(
             <GroceryItemInventoryQuantity
               :id="`${groceryItem.id}-inventoryQuantity`"
               v-model="groceryItem.inventoryQuantity"
-              :item="groceryItem"
+              :item-id="groceryItem.id"
               :inline="true"
               class="g-col-12 g-col-sm-6 g-col-md-12 g-col-lg-6"
             />

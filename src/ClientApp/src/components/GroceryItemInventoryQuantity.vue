@@ -3,7 +3,6 @@ import { type PropType } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
-import type GroceryItemInventoryWorking from '@/models/GroceryItemInventoryWorking';
 import { debounce } from '@/models/InputHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -17,10 +16,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  item: {
-    type: Object as PropType<GroceryItemInventoryWorking>,
+  itemId: {
+    type: Number,
     required: false,
-    default: () => {},
+    default: () => 0,
   },
   inline: {
     type: Boolean,
@@ -32,11 +31,11 @@ const props = defineProps({
 const messageStore = useMessageStore();
 const api = ApiHelper.client;
 
-const onInventoryChange = debounce(async (item: GroceryItemInventoryWorking) => {
+const onInventoryChange = debounce(async () => {
   const inventoryQuantity = Math.max(0, model.value || 0);
 
   const request = {
-    id: item.id,
+    id: props.itemId,
     inventoryQuantity,
   };
 
@@ -53,7 +52,7 @@ const onInventoryChange = debounce(async (item: GroceryItemInventoryWorking) => 
 
 const changeInventory = (amount: number) => {
   model.value = Math.max(0, (model.value || 0) + amount);
-  onInventoryChange(props.item);
+  onInventoryChange();
 };
 </script>
 
@@ -79,7 +78,7 @@ const changeInventory = (amount: number) => {
           'form-control': true,
           'is-invalid': messageStore.isFieldInError(id),
         }"
-        @change="onInventoryChange(item)"
+        @change="onInventoryChange()"
       />
       <button
         class="btn btn-outline-secondary text-monospace"
@@ -113,7 +112,7 @@ const changeInventory = (amount: number) => {
           'form-control': true,
           'is-invalid': messageStore.isFieldInError(id),
         }"
-        @change="onInventoryChange(item)"
+        @change="onInventoryChange()"
       />
       <button
         class="btn btn-outline-secondary text-monospace"

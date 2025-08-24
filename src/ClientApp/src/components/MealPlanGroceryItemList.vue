@@ -142,7 +142,7 @@ function copyList() {
                 v-model="item.details.inventoryQuantity"
                 class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6"
                 :inline="true"
-                :item="item"
+                :item-id="item.id"
                 @click.stop.prevent
               />
             </div>

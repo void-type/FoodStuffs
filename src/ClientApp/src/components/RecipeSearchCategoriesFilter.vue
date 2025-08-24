@@ -54,7 +54,7 @@ onMounted(() => {
 <template>
   <div id="categoriesAccordion" class="accordion">
     <div class="accordion-item">
-      <h2 class="accordion-header">
+      <div class="accordion-header">
         <button
           class="accordion-button collapsed"
           type="button"
@@ -68,7 +68,7 @@ onMounted(() => {
             <span v-if="model.categories.length">({{ model.categories.length }} selected)</span>
           </label>
         </button>
-      </h2>
+      </div>
       <div
         id="categoriesCollapse"
         class="accordion-collapse collapse"

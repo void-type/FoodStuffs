@@ -182,17 +182,9 @@ watch(
 
 const isRecipeDirty = computed(() => {
   const working: RecipeWorking = JSON.parse(JSON.stringify(data.workingRecipe));
-  working.groceryItems.forEach((x) => {
-    // eslint-disable-next-line no-param-reassign
-    delete x.inventoryQuantity;
-  });
   const workingJson = JSON.stringify(working);
 
   const initial: RecipeWorking = JSON.parse(data.workingRecipeInitial);
-  initial.groceryItems?.forEach((x) => {
-    // eslint-disable-next-line no-param-reassign
-    delete x.inventoryQuantity;
-  });
   const initialJson = JSON.stringify(initial);
 
   return workingJson !== initialJson;

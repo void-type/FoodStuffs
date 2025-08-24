@@ -10,7 +10,8 @@ import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 
 const model = defineModel({
   type: Number as PropType<number | null | undefined>,
-  required: true,
+  required: false,
+  default: null,
 });
 
 const messageStore = useMessageStore();
@@ -110,7 +111,8 @@ onBeforeUnmount(() => {
       aria-expanded="false"
       @keydown="onDropdownKeydown"
     >
-      {{ (selectedSuggestion?.id || 0) > 0 ? selectedSuggestion?.name : 'Select one' }}
+      <!-- Name or non-breaking space -->
+      {{ selectedSuggestion?.name || '\u00A0' }}
     </button>
     <ul class="dropdown-menu pt-0 w-100">
       <li class="mb-2">
