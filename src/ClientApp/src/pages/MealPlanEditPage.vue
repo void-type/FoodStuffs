@@ -229,7 +229,7 @@ onMounted(async () => {
         </div>
       </div>
       <div class="form-check form-switch mt-3">
-        <label class="form-check-label" for="showSortHandle">Sort</label>
+        <label class="form-check-label" for="showSortHandle">Enable Sort</label>
         <input
           id="showSortHandle"
           v-model="showSortHandle"
@@ -260,6 +260,8 @@ onMounted(async () => {
           @recipe-completed="onRecipeCompleted"
         />
       </vue-draggable>
+      <h2 class="mt-4">Lists</h2>
+      <div>Click an item to move it between lists.</div>
       <div class="grid mt-3 gap-sm">
         <div class="g-col-12 g-col-md-6">
           <MealPlanGroceryItemList

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeMealButton from './RecipeMealButton.vue';
 import AppSortHandle from './AppSortHandle.vue';
+import TagBadge from './TagBadge.vue';
 
 const props = defineProps({
   recipe: { type: Object as PropType<GetMealPlanResponseRecipe>, required: true },
@@ -64,15 +65,41 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
         </div>
         <div class="card-body">
           <div class="btn-toolbar mt-2">
-            <router-link
+            <span>
+              <TagBadge
+                v-for="tag in recipe.categories"
+                :key="tag.name"
+                :tag="tag"
+                class="mb-1 me-1"
+              />
+            </span>
+            <button
+              :id="`overflowMenuButton-recipe-${recipe.id}`"
+              class="btn btn-sm btn-secondary dropdown-toggle ms-auto"
               type="button"
-              class="btn btn-sm btn-secondary me-2"
-              aria-label="edit recipe"
-              :to="RouterHelper.editRecipe(recipe)"
-              @click.stop
-              >Edit</router-link
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-            <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
+              More
+            </button>
+            <div
+              class="dropdown-menu p-3"
+              :aria-labelledby="`overflowMenuButton-recipe-${recipe.id}`"
+            >
+              <div>
+                <RecipeMealButton class="btn-sm mb-2" :recipe-id="recipe.id" />
+              </div>
+              <div>
+                <router-link
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  aria-label="edit recipe"
+                  :to="RouterHelper.editRecipe(recipe)"
+                  @click.stop
+                  >Edit Recipe</router-link
+                >
+              </div>
+            </div>
           </div>
           <div class="mt-3">
             <div class="form-check my-auto">
