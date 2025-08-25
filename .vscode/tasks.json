@@ -249,7 +249,7 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false,
-        "group": "database"
+        "group": "build"
       }
     },
     {
@@ -268,7 +268,7 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false,
-        "group": "database"
+        "group": "build"
       }
     },
     {
@@ -287,7 +287,43 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false,
-        "group": "database"
+        "group": "build"
+      }
+    },
+    {
+      "label": "deploy-web-to-test",
+      "command": "./deployWebToTest.ps1",
+      "options": {
+        "cwd": "./build"
+      },
+      "type": "shell",
+      "problemMatcher": ["$msCompile"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "build"
+      }
+    },
+    {
+      "label": "deploy-web-to-production",
+      "command": "./deployWebToProduction.ps1",
+      "options": {
+        "cwd": "./build"
+      },
+      "type": "shell",
+      "problemMatcher": ["$msCompile"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "build"
       }
     }
   ],
