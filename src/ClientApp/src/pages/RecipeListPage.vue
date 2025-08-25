@@ -5,7 +5,7 @@ import RecipesListRequest from '@/models/RecipesListRequest';
 import useRecipeStore from '@/stores/recipeStore';
 import { storeToRefs } from 'pinia';
 import { watch, type PropType, ref, computed } from 'vue';
-import { useRouter, type LocationQuery } from 'vue-router';
+import { useRoute, useRouter, type LocationQuery } from 'vue-router';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
@@ -23,6 +23,7 @@ const props = defineProps({
 
 const recipeStore = useRecipeStore();
 const router = useRouter();
+const route = useRoute();
 
 const { listResponse, listRequest } = storeToRefs(recipeStore);
 const { sortOptions } = RecipeStoreHelper;
@@ -51,10 +52,19 @@ const resultCountText = computed(() => {
   return `Showing ${start}-${end} of ${totalCount} recipes.`;
 });
 
-function navigateSearch() {
-  router.push({
+function navigateSearch(toResults: boolean) {
+  const routeParams = {
     query: recipeStore.currentQueryParams,
-  });
+    hash: undefined as string | undefined,
+  };
+
+  if (toResults) {
+    routeParams.hash = '#search-results';
+  } else {
+    // Don't scroll when editing filters.
+    routeParams.hash = '#';
+  }
+  router.push(routeParams);
 }
 
 function clearSearch() {
@@ -66,7 +76,16 @@ function clearSearch() {
 
   // selectedCategories gets its new value from query params.
 
-  navigateSearch();
+  navigateSearch(true);
+}
+
+function startSearchNoHash() {
+  recipeStore.setListRequest({
+    ...listRequest.value,
+    page: 1,
+  });
+
+  navigateSearch(false);
 }
 
 function startSearch() {
@@ -75,13 +94,13 @@ function startSearch() {
     page: 1,
   });
 
-  navigateSearch();
+  navigateSearch(true);
 }
 
 function changePage(page: number) {
   recipeStore.setListRequest({ ...listRequest.value, page });
 
-  navigateSearch();
+  navigateSearch(true);
 }
 
 function changeTake(take: number) {
@@ -92,7 +111,7 @@ function changeTake(take: number) {
     page: 1,
   });
 
-  navigateSearch();
+  navigateSearch(true);
 }
 
 function changeSort(event: Event) {
@@ -104,7 +123,7 @@ function changeSort(event: Event) {
     page: 1,
   });
 
-  navigateSearch();
+  navigateSearch(false);
 }
 
 function setListRequestFromQuery() {
@@ -165,7 +184,7 @@ watch(
         page: 1,
       });
 
-      navigateSearch();
+      navigateSearch(false);
     }
   },
   { deep: true }
@@ -185,6 +204,13 @@ watch(
   <div class="container-xxl">
     <AppBreadcrumbs />
     <AppPageHeading />
+    <div id="skip-filters" class="container-xxl visually-hidden-focusable">
+      <router-link
+        class="d-inline-flex p-2 m-1"
+        :to="{ hash: '#search-results', query: route.query }"
+        >Skip to search results</router-link
+      >
+    </div>
     <div class="mt-3">
       <div class="grid mb-3 gap-sm">
         <div class="g-col-12 g-col-md-6">
@@ -205,7 +231,7 @@ watch(
             id="isForMealPlanning"
             v-model="listRequest.isForMealPlanning"
             class="form-select"
-            @change="startSearch"
+            @change="startSearchNoHash"
           >
             <option
               v-for="option in Choices.boolean"
@@ -251,7 +277,7 @@ watch(
         <router-link :to="{ name: 'recipeNew' }" class="btn btn-secondary">New</router-link>
       </div>
     </div>
-    <div class="mt-3">{{ resultCountText }}</div>
+    <div id="search-results" class="mt-3">{{ resultCountText }}</div>
     <div class="form-check form-switch mt-3">
       <label class="form-check-label" for="useCompactView">Compact</label>
       <input

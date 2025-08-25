@@ -9,10 +9,13 @@ const router = createRouter({
       document.getElementById(to.hash.slice(1))?.focus();
       return {
         el: to.hash,
+        behavior: 'instant',
       };
     }
 
     if (savedPosition) {
+      // eslint-disable-next-line no-param-reassign
+      savedPosition.behavior = 'instant';
       return savedPosition;
     }
 
@@ -20,6 +23,7 @@ const router = createRouter({
 
     return {
       el: '#app',
+      behavior: 'instant',
     };
   },
   history: createWebHistory(import.meta.env.BASE_URL),
