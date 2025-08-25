@@ -14,6 +14,9 @@ public class SaveRecipeRequestValidator : RuleValidatorAbstract<SaveRecipeReques
         CreateRule(new Failure("Grocery items quantity must be 1 or greater.", "groceryItems"))
             .InvalidWhen(entity => entity.GroceryItems?.Exists(i => i.Quantity <= 0) ?? false);
 
+        CreateRule(new Failure("Side count must be 0 or greater.", "mealPlanningSidesCount"))
+            .InvalidWhen(entity => entity.MealPlanningSidesCount < 0);
+
         CreateRule(new Failure("Cook time must be 0 or greater.", "cookTimeMinutes"))
             .InvalidWhen(entity => entity.CookTimeMinutes < 0);
 
