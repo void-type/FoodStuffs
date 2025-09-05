@@ -56,7 +56,7 @@ public static class RecipeSearchHelper
             .ToArray();
 
         // Categories: retrievable
-        doc.AddStoredField(C.FIELD_CATEGORIES, JsonSerializer.Serialize(categories));
+        doc.AddStoredField(C.FIELD_CATEGORIES_JSON, JsonSerializer.Serialize(categories));
 
         foreach (var category in categories)
         {
@@ -85,7 +85,7 @@ public static class RecipeSearchHelper
         return doc;
     }
 
-    public static SearchRecipesResultItem ToSearchRecipesResultItem(this Document doc)
+    public static SearchRecipesResultItem ToSearchResultItem(this Document doc)
     {
         return new SearchRecipesResultItem
         (
@@ -95,7 +95,7 @@ public static class RecipeSearchHelper
             MealPlanningSidesCount: int.Parse(doc.Get(C.FIELD_MEAL_PLANNING_SIDES_COUNT) ?? "0"),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
-            Categories: doc.Get(C.FIELD_CATEGORIES)
+            Categories: doc.Get(C.FIELD_CATEGORIES_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemCategory>>(x) ?? []),
             GroceryItems: doc.Get(C.FIELD_MEAL_GROCERY_ITEMS_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemGroceryItem>>(x) ?? []),
@@ -103,7 +103,7 @@ public static class RecipeSearchHelper
         );
     }
 
-    public static SuggestRecipesResultItem ToSuggestRecipesResultItem(this Document doc)
+    public static SuggestRecipesResultItem ToSuggestResultItem(this Document doc)
     {
         return new SuggestRecipesResultItem
         (
@@ -114,7 +114,7 @@ public static class RecipeSearchHelper
         );
     }
 
-    public static FacetsConfig RecipeFacetsConfig()
+    public static FacetsConfig FacetsConfig()
     {
         var facetConfig = new FacetsConfig();
 

@@ -73,7 +73,7 @@ public class RecipeIndexService : IRecipeIndexService
     {
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
 
-        var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
         var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
 
@@ -97,7 +97,7 @@ public class RecipeIndexService : IRecipeIndexService
 
         using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
 
-        var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
         var page = 1;
         var numIndexed = 0;

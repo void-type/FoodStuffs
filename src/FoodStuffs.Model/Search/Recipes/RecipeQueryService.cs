@@ -26,7 +26,7 @@ public class RecipeQueryService : IRecipeQueryService
     {
         using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
         var searcher = readers.IndexSearcher;
-        var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
+        var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
         var baseQuery = new BooleanQuery()
         {
@@ -59,7 +59,7 @@ public class RecipeQueryService : IRecipeQueryService
 
         var resultItems = scoreDocs
             .GetPage(pagination)
-            .Select(x => searcher.Doc(x.Doc).ToSearchRecipesResultItem())
+            .Select(x => searcher.Doc(x.Doc).ToSearchResultItem())
             .ToItemSet(pagination, drillResult.Hits.TotalHits);
 
         var resultFacets = SearchHelper.GetFacets(drillResult, facetsConfig);
@@ -91,7 +91,7 @@ public class RecipeQueryService : IRecipeQueryService
 
             return topDocs.ScoreDocs
                 .GetPage(pagination)
-                .Select(x => searcher.Doc(x.Doc).ToSuggestRecipesResultItem())
+                .Select(x => searcher.Doc(x.Doc).ToSuggestResultItem())
                 .ToItemSet(pagination, topDocs.TotalHits);
         }
         catch
@@ -212,37 +212,18 @@ public class RecipeQueryService : IRecipeQueryService
     {
         var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
 
-        if (request.IsForMealPlanning is not null)
-        {
-            drillDownQuery.Add(C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString());
-        }
+        SearchHelper.AddFilterForSingleValueFacet(
+            drillDownQuery,
+            C.FIELD_IS_FOR_MEAL_PLANNING,
+            request.IsForMealPlanning?.ToString());
 
-        if (request.CategoryIds?.Length > 0)
-        {
-            if (!request.MatchAllCategories)
-            {
-                // OR - matches recipes with ANY of the selected categories
-                foreach (var categoryId in request.CategoryIds)
-                {
-                    drillDownQuery.Add(C.FIELD_CATEGORY_IDS, categoryId.ToString());
-                }
-            }
-            else
-            {
-                // AND - matches recipes with ALL of the selected categories
-                // For AND behavior with DrillSideways, you need to add each as a separate dimension
-                // or handle this differently depending on your facet configuration
-                foreach (var categoryId in request.CategoryIds)
-                {
-                    var singleCategoryQuery = new DrillDownQuery(facetsConfig)
-                    {
-                        { C.FIELD_CATEGORY_IDS, categoryId.ToString() }
-                    };
-
-                    baseQuery.Add(singleCategoryQuery, Occur.MUST);
-                }
-            }
-        }
+        SearchHelper.AddFilterForMultiValueFacet(
+            drillDownQuery,
+            baseQuery,
+            facetsConfig,
+            C.FIELD_CATEGORY_IDS,
+            request.CategoryIds?.Select(x => x.ToString()).ToArray() ?? [],
+            request.MatchAllCategories);
 
         return drillDownQuery;
     }
