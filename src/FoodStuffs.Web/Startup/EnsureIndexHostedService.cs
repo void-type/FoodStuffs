@@ -41,7 +41,7 @@ public class EnsureIndexHostedService : IHostedService
                 var testRequest = new SearchRecipesRequest(
                     SearchText: null,
                     CategoryIds: null,
-                    AllCategories: false,
+                    MatchAllCategories: false,
                     IsForMealPlanning: null,
                     SortBy: null,
                     RandomSortSeed: null,

@@ -7,7 +7,7 @@ export default class RecipesListRequest implements RecipesSearchParams {
 
   public categories = [] as number[];
 
-  public allCategories = false;
+  public matchAllCategories = false;
 
   public isForMealPlanning = null;
 

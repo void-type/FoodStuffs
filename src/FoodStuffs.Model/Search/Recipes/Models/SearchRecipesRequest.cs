@@ -5,7 +5,7 @@ namespace FoodStuffs.Model.Search.Recipes.Models;
 public record SearchRecipesRequest(
     string? SearchText,
     int[]? CategoryIds,
-    bool AllCategories,
+    bool MatchAllCategories,
     bool? IsForMealPlanning,
     string? SortBy,
     string? RandomSortSeed,

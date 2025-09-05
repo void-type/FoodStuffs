@@ -809,7 +809,7 @@ export interface RecipesSearchParams {
    * When true, recipes returned will match all selected categories
    * @default false
    */
-  allCategories?: boolean;
+  matchAllCategories?: boolean;
   /** If the recipes should be enabled for meal planning */
   isForMealPlanning?: boolean | null;
   /** Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score. */

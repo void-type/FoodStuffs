@@ -26,39 +26,33 @@ public class RecipeQueryService : IRecipeQueryService
     {
         using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
         var searcher = readers.IndexSearcher;
-        var facetsCollector = new FacetsCollector();
-
         var facetsConfig = RecipeSearchHelper.RecipeFacetsConfig();
 
-        var query = new BooleanQuery()
+        var baseQuery = new BooleanQuery()
         {
             { BuildSearchTextQuery(request.SearchText), Occur.MUST },
         };
 
-        var filter = BuildFilter(request, facetsConfig);
         var sort = BuildSortCriteria(request);
 
-        var topDocs = sort is null
-            ? FacetsCollector.Search(searcher, query, filter, _settings.MaxResults, facetsCollector)
-            : FacetsCollector.Search(searcher, query, filter, _settings.MaxResults, sort, facetsCollector);
+        // Use DrillSideways for proper facet counting
+        var drillDownQuery = BuildDrillDownQuery(request, facetsConfig, baseQuery);
+        var drillSideways = new DrillSideways(searcher, facetsConfig, readers.TaxonomyReader);
+
+        var drillResult = sort is null
+            ? drillSideways.Search(drillDownQuery, _settings.MaxResults)
+            : drillSideways.Search(drillDownQuery, null, null, _settings.MaxResults, sort, false, false);
 
         var pagination = request.GetPaginationOptions();
-
-        var scoreDocs = new List<ScoreDoc>(topDocs.ScoreDocs);
+        var scoreDocs = new List<ScoreDoc>(drillResult.Hits.ScoreDocs);
 
         if (request.SortBy?.ToUpperInvariant() == "RANDOM")
         {
             var seed = request.RandomSortSeed is not null ?
-                // Let the client give us a seed.
                 request.RandomSortSeed.GetHashCode() :
-                // Sort is stable within same local day.
                 _dateTimeService.MomentWithOffset.Date.GetHashCode();
-
             var random = new Random(seed);
-
-            // Ignore weak random
 #pragma warning disable SCS0005
-            // Perform a random sort on the whole search set.
             scoreDocs.Sort((_, __) => random.Next(-1, 2));
 #pragma warning restore SCS0005
         }
@@ -66,9 +60,9 @@ public class RecipeQueryService : IRecipeQueryService
         var resultItems = scoreDocs
             .GetPage(pagination)
             .Select(x => searcher.Doc(x.Doc).ToSearchRecipesResultItem())
-            .ToItemSet(pagination, topDocs.TotalHits);
+            .ToItemSet(pagination, drillResult.Hits.TotalHits);
 
-        var resultFacets = SearchHelper.GetFacets(readers, facetsCollector, facetsConfig);
+        var resultFacets = SearchHelper.GetFacets(drillResult, facetsConfig);
 
         return new(resultItems, resultFacets);
     }
@@ -214,35 +208,30 @@ public class RecipeQueryService : IRecipeQueryService
         return query;
     }
 
-    private static QueryWrapperFilter BuildFilter(SearchRecipesRequest request, FacetsConfig facetsConfig)
+    private static DrillDownQuery BuildDrillDownQuery(SearchRecipesRequest request, FacetsConfig facetsConfig, BooleanQuery baseQuery)
     {
-        // Used when other filters are AND'd between fields, but OR'd within the field.
-        // Otherwise, the field needs to add it's own filter to the outerQuery.
-        var mainDrillDownQuery = new DrillDownQuery(facetsConfig);
-
-        var outerQuery = new BooleanQuery()
-        {
-            { mainDrillDownQuery, Occur.MUST }
-        };
+        var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
 
         if (request.IsForMealPlanning is not null)
         {
-            mainDrillDownQuery.Add(C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString());
+            drillDownQuery.Add(C.FIELD_IS_FOR_MEAL_PLANNING, request.IsForMealPlanning.ToString());
         }
 
         if (request.CategoryIds?.Length > 0)
         {
-            if (!request.AllCategories)
+            if (!request.MatchAllCategories)
             {
                 // OR - matches recipes with ANY of the selected categories
                 foreach (var categoryId in request.CategoryIds)
                 {
-                    mainDrillDownQuery.Add(C.FIELD_CATEGORY_IDS, categoryId.ToString());
+                    drillDownQuery.Add(C.FIELD_CATEGORY_IDS, categoryId.ToString());
                 }
             }
             else
             {
                 // AND - matches recipes with ALL of the selected categories
+                // For AND behavior with DrillSideways, you need to add each as a separate dimension
+                // or handle this differently depending on your facet configuration
                 foreach (var categoryId in request.CategoryIds)
                 {
                     var singleCategoryQuery = new DrillDownQuery(facetsConfig)
@@ -250,18 +239,12 @@ public class RecipeQueryService : IRecipeQueryService
                         { C.FIELD_CATEGORY_IDS, categoryId.ToString() }
                     };
 
-                    outerQuery.Add(singleCategoryQuery, Occur.MUST);
+                    baseQuery.Add(singleCategoryQuery, Occur.MUST);
                 }
             }
         }
 
-        if ((mainDrillDownQuery as IEnumerable<BooleanClause>).Any() || outerQuery.Clauses.Count > 1)
-        {
-            return new QueryWrapperFilter(outerQuery);
-        }
-
-        // No filters selected.
-        return new QueryWrapperFilter(new MatchAllDocsQuery());
+        return drillDownQuery;
     }
 
     private static Sort? BuildSortCriteria(SearchRecipesRequest request)

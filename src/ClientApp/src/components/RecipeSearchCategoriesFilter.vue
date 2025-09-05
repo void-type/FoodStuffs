@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 const model = defineModel({
-  type: Object as PropType<{ categories: Array<number>; allCategories: boolean }>,
+  type: Object as PropType<{ categories: Array<number>; matchAllCategories: boolean }>,
   required: true,
   default: [],
 });
@@ -87,13 +87,16 @@ onMounted(() => {
               Select all
             </button>
             <div class="form-check form-switch my-auto">
-              <label class="w-100" for="allCategories" aria-label="Match all selected categories"
+              <label
+                class="w-100"
+                for="matchAllCategories"
+                aria-label="Match all selected categories"
                 >Match all selected</label
               >
               <input
-                id="allCategories"
-                v-model="model.allCategories"
-                :checked="model.allCategories"
+                id="matchAllCategories"
+                v-model="model.matchAllCategories"
+                :checked="model.matchAllCategories"
                 class="form-check-input"
                 type="checkbox"
               />

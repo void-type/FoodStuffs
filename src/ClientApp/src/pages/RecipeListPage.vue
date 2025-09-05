@@ -30,7 +30,7 @@ const { sortOptions } = RecipeStoreHelper;
 
 const categoriesFilterModel = ref({
   categories: [] as Array<number>,
-  allCategories: false,
+  matchAllCategories: false,
 });
 
 const useCompactView = ref(false);
@@ -170,11 +170,11 @@ function getMealFacetCount(facetValue: boolean | null) {
 watch(
   categoriesFilterModel,
   () => {
-    const { categories, allCategories } = listRequest.value;
+    const { categories, matchAllCategories } = listRequest.value;
 
     const initialModel = {
       categories,
-      allCategories,
+      matchAllCategories,
     };
 
     if (JSON.stringify(initialModel) !== JSON.stringify(categoriesFilterModel.value)) {

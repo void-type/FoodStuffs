@@ -1,6 +1,5 @@
 ﻿using Lucene.Net.Documents;
 using Lucene.Net.Facet;
-using Lucene.Net.Facet.Taxonomy;
 using System.Globalization;
 
 namespace FoodStuffs.Model.Search;
@@ -24,15 +23,16 @@ public static class SearchHelper
         return DateTime.ParseExact(value, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
     }
 
-    public static List<SearchFacet> GetFacets(LuceneReaders readers, FacetsCollector facetsCollector, FacetsConfig facetsConfig)
+    /// <summary>
+    /// Get facets from a DrillSidewaysResult and FacetsConfig
+    /// </summary>
+    public static List<SearchFacet> GetFacets(DrillSidewaysResult drillResult, FacetsConfig facetsConfig)
     {
-        var facetCounts = new TaxonomyFacetCounts(new DocValuesOrdinalsReader(), readers.TaxonomyReader, facetsConfig, facetsCollector);
-
         return [.. facetsConfig.DimConfigs.Keys
             .Select(fieldName => new SearchFacet
             {
                 FieldName = fieldName,
-                Values = [.. (facetCounts
+                Values = [.. (drillResult.Facets
                     .GetTopChildren(int.MaxValue, fieldName)?
                     .LabelValues ?? [])
                     .Select(x => new SearchFacetValue
