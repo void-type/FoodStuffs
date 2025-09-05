@@ -6,6 +6,8 @@ export default class GroceryItemsListRequest implements GroceryItemsListParams {
 
   public isUnused = null;
 
+  public isOutOfStock = null;
+
   public isPagingEnabled = true;
 
   public page = 1;

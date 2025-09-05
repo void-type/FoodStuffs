@@ -170,6 +170,23 @@ watch(
             </option>
           </select>
         </div>
+        <div class="g-col-6 g-col-md-3">
+          <label class="form-label" for="isOutOfStock">Out Of Stock</label>
+          <select
+            id="isOutOfStock"
+            v-model="listRequest.isOutOfStock"
+            class="form-select"
+            @change="startSearch"
+          >
+            <option
+              v-for="option in Choices.boolean"
+              :key="option.value?.toString()"
+              :value="option.value"
+            >
+              {{ option.text }}
+            </option>
+          </select>
+        </div>
       </div>
       <div class="btn-toolbar">
         <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">

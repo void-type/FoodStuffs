@@ -751,6 +751,8 @@ export interface GroceryItemsListParams {
   name?: string | null;
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
+  /** Specify to show items that are out of stock */
+  isOutOfStock?: boolean | null;
   /**
    * Set false to get all results
    * @default true

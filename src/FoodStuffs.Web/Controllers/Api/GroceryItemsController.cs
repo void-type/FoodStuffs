@@ -21,17 +21,19 @@ public class GroceryItemsController : ControllerBase
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
     /// <param name="isUnused">Specify to show items that have relations or no relations</param>
+    /// <param name="isOutOfStock">Specify to show items that are out of stock</param>
     /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListGroceryItemsResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListGroceryItemsHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListGroceryItemsHandler listHandler, string? name = null, bool? isUnused = null, bool? isOutOfStock = null, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListGroceryItemsRequest(
             NameSearch: name,
             IsUnused: isUnused,
+            IsOutOfStock: isOutOfStock,
             IsPagingEnabled: isPagingEnabled,
             Page: page,
             Take: take);

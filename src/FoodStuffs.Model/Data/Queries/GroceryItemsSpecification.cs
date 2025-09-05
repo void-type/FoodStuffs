@@ -52,5 +52,10 @@ public class GroceryItemsSpecification : QuerySpecificationAbstract<GroceryItem>
         }
 
 #pragma warning restore CA1860 // Avoid using 'Enumerable.Any()' extension method
+
+        if (request.IsOutOfStock is not null)
+        {
+            AddCriteria(m => m.InventoryQuantity < 1 == request.IsOutOfStock);
+        }
     }
 }
