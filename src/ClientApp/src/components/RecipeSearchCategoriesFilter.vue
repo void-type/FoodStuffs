@@ -91,7 +91,7 @@ onMounted(() => {
                 class="w-100"
                 for="matchAllCategories"
                 aria-label="Match all selected categories"
-                >Match all selected</label
+                >Match all</label
               >
               <input
                 id="matchAllCategories"
