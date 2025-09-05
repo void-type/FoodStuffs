@@ -1,0 +1,249 @@
+﻿using FoodStuffs.Model.Search.GroceryItems.Models;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Facet;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Util;
+using VoidCore.Model.Responses.Collections;
+using VoidCore.Model.Time;
+using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
+
+namespace FoodStuffs.Model.Search.GroceryItems;
+
+public class GroceryItemQueryService : IGroceryItemQueryService
+{
+    private readonly IDateTimeService _dateTimeService;
+    private readonly SearchSettings _settings;
+
+    public GroceryItemQueryService(SearchSettings settings, IDateTimeService dateTimeService)
+    {
+        _dateTimeService = dateTimeService;
+        _settings = settings;
+    }
+
+    /// <inheritdoc/>
+    public SearchGroceryItemsResponse Search(SearchGroceryItemsRequest request)
+    {
+        using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
+        var searcher = readers.IndexSearcher;
+        var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
+
+        var baseQuery = new BooleanQuery()
+        {
+            { BuildSearchTextQuery(request.SearchText), Occur.MUST },
+        };
+
+        var sort = BuildSortCriteria(request);
+
+        // Use DrillSideways for proper facet counting
+        var drillDownQuery = BuildDrillDownQuery(request, facetsConfig, baseQuery);
+        var drillSideways = new DrillSideways(searcher, facetsConfig, readers.TaxonomyReader);
+
+        var drillResult = sort is null
+            ? drillSideways.Search(drillDownQuery, _settings.MaxResults)
+            : drillSideways.Search(drillDownQuery, null, null, _settings.MaxResults, sort, false, false);
+
+        var pagination = request.GetPaginationOptions();
+        var scoreDocs = new List<ScoreDoc>(drillResult.Hits.ScoreDocs);
+
+        if (request.SortBy?.ToUpperInvariant() == "RANDOM")
+        {
+            var seed = request.RandomSortSeed is not null ?
+                request.RandomSortSeed.GetHashCode() :
+                _dateTimeService.MomentWithOffset.Date.GetHashCode();
+            var random = new Random(seed);
+#pragma warning disable SCS0005
+            scoreDocs.Sort((_, __) => random.Next(-1, 2));
+#pragma warning restore SCS0005
+        }
+
+        var resultItems = scoreDocs
+            .GetPage(pagination)
+            .Select(x => searcher.Doc(x.Doc).ToSearchResultItem())
+            .ToItemSet(pagination, drillResult.Hits.TotalHits);
+
+        var resultFacets = SearchHelper.GetFacets(drillResult, facetsConfig);
+
+        return new(resultItems, resultFacets);
+    }
+
+    public IItemSet<SuggestGroceryItemsResultItem> Suggest(SuggestGroceryItemsRequest request)
+    {
+        // In the future we should use Lucene suggester.
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.SearchText) || request.SearchText.Length <= 1)
+            {
+                return new List<SuggestGroceryItemsResultItem>().ToItemSet(request.GetPaginationOptions());
+            }
+
+            using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
+            var searcher = readers.IndexSearcher;
+
+            var query = new BooleanQuery()
+            {
+                { BuildSuggestTextQuery(request.SearchText), Occur.MUST },
+            };
+
+            var pagination = request.GetPaginationOptions();
+
+            var topDocs = searcher.Search(query, request.Take);
+
+            return topDocs.ScoreDocs
+                .GetPage(pagination)
+                .Select(x => searcher.Doc(x.Doc).ToSuggestResultItem())
+                .ToItemSet(pagination, topDocs.TotalHits);
+        }
+        catch
+        {
+            return new List<SuggestGroceryItemsResultItem>().ToItemSet(request.GetPaginationOptions());
+        }
+    }
+
+    private Query BuildSearchTextQuery(string? requestText)
+    {
+        var searchText = requestText?.Trim()?.ToLowerInvariant();
+
+        var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
+        var queryBuilder = new QueryBuilder(analyzer);
+        var query = new BooleanQuery();
+
+        // Exclude small queries that break the query builders.
+        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length > 1)
+        {
+            // If the exact phrase is found (with the given word slop), it will be boosted by the given amount.
+            // Word slop is the number of intervening words allowed between the terms in the phrase.
+            // CreatePhraseQuery can return null in some cases.
+            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
+            phraseQuery.Boost = 9;
+            query.Add(phraseQuery, Occur.SHOULD);
+
+            // Query for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
+            // If you would like ALL terms to match, use MUST instead of SHOULD.
+            var wordQuery = queryBuilder.CreateBooleanQuery(C.FIELD_NAME, searchText, Occur.SHOULD);
+            wordQuery.Boost = 3;
+            query.Add(wordQuery, Occur.SHOULD);
+
+            // Append a wildcard to the last term for incomplete text matches.
+            var lastTerm = searchText.Split(" ").LastOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(lastTerm))
+            {
+                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
+                {
+                    Boost = 3
+                };
+
+                query.Add(lastWildcard, Occur.SHOULD);
+            }
+
+            // Partial word matches using fuzzy queries to account for spelling errors and similar words.
+            // The Levenshtein distance is the number of single-character edits (insertions, deletions, or substitutions) required to change one word into the other.
+            var fuzzyQuery = new FuzzyQuery(new Term(C.FIELD_NAME, searchText), 2)
+            {
+                Boost = 0.3f
+            };
+
+            query.Add(fuzzyQuery, Occur.SHOULD);
+        }
+
+        if (query.Clauses.Count < 1)
+        {
+            return new MatchAllDocsQuery();
+        }
+
+        return query;
+    }
+
+    private Query BuildSuggestTextQuery(string? requestText)
+    {
+        var searchText = requestText?.Trim()?.ToLowerInvariant();
+
+        var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
+        var queryBuilder = new QueryBuilder(analyzer);
+        var query = new BooleanQuery();
+
+        // Exclude small queries that break the query builders.
+        if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length > 1)
+        {
+            // Boost when the exact phrase is at the beginning of the field.
+            var prefixQuery = new PrefixQuery(new Term(C.FIELD_NAME_PREFIX, searchText.ToLower()))
+            {
+                Boost = 18
+            };
+            query.Add(prefixQuery, Occur.SHOULD);
+
+            // If the exact phrase is found (with the given word slop), it will be boosted by the given amount.
+            // Word slop is the number of intervening words allowed between the terms in the phrase.
+            // CreatePhraseQuery can return null in some cases.
+            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
+            phraseQuery.Boost = 9;
+            query.Add(phraseQuery, Occur.SHOULD);
+
+            // Query for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
+            // If you would like ALL terms to match, use MUST instead of SHOULD.
+            var wordQuery = queryBuilder.CreateBooleanQuery(C.FIELD_NAME, searchText, Occur.SHOULD);
+            wordQuery.Boost = 3;
+            query.Add(wordQuery, Occur.SHOULD);
+
+            // Append a wildcard to the last term for incomplete text matches.
+            var lastTerm = searchText.Split(" ").LastOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(lastTerm))
+            {
+                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
+                {
+                    Boost = 3
+                };
+
+                query.Add(lastWildcard, Occur.SHOULD);
+            }
+        }
+
+        if (query.Clauses.Count < 1)
+        {
+            return new MatchAllDocsQuery();
+        }
+
+        return query;
+    }
+
+    private static DrillDownQuery BuildDrillDownQuery(SearchGroceryItemsRequest request, FacetsConfig facetsConfig, BooleanQuery baseQuery)
+    {
+        var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
+
+        SearchHelper.AddFilterForSingleValueFacet(
+            drillDownQuery,
+            C.FIELD_IS_OUT_OF_STOCK,
+            request.IsForMealPlanning?.ToString());
+
+        SearchHelper.AddFilterForMultiValueFacet(
+            drillDownQuery,
+            baseQuery,
+            facetsConfig,
+            C.FIELD_STORAGE_LOCATION_IDS,
+            request.StorageLocationsIds?.Select(x => x.ToString()).ToArray() ?? [],
+            request.MatchAllStorageLocations);
+
+        return drillDownQuery;
+    }
+
+    private static Sort? BuildSortCriteria(SearchGroceryItemsRequest request)
+    {
+        // If "RANDOM", we shuffle topDocs results later.
+        return (request.SortBy?.ToUpperInvariant()) switch
+        {
+            "NEWEST" => new Sort(
+                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
+            "OLDEST" => new Sort(
+                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, false)),
+            "A-Z" => new Sort(
+                new SortField(C.FIELD_NAME, SortFieldType.STRING, false),
+                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, false)),
+            "Z-A" => new Sort(
+                new SortField(C.FIELD_NAME, SortFieldType.STRING, true),
+                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
+            _ => null,
+        };
+    }
+}
