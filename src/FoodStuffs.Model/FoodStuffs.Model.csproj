@@ -6,7 +6,7 @@
     <PackageReference Include="Lucene.Net" Version="4.8.0-beta00017" />
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00017" />
     <PackageReference Include="Lucene.Net.Facet" Version="4.8.0-beta00017" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
     <PackageReference Include="VoidCore.EntityFramework" Version="15.3.1" />
 
