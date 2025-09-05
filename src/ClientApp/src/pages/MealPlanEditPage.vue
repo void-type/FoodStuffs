@@ -30,16 +30,31 @@ const initialized = ref(false);
 
 const { currentMealPlan } = storeToRefs(mealPlanStore);
 
-const currentRecipes = computed({
+const completedRecipes = computed({
   get() {
-    return currentMealPlan.value?.recipes || [];
+    return currentMealPlan.value?.recipes?.filter((recipe) => recipe.isComplete) || [];
   },
   set(value) {
     if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
       return;
     }
+    const incompleteList =
+      currentMealPlan.value.recipes?.filter((recipe) => !recipe.isComplete) || [];
+    currentMealPlan.value.recipes = [...value, ...incompleteList];
+  },
+});
 
-    currentMealPlan.value.recipes = value;
+const incompleteRecipes = computed({
+  get() {
+    return currentMealPlan.value?.recipes?.filter((recipe) => !recipe.isComplete) || [];
+  },
+  set(value) {
+    if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
+      return;
+    }
+    const completedList =
+      currentMealPlan.value.recipes?.filter((recipe) => recipe.isComplete) || [];
+    currentMealPlan.value.recipes = [...completedList, ...value];
   },
 });
 
@@ -116,13 +131,21 @@ function findGroceryAisle(id: number | undefined) {
 }
 
 function updateOrdersByIndex() {
-  if (currentRecipes.value === undefined || currentRecipes.value === null) {
+  if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
     return;
   }
 
-  currentRecipes.value.forEach((x, i) => {
+  const completed = completedRecipes.value;
+  const incomplete = incompleteRecipes.value;
+
+  completed.forEach((x, i) => {
     // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
+  });
+
+  incomplete.forEach((x, i) => {
+    // eslint-disable-next-line no-param-reassign
+    x.order = completed.length + i + 1;
   });
 }
 
@@ -136,13 +159,7 @@ function onSortEnd() {
 function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
   // eslint-disable-next-line no-param-reassign
   recipe.isComplete = !recipe.isComplete;
-  const newList = currentRecipes.value.filter((x) => x.id !== recipe.id);
-  if (recipe.isComplete) {
-    newList.push(recipe);
-  } else {
-    newList.unshift(recipe);
-  }
-  currentRecipes.value = newList;
+
   updateOrdersByIndex();
   mealPlanStore.saveCurrentMealPlan([], true);
 
@@ -271,28 +288,77 @@ onMounted(async () => {
           type="checkbox"
         />
       </div>
-      <div v-if="(currentRecipes?.length || 0) < 1" class="grid mt-4">
-        <div class="g-col-12 p-4 text-center">None selected</div>
+      <div class="mt-4">
+        <div v-if="(incompleteRecipes?.length || 0) < 1" class="grid mt-3">
+          <div class="g-col-12 p-4 text-center">None selected</div>
+        </div>
+        <div>
+          <vue-draggable
+            v-model="incompleteRecipes"
+            :animation="200"
+            group="incomplete"
+            ghost-class="ghost"
+            handle=".sort-handle"
+            class="grid mt-3 gap-sm"
+            @end="onSortEnd"
+          >
+            <MealPlanRecipeCard
+              v-for="(recipe, i) in incompleteRecipes"
+              :key="recipe.id"
+              :recipe="recipe"
+              :lazy="i > 6"
+              :show-sort-handle="showSortHandle"
+              class="g-col-12 g-col-lg-6"
+              @recipe-completed="onRecipeCompleted"
+            />
+          </vue-draggable>
+        </div>
       </div>
-      <vue-draggable
-        v-model="currentRecipes"
-        :animation="200"
-        group="item"
-        ghost-class="ghost"
-        handle=".sort-handle"
-        class="grid mt-3 gap-sm"
-        @end="onSortEnd"
+      <div
+        v-if="(completedRecipes?.length || 0) > 0"
+        id="completedAccordion"
+        class="mt-4 accordion"
       >
-        <MealPlanRecipeCard
-          v-for="(recipe, i) in currentRecipes"
-          :key="recipe.id"
-          :recipe="recipe"
-          :lazy="i > 6"
-          :show-sort-handle="showSortHandle"
-          class="g-col-12 g-col-lg-6"
-          @recipe-completed="onRecipeCompleted"
-        />
-      </vue-draggable>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#completedCollapse"
+              aria-expanded="false"
+              aria-controls="completedCollapse"
+            >
+              Completed ({{ completedRecipes.length }})
+            </button>
+          </div>
+          <div
+            id="completedCollapse"
+            class="accordion-collapse collapse"
+            data-bs-parent="#completedAccordion"
+          >
+            <vue-draggable
+              v-model="completedRecipes"
+              :animation="200"
+              group="completed"
+              ghost-class="ghost"
+              handle=".sort-handle"
+              class="grid gap-sm"
+              @end="onSortEnd"
+            >
+              <MealPlanRecipeCard
+                v-for="(recipe, i) in completedRecipes"
+                :key="recipe.id"
+                :recipe="recipe"
+                :lazy="i > 6"
+                :show-sort-handle="showSortHandle"
+                class="g-col-12 g-col-lg-6"
+                @recipe-completed="onRecipeCompleted"
+              />
+            </vue-draggable>
+          </div>
+        </div>
+      </div>
       <h2 class="mt-4">Lists</h2>
       <div>Click an item to move it between lists.</div>
       <div class="grid mt-3 gap-sm">
