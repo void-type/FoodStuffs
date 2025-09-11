@@ -15,14 +15,14 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
     private readonly FoodStuffsContext _data;
     private readonly ILogger<SaveImageHandler> _logger;
     private readonly IImageCompressionService _compressor;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
 
-    public SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, IRecipeIndexService index)
+    public SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, IRecipeIndexService recipeIndex)
     {
         _data = data;
         _logger = logger;
         _compressor = imageCompressionService;
-        _index = index;
+        _recipeIndex = recipeIndex;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
@@ -71,7 +71,7 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _index.AddOrUpdateAsync(recipeResult.Value.Id, cancellationToken);
+        await _recipeIndex.AddOrUpdateAsync(recipeResult.Value.Id, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }

@@ -10,7 +10,7 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage grocery item storage locations.
+/// Manage storage locations.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/storage-locations")]
 public class StorageLocationsController : ControllerBase

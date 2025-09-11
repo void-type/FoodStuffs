@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Images;
 public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, EntityMessage<string>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
 
-    public PinImageHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public PinImageHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex)
     {
         _data = data;
-        _index = index;
+        _recipeIndex = recipeIndex;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
@@ -32,7 +32,7 @@ public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, Entit
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.AddOrUpdateAsync(i.Recipe.Id, cancellationToken);
+                await _recipeIndex.AddOrUpdateAsync(i.Recipe.Id, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));
     }

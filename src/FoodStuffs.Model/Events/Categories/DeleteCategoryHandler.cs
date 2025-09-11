@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Categories;
 public class DeleteCategoryHandler : CustomEventHandlerAbstract<DeleteCategoryRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
 
-    public DeleteCategoryHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public DeleteCategoryHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex)
     {
         _data = data;
-        _index = index;
+        _recipeIndex = recipeIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteCategoryRequest request, CancellationToken cancellationToken = default)
@@ -34,7 +34,7 @@ public class DeleteCategoryHandler : CustomEventHandlerAbstract<DeleteCategoryRe
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.AddOrUpdateAsync(recipeIds, cancellationToken);
+                await _recipeIndex.AddOrUpdateAsync(recipeIds, cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Category deleted.", r.Id));
     }

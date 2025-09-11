@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.GroceryItems.Models;
+using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
@@ -10,12 +11,14 @@ namespace FoodStuffs.Model.Events.GroceryItems;
 public class DeleteGroceryItemHandler : CustomEventHandlerAbstract<DeleteGroceryItemRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
+    private readonly IGroceryItemIndexService _groceryItemIndex;
 
-    public DeleteGroceryItemHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public DeleteGroceryItemHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex, IGroceryItemIndexService groceryItemIndex)
     {
         _data = data;
-        _index = index;
+        _recipeIndex = recipeIndex;
+        _groceryItemIndex = groceryItemIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteGroceryItemRequest request, CancellationToken cancellationToken = default)
@@ -34,7 +37,8 @@ public class DeleteGroceryItemHandler : CustomEventHandlerAbstract<DeleteGrocery
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.AddOrUpdateAsync(recipeIds, cancellationToken);
+                await _recipeIndex.AddOrUpdateAsync(recipeIds, cancellationToken);
+                _groceryItemIndex.Remove(si.Id);
             })
             .SelectAsync(r => EntityMessage.Create("Grocery item deleted.", r.Id));
     }

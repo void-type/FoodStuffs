@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Startup;
@@ -60,6 +61,9 @@ try
 
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();
+
+    services.AddScoped<IGroceryItemIndexService, GroceryItemIndexService>();
+    services.AddScoped<IGroceryItemQueryService, GroceryItemQueryService>();
 
     // Auto-register Domain Events
     services.AddDomainEvents(

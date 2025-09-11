@@ -1,4 +1,4 @@
-namespace FoodStuffs.Model.Search.Recipes.Models;
+﻿namespace FoodStuffs.Model.Search.Recipes.Models;
 
 public record SearchRecipesResultItemCategory(
     int Id,

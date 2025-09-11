@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.StorageLocations.Models;
+using FoodStuffs.Model.Search.GroceryItems;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -9,10 +10,12 @@ namespace FoodStuffs.Model.Events.StorageLocations;
 public class DeleteStorageLocationHandler : CustomEventHandlerAbstract<DeleteStorageLocationRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
+    private readonly IGroceryItemIndexService _groceryItemIndex;
 
-    public DeleteStorageLocationHandler(FoodStuffsContext data)
+    public DeleteStorageLocationHandler(FoodStuffsContext data, IGroceryItemIndexService groceryItemIndex)
     {
         _data = data;
+        _groceryItemIndex = groceryItemIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteStorageLocationRequest request, CancellationToken cancellationToken = default)
@@ -28,6 +31,8 @@ public class DeleteStorageLocationHandler : CustomEventHandlerAbstract<DeleteSto
                 _data.StorageLocations.Remove(c);
 
                 await _data.SaveChangesAsync(cancellationToken);
+
+                await _groceryItemIndex.AddOrUpdateAsync(c.GroceryItems.Select(gi => gi.Id), cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Storage location deleted.", r.Id));
     }

@@ -3,10 +3,10 @@
 public record SearchGroceryItemsResultItem(
     int Id,
     string Name,
-    bool IsForMealPlanning,
-    int MealPlanningSidesCount,
+    bool IsOutOfStock,
+    bool IsUnused,
+    int InventoryQuantity,
+    int RecipeCount,
     DateTimeOffset CreatedOn,
-    string Slug,
-    List<SearchGroceryItemsResultItemCategory> Categories,
-    List<SearchGroceryItemsResultItemGroceryItem> GroceryItems,
-    string? Image);
+    List<SearchGroceryItemsResultItemStorageLocation> StorageLocations,
+    SearchGroceryItemsResultItemGroceryAisle? GroceryAisle);

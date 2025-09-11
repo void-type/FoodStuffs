@@ -16,13 +16,13 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveCategoryRequestValidator _validator;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
 
-    public SaveCategoryHandler(FoodStuffsContext data, SaveCategoryRequestValidator validator, IRecipeIndexService index)
+    public SaveCategoryHandler(FoodStuffsContext data, SaveCategoryRequestValidator validator, IRecipeIndexService recipeIndex)
     {
         _data = data;
         _validator = validator;
-        _index = index;
+        _recipeIndex = recipeIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveCategoryRequest request, CancellationToken cancellationToken = default)
@@ -76,7 +76,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _index.AddOrUpdateAsync(categoryToEdit.Recipes.Select(r => r.Id), cancellationToken);
+        await _recipeIndex.AddOrUpdateAsync(categoryToEdit.Recipes.Select(r => r.Id), cancellationToken);
 
         return Ok(EntityMessage.Create($"Category {(maybeCategory.HasValue ? "updated" : "added")}.", categoryToEdit.Id));
     }

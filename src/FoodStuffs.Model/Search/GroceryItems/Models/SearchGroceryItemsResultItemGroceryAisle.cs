@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Model.Search.GroceryItems.Models;
 
-public record SearchGroceryItemsResultItemGroceryItem(
+public record SearchGroceryItemsResultItemGroceryAisle(
+    int Id,
     string Name,
-    int Quantity,
     int Order);

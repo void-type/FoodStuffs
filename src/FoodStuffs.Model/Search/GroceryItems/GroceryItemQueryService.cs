@@ -212,18 +212,31 @@ public class GroceryItemQueryService : IGroceryItemQueryService
     {
         var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
 
-        SearchHelper.AddFilterForSingleValueFacet(
+        SearchHelper.DrillDownByValue(
             drillDownQuery,
             C.FIELD_IS_OUT_OF_STOCK,
-            request.IsForMealPlanning?.ToString());
+            request.IsOutOfStock?.ToString());
 
-        SearchHelper.AddFilterForMultiValueFacet(
+        SearchHelper.DrillDownByValue(
+            drillDownQuery,
+            C.FIELD_IS_UNUSED,
+            request.IsUnused?.ToString());
+
+        SearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,
             C.FIELD_STORAGE_LOCATION_IDS,
-            request.StorageLocationsIds?.Select(x => x.ToString()).ToArray() ?? [],
+            request.StorageLocationIds?.Select(x => x.ToString()).ToArray() ?? [],
             request.MatchAllStorageLocations);
+
+        SearchHelper.DrillDownByValues(
+            drillDownQuery,
+            baseQuery,
+            facetsConfig,
+            C.FIELD_GROCERY_AISLE_ID,
+            request.GroceryAisleIds?.Select(x => x.ToString()).ToArray() ?? [],
+            false);
 
         return drillDownQuery;
     }

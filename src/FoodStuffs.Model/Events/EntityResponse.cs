@@ -1,4 +1,4 @@
-namespace FoodStuffs.Model.Events;
+﻿namespace FoodStuffs.Model.Events;
 
 /// <summary>
 /// Static helpers to create messages

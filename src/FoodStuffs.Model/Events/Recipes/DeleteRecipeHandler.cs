@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Recipes.Models;
+using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.Recipes;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
@@ -12,12 +13,14 @@ namespace FoodStuffs.Model.Events.Recipes;
 public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
+    private readonly IGroceryItemIndexService _groceryItemIndex;
 
-    public DeleteRecipeHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public DeleteRecipeHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex, IGroceryItemIndexService groceryItemIndex)
     {
         _data = data;
-        _index = index;
+        _recipeIndex = recipeIndex;
+        _groceryItemIndex = groceryItemIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
@@ -27,16 +30,22 @@ public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeReques
         return await _data.Recipes
             .TagWith(GetTag(byId))
             .ApplyEfSpecification(byId)
+            .Include(r => r.GroceryItemRelations)
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new RecipeNotFoundFailure())
             .TeeOnSuccessAsync(async r =>
             {
+                var groceryItemIds = r.GroceryItemRelations.Select(gr => gr.GroceryItemId).ToList();
+
                 _data.Recipes.Remove(r);
 
                 await _data.SaveChangesAsync(cancellationToken);
+
+                _recipeIndex.Remove(r.Id);
+
+                await _groceryItemIndex.AddOrUpdateAsync(groceryItemIds, cancellationToken);
             })
-            .TeeOnSuccessAsync(r => _index.Remove(r.Id))
             .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
     }
 }

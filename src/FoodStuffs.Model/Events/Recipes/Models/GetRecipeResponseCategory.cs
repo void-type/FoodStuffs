@@ -1,4 +1,4 @@
-namespace FoodStuffs.Model.Events.Recipes.Models;
+﻿namespace FoodStuffs.Model.Events.Recipes.Models;
 
 public record GetRecipeResponseCategory(
     int Id,

@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Images;
 public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest, EntityMessage<string>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
 
-    public DeleteImageHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public DeleteImageHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex)
     {
         _data = data;
-        _index = index;
+        _recipeIndex = recipeIndex;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.AddOrUpdateAsync(i.RecipeId, cancellationToken);
+                await _recipeIndex.AddOrUpdateAsync(i.RecipeId, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image deleted.", request.Name));
     }

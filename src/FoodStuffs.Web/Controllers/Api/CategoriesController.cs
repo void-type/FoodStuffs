@@ -10,7 +10,7 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage recipe categories.
+/// Manage categories.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/categories")]
 public class CategoriesController : ControllerBase

@@ -1,5 +1,8 @@
-﻿using FoodStuffs.Model.Events.Recipes;
+﻿using FoodStuffs.Model.Events.GroceryItems;
+using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.GroceryItems;
+using FoodStuffs.Model.Search.GroceryItems.Models;
 using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Model.Search.Recipes.Models;
 
@@ -28,9 +31,17 @@ public class EnsureIndexHostedService : IHostedService
         // Check if index directories exist
         var config = scope.ServiceProvider.GetRequiredService<SearchSettings>();
 
-        if (!Directory.Exists(config.GetIndexFolder(RecipeSearchConstants.INDEX_NAME)) || !Directory.Exists(config.GetTaxonomyFolder(RecipeSearchConstants.INDEX_NAME)))
+        var folders = new[]
         {
-            _logger.LogWarning("Recipe index is missing on startup. Rebuilding.");
+            config.GetIndexFolder(RecipeSearchConstants.INDEX_NAME),
+            config.GetTaxonomyFolder(RecipeSearchConstants.INDEX_NAME),
+            config.GetIndexFolder(GroceryItemSearchConstants.INDEX_NAME),
+            config.GetTaxonomyFolder(GroceryItemSearchConstants.INDEX_NAME)
+        };
+
+        if (folders.Any(x => !Directory.Exists(x)))
+        {
+            _logger.LogWarning("One or more index folders are missing on startup. Rebuilding.");
             needsRebuild = true;
         }
         else
@@ -57,12 +68,40 @@ public class EnsureIndexHostedService : IHostedService
                 _logger.LogError(ex, "Recipe index test failed. Index may be corrupted. Rebuilding.");
                 needsRebuild = true;
             }
+
+            // Test the index by performing a simple search
+            try
+            {
+                var testRequest = new SearchGroceryItemsRequest(
+                    SearchText: null,
+                    StorageLocationIds: null,
+                    MatchAllStorageLocations: false,
+                    GroceryAisleIds: null,
+                    IsOutOfStock: null,
+                    IsUnused: null,
+                    SortBy: null,
+                    RandomSortSeed: null,
+                    IsPagingEnabled: true,
+                    Page: 1,
+                    Take: 5);
+
+                var searchHandler = scope.ServiceProvider.GetRequiredService<SearchGroceryItemsHandler>();
+                await searchHandler.Handle(testRequest, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Grocery items index test failed. Index may be corrupted. Rebuilding.");
+                needsRebuild = true;
+            }
         }
 
         if (needsRebuild)
         {
-            var index = scope.ServiceProvider.GetRequiredService<IRecipeIndexService>();
-            await index.RebuildAsync(cancellationToken);
+            var recipeIndex = scope.ServiceProvider.GetRequiredService<IRecipeIndexService>();
+            await recipeIndex.RebuildAsync(cancellationToken);
+
+            var groceryIndex = scope.ServiceProvider.GetRequiredService<IGroceryItemIndexService>();
+            await groceryIndex.RebuildAsync(cancellationToken);
         }
     }
 

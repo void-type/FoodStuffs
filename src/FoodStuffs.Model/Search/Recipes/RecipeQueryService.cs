@@ -212,12 +212,12 @@ public class RecipeQueryService : IRecipeQueryService
     {
         var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
 
-        SearchHelper.AddFilterForSingleValueFacet(
+        SearchHelper.DrillDownByValue(
             drillDownQuery,
             C.FIELD_IS_FOR_MEAL_PLANNING,
             request.IsForMealPlanning?.ToString());
 
-        SearchHelper.AddFilterForMultiValueFacet(
+        SearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,

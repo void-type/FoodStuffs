@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Categories;
 public class AddCategoryToAllRecipesHandler : CustomEventHandlerAbstract<AddCategoryToAllRecipesRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly IRecipeIndexService _recipeIndex;
 
-    public AddCategoryToAllRecipesHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public AddCategoryToAllRecipesHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex)
     {
         _data = data;
-        _index = index;
+        _recipeIndex = recipeIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(AddCategoryToAllRecipesRequest request, CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ public class AddCategoryToAllRecipesHandler : CustomEventHandlerAbstract<AddCate
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.RebuildAsync(cancellationToken);
+                await _recipeIndex.RebuildAsync(cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Category added to all recipes.", r.Id));
     }
