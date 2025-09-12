@@ -3,7 +3,7 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Lucene;
 
 public class LuceneReaders : IDisposable
 {

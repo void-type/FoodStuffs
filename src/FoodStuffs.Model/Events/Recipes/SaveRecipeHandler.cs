@@ -2,8 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Recipes.Models;
-using FoodStuffs.Model.Search.GroceryItems;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -15,16 +14,14 @@ namespace FoodStuffs.Model.Events.Recipes;
 public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, EntityResponse<GetRecipeResponse>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _recipeIndex;
+    private readonly ISearchIndexService _searchIndex;
     private readonly SaveRecipeRequestValidator _validator;
-    private readonly IGroceryItemIndexService _groceryItemIndex;
 
-    public SaveRecipeHandler(FoodStuffsContext data, SaveRecipeRequestValidator validator, IRecipeIndexService recipeIndex, IGroceryItemIndexService groceryItemIndex)
+    public SaveRecipeHandler(FoodStuffsContext data, SaveRecipeRequestValidator validator, ISearchIndexService searchIndex)
     {
         _data = data;
-        _recipeIndex = recipeIndex;
+        _searchIndex = searchIndex;
         _validator = validator;
-        _groceryItemIndex = groceryItemIndex;
     }
 
     public override async Task<IResult<EntityResponse<GetRecipeResponse>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
@@ -80,9 +77,9 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        _recipeIndex.AddOrUpdate(recipeToEdit);
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeToEdit.Id, cancellationToken);
 
-        await _groceryItemIndex.AddOrUpdateAsync(recipeToEdit.GroceryItemRelations.Select(x => x.GroceryItemId), cancellationToken);
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, recipeToEdit.GroceryItemRelations.Select(x => x.GroceryItemId), cancellationToken);
 
         var response = EntityResponse.Create(
             $"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.",

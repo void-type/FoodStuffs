@@ -1,6 +1,6 @@
 ﻿using FoodStuffs.Model.Events.GroceryItems;
 using FoodStuffs.Model.Events.GroceryItems.Models;
-using FoodStuffs.Model.Search.GroceryItems;
+using FoodStuffs.Model.Search;
 using FoodStuffs.Model.Search.GroceryItems.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
@@ -163,10 +163,10 @@ public class GroceryItemsController : ControllerBase
     /// </summary>
     [HttpPost("rebuild-index")]
     [ProducesResponseType(typeof(UserMessage), 200)]
-    public async Task<IActionResult> RebuildAsync([FromServices] IGroceryItemIndexService indexService, CancellationToken cancellationToken)
+    public async Task<IActionResult> RebuildAsync([FromServices] ISearchIndexService searchIndex, CancellationToken cancellationToken)
     {
-        await indexService.RebuildAsync(cancellationToken);
+        await searchIndex.RebuildAsync(SearchIndex.GroceryItems, cancellationToken);
 
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Grocery item index rebuilt.")));
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Grocery item index queued for rebuild.")));
     }
 }

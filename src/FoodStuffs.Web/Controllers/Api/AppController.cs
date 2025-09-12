@@ -1,5 +1,4 @@
-﻿using FoodStuffs.Model.Search.GroceryItems;
-using FoodStuffs.Model.Search.Recipes;
+﻿using FoodStuffs.Model.Search;
 using FoodStuffs.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
@@ -49,11 +48,11 @@ public class AppController : ControllerBase
     /// </summary>
     [HttpPost("rebuild-indexes")]
     [ProducesResponseType(typeof(UserMessage), 200)]
-    public async Task<IActionResult> RebuildAsync([FromServices] IRecipeIndexService recipeIndexService, IGroceryItemIndexService groceryItemIndexService, CancellationToken cancellationToken)
+    public async Task<IActionResult> RebuildAsync([FromServices] ISearchIndexService searchIndex, CancellationToken cancellationToken)
     {
-        await recipeIndexService.RebuildAsync(cancellationToken);
-        await groceryItemIndexService.RebuildAsync(cancellationToken);
+        await searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
+        await searchIndex.RebuildAsync(SearchIndex.GroceryItems, cancellationToken);
 
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Search indexes rebuilt.")));
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Search indexes queued for rebuild.")));
     }
 }

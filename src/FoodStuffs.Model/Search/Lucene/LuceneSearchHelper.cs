@@ -3,9 +3,9 @@ using Lucene.Net.Facet;
 using Lucene.Net.Search;
 using System.Globalization;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Lucene;
 
-public static class SearchHelper
+public static class LuceneSearchHelper
 {
     /// <summary>
     /// Convert a string field to a DateTime, or return null if the field is empty.

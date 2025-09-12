@@ -65,6 +65,11 @@ try
     services.AddScoped<IGroceryItemIndexService, GroceryItemIndexService>();
     services.AddScoped<IGroceryItemQueryService, GroceryItemQueryService>();
 
+    services.AddSingleton<BackgroundSearchIndexService>();
+    services.AddSingleton<ISearchIndexService>(provider => provider.GetRequiredService<BackgroundSearchIndexService>());
+    services.AddHostedService(provider => provider.GetRequiredService<BackgroundSearchIndexService>());
+    services.AddHostedService<EnsureIndexHostedService>();
+
     // Auto-register Domain Events
     services.AddDomainEvents(
         ServiceLifetime.Scoped,
@@ -72,7 +77,6 @@ try
         typeof(SearchRecipesHandler).Assembly);
 
     // Workers and background services
-    services.AddHostedService<EnsureIndexHostedService>();
 
     var app = builder.Build();
 

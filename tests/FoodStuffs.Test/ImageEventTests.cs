@@ -2,7 +2,7 @@
 using FoodStuffs.Model.Events.Images;
 using FoodStuffs.Model.Events.Images.Models;
 using FoodStuffs.Model.ImageCompression;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -59,7 +59,7 @@ public class ImageEventTests
         var request = new SaveImageRequest(recipe.Id, myFile);
         var imageCompressor = new ImageCompressionService(new NullLogger<ImageCompressionService>());
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new SaveImageHandler(context, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
 
@@ -85,7 +85,7 @@ public class ImageEventTests
 
         var imageCompressor = new ImageCompressionService(new NullLogger<ImageCompressionService>());
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new SaveImageHandler(context, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
 
@@ -104,7 +104,7 @@ public class ImageEventTests
 
         var imageCompressor = new ImageCompressionService(new NullLogger<ImageCompressionService>());
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new SaveImageHandler(context, new NullLogger<SaveImageHandler>(), imageCompressor, indexService).Handle(request);
 
@@ -134,7 +134,7 @@ public class ImageEventTests
 
         var request = new DeleteImageRequest(image.FileName);
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new DeleteImageHandler(context, indexService).Handle(request);
 
@@ -150,7 +150,7 @@ public class ImageEventTests
 
         var request = new DeleteImageRequest("not-exist-image.jpg");
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new DeleteImageHandler(context, indexService).Handle(request);
 
@@ -172,7 +172,7 @@ public class ImageEventTests
 
         var request = new PinImageRequest(image.FileName);
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new PinImageHandler(context, indexService).Handle(request);
 
@@ -192,7 +192,7 @@ public class ImageEventTests
 
         var request = new PinImageRequest("not-exist-image.jpg");
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new PinImageHandler(context, indexService).Handle(request);
 

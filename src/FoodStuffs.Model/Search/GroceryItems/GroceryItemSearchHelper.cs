@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Search.GroceryItems.Models;
+using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Documents;
 using Lucene.Net.Documents.Extensions;
 using Lucene.Net.Facet;

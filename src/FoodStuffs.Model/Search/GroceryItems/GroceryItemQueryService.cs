@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Search.GroceryItems.Models;
+using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Facet;
 using Lucene.Net.Index;
@@ -62,7 +63,7 @@ public class GroceryItemQueryService : IGroceryItemQueryService
             .Select(x => searcher.Doc(x.Doc).ToSearchResultItem())
             .ToItemSet(pagination, drillResult.Hits.TotalHits);
 
-        var resultFacets = SearchHelper.GetFacets(drillResult, facetsConfig);
+        var resultFacets = LuceneSearchHelper.GetFacets(drillResult, facetsConfig);
 
         return new(resultItems, resultFacets);
     }
@@ -212,17 +213,17 @@ public class GroceryItemQueryService : IGroceryItemQueryService
     {
         var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
 
-        SearchHelper.DrillDownByValue(
+        LuceneSearchHelper.DrillDownByValue(
             drillDownQuery,
             C.FIELD_IS_OUT_OF_STOCK,
             request.IsOutOfStock?.ToString());
 
-        SearchHelper.DrillDownByValue(
+        LuceneSearchHelper.DrillDownByValue(
             drillDownQuery,
             C.FIELD_IS_UNUSED,
             request.IsUnused?.ToString());
 
-        SearchHelper.DrillDownByValues(
+        LuceneSearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,
@@ -230,7 +231,7 @@ public class GroceryItemQueryService : IGroceryItemQueryService
             request.StorageLocationIds?.Select(x => x.ToString()).ToArray() ?? [],
             request.MatchAllStorageLocations);
 
-        SearchHelper.DrillDownByValues(
+        LuceneSearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,

@@ -1,6 +1,6 @@
 ﻿using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Events.Recipes.Models;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
@@ -57,7 +57,7 @@ public class RecipeEventTests
         Assert.True(recipeToDelete.Images.Select(i => i.ImageBlob).Any());
         Assert.Equal(recipeToDelete.Images.Count, recipeToDelete.Images.Select(i => i.ImageBlob).Count());
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new DeleteRecipeHandler(context, indexService)
             .Handle(new DeleteRecipeRequest(recipeToDelete.Id));
@@ -76,7 +76,7 @@ public class RecipeEventTests
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
         var result = await new DeleteRecipeHandler(context, indexService)
             .Handle(new DeleteRecipeRequest(-22));
@@ -89,9 +89,9 @@ public class RecipeEventTests
     {
         await using var context = Deps.FoodStuffsContext().Seed();
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
-        var result = await new SaveRecipeHandler(context, indexService, new SaveRecipeRequestValidator())
+        var result = await new SaveRecipeHandler(context, new SaveRecipeRequestValidator(), indexService)
             .Handle(new SaveRecipeRequest(0, "New", "New", string.Empty, null, 20, false, 2, [], ["Category2", "Category3", "Category4"]));
 
         Assert.True(result.IsSuccess);
@@ -116,9 +116,9 @@ public class RecipeEventTests
 
         var existingRecipeId = context.Recipes.First().Id;
 
-        var indexService = Substitute.For<IRecipeIndexService>();
+        var indexService = Substitute.For<ISearchIndexService>();
 
-        var result = await new SaveRecipeHandler(context, indexService, new SaveRecipeRequestValidator())
+        var result = await new SaveRecipeHandler(context, new SaveRecipeRequestValidator(), indexService)
             .Handle(new SaveRecipeRequest(existingRecipeId, "New", "New", string.Empty, null, 20, false, 2, [], ["Category2", "Category3", "Category4"]));
 
         Assert.True(result.IsSuccess);

@@ -1,6 +1,7 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
+using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Microsoft.EntityFrameworkCore;

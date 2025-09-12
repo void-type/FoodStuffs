@@ -1,6 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.Categories.Models;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Categories;
 public class AddCategoryToAllRecipesHandler : CustomEventHandlerAbstract<AddCategoryToAllRecipesRequest, EntityMessage<int>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _recipeIndex;
+    private readonly ISearchIndexService _searchIndex;
 
-    public AddCategoryToAllRecipesHandler(FoodStuffsContext data, IRecipeIndexService recipeIndex)
+    public AddCategoryToAllRecipesHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
     {
         _data = data;
-        _recipeIndex = recipeIndex;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(AddCategoryToAllRecipesRequest request, CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ public class AddCategoryToAllRecipesHandler : CustomEventHandlerAbstract<AddCate
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _recipeIndex.RebuildAsync(cancellationToken);
+                await _searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Category added to all recipes.", r.Id));
     }

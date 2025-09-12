@@ -2,8 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.GroceryItems.Models;
-using FoodStuffs.Model.Search.GroceryItems;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -17,15 +16,13 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveGroceryItemRequestValidator _validator;
-    private readonly IRecipeIndexService _recipeIndex;
-    private readonly IGroceryItemIndexService _groceryItemIndex;
+    private readonly ISearchIndexService _searchIndex;
 
-    public SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemRequestValidator validator, IRecipeIndexService recipeIndex, IGroceryItemIndexService groceryItemIndex)
+    public SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemRequestValidator validator, ISearchIndexService searchIndex)
     {
         _data = data;
         _validator = validator;
-        _recipeIndex = recipeIndex;
-        _groceryItemIndex = groceryItemIndex;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryItemRequest request, CancellationToken cancellationToken = default)
@@ -95,8 +92,9 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _recipeIndex.AddOrUpdateAsync(groceryItemToEdit.Recipes.Select(r => r.Id), cancellationToken);
-        _groceryItemIndex.AddOrUpdate(groceryItemToEdit);
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, groceryItemToEdit.Recipes.Select(r => r.Id), cancellationToken);
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery Item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }

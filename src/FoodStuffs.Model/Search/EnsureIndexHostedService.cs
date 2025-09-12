@@ -1,12 +1,14 @@
 ﻿using FoodStuffs.Model.Events.GroceryItems;
 using FoodStuffs.Model.Events.Recipes;
-using FoodStuffs.Model.Search;
 using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.GroceryItems.Models;
 using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Model.Search.Recipes.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace FoodStuffs.Web.Startup;
+namespace FoodStuffs.Model.Search;
 
 /// <summary>
 /// This service will rebuild the index on startup if it doesn't exist or if it's corrupted.
@@ -97,11 +99,9 @@ public class EnsureIndexHostedService : IHostedService
 
         if (needsRebuild)
         {
-            var recipeIndex = scope.ServiceProvider.GetRequiredService<IRecipeIndexService>();
-            await recipeIndex.RebuildAsync(cancellationToken);
-
-            var groceryIndex = scope.ServiceProvider.GetRequiredService<IGroceryItemIndexService>();
-            await groceryIndex.RebuildAsync(cancellationToken);
+            var searchIndex = scope.ServiceProvider.GetRequiredService<ISearchIndexService>();
+            await searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
+            await searchIndex.RebuildAsync(SearchIndex.GroceryItems, cancellationToken);
         }
     }
 
