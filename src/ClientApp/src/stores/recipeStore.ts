@@ -8,7 +8,7 @@ import type {
   SearchFacet,
 } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
-import RecipesListRequest from '@/models/RecipesListRequest';
+import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
@@ -36,7 +36,7 @@ export const useRecipeStore = defineStore('recipe', {
       totalCount: 0,
     },
     listFacets: [],
-    listRequest: { ...new RecipesListRequest(), take: Choices.defaultPaginationTake.value },
+    listRequest: { ...new RecipesSearchRequest(), take: Choices.defaultPaginationTake.value },
     recentRecipes: RecipeStoreHelper.getRecents(),
   }),
 

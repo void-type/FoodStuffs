@@ -5,7 +5,7 @@ import { VueDraggable } from 'vue-draggable-plus';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { clamp } from '@/models/FormatHelper';
 import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
-import type { ListGroceryItemsResponse } from '@/api/data-contracts';
+import type { SearchGroceryItemsResultItem } from '@/api/data-contracts';
 import RecipeEditorGroceryItemSelect from './RecipeEditorGroceryItemSelect.vue';
 import AppSortHandle from './AppSortHandle.vue';
 import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
@@ -22,7 +22,7 @@ const props = defineProps({
     required: true,
   },
   suggestions: {
-    type: Array as PropType<Array<ListGroceryItemsResponse>>,
+    type: Array as PropType<Array<SearchGroceryItemsResultItem>>,
     required: false,
     default: () => [],
   },

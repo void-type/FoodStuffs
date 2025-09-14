@@ -1,7 +1,7 @@
 ﻿using FoodStuffs.Model.Events;
 using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Events.Recipes.Models;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using FoodStuffs.Model.Search.Recipes.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
@@ -143,10 +143,10 @@ public class RecipesController : ControllerBase
     /// </summary>
     [HttpPost("rebuild-index")]
     [ProducesResponseType(typeof(UserMessage), 200)]
-    public async Task<IActionResult> RebuildAsync([FromServices] IRecipeIndexService indexService, CancellationToken cancellationToken)
+    public async Task<IActionResult> RebuildAsync([FromServices] ISearchIndexService searchIndex, CancellationToken cancellationToken)
     {
-        await indexService.RebuildAsync(cancellationToken);
+        await searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
 
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Index rebuilt.")));
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Recipe index queued for rebuild.")));
     }
 }

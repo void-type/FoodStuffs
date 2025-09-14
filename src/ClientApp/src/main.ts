@@ -19,6 +19,8 @@ import {
   faCheck,
   faDiceThree,
   faPalette,
+  faUtensils,
+  faShoppingBasket,
 } from '@fortawesome/free-solid-svg-icons';
 import 'vue-color/style.css';
 
@@ -37,7 +39,9 @@ library.add(
   faTimes,
   faCheck,
   faDiceThree,
-  faPalette
+  faPalette,
+  faUtensils,
+  faShoppingBasket
 );
 
 const app = createApp(App);

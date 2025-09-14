@@ -1,4 +1,5 @@
-﻿using FoodStuffs.Model.Search.Recipes.Models;
+﻿using FoodStuffs.Model.Search.Lucene;
+using FoodStuffs.Model.Search.Recipes.Models;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Facet;
 using Lucene.Net.Index;
@@ -62,7 +63,7 @@ public class RecipeQueryService : IRecipeQueryService
             .Select(x => searcher.Doc(x.Doc).ToSearchResultItem())
             .ToItemSet(pagination, drillResult.Hits.TotalHits);
 
-        var resultFacets = SearchHelper.GetFacets(drillResult, facetsConfig);
+        var resultFacets = LuceneSearchHelper.GetFacets(drillResult, facetsConfig);
 
         return new(resultItems, resultFacets);
     }
@@ -212,12 +213,12 @@ public class RecipeQueryService : IRecipeQueryService
     {
         var drillDownQuery = new DrillDownQuery(facetsConfig, baseQuery);
 
-        SearchHelper.AddFilterForSingleValueFacet(
+        LuceneSearchHelper.DrillDownByValue(
             drillDownQuery,
             C.FIELD_IS_FOR_MEAL_PLANNING,
             request.IsForMealPlanning?.ToString());
 
-        SearchHelper.AddFilterForMultiValueFacet(
+        LuceneSearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,

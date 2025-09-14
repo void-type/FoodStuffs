@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { SearchRecipesResultItem, SearchRecipesResponse } from '@/api/data-contracts';
-import RecipesListRequest from '@/models/RecipesListRequest';
+import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
 import useMessageStore from './messageStore';
@@ -75,7 +75,7 @@ export default defineStore('discovery', {
 
       try {
         const response = await api().recipesSearch({
-          ...new RecipesListRequest(),
+          ...new RecipesSearchRequest(),
           page: this.page + 1,
           take: 12,
           sortBy: 'random',

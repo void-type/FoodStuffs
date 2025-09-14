@@ -40,4 +40,15 @@ export default class Choices {
       },
     ];
   }
+
+  static get sortOptions() {
+    return [
+      { text: 'Relevance', value: '' },
+      { text: 'Newest', value: 'newest' },
+      { text: 'Oldest', value: 'oldest' },
+      { text: 'A-Z', value: 'a-z' },
+      { text: 'Z-A', value: 'z-a' },
+      { text: 'Random', value: 'random' },
+    ];
+  }
 }

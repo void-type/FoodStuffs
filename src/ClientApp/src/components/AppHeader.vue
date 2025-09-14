@@ -8,7 +8,7 @@ import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelper from '@/models/ApiHelper';
-import AppHeaderSearch from './AppHeaderSearch.vue';
+import AppHeaderQuickSearch from './AppHeaderQuickSearch.vue';
 
 const appStore = useAppStore();
 const messageStore = useMessageStore();
@@ -22,7 +22,7 @@ async function rebuildSearch() {
   try {
     isRebuilding.value = true;
 
-    const response = await api().recipesRebuild();
+    const response = await api().appRebuildIndexes();
 
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
@@ -50,7 +50,7 @@ const searchText = ref('');
         />
         {{ applicationName }}
       </router-link>
-      <AppHeaderSearch v-model="searchText" class="ms-auto me-2 d-none d-sm-block d-md-none" />
+      <AppHeaderQuickSearch v-model="searchText" class="ms-auto me-2 d-none d-sm-block d-md-none" />
       <button
         type="button"
         class="navbar-toggler border"
@@ -62,10 +62,10 @@ const searchText = ref('');
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <AppHeaderSearch v-model="searchText" class="mt-2 d-sm-none w-100" />
+      <AppHeaderQuickSearch v-model="searchText" class="mt-2 d-sm-none w-100" />
       <div id="navbar-menu" class="navbar-collapse collapse">
         <slot name="navItems"></slot>
-        <AppHeaderSearch v-model="searchText" class="ms-auto me-2 d-none d-md-block" />
+        <AppHeaderQuickSearch v-model="searchText" class="ms-auto me-2 d-none d-md-block" />
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
             <a

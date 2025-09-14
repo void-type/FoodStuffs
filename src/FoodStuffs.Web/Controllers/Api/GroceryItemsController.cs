@@ -1,5 +1,7 @@
 ﻿using FoodStuffs.Model.Events.GroceryItems;
 using FoodStuffs.Model.Events.GroceryItems.Models;
+using FoodStuffs.Model.Search;
+using FoodStuffs.Model.Search.GroceryItems.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Routing;
@@ -10,40 +12,85 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage recipe grocery items.
+/// Manage grocery items.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/grocery-items")]
 public class GroceryItemsController : ControllerBase
 {
     /// <summary>
-    /// List grocery items. All parameters are optional and some have defaults.
+    /// Search for grocery items using the following criteria. All are optional and some have defaults.
     /// </summary>
-    /// <param name="listHandler"></param>
-    /// <param name="name">Name contains (case-insensitive)</param>
-    /// <param name="isUnused">Specify to show items that have relations or no relations</param>
-    /// <param name="isOutOfStock">Specify to show items that are out of stock</param>
+    /// <param name="searchHandler"></param>
+    /// <param name="searchText">Search text (case-insensitive)</param>
+    /// <param name="storageLocations">Storage location IDs to filter on</param>
+    /// <param name="matchAllStorageLocations">When true, grocery items returned will match all selected storage locations</param>
+    /// <param name="groceryAisles">Grocery aisle IDs to filter on</param>
+    /// <param name="isOutOfStock">If the grocery items are out of stock</param>
+    /// <param name="isUnused">If the grocery items have no relations</param>
+    /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
+    /// <param name="randomSortSeed">Give a seed for stable random sorting. By default is stable for 24 hours on the server.</param>
     /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
-    [ProducesResponseType(typeof(IItemSet<ListGroceryItemsResponse>), 200)]
+    [ProducesResponseType(typeof(SearchGroceryItemsResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListGroceryItemsHandler listHandler, string? name = null, bool? isUnused = null, bool? isOutOfStock = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> SearchAsync(
+        [FromServices] SearchGroceryItemsHandler searchHandler,
+        [FromQuery] string? searchText = null,
+        [FromQuery] int[]? storageLocations = null,
+        [FromQuery] bool matchAllStorageLocations = false,
+        [FromQuery] int[]? groceryAisles = null,
+        [FromQuery] bool? isOutOfStock = null,
+        [FromQuery] bool? isUnused = null,
+        [FromQuery] string? sortBy = null,
+        [FromQuery] string? randomSortSeed = null,
+        [FromQuery] bool isPagingEnabled = true,
+        [FromQuery] int page = 1,
+        [FromQuery] int take = 30)
     {
-        var request = new ListGroceryItemsRequest(
-            NameSearch: name,
-            IsUnused: isUnused,
+        var request = new SearchGroceryItemsRequest(
+            SearchText: searchText,
+            StorageLocationIds: storageLocations,
+            MatchAllStorageLocations: matchAllStorageLocations,
+            GroceryAisleIds: groceryAisles,
             IsOutOfStock: isOutOfStock,
+            IsUnused: isUnused,
+            SortBy: sortBy,
+            RandomSortSeed: randomSortSeed,
             IsPagingEnabled: isPagingEnabled,
             Page: page,
             Take: take);
 
-        // Cancel long-running queries
-        using var cts = new CancellationTokenSource()
-            .Tee(c => c.CancelAfter(5000));
+        return await searchHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
 
-        return await listHandler
-            .Handle(request, cts.Token)
+    /// <summary>
+    /// Suggest grocery items based on search.
+    /// </summary>
+    /// <param name="suggestHandler"></param>
+    /// <param name="searchText">Search text (case-insensitive)</param>
+    /// <param name="isPagingEnabled">Set false to get all results</param>
+    /// <param name="take">How many items in a page</param>
+    [HttpGet("suggest")]
+    [ProducesResponseType(typeof(IItemSet<SuggestGroceryItemsResultItem>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> SuggestAsync(
+        [FromServices] SuggestGroceryItemsHandler suggestHandler,
+        [FromQuery] string? searchText = null,
+        [FromQuery] bool isPagingEnabled = true,
+        [FromQuery] int take = 8)
+    {
+        var request = new SuggestGroceryItemsRequest(
+            SearchText: searchText,
+            IsPagingEnabled: isPagingEnabled,
+            Page: 1,
+            Take: take);
+
+        return await suggestHandler
+            .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }
 
@@ -109,5 +156,17 @@ public class GroceryItemsController : ControllerBase
         return await deleteHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Rebuild the grocery item search index.
+    /// </summary>
+    [HttpPost("rebuild-index")]
+    [ProducesResponseType(typeof(UserMessage), 200)]
+    public async Task<IActionResult> RebuildAsync([FromServices] ISearchIndexService searchIndex, CancellationToken cancellationToken)
+    {
+        await searchIndex.RebuildAsync(SearchIndex.GroceryItems, cancellationToken);
+
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Grocery item index queued for rebuild.")));
     }
 }

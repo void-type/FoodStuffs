@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Search.GroceryItems.Models;
+using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Documents;
 using Lucene.Net.Documents.Extensions;
 using Lucene.Net.Facet;
@@ -14,7 +15,8 @@ public static class GroceryItemSearchHelper
 {
     public static Document ToDocument(this GroceryItem groceryItem)
     {
-        var isForMealPlanning = groceryItem.IsForMealPlanning.ToString();
+        var isOutOfStock = (groceryItem.InventoryQuantity < 1).ToString();
+        var isUnused = (!groceryItem.Recipes.Any()).ToString();
         var createdOn = groceryItem.CreatedOn.ToString("o");
 
         var doc = new Document
@@ -29,57 +31,56 @@ public static class GroceryItemSearchHelper
             // Name: Verbatim string for prefix search, needs to be lowercase
             new StringField(C.FIELD_NAME_PREFIX, groceryItem.Name.ToLower(), Field.Store.NO),
 
-            // IsForMealPlanning: retrievable
-            new StoredField(C.FIELD_IS_OUT_OF_STOCK, isForMealPlanning),
-            // IsForMealPlanning: facetable
-            new FacetField(C.FIELD_IS_OUT_OF_STOCK, isForMealPlanning),
+            // IsOutOfStock: retrievable
+            new StoredField(C.FIELD_IS_OUT_OF_STOCK, isOutOfStock),
+            // IsOutOfStock: facetable
+            new FacetField(C.FIELD_IS_OUT_OF_STOCK, isOutOfStock),
 
-            // MealPlanningSidesCount: retrievable
-            new StoredField(C.FIELD_MEAL_PLANNING_SIDES_COUNT, groceryItem.MealPlanningSidesCount.ToString()),
+            // IsUnused: retrievable
+            new StoredField(C.FIELD_IS_UNUSED, isUnused),
+            // IsUnused: facetable
+            new FacetField(C.FIELD_IS_UNUSED, isUnused),
+
+            // InventoryQuantity: retrievable
+            new StoredField(C.FIELD_INVENTORY_QUANTITY, groceryItem.InventoryQuantity.ToString()),
+
+            // RecipeCount: retrievable
+            new StoredField(C.FIELD_RECIPE_COUNT, groceryItem.Recipes.Count.ToString()),
 
             // CreatedOn: retrievable
             new StoredField(C.FIELD_CREATED_ON, createdOn),
             // CreatedOn: sortable
             new SortedDocValuesField(C.FIELD_CREATED_ON, new BytesRef(createdOn)),
-
-            // Slug: retrievable
-            new StoredField(C.FIELD_SLUG, groceryItem.Slug),
         };
 
-        var categories = groceryItem.Categories
-            .Select(c => new SearchGroceryItemsResultItemCategory(
+        var storageLocations = groceryItem.StorageLocations
+            .Select(c => new SearchGroceryItemsResultItemStorageLocation(
                 Id: c.Id,
-                Name: c.Name,
-                Color: c.Color
+                Name: c.Name
             ))
             .OrderBy(c => c.Name)
             .ToArray();
 
-        // Categories: retrievable
-        doc.AddStoredField(C.FIELD_CATEGORIES, JsonSerializer.Serialize(categories));
+        // StorageLocations: retrievable
+        doc.AddStoredField(C.FIELD_STORAGE_LOCATIONS_JSON, JsonSerializer.Serialize(storageLocations));
 
-        foreach (var category in categories)
+        foreach (var location in storageLocations)
         {
-            // CategoryId: facetable
-            doc.AddFacetField(C.FIELD_CATEGORY_IDS, category.Id.ToString());
+            // LocationId: facetable
+            doc.AddFacetField(C.FIELD_STORAGE_LOCATION_IDS, location.Id.ToString());
         }
 
-        var groceryItems = groceryItem.GroceryItemRelations
-            .Select(x => new SearchGroceryItemsResultItemGroceryItem(
-                Name: x.GroceryItem.Name,
-                Quantity: x.Quantity,
-                Order: x.Order
-            ));
-
-        // Grocery items: retrievable
-        doc.AddStoredField(C.FIELD_MEAL_GROCERY_ITEMS_JSON, JsonSerializer.Serialize(groceryItems));
-
-        var image = groceryItem.DefaultImage;
-
-        if (image is not null)
+        if (groceryItem.GroceryAisle is not null)
         {
-            // Image: retrievable
-            doc.AddStoredField(C.FIELD_IMAGE, image.FileName);
+            // GroceryAisle: retrievable
+            doc.AddStoredField(C.FIELD_GROCERY_AISLE_JSON, JsonSerializer.Serialize(new SearchGroceryItemsResultItemGroceryAisle(
+                Id: groceryItem.GroceryAisle.Id,
+                Name: groceryItem.GroceryAisle.Name,
+                Order: groceryItem.GroceryAisle.Order
+            )));
+
+            // GroceryAisleId: facetable
+            doc.AddFacetField(C.FIELD_GROCERY_AISLE_ID, groceryItem.GroceryAisle.Id.ToString());
         }
 
         return doc;
@@ -91,15 +92,15 @@ public static class GroceryItemSearchHelper
         (
             Id: int.Parse(doc.Get(C.FIELD_ID)),
             Name: doc.Get(C.FIELD_NAME),
-            IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_OUT_OF_STOCK)),
-            MealPlanningSidesCount: int.Parse(doc.Get(C.FIELD_MEAL_PLANNING_SIDES_COUNT) ?? "0"),
+            IsOutOfStock: bool.Parse(doc.Get(C.FIELD_IS_OUT_OF_STOCK)),
+            IsUnused: bool.Parse(doc.Get(C.FIELD_IS_UNUSED)),
+            InventoryQuantity: int.Parse(doc.Get(C.FIELD_INVENTORY_QUANTITY) ?? "0"),
+            RecipeCount: int.Parse(doc.Get(C.FIELD_RECIPE_COUNT) ?? "0"),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
-            Slug: doc.Get(C.FIELD_SLUG),
-            Categories: doc.Get(C.FIELD_CATEGORIES)
-                .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemCategory>>(x) ?? []),
-            GroceryItems: doc.Get(C.FIELD_MEAL_GROCERY_ITEMS_JSON)
-                .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemGroceryItem>>(x) ?? []),
-            Image: doc.Get(C.FIELD_IMAGE)
+            StorageLocations: doc.Get(C.FIELD_STORAGE_LOCATIONS_JSON)
+                .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemStorageLocation>>(x) ?? []),
+            GroceryAisle: doc.Get(C.FIELD_GROCERY_AISLE_JSON)
+                .Map(x => x is null ? null : JsonSerializer.Deserialize<SearchGroceryItemsResultItemGroceryAisle>(x))
         );
     }
 
@@ -108,9 +109,7 @@ public static class GroceryItemSearchHelper
         return new SuggestGroceryItemsResultItem
         (
             Id: int.Parse(doc.Get(C.FIELD_ID)),
-            Name: doc.Get(C.FIELD_NAME),
-            Slug: doc.Get(C.FIELD_SLUG),
-            Image: doc.Get(C.FIELD_IMAGE)
+            Name: doc.Get(C.FIELD_NAME)
         );
     }
 
@@ -119,7 +118,10 @@ public static class GroceryItemSearchHelper
         var facetConfig = new FacetsConfig();
 
         facetConfig.SetMultiValued(C.FIELD_IS_OUT_OF_STOCK, false);
-        facetConfig.SetMultiValued(C.FIELD_CATEGORY_IDS, true);
+        facetConfig.SetMultiValued(C.FIELD_IS_UNUSED, false);
+
+        facetConfig.SetMultiValued(C.FIELD_STORAGE_LOCATION_IDS, true);
+        facetConfig.SetMultiValued(C.FIELD_GROCERY_AISLE_ID, false);
 
         return facetConfig;
     }

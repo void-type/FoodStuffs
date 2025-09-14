@@ -3,9 +3,9 @@ using Lucene.Net.Facet;
 using Lucene.Net.Search;
 using System.Globalization;
 
-namespace FoodStuffs.Model.Search;
+namespace FoodStuffs.Model.Search.Lucene;
 
-public static class SearchHelper
+public static class LuceneSearchHelper
 {
     /// <summary>
     /// Convert a string field to a DateTime, or return null if the field is empty.
@@ -27,7 +27,10 @@ public static class SearchHelper
     /// <summary>
     /// Add a filter to a DrillDownQuery for a single-value facet field if the value is not null.
     /// </summary>
-    public static void AddFilterForSingleValueFacet(DrillDownQuery drillDownQuery, string facetName, string? value)
+    /// <param name="drillDownQuery">The DrillDownQuery to modify.</param>
+    /// <param name="facetName">The name of the facet field to filter on.</param>
+    /// <param name="value">The value to filter by, or null to skip adding a filter.</param>
+    public static void DrillDownByValue(DrillDownQuery drillDownQuery, string facetName, string? value)
     {
         if (value is not null)
         {
@@ -38,7 +41,13 @@ public static class SearchHelper
     /// <summary>
     /// Add a filter to a DrillDownQuery for a multi-value facet field.
     /// </summary>
-    public static void AddFilterForMultiValueFacet(DrillDownQuery drillDownQuery, BooleanQuery baseQuery, FacetsConfig facetsConfig, string facetName, string[] values, bool matchAll)
+    /// <param name="drillDownQuery">The DrillDownQuery to modify.</param>
+    /// <param name="baseQuery">The base BooleanQuery to modify for AND behavior.</param>
+    /// <param name="facetsConfig">The FacetsConfig used to create the DrillDownQuery.</param>
+    /// <param name="facetName">The name of the facet field to filter on.</param>
+    /// <param name="values">The values to filter by.</param>
+    /// <param name="matchAll">If true, only return documents that match all values (AND). If false, return documents that match any value (OR).</param>
+    public static void DrillDownByValues(DrillDownQuery drillDownQuery, BooleanQuery baseQuery, FacetsConfig facetsConfig, string facetName, string[] values, bool matchAll)
     {
         if (values.Length == 0)
         {

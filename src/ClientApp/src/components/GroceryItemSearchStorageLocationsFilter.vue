@@ -2,7 +2,7 @@
 import ApiHelper from '@/models/ApiHelper';
 import { ref, onMounted, type PropType } from 'vue';
 import useMessageStore from '@/stores/messageStore';
-import { type ListCategoriesResponse, type SearchFacetValue } from '@/api/data-contracts';
+import { type ListStorageLocationsResponse, type SearchFacetValue } from '@/api/data-contracts';
 import { toNumberOrNull } from '@/models/FormatHelper';
 
 const props = defineProps({
@@ -24,7 +24,7 @@ const props = defineProps({
 });
 
 const model = defineModel({
-  type: Object as PropType<{ categories: Array<number>; matchAllCategories: boolean }>,
+  type: Object as PropType<{ storageLocations: Array<number>; matchAllStorageLocations: boolean }>,
   required: true,
   default: [],
 });
@@ -32,10 +32,10 @@ const model = defineModel({
 const messageStore = useMessageStore();
 const api = ApiHelper.client;
 
-const categoryOptions = ref([] as Array<ListCategoriesResponse>);
+const storageLocationOptions = ref([] as Array<ListStorageLocationsResponse>);
 
 function selectAll() {
-  model.value.categories = categoryOptions.value.flatMap((x) => {
+  model.value.storageLocations = storageLocationOptions.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
     return n ? [n] : [];
   });
@@ -53,9 +53,9 @@ function getFacetCount(facetValue: number | null | undefined) {
 
 onMounted(() => {
   api()
-    .categoriesList({ isPagingEnabled: false })
+    .storageLocationsList({ isPagingEnabled: false })
     .then((response) => {
-      categoryOptions.value = response.data.items || [];
+      storageLocationOptions.value = response.data.items || [];
     })
     .catch((response) => messageStore.setApiFailureMessages(response));
 });
@@ -68,27 +68,29 @@ onMounted(() => {
         class="accordion-button collapsed"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#categoriesCollapse"
+        data-bs-target="#storageLocationsCollapse"
         aria-expanded="false"
-        aria-controls="categoriesCollapse"
+        aria-controls="storageLocationsCollapse"
       >
-        <label for="categorySearch"
-          >Categories
-          <span v-if="model.categories.length">({{ model.categories.length }} selected)</span>
+        <label for="storageLocationSearch"
+          >Storage Locations
+          <span v-if="model.storageLocations.length">
+            ({{ model.storageLocations.length }} selected)
+          </span>
         </label>
       </button>
     </div>
     <div
-      id="categoriesCollapse"
+      id="storageLocationsCollapse"
       class="accordion-collapse collapse"
       :data-bs-parent="`#${props.parentAccordionId}`"
     >
       <div class="accordion-body">
         <div class="btn-toolbar mb-3">
           <button
-            v-if="model.categories.length"
+            v-if="model.storageLocations.length"
             class="btn btn-sm btn-secondary me-2"
-            @click.stop.prevent="model.categories = []"
+            @click.stop.prevent="model.storageLocations = []"
           >
             Select none
           </button>
@@ -96,34 +98,37 @@ onMounted(() => {
             Select all
           </button>
           <div class="form-check form-switch my-auto">
-            <label class="w-100" for="matchAllCategories" aria-label="Match all selected categories"
+            <label
+              class="w-100"
+              for="matchAllStorageLocations"
+              aria-label="Match all selected storage locations"
               >Match all</label
             >
             <input
-              id="matchAllCategories"
-              v-model="model.matchAllCategories"
-              :checked="model.matchAllCategories"
+              id="matchAllStorageLocations"
+              v-model="model.matchAllStorageLocations"
+              :checked="model.matchAllStorageLocations"
               class="form-check-input"
               type="checkbox"
             />
           </div>
         </div>
-        <div class="grid slim-scroll category-scroll">
+        <div class="grid slim-scroll storage-location-scroll">
           <div
-            v-for="categoryOption in categoryOptions"
-            :key="categoryOption.id"
+            v-for="storageLocationOption in storageLocationOptions"
+            :key="storageLocationOption.id"
             :class="`${checkClass} form-check m-0`"
           >
             <input
-              :id="`category-${categoryOption.id}`"
-              v-model.lazy.number="model.categories"
+              :id="`storageLocation-${storageLocationOption.id}`"
+              v-model.lazy.number="model.storageLocations"
               class="form-check-input"
               type="checkbox"
-              :value="categoryOption.id"
+              :value="storageLocationOption.id"
             />
-            <label class="form-check-label" :for="`category-${categoryOption.id}`"
-              >{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label
-            >
+            <label class="form-check-label" :for="`storageLocation-${storageLocationOption.id}`">
+              {{ storageLocationOption.name }}{{ getFacetCount(storageLocationOption.id) }}
+            </label>
           </div>
         </div>
       </div>
@@ -132,7 +137,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.category-scroll {
+.storage-location-scroll {
   row-gap: 0.1rem;
   column-gap: 0;
 }

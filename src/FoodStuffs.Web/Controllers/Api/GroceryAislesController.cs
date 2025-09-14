@@ -10,7 +10,7 @@ using VoidCore.Model.Responses.Messages;
 namespace FoodStuffs.Web.Controllers.Api;
 
 /// <summary>
-/// Manage grocery item grocery aisles.
+/// Manage grocery aisles.
 /// </summary>
 [Route(ApiRouteAttribute.BasePath + "/grocery-aisles")]
 public class GroceryAislesController : ControllerBase

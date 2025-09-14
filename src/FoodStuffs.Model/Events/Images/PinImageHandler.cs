@@ -1,6 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.Images.Models;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Images;
 public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, EntityMessage<string>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly ISearchIndexService _searchIndex;
 
-    public PinImageHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public PinImageHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
     {
         _data = data;
-        _index = index;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(PinImageRequest request, CancellationToken cancellationToken = default)
@@ -32,7 +32,7 @@ public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, Entit
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.AddOrUpdateAsync(i.Recipe.Id, cancellationToken);
+                await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, i.Recipe.Id, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));
     }

@@ -14,7 +14,7 @@ public static class RecipeSearchConstants
     public const string FIELD_MEAL_PLANNING_SIDES_COUNT = nameof(Recipe.MealPlanningSidesCount);
     public const string FIELD_IMAGE = nameof(Recipe.DefaultImage);
     public const string FIELD_SLUG = nameof(Recipe.Slug);
-    public const string FIELD_CATEGORY_IDS = nameof(Category) + nameof(Category.Id) + "s";
+    public const string FIELD_CATEGORY_IDS = nameof(Recipe.Categories);
     public const string FIELD_CATEGORIES_JSON = nameof(Recipe.Categories) + "Json";
     public const string FIELD_MEAL_GROCERY_ITEMS_JSON = nameof(RecipeGroceryItemRelation.GroceryItem) + "sJson";
 }

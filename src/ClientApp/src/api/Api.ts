@@ -24,13 +24,14 @@ import type {
   GetRecipeResponse,
   GetStorageLocationResponse,
   GroceryAislesListParams,
-  GroceryItemsListParams,
+  GroceryItemsSearchParams,
+  GroceryItemsSuggestParams,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
   IItemSetOfListGroceryAislesResponse,
-  IItemSetOfListGroceryItemsResponse,
   IItemSetOfListMealPlansResponse,
   IItemSetOfListStorageLocationsResponse,
+  IItemSetOfSuggestGroceryItemsResultItem,
   IItemSetOfSuggestRecipesResultItem,
   ImagesUploadParams,
   MealPlansListParams,
@@ -43,6 +44,7 @@ import type {
   SaveMealPlanRequest,
   SaveRecipeRequest,
   SaveStorageLocationRequest,
+  SearchGroceryItemsResponse,
   SearchRecipesResponse,
   StorageLocationsListParams,
   UserMessage,
@@ -80,6 +82,22 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     this.request<AppVersion, any>({
       path: `/api/app/version`,
       method: 'GET',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags App
+   * @name AppRebuildIndexes
+   * @summary Rebuild the search indexes.
+   * @request POST:/api/app/rebuild-indexes
+   * @response `200` `UserMessage`
+   */
+  appRebuildIndexes = (params: RequestParams = {}) =>
+    this.request<UserMessage, any>({
+      path: `/api/app/rebuild-indexes`,
+      method: 'POST',
       format: 'json',
       ...params,
     });
@@ -248,14 +266,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags GroceryItems
-   * @name GroceryItemsList
-   * @summary List grocery items. All parameters are optional and some have defaults.
+   * @name GroceryItemsSearch
+   * @summary Search for grocery items using the following criteria. All are optional and some have defaults.
    * @request GET:/api/grocery-items
-   * @response `200` `IItemSetOfListGroceryItemsResponse`
+   * @response `200` `SearchGroceryItemsResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsList = (query: GroceryItemsListParams, params: RequestParams = {}) =>
-    this.request<IItemSetOfListGroceryItemsResponse, IItemSetOfIFailure>({
+  groceryItemsSearch = (query: GroceryItemsSearchParams, params: RequestParams = {}) =>
+    this.request<SearchGroceryItemsResponse, IItemSetOfIFailure>({
       path: `/api/grocery-items`,
       method: 'GET',
       query: query,
@@ -278,6 +296,24 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsSuggest
+   * @summary Suggest grocery items based on search.
+   * @request GET:/api/grocery-items/suggest
+   * @response `200` `IItemSetOfSuggestGroceryItemsResultItem`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryItemsSuggest = (query: GroceryItemsSuggestParams, params: RequestParams = {}) =>
+    this.request<IItemSetOfSuggestGroceryItemsResultItem, IItemSetOfIFailure>({
+      path: `/api/grocery-items/suggest`,
+      method: 'GET',
+      query: query,
       format: 'json',
       ...params,
     });
@@ -331,6 +367,22 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       method: 'POST',
       body: data,
       type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryItems
+   * @name GroceryItemsRebuild
+   * @summary Rebuild the grocery item search index.
+   * @request POST:/api/grocery-items/rebuild-index
+   * @response `200` `UserMessage`
+   */
+  groceryItemsRebuild = (params: RequestParams = {}) =>
+    this.request<UserMessage, any>({
+      path: `/api/grocery-items/rebuild-index`,
+      method: 'POST',
       format: 'json',
       ...params,
     });

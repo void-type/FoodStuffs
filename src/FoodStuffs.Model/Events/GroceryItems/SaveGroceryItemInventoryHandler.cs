@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.GroceryItems.Models;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Functional;
@@ -14,11 +15,13 @@ public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGr
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveGroceryItemInventoryRequestValidator _validator;
+    private readonly ISearchIndexService _searchIndex;
 
-    public SaveGroceryItemInventoryHandler(FoodStuffsContext data, SaveGroceryItemInventoryRequestValidator validator)
+    public SaveGroceryItemInventoryHandler(FoodStuffsContext data, SaveGroceryItemInventoryRequestValidator validator, ISearchIndexService searchIndex)
     {
         _data = data;
         _validator = validator;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryItemInventoryRequest request, CancellationToken cancellationToken = default)
@@ -52,6 +55,8 @@ public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGr
         _data.GroceryItems.Update(groceryItemToEdit);
 
         await _data.SaveChangesAsync(cancellationToken);
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }

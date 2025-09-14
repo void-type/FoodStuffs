@@ -1,8 +1,7 @@
 import type { RecipesSearchParams } from '@/api/data-contracts';
 import Choices from '@/models/Choices';
-import RecipeStoreHelper from './RecipeStoreHelper';
 
-export default class RecipesListRequest implements RecipesSearchParams {
+export default class RecipesSearchRequest implements RecipesSearchParams {
   public searchText = '';
 
   public categories = [] as number[];
@@ -11,7 +10,7 @@ export default class RecipesListRequest implements RecipesSearchParams {
 
   public isForMealPlanning = null;
 
-  public sortBy = RecipeStoreHelper.sortOptions[0]!.value;
+  public sortBy = Choices.sortOptions[0]!.value;
 
   public isPagingEnabled = true;
 

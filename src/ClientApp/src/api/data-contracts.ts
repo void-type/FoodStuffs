@@ -40,6 +40,12 @@ export interface AppVersion {
   assemblyConfiguration?: string;
 }
 
+/** A UI-friendly message. */
+export interface UserMessage {
+  /** The UI-friendly message. */
+  message?: string;
+}
+
 /** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListCategoriesResponse {
   /**
@@ -147,12 +153,6 @@ export type EntityMessageOfInteger = UserMessage & {
   id?: number;
 };
 
-/** A UI-friendly message. */
-export interface UserMessage {
-  /** The UI-friendly message. */
-  message?: string;
-}
-
 export interface SaveCategoryRequest {
   /** @format int32 */
   id?: number;
@@ -233,15 +233,21 @@ export interface SaveGroceryAisleRequest {
   order?: number;
 }
 
+export interface SearchGroceryItemsResponse {
+  /** A set of items. Can optionally by a page of a full set. */
+  results?: IItemSetOfSearchGroceryItemsResultItem;
+  facets?: SearchFacet[];
+}
+
 /** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListGroceryItemsResponse {
+export interface IItemSetOfSearchGroceryItemsResultItem {
   /**
    * The count of items in this set.
    * @format int32
    */
   count?: number;
   /** The items in this set. */
-  items?: ListGroceryItemsResponse[];
+  items?: SearchGroceryItemsResultItem[];
   /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
   /**
@@ -261,17 +267,79 @@ export interface IItemSetOfListGroceryItemsResponse {
   totalCount?: number;
 }
 
-export interface ListGroceryItemsResponse {
+export interface SearchGroceryItemsResultItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  isOutOfStock?: boolean;
+  isUnused?: boolean;
+  /** @format int32 */
+  inventoryQuantity?: number;
+  /** @format int32 */
+  recipeCount?: number;
+  /** @format date-time */
+  createdOn?: string;
+  storageLocations?: SearchGroceryItemsResultItemStorageLocation[];
+  groceryAisle?: SearchGroceryItemsResultItemGroceryAisle | null;
+}
+
+export interface SearchGroceryItemsResultItemStorageLocation {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SearchGroceryItemsResultItemGroceryAisle {
   /** @format int32 */
   id?: number;
   name?: string;
   /** @format int32 */
-  inventoryQuantity?: number;
-  storageLocations?: string[];
+  order?: number;
+}
+
+export interface SearchFacet {
+  fieldName?: string;
+  values?: SearchFacetValue[];
+}
+
+export interface SearchFacetValue {
+  fieldValue?: string;
   /** @format int32 */
-  groceryAisleId?: number | null;
+  count?: number;
+}
+
+/** A set of items. Can optionally by a page of a full set. */
+export interface IItemSetOfSuggestGroceryItemsResultItem {
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
+  count?: number;
+  /** The items in this set. */
+  items?: SuggestGroceryItemsResultItem[];
+  /** When true, this is a page of a full set. */
+  isPagingEnabled?: boolean;
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
+  page?: number;
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
+  take?: number;
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
+  totalCount?: number;
+}
+
+export interface SuggestGroceryItemsResultItem {
   /** @format int32 */
-  recipeCount?: number;
+  id?: number;
+  name?: string;
 }
 
 export interface GetGroceryItemResponse {
@@ -514,17 +582,6 @@ export interface SearchRecipesResultItemGroceryItem {
   order?: number;
 }
 
-export interface SearchFacet {
-  fieldName?: string;
-  values?: SearchFacetValue[];
-}
-
-export interface SearchFacetValue {
-  fieldValue?: string;
-  /** @format int32 */
-  count?: number;
-}
-
 /** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfSuggestRecipesResultItem {
   /**
@@ -746,13 +803,26 @@ export interface GroceryAislesListParams {
   take?: number;
 }
 
-export interface GroceryItemsListParams {
-  /** Name contains (case-insensitive) */
-  name?: string | null;
-  /** Specify to show items that have relations or no relations */
-  isUnused?: boolean | null;
-  /** Specify to show items that are out of stock */
+export interface GroceryItemsSearchParams {
+  /** Search text (case-insensitive) */
+  searchText?: string | null;
+  /** Storage location IDs to filter on */
+  storageLocations?: number[] | null;
+  /**
+   * When true, grocery items returned will match all selected storage locations
+   * @default false
+   */
+  matchAllStorageLocations?: boolean;
+  /** Grocery aisle IDs to filter on */
+  groceryAisles?: number[] | null;
+  /** If the grocery items are out of stock */
   isOutOfStock?: boolean | null;
+  /** If the grocery items have no relations */
+  isUnused?: boolean | null;
+  /** Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score. */
+  sortBy?: string | null;
+  /** Give a seed for stable random sorting. By default is stable for 24 hours on the server. */
+  randomSortSeed?: string | null;
   /**
    * Set false to get all results
    * @default true
@@ -768,6 +838,22 @@ export interface GroceryItemsListParams {
    * How many items in a page
    * @format int32
    * @default 30
+   */
+  take?: number;
+}
+
+export interface GroceryItemsSuggestParams {
+  /** Search text (case-insensitive) */
+  searchText?: string | null;
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 8
    */
   take?: number;
 }

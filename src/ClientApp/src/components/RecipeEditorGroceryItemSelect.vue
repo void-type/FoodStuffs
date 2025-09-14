@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount, type PropType } from 'vue';
-import type { ListGroceryItemsResponse } from '@/api/data-contracts';
+import type { SearchGroceryItemsResultItem } from '@/api/data-contracts';
 import type RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
 import { Dropdown } from 'bootstrap';
 import { trimAndTitleCase } from '@/models/FormatHelper';
@@ -26,7 +26,7 @@ const props = defineProps({
     default: '',
   },
   suggestions: {
-    type: Array as PropType<Array<ListGroceryItemsResponse>>,
+    type: Array as PropType<Array<SearchGroceryItemsResultItem>>,
     required: true,
   },
   usedIds: {

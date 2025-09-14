@@ -5,10 +5,10 @@ import router from '@/router';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { onClickOutside } from '@vueuse/core';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
-import type { SuggestRecipesResultItem } from '@/api/data-contracts';
+import type { SuggestRecipesResultItem, SuggestGroceryItemsResultItem } from '@/api/data-contracts';
 import RouterHelper from '@/models/RouterHelper';
 import { debounce } from '@/models/InputHelper';
 
@@ -18,20 +18,33 @@ const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const api = ApiHelper.client;
 
-const suggestions = ref<SuggestRecipesResultItem[]>([]);
+const recipeSuggestions = ref<SuggestRecipesResultItem[]>([]);
 
+const grocerySuggestions = ref<SuggestGroceryItemsResultItem[]>([]);
+type SearchMode = 'recipe' | 'groceryItem';
+const searchMode = ref<SearchMode>('recipe');
 // Prevent suggestions from showing if they were requested but now no longer useful.
 let cancelInFlightSuggestions = false;
 
 function closeSuggestions() {
   cancelInFlightSuggestions = true;
-  suggestions.value = [];
+  recipeSuggestions.value = [];
+  grocerySuggestions.value = [];
 }
 
 function clearSearch() {
   closeSuggestions();
   searchText.value = '';
 }
+
+function cycleSearchMode() {
+  searchMode.value = searchMode.value === 'recipe' ? 'groceryItem' : 'recipe';
+  clearSearch();
+}
+
+const searchModeIcon = computed(() =>
+  searchMode.value === 'recipe' ? 'fa-utensils' : 'fa-shopping-basket'
+);
 
 function navigateSearchPage() {
   const query = RecipeStoreHelper.listRequestToQueryParams({
@@ -47,7 +60,7 @@ function navigateSearchPage() {
   });
 }
 
-function navigateRecipe() {
+function navigateAway() {
   clearSearch();
 }
 
@@ -58,28 +71,49 @@ function suggest(event: Event) {
 
   debounce(async () => {
     if (!searchText.value || searchText.value.length <= 1) {
-      suggestions.value = [];
+      recipeSuggestions.value = [];
+      grocerySuggestions.value = [];
       return;
     }
 
     cancelInFlightSuggestions = false;
 
     try {
-      const response = await api().recipesSuggest({
-        searchText: searchText.value,
-        take: 8,
-      });
+      if (searchMode.value === 'recipe') {
+        const response = await api().recipesSuggest({
+          searchText: searchText.value,
+          take: 8,
+        });
 
-      // If we're not focused on the search input, don't show suggestions.
-      if (!searchContainerRef.value?.contains(document.activeElement)) {
-        return;
+        // If we're not focused on the search input, don't show suggestions.
+        if (!searchContainerRef.value?.contains(document.activeElement)) {
+          return;
+        }
+
+        if (cancelInFlightSuggestions) {
+          return;
+        }
+
+        recipeSuggestions.value = response.data?.items || [];
+        grocerySuggestions.value = [];
+      } else {
+        const response = await api().groceryItemsSuggest({
+          searchText: searchText.value,
+          take: 8,
+        });
+
+        // If we're not focused on the search input, don't show suggestions.
+        if (!searchContainerRef.value?.contains(document.activeElement)) {
+          return;
+        }
+
+        if (cancelInFlightSuggestions) {
+          return;
+        }
+
+        grocerySuggestions.value = response.data?.items || [];
+        recipeSuggestions.value = [];
       }
-
-      if (cancelInFlightSuggestions) {
-        return;
-      }
-
-      suggestions.value = response.data?.items || [];
     } catch (error) {
       messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
     }
@@ -122,6 +156,15 @@ onBeforeUnmount(() => {
 <template>
   <div ref="searchContainerRef" @focusout="handleFocusOut">
     <div class="input-group" title="Use control + shift + F to focus the search.">
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        :title="searchMode === 'recipe' ? 'Recipe search' : 'Grocery item search'"
+        aria-label="Toggle search mode"
+        @click.stop.prevent="cycleSearchMode"
+      >
+        <font-awesome-icon :icon="searchModeIcon" />
+      </button>
       <input
         ref="inputRef"
         :value="searchText"
@@ -129,8 +172,8 @@ onBeforeUnmount(() => {
         inputmode="search"
         enterkeyhint="search"
         class="form-control"
-        placeholder="Search"
-        aria-label="Search text"
+        :placeholder="`Search ${searchMode === 'recipe' ? 'recipes' : 'grocery items'}`"
+        :aria-label="`Search ${searchMode === 'recipe' ? 'recipes' : 'grocery items'}`"
         @input="suggest"
         @keydown.enter.stop.prevent="navigateSearchPage"
       />
@@ -143,16 +186,31 @@ onBeforeUnmount(() => {
         <font-awesome-icon icon="fa-search" />
       </button>
     </div>
-    <ul v-if="suggestions.length" class="dropdown-menu show">
+    <ul v-if="searchMode === 'recipe' && recipeSuggestions.length" class="dropdown-menu show">
       <li
-        v-for="suggestion in suggestions"
+        v-for="suggestion in recipeSuggestions"
         :key="suggestion.id"
         class="dropdown-item suggestion"
         role="option"
         aria-selected="false"
       >
-        <span
-          ><router-link :to="RouterHelper.viewRecipe(suggestion)" @click="navigateRecipe">
+        <span>
+          <router-link :to="RouterHelper.viewRecipe(suggestion)" @click="navigateAway">
+            {{ suggestion.name }}
+          </router-link>
+        </span>
+      </li>
+    </ul>
+    <ul v-if="searchMode === 'groceryItem' && grocerySuggestions.length" class="dropdown-menu show">
+      <li
+        v-for="suggestion in grocerySuggestions"
+        :key="suggestion.id"
+        class="dropdown-item suggestion"
+        role="option"
+        aria-selected="false"
+      >
+        <span>
+          <router-link :to="RouterHelper.editGroceryItem(suggestion)" @click="navigateAway">
             {{ suggestion.name }}
           </router-link>
         </span>

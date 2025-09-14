@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Data.Models;
+﻿using FoodStuffs.Model.Data.Models;
 
 namespace FoodStuffs.Model.Events.Recipes.Models;
 

@@ -1,14 +1,18 @@
-import type { GroceryItemsListParams } from '@/api/data-contracts';
-import GroceryItemsListRequest from './GroceryItemsListRequest';
+import type { GroceryItemsSearchParams } from '@/api/data-contracts';
+import GroceryItemsSearchRequest from './GroceryItemsSearchRequest';
 
-export default function listRequestToQueryParams(listRequest: GroceryItemsListParams) {
+export default function listRequestToQueryParams(listRequest: GroceryItemsSearchParams) {
   // Query params need to be string or number
   const requestEntries = Object.entries({
     ...listRequest,
+    storageLocations: listRequest.storageLocations?.join() || '',
+    groceryAisles: listRequest.groceryAisles?.join() || '',
   });
 
   const defaultEntries = Object.entries({
-    ...new GroceryItemsListRequest(),
+    ...new GroceryItemsSearchRequest(),
+    storageLocations: new GroceryItemsSearchRequest().storageLocations?.join() || '',
+    groceryAisles: new GroceryItemsSearchRequest().groceryAisles?.join() || '',
   });
 
   const cleanedEntries = requestEntries

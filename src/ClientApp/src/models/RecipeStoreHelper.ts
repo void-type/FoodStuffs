@@ -3,7 +3,7 @@ import type {
   GetRecipeResponse,
   RecipesSearchParams,
 } from '@/api/data-contracts';
-import RecipesListRequest from './RecipesListRequest';
+import RecipesSearchRequest from './RecipesSearchRequest';
 
 const settingsKeyRecentRecipes = 'recentRecipes';
 const settingsKeyQueuedRecentRecipe = 'queuedRecentRecipe';
@@ -33,15 +33,6 @@ export default class RecipeStoreHelper {
     localStorage.setItem(settingsKeyQueuedRecentRecipe, JSON.stringify(recipe));
   }
 
-  static sortOptions = [
-    { text: 'Relevance', value: '' },
-    { text: 'Newest', value: 'newest' },
-    { text: 'Oldest', value: 'oldest' },
-    { text: 'A-Z', value: 'a-z' },
-    { text: 'Z-A', value: 'z-a' },
-    { text: 'Random', value: 'random' },
-  ];
-
   static listRequestToQueryParams(listRequest: RecipesSearchParams) {
     // Query params need to be string or number
     const requestEntries = Object.entries({
@@ -50,8 +41,8 @@ export default class RecipeStoreHelper {
     });
 
     const defaultEntries = Object.entries({
-      ...new RecipesListRequest(),
-      categories: new RecipesListRequest().categories?.join() || '',
+      ...new RecipesSearchRequest(),
+      categories: new RecipesSearchRequest().categories?.join() || '',
     });
 
     const cleanedEntries = requestEntries

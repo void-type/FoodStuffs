@@ -120,7 +120,7 @@ watch(
       <thead>
         <tr>
           <th>Name</th>
-          <th>Created on</th>
+          <th>Created On</th>
           <th>Recipes</th>
           <th>Actions</th>
         </tr>

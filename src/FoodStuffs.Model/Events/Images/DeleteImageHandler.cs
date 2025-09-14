@@ -1,6 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.Images.Models;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Messages;
@@ -10,12 +10,12 @@ namespace FoodStuffs.Model.Events.Images;
 public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest, EntityMessage<string>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly ISearchIndexService _searchIndex;
 
-    public DeleteImageHandler(FoodStuffsContext data, IRecipeIndexService index)
+    public DeleteImageHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
     {
         _data = data;
-        _index = index;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _index.AddOrUpdateAsync(i.RecipeId, cancellationToken);
+                await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, i.RecipeId, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image deleted.", request.Name));
     }

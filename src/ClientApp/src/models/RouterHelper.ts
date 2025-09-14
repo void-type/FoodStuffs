@@ -7,6 +7,10 @@ interface RouteRecipe {
   slug?: string | null;
 }
 
+interface RouteGroceryItem {
+  id?: number;
+}
+
 export default class RouterHelper {
   static setTitle(
     route: RouteLocationNormalizedLoaded,
@@ -26,6 +30,10 @@ export default class RouterHelper {
 
   static editRecipe(recipe: RouteRecipe) {
     return { name: 'recipeEdit', params: { id: recipe.id, slug: recipe.slug } };
+  }
+
+  static editGroceryItem(groceryItem: RouteGroceryItem) {
+    return { name: 'groceryItemEdit', params: { id: groceryItem.id } };
   }
 
   static paramToInt(param: string | string[] | undefined | null) {

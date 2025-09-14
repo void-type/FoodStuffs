@@ -2,7 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Events.Images.Models;
 using FoodStuffs.Model.ImageCompression;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VoidCore.Model.Functional;
@@ -15,14 +15,14 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
     private readonly FoodStuffsContext _data;
     private readonly ILogger<SaveImageHandler> _logger;
     private readonly IImageCompressionService _compressor;
-    private readonly IRecipeIndexService _index;
+    private readonly ISearchIndexService _searchIndex;
 
-    public SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, IRecipeIndexService index)
+    public SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, ISearchIndexService searchIndex)
     {
         _data = data;
         _logger = logger;
         _compressor = imageCompressionService;
-        _index = index;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
@@ -71,7 +71,7 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _index.AddOrUpdateAsync(recipeResult.Value.Id, cancellationToken);
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeResult.Value.Id, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }

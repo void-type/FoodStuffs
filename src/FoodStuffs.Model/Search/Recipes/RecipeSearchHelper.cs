@@ -1,4 +1,5 @@
 ﻿using FoodStuffs.Model.Data.Models;
+using FoodStuffs.Model.Search.Lucene;
 using FoodStuffs.Model.Search.Recipes.Models;
 using Lucene.Net.Documents;
 using Lucene.Net.Documents.Extensions;

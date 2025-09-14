@@ -2,7 +2,7 @@
 import ApiHelper from '@/models/ApiHelper';
 import { ref, onMounted, type PropType } from 'vue';
 import useMessageStore from '@/stores/messageStore';
-import { type ListCategoriesResponse, type SearchFacetValue } from '@/api/data-contracts';
+import { type ListGroceryAislesResponse, type SearchFacetValue } from '@/api/data-contracts';
 import { toNumberOrNull } from '@/models/FormatHelper';
 
 const props = defineProps({
@@ -24,7 +24,7 @@ const props = defineProps({
 });
 
 const model = defineModel({
-  type: Object as PropType<{ categories: Array<number>; matchAllCategories: boolean }>,
+  type: Object as PropType<{ groceryAisles: Array<number> }>,
   required: true,
   default: [],
 });
@@ -32,10 +32,10 @@ const model = defineModel({
 const messageStore = useMessageStore();
 const api = ApiHelper.client;
 
-const categoryOptions = ref([] as Array<ListCategoriesResponse>);
+const groceryAisleOptions = ref([] as Array<ListGroceryAislesResponse>);
 
 function selectAll() {
-  model.value.categories = categoryOptions.value.flatMap((x) => {
+  model.value.groceryAisles = groceryAisleOptions.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
     return n ? [n] : [];
   });
@@ -53,9 +53,9 @@ function getFacetCount(facetValue: number | null | undefined) {
 
 onMounted(() => {
   api()
-    .categoriesList({ isPagingEnabled: false })
+    .groceryAislesList({ isPagingEnabled: false })
     .then((response) => {
-      categoryOptions.value = response.data.items || [];
+      groceryAisleOptions.value = response.data.items || [];
     })
     .catch((response) => messageStore.setApiFailureMessages(response));
 });
@@ -68,62 +68,52 @@ onMounted(() => {
         class="accordion-button collapsed"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#categoriesCollapse"
+        data-bs-target="#groceryAislesCollapse"
         aria-expanded="false"
-        aria-controls="categoriesCollapse"
+        aria-controls="groceryAislesCollapse"
       >
-        <label for="categorySearch"
-          >Categories
-          <span v-if="model.categories.length">({{ model.categories.length }} selected)</span>
+        <label for="groceryAisleSearch"
+          >Grocery Aisles
+          <span v-if="model.groceryAisles.length">
+            ({{ model.groceryAisles.length }} selected)
+          </span>
         </label>
       </button>
     </div>
     <div
-      id="categoriesCollapse"
+      id="groceryAislesCollapse"
       class="accordion-collapse collapse"
       :data-bs-parent="`#${props.parentAccordionId}`"
     >
       <div class="accordion-body">
         <div class="btn-toolbar mb-3">
           <button
-            v-if="model.categories.length"
+            v-if="model.groceryAisles.length"
             class="btn btn-sm btn-secondary me-2"
-            @click.stop.prevent="model.categories = []"
+            @click.stop.prevent="model.groceryAisles = []"
           >
             Select none
           </button>
           <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
             Select all
           </button>
-          <div class="form-check form-switch my-auto">
-            <label class="w-100" for="matchAllCategories" aria-label="Match all selected categories"
-              >Match all</label
-            >
-            <input
-              id="matchAllCategories"
-              v-model="model.matchAllCategories"
-              :checked="model.matchAllCategories"
-              class="form-check-input"
-              type="checkbox"
-            />
-          </div>
         </div>
-        <div class="grid slim-scroll category-scroll">
+        <div class="grid slim-scroll grocery-aisle-scroll">
           <div
-            v-for="categoryOption in categoryOptions"
-            :key="categoryOption.id"
+            v-for="groceryAisleOption in groceryAisleOptions"
+            :key="groceryAisleOption.id"
             :class="`${checkClass} form-check m-0`"
           >
             <input
-              :id="`category-${categoryOption.id}`"
-              v-model.lazy.number="model.categories"
+              :id="`groceryAisle-${groceryAisleOption.id}`"
+              v-model.lazy.number="model.groceryAisles"
               class="form-check-input"
               type="checkbox"
-              :value="categoryOption.id"
+              :value="groceryAisleOption.id"
             />
-            <label class="form-check-label" :for="`category-${categoryOption.id}`"
-              >{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label
-            >
+            <label class="form-check-label" :for="`groceryAisle-${groceryAisleOption.id}`">
+              {{ groceryAisleOption.name }}{{ getFacetCount(groceryAisleOption.id) }}
+            </label>
           </div>
         </div>
       </div>
@@ -132,7 +122,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.category-scroll {
+.grocery-aisle-scroll {
   row-gap: 0.1rem;
   column-gap: 0;
 }

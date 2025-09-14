@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.StorageLocations.Models;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -15,11 +16,13 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveStorageLocationRequestValidator _validator;
+    private readonly ISearchIndexService _searchIndex;
 
-    public SaveStorageLocationHandler(FoodStuffsContext data, SaveStorageLocationRequestValidator validator)
+    public SaveStorageLocationHandler(FoodStuffsContext data, SaveStorageLocationRequestValidator validator, ISearchIndexService searchIndex)
     {
         _data = data;
         _validator = validator;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveStorageLocationRequest request, CancellationToken cancellationToken = default)
@@ -72,6 +75,8 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
         }
 
         await _data.SaveChangesAsync(cancellationToken);
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, storageLocationToEdit.GroceryItems.Select(gi => gi.Id), cancellationToken);
 
         return Ok(EntityMessage.Create($"Storage Location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
     }

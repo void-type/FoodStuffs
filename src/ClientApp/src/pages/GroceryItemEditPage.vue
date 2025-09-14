@@ -325,7 +325,7 @@ onBeforeUnmount(() => {
           />
         </div>
         <div class="g-col-12 g-col-md-6">
-          <label for="groceryAisleId" class="form-label">Grocery Aisle</label>
+          <label for="groceryAisleId" class="form-label">Grocery aisle</label>
           <GroceryItemGroceryAisleSelect v-model="data.working.groceryAisleId" />
         </div>
         <TagEditor

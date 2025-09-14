@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.GroceryAisles.Models;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -15,11 +16,13 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
 {
     private readonly FoodStuffsContext _data;
     private readonly SaveGroceryAisleRequestValidator _validator;
+    private readonly ISearchIndexService _searchIndex;
 
-    public SaveGroceryAisleHandler(FoodStuffsContext data, SaveGroceryAisleRequestValidator validator)
+    public SaveGroceryAisleHandler(FoodStuffsContext data, SaveGroceryAisleRequestValidator validator, ISearchIndexService searchIndex)
     {
         _data = data;
         _validator = validator;
+        _searchIndex = searchIndex;
     }
 
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryAisleRequest request, CancellationToken cancellationToken = default)
@@ -73,6 +76,8 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
         }
 
         await _data.SaveChangesAsync(cancellationToken);
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryAisleToEdit.GroceryItems.Select(gi => gi.Id), cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery Aisle {(maybeGroceryAisle.HasValue ? "updated" : "added")}.", groceryAisleToEdit.Id));
     }

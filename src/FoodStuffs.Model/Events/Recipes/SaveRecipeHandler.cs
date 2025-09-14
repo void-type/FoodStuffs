@@ -2,7 +2,7 @@
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Recipes.Models;
-using FoodStuffs.Model.Search.Recipes;
+using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VoidCore.EntityFramework;
@@ -14,13 +14,13 @@ namespace FoodStuffs.Model.Events.Recipes;
 public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, EntityResponse<GetRecipeResponse>>
 {
     private readonly FoodStuffsContext _data;
-    private readonly IRecipeIndexService _index;
+    private readonly ISearchIndexService _searchIndex;
     private readonly SaveRecipeRequestValidator _validator;
 
-    public SaveRecipeHandler(FoodStuffsContext data, IRecipeIndexService index, SaveRecipeRequestValidator validator)
+    public SaveRecipeHandler(FoodStuffsContext data, SaveRecipeRequestValidator validator, ISearchIndexService searchIndex)
     {
         _data = data;
-        _index = index;
+        _searchIndex = searchIndex;
         _validator = validator;
     }
 
@@ -77,7 +77,9 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        _index.AddOrUpdate(recipeToEdit);
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeToEdit.Id, cancellationToken);
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, recipeToEdit.GroceryItemRelations.Select(x => x.GroceryItemId), cancellationToken);
 
         var response = EntityResponse.Create(
             $"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.",

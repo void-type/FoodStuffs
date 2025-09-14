@@ -1,18 +1,21 @@
 import type {
-  IItemSetOfListGroceryItemsResponse,
-  GroceryItemsListParams,
+  IItemSetOfSearchGroceryItemsResultItem,
+  GroceryItemsSearchParams,
+  SearchGroceryItemsResponse,
+  SearchFacet,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
-import GroceryItemsListRequest from '@/models/GroceryItemsListRequest';
+import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
 import listRequestToQueryParams from '@/models/GroceryItemStoreHelper';
 import useMessageStore from './messageStore';
 
 interface GroceryItemStoreState {
-  listResponse: IItemSetOfListGroceryItemsResponse;
-  listRequest: GroceryItemsListParams;
+  listResponse: IItemSetOfSearchGroceryItemsResultItem;
+  listFacets: SearchFacet[];
+  listRequest: GroceryItemsSearchParams;
 }
 
 const api = ApiHelper.client;
@@ -27,7 +30,8 @@ export default defineStore('groceryItem', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new GroceryItemsListRequest() },
+    listFacets: [],
+    listRequest: { ...new GroceryItemsSearchRequest() },
   }),
 
   getters: {
@@ -39,10 +43,27 @@ export default defineStore('groceryItem', {
   },
 
   actions: {
+    setListResponse(data: SearchGroceryItemsResponse) {
+      if (data.results) {
+        this.listResponse = data.results;
+      }
+
+      if (data.facets) {
+        this.listFacets = data.facets;
+      }
+    },
+
+    setListRequest(data: GroceryItemsSearchParams) {
+      this.listRequest = data;
+    },
+
     async fetchGroceryItemsList() {
       try {
-        const response = await api().groceryItemsList(this.listRequest);
-        this.listResponse = response.data;
+        const response = await api().groceryItemsSearch(this.listRequest);
+
+        if (response.data) {
+          this.setListResponse(response.data);
+        }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }

@@ -4,7 +4,7 @@ import type {
   GetRecipeResponse,
   IItemSetOfIFailure,
   ListCategoriesResponse,
-  ListGroceryItemsResponse,
+  SearchGroceryItemsResultItem,
 } from '@/api/data-contracts';
 import { trimAndTitleCase } from '@/models/FormatHelper';
 import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
@@ -71,12 +71,14 @@ async function fetchCategories() {
   }
 }
 
-const groceryItemOptions = ref([] as Array<ListGroceryItemsResponse>);
+const groceryItemOptions = ref([] as Array<SearchGroceryItemsResultItem>);
 
 async function fetchGroceryItems() {
   try {
-    const response = await api().groceryItemsList({ isPagingEnabled: false });
-    groceryItemOptions.value = (response.data.items || []) as Array<ListGroceryItemsResponse>;
+    // TODO: may want to use suggestion endpoint because this will be a huge response.
+    const response = await api().groceryItemsSearch({ isPagingEnabled: false });
+    groceryItemOptions.value = (response.data.results?.items ||
+      []) as Array<SearchGroceryItemsResultItem>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }

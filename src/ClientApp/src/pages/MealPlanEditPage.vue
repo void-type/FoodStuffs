@@ -9,8 +9,8 @@ import ApiHelper from '@/models/ApiHelper';
 import { VueDraggable } from 'vue-draggable-plus';
 import type {
   ListGroceryAislesResponse,
-  ListGroceryItemsResponse,
   GetMealPlanResponseRecipe,
+  SearchGroceryItemsResultItem,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
@@ -100,12 +100,14 @@ async function onDeleteMealPlan() {
   appStore.showModal(parameters);
 }
 
-const groceryItemOptions = ref([] as Array<ListGroceryItemsResponse>);
+const groceryItemOptions = ref([] as Array<SearchGroceryItemsResultItem>);
 
 async function fetchGroceryItems() {
   try {
-    const response = await api().groceryItemsList({ isPagingEnabled: false });
-    groceryItemOptions.value = (response.data.items || []) as Array<ListGroceryItemsResponse>;
+    // TODO: use suggestion endpoint because this will be a huge response.
+    const response = await api().groceryItemsSearch({ isPagingEnabled: false });
+    groceryItemOptions.value = (response.data.results?.items ||
+      []) as Array<SearchGroceryItemsResultItem>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
