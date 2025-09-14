@@ -9,6 +9,17 @@
       }
     }
   },
+  "problemMatcher": [
+    "$msCompile",
+    {
+      "base": "$eslint-compact",
+      "fileLocation": ["relative", "${workspaceFolder}/src/ClientApp"]
+    },
+    {
+      "base": "$tsc",
+      "fileLocation": ["relative", "${workspaceFolder}/src/ClientApp"]
+    }
+  ],
   "tasks": [
     {
       "label": "build",
@@ -21,7 +32,6 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$node-sass", "$eslint-compact", "$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -40,7 +50,6 @@
         "cwd": "./src/FoodStuffs.Web/"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -59,7 +68,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$node-sass", "$eslint-compact", "$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -77,7 +85,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": [],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -95,7 +102,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": [],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -113,7 +119,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -131,7 +136,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -149,7 +153,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$node-sass", "$eslint-compact"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -168,7 +171,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -183,7 +185,6 @@
     {
       "label": "watch-web",
       "dependsOn": ["watch-web-client", "watch-web-server"],
-      "problemMatcher": []
     },
     {
       "label": "watch-web-client-with-build",
@@ -193,7 +194,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$node-sass", "$eslint-compact"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -213,7 +213,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -231,7 +230,6 @@
         "watch-web-client-with-build",
         "watch-web-server-with-client-build"
       ],
-      "problemMatcher": []
     },
     {
       "label": "create-migration",
@@ -241,7 +239,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -260,7 +257,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -279,7 +275,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -297,7 +292,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -315,7 +309,6 @@
         "cwd": "./build"
       },
       "type": "shell",
-      "problemMatcher": ["$msCompile"],
       "presentation": {
         "echo": true,
         "reveal": "always",
