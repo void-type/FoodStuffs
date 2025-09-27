@@ -27,6 +27,12 @@ try
     var config = builder.Configuration;
     var services = builder.Services;
 
+    builder.Host.UseDefaultServiceProvider((_, options) =>
+    {
+        options.ValidateScopes = true;
+        options.ValidateOnBuild = true;
+    });
+
     Log.Logger = new LoggerConfiguration()
         // Set a default logger if none configured or configuration not found.
         .WriteTo.Console()
