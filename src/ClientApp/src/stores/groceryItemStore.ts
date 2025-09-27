@@ -8,8 +8,8 @@ import type { HttpResponse } from '@/api/http-client';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
+import GroceryItemStoreHelper from '@/models/GroceryItemStoreHelper';
 import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
-import listRequestToQueryParams from '@/models/GroceryItemStoreHelper';
 import useMessageStore from './messageStore';
 
 interface GroceryItemStoreState {
@@ -38,7 +38,7 @@ export default defineStore('groceryItem', {
     currentQueryParams(state) {
       const { listRequest } = state;
 
-      return listRequestToQueryParams(listRequest);
+      return GroceryItemStoreHelper.listRequestToQueryParams(listRequest);
     },
   },
 

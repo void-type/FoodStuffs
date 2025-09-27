@@ -373,7 +373,7 @@ watch(
         </div>
 
         <div id="search-results" class="mt-3">{{ resultCountText }}</div>
-        <div class="form-check form-switch mt-3">
+        <div class="form-check form-switch mt-4">
           <label class="form-check-label" for="useCompactView">Compact</label>
           <input
             id="useCompactView"

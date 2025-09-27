@@ -8,19 +8,27 @@ import { onClickOutside } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
-import type { SuggestRecipesResultItem, SuggestGroceryItemsResultItem } from '@/api/data-contracts';
 import RouterHelper from '@/models/RouterHelper';
 import { debounce } from '@/models/InputHelper';
+import useGroceryItemStore from '@/stores/groceryItemStore';
+import GroceryItemStoreHelper from '@/models/GroceryItemStoreHelper';
+
+interface UnifiedSuggestion {
+  id: string;
+  name: string;
+  icon: string;
+  route: object;
+}
 
 const searchText = defineModel<string | null | undefined>();
 
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
+const groceryItemStore = useGroceryItemStore();
 const api = ApiHelper.client;
 
-const recipeSuggestions = ref<SuggestRecipesResultItem[]>([]);
+const suggestions = ref<UnifiedSuggestion[]>([]);
 
-const grocerySuggestions = ref<SuggestGroceryItemsResultItem[]>([]);
 type SearchMode = 'recipe' | 'groceryItem';
 const searchMode = ref<SearchMode>('recipe');
 // Prevent suggestions from showing if they were requested but now no longer useful.
@@ -28,8 +36,7 @@ let cancelInFlightSuggestions = false;
 
 function closeSuggestions() {
   cancelInFlightSuggestions = true;
-  recipeSuggestions.value = [];
-  grocerySuggestions.value = [];
+  suggestions.value = [];
 }
 
 function clearSearch() {
@@ -39,7 +46,7 @@ function clearSearch() {
 
 function cycleSearchMode() {
   searchMode.value = searchMode.value === 'recipe' ? 'groceryItem' : 'recipe';
-  clearSearch();
+  closeSuggestions();
 }
 
 const searchModeIcon = computed(() =>
@@ -47,17 +54,31 @@ const searchModeIcon = computed(() =>
 );
 
 function navigateSearchPage() {
-  const query = RecipeStoreHelper.listRequestToQueryParams({
-    searchText: searchText.value,
-    take: recipeStore.listRequest.take,
-  });
+  const searchTextValue = searchText.value;
 
   clearSearch();
 
-  router.push({
-    name: 'recipeList',
-    query,
-  });
+  if (searchMode.value === 'recipe') {
+    const query = RecipeStoreHelper.listRequestToQueryParams({
+      searchText: searchTextValue,
+      take: recipeStore.listRequest.take,
+    });
+
+    router.push({
+      name: 'recipeList',
+      query,
+    });
+  } else if (searchMode.value === 'groceryItem') {
+    const query = GroceryItemStoreHelper.listRequestToQueryParams({
+      searchText: searchTextValue,
+      take: groceryItemStore.listRequest.take,
+    });
+
+    router.push({
+      name: 'groceryItemList',
+      query,
+    });
+  }
 }
 
 function navigateAway() {
@@ -71,8 +92,7 @@ function suggest(event: Event) {
 
   debounce(async () => {
     if (!searchText.value || searchText.value.length <= 1) {
-      recipeSuggestions.value = [];
-      grocerySuggestions.value = [];
+      suggestions.value = [];
       return;
     }
 
@@ -94,8 +114,12 @@ function suggest(event: Event) {
           return;
         }
 
-        recipeSuggestions.value = response.data?.items || [];
-        grocerySuggestions.value = [];
+        suggestions.value = (response.data?.items || []).map((recipe) => ({
+          id: `recipe-${recipe.id!}`,
+          name: recipe.name!,
+          icon: 'fa-utensils',
+          route: RouterHelper.viewRecipe(recipe),
+        }));
       } else {
         const response = await api().groceryItemsSuggest({
           searchText: searchText.value,
@@ -111,8 +135,12 @@ function suggest(event: Event) {
           return;
         }
 
-        grocerySuggestions.value = response.data?.items || [];
-        recipeSuggestions.value = [];
+        suggestions.value = (response.data?.items || []).map((item) => ({
+          id: `groceryItem-${item.id!}`,
+          name: item.name!,
+          icon: 'fa-shopping-basket',
+          route: RouterHelper.editGroceryItem(item),
+        }));
       }
     } catch (error) {
       messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -186,33 +214,20 @@ onBeforeUnmount(() => {
         <font-awesome-icon icon="fa-search" />
       </button>
     </div>
-    <ul v-if="searchMode === 'recipe' && recipeSuggestions.length" class="dropdown-menu show">
+    <ul v-if="suggestions.length" class="dropdown-menu show">
       <li
-        v-for="suggestion in recipeSuggestions"
+        v-for="suggestion in suggestions"
         :key="suggestion.id"
         class="dropdown-item suggestion"
         role="option"
         aria-selected="false"
       >
         <span>
-          <router-link :to="RouterHelper.viewRecipe(suggestion)" @click="navigateAway">
-            {{ suggestion.name }}
-          </router-link>
-        </span>
-      </li>
-    </ul>
-    <ul v-if="searchMode === 'groceryItem' && grocerySuggestions.length" class="dropdown-menu show">
-      <li
-        v-for="suggestion in grocerySuggestions"
-        :key="suggestion.id"
-        class="dropdown-item suggestion"
-        role="option"
-        aria-selected="false"
-      >
-        <span>
-          <router-link :to="RouterHelper.editGroceryItem(suggestion)" @click="navigateAway">
-            {{ suggestion.name }}
-          </router-link>
+          <router-link :to="suggestion.route" @click="navigateAway">
+            <font-awesome-icon class="me-2" :icon="suggestion.icon" />{{
+              suggestion.name
+            }}</router-link
+          >
         </span>
       </li>
     </ul>

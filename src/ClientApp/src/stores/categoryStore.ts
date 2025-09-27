@@ -4,7 +4,7 @@ import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
 import CategoriesListRequest from '@/models/CategoriesListRequest';
-import listRequestToQueryParams from '@/models/GroceryItemStoreHelper';
+import CategoryStoreHelper from '@/models/CategoryStoreHelper';
 import useMessageStore from './messageStore';
 
 interface CategoryStoreState {
@@ -31,7 +31,7 @@ export default defineStore('category', {
     currentQueryParams(state) {
       const { listRequest } = state;
 
-      return listRequestToQueryParams(listRequest);
+      return CategoryStoreHelper.listRequestToQueryParams(listRequest);
     },
   },
 

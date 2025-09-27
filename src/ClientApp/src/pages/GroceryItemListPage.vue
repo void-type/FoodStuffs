@@ -556,7 +556,7 @@ watch(
           <router-link :to="{ name: 'groceryItemNew' }" class="btn btn-secondary">New</router-link>
         </div>
         <div id="search-results" class="mt-3">{{ resultCountText }}</div>
-        <div class="grid mt-3">
+        <div class="grid mt-4">
           <div
             v-for="groceryItem in listResponse.items"
             :key="groceryItem.id"
