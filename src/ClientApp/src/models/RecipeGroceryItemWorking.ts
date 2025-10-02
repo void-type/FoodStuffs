@@ -4,7 +4,7 @@ export default class RecipeGroceryItemWorking implements SaveRecipeRequestGrocer
   // Used so Vue can track in editor.
   public uiKey = crypto.randomUUID();
 
-  public id?: number;
+  public id?: number = 0;
 
   public quantity?: number = 1;
 
