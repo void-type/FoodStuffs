@@ -63,6 +63,7 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
         }
 
         var groceryAisleToEdit = maybeGroceryAisle.Unwrap(() => new GroceryAisle());
+        var relatedGroceryItemIds = groceryAisleToEdit.GroceryItems.Select(r => r.Id).ToHashSet();
 
         Transfer(request, requestedName, groceryAisleToEdit);
 
@@ -77,7 +78,9 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryAisleToEdit.GroceryItems.Select(gi => gi.Id), cancellationToken);
+        relatedGroceryItemIds.UnionWith(groceryAisleToEdit.GroceryItems.Select(gi => gi.Id));
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, relatedGroceryItemIds, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery Aisle {(maybeGroceryAisle.HasValue ? "updated" : "added")}.", groceryAisleToEdit.Id));
     }

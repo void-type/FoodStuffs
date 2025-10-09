@@ -63,6 +63,8 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         var categoryToEdit = maybeCategory.Unwrap(() => new Category());
 
+        var relatedRecipeIds = categoryToEdit.Recipes.Select(r => r.Id).ToHashSet();
+
         Transfer(formattedName, request, categoryToEdit);
 
         if (maybeCategory.HasValue)
@@ -76,7 +78,9 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, categoryToEdit.Recipes.Select(r => r.Id), cancellationToken);
+        relatedRecipeIds.UnionWith(categoryToEdit.Recipes.Select(r => r.Id));
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, relatedRecipeIds, cancellationToken);
 
         return Ok(EntityMessage.Create($"Category {(maybeCategory.HasValue ? "updated" : "added")}.", categoryToEdit.Id));
     }

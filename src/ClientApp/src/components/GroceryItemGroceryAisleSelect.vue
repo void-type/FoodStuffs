@@ -6,6 +6,7 @@ import { trimAndTitleCase } from '@/models/FormatHelper';
 import ApiHelper from '@/models/ApiHelper';
 import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 
 const model = defineModel({
@@ -41,6 +42,10 @@ const filteredSuggestions = computed(() => {
 function selectSuggestion(id: number | undefined) {
   filterText.value = '';
   model.value = id;
+}
+
+function clearSelection() {
+  model.value = null;
 }
 
 const dropdownParent = ref<HTMLElement | null>(null);
@@ -102,7 +107,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="dropdownParent" class="dropdown">
+  <div ref="dropdownParent" class="dropdown position-relative">
     <button
       ref="dropdownButton"
       class="form-select first-form-item"
@@ -113,6 +118,15 @@ onBeforeUnmount(() => {
     >
       <!-- Name or non-breaking space -->
       {{ selectedSuggestion?.name || '\u00A0' }}
+    </button>
+    <button
+      v-if="selectedSuggestion"
+      class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-1"
+      type="button"
+      aria-label="Clear selection"
+      @click="clearSelection"
+    >
+      <font-awesome-icon icon="fa-times" />
     </button>
     <ul class="dropdown-menu pt-0 w-100">
       <li class="mb-2">

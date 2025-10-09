@@ -13,12 +13,17 @@ public interface ISearchIndexService
     Task AddOrUpdateAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Remove entity from the index.
+    /// </summary>
+    Task RemoveAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Remove multiple entities from the index.
+    /// </summary>
+    Task RemoveAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Rebuild the index.
     /// </summary>
     Task RebuildAsync(SearchIndex indexName, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Remove recipe from the index.
-    /// </summary>
-    Task RemoveAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken);
 }

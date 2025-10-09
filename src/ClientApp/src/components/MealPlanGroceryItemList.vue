@@ -10,8 +10,11 @@ const props = defineProps({
   title: { type: String, required: true },
   groceryItems: { type: Array<GetMealPlanResponseExcludedGroceryItem>, required: true },
   onItemClick: { type: Function, required: true },
+  buttonLabel: { type: String, required: false, default: 'Move' },
   showCopyList: { type: Boolean, required: false, default: false },
   onClear: { type: Function as PropType<() => unknown | null>, required: false, default: null },
+  collapsable: { type: Boolean, required: false, default: false },
+  collapsed: { type: Boolean, required: false, default: false },
   getGroceryItemDetails: { type: Function, required: true },
   getGroceryAisleDetails: { type: Function, required: true },
 });
@@ -73,6 +76,11 @@ function clear() {
   }
 }
 
+const itemCount = computed(() => {
+  const count = props.groceryItems.length;
+  return count > 0 ? ` (${count})` : '';
+});
+
 function copyList() {
   const lines: string[] = [];
 
@@ -90,11 +98,14 @@ function copyList() {
   navigator.clipboard.writeText(text);
   data.copyTooltipText = 'List copied!';
 }
+
+const accordionId = computed(() => `accordion-${Math.random().toString(36).substr(2, 9)}`);
+const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(2, 9)}`);
 </script>
 
 <template>
   <div>
-    <div class="card">
+    <div v-if="!collapsable" class="card">
       <div class="card-header fw-bold d-flex justify-content-between align-items-center">
         {{ title }}
         <button
@@ -124,18 +135,15 @@ function copyList() {
           {{ group.groceryAisle.name }}
         </div>
         <ul class="list-group list-group-flush">
-          <li
-            v-for="item in group.items"
-            :key="item.id"
-            tabindex="0"
-            role="button"
-            class="list-group-item card-hover p-3"
-            @keydown.stop.prevent.enter="onItemClick(item.id)"
-            @click="onItemClick(item.id)"
-          >
+          <li v-for="item in group.items" :key="item.id" class="list-group-item p-3">
             <div class="grid gap-sm">
-              <div class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6">
-                {{ item.quantity }}x {{ item.details.name }}
+              <div
+                class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6 d-flex justify-content-between align-items-center"
+              >
+                <span>{{ item.quantity }}x {{ item.details.name }}</span>
+                <button type="button" class="btn btn-sm btn-primary" @click="onItemClick(item.id)">
+                  {{ buttonLabel }}
+                </button>
               </div>
               <GroceryItemInventoryQuantity
                 :id="`inventory-${item.id}`"
@@ -154,6 +162,94 @@ function copyList() {
           No grocery items.
         </li>
       </ul>
+    </div>
+
+    <div v-else :id="accordionId" class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <div
+            :class="['accordion-button', { collapsed: collapsed }]"
+            type="button"
+            data-bs-toggle="collapse"
+            :data-bs-target="`#${collapseId}`"
+            :aria-expanded="!collapsed"
+            :aria-controls="collapseId"
+          >
+            <div class="d-flex justify-content-between align-items-center w-100 me-2">
+              <span>{{ title }}{{ itemCount }}</span>
+            </div>
+          </div>
+        </div>
+        <div
+          :id="collapseId"
+          :class="['accordion-collapse', 'collapse', { show: !collapsed }]"
+          :data-bs-parent="`#${accordionId}`"
+        >
+          <div class="accordion-body p-0 card border-none">
+            <div class="d-flex gap-2 ms-auto py-2 px-3">
+              <button
+                v-if="onClear !== null"
+                type="button"
+                class="btn btn-sm btn-secondary"
+                @click.stop.prevent="clear()"
+              >
+                Clear
+              </button>
+              <div v-if="showCopyList" class="copy-tooltip">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  :title="data.copyTooltipText"
+                  @click.stop.prevent="copyList()"
+                  @mouseout="data.copyTooltipText = defaultCopyTooltip"
+                  @focusout="data.copyTooltipText = defaultCopyTooltip"
+                >
+                  <span id="copyTooltipText" class="copy-tooltip-text">{{
+                    data.copyTooltipText
+                  }}</span>
+                  Copy
+                </button>
+              </div>
+            </div>
+            <div v-for="group in groceryItemsGrouped" :key="group.groceryAisleId">
+              <div class="card-header">
+                {{ group.groceryAisle.name }}
+              </div>
+              <ul class="list-group list-group-flush">
+                <li v-for="item in group.items" :key="item.id" class="list-group-item p-3">
+                  <div class="grid gap-sm">
+                    <div
+                      class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6 d-flex justify-content-between align-items-center"
+                    >
+                      <span>{{ item.quantity }}x {{ item.details.name }}</span>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary"
+                        @click="onItemClick(item.id)"
+                      >
+                        {{ buttonLabel }}
+                      </button>
+                    </div>
+                    <GroceryItemInventoryQuantity
+                      :id="`inventory-${item.id}`"
+                      v-model="item.details.inventoryQuantity"
+                      class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6"
+                      :inline="true"
+                      :item-id="item.id"
+                      @click.stop.prevent
+                    />
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li v-if="groceryItemsGrouped.length < 1" class="list-group-item p-4 text-center">
+                No grocery items.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

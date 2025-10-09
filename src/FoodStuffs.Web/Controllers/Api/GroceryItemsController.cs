@@ -167,6 +167,6 @@ public class GroceryItemsController : ControllerBase
     {
         await searchIndex.RebuildAsync(SearchIndex.GroceryItems, cancellationToken);
 
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Grocery item index queued for rebuild.")));
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Grocery item index rebuilt.")));
     }
 }

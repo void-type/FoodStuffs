@@ -236,7 +236,7 @@ watch(
                 data-bs-parent="#filterAccordionDesktop"
               >
                 <div class="accordion-body">
-                  <div class="form-group">
+                  <div>
                     <div
                       v-for="option in Choices.boolean"
                       :key="option.value?.toString()"
@@ -247,7 +247,7 @@ watch(
                         v-model="listRequest.isForMealPlanning"
                         class="form-check-input"
                         type="radio"
-                        name="isForMealPlanning"
+                        name="isForMealPlanning_Desktop"
                         :value="option.value"
                         @change="startSearchNoHash"
                       />
@@ -330,7 +330,7 @@ watch(
                   data-bs-parent="#filterAccordion"
                 >
                   <div class="accordion-body">
-                    <div class="form-group">
+                    <div>
                       <div
                         v-for="option in Choices.boolean"
                         :key="option.value?.toString()"

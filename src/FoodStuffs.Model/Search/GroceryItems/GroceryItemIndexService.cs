@@ -7,7 +7,6 @@ using Lucene.Net.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VoidCore.EntityFramework;
-using VoidCore.Model.Functional;
 using VoidCore.Model.Responses.Collections;
 using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
 
@@ -20,35 +19,20 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     private readonly ILogger<GroceryItemIndexService> _logger;
     private readonly SearchSettings _settings;
     private readonly FoodStuffsContext _data;
+    private readonly SemaphoreSlim _writeSemaphore;
 
     public GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, SearchSettings settings, FoodStuffsContext data)
     {
         _logger = logger;
         _settings = settings;
         _data = data;
+        _writeSemaphore = new SemaphoreSlim(1, 1);
     }
 
     /// <inheritdoc/>
     public async Task AddOrUpdateAsync(int groceryItemId, CancellationToken cancellationToken)
     {
-        var byId = new GroceryItemsWithAllRelatedSpecification(groceryItemId);
-
-        var maybeGroceryItem = await _data.GroceryItems
-            .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(AddOrUpdate)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
-            .AsSplitQuery()
-            .ApplyEfSpecification(byId)
-            .OrderBy(x => x.Id)
-            .FirstOrDefaultAsync(cancellationToken)
-            .MapAsync(Maybe.From);
-
-        if (maybeGroceryItem.HasNoValue)
-        {
-            return;
-        }
-
-        var groceryItem = maybeGroceryItem.Value;
-
-        AddOrUpdate(groceryItem);
+        await AddOrUpdateAsync([groceryItemId], cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -57,38 +41,46 @@ public class GroceryItemIndexService : IGroceryItemIndexService
         var byId = new GroceryItemsWithAllRelatedSpecification(groceryItemId);
 
         var groceryItems = await _data.GroceryItems
-            .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(AddOrUpdate)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
+            .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(AddOrUpdateAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
             .ToListAsync(cancellationToken);
 
-        foreach (var groceryItem in groceryItems)
+        if (groceryItems.Count == 0)
         {
-            AddOrUpdate(groceryItem);
+            return;
         }
+
+        await AddOrUpdateAsync(groceryItems, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public void AddOrUpdate(GroceryItem groceryItem)
+    public async Task RemoveAsync(int groceryItemId, CancellationToken cancellationToken)
     {
-        using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+        await RemoveAsync([groceryItemId], cancellationToken);
+    }
 
-        var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
+    /// <inheritdoc/>
+    public async Task RemoveAsync(IEnumerable<int> groceryItemIds, CancellationToken cancellationToken)
+    {
+        await _writeSemaphore.WaitAsync(cancellationToken);
 
-        var doc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
-
-        if (ExistsInIndex(groceryItem.Id))
+        try
         {
-            writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, groceryItem.Id.ToString()), doc);
-        }
-        else
-        {
-            writers.IndexWriter.AddDocument(doc);
-        }
+            using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
 
-        writers.IndexWriter.Commit();
-        writers.TaxonomyWriter.Commit();
+            foreach (var groceryItemId in groceryItemIds)
+            {
+                writers.IndexWriter.DeleteDocuments(new Term(C.FIELD_ID, groceryItemId.ToString()));
+            }
+
+            writers.IndexWriter.Commit();
+        }
+        finally
+        {
+            _writeSemaphore.Release();
+        }
     }
 
     /// <inheritdoc/>
@@ -96,52 +88,84 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     {
         _logger.LogInformation("Starting rebuild of grocery item search index.");
 
-        using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
+        await _writeSemaphore.WaitAsync(cancellationToken);
 
-        var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
-
-        var page = 1;
-        var numIndexed = 0;
-        var done = false;
-
-        do
+        try
         {
-            var pagination = new PaginationOptions(page, BATCH_SIZE);
-            var withAllRelated = new GroceryItemsWithAllRelatedSpecification();
+            using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
 
-            var groceryItems = await _data.GroceryItems
-                .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(RebuildAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
-                .AsSplitQuery()
-                .ApplyEfSpecification(withAllRelated)
-                .OrderBy(x => x.Id)
-                .GetPage(pagination)
-                .ToListAsync(cancellationToken);
+            var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
+
+            var page = 1;
+            var numIndexed = 0;
+            var done = false;
+
+            do
+            {
+                var pagination = new PaginationOptions(page, BATCH_SIZE);
+                var withAllRelated = new GroceryItemsWithAllRelatedSpecification();
+
+                var groceryItems = await _data.GroceryItems
+                    .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(RebuildAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
+                    .AsSplitQuery()
+                    .ApplyEfSpecification(withAllRelated)
+                    .OrderBy(x => x.Id)
+                    .GetPage(pagination)
+                    .ToListAsync(cancellationToken);
+
+                foreach (var groceryItem in groceryItems)
+                {
+                    var builtDoc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
+                    writers.IndexWriter.AddDocument(builtDoc);
+                    numIndexed++;
+                }
+
+                done = groceryItems.Count < 1;
+                page++;
+            } while (!done);
+
+            writers.IndexWriter.Commit();
+            writers.TaxonomyWriter.Commit();
+
+            _logger.LogInformation("Finished rebuild of grocery item search index. {DocCount} documents.", numIndexed);
+        }
+        finally
+        {
+            _writeSemaphore.Release();
+        }
+    }
+
+    private async Task AddOrUpdateAsync(IEnumerable<GroceryItem> groceryItems, CancellationToken cancellationToken)
+    {
+        await _writeSemaphore.WaitAsync(cancellationToken);
+
+        try
+        {
+            using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+
+            var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 
             foreach (var groceryItem in groceryItems)
             {
-                var builtDoc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
-                writers.IndexWriter.AddDocument(builtDoc);
-                numIndexed++;
+                var doc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
+
+                if (ExistsInIndex(groceryItem.Id))
+                {
+                    writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, groceryItem.Id.ToString()), doc);
+                }
+                else
+                {
+                    writers.IndexWriter.AddDocument(doc);
+                }
             }
 
-            done = groceryItems.Count < 1;
-            page++;
-        } while (!done);
-
-        writers.IndexWriter.Commit();
-        writers.TaxonomyWriter.Commit();
-
-        _logger.LogInformation("Finished rebuild of grocery item search index. {DocCount} documents.", numIndexed);
-    }
-
-    /// <inheritdoc/>
-    public void Remove(int groceryItemId)
-    {
-        using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
-
-        writers.IndexWriter.DeleteDocuments(new Term(C.FIELD_ID, groceryItemId.ToString()));
-
-        writers.IndexWriter.Commit();
+            writers.IndexWriter.Commit();
+            writers.TaxonomyWriter.Commit();
+        }
+        finally
+        {
+            _writeSemaphore.Release();
+        }
     }
 
     private bool ExistsInIndex(int groceryItemId)

@@ -1,6 +1,4 @@
-﻿using FoodStuffs.Model.Data.Models;
-
-namespace FoodStuffs.Model.Search.GroceryItems;
+﻿namespace FoodStuffs.Model.Search.GroceryItems;
 
 public interface IGroceryItemIndexService
 {
@@ -15,17 +13,17 @@ public interface IGroceryItemIndexService
     Task AddOrUpdateAsync(IEnumerable<int> groceryItemId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Update grocery item in the index. Ensure you have a fully-hydrated grocery item.
+    /// Remove grocery item from the index.
     /// </summary>
-    void AddOrUpdate(GroceryItem groceryItem);
+    Task RemoveAsync(int groceryItemId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Remove multiple grocery items from the index.
+    /// </summary>
+    Task RemoveAsync(IEnumerable<int> groceryItemIds, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rebuild the index.
     /// </summary>
     Task RebuildAsync(CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Remove grocery item from the index.
-    /// </summary>
-    void Remove(int groceryItemId);
 }

@@ -63,6 +63,8 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
 
         var storageLocationToEdit = maybeStorageLocation.Unwrap(() => new StorageLocation());
 
+        var relatedGroceryItemIds = storageLocationToEdit.GroceryItems.Select(gi => gi.Id).ToHashSet();
+
         Transfer(requestedName, storageLocationToEdit);
 
         if (maybeStorageLocation.HasValue)
@@ -76,7 +78,9 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, storageLocationToEdit.GroceryItems.Select(gi => gi.Id), cancellationToken);
+        relatedGroceryItemIds.UnionWith(storageLocationToEdit.GroceryItems.Select(gi => gi.Id));
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, relatedGroceryItemIds, cancellationToken);
 
         return Ok(EntityMessage.Create($"Storage Location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
     }

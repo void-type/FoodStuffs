@@ -147,6 +147,6 @@ public class RecipesController : ControllerBase
     {
         await searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
 
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Recipe index queued for rebuild.")));
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Recipe index rebuilt.")));
     }
 }

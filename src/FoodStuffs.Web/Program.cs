@@ -71,9 +71,7 @@ try
     services.AddScoped<IGroceryItemIndexService, GroceryItemIndexService>();
     services.AddScoped<IGroceryItemQueryService, GroceryItemQueryService>();
 
-    services.AddSingleton<BackgroundSearchIndexService>();
-    services.AddSingleton<ISearchIndexService>(provider => provider.GetRequiredService<BackgroundSearchIndexService>());
-    services.AddHostedService(provider => provider.GetRequiredService<BackgroundSearchIndexService>());
+    services.AddScoped<ISearchIndexService, SearchIndexService>();
     services.AddHostedService<EnsureIndexHostedService>();
 
     // Auto-register Domain Events

@@ -108,7 +108,7 @@ onMounted(() => {
             />
           </div>
         </div>
-        <div class="grid slim-scroll category-scroll">
+        <div class="grid category-scroll">
           <div
             v-for="categoryOption in categoryOptions"
             :key="categoryOption.id"
@@ -134,6 +134,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 .category-scroll {
   row-gap: 0.1rem;
-  column-gap: 0;
+  column-gap: 0.1rem;
 }
 </style>

@@ -62,6 +62,8 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         Transfer(request, recipeToEdit);
 
+        var relatedGroceryItemIds = recipeToEdit.GroceryItemRelations.Select(gi => gi.GroceryItemId).ToHashSet();
+
         await ManageCategoriesAsync(request, recipeToEdit, cancellationToken);
 
         await ManageGroceryItemsAsync(request, recipeToEdit, cancellationToken);
@@ -79,7 +81,9 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeToEdit.Id, cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, recipeToEdit.GroceryItemRelations.Select(x => x.GroceryItemId), cancellationToken);
+        relatedGroceryItemIds.UnionWith(recipeToEdit.GroceryItemRelations.Select(x => x.GroceryItemId));
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, relatedGroceryItemIds, cancellationToken);
 
         var response = EntityResponse.Create(
             $"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.",

@@ -63,6 +63,8 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         var groceryItemToEdit = maybeGroceryItem.Unwrap(() => new GroceryItem());
 
+        var relatedRecipeIds = groceryItemToEdit.Recipes.Select(r => r.Id).ToHashSet();
+
         Transfer(requestedName, request, groceryItemToEdit);
 
         await ManageStorageLocationsAsync(request, groceryItemToEdit, cancellationToken);
@@ -92,7 +94,9 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, groceryItemToEdit.Recipes.Select(r => r.Id), cancellationToken);
+        relatedRecipeIds.UnionWith(groceryItemToEdit.Recipes.Select(r => r.Id));
+
+        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, relatedRecipeIds, cancellationToken);
 
         await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 

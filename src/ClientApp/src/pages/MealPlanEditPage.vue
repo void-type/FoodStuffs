@@ -380,6 +380,8 @@ onMounted(async () => {
             :grocery-items="pantry"
             :on-item-click="removeFromPantry"
             :on-clear="clearPantry"
+            :collapsable="true"
+            :collapsed="true"
             :get-grocery-item-details="findGroceryItem"
             :get-grocery-aisle-details="findGroceryAisle"
           />

@@ -204,7 +204,7 @@ onBeforeUnmount(() => {
                 class="btn btn-danger btn-sm ms-auto"
                 @click.stop.prevent="onDeleteClick(item.uiKey)"
               >
-                Delete
+                Remove
               </button>
             </div>
           </div>

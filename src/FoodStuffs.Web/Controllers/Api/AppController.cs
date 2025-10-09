@@ -53,6 +53,6 @@ public class AppController : ControllerBase
         await searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
         await searchIndex.RebuildAsync(SearchIndex.GroceryItems, cancellationToken);
 
-        return HttpResponder.Respond(Result.Ok(new UserMessage("Search indexes queued for rebuild.")));
+        return HttpResponder.Respond(Result.Ok(new UserMessage("Search indexes rebuilt.")));
     }
 }

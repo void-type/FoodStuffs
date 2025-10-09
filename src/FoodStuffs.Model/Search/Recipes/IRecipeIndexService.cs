@@ -1,6 +1,4 @@
-﻿using FoodStuffs.Model.Data.Models;
-
-namespace FoodStuffs.Model.Search.Recipes;
+﻿namespace FoodStuffs.Model.Search.Recipes;
 
 public interface IRecipeIndexService
 {
@@ -15,17 +13,17 @@ public interface IRecipeIndexService
     Task AddOrUpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Update recipe in the index. Ensure you have a fully-hydrated recipe.
+    /// Remove recipe from the index.
     /// </summary>
-    void AddOrUpdate(Recipe recipe);
+    Task RemoveAsync(int recipeId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Remove multiple recipes from the index.
+    /// </summary>
+    Task RemoveAsync(IEnumerable<int> recipeIds, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rebuild the index.
     /// </summary>
     Task RebuildAsync(CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Remove recipe from the index.
-    /// </summary>
-    void Remove(int recipeId);
 }
