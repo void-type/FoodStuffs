@@ -97,7 +97,7 @@ onUnmounted(() => {
     </div>
   </div>
   <Transition name="fade">
-    <div v-if="showScrollToTop" class="scroll-to-top">
+    <div v-if="showScrollToTop || isFetchingRecipes" class="scroll-to-top">
       <button
         class="btn btn-outline-secondary opacity-75"
         type="button"

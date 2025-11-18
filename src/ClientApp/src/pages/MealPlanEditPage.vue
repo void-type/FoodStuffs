@@ -38,8 +38,8 @@ const api = ApiHelper.client;
 const initialized = ref(false);
 
 // Determine if we're editing a specific meal plan or the current one
-const isEditingCurrent = computed(() => (props.id || 0) === 0);
 const { currentMealPlan, editingMealPlan } = storeToRefs(mealPlanStore);
+const isEditingCurrent = computed(() => (props.id || 0) === currentMealPlan.value?.id);
 
 // Use the appropriate meal plan based on whether we're editing current or a specific one
 const activeMealPlan = computed(() =>
