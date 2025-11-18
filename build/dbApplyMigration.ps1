@@ -16,12 +16,11 @@ try {
   $dbMigrationArgs = $dbMigrationArgs + $AdditionalArgs
 
   if ($MigrationName) {
-    dotnet ef database update "$MigrationName" @dbMigrationArgs
+    dotnet ef database update "$MigrationName" @dbMigrationArgs | Write-Output
     return
   }
 
-  dotnet ef database update @dbMigrationArgs
-
+  dotnet ef database update @dbMigrationArgs | Write-Output
 } finally {
   Set-Location $originalLocation
 }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
@@ -11,6 +11,7 @@ import type {
   ListGroceryAislesResponse,
   GetMealPlanResponseRecipe,
   SearchGroceryItemsResultItem,
+  GetMealPlanResponseExcludedGroceryItem,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
@@ -20,6 +21,14 @@ import AppPageHeading from '@/components/AppPageHeading.vue';
 import { useRouter } from 'vue-router';
 import RouterHelper from '@/models/RouterHelper';
 
+const props = defineProps({
+  id: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+});
+
 const appStore = useAppStore();
 const mealPlanStore = useMealPlanStore();
 const messageStore = useMessageStore();
@@ -28,73 +37,163 @@ const api = ApiHelper.client;
 
 const initialized = ref(false);
 
-const { currentMealPlan } = storeToRefs(mealPlanStore);
+// Determine if we're editing a specific meal plan or the current one
+const isEditingCurrent = computed(() => (props.id || 0) === 0);
+const { currentMealPlan, editingMealPlan } = storeToRefs(mealPlanStore);
+
+// Use the appropriate meal plan based on whether we're editing current or a specific one
+const activeMealPlan = computed(() =>
+  isEditingCurrent.value ? currentMealPlan.value : editingMealPlan.value
+);
 
 const completedRecipes = computed({
   get() {
-    return currentMealPlan.value?.recipes?.filter((recipe) => recipe.isComplete) || [];
+    return activeMealPlan.value?.recipes?.filter((recipe) => recipe.isComplete) || [];
   },
   set(value) {
-    if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
+    if (activeMealPlan.value === undefined || activeMealPlan.value === null) {
       return;
     }
     const incompleteList =
-      currentMealPlan.value.recipes?.filter((recipe) => !recipe.isComplete) || [];
-    currentMealPlan.value.recipes = [...value, ...incompleteList];
+      activeMealPlan.value.recipes?.filter((recipe) => !recipe.isComplete) || [];
+    activeMealPlan.value.recipes = [...value, ...incompleteList];
   },
 });
 
 const incompleteRecipes = computed({
   get() {
-    return currentMealPlan.value?.recipes?.filter((recipe) => !recipe.isComplete) || [];
+    return activeMealPlan.value?.recipes?.filter((recipe) => !recipe.isComplete) || [];
   },
   set(value) {
-    if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
+    if (activeMealPlan.value === undefined || activeMealPlan.value === null) {
       return;
     }
-    const completedList =
-      currentMealPlan.value.recipes?.filter((recipe) => recipe.isComplete) || [];
-    currentMealPlan.value.recipes = [...completedList, ...value];
+    const completedList = activeMealPlan.value.recipes?.filter((recipe) => recipe.isComplete) || [];
+    activeMealPlan.value.recipes = [...completedList, ...value];
   },
 });
 
-const shoppingList = computed(() => mealPlanStore.currentShoppingList);
+const shoppingList = computed(() => {
+  if (isEditingCurrent.value) {
+    return mealPlanStore.currentShoppingList;
+  }
 
-const pantry = computed(() => mealPlanStore.currentPantry);
+  // Calculate shopping list for editing meal plan
+  const groceryItemCounts = (activeMealPlan.value?.recipes || [])
+    .flatMap((c) => c.groceryItems || [])
+    .reduce((acc, item) => {
+      if (!item.id) return acc;
+      const existing = acc.find((x) => x.id === item.id);
+      if (existing) {
+        existing.quantity = (existing.quantity || 0) + (item.quantity || 0);
+      } else {
+        acc.push({ ...item });
+      }
+      return acc;
+    }, [] as Array<GetMealPlanResponseExcludedGroceryItem>);
+
+  (activeMealPlan.value?.excludedGroceryItems || []).forEach((x) => {
+    if (!x.id) return;
+    const existing = groceryItemCounts.find((item) => item.id === x.id);
+    if (existing) {
+      existing.quantity = Math.max(0, (existing.quantity || 0) - (x.quantity || 0));
+    }
+  });
+
+  return groceryItemCounts.filter((item) => (item.quantity || 0) > 0);
+});
+
+const pantry = computed(() => {
+  if (isEditingCurrent.value) {
+    return mealPlanStore.currentPantry;
+  }
+  return activeMealPlan.value?.excludedGroceryItems || [];
+});
 
 const showSortHandle = ref(false);
 
+async function onSaveMealPlan(quickSave: boolean = false) {
+  if (isEditingCurrent.value) {
+    await mealPlanStore.saveCurrentMealPlan([], quickSave);
+  } else {
+    const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
+    if (savedId && !props.id) {
+      // If this was a new meal plan, redirect to the edit page with the new ID
+      router.push({ name: 'mealPlanEdit', params: { id: savedId } });
+    }
+  }
+}
+
 async function addToPantry(id: number) {
-  await mealPlanStore.addToCurrentPantry(id);
+  if (isEditingCurrent.value) {
+    await mealPlanStore.addToCurrentPantry(id);
+  } else {
+    // Add to editing meal plan pantry
+    if (!activeMealPlan.value.excludedGroceryItems) {
+      activeMealPlan.value.excludedGroceryItems = [];
+    }
+    const existing = activeMealPlan.value.excludedGroceryItems.find((x) => x.id === id);
+    if (existing) {
+      existing.quantity = (existing.quantity || 0) + 1;
+    } else {
+      activeMealPlan.value.excludedGroceryItems.push({ id, quantity: 1 });
+    }
+    await onSaveMealPlan(true);
+  }
 }
 
 async function removeFromPantry(id: number) {
-  await mealPlanStore.removeFromCurrentPantry(id);
+  if (isEditingCurrent.value) {
+    await mealPlanStore.removeFromCurrentPantry(id);
+  } else {
+    // Remove from editing meal plan pantry
+    if (!activeMealPlan.value.excludedGroceryItems) return;
+    const existing = activeMealPlan.value.excludedGroceryItems.find((x) => x.id === id);
+    if (existing) {
+      existing.quantity = Math.max(0, (existing.quantity || 0) - 1);
+      if (existing.quantity === 0) {
+        activeMealPlan.value.excludedGroceryItems =
+          activeMealPlan.value.excludedGroceryItems.filter((x) => x.id !== id);
+      }
+    }
+    await onSaveMealPlan(true);
+  }
 }
 
 async function clearPantry() {
-  await mealPlanStore.clearCurrentPantry();
+  if (isEditingCurrent.value) {
+    await mealPlanStore.clearCurrentPantry();
+  } else {
+    activeMealPlan.value.excludedGroceryItems = [];
+    await onSaveMealPlan(true);
+  }
 }
 
 async function onClearRecipes() {
   const parameters: ModalParameters = {
     title: 'Clear meal plan',
     description: 'Do you really want to remove all recipes from this meal plan?',
-    okAction: () => mealPlanStore.clearCurrentRecipes(),
+    okAction: () => {
+      if (isEditingCurrent.value) {
+        mealPlanStore.clearCurrentRecipes();
+      } else {
+        activeMealPlan.value.recipes = [];
+        onSaveMealPlan();
+      }
+    },
   };
 
   appStore.showModal(parameters);
-}
-
-async function onSaveMealPlan() {
-  await mealPlanStore.saveCurrentMealPlan();
 }
 
 async function onDeleteMealPlan() {
   const parameters: ModalParameters = {
     title: 'Delete meal plan',
     description: 'Do you really want to delete this meal plan?',
-    okAction: () => mealPlanStore.deleteMealPlan(currentMealPlan.value.id),
+    okAction: async () => {
+      await mealPlanStore.deleteMealPlan(activeMealPlan.value.id);
+      router.push({ name: 'mealPlanList' });
+    },
   };
 
   appStore.showModal(parameters);
@@ -133,7 +232,7 @@ function findGroceryAisle(id: number | undefined) {
 }
 
 function updateOrdersByIndex() {
-  if (currentMealPlan.value === undefined || currentMealPlan.value === null) {
+  if (activeMealPlan.value === undefined || activeMealPlan.value === null) {
     return;
   }
 
@@ -154,7 +253,11 @@ function updateOrdersByIndex() {
 function onSortEnd() {
   nextTick(() => {
     updateOrdersByIndex();
-    mealPlanStore.saveCurrentMealPlan([], true);
+    if (isEditingCurrent.value) {
+      mealPlanStore.saveCurrentMealPlan([], true);
+    } else {
+      onSaveMealPlan(true);
+    }
   });
 }
 
@@ -163,7 +266,11 @@ function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
   recipe.isComplete = !recipe.isComplete;
 
   updateOrdersByIndex();
-  mealPlanStore.saveCurrentMealPlan([], true);
+  if (isEditingCurrent.value) {
+    mealPlanStore.saveCurrentMealPlan([], true);
+  } else {
+    onSaveMealPlan(true);
+  }
 
   if (!recipe.isComplete) {
     return;
@@ -180,8 +287,19 @@ function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
   appStore.showModal(modalParameters);
 }
 
+async function onRecipeRemoved(recipe: GetMealPlanResponseRecipe) {
+  if (!activeMealPlan.value?.recipes) {
+    return;
+  }
+
+  activeMealPlan.value.recipes = activeMealPlan.value.recipes.filter((r) => r.id !== recipe.id);
+
+  updateOrdersByIndex();
+  await onSaveMealPlan(true);
+}
+
 const pageTitle = computed(() => {
-  if (currentMealPlan.value?.id) {
+  if (activeMealPlan.value?.id) {
     return '';
   }
 
@@ -189,12 +307,12 @@ const pageTitle = computed(() => {
 });
 
 const sidesNeeded = computed(() => {
-  if (!currentMealPlan.value) {
+  if (!activeMealPlan.value) {
     return 0;
   }
 
   return (
-    currentMealPlan.value.recipes?.reduce(
+    activeMealPlan.value.recipes?.reduce(
       (acc, recipe) => acc + (recipe.mealPlanningSidesCount || 0),
       0
     ) || 0
@@ -202,18 +320,29 @@ const sidesNeeded = computed(() => {
 });
 
 const sidesHave = computed(() => {
-  if (!currentMealPlan.value) {
+  if (!activeMealPlan.value) {
     return 0;
   }
 
   // Count how many sides are included in the meal plan. A side is recipe with Category that looks like {name: 'Side'}
   return (
-    currentMealPlan.value.recipes?.reduce(
+    activeMealPlan.value.recipes?.reduce(
       (acc, recipe) => acc + (recipe.categories?.some((cat) => cat.name === 'Side') ? 1 : 0),
       0
     ) || 0
   );
 });
+
+// Watch for ID changes to fetch the appropriate meal plan
+watch(
+  () => props.id,
+  () => {
+    if (!isEditingCurrent.value) {
+      mealPlanStore.fetchMealPlan(props.id);
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(async () => {
   await fetchGroceryItems();
@@ -232,14 +361,14 @@ onMounted(async () => {
           Save
         </button>
         <button
-          v-if="(currentMealPlan?.id || 0) > 0"
+          v-if="(activeMealPlan?.id || 0) > 0"
           class="btn btn-secondary me-2"
           @click.stop.prevent="() => onClearRecipes()"
         >
           Clear
         </button>
         <button
-          v-if="(currentMealPlan?.id || 0) > 0"
+          v-if="(activeMealPlan?.id || 0) > 0"
           id="overflowMenuButton"
           class="btn btn-secondary dropdown-toggle"
           type="button"
@@ -249,7 +378,7 @@ onMounted(async () => {
           More
         </button>
         <ul
-          v-if="(currentMealPlan?.id || 0) > 0"
+          v-if="(activeMealPlan?.id || 0) > 0"
           class="dropdown-menu"
           aria-labelledby="overflowMenuButton"
         >
@@ -274,7 +403,7 @@ onMounted(async () => {
           <label for="nameSearch" class="form-label">Name</label>
           <input
             id="mealPlanName"
-            v-model="currentMealPlan.name"
+            v-model="activeMealPlan.name"
             class="form-control"
             @keydown.stop.prevent.enter="() => onSaveMealPlan()"
           />
@@ -310,8 +439,10 @@ onMounted(async () => {
               :recipe="recipe"
               :lazy="i > 6"
               :show-sort-handle="showSortHandle"
+              :is-current-plan="isEditingCurrent"
               class="g-col-12 g-col-lg-6"
               @recipe-completed="onRecipeCompleted"
+              @recipe-removed="onRecipeRemoved"
             />
           </vue-draggable>
         </div>

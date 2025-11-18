@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
-import RecipeMealButton from './RecipeMealButton.vue';
+import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 import TagBadge from './TagBadge.vue';
 import AppSortHandle from './AppSortHandle.vue';
 
@@ -103,7 +103,7 @@ function flipCard() {
           @click.stop
           >Edit</router-link
         >
-        <RecipeMealButton class="btn-sm" :recipe-id="recipe.id" />
+        <RecipeCurrentMealPlanButton class="btn-sm" :recipe-id="recipe.id" />
         <div v-if="!props.showCompactView" class="ms-auto">
           <button
             class="btn btn-sm btn-outline-secondary"

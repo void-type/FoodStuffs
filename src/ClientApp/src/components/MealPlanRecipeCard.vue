@@ -5,7 +5,7 @@ import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ImagePlaceholder from './ImagePlaceholder.vue';
-import RecipeMealButton from './RecipeMealButton.vue';
+import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 import AppSortHandle from './AppSortHandle.vue';
 import TagBadge from './TagBadge.vue';
 
@@ -13,9 +13,10 @@ const props = defineProps({
   recipe: { type: Object as PropType<GetMealPlanResponseRecipe>, required: true },
   imgLazy: { type: Boolean, required: false, default: false },
   showSortHandle: { type: Boolean, required: false, default: false },
+  isCurrentPlan: { type: Boolean, required: false, default: false },
 });
 
-const emit = defineEmits(['recipeCompleted']);
+const emit = defineEmits(['recipeCompleted', 'recipeRemoved']);
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 </script>
@@ -86,8 +87,16 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
               class="dropdown-menu p-3"
               :aria-labelledby="`overflowMenuButton-recipe-${recipe.id}`"
             >
+              <div v-if="!isCurrentPlan">
+                <button
+                  class="btn btn-sm btn-secondary mb-2"
+                  @click.prevent.stop="() => emit('recipeRemoved', recipe)"
+                >
+                  Remove From This Plan
+                </button>
+              </div>
               <div>
-                <RecipeMealButton class="btn-sm mb-2" :recipe-id="recipe.id" />
+                <RecipeCurrentMealPlanButton class="btn-sm mb-2" :recipe-id="recipe.id" />
               </div>
               <div>
                 <router-link

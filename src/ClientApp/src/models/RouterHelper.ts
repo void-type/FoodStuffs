@@ -11,6 +11,10 @@ interface RouteGroceryItem {
   id?: number;
 }
 
+interface RouteMealPlan {
+  id?: number;
+}
+
 export default class RouterHelper {
   static setTitle(
     route: RouteLocationNormalizedLoaded,
@@ -36,6 +40,10 @@ export default class RouterHelper {
     return { name: 'groceryItemEdit', params: { id: groceryItem.id } };
   }
 
+  static editMealPlan(mealPlan: RouteMealPlan) {
+    return { name: 'mealPlanEdit', params: { id: mealPlan.id } };
+  }
+
   static paramToInt(param: string | string[] | undefined | null) {
     if (Array.isArray(param)) {
       return param.length > 0 && param[0] ? parseInt(param[0], 10) : 0;
@@ -46,5 +54,14 @@ export default class RouterHelper {
     }
 
     return 0;
+  }
+
+  static scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
+    document.getElementById('main')?.focus();
   }
 }

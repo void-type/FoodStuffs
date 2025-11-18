@@ -92,17 +92,17 @@ onMounted(() => {
             class="btn btn-sm btn-secondary me-2"
             @click.stop.prevent="model.storageLocations = []"
           >
-            Select none
+            Select None
           </button>
           <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
-            Select all
+            Select All
           </button>
           <div class="form-check form-switch my-auto">
             <label
               class="w-100"
               for="matchAllStorageLocations"
               aria-label="Match all selected storage locations"
-              >Match all</label
+              >Match All</label
             >
             <input
               id="matchAllStorageLocations"

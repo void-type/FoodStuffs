@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import RecipeCard from '@/components/RecipeCard.vue';
+import RouterHelper from '@/models/RouterHelper';
 
 const discoveryStore = useDiscoveryStore();
 
@@ -11,6 +12,16 @@ const { list, take, isFetchingRecipes } = storeToRefs(discoveryStore);
 
 const loadMoreTriggerElement: Ref<Element | undefined> = ref();
 let loadMoreObserver: IntersectionObserver | null = null;
+
+const showScrollToTop = ref(true);
+
+function handleScroll() {
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  const { scrollHeight, clientHeight } = document.documentElement;
+
+  // Hide button when within 200px of the top or 100px of the bottom
+  showScrollToTop.value = scrollTop > 300 && scrollTop + clientHeight < scrollHeight - 300;
+}
 
 function setupLoadMoreObserver() {
   if (!loadMoreTriggerElement.value) {
@@ -44,6 +55,8 @@ async function randomize() {
 
 onMounted(async () => {
   setupLoadMoreObserver();
+  window.addEventListener('scroll', handleScroll);
+  handleScroll(); // Initial check
   if (list.value.length < take.value) {
     await discoveryStore.fetchNext();
   }
@@ -51,6 +64,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   tearDownLoadMoreObserver();
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -82,6 +96,35 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
+  <Transition name="fade">
+    <div v-if="showScrollToTop" class="scroll-to-top">
+      <button
+        class="btn btn-outline-secondary opacity-75"
+        type="button"
+        @click="RouterHelper.scrollToTop()"
+      >
+        <font-awesome-icon icon="fa-arrow-up" />
+      </button>
+    </div>
+  </Transition>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.scroll-to-top {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

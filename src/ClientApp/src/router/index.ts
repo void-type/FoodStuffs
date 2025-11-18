@@ -94,9 +94,18 @@ const router = createRouter({
               props: (route) => ({ query: route.query }),
             },
             {
-              path: 'current',
+              path: ':id',
               name: 'mealPlanEdit',
-              meta: { title: 'Edit Current Meal Plan' },
+              meta: { title: 'Edit Meal Plan' },
+              component: () => import('@/pages/MealPlanEditPage.vue'),
+              props: (route) => ({
+                id: RouterHelper.paramToInt(route.params.id),
+              }),
+            },
+            {
+              path: 'new',
+              name: 'mealPlanNew',
+              meta: { title: 'New Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
             },
           ],

@@ -92,10 +92,10 @@ onMounted(() => {
             class="btn btn-sm btn-secondary me-2"
             @click.stop.prevent="model.groceryAisles = []"
           >
-            Select none
+            Select None
           </button>
           <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
-            Select all
+            Select All
           </button>
         </div>
         <div class="grid slim-scroll grocery-aisle-scroll">

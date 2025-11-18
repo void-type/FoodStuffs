@@ -22,7 +22,7 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
     :aria-label="`Remove recipe from current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.removeCurrentRecipe(props.recipeId)"
   >
-    <font-awesome-icon icon="fa-minus" /> Plan
+    <font-awesome-icon icon="fa-minus" /> Current Plan
   </button>
   <button
     v-else
@@ -30,7 +30,7 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
     :aria-label="`Add recipe to current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.addCurrentRecipe(props.recipeId)"
   >
-    <font-awesome-icon icon="fa-plus" /> Plan
+    <font-awesome-icon icon="fa-plus" /> Current Plan
   </button>
 </template>
 

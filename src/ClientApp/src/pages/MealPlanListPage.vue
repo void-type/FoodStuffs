@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import useAppStore from '@/stores/appStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
-import DateHelper from '@/models/DateHelper';
 import { storeToRefs } from 'pinia';
 import { computed, watch, type PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
@@ -13,6 +12,7 @@ import router from '@/router';
 import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import RouterHelper from '@/models/RouterHelper';
 
 const props = defineProps({
   query: {
@@ -89,8 +89,7 @@ function setListRequestFromQuery() {
 }
 
 async function newMealPlan() {
-  await mealPlanStore.newCurrentMealPlan();
-  router.push({ name: 'mealPlanEdit' });
+  router.push({ name: 'mealPlanNew' });
 }
 
 watch(
@@ -120,31 +119,30 @@ watch(
       <thead>
         <tr>
           <th>Name</th>
-          <th>Created On</th>
+          <th>Current</th>
           <th>Recipes</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
-          <td>{{ mealPlan.name }}</td>
-          <td>{{ DateHelper.dateTimeForView(mealPlan.createdOn) }}</td>
+          <td>
+            <router-link :to="RouterHelper.editMealPlan(mealPlan)">{{ mealPlan.name }}</router-link>
+          </td>
+          <td>
+            <div class="form-check">
+              <input
+                type="radio"
+                class="form-check-input form-check-input-lg"
+                name="currentMealPlan"
+                :checked="currentMealPlan.id === mealPlan.id"
+                :aria-label="`Set ${mealPlan.name} as current meal plan`"
+                @change="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
+              />
+            </div>
+          </td>
           <td>{{ mealPlan.recipeCount }}</td>
           <td>
-            <router-link
-              v-if="currentMealPlan.id === mealPlan.id"
-              :to="{ name: 'mealPlanEdit' }"
-              class="btn btn-sm btn-secondary me-2"
-            >
-              Edit current
-            </router-link>
-            <button
-              v-else
-              class="btn btn-sm btn-primary me-2"
-              @click="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
-            >
-              Make current
-            </button>
             <button class="btn btn-sm btn-danger" @click="() => onDeleteMealPlan(mealPlan.id)">
               Delete
             </button>
@@ -162,4 +160,8 @@ watch(
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.form-check-input-lg {
+  transform: scale(1.3);
+}
+</style>

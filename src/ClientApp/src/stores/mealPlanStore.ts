@@ -24,6 +24,7 @@ interface MealPlanStoreState {
   listResponse: IItemSetOfListMealPlansResponse;
   listRequest: MealPlansListParams;
   currentMealPlan: GetMealPlanResponse;
+  editingMealPlan: GetMealPlanResponse;
 }
 
 const api = ApiHelper.client;
@@ -40,6 +41,7 @@ export default defineStore('mealPlan', {
     },
     listRequest: { ...new ListMealPlansRequest() },
     currentMealPlan: MealPlanWorking.createForStore(),
+    editingMealPlan: MealPlanWorking.createForStore(),
   }),
 
   getters: {
@@ -236,6 +238,64 @@ export default defineStore('mealPlan', {
         this.listResponse = response.data;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
+    },
+
+    async fetchMealPlan(id: number | null | undefined) {
+      if (isNil(id)) {
+        this.editingMealPlan = MealPlanWorking.createForStore();
+        return;
+      }
+
+      try {
+        const response = await api().mealPlansGet(id);
+        this.editingMealPlan = response.data;
+      } catch (error) {
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        this.editingMealPlan = MealPlanWorking.createForStore();
+      }
+    },
+
+    async saveMealPlan(
+      mealPlan: GetMealPlanResponse,
+      additionalRecipeIds: number[] = []
+    ): Promise<number | null> {
+      if (mealPlan === null) {
+        return null;
+      }
+
+      const request = mealPlan;
+
+      if (additionalRecipeIds && additionalRecipeIds.length > 0) {
+        additionalRecipeIds.forEach((additionalId) => {
+          if (request.recipes === null || typeof request.recipes === 'undefined') {
+            return;
+          }
+
+          const highestOrder = Math.max(...request.recipes.map((x) => x.order || 0), 0);
+
+          request.recipes?.push({
+            id: additionalId,
+            order: highestOrder + 1,
+          });
+        });
+      }
+
+      try {
+        const response = await api().mealPlansSave(request);
+
+        if (response.data.message) {
+          useMessageStore().setSuccessMessage(response.data.message);
+        }
+
+        // Refresh the editing meal plan with the saved data
+        await this.fetchMealPlan(response.data.id);
+        await this.fetchMealPlanList();
+
+        return response.data.id || null;
+      } catch (error) {
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        return null;
       }
     },
   },

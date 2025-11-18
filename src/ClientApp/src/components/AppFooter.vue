@@ -1,25 +1,19 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import useAppStore from '@/stores/appStore';
+import RouterHelper from '@/models/RouterHelper';
 
 const appStore = useAppStore();
 const { version } = storeToRefs(appStore);
-
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
-
-  document.getElementById('main')?.focus();
-}
 </script>
 
 <template>
   <footer id="footer" class="mt-5 d-print-none border-top text-center py-3 px-0">
     <div class="m-0 mb-4 text-center">
-      <button class="btn btn-outline-secondary" type="button" @click="scrollToTop">
+      <button class="btn btn-outline-secondary" type="button" @click="RouterHelper.scrollToTop()">
         Back to top
+        <font-awesome-icon icon="fa-arrow-up" class="ms-1" />
       </button>
     </div>
     <div>

@@ -7,6 +7,7 @@ import App from '@/App.vue';
 import router from '@/router';
 import { library, config as fontAwesomeConfig } from '@fortawesome/fontawesome-svg-core';
 import {
+  faArrowUp,
   faRotateRight,
   faMoon,
   faSearch,
@@ -28,6 +29,7 @@ import 'vue-color/style.css';
 fontAwesomeConfig.autoAddCss = false;
 
 library.add(
+  faArrowUp,
   faRotateRight,
   faMoon,
   faSearch,

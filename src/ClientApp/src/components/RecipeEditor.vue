@@ -19,7 +19,7 @@ import type { Tag } from '@/models/Tag';
 import EntityAuditInfo from './EntityAuditInfo.vue';
 import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import TagEditor from './TagEditor.vue';
-import RecipeMealButton from './RecipeMealButton.vue';
+import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 import RecipeEditorGroceryItems from './RecipeEditorGroceryItems.vue';
 import RichTextEditor from './RichTextEditor.vue';
 import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
@@ -209,7 +209,7 @@ onMounted(async () => {
       <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
         Save
       </button>
-      <RecipeMealButton v-if="isEditMode" class="me-2" :recipe-id="sourceRecipe.id" />
+      <RecipeCurrentMealPlanButton v-if="isEditMode" class="me-2" :recipe-id="sourceRecipe.id" />
       <div class="dropdown">
         <button
           v-if="isEditMode"

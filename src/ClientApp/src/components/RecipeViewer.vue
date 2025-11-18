@@ -8,7 +8,7 @@ import { toTimeSpanString } from '@/models/TimeSpanHelper';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RouterHelper from '@/models/RouterHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
-import RecipeMealButton from './RecipeMealButton.vue';
+import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 
 const props = defineProps({
   recipe: {
@@ -69,7 +69,7 @@ onMounted(() => {
       <router-link :to="RouterHelper.editRecipe(recipe)" class="btn btn-primary me-2" type="button">
         Edit
       </router-link>
-      <RecipeMealButton class="me-2" :recipe-id="recipe.id" />
+      <RecipeCurrentMealPlanButton class="me-2" :recipe-id="recipe.id" />
     </div>
     <div class="btn-toolbar mt-3 d-print-none">
       <div class="form-check form-switch mt-">
