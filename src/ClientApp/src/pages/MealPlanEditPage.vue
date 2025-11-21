@@ -299,6 +299,10 @@ async function onRecipeRemoved(recipe: GetMealPlanResponseRecipe) {
 }
 
 const pageTitle = computed(() => {
+  if (isEditingCurrent.value) {
+    return 'Current Meal Plan';
+  }
+
   if (activeMealPlan.value?.id) {
     return '';
   }

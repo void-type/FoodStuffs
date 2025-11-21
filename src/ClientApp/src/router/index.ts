@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
 import { Collapse } from 'bootstrap';
+import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -107,6 +108,19 @@ const router = createRouter({
               name: 'mealPlanNew',
               meta: { title: 'New Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
+            },
+            {
+              path: 'current',
+              name: 'mealPlanCurrent',
+              redirect: () => {
+                const currentMealPlanId = getCurrentMealPlanFromStorage();
+
+                if (currentMealPlanId) {
+                  return { name: 'mealPlanEdit', params: { id: currentMealPlanId } };
+                }
+
+                return { name: 'mealPlanList' };
+              },
             },
           ],
         },
