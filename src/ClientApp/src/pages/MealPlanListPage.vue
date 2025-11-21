@@ -13,6 +13,7 @@ import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import RouterHelper from '@/models/RouterHelper';
+import AppScrollToTop from '@/components/AppScrollToTop.vue';
 
 const props = defineProps({
   query: {
@@ -158,6 +159,7 @@ watch(
       :on-change-take="changeTake"
     />
   </div>
+  <AppScrollToTop />
 </template>
 
 <style lang="scss" scoped>

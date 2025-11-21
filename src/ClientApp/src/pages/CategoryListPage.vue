@@ -14,6 +14,7 @@ import useMessageStore from '@/stores/messageStore';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import type { HttpResponse } from '@/api/http-client';
+import AppScrollToTop from '@/components/AppScrollToTop.vue';
 
 const props = defineProps({
   query: {
@@ -217,6 +218,7 @@ watch(
       :on-change-take="changeTake"
     />
   </div>
+  <AppScrollToTop />
 </template>
 
 <style lang="scss" scoped></style>

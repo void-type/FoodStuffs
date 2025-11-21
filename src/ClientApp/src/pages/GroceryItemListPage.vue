@@ -18,6 +18,7 @@ import type { HttpResponse } from '@/api/http-client';
 import GroceryItemInventoryQuantity from '@/components/GroceryItemInventoryQuantity.vue';
 import GroceryItemSearchStorageLocationsFilter from '@/components/GroceryItemSearchStorageLocationsFilter.vue';
 import GroceryItemSearchGroceryAislesFilter from '@/components/GroceryItemSearchGroceryAislesFilter.vue';
+import AppScrollToTop from '@/components/AppScrollToTop.vue';
 
 const props = defineProps({
   query: {
@@ -609,6 +610,7 @@ watch(
       </div>
     </div>
   </div>
+  <AppScrollToTop />
 </template>
 
 <style lang="scss" scoped></style>

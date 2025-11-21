@@ -11,6 +11,7 @@ import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFil
 import RecipeCard from '@/components/RecipeCard.vue';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import AppScrollToTop from '@/components/AppScrollToTop.vue';
 
 const props = defineProps({
   query: {
@@ -403,6 +404,7 @@ watch(
       </div>
     </div>
   </div>
+  <AppScrollToTop />
 </template>
 
 <style lang="scss" scoped></style>
