@@ -1,64 +1,64 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Web Client (npm run dev)",
-        "request": "launch",
-        "cwd": "${workspaceFolder}/src/ClientApp",
-        "runtimeExecutable": "npm",
-        "runtimeArgs": ["run", "dev"],
-        "type": "node",
-        "presentation": {
-          "hidden": true
-        }
-      },
-      {
-        "name": "Web Client (Chrome debug)",
-        "request": "launch",
-        "type": "chrome",
-        "url": "https://localhost:5001",
-        "webRoot": "${workspaceFolder}/src/ClientApp",
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Web Client (npm run dev)",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/src/ClientApp",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "type": "node",
+      "presentation": {
+        "hidden": true
+      }
+    },
+    {
+      "name": "Web Client (Chrome debug)",
+      "request": "launch",
+      "type": "chrome",
+      "url": "https://localhost:5001",
+      "webRoot": "${workspaceFolder}/src/ClientApp",
         "skipFiles": [
           "**/node_modules/**",
         ],
-        "presentation": {
-          "hidden": true
-        }
-      },
-      {
-        "name": "Web Server",
-        "type": "coreclr",
-        "request": "launch",
-        "preLaunchTask": "build-debug-web",
-        "program": "${workspaceFolder}/src/FoodStuffs.Web/bin/Debug/net9.0/FoodStuffs.Web.dll",
-        "args": [],
-        "cwd": "${workspaceFolder}/src/FoodStuffs.Web",
-        "console": "internalConsole",
-        "stopAtEntry": false,
-        "presentation": {
-          "hidden": false
-        }
-      },
-      {
-        "name": ".NET Core Attach",
-        "type": "coreclr",
-        "request": "attach",
-        "processId": "${command:pickProcess}"
+      "presentation": {
+        "hidden": true
       }
-    ],
-    "compounds": [
-      {
-        "name": "Web",
-        "configurations": [
-          "Web Client (npm run dev)",
-          "Web Server",
-          "Web Client (Chrome debug)"
-        ],
-        "presentation": {
-          "hidden": false,
-          "group": "",
-          "order": 1
-        }
+    },
+    {
+      "name": "Web Server",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-debug-web",
+      "program": "${workspaceFolder}/src/FoodStuffs.Web/bin/Debug/net10.0/FoodStuffs.Web.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FoodStuffs.Web",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "presentation": {
+        "hidden": false
       }
-    ]
-  }
+    },
+    {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Web",
+      "configurations": [
+        "Web Client (npm run dev)",
+        "Web Server",
+        "Web Client (Chrome debug)"
+      ],
+      "presentation": {
+        "hidden": false,
+        "group": "",
+        "order": 1
+      }
+    }
+  ]
+}

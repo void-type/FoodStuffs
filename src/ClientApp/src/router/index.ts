@@ -1,8 +1,8 @@
+import { Collapse } from 'bootstrap';
 import { createRouter, createWebHistory } from 'vue-router';
+import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
-import { Collapse } from 'bootstrap';
-import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -15,7 +15,6 @@ const router = createRouter({
     }
 
     if (savedPosition) {
-      // eslint-disable-next-line no-param-reassign
       savedPosition.behavior = 'instant';
       return savedPosition;
     }
@@ -48,7 +47,7 @@ const router = createRouter({
               path: '',
               name: 'recipeList',
               component: () => import('@/pages/RecipeListPage.vue'),
-              props: (route) => ({ query: route.query }),
+              props: route => ({ query: route.query }),
             },
             {
               path: ':id/:slug?',
@@ -58,7 +57,7 @@ const router = createRouter({
                   path: '',
                   name: 'recipeView',
                   component: () => import('@/pages/RecipeViewPage.vue'),
-                  props: (route) => ({
+                  props: route => ({
                     id: RouterHelper.paramToInt(route.params.id),
                   }),
                 },
@@ -67,7 +66,7 @@ const router = createRouter({
                   name: 'recipeEdit',
                   meta: { title: 'Edit Recipe' },
                   component: () => import('@/pages/RecipeEditPage.vue'),
-                  props: (route) => ({
+                  props: route => ({
                     id: RouterHelper.paramToInt(route.params.id),
                   }),
                 },
@@ -78,7 +77,7 @@ const router = createRouter({
               name: 'recipeNew',
               meta: { title: 'New Recipe' },
               component: () => import('@/pages/RecipeEditPage.vue'),
-              props: (route) => ({
+              props: route => ({
                 copy: +(route.query?.copy || 0),
               }),
             },
@@ -92,14 +91,14 @@ const router = createRouter({
               path: '',
               name: 'mealPlanList',
               component: () => import('@/pages/MealPlanListPage.vue'),
-              props: (route) => ({ query: route.query }),
+              props: route => ({ query: route.query }),
             },
             {
               path: ':id',
               name: 'mealPlanEdit',
               meta: { title: 'Edit Meal Plan' },
               component: () => import('@/pages/MealPlanEditPage.vue'),
-              props: (route) => ({
+              props: route => ({
                 id: RouterHelper.paramToInt(route.params.id),
               }),
             },
@@ -132,14 +131,14 @@ const router = createRouter({
               path: '',
               name: 'categoryList',
               component: () => import('@/pages/CategoryListPage.vue'),
-              props: (route) => ({ query: route.query }),
+              props: route => ({ query: route.query }),
             },
             {
               path: ':id',
               name: 'categoryEdit',
               meta: { title: 'Edit Category' },
               component: () => import('@/pages/CategoryEditPage.vue'),
-              props: (route) => ({
+              props: route => ({
                 id: RouterHelper.paramToInt(route.params.id),
               }),
             },
@@ -159,14 +158,14 @@ const router = createRouter({
               path: '',
               name: 'groceryAisleList',
               component: () => import('@/pages/GroceryAisleListPage.vue'),
-              props: (route) => ({ query: route.query }),
+              props: route => ({ query: route.query }),
             },
             {
               path: ':id',
               name: 'groceryAisleEdit',
               meta: { title: 'Edit Grocery Aisle' },
               component: () => import('@/pages/GroceryAisleEditPage.vue'),
-              props: (route) => ({
+              props: route => ({
                 id: RouterHelper.paramToInt(route.params.id),
               }),
             },
@@ -186,14 +185,14 @@ const router = createRouter({
               path: '',
               name: 'storageLocationList',
               component: () => import('@/pages/StorageLocationListPage.vue'),
-              props: (route) => ({ query: route.query }),
+              props: route => ({ query: route.query }),
             },
             {
               path: ':id',
               name: 'storageLocationEdit',
               meta: { title: 'Edit Storage Location' },
               component: () => import('@/pages/StorageLocationEditPage.vue'),
-              props: (route) => ({
+              props: route => ({
                 id: RouterHelper.paramToInt(route.params.id),
               }),
             },
@@ -213,14 +212,14 @@ const router = createRouter({
               path: '',
               name: 'groceryItemList',
               component: () => import('@/pages/GroceryItemListPage.vue'),
-              props: (route) => ({ query: route.query }),
+              props: route => ({ query: route.query }),
             },
             {
               path: ':id',
               name: 'groceryItemEdit',
               meta: { title: 'Edit Grocery Item' },
               component: () => import('@/pages/GroceryItemEditPage.vue'),
-              props: (route) => ({
+              props: route => ({
                 id: RouterHelper.paramToInt(route.params.id),
               }),
             },

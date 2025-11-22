@@ -1,13 +1,14 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
 import type { SearchRecipesResultItem } from '@/api/data-contracts';
-import { computed, type PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
+import AppSortHandle from './AppSortHandle.vue';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 import TagBadge from './TagBadge.vue';
-import AppSortHandle from './AppSortHandle.vue';
 
 const props = defineProps({
   recipe: { type: Object as PropType<SearchRecipesResultItem>, required: true },
@@ -49,7 +50,7 @@ function flipCard() {
               :loading="imgLazy ? 'lazy' : 'eager'"
               width="1600"
               height="1200"
-            />
+            >
             <ImagePlaceholder v-else class="img-fluid position-absolute top-0 left-0" />
           </div>
         </router-link>
@@ -101,8 +102,9 @@ function flipCard() {
           aria-label="edit recipe"
           :to="RouterHelper.editRecipe(recipe)"
           @click.stop
-          >Edit</router-link
         >
+          Edit
+        </router-link>
         <RecipeCurrentMealPlanButton class="btn-sm" :recipe-id="recipe.id" />
         <div v-if="!props.showCompactView" class="ms-auto">
           <button
@@ -110,7 +112,7 @@ function flipCard() {
             aria-label="flip card"
             @click.stop.prevent="flipCard"
           >
-            <font-awesome-icon icon="fa-rotate" />
+            <FontAwesomeIcon icon="fa-rotate" />
           </button>
         </div>
       </div>

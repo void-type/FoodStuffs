@@ -1,28 +1,26 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import 'bootstrap';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import App from '@/App.vue';
-import router from '@/router';
-import { library, config as fontAwesomeConfig } from '@fortawesome/fontawesome-svg-core';
+import { config as fontAwesomeConfig, library } from '@fortawesome/fontawesome-svg-core';
 import {
   faArrowUp,
-  faRotateRight,
-  faMoon,
-  faSearch,
-  faThumbtack,
-  faRotate,
-  faGripVertical,
-  faPlus,
-  faMinus,
-  faTimes,
   faCheck,
   faDiceThree,
+  faGripVertical,
+  faMinus,
+  faMoon,
   faPalette,
-  faUtensils,
+  faPlus,
+  faRotate,
+  faRotateRight,
+  faSearch,
   faShoppingBasket,
+  faThumbtack,
+  faTimes,
+  faUtensils,
 } from '@fortawesome/free-solid-svg-icons';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+import App from '@/App.vue';
+import router from '@/router';
+import 'bootstrap';
 import 'vue-color/style.css';
 
 // Prevents inline styling to appease CSP.
@@ -43,7 +41,7 @@ library.add(
   faDiceThree,
   faPalette,
   faUtensils,
-  faShoppingBasket
+  faShoppingBasket,
 );
 
 const app = createApp(App);

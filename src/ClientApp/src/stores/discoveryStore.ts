@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia';
-import type { SearchRecipesResultItem, SearchRecipesResponse } from '@/api/data-contracts';
-import RecipesSearchRequest from '@/models/RecipesSearchRequest';
-import ApiHelper from '@/models/ApiHelper';
+import type { SearchRecipesResponse, SearchRecipesResultItem } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
+import { defineStore } from 'pinia';
+import ApiHelper from '@/models/ApiHelper';
+import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import useMessageStore from './messageStore';
 
 interface DiscoveryStoreState {
@@ -46,7 +46,7 @@ export default defineStore('discovery', {
       }
 
       const newItems = results.items.filter(
-        (newItem) => !this.list.some((existingItem) => existingItem.id === newItem.id)
+        newItem => !this.list.some(existingItem => existingItem.id === newItem.id),
       );
 
       if (newItems.length > 0) {
@@ -57,7 +57,7 @@ export default defineStore('discovery', {
     removeFromList(id: number) {
       const list = this.list.slice();
 
-      const indexOfCurrentInRecents = list.findIndex((recentRecipe) => recentRecipe.id === id);
+      const indexOfCurrentInRecents = list.findIndex(recentRecipe => recentRecipe.id === id);
 
       if (indexOfCurrentInRecents > -1) {
         list.splice(indexOfCurrentInRecents, 1);

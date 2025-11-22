@@ -1,17 +1,17 @@
-/* eslint-disable import/no-extraneous-dependencies */
+import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import { spawn } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+import { defineConfig } from 'vite';
 
 /**
  * Retrieves the ASP.NET Core dev certificate paths
  */
 function getDotnetCertPaths() {
-  const baseFolder =
-    process.env.APPDATA !== undefined && process.env.APPDATA !== ''
+  const baseFolder
+    = process.env.APPDATA !== undefined && process.env.APPDATA !== ''
       ? `${process.env.APPDATA}/ASP.NET/https`
       : `${process.env.HOME}/.aspnet/https`;
 
@@ -24,7 +24,7 @@ function getDotnetCertPaths() {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig(async ({ mode }) => {
+export default defineConfig(async ({ command }) => {
   const { baseFolder, cert, key } = getDotnetCertPaths();
 
   // If you have problems with the cert, uncomment these to clean the certs and force their re-gen. Be sure to comment when done.
@@ -36,7 +36,7 @@ export default defineConfig(async ({ mode }) => {
   // }
 
   // Ensure the certificate and key exist
-  if (mode === 'development' && (!fs.existsSync(cert) || !fs.existsSync(key))) {
+  if (command === 'serve') {
     if (!fs.existsSync(baseFolder)) {
       fs.mkdirSync(baseFolder, { recursive: true });
     }
@@ -46,7 +46,7 @@ export default defineConfig(async ({ mode }) => {
       spawn(
         'dotnet',
         ['dev-certs', 'https', '--export-path', cert, '--format', 'Pem', '--no-password'],
-        { stdio: 'inherit' }
+        { stdio: 'inherit' },
       ).on('exit', (code) => {
         resolve(null);
         if (code) {

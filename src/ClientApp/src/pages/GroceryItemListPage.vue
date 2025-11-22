@@ -1,24 +1,26 @@
 <script lang="ts" setup>
-import useAppStore from '@/stores/appStore';
-import useGroceryItemStore from '@/stores/groceryItemStore';
-import { storeToRefs } from 'pinia';
-import { computed, watch, type PropType, ref } from 'vue';
-import { useRouter, useRoute, type LocationQuery } from 'vue-router';
+import type { PropType } from 'vue';
+import type { LocationQuery } from 'vue-router';
+import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
-import EntityTablePager from '@/components/EntityTablePager.vue';
-import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
-import Choices from '@/models/Choices';
-import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
-import ApiHelper from '@/models/ApiHelper';
-import useMessageStore from '@/stores/messageStore';
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import TagBadge from '@/components/TagBadge.vue';
-import type { HttpResponse } from '@/api/http-client';
-import GroceryItemInventoryQuantity from '@/components/GroceryItemInventoryQuantity.vue';
-import GroceryItemSearchStorageLocationsFilter from '@/components/GroceryItemSearchStorageLocationsFilter.vue';
-import GroceryItemSearchGroceryAislesFilter from '@/components/GroceryItemSearchGroceryAislesFilter.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import EntityTablePager from '@/components/EntityTablePager.vue';
+import GroceryItemInventoryQuantity from '@/components/GroceryItemInventoryQuantity.vue';
+import GroceryItemSearchGroceryAislesFilter from '@/components/GroceryItemSearchGroceryAislesFilter.vue';
+import GroceryItemSearchStorageLocationsFilter from '@/components/GroceryItemSearchStorageLocationsFilter.vue';
+import TagBadge from '@/components/TagBadge.vue';
+import ApiHelper from '@/models/ApiHelper';
+import Choices from '@/models/Choices';
+import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
+import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
+import useAppStore from '@/stores/appStore';
+import useGroceryItemStore from '@/stores/groceryItemStore';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   query: {
@@ -139,8 +141,8 @@ function changeSort(event: Event) {
 }
 
 function setListRequestFromQuery() {
-  const storageLocations =
-    props.query.storageLocations
+  const storageLocations
+    = props.query.storageLocations
       ?.toString()
       ?.split(',')
       .flatMap((x) => {
@@ -148,8 +150,8 @@ function setListRequestFromQuery() {
         return n ? [n] : [];
       }) || [];
 
-  const groceryAisles =
-    props.query.groceryAisles
+  const groceryAisles
+    = props.query.groceryAisles
       ?.toString()
       ?.split(',')
       .flatMap((x) => {
@@ -158,8 +160,8 @@ function setListRequestFromQuery() {
       }) || [];
 
   storageLocationsFilterModel.value.storageLocations = storageLocations;
-  storageLocationsFilterModel.value.matchAllStorageLocations =
-    props.query.matchAllStorageLocations === 'true';
+  storageLocationsFilterModel.value.matchAllStorageLocations
+    = props.query.matchAllStorageLocations === 'true';
 
   groceryAislesFilterModel.value.groceryAisles = groceryAisles;
 
@@ -174,11 +176,11 @@ function setListRequestFromQuery() {
 }
 
 const storageLocationFacets = computed(() => {
-  return listFacets.value.find((x) => x.fieldName === 'StorageLocations')?.values || [];
+  return listFacets.value.find(x => x.fieldName === 'StorageLocations')?.values || [];
 });
 
 const groceryAisleFacets = computed(() => {
-  return listFacets.value.find((x) => x.fieldName === 'GroceryAisle')?.values || [];
+  return listFacets.value.find(x => x.fieldName === 'GroceryAisle')?.values || [];
 });
 
 function getOutOfStockFacetCount(facetValue: boolean | null) {
@@ -186,10 +188,11 @@ function getOutOfStockFacetCount(facetValue: boolean | null) {
     return null;
   }
 
-  const count =
-    groceryItemStore.listFacets
-      .find((x) => x.fieldName === 'IsOutOfStock')
-      ?.values?.find((x) => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
+  const count
+    = groceryItemStore.listFacets
+      .find(x => x.fieldName === 'IsOutOfStock')
+      ?.values
+      ?.find(x => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
       ?.count || 0;
 
   return ` (${count})`;
@@ -200,10 +203,11 @@ function getUnusedFacetCount(facetValue: boolean | null) {
     return null;
   }
 
-  const count =
-    groceryItemStore.listFacets
-      .find((x) => x.fieldName === 'IsUnused')
-      ?.values?.find((x) => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
+  const count
+    = groceryItemStore.listFacets
+      .find(x => x.fieldName === 'IsUnused')
+      ?.values
+      ?.find(x => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
       ?.count || 0;
 
   return ` (${count})`;
@@ -216,7 +220,7 @@ async function onDeleteGroceryItem(id: number | null | undefined) {
     }
 
     try {
-      const response = await api().groceryItemsDelete(id);
+      const response = await api().groceryItemsDelete({ id });
       await groceryItemStore.fetchGroceryItemsList();
 
       if (response.data.message) {
@@ -256,7 +260,7 @@ watch(
       navigateSearch(false);
     }
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
@@ -278,7 +282,7 @@ watch(
       navigateSearch(false);
     }
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
@@ -287,7 +291,7 @@ watch(
     setListRequestFromQuery();
     await groceryItemStore.fetchGroceryItemsList();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
@@ -299,8 +303,9 @@ watch(
       <router-link
         class="d-inline-flex p-2 m-1"
         :to="{ hash: '#search-results', query: route.query }"
-        >Skip to search results</router-link
       >
+        Skip to search results
+      </router-link>
     </div>
 
     <!-- Two column layout -->
@@ -343,7 +348,7 @@ watch(
                         name="isUnusedDesktop"
                         :value="option.value"
                         @change="startSearchNoHash"
-                      />
+                      >
                       <label class="form-check-label" :for="`isUnusedDesktop-${option.value}`">
                         {{ option.text }}{{ getUnusedFacetCount(option.value) }}
                       </label>
@@ -385,7 +390,7 @@ watch(
                         name="isOutOfStockDesktop"
                         :value="option.value"
                         @change="startSearchNoHash"
-                      />
+                      >
                       <label class="form-check-label" :for="`isOutOfStockDesktop-${option.value}`">
                         {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
                       </label>
@@ -423,7 +428,7 @@ watch(
               enterkeyhint="search"
               class="form-control"
               @keydown.stop.prevent.enter="startSearch"
-            />
+            >
           </div>
           <div class="g-col-12 g-col-md-3">
             <label for="groceryItemSort" class="form-label">Sort</label>
@@ -482,7 +487,7 @@ watch(
                           name="isUnused"
                           :value="option.value"
                           @change="startSearchNoHash"
-                        />
+                        >
                         <label class="form-check-label" :for="`isUnused-${option.value}`">
                           {{ option.text }}{{ getUnusedFacetCount(option.value) }}
                         </label>
@@ -524,7 +529,7 @@ watch(
                           name="isOutOfStock"
                           :value="option.value"
                           @change="startSearchNoHash"
-                        />
+                        >
                         <label class="form-check-label" :for="`isOutOfStock-${option.value}`">
                           {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
                         </label>
@@ -554,9 +559,13 @@ watch(
           <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
             Clear
           </button>
-          <router-link :to="{ name: 'groceryItemNew' }" class="btn btn-secondary">New</router-link>
+          <router-link :to="{ name: 'groceryItemNew' }" class="btn btn-secondary">
+            New
+          </router-link>
         </div>
-        <div id="search-results" class="mt-3">{{ resultCountText }}</div>
+        <div id="search-results" class="mt-3">
+          {{ resultCountText }}
+        </div>
         <div class="grid mt-4">
           <div
             v-for="groceryItem in listResponse.items"

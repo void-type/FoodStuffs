@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-import { watch, ref } from 'vue';
-import StarterKit from '@tiptap/starter-kit';
 import Typography from '@tiptap/extension-typography';
-import { useEditor, EditorContent, Extension, textInputRule } from '@tiptap/vue-3';
-
-const model = defineModel<string | null | undefined>();
+import StarterKit from '@tiptap/starter-kit';
+import { EditorContent, Extension, textInputRule, useEditor } from '@tiptap/vue-3';
+import { ref, watch } from 'vue';
 
 defineProps({
   id: {
@@ -17,6 +15,8 @@ defineProps({
     default: () => ['h1', 'h2', 'h6', 'clearMarks', 'clearNodes', 'blockquote', 'codeBlock'],
   },
 });
+
+const model = defineModel<string | null | undefined>();
 
 // We'll do our own fractions.
 Typography.options.oneHalf = false;
@@ -39,7 +39,7 @@ const CustomReplacer = Extension.create({
       textInputRule({ find: /(?:^|\s)(7\/8)\s$/, replace: '⅞' }),
 
       // Degrees
-      textInputRule({ find: /(?:^|\s)[0-9]+(deg)\s$/, replace: '°' }),
+      textInputRule({ find: /(?:^|\s)\d+(deg)\s$/, replace: '°' }),
     ];
   },
 });
@@ -65,7 +65,7 @@ watch(
     }
 
     editor.value?.commands?.setContent(value || '', false);
-  }
+  },
 );
 
 const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
@@ -256,7 +256,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </button>
       </div>
     </div>
-    <editor-content :id="id" class="rich-text" :editor="editor" />
+    <EditorContent :id="id" class="rich-text" :editor="editor" />
   </div>
   <div v-else>
     <div class="editor-toolbars pb-2">

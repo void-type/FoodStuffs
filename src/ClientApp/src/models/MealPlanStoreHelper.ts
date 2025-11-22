@@ -2,8 +2,8 @@ import type {
   MealPlansListParams,
   SaveMealPlanRequestExcludedGroceryItem,
 } from '@/api/data-contracts';
-import MealPlansListRequest from './MealPlansListRequest';
 import { isNil } from './FormatHelper';
+import MealPlansListRequest from './MealPlansListRequest';
 
 const settingsKeyCurrentMealPlanId = 'currentMealPlanId';
 
@@ -39,7 +39,7 @@ export function listRequestToQueryParams(listRequest: MealPlansListParams) {
 
 export function countGroceryItems(
   acc: SaveMealPlanRequestExcludedGroceryItem[],
-  curr: SaveMealPlanRequestExcludedGroceryItem
+  curr: SaveMealPlanRequestExcludedGroceryItem,
 ) {
   const { id, quantity } = curr;
 
@@ -47,7 +47,7 @@ export function countGroceryItems(
     return acc;
   }
 
-  let match = acc.find((x) => x.id === id);
+  let match = acc.find(x => x.id === id);
 
   if (!match) {
     match = { id, quantity: 0 };
@@ -65,9 +65,9 @@ export function countGroceryItems(
 export function addGroceryItem(
   groceryItems: SaveMealPlanRequestExcludedGroceryItem[],
   id: number,
-  count = 1
+  count = 1,
 ) {
-  let groceryItem = groceryItems.find((x) => x.id === id);
+  let groceryItem = groceryItems.find(x => x.id === id);
 
   if (!groceryItem) {
     groceryItem = { id, quantity: 0 };
@@ -84,9 +84,9 @@ export function addGroceryItem(
 export function subtractGroceryItem(
   groceryItems: SaveMealPlanRequestExcludedGroceryItem[],
   id: number,
-  count = 1
+  count = 1,
 ) {
-  const groceryItem = groceryItems.find((x) => x.id === id);
+  const groceryItem = groceryItems.find(x => x.id === id);
 
   if (!groceryItem) {
     return;

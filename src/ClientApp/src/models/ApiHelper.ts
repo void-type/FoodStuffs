@@ -1,5 +1,5 @@
-import { Api } from '../api/Api';
 import type { ApiConfig } from '../api/http-client';
+import { Api } from '../api/Api';
 
 const defaultHeaders: Record<string, string> = {};
 

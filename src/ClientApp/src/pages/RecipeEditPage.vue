@@ -1,33 +1,34 @@
 <script lang="ts" setup>
-import { watch, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
-import {
-  onBeforeRouteLeave,
-  onBeforeRouteUpdate,
-  useRoute,
-  useRouter,
-  type NavigationGuardNext,
-  type RouteLocationNormalized,
-} from 'vue-router';
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import type {
+  EntityResponseOfGetRecipeResponse,
   GetRecipeResponse,
   IItemSetOfIFailure,
-  EntityResponseOfGetRecipeResponse,
 } from '@/api/data-contracts';
-import useAppStore from '@/stores/appStore';
-import useRecipeStore from '@/stores/recipeStore';
-import useDiscoveryStore from '@/stores/discoveryStore';
-import RecipeImageManager from '@/components/RecipeImageManager.vue';
-import RecipeEditor from '@/components/RecipeEditor.vue';
-import RecipeGetResponse from '@/models/RecipeGetResponse';
-import type { ModalParameters } from '@/models/ModalParameters';
-import ApiHelper from '@/models/ApiHelper';
 import type { HttpResponse } from '@/api/http-client';
-import { clamp } from '@/models/FormatHelper';
-import RouterHelper from '@/models/RouterHelper';
-import useMessageStore from '@/stores/messageStore';
+import type { ModalParameters } from '@/models/ModalParameters';
+import type RecipeWorking from '@/models/RecipeWorking';
+import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
+import {
+
+  onBeforeRouteLeave,
+  onBeforeRouteUpdate,
+
+  useRoute,
+  useRouter,
+} from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import type RecipeWorking from '@/models/RecipeWorking';
+import RecipeEditor from '@/components/RecipeEditor.vue';
+import RecipeImageManager from '@/components/RecipeImageManager.vue';
+import ApiHelper from '@/models/ApiHelper';
+import { clamp } from '@/models/FormatHelper';
+import RecipeGetResponse from '@/models/RecipeGetResponse';
+import RouterHelper from '@/models/RouterHelper';
+import useAppStore from '@/stores/appStore';
+import useDiscoveryStore from '@/stores/discoveryStore';
+import useMessageStore from '@/stores/messageStore';
+import useRecipeStore from '@/stores/recipeStore';
 
 const props = defineProps({
   id: {
@@ -103,7 +104,7 @@ async function fetchRecipe() {
   const id = isCreateCopyMode.value ? props.copy : props.id;
 
   try {
-    const response = await api().recipesGet(id);
+    const response = await api().recipesGet({ id });
     data.recipeChangeToken += 1;
     setSources(response.data);
     if (isEditMode.value) {
@@ -117,7 +118,7 @@ async function fetchRecipe() {
 
 async function fetchImages(recipeId: number) {
   try {
-    const response = await api().recipesGet(recipeId);
+    const response = await api().recipesGet({ id: recipeId });
     setImageSources(response.data);
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -126,7 +127,7 @@ async function fetchImages(recipeId: number) {
 
 async function onRecipeSave(recipe: RecipeWorking) {
   async function onPostSave(
-    response: HttpResponse<EntityResponseOfGetRecipeResponse, IItemSetOfIFailure>
+    response: HttpResponse<EntityResponseOfGetRecipeResponse, IItemSetOfIFailure>,
   ) {
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
@@ -142,7 +143,7 @@ async function onRecipeSave(recipe: RecipeWorking) {
   try {
     const response = await api().recipesSave({
       ...recipe,
-      categories: recipe.categories.map((x) => x.name || ''),
+      categories: recipe.categories.map(x => x.name || ''),
     });
     data.isRecipeDirty = false;
 
@@ -161,7 +162,7 @@ async function onRecipeSave(recipe: RecipeWorking) {
 function onRecipeDelete(id: number) {
   function deleteRecipe() {
     api()
-      .recipesDelete(id)
+      .recipesDelete({ id })
       .then(async (response) => {
         discoveryStore.removeFromList(props.id);
         recipeStore.removeFromRecent(props.id);
@@ -213,7 +214,7 @@ function onImageUpload(file: File) {
 function onImageDelete(name: string) {
   function deleteImage() {
     api()
-      .imagesDelete(name)
+      .imagesDelete({ name })
       .then(async (response) => {
         if (response.data.message) {
           messageStore.setSuccessMessage(response.data.message);
@@ -222,7 +223,7 @@ function onImageDelete(name: string) {
         const suggestedImageIndex = clamp(
           data.sourceImages.indexOf(name) - 1,
           0,
-          data.sourceImages.length - 1
+          data.sourceImages.length - 1,
         );
         data.suggestedImage = data.sourceImages[suggestedImageIndex] || null;
         fetchImages(props.id);
@@ -244,7 +245,7 @@ function onImageDelete(name: string) {
 
 function onImagePin(name: string) {
   api()
-    .imagesPin(name)
+    .imagesPin({ name })
     .then(async (response) => {
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
@@ -263,7 +264,7 @@ watch(
   () => {
     fetchRecipe();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 let forceImmediateRouteChange = false;
@@ -279,7 +280,7 @@ function changeRouteFromModal(t: RouteLocationNormalized) {
 function beforeRouteChange(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   if (forceImmediateRouteChange) {
     next();
@@ -315,7 +316,7 @@ function handleBeforeUnload(event: BeforeUnloadEvent) {
   if (data.isRecipeDirty) {
     event.preventDefault();
     // Required for Chrome to show the confirmation dialog
-    // eslint-disable-next-line no-param-reassign
+
     event.returnValue = '';
     // Required for Firefox to show the confirmation dialog
     return '';

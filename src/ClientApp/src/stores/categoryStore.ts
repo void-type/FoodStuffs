@@ -1,10 +1,10 @@
 import type { CategoriesListParams, IItemSetOfListCategoriesResponse } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
-import ApiHelper from '@/models/ApiHelper';
-import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
+import ApiHelper from '@/models/ApiHelper';
 import CategoriesListRequest from '@/models/CategoriesListRequest';
 import CategoryStoreHelper from '@/models/CategoryStoreHelper';
+import Choices from '@/models/Choices';
 import useMessageStore from './messageStore';
 
 interface CategoryStoreState {

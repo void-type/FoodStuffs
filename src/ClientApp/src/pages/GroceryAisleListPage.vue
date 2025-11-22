@@ -1,20 +1,22 @@
 <script lang="ts" setup>
-import useAppStore from '@/stores/appStore';
-import useGroceryAisleStore from '@/stores/groceryAisleStore';
-import { storeToRefs } from 'pinia';
-import { computed, watch, type PropType } from 'vue';
-import { useRouter, type LocationQuery } from 'vue-router';
+import type { PropType } from 'vue';
+import type { LocationQuery } from 'vue-router';
+import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
-import EntityTablePager from '@/components/EntityTablePager.vue';
-import { toInt, toNumber } from '@/models/FormatHelper';
-import Choices from '@/models/Choices';
-import GroceryAislesListRequest from '@/models/GroceryAislesListRequest';
-import ApiHelper from '@/models/ApiHelper';
-import useMessageStore from '@/stores/messageStore';
+import { storeToRefs } from 'pinia';
+import { computed, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import type { HttpResponse } from '@/api/http-client';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import EntityTablePager from '@/components/EntityTablePager.vue';
+import ApiHelper from '@/models/ApiHelper';
+import Choices from '@/models/Choices';
+import { toInt, toNumber } from '@/models/FormatHelper';
+import GroceryAislesListRequest from '@/models/GroceryAislesListRequest';
+import useAppStore from '@/stores/appStore';
+import useGroceryAisleStore from '@/stores/groceryAisleStore';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   query: {
@@ -109,7 +111,7 @@ async function onDeleteGroceryAisle(id: number | null | undefined) {
     }
 
     try {
-      const response = await api().groceryAislesDelete(id);
+      const response = await api().groceryAislesDelete({ id });
       await groceryAisleStore.fetchGroceryAislesList();
 
       if (response.data.message) {
@@ -135,7 +137,7 @@ watch(
     setListRequestFromQuery();
     await groceryAisleStore.fetchGroceryAislesList();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
@@ -152,7 +154,7 @@ watch(
             v-model="listRequest.name"
             class="form-control"
             @keydown.stop.prevent.enter="startSearch"
-          />
+          >
         </div>
         <div class="g-col-6 g-col-md-3">
           <label class="form-label" for="isUnused">Unused</label>
@@ -179,13 +181,17 @@ watch(
         <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
           Clear
         </button>
-        <router-link :to="{ name: 'groceryAisleNew' }" class="btn btn-secondary">New</router-link>
+        <router-link :to="{ name: 'groceryAisleNew' }" class="btn btn-secondary">
+          New
+        </router-link>
       </div>
     </div>
-    <div class="mt-3">{{ resultCountText }}</div>
+    <div class="mt-3">
+      {{ resultCountText }}
+    </div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
-      :class="{ 'table mt-4': true, 'table-dark': useDarkMode }"
+      class="table mt-4" :class="{ 'table-dark': useDarkMode }"
     >
       <thead>
         <tr>

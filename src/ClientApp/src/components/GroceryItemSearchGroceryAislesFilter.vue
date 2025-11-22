@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type { ListGroceryAislesResponse, SearchFacetValue } from '@/api/data-contracts';
+import { onMounted, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
-import { ref, onMounted, type PropType } from 'vue';
-import useMessageStore from '@/stores/messageStore';
-import { type ListGroceryAislesResponse, type SearchFacetValue } from '@/api/data-contracts';
 import { toNumberOrNull } from '@/models/FormatHelper';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   facetValues: {
@@ -46,7 +47,7 @@ function getFacetCount(facetValue: number | null | undefined) {
     return null;
   }
 
-  const count = props.facetValues?.find((x) => x.fieldValue === facetValue.toString())?.count || 0;
+  const count = props.facetValues?.find(x => x.fieldValue === facetValue.toString())?.count || 0;
 
   return ` (${count})`;
 }
@@ -57,7 +58,7 @@ onMounted(() => {
     .then((response) => {
       groceryAisleOptions.value = response.data.items || [];
     })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+    .catch(response => messageStore.setApiFailureMessages(response));
 });
 </script>
 
@@ -72,8 +73,7 @@ onMounted(() => {
         aria-expanded="false"
         aria-controls="groceryAislesCollapse"
       >
-        <label for="groceryAisleSearch"
-          >Grocery Aisles
+        <label for="groceryAisleSearch">Grocery Aisles
           <span v-if="model.groceryAisles.length">
             ({{ model.groceryAisles.length }} selected)
           </span>
@@ -110,7 +110,7 @@ onMounted(() => {
               class="form-check-input"
               type="checkbox"
               :value="groceryAisleOption.id"
-            />
+            >
             <label class="form-check-label" :for="`groceryAisle-${groceryAisleOption.id}`">
               {{ groceryAisleOption.name }}{{ getFacetCount(groceryAisleOption.id) }}
             </label>

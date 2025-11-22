@@ -1,6 +1,3 @@
-/* eslint-disable */
-/* tslint:disable */
-// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -779,6 +776,22 @@ export interface CategoriesListParams {
   take?: number;
 }
 
+export interface CategoriesGetParams {
+  /**
+   * The ID of the category to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface CategoriesDeleteParams {
+  /**
+   * The ID of the category
+   * @format int32
+   */
+  id: number;
+}
+
 export interface GroceryAislesListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
@@ -801,6 +814,22 @@ export interface GroceryAislesListParams {
    * @default 30
    */
   take?: number;
+}
+
+export interface GroceryAislesGetParams {
+  /**
+   * The ID of the grocery aisle to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface GroceryAislesDeleteParams {
+  /**
+   * The ID of the grocery aisle
+   * @format int32
+   */
+  id: number;
 }
 
 export interface GroceryItemsSearchParams {
@@ -858,12 +887,43 @@ export interface GroceryItemsSuggestParams {
   take?: number;
 }
 
+export interface GroceryItemsGetParams {
+  /**
+   * The ID of the grocery item to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface GroceryItemsDeleteParams {
+  /**
+   * The ID of the grocery item
+   * @format int32
+   */
+  id: number;
+}
+
+export interface ImagesGetParams {
+  /** The name of the image to download */
+  name: string;
+}
+
+export interface ImagesDeleteParams {
+  /** The name of the image to delete */
+  name: string;
+}
+
 export interface ImagesUploadParams {
   /**
    * The ID of the recipe of which the image belongs to
    * @format int32
    */
   recipeId?: number;
+}
+
+export interface ImagesPinParams {
+  /** The name of the image to pin */
+  name: string;
 }
 
 export interface MealPlansListParams {
@@ -884,6 +944,22 @@ export interface MealPlansListParams {
    * @default 30
    */
   take?: number;
+}
+
+export interface MealPlansGetParams {
+  /**
+   * The ID of the meal plan to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface MealPlansDeleteParams {
+  /**
+   * The ID of the meal plan
+   * @format int32
+   */
+  id: number;
 }
 
 export interface RecipesSearchParams {
@@ -937,6 +1013,22 @@ export interface RecipesSuggestParams {
   take?: number;
 }
 
+export interface RecipesGetParams {
+  /**
+   * The ID of the recipe to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface RecipesDeleteParams {
+  /**
+   * The ID of the recipe
+   * @format int32
+   */
+  id: number;
+}
+
 export interface StorageLocationsListParams {
   /** Name contains (case-insensitive) */
   name?: string | null;
@@ -959,4 +1051,20 @@ export interface StorageLocationsListParams {
    * @default 30
    */
   take?: number;
+}
+
+export interface StorageLocationsGetParams {
+  /**
+   * The ID of the storage location to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface StorageLocationsDeleteParams {
+  /**
+   * The ID of the storage location
+   * @format int32
+   */
+  id: number;
 }

@@ -27,6 +27,6 @@ export function toTimeSpanString(totalMinutes: number) {
     stringifyUnit(clampHours(totalMinutes), 'hour', 'hours'),
     stringifyUnit(clampMinutes(totalMinutes), 'minute', 'minutes'),
   ]
-    .filter((v) => v !== null && v !== '')
+    .filter(v => v !== null && v !== '')
     .join(' and ');
 }

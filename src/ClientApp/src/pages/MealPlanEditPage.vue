@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import useMealPlanStore from '@/stores/mealPlanStore';
-import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
-import MealPlanGroceryItemList from '@/components/MealPlanGroceryItemList.vue';
-import useMessageStore from '@/stores/messageStore';
-import ApiHelper from '@/models/ApiHelper';
-import { VueDraggable } from 'vue-draggable-plus';
 import type {
-  ListGroceryAislesResponse,
-  GetMealPlanResponseRecipe,
-  SearchGroceryItemsResultItem,
   GetMealPlanResponseExcludedGroceryItem,
+  GetMealPlanResponseRecipe,
+  ListGroceryAislesResponse,
+  SearchGroceryItemsResultItem,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
-import useAppStore from '@/stores/appStore';
+import { storeToRefs } from 'pinia';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+import { useRouter } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import { useRouter } from 'vue-router';
+import MealPlanGroceryItemList from '@/components/MealPlanGroceryItemList.vue';
+import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
+import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
+import useAppStore from '@/stores/appStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -43,32 +43,32 @@ const isEditingCurrent = computed(() => (props.id || 0) === currentMealPlan.valu
 
 // Use the appropriate meal plan based on whether we're editing current or a specific one
 const activeMealPlan = computed(() =>
-  isEditingCurrent.value ? currentMealPlan.value : editingMealPlan.value
+  isEditingCurrent.value ? currentMealPlan.value : editingMealPlan.value,
 );
 
 const completedRecipes = computed({
   get() {
-    return activeMealPlan.value?.recipes?.filter((recipe) => recipe.isComplete) || [];
+    return activeMealPlan.value?.recipes?.filter(recipe => recipe.isComplete) || [];
   },
   set(value) {
     if (activeMealPlan.value === undefined || activeMealPlan.value === null) {
       return;
     }
-    const incompleteList =
-      activeMealPlan.value.recipes?.filter((recipe) => !recipe.isComplete) || [];
+    const incompleteList
+      = activeMealPlan.value.recipes?.filter(recipe => !recipe.isComplete) || [];
     activeMealPlan.value.recipes = [...value, ...incompleteList];
   },
 });
 
 const incompleteRecipes = computed({
   get() {
-    return activeMealPlan.value?.recipes?.filter((recipe) => !recipe.isComplete) || [];
+    return activeMealPlan.value?.recipes?.filter(recipe => !recipe.isComplete) || [];
   },
   set(value) {
     if (activeMealPlan.value === undefined || activeMealPlan.value === null) {
       return;
     }
-    const completedList = activeMealPlan.value.recipes?.filter((recipe) => recipe.isComplete) || [];
+    const completedList = activeMealPlan.value.recipes?.filter(recipe => recipe.isComplete) || [];
     activeMealPlan.value.recipes = [...completedList, ...value];
   },
 });
@@ -80,10 +80,12 @@ const shoppingList = computed(() => {
 
   // Calculate shopping list for editing meal plan
   const groceryItemCounts = (activeMealPlan.value?.recipes || [])
-    .flatMap((c) => c.groceryItems || [])
+    .flatMap(c => c.groceryItems || [])
     .reduce((acc, item) => {
-      if (!item.id) return acc;
-      const existing = acc.find((x) => x.id === item.id);
+      if (!item.id) {
+        return acc;
+      }
+      const existing = acc.find(x => x.id === item.id);
       if (existing) {
         existing.quantity = (existing.quantity || 0) + (item.quantity || 0);
       } else {
@@ -93,14 +95,16 @@ const shoppingList = computed(() => {
     }, [] as Array<GetMealPlanResponseExcludedGroceryItem>);
 
   (activeMealPlan.value?.excludedGroceryItems || []).forEach((x) => {
-    if (!x.id) return;
-    const existing = groceryItemCounts.find((item) => item.id === x.id);
+    if (!x.id) {
+      return;
+    }
+    const existing = groceryItemCounts.find(item => item.id === x.id);
     if (existing) {
       existing.quantity = Math.max(0, (existing.quantity || 0) - (x.quantity || 0));
     }
   });
 
-  return groceryItemCounts.filter((item) => (item.quantity || 0) > 0);
+  return groceryItemCounts.filter(item => (item.quantity || 0) > 0);
 });
 
 const pantry = computed(() => {
@@ -132,7 +136,7 @@ async function addToPantry(id: number) {
     if (!activeMealPlan.value.excludedGroceryItems) {
       activeMealPlan.value.excludedGroceryItems = [];
     }
-    const existing = activeMealPlan.value.excludedGroceryItems.find((x) => x.id === id);
+    const existing = activeMealPlan.value.excludedGroceryItems.find(x => x.id === id);
     if (existing) {
       existing.quantity = (existing.quantity || 0) + 1;
     } else {
@@ -147,13 +151,15 @@ async function removeFromPantry(id: number) {
     await mealPlanStore.removeFromCurrentPantry(id);
   } else {
     // Remove from editing meal plan pantry
-    if (!activeMealPlan.value.excludedGroceryItems) return;
-    const existing = activeMealPlan.value.excludedGroceryItems.find((x) => x.id === id);
+    if (!activeMealPlan.value.excludedGroceryItems) {
+      return;
+    }
+    const existing = activeMealPlan.value.excludedGroceryItems.find(x => x.id === id);
     if (existing) {
       existing.quantity = Math.max(0, (existing.quantity || 0) - 1);
       if (existing.quantity === 0) {
-        activeMealPlan.value.excludedGroceryItems =
-          activeMealPlan.value.excludedGroceryItems.filter((x) => x.id !== id);
+        activeMealPlan.value.excludedGroceryItems
+          = activeMealPlan.value.excludedGroceryItems.filter(x => x.id !== id);
       }
     }
     await onSaveMealPlan(true);
@@ -205,15 +211,15 @@ async function fetchGroceryItems() {
   try {
     // TODO: use suggestion endpoint because this will be a huge response.
     const response = await api().groceryItemsSearch({ isPagingEnabled: false });
-    groceryItemOptions.value = (response.data.results?.items ||
-      []) as Array<SearchGroceryItemsResultItem>;
+    groceryItemOptions.value = (response.data.results?.items
+      || []) as Array<SearchGroceryItemsResultItem>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
 }
 
 function findGroceryItem(id: number | undefined) {
-  return groceryItemOptions.value.find((x) => x.id === id);
+  return groceryItemOptions.value.find(x => x.id === id);
 }
 
 const groceryAisleOptions = ref([] as Array<ListGroceryAislesResponse>);
@@ -228,7 +234,7 @@ async function fetchGroceryAisles() {
 }
 
 function findGroceryAisle(id: number | undefined) {
-  return groceryAisleOptions.value.find((x) => x.id === id);
+  return groceryAisleOptions.value.find(x => x.id === id);
 }
 
 function updateOrdersByIndex() {
@@ -240,12 +246,10 @@ function updateOrdersByIndex() {
   const incomplete = incompleteRecipes.value;
 
   completed.forEach((x, i) => {
-    // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
   });
 
   incomplete.forEach((x, i) => {
-    // eslint-disable-next-line no-param-reassign
     x.order = completed.length + i + 1;
   });
 }
@@ -262,7 +266,6 @@ function onSortEnd() {
 }
 
 function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
-  // eslint-disable-next-line no-param-reassign
   recipe.isComplete = !recipe.isComplete;
 
   updateOrdersByIndex();
@@ -292,7 +295,7 @@ async function onRecipeRemoved(recipe: GetMealPlanResponseRecipe) {
     return;
   }
 
-  activeMealPlan.value.recipes = activeMealPlan.value.recipes.filter((r) => r.id !== recipe.id);
+  activeMealPlan.value.recipes = activeMealPlan.value.recipes.filter(r => r.id !== recipe.id);
 
   updateOrdersByIndex();
   await onSaveMealPlan(true);
@@ -318,7 +321,7 @@ const sidesNeeded = computed(() => {
   return (
     activeMealPlan.value.recipes?.reduce(
       (acc, recipe) => acc + (recipe.mealPlanningSidesCount || 0),
-      0
+      0,
     ) || 0
   );
 });
@@ -331,8 +334,8 @@ const sidesHave = computed(() => {
   // Count how many sides are included in the meal plan. A side is recipe with Category that looks like {name: 'Side'}
   return (
     activeMealPlan.value.recipes?.reduce(
-      (acc, recipe) => acc + (recipe.categories?.some((cat) => cat.name === 'Side') ? 1 : 0),
-      0
+      (acc, recipe) => acc + (recipe.categories?.some(cat => cat.name === 'Side') ? 1 : 0),
+      0,
     ) || 0
   );
 });
@@ -345,7 +348,7 @@ watch(
       mealPlanStore.fetchMealPlan(props.id);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(async () => {
@@ -410,7 +413,7 @@ onMounted(async () => {
             v-model="activeMealPlan.name"
             class="form-control"
             @keydown.stop.prevent.enter="() => onSaveMealPlan()"
-          />
+          >
         </div>
       </div>
       <div class="form-check form-switch mt-3">
@@ -421,14 +424,16 @@ onMounted(async () => {
           :checked="showSortHandle"
           class="form-check-input"
           type="checkbox"
-        />
+        >
       </div>
       <div class="mt-4">
         <div v-if="(incompleteRecipes?.length || 0) < 1" class="grid mt-3">
-          <div class="g-col-12 p-4 text-center">None selected</div>
+          <div class="g-col-12 p-4 text-center">
+            None selected
+          </div>
         </div>
         <div>
-          <vue-draggable
+          <VueDraggable
             v-model="incompleteRecipes"
             :animation="200"
             group="incomplete"
@@ -448,7 +453,7 @@ onMounted(async () => {
               @recipe-completed="onRecipeCompleted"
               @recipe-removed="onRecipeRemoved"
             />
-          </vue-draggable>
+          </VueDraggable>
         </div>
       </div>
       <div
@@ -474,7 +479,7 @@ onMounted(async () => {
             class="accordion-collapse collapse"
             data-bs-parent="#completedAccordion"
           >
-            <vue-draggable
+            <VueDraggable
               v-model="completedRecipes"
               :animation="200"
               group="completed"
@@ -492,11 +497,13 @@ onMounted(async () => {
                 class="g-col-12 g-col-lg-6"
                 @recipe-completed="onRecipeCompleted"
               />
-            </vue-draggable>
+            </VueDraggable>
           </div>
         </div>
       </div>
-      <h2 class="mt-4">Lists</h2>
+      <h2 class="mt-4">
+        Lists
+      </h2>
       <div>Click an item to move it between lists.</div>
       <div class="grid mt-3 gap-sm">
         <div class="g-col-12 g-col-md-6">

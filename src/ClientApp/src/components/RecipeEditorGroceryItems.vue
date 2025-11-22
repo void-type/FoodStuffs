@@ -1,20 +1,16 @@
 <script lang="ts" setup>
-import { Collapse } from 'bootstrap';
-import { ref, computed, nextTick, onMounted, onBeforeUnmount, type PropType } from 'vue';
-import { VueDraggable } from 'vue-draggable-plus';
+import type { PropType } from 'vue';
+import type { SearchGroceryItemsResultItem } from '@/api/data-contracts';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { Collapse } from 'bootstrap';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
 import { clamp } from '@/models/FormatHelper';
 import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
-import type { SearchGroceryItemsResultItem } from '@/api/data-contracts';
-import RecipeEditorGroceryItemSelect from './RecipeEditorGroceryItemSelect.vue';
-import AppSortHandle from './AppSortHandle.vue';
 import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
+import AppSortHandle from './AppSortHandle.vue';
 import GroceryItemInventoryQuantity from './GroceryItemInventoryQuantity.vue';
-
-const model = defineModel({
-  type: Array as PropType<Array<RecipeGroceryItemWorking>>,
-  required: true,
-});
+import RecipeEditorGroceryItemSelect from './RecipeEditorGroceryItemSelect.vue';
 
 const props = defineProps({
   isFieldInError: {
@@ -30,6 +26,11 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+});
+
+const model = defineModel({
+  type: Array as PropType<Array<RecipeGroceryItemWorking>>,
+  required: true,
 });
 
 function showInAccordion(index: number, focus: boolean = false) {
@@ -66,22 +67,21 @@ function onNewClick(itemId: number | null) {
 
 function updateOrdersByIndex() {
   model.value.forEach((x, i) => {
-    // eslint-disable-next-line no-param-reassign
     x.order = i + 1;
   });
 }
 
 function onDeleteClick(uiKey: string) {
-  const index = model.value.findIndex((x) => x.uiKey === uiKey);
+  const index = model.value.findIndex(x => x.uiKey === uiKey);
   model.value.splice(index, 1);
   updateOrdersByIndex();
   showInAccordion(index);
 }
 
-const usedIds = computed(() => model.value.map((x) => x.id));
+const usedIds = computed(() => model.value.map(x => x.id));
 
 function getGroceryItem(id: number | undefined) {
-  return props.suggestions.find((x) => x.id === id);
+  return props.suggestions.find(x => x.id === id);
 }
 
 function onSortEnd() {
@@ -101,14 +101,18 @@ function onShow(event: Event) {
 }
 
 function getInventoryQuantity(itemId: number | undefined) {
-  if (!itemId) return 0;
-  const groceryItem = props.suggestions.find((x) => x.id === itemId);
+  if (!itemId) {
+    return 0;
+  }
+  const groceryItem = props.suggestions.find(x => x.id === itemId);
   return groceryItem?.inventoryQuantity ?? 0;
 }
 
 function setInventoryQuantity(itemId: number | undefined, quantity: number) {
-  if (!itemId) return;
-  const groceryItem = props.suggestions.find((x) => x.id === itemId);
+  if (!itemId) {
+    return;
+  }
+  const groceryItem = props.suggestions.find(x => x.id === itemId);
   if (groceryItem) {
     groceryItem.inventoryQuantity = quantity;
   }
@@ -134,7 +138,7 @@ onBeforeUnmount(() => {
     <div v-if="model.length < 1" id="grocery-item-list" class="card p-4 text-center border">
       No grocery items.
     </div>
-    <vue-draggable
+    <VueDraggable
       v-else
       id="grocery-item-list"
       v-model="model"
@@ -197,8 +201,9 @@ onBeforeUnmount(() => {
               <router-link
                 :to="{ name: 'groceryItemEdit', params: { id: item.id } }"
                 class="btn btn-secondary btn-sm"
-                >Edit</router-link
               >
+                Edit
+              </router-link>
               <button
                 type="button"
                 class="btn btn-danger btn-sm ms-auto"
@@ -210,14 +215,14 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
-    </vue-draggable>
+    </VueDraggable>
     <button
       type="button"
       class="btn btn-secondary btn-sm btn-add-item"
       aria-label="add grocery item"
       @click.stop.prevent="onNewClick(null)"
     >
-      <font-awesome-icon icon="fa-plus" />
+      <FontAwesomeIcon icon="fa-plus" />
     </button>
   </div>
 </template>

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import useRecipeStore from '@/stores/recipeStore';
-import useMealPlanStore from '@/stores/mealPlanStore';
-import useGroceryItemStore from '@/stores/groceryItemStore';
-import useCategoryStore from '@/stores/categoryStore';
-import useStorageLocationStore from '@/stores/storageLocationStore';
-import useGroceryAisleStore from '@/stores/groceryAisleStore';
-import RouterHelper from '@/models/RouterHelper';
-import { isNil } from '@/models/FormatHelper';
-import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
+import { isNil } from '@/models/FormatHelper';
+import RouterHelper from '@/models/RouterHelper';
+import useCategoryStore from '@/stores/categoryStore';
+import useGroceryAisleStore from '@/stores/groceryAisleStore';
+import useGroceryItemStore from '@/stores/groceryItemStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
+import useRecipeStore from '@/stores/recipeStore';
+import useStorageLocationStore from '@/stores/storageLocationStore';
 
 const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
@@ -49,16 +49,18 @@ const { recentRecipes } = storeToRefs(recipeStore);
           <router-link
             :to="{ name: 'recipeList', query: recipeStore.currentQueryParams }"
             class="dropdown-item"
-            >Recipes</router-link
           >
+            Recipes
+          </router-link>
         </li>
-        <li><hr class="dropdown-divider" /></li>
+        <li><hr class="dropdown-divider"></li>
         <li>
           <router-link
             :to="{ name: 'mealPlanList', query: mealPlanStore.currentQueryParams }"
             class="dropdown-item"
-            >Meal Plans</router-link
           >
+            Meal Plans
+          </router-link>
         </li>
         <li>
           <router-link
@@ -69,16 +71,18 @@ const { recentRecipes } = storeToRefs(recipeStore);
               query: mealPlanStore.currentQueryParams,
             }"
             class="dropdown-item"
-            >Edit Current Meal Plan<br /><small>{{ planName }}</small></router-link
           >
+            Edit Current Meal Plan<br><small>{{ planName }}</small>
+          </router-link>
         </li>
-        <li><hr class="dropdown-divider" /></li>
+        <li><hr class="dropdown-divider"></li>
         <li>
           <router-link
             :to="{ name: 'groceryItemList', query: groceryItemStore.currentQueryParams }"
             class="dropdown-item"
-            >Grocery Items</router-link
           >
+            Grocery Items
+          </router-link>
         </li>
       </ul>
     </li>
@@ -97,10 +101,11 @@ const { recentRecipes } = storeToRefs(recipeStore);
           <router-link
             :to="{ name: 'categoryList', query: categoryStore.currentQueryParams }"
             class="dropdown-item"
-            >Categories</router-link
           >
+            Categories
+          </router-link>
         </li>
-        <li><hr class="dropdown-divider" /></li>
+        <li><hr class="dropdown-divider"></li>
         <li>
           <router-link
             :to="{
@@ -108,16 +113,18 @@ const { recentRecipes } = storeToRefs(recipeStore);
               query: groceryAisleStore.currentQueryParams,
             }"
             class="dropdown-item"
-            >Grocery Aisles</router-link
           >
+            Grocery Aisles
+          </router-link>
         </li>
-        <li><hr class="dropdown-divider" /></li>
+        <li><hr class="dropdown-divider"></li>
         <li>
           <router-link
             :to="{ name: 'storageLocationList', query: storageLocationStore.currentQueryParams }"
             class="dropdown-item"
-            >Storage Locations</router-link
           >
+            Storage Locations
+          </router-link>
         </li>
       </ul>
     </li>
@@ -133,9 +140,11 @@ const { recentRecipes } = storeToRefs(recipeStore);
       </a>
       <ul class="dropdown-menu">
         <li v-for="recipe in recentRecipes" :key="recipe.id">
-          <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">{{
-            recipe.name
-          }}</router-link>
+          <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">
+            {{
+              recipe.name
+            }}
+          </router-link>
         </li>
       </ul>
     </li>

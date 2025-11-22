@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import useAppStore from '@/stores/appStore';
-import AppHeader from '@/components/AppHeader.vue';
-import AppNav from '@/components/AppNav.vue';
 import AppFooter from '@/components/AppFooter.vue';
+import AppHeader from '@/components/AppHeader.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
-import RouterHelper from '@/models/RouterHelper';
 import AppModal from '@/components/AppModal.vue';
+import AppNav from '@/components/AppNav.vue';
 import ApiHelper from '@/models/ApiHelper';
-import useRecipeStore from '@/stores/recipeStore';
-import useMealPlanStore from '@/stores/mealPlanStore';
 import DarkModeHelper from '@/models/DarkModeHelper';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
+import RouterHelper from '@/models/RouterHelper';
+import useAppStore from '@/stores/appStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
 import useMessageStore from '@/stores/messageStore';
+import useRecipeStore from '@/stores/recipeStore';
 import { getCurrentMealPlanFromStorage } from './models/MealPlanStoreHelper';
 
 const appStore = useAppStore();
@@ -39,23 +39,23 @@ onMounted(() => {
       if (response.data.antiforgeryToken) {
         ApiHelper.setHeader(
           response.data.antiforgeryTokenHeaderName || 'X-Csrf-Token',
-          response.data.antiforgeryToken
+          response.data.antiforgeryToken,
         );
       }
     })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+    .catch(response => messageStore.setApiFailureMessages(response));
 
   api()
     .appGetVersion()
-    .then((response) => appStore.setVersionInfo(response.data));
+    .then(response => appStore.setVersionInfo(response.data));
 });
 </script>
 
 <template>
   <div id="skip-nav" class="container-xxl visually-hidden-focusable">
-    <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }"
-      >Skip to main content</router-link
-    >
+    <router-link class="d-inline-flex p-2 m-1" :to="{ hash: '#main', query: route.query }">
+      Skip to main content
+    </router-link>
   </div>
   <AppHeader>
     <template #navItems>

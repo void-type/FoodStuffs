@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type IPaginatedRequest from '@/models/IPaginatedRequest';
+import { computed } from 'vue';
 import Choices from '@/models/Choices';
 import { toInt } from '@/models/FormatHelper';
-import type IPaginatedRequest from '@/models/IPaginatedRequest';
-import { computed, type PropType } from 'vue';
 
 const props = defineProps({
   listRequest: {
@@ -19,19 +20,19 @@ const props = defineProps({
     default: () => 7,
   },
   onChangePage: {
-    // eslint-disable-next-line no-unused-vars
+
     type: Function as PropType<(page: number) => void>,
     required: true,
   },
   onChangeTake: {
-    // eslint-disable-next-line no-unused-vars
+
     type: Function as PropType<(take: number) => void>,
     required: true,
   },
 });
 
 function range(size: number, startAt = 0) {
-  return [...Array(size).keys()].map((i) => i + startAt);
+  return Array.from({ length: size }, (_, i) => i + startAt);
 }
 
 function changeTakeLocal(event: Event) {
@@ -89,7 +90,7 @@ const pageRange = computed(() => {
 <template>
   <nav aria-label="Table pagination" class="mt-4 d-print-none">
     <ul class="pagination justify-content-center">
-      <li :class="{ 'page-item': true, disabled: isPrevDisabled }">
+      <li class="page-item" :class="{ disabled: isPrevDisabled }">
         <button
           class="page-link"
           role="menuitemradio"
@@ -103,7 +104,7 @@ const pageRange = computed(() => {
           <span aria-hidden="true">&laquo;</span>
         </button>
       </li>
-      <li :class="{ 'page-item': true, disabled: isPrevDisabled }">
+      <li class="page-item" :class="{ disabled: isPrevDisabled }">
         <button
           class="page-link"
           role="menuitemradio"
@@ -120,7 +121,7 @@ const pageRange = computed(() => {
       <li
         v-for="n in pageRange"
         :key="n"
-        :class="{ 'page-item': true, active: currentPage === n, disabled: typeof n === 'string' }"
+        class="page-item" :class="{ active: currentPage === n, disabled: typeof n === 'string' }"
         :role="typeof n === 'string' ? 'separator' : undefined"
       >
         <span v-if="typeof n === 'string'" class="page-link">
@@ -138,7 +139,7 @@ const pageRange = computed(() => {
           <span aria-hidden="true">{{ n }}</span>
         </button>
       </li>
-      <li :class="{ 'page-item': true, disabled: isNextDisabled }">
+      <li class="page-item" :class="{ disabled: isNextDisabled }">
         <button
           class="page-link"
           role="menuitemradio"
@@ -152,7 +153,7 @@ const pageRange = computed(() => {
           <span aria-hidden="true">&rsaquo;</span>
         </button>
       </li>
-      <li :class="{ 'page-item': true, disabled: isNextDisabled }">
+      <li class="page-item" :class="{ disabled: isNextDisabled }">
         <button
           class="page-link"
           role="menuitemradio"

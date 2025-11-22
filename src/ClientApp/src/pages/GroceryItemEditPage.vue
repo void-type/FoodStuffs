@@ -1,28 +1,29 @@
 <script lang="ts" setup>
-import { computed, reactive, watch, onMounted, onBeforeUnmount, ref } from 'vue';
-import ApiHelper from '@/models/ApiHelper';
-import useAppStore from '@/stores/appStore';
-import useMessageStore from '@/stores/messageStore';
-import useGroceryItemStore from '@/stores/groceryItemStore';
-import { trimAndTitleCase, isNil } from '@/models/FormatHelper';
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+import type { GetGroceryItemResponse } from '@/api/data-contracts';
+import type { HttpResponse } from '@/api/http-client';
+import type { ModalParameters } from '@/models/ModalParameters';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import {
+
+  onBeforeRouteLeave,
+  onBeforeRouteUpdate,
+
+} from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
+import GroceryItemGroceryAisleSelect from '@/components/GroceryItemGroceryAisleSelect.vue';
+import TagEditor from '@/components/TagEditor.vue';
+import ApiHelper from '@/models/ApiHelper';
+import { isNil, trimAndTitleCase } from '@/models/FormatHelper';
 import GroceryItemGetResponse from '@/models/GroceryItemGetResponse';
 import GroceryItemWorking from '@/models/GroceryItemWorking';
-import type { HttpResponse } from '@/api/http-client';
-import type { GetGroceryItemResponse } from '@/api/data-contracts';
-import type { ModalParameters } from '@/models/ModalParameters';
-import router from '@/router';
-import {
-  type RouteLocationNormalized,
-  type NavigationGuardNext,
-  onBeforeRouteUpdate,
-  onBeforeRouteLeave,
-} from 'vue-router';
-import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
-import TagEditor from '@/components/TagEditor.vue';
 import RouterHelper from '@/models/RouterHelper';
-import GroceryItemGroceryAisleSelect from '@/components/GroceryItemGroceryAisleSelect.vue';
+import router from '@/router';
+import useAppStore from '@/stores/appStore';
+import useGroceryItemStore from '@/stores/groceryItemStore';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -56,8 +57,8 @@ const storageLocationOptions = ref([] as Array<string>);
 async function fetchStorageLocations() {
   try {
     const response = await api().storageLocationsList({ isPagingEnabled: false });
-    storageLocationOptions.value =
-      response.data.items?.map((x) => x.name || '').filter((x) => !isNil(x)) || [];
+    storageLocationOptions.value
+      = response.data.items?.map(x => x.name || '').filter(x => !isNil(x)) || [];
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -72,7 +73,7 @@ async function fetch() {
   const { id } = props;
 
   try {
-    const response = await api().groceryItemsGet(id);
+    const response = await api().groceryItemsGet({ id });
     data.source = response.data;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -108,7 +109,7 @@ async function onSaveClick() {
 function onDeleteClick(id: number) {
   function deleteNow() {
     api()
-      .groceryItemsDelete(id)
+      .groceryItemsDelete({ id })
       .then(async (response) => {
         data.source = new GroceryItemGetResponse();
         await groceryItemStore.fetchGroceryItemsList();
@@ -164,10 +165,10 @@ function addStorageLocation(tag: string) {
 
   const storageLocations = data.working.storageLocations?.slice() || [];
 
-  const storageLocationDoesNotExist =
-    storageLocations
-      .map((value) => value.toUpperCase())
-      .indexOf(storageLocationName.toUpperCase()) < 0;
+  const storageLocationDoesNotExist
+    = !storageLocations
+      .map(value => value.toUpperCase())
+      .includes(storageLocationName.toUpperCase());
 
   if (storageLocationDoesNotExist && storageLocationName.length > 0) {
     storageLocations.push(storageLocationName);
@@ -195,7 +196,7 @@ function changeRouteFromModal(t: RouteLocationNormalized) {
 function beforeRouteChange(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   if (forceImmediateRouteChange) {
     next();
@@ -223,7 +224,7 @@ watch(
   () => {
     fetch();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -231,7 +232,7 @@ watch(
   () => {
     reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onBeforeRouteUpdate(async (to, from, next) => {
@@ -246,7 +247,7 @@ function handleBeforeUnload(event: BeforeUnloadEvent) {
   if (isDirty.value) {
     event.preventDefault();
     // Required for Chrome to show the confirmation dialog
-    // eslint-disable-next-line no-param-reassign
+
     event.returnValue = '';
     // Required for Firefox to show the confirmation dialog
     return '';
@@ -304,11 +305,10 @@ onBeforeUnmount(() => {
             v-model="data.working.name"
             required
             type="text"
-            :class="{
-              'form-control': true,
+            class="form-control" :class="{
               'is-invalid': messageStore.isFieldInError('name'),
             }"
-          />
+          >
         </div>
         <div class="g-col-12 g-col-md-6">
           <label for="inventoryQuantity" class="form-label">Inventory</label>
@@ -318,19 +318,17 @@ onBeforeUnmount(() => {
             required
             type="number"
             min="0"
-            :class="{
-              'form-control': true,
+            class="form-control" :class="{
               'is-invalid': messageStore.isFieldInError('inventoryQuantity'),
             }"
-          />
+          >
         </div>
         <div class="g-col-12 g-col-md-6">
           <label for="groceryAisleId" class="form-label">Grocery aisle</label>
           <GroceryItemGroceryAisleSelect v-model="data.working.groceryAisleId" />
         </div>
         <TagEditor
-          :class="{
-            'g-col-12 g-col-md-6': true,
+          class="g-col-12 g-col-md-6" :class="{
             danger: messageStore.isFieldInError('storageLocations'),
           }"
           :tags="(data.working.storageLocations || []).map((name) => ({ name }))"
@@ -349,7 +347,9 @@ onBeforeUnmount(() => {
                 {{ recipe.name }}
               </router-link>
               |
-              <router-link :to="RouterHelper.editRecipe(recipe)">Edit</router-link>
+              <router-link :to="RouterHelper.editRecipe(recipe)">
+                Edit
+              </router-link>
             </li>
           </ul>
         </div>

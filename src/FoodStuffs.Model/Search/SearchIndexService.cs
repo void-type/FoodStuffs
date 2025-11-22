@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Search.GroceryItems;
+﻿using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.Recipes;
 
 namespace FoodStuffs.Model.Search;

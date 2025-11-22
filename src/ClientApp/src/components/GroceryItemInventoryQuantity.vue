@@ -1,15 +1,11 @@
 <script lang="ts" setup>
-import { type PropType, ref } from 'vue';
-import ApiHelper from '@/models/ApiHelper';
-import useMessageStore from '@/stores/messageStore';
+import type { PropType } from 'vue';
 import type { HttpResponse } from '@/api/http-client';
-import { debounce } from '@/models/InputHelper';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-const model = defineModel({
-  type: Number as PropType<number | null | undefined>,
-  required: true,
-});
+import { ref } from 'vue';
+import ApiHelper from '@/models/ApiHelper';
+import { debounce } from '@/models/InputHelper';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -26,6 +22,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+});
+
+const model = defineModel({
+  type: Number as PropType<number | null | undefined>,
+  required: true,
 });
 
 const messageStore = useMessageStore();
@@ -52,14 +53,14 @@ const onInventoryChange = debounce(async () => {
   }
 });
 
-const changeInventory = (amount: number) => {
+function changeInventory(amount: number) {
   model.value = Math.max(0, (model.value || 0) + amount);
   onInventoryChange();
-};
+}
 
-const toggleExpanded = () => {
+function toggleExpanded() {
   isExpanded.value = !isExpanded.value;
-};
+}
 </script>
 
 <template>
@@ -72,7 +73,7 @@ const toggleExpanded = () => {
         type="button"
         @click="changeInventory(-1)"
       >
-        <font-awesome-icon icon="fa-minus" />
+        <FontAwesomeIcon icon="fa-minus" />
       </button>
       <input
         :id="id"
@@ -80,26 +81,27 @@ const toggleExpanded = () => {
         required
         type="number"
         min="0"
-        :class="{
-          'form-control': true,
+        class="form-control" :class="{
           'is-invalid': messageStore.isFieldInError(id),
         }"
         @change="onInventoryChange()"
-      />
+      >
       <button
         class="btn btn-outline-secondary text-monospace"
         aria-label="Increment inventory by one."
         type="button"
         @click="changeInventory(1)"
       >
-        <font-awesome-icon icon="fa-plus" />
+        <FontAwesomeIcon icon="fa-plus" />
       </button>
     </div>
   </div>
   <div v-else>
     <label :for="id" class="visually-hidden">Inventory</label>
     <div class="input-group">
-      <button class="input-group-text" type="button" @click="toggleExpanded">Inventory</button>
+      <button class="input-group-text" type="button" @click="toggleExpanded">
+        Inventory
+      </button>
       <Transition name="slide-left">
         <button
           v-if="isExpanded"
@@ -108,7 +110,7 @@ const toggleExpanded = () => {
           type="button"
           @click="changeInventory(-1)"
         >
-          <font-awesome-icon icon="fa-minus" />
+          <FontAwesomeIcon icon="fa-minus" />
         </button>
       </Transition>
       <input
@@ -117,12 +119,11 @@ const toggleExpanded = () => {
         required
         type="number"
         min="0"
-        :class="{
-          'form-control': true,
+        class="form-control" :class="{
           'is-invalid': messageStore.isFieldInError(id),
         }"
         @change="onInventoryChange()"
-      />
+      >
       <Transition name="slide-right">
         <button
           v-if="isExpanded"
@@ -131,7 +132,7 @@ const toggleExpanded = () => {
           type="button"
           @click="changeInventory(1)"
         >
-          <font-awesome-icon icon="fa-plus" />
+          <FontAwesomeIcon icon="fa-plus" />
         </button>
       </Transition>
     </div>

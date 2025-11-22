@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { onMounted, onUnmounted, ref } from 'vue';
 import RouterHelper from '@/models/RouterHelper';
 
 const props = defineProps({
@@ -39,7 +39,7 @@ onUnmounted(() => {
         type="button"
         @click="RouterHelper.scrollToTop()"
       >
-        <font-awesome-icon icon="fa-arrow-up" />
+        <FontAwesomeIcon icon="fa-arrow-up" />
       </button>
     </div>
   </Transition>

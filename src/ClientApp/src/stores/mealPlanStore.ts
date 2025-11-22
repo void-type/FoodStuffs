@@ -5,12 +5,11 @@ import type {
   MealPlansListParams,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
-import ApiHelper from '@/models/ApiHelper';
-import { isNil } from '@/models/FormatHelper';
-import MealPlanWorking from '@/models/MealPlanWorking';
-import ListMealPlansRequest from '@/models/MealPlansListRequest';
-import Choices from '@/models/Choices';
 import { defineStore } from 'pinia';
+import ApiHelper from '@/models/ApiHelper';
+import Choices from '@/models/Choices';
+import { isNil } from '@/models/FormatHelper';
+import ListMealPlansRequest from '@/models/MealPlansListRequest';
 import {
   addGroceryItem,
   countGroceryItems,
@@ -18,6 +17,7 @@ import {
   storeCurrentMealPlanInStorage,
   subtractGroceryItem,
 } from '@/models/MealPlanStoreHelper';
+import MealPlanWorking from '@/models/MealPlanWorking';
 import useMessageStore from './messageStore';
 
 interface MealPlanStoreState {
@@ -45,21 +45,21 @@ export default defineStore('mealPlan', {
   }),
 
   getters: {
-    currentRecipes: (state) => state.currentMealPlan.recipes || [],
+    currentRecipes: state => state.currentMealPlan.recipes || [],
 
-    currentPantry: (state) => state.currentMealPlan.excludedGroceryItems || [],
+    currentPantry: state => state.currentMealPlan.excludedGroceryItems || [],
 
-    currentRecipesContains: (state) => (recipeId: number | null | undefined) => {
+    currentRecipesContains: state => (recipeId: number | null | undefined) => {
       if (isNil(recipeId)) {
         return false;
       }
 
-      return (state.currentMealPlan.recipes || []).map((x) => x.id).includes(recipeId!);
+      return (state.currentMealPlan.recipes || []).map(x => x.id).includes(recipeId!);
     },
 
     currentShoppingList(state): GetMealPlanResponseExcludedGroceryItem[] {
       const groceryItemCounts = this.currentRecipes
-        .flatMap((c) => c.groceryItems || [])
+        .flatMap(c => c.groceryItems || [])
         .reduce(countGroceryItems, []);
 
       (state.currentMealPlan.excludedGroceryItems || []).forEach((x) => {
@@ -132,7 +132,7 @@ export default defineStore('mealPlan', {
       const { recipes } = this.currentMealPlan;
 
       if (recipes !== null && typeof recipes !== 'undefined') {
-        this.currentMealPlan.recipes = recipes.filter((x) => x.id !== recipeId);
+        this.currentMealPlan.recipes = recipes.filter(x => x.id !== recipeId);
       }
 
       await this.saveCurrentMealPlan();
@@ -158,7 +158,7 @@ export default defineStore('mealPlan', {
       }
 
       try {
-        const response = await api().mealPlansGet(id);
+        const response = await api().mealPlansGet({ id });
         this.currentMealPlan = response.data;
         if (response.data.id) {
           storeCurrentMealPlanInStorage(response.data.id);
@@ -184,7 +184,7 @@ export default defineStore('mealPlan', {
             return;
           }
 
-          const highestOrder = Math.max(...request.recipes.map((x) => x.order || 0), 0);
+          const highestOrder = Math.max(...request.recipes.map(x => x.order || 0), 0);
 
           request.recipes?.push({
             id: additionalId,
@@ -216,7 +216,7 @@ export default defineStore('mealPlan', {
       }
 
       try {
-        const response = await api().mealPlansDelete(id);
+        const response = await api().mealPlansDelete({ id });
 
         if (response.data.message) {
           useMessageStore().setSuccessMessage(response.data.message);
@@ -248,7 +248,7 @@ export default defineStore('mealPlan', {
       }
 
       try {
-        const response = await api().mealPlansGet(id);
+        const response = await api().mealPlansGet({ id });
         this.editingMealPlan = response.data;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -258,7 +258,7 @@ export default defineStore('mealPlan', {
 
     async saveMealPlan(
       mealPlan: GetMealPlanResponse,
-      additionalRecipeIds: number[] = []
+      additionalRecipeIds: number[] = [],
     ): Promise<number | null> {
       if (mealPlan === null) {
         return null;
@@ -272,7 +272,7 @@ export default defineStore('mealPlan', {
             return;
           }
 
-          const highestOrder = Math.max(...request.recipes.map((x) => x.order || 0), 0);
+          const highestOrder = Math.max(...request.recipes.map(x => x.order || 0), 0);
 
           request.recipes?.push({
             id: additionalId,

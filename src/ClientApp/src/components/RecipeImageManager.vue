@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch, type PropType, type Ref } from 'vue';
-import { clamp } from '@/models/FormatHelper';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import ApiHelper from '@/models/ApiHelper';
-import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import type bootstrap from 'bootstrap';
+import type { PropType, Ref } from 'vue';
+import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { onMounted, ref, watch } from 'vue';
+import ApiHelper from '@/models/ApiHelper';
+import { clamp } from '@/models/FormatHelper';
 import useMessageStore from '@/stores/messageStore';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
@@ -12,7 +13,6 @@ const props = defineProps({
   images: {
     type: Array as PropType<Array<string>>,
     required: true,
-    default: () => [],
   },
   suggestedImage: {
     type: String as PropType<string | null>,
@@ -96,16 +96,15 @@ function uploadImageClick() {
 }
 
 function uploadFileChange(event: Event | DragEvent) {
-  const files =
-    (event as HTMLInputEvent)?.target?.files ||
-    (event as DragEvent)?.dataTransfer?.files ||
-    new FileList();
+  const files
+    = (event as HTMLInputEvent)?.target?.files
+      || (event as DragEvent)?.dataTransfer?.files
+      || new FileList();
 
   if (files.length < 1) {
     return;
   }
 
-  // eslint-disable-next-line prefer-destructuring
   uploadFile.value = files[0] || null;
 }
 
@@ -118,8 +117,8 @@ function pinImageClick(name: string) {
 }
 
 watch([() => props.images, () => props.suggestedImage], () => {
-  const suggestedImageIndex =
-    props.suggestedImage === null ? -1 : props.images.indexOf(props.suggestedImage);
+  const suggestedImageIndex
+    = props.suggestedImage === null ? -1 : props.images.indexOf(props.suggestedImage);
   const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
   carouselIndex.value = clamp(newIndex, 0, props.images.length - 1);
 });
@@ -139,14 +138,14 @@ watch(
 
     uploadFile.value = null;
     uploadInProgress.value = false;
-  }
+  },
 );
 
 watch(
   () => props.imageUploadFailToken,
   () => {
     uploadInProgress.value = false;
-  }
+  },
 );
 
 onMounted(() => {
@@ -169,13 +168,12 @@ onMounted(() => {
         <input
           id="upload-file"
           type="file"
-          :class="{
-            'form-control': true,
+          class="form-control" :class="{
             'is-invalid': isFieldInError('upload-file'),
           }"
           @drop="uploadFileChange"
           @change="uploadFileChange"
-        />
+        >
         <div class="btn-toolbar mt-3">
           <button
             class="btn btn-primary"
@@ -204,23 +202,23 @@ onMounted(() => {
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
               :aria-label="`Show image ${i}`"
-            ></button>
+            />
           </div>
           <div class="carousel-inner">
             <div
               v-for="(imageName, i) in images"
               :key="`${imageName}:${props.suggestedImage}`"
-              :class="{ 'carousel-item': true, active: i === carouselIndex }"
+              class="carousel-item" :class="{ active: i === carouselIndex }"
             >
               <button
-                v-if="images.length > 0 && imageName != pinnedImage"
+                v-if="images.length > 0 && imageName !== pinnedImage"
                 type="button"
                 class="btn btn-light btn-sm image-button image-button-left d-print-none"
                 title="Pin image"
                 @click.stop.prevent="pinImageClick(imageName)"
               >
                 <span class="visually-hidden">Pin image</span>
-                <font-awesome-icon icon="fa-thumbtack" />
+                <FontAwesomeIcon icon="fa-thumbtack" />
               </button>
               <button
                 v-if="images.length > 0"
@@ -230,7 +228,7 @@ onMounted(() => {
                 @click.stop.prevent="deleteImageClick(imageName)"
               >
                 <span class="visually-hidden">Delete image</span>
-                <font-awesome-icon icon="fa-times" />
+                <FontAwesomeIcon icon="fa-times" />
               </button>
               <img
                 class="img-fluid rounded object-fit-cover"
@@ -240,7 +238,7 @@ onMounted(() => {
                 width="1600"
                 height="1200"
                 style="aspect-ratio: 4 / 3"
-              />
+              >
             </div>
           </div>
           <button
@@ -249,7 +247,7 @@ onMounted(() => {
             :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="prev"
           >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon" aria-hidden="true" />
             <span class="visually-hidden">Previous image</span>
           </button>
           <button
@@ -258,7 +256,7 @@ onMounted(() => {
             :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="next"
           >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon" aria-hidden="true" />
             <span class="visually-hidden">Next image</span>
           </button>
         </div>

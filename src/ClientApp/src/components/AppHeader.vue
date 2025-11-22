@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import logoSvg from '@/img/logo.svg';
-import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
-import useAppStore from '@/stores/appStore';
-import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
-import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
+import logoSvg from '@/img/logo.svg';
 import ApiHelper from '@/models/ApiHelper';
+import useAppStore from '@/stores/appStore';
+import useMessageStore from '@/stores/messageStore';
 import AppHeaderQuickSearch from './AppHeaderQuickSearch.vue';
 
 const appStore = useAppStore();
@@ -47,7 +46,7 @@ const searchText = ref('');
           class="d-inline-block align-text-top"
           width="24"
           height="24"
-        />
+        >
         {{ applicationName }}
       </router-link>
       <AppHeaderQuickSearch v-model="searchText" class="ms-auto me-2 d-none d-sm-block d-md-none" />
@@ -60,11 +59,11 @@ const searchText = ref('');
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon" />
       </button>
       <AppHeaderQuickSearch v-model="searchText" class="mt-2 d-sm-none w-100" />
       <div id="navbar-menu" class="navbar-collapse collapse">
-        <slot name="navItems"></slot>
+        <slot name="navItems" />
         <AppHeaderQuickSearch v-model="searchText" class="ms-auto me-2 d-none d-md-block" />
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
@@ -76,8 +75,7 @@ const searchText = ref('');
               class="nav-link dropdown-toggle"
               data-bs-toggle="dropdown"
               data-bs-auto-close="outside"
-              ><span>{{ user.login }}</span></a
-            >
+            ><span>{{ user.login }}</span></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <!-- <li class="dropdown-item-text fw-bold">Roles</li>
               <li v-for="role in user.authorizedAs" :key="role" class="dropdown-item-text">
@@ -89,9 +87,7 @@ const searchText = ref('');
               <li><hr class="dropdown-divider" /></li> -->
               <li class="dropdown-item">
                 <div class="form-check form-switch">
-                  <label class="w-100" for="useDarkMode" aria-label="Use dark mode"
-                    ><font-awesome-icon icon="fa-moon" /> Dark mode</label
-                  >
+                  <label class="w-100" for="useDarkMode" aria-label="Use dark mode"><FontAwesomeIcon icon="fa-moon" /> Dark mode</label>
                   <input
                     id="useDarkMode"
                     :checked="useDarkMode"
@@ -99,14 +95,14 @@ const searchText = ref('');
                     type="checkbox"
                     @change="
                       (e: Event) =>
-                        appStore.setDarkMode((e as HTMLInputEvent).target?.checked === true)
+                        appStore.setDarkMode((e.target as HTMLInputElement).checked === true)
                     "
-                  />
+                  >
                 </div>
               </li>
               <li class="dropdown-item">
                 <button class="btn btn-secondary" :disabled="isRebuilding" @click="rebuildSearch">
-                  <font-awesome-icon icon="fa-rotate-right" />
+                  <FontAwesomeIcon icon="fa-rotate-right" />
                   {{ isRebuilding ? 'Rebuilding...' : 'Rebuild index' }}
                 </button>
               </li>

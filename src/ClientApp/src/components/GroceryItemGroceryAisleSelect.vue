@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeUnmount, type PropType } from 'vue';
+import type { PropType } from 'vue';
 import type { ListGroceryAislesResponse } from '@/api/data-contracts';
-import { Dropdown } from 'bootstrap';
-import { trimAndTitleCase } from '@/models/FormatHelper';
-import ApiHelper from '@/models/ApiHelper';
-import useMessageStore from '@/stores/messageStore';
 import type { HttpResponse } from '@/api/http-client';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
+import { Dropdown } from 'bootstrap';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import ApiHelper from '@/models/ApiHelper';
+import { trimAndTitleCase } from '@/models/FormatHelper';
+import useMessageStore from '@/stores/messageStore';
 
 const model = defineModel({
   type: Number as PropType<number | null | undefined>,
@@ -22,7 +22,7 @@ const filterText = ref('');
 
 const suggestions = ref([] as ListGroceryAislesResponse[]);
 
-const selectedSuggestion = computed(() => suggestions.value.find((x) => x.id === model.value));
+const selectedSuggestion = computed(() => suggestions.value.find(x => x.id === model.value));
 
 async function fetchSuggestions() {
   try {
@@ -36,7 +36,7 @@ async function fetchSuggestions() {
 const filteredSuggestions = computed(() => {
   const filterTextLow = filterText.value.toLowerCase();
 
-  return suggestions.value.filter((x) => x.name?.toLowerCase().includes(filterTextLow));
+  return suggestions.value.filter(x => x.name?.toLowerCase().includes(filterTextLow));
 });
 
 function selectSuggestion(id: number | undefined) {
@@ -126,13 +126,11 @@ onBeforeUnmount(() => {
       aria-label="Clear selection"
       @click="clearSelection"
     >
-      <font-awesome-icon icon="fa-times" />
+      <FontAwesomeIcon icon="fa-times" />
     </button>
     <ul class="dropdown-menu pt-0 w-100">
       <li class="mb-2">
-        <label :for="`item-${selectedSuggestion?.id}-name-filter`" class="visually-hidden"
-          >Type to filter options</label
-        >
+        <label :for="`item-${selectedSuggestion?.id}-name-filter`" class="visually-hidden">Type to filter options</label>
         <input
           :id="`item-${selectedSuggestion?.id}-name-filter`"
           ref="filterInput"
@@ -140,19 +138,21 @@ onBeforeUnmount(() => {
           type="text"
           class="form-control"
           placeholder="Type to filter options"
-          @input="(e) => (filterText = (e as HTMLInputEvent).target.value)"
-        />
+          @input="(e) => (filterText = (e.target as HTMLInputElement).value)"
+        >
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
         <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
           {{ suggestion.name }}
         </a>
       </li>
-      <li v-if="filteredSuggestions.length === 0" class="p-3">No options found</li>
+      <li v-if="filteredSuggestions.length === 0" class="p-3">
+        No options found
+      </li>
       <li
         v-if="
-          filterText.length > 0 &&
-          filteredSuggestions.find((x) => x.name === filterText) === undefined
+          filterText.length > 0
+            && filteredSuggestions.find((x) => x.name === filterText) === undefined
         "
         class="mt-2"
       >

@@ -10,7 +10,9 @@ defineProps({
 
 <template>
   <div class="img-placeholder d-print-none m-auto">
-    <div class="text-muted">{{ text }}</div>
+    <div class="text-muted">
+      {{ text }}
+    </div>
   </div>
 </template>
 

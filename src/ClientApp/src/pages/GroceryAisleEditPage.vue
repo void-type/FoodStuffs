@@ -1,26 +1,27 @@
 <script lang="ts" setup>
-import { computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
-import ApiHelper from '@/models/ApiHelper';
-import useAppStore from '@/stores/appStore';
-import useMessageStore from '@/stores/messageStore';
-import useGroceryAisleStore from '@/stores/groceryAisleStore';
-import { isNil } from '@/models/FormatHelper';
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+import type { GetGroceryAisleResponse } from '@/api/data-contracts';
+import type { HttpResponse } from '@/api/http-client';
+import type { ModalParameters } from '@/models/ModalParameters';
+import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
+import {
+
+  onBeforeRouteLeave,
+  onBeforeRouteUpdate,
+
+} from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
+import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
+import ApiHelper from '@/models/ApiHelper';
+import { isNil } from '@/models/FormatHelper';
 import GroceryAisleGetResponse from '@/models/GroceryAisleGetResponse';
 import GroceryAisleWorking from '@/models/GroceryAisleWorking';
-import type { HttpResponse } from '@/api/http-client';
-import type { GetGroceryAisleResponse } from '@/api/data-contracts';
-import type { ModalParameters } from '@/models/ModalParameters';
-import router from '@/router';
-import {
-  type RouteLocationNormalized,
-  type NavigationGuardNext,
-  onBeforeRouteUpdate,
-  onBeforeRouteLeave,
-} from 'vue-router';
-import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RouterHelper from '@/models/RouterHelper';
+import router from '@/router';
+import useAppStore from '@/stores/appStore';
+import useGroceryAisleStore from '@/stores/groceryAisleStore';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -58,7 +59,7 @@ async function fetch() {
   const { id } = props;
 
   try {
-    const response = await api().groceryAislesGet(id);
+    const response = await api().groceryAislesGet({ id });
     data.source = response.data;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -96,7 +97,7 @@ async function onSaveClick() {
 function onDeleteClick(id: number) {
   function deleteNow() {
     api()
-      .groceryAislesDelete(id)
+      .groceryAislesDelete({ id })
       .then(async (response) => {
         data.source = new GroceryAisleGetResponse();
         await groceryAisleStore.fetchGroceryAislesList();
@@ -156,7 +157,7 @@ function changeRouteFromModal(t: RouteLocationNormalized) {
 function beforeRouteChange(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   if (forceImmediateRouteChange) {
     next();
@@ -184,7 +185,7 @@ watch(
   () => {
     fetch();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -192,7 +193,7 @@ watch(
   () => {
     reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onBeforeRouteUpdate(async (to, from, next) => {
@@ -207,7 +208,7 @@ function handleBeforeUnload(event: BeforeUnloadEvent) {
   if (isDirty.value) {
     event.preventDefault();
     // Required for Chrome to show the confirmation dialog
-    // eslint-disable-next-line no-param-reassign
+
     event.returnValue = '';
     // Required for Firefox to show the confirmation dialog
     return '';
@@ -265,11 +266,10 @@ onBeforeUnmount(() => {
             v-model="data.working.name"
             required
             type="text"
-            :class="{
-              'form-control': true,
+            class="form-control" :class="{
               'is-invalid': messageStore.isFieldInError('name'),
             }"
-          />
+          >
         </div>
         <div class="g-col-12 g-col-md-6">
           <label for="order" class="form-label">Shopping list order</label>
@@ -278,11 +278,10 @@ onBeforeUnmount(() => {
             v-model="data.working.order"
             required
             type="number"
-            :class="{
-              'form-control': true,
+            class="form-control" :class="{
               'is-invalid': messageStore.isFieldInError('order'),
             }"
-          />
+          >
         </div>
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
         <div v-if="data.source.groceryItems?.length" class="g-col-12 g-col-md-6">
@@ -293,7 +292,9 @@ onBeforeUnmount(() => {
                 {{ recipe.name }}
               </router-link>
               |
-              <router-link :to="RouterHelper.editRecipe(recipe)">Edit</router-link>
+              <router-link :to="RouterHelper.editRecipe(recipe)">
+                Edit
+              </router-link>
             </li>
           </ul>
         </div>

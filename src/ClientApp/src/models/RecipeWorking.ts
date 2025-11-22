@@ -1,5 +1,5 @@
-import type { GetRecipeResponseCategory } from '@/api/data-contracts';
 import type RecipeGroceryItemWorking from './RecipeGroceryItemWorking';
+import type { GetRecipeResponseCategory } from '@/api/data-contracts';
 
 export default class RecipeWorking {
   public id = 0;

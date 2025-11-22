@@ -1,15 +1,15 @@
 import type {
-  IItemSetOfSearchGroceryItemsResultItem,
   GroceryItemsSearchParams,
-  SearchGroceryItemsResponse,
+  IItemSetOfSearchGroceryItemsResultItem,
   SearchFacet,
+  SearchGroceryItemsResponse,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
+import { defineStore } from 'pinia';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
-import { defineStore } from 'pinia';
-import GroceryItemStoreHelper from '@/models/GroceryItemStoreHelper';
 import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
+import GroceryItemStoreHelper from '@/models/GroceryItemStoreHelper';
 import useMessageStore from './messageStore';
 
 interface GroceryItemStoreState {
