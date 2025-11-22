@@ -35,7 +35,7 @@ onUnmounted(() => {
   <Transition name="fade">
     <div v-if="props.show || isWithinScrollRange" class="scroll-to-top">
       <button
-        class="btn btn-outline-secondary rounded-circle opacity-75"
+        class="btn btn-outline-secondary rounded-circle opacity-75 d-flex align-items-center justify-content-center"
         type="button"
         @click="RouterHelper.scrollToTop()"
       >
@@ -46,6 +46,12 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.scroll-to-top button {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+}
+
 .scroll-to-top {
   position: fixed;
   bottom: 1rem;
