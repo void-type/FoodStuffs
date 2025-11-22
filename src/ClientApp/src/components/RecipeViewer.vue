@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { ref, computed, type PropType, onMounted, watch } from 'vue';
 import type bootstrap from 'bootstrap';
+import type { PropType } from 'vue';
 import type { GetRecipeResponse } from '@/api/data-contracts';
+import { computed, onMounted, ref, watch } from 'vue';
+import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import ApiHelper from '@/models/ApiHelper';
 import { isNil } from '@/models/FormatHelper';
-import { toTimeSpanString } from '@/models/TimeSpanHelper';
-import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import RouterHelper from '@/models/RouterHelper';
+import { toTimeSpanString } from '@/models/TimeSpanHelper';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 
@@ -26,7 +27,7 @@ const images = computed(() => {
   const recipeImages = props.recipe.images || [];
 
   if (pinnedImage != null && recipeImages.includes(pinnedImage)) {
-    const sortedRecipeImages = recipeImages.filter((i) => i !== pinnedImage);
+    const sortedRecipeImages = recipeImages.filter(i => i !== pinnedImage);
 
     sortedRecipeImages.unshift(pinnedImage);
 
@@ -48,7 +49,7 @@ watch(
   () => props.recipe,
   () => {
     carouselIndex.value = 0;
-  }
+  },
 );
 
 onMounted(() => {
@@ -74,13 +75,12 @@ onMounted(() => {
     <div class="btn-toolbar mt-3 d-print-none">
       <div class="form-check form-switch mt-">
         <label class="form-check-label" for="showImage">Show image</label>
-        <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox" />
+        <input id="showImage" v-model="showImage" class="form-check-input" type="checkbox">
       </div>
     </div>
     <div
       v-if="showImage"
-      :class="{
-        'g-col-12 text-center mt-4 mb-5': true,
+      class="g-col-12 text-center mt-4 mb-5" :class="{
         'd-print-none': !(images.length > 0),
       }"
     >
@@ -101,13 +101,13 @@ onMounted(() => {
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
               :aria-label="`Show image ${i}`"
-            ></button>
+            />
           </div>
           <div class="carousel-inner">
             <div
               v-for="(imageName, i) in images"
               :key="imageName"
-              :class="{ 'carousel-item': true, active: i === carouselIndex }"
+              class="carousel-item" :class="{ active: i === carouselIndex }"
             >
               <img
                 class="img-fluid rounded object-fit-cover"
@@ -117,7 +117,7 @@ onMounted(() => {
                 width="1600"
                 height="1200"
                 style="aspect-ratio: 4 / 3"
-              />
+              >
             </div>
           </div>
           <button
@@ -126,7 +126,7 @@ onMounted(() => {
             :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="prev"
           >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon" aria-hidden="true" />
             <span class="visually-hidden">Previous image</span>
           </button>
           <button
@@ -135,7 +135,7 @@ onMounted(() => {
             :data-bs-target="`#image-carousel-${uniqueId}`"
             data-bs-slide="next"
           >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon" aria-hidden="true" />
             <span class="visually-hidden">Next image</span>
           </button>
         </div>
@@ -145,7 +145,7 @@ onMounted(() => {
     <div v-if="!isNil(recipe.directions)" class="mt-3">
       <h2>Directions</h2>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <div class="rich-text" v-html="recipe.directions"></div>
+      <div class="rich-text" v-html="recipe.directions" />
     </div>
     <div v-if="!isNil(recipe.sides)" class="mt-3">
       <h2>Sides</h2>
@@ -160,12 +160,14 @@ onMounted(() => {
           </span>
         </div>
       </div>
-      <div :class="{ 'form-control-plaintext p-0': true }">
+      <div class="form-control-plaintext p-0">
         {{ recipe.sides }}
       </div>
     </div>
     <div v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-3 d-print-none">
-      <h2 class="mb-0">Grocery Items</h2>
+      <h2 class="mb-0">
+        Grocery Items
+      </h2>
       <div class="badge p-0 mb-2 text-muted">
         <small>Not printed.</small>
       </div>
@@ -177,11 +179,11 @@ onMounted(() => {
     </div>
     <div
       v-if="
-        recipe.prepTimeMinutes ||
-        0 > 0 ||
-        recipe.cookTimeMinutes ||
-        0 > 0 ||
-        (recipe.categories || []).length > 0
+        recipe.prepTimeMinutes
+          || 0 > 0
+          || recipe.cookTimeMinutes
+          || 0 > 0
+          || (recipe.categories || []).length > 0
       "
       class="mt-3"
     >

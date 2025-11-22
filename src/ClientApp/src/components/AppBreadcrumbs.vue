@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import useRecipeStore from '@/stores/recipeStore';
-import useMealPlanStore from '@/stores/mealPlanStore';
-import useGroceryItemStore from '@/stores/groceryItemStore';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import useGroceryItemStore from '@/stores/groceryItemStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
+import useRecipeStore from '@/stores/recipeStore';
 
 const route = useRoute();
 const recipeStore = useRecipeStore();
@@ -12,9 +12,9 @@ const groceryItemStore = useGroceryItemStore();
 
 const breadcrumbs = computed(() => {
   const matched = route.matched
-    .filter((r) => r.meta.title)
+    .filter(r => r.meta.title)
     .map((r) => {
-      const name = r.name || r.children.find((c) => c.path === '')?.name;
+      const name = r.name || r.children.find(c => c.path === '')?.name;
 
       const routeData = {
         name,
@@ -50,9 +50,11 @@ const breadcrumbs = computed(() => {
           class="breadcrumb-item"
           :aria-current="index === breadcrumbs.length - 1 ? 'page' : false"
         >
-          <router-link v-if="index !== breadcrumbs.length - 1" :to="segment.routeData">{{
-            segment.title
-          }}</router-link>
+          <router-link v-if="index !== breadcrumbs.length - 1" :to="segment.routeData">
+            {{
+              segment.title
+            }}
+          </router-link>
           <span v-else>{{ segment.title }}</span>
         </li>
       </ol>

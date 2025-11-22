@@ -1,28 +1,29 @@
 <script lang="ts" setup>
-import RecipeWorking from '@/models/RecipeWorking';
+import type { PropType } from 'vue';
 import type {
   GetRecipeResponse,
   IItemSetOfIFailure,
   ListCategoriesResponse,
   SearchGroceryItemsResultItem,
 } from '@/api/data-contracts';
-import { trimAndTitleCase } from '@/models/FormatHelper';
-import { computed, reactive, watch, type PropType, onMounted, ref } from 'vue';
 import type { HttpResponse } from '@/api/http-client';
+import type { Tag } from '@/models/Tag';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
-import RouterHelper from '@/models/RouterHelper';
-import useMessageStore from '@/stores/messageStore';
-import useMealPlanStore from '@/stores/mealPlanStore';
+import { trimAndTitleCase } from '@/models/FormatHelper';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
-import type { Tag } from '@/models/Tag';
+import RecipeWorking from '@/models/RecipeWorking';
+import RouterHelper from '@/models/RouterHelper';
+import useMealPlanStore from '@/stores/mealPlanStore';
+import useMessageStore from '@/stores/messageStore';
+import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
 import EntityAuditInfo from './EntityAuditInfo.vue';
-import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
-import TagEditor from './TagEditor.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 import RecipeEditorGroceryItems from './RecipeEditorGroceryItems.vue';
+import RecipeTimeSpanEditor from './RecipeTimeSpanEditor.vue';
 import RichTextEditor from './RichTextEditor.vue';
-import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
+import TagEditor from './TagEditor.vue';
 
 const props = defineProps({
   sourceRecipe: {
@@ -77,8 +78,8 @@ async function fetchGroceryItems() {
   try {
     // TODO: may want to use suggestion endpoint because this will be a huge response.
     const response = await api().groceryItemsSearch({ isPagingEnabled: false });
-    groceryItemOptions.value = (response.data.results?.items ||
-      []) as Array<SearchGroceryItemsResultItem>;
+    groceryItemOptions.value = (response.data.results?.items
+      || []) as Array<SearchGroceryItemsResultItem>;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -98,7 +99,7 @@ function reset() {
     }
   });
 
-  const groceryItems = (props.sourceRecipe.groceryItems || []).map((x) => ({
+  const groceryItems = (props.sourceRecipe.groceryItems || []).map(x => ({
     ...new RecipeGroceryItemWorking(),
     ...x,
   }));
@@ -134,7 +135,6 @@ async function createGroceryItem(name: string) {
     // Add sub-type prefix to uiHandle
     if (typeof failureSet !== 'undefined' && failureSet !== null) {
       failureSet.items?.forEach((failure) => {
-        // eslint-disable-next-line no-param-reassign
         failure.uiHandle = `groceryItems-${failure.uiHandle}`;
       });
     }
@@ -149,8 +149,8 @@ function addCategory(tag: string) {
 
   const categories = data.workingRecipe.categories?.slice() || [];
 
-  const categoryDoesNotExist =
-    categories.map((value) => value?.name?.toUpperCase()).indexOf(categoryName.toUpperCase()) < 0;
+  const categoryDoesNotExist
+    = !categories.map(value => value?.name?.toUpperCase()).includes(categoryName.toUpperCase());
 
   if (categoryDoesNotExist && categoryName.length > 0) {
     categories.push({ id: 0, name: categoryName, color: '#000000' });
@@ -160,7 +160,7 @@ function addCategory(tag: string) {
 
 function removeCategory(category: Tag) {
   const categories = data.workingRecipe.categories?.slice() || [];
-  const categoryIndex = categories.findIndex((x) => x.name === category.name);
+  const categoryIndex = categories.findIndex(x => x.name === category.name);
 
   if (categoryIndex > -1) {
     categories.splice(categoryIndex, 1);
@@ -180,7 +180,7 @@ watch(
   () => {
     reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const isRecipeDirty = computed(() => {
@@ -254,12 +254,11 @@ onMounted(async () => {
           v-model="data.workingRecipe.name"
           required
           type="text"
-          :class="{ 'form-control': true, 'is-invalid': messageStore.isFieldInError('name') }"
-        />
+          class="form-control" :class="{ 'is-invalid': messageStore.isFieldInError('name') }"
+        >
       </div>
       <TagEditor
-        :class="{
-          'g-col-12 g-col-md-6': true,
+        class="g-col-12 g-col-md-6" :class="{
           danger: messageStore.isFieldInError('categories'),
         }"
         :tags="data.workingRecipe.categories"
@@ -277,7 +276,7 @@ onMounted(async () => {
             class="form-check-input"
             type="checkbox"
             :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
-          />
+          >
           <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
         </div>
       </div>
@@ -303,8 +302,7 @@ onMounted(async () => {
           id="sides"
           v-model="data.workingRecipe.sides"
           rows="5"
-          :class="{
-            'form-control': true,
+          class="form-control" :class="{
             'is-invalid': messageStore.isFieldInError('sides'),
           }"
         />

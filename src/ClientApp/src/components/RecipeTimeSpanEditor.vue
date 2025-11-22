@@ -1,11 +1,12 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import { computed } from 'vue';
 import {
   clampHours,
   clampMinutes,
   getTotalMinutes,
   toTimeSpanString,
 } from '@/models/TimeSpanHelper';
-import { computed, type PropType } from 'vue';
 
 const props = defineProps({
   id: {
@@ -37,8 +38,8 @@ const hours = computed({
   },
   set(value) {
     const newHours = Number(value);
-    // eslint-disable-next-line no-use-before-define
-    const totalMinutes = getTotalMinutes(minutes.value, newHours);
+    const currentMinutes = clampMinutes(props.modelValue || 0);
+    const totalMinutes = getTotalMinutes(currentMinutes, newHours);
     emit('update:modelValue', totalMinutes);
   },
 });
@@ -49,7 +50,8 @@ const minutes = computed({
   },
   set(value) {
     const newMinutes = Number(value);
-    const totalMinutes = getTotalMinutes(newMinutes, hours.value);
+    const currentHours = clampHours(props.modelValue || 0);
+    const totalMinutes = getTotalMinutes(newMinutes, currentHours);
     emit('update:modelValue', totalMinutes);
   },
 });
@@ -63,17 +65,17 @@ const minutes = computed({
       <input
         :id="`hours-${id}`"
         v-model="hours"
-        :class="{ 'is-invalid': isInvalid, 'form-control text-center': true }"
+        class="form-control text-center" :class="{ 'is-invalid': isInvalid }"
         type="number"
         min="0"
-      />
+      >
       <input
         :id="`minutes-${id}`"
         v-model="minutes"
-        :class="{ 'is-invalid': isInvalid, 'form-control text-center': true }"
+        class="form-control text-center" :class="{ 'is-invalid': isInvalid }"
         type="number"
         min="-1"
-      />
+      >
     </div>
     <small :class="{ invisible: !showPreview }">
       {{ toTimeSpanString(modelValue || 0) }}

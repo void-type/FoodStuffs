@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-  [ValidateSet("All", "Server", "Client")]
+  [ValidateSet('All', 'Server', 'Client')]
   [string] $Target = 'All'
 )
 
@@ -18,7 +18,6 @@ try {
   if ($Target -ne 'Server') {
     Set-Location -Path $webClientProjectFolder
     npm run lint
-    npm run format
   }
 } finally {
   Set-Location $originalLocation

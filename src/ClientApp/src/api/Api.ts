@@ -1,6 +1,3 @@
-/* eslint-disable */
-/* tslint:disable */
-// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -10,9 +7,10 @@
  * ---------------------------------------------------------------
  */
 
-import type {
-  AddCategoryToAllRecipesRequest,
+import type {AddCategoryToAllRecipesRequest,
   AppVersion,
+  CategoriesDeleteParams,
+  CategoriesGetParams,
   CategoriesListParams,
   EntityMessageOfInteger,
   EntityMessageOfString,
@@ -23,7 +21,11 @@ import type {
   GetMealPlanResponse,
   GetRecipeResponse,
   GetStorageLocationResponse,
+  GroceryAislesDeleteParams,
+  GroceryAislesGetParams,
   GroceryAislesListParams,
+  GroceryItemsDeleteParams,
+  GroceryItemsGetParams,
   GroceryItemsSearchParams,
   GroceryItemsSuggestParams,
   IItemSetOfIFailure,
@@ -33,8 +35,15 @@ import type {
   IItemSetOfListStorageLocationsResponse,
   IItemSetOfSuggestGroceryItemsResultItem,
   IItemSetOfSuggestRecipesResultItem,
+  ImagesDeleteParams,
+  ImagesGetParams,
+  ImagesPinParams,
   ImagesUploadParams,
+  MealPlansDeleteParams,
+  MealPlansGetParams,
   MealPlansListParams,
+  RecipesDeleteParams,
+  RecipesGetParams,
   RecipesSearchParams,
   RecipesSuggestParams,
   SaveCategoryRequest,
@@ -46,13 +55,17 @@ import type {
   SaveStorageLocationRequest,
   SearchGroceryItemsResponse,
   SearchRecipesResponse,
+  StorageLocationsDeleteParams,
+  StorageLocationsGetParams,
   StorageLocationsListParams,
   UserMessage,
-  WebClientInfo,
-} from './data-contracts';
-import { ContentType, HttpClient, type RequestParams } from './http-client';
+  WebClientInfo,} from "./data-contracts";
+import { ContentType, HttpClient } from "./http-client";
+import type { RequestParams } from "./http-client";
 
-export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType = unknown,
+> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -65,8 +78,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appGetInfo = (params: RequestParams = {}) =>
     this.request<WebClientInfo, any>({
       path: `/api/app/info`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -81,8 +94,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appGetVersion = (params: RequestParams = {}) =>
     this.request<AppVersion, any>({
       path: `/api/app/version`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -97,8 +110,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appRebuildIndexes = (params: RequestParams = {}) =>
     this.request<UserMessage, any>({
       path: `/api/app/rebuild-indexes`,
-      method: 'POST',
-      format: 'json',
+      method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -114,9 +127,9 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoriesList = (query: CategoriesListParams, params: RequestParams = {}) =>
     this.request<IItemSetOfListCategoriesResponse, IItemSetOfIFailure>({
       path: `/api/categories`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -132,10 +145,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoriesSave = (data: SaveCategoryRequest, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/categories`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -148,11 +161,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `GetCategoryResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  categoriesGet = (id: number, params: RequestParams = {}) =>
+  categoriesGet = (
+    { id, ...query }: CategoriesGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetCategoryResponse, IItemSetOfIFailure>({
       path: `/api/categories/${id}`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -165,11 +181,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  categoriesDelete = (id: number, params: RequestParams = {}) =>
+  categoriesDelete = (
+    { id, ...query }: CategoriesDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/categories/${id}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -182,13 +201,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  categoriesAddToAllRecipes = (data: AddCategoryToAllRecipesRequest, params: RequestParams = {}) =>
+  categoriesAddToAllRecipes = (
+    data: AddCategoryToAllRecipesRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/categories/add-to-all-recipes`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -201,12 +223,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `IItemSetOfListGroceryAislesResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryAislesList = (query: GroceryAislesListParams, params: RequestParams = {}) =>
+  groceryAislesList = (
+    query: GroceryAislesListParams,
+    params: RequestParams = {},
+  ) =>
     this.request<IItemSetOfListGroceryAislesResponse, IItemSetOfIFailure>({
       path: `/api/grocery-aisles`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -219,13 +244,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryAislesSave = (data: SaveGroceryAisleRequest, params: RequestParams = {}) =>
+  groceryAislesSave = (
+    data: SaveGroceryAisleRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-aisles`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -238,11 +266,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `GetGroceryAisleResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryAislesGet = (id: number, params: RequestParams = {}) =>
+  groceryAislesGet = (
+    { id, ...query }: GroceryAislesGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetGroceryAisleResponse, IItemSetOfIFailure>({
       path: `/api/grocery-aisles/${id}`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -255,11 +286,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryAislesDelete = (id: number, params: RequestParams = {}) =>
+  groceryAislesDelete = (
+    { id, ...query }: GroceryAislesDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-aisles/${id}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -272,12 +306,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `SearchGroceryItemsResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsSearch = (query: GroceryItemsSearchParams, params: RequestParams = {}) =>
+  groceryItemsSearch = (
+    query: GroceryItemsSearchParams,
+    params: RequestParams = {},
+  ) =>
     this.request<SearchGroceryItemsResponse, IItemSetOfIFailure>({
       path: `/api/grocery-items`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -290,13 +327,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsSave = (data: SaveGroceryItemRequest, params: RequestParams = {}) =>
+  groceryItemsSave = (
+    data: SaveGroceryItemRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-items`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -309,12 +349,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `IItemSetOfSuggestGroceryItemsResultItem`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsSuggest = (query: GroceryItemsSuggestParams, params: RequestParams = {}) =>
+  groceryItemsSuggest = (
+    query: GroceryItemsSuggestParams,
+    params: RequestParams = {},
+  ) =>
     this.request<IItemSetOfSuggestGroceryItemsResultItem, IItemSetOfIFailure>({
       path: `/api/grocery-items/suggest`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -327,11 +370,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `GetGroceryItemResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsGet = (id: number, params: RequestParams = {}) =>
+  groceryItemsGet = (
+    { id, ...query }: GroceryItemsGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetGroceryItemResponse, IItemSetOfIFailure>({
       path: `/api/grocery-items/${id}`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -344,11 +390,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsDelete = (id: number, params: RequestParams = {}) =>
+  groceryItemsDelete = (
+    { id, ...query }: GroceryItemsDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-items/${id}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -361,13 +410,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  groceryItemsSaveInventory = (data: SaveGroceryItemInventoryRequest, params: RequestParams = {}) =>
+  groceryItemsSaveInventory = (
+    data: SaveGroceryItemInventoryRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-items/inventory`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -382,8 +434,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   groceryItemsRebuild = (params: RequestParams = {}) =>
     this.request<UserMessage, any>({
       path: `/api/grocery-items/rebuild-index`,
-      method: 'POST',
-      format: 'json',
+      method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -396,10 +448,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `File`
    * @response `400` `IItemSetOfIFailure`
    */
-  imagesGet = (name: string, params: RequestParams = {}) =>
+  imagesGet = (
+    { name, ...query }: ImagesGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<File, IItemSetOfIFailure>({
       path: `/api/images/${name}`,
-      method: 'GET',
+      method: "GET",
       ...params,
     });
   /**
@@ -412,11 +467,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfString`
    * @response `400` `IItemSetOfIFailure`
    */
-  imagesDelete = (name: string, params: RequestParams = {}) =>
+  imagesDelete = (
+    { name, ...query }: ImagesDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images/${name}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -435,15 +493,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       /** @format binary */
       file?: File | null;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images`,
-      method: 'POST',
+      method: "POST",
       query: query,
       body: data,
       type: ContentType.FormData,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -456,11 +514,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfString`
    * @response `400` `IItemSetOfIFailure`
    */
-  imagesPin = (name: string, params: RequestParams = {}) =>
+  imagesPin = (
+    { name, ...query }: ImagesPinParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images/pin/${name}`,
-      method: 'POST',
-      format: 'json',
+      method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -476,9 +537,9 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   mealPlansList = (query: MealPlansListParams, params: RequestParams = {}) =>
     this.request<IItemSetOfListMealPlansResponse, IItemSetOfIFailure>({
       path: `/api/meal-plans`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -494,10 +555,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   mealPlansSave = (data: SaveMealPlanRequest, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/meal-plans`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -510,11 +571,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `GetMealPlanResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealPlansGet = (id: number, params: RequestParams = {}) =>
+  mealPlansGet = (
+    { id, ...query }: MealPlansGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetMealPlanResponse, IItemSetOfIFailure>({
       path: `/api/meal-plans/${id}`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -527,11 +591,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealPlansDelete = (id: number, params: RequestParams = {}) =>
+  mealPlansDelete = (
+    { id, ...query }: MealPlansDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/meal-plans/${id}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -547,9 +614,9 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   recipesSearch = (query: RecipesSearchParams, params: RequestParams = {}) =>
     this.request<SearchRecipesResponse, IItemSetOfIFailure>({
       path: `/api/recipes`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -565,10 +632,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   recipesSave = (data: SaveRecipeRequest, params: RequestParams = {}) =>
     this.request<EntityResponseOfGetRecipeResponse, IItemSetOfIFailure>({
       path: `/api/recipes`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -584,9 +651,9 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   recipesSuggest = (query: RecipesSuggestParams, params: RequestParams = {}) =>
     this.request<IItemSetOfSuggestRecipesResultItem, IItemSetOfIFailure>({
       path: `/api/recipes/suggest`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -599,11 +666,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `GetRecipeResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  recipesGet = (id: number, params: RequestParams = {}) =>
+  recipesGet = (
+    { id, ...query }: RecipesGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetRecipeResponse, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -616,11 +686,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  recipesDelete = (id: number, params: RequestParams = {}) =>
+  recipesDelete = (
+    { id, ...query }: RecipesDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -635,8 +708,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   recipesRebuild = (params: RequestParams = {}) =>
     this.request<UserMessage, any>({
       path: `/api/recipes/rebuild-index`,
-      method: 'POST',
-      format: 'json',
+      method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -649,12 +722,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `IItemSetOfListStorageLocationsResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  storageLocationsList = (query: StorageLocationsListParams, params: RequestParams = {}) =>
+  storageLocationsList = (
+    query: StorageLocationsListParams,
+    params: RequestParams = {},
+  ) =>
     this.request<IItemSetOfListStorageLocationsResponse, IItemSetOfIFailure>({
       path: `/api/storage-locations`,
-      method: 'GET',
+      method: "GET",
       query: query,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -667,13 +743,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  storageLocationsSave = (data: SaveStorageLocationRequest, params: RequestParams = {}) =>
+  storageLocationsSave = (
+    data: SaveStorageLocationRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/storage-locations`,
-      method: 'POST',
+      method: "POST",
       body: data,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -686,11 +765,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `GetStorageLocationResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  storageLocationsGet = (id: number, params: RequestParams = {}) =>
+  storageLocationsGet = (
+    { id, ...query }: StorageLocationsGetParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetStorageLocationResponse, IItemSetOfIFailure>({
       path: `/api/storage-locations/${id}`,
-      method: 'GET',
-      format: 'json',
+      method: "GET",
+      format: "json",
       ...params,
     });
   /**
@@ -703,11 +785,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  storageLocationsDelete = (id: number, params: RequestParams = {}) =>
+  storageLocationsDelete = (
+    { id, ...query }: StorageLocationsDeleteParams,
+    params: RequestParams = {},
+  ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/storage-locations/${id}`,
-      method: 'DELETE',
-      format: 'json',
+      method: "DELETE",
+      format: "json",
       ...params,
     });
 }

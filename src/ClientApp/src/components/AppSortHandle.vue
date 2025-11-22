@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 <template>
   <span class="sort-handle" @click.stop.prevent>
     <div class="visually-hidden">Drag to sort</div>
-    <font-awesome-icon icon="fa-grip-vertical" class="text-muted" />
+    <FontAwesomeIcon icon="fa-grip-vertical" class="text-muted" />
   </span>
 </template>
 

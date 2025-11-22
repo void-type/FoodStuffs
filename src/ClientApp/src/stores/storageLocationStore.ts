@@ -3,9 +3,9 @@ import type {
   StorageLocationsListParams,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
+import { defineStore } from 'pinia';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
-import { defineStore } from 'pinia';
 import StorageLocationsListRequest from '@/models/StorageLocationsListRequest';
 import listRequestToQueryParams from '@/models/StorageLocationStoreHelper';
 import useMessageStore from './messageStore';

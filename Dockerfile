@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
 # Install Node in the build container
@@ -43,7 +43,7 @@ RUN pwsh ./build/build.ps1
 # Copy output from the build container to the run container
 ARG ENTRY_POINT
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
 COPY --from=build /source/artifacts/dist/release .

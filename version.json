@@ -1,5 +1,5 @@
 {
-  "version": "17.1",
+  "version": "18.0",
   "publicReleaseRefSpec": [
     "^refs/heads/main$",
     "^refs/heads/v\\d+(?:\\.\\d+)?$"

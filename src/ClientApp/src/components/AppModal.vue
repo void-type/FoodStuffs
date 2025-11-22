@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import useAppStore from '@/stores/appStore';
-import { watch } from 'vue';
-import { storeToRefs } from 'pinia';
 import { Modal } from 'bootstrap';
+import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
+import useAppStore from '@/stores/appStore';
 
 const appStore = useAppStore();
 const { modalIsActive, modalParameters } = storeToRefs(appStore);
@@ -61,15 +61,19 @@ watch(modalIsActive, (isActive) => {
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 id="app-modal-title" class="modal-title">{{ modalParameters.title }}</h5>
+            <h5 id="app-modal-title" class="modal-title">
+              {{ modalParameters.title }}
+            </h5>
             <button
               type="button"
               class="btn-close"
               aria-label="Cancel"
               @click="cancelAction"
-            ></button>
+            />
           </div>
-          <div class="modal-body">{{ modalParameters.description }}</div>
+          <div class="modal-body">
+            {{ modalParameters.description }}
+          </div>
           <div class="modal-footer">
             <button
               id="app-modal-cancel-button"

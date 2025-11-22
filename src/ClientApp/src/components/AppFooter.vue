@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import useAppStore from '@/stores/appStore';
+import { storeToRefs } from 'pinia';
 import RouterHelper from '@/models/RouterHelper';
+import useAppStore from '@/stores/appStore';
 
 const appStore = useAppStore();
 const { version } = storeToRefs(appStore);
@@ -13,13 +13,12 @@ const { version } = storeToRefs(appStore);
     <div class="m-0 mb-4 text-center">
       <button class="btn btn-outline-secondary" type="button" @click="RouterHelper.scrollToTop()">
         Back to top
-        <font-awesome-icon icon="fa-arrow-up" class="ms-1" />
+        <FontAwesomeIcon icon="fa-arrow-up" class="ms-1" />
       </button>
     </div>
     <div>
       <a href="https://github.com/void-type/foodstuffs">
-        FoodStuffs {{ version }} is open source!</a
-      >
+        FoodStuffs {{ version }} is open source!</a>
     </div>
     <div>
       Logo icon made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from

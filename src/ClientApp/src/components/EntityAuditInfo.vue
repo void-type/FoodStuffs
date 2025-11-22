@@ -13,16 +13,12 @@ defineProps({
 <template>
   <div v-if="entity !== null">
     <div>
-      <small
-        >Created: {{ DateHelper.dateTimeForView(entity.createdOn) }} by
-        {{ entity.createdBy }}</small
-      >
+      <small>Created: {{ DateHelper.dateTimeForView(entity.createdOn) }} by
+        {{ entity.createdBy }}</small>
     </div>
     <div>
-      <small
-        >Modified: {{ DateHelper.dateTimeForView(entity.modifiedOn) }} by
-        {{ entity.modifiedBy }}</small
-      >
+      <small>Modified: {{ DateHelper.dateTimeForView(entity.modifiedOn) }} by
+        {{ entity.modifiedBy }}</small>
     </div>
   </div>
 </template>

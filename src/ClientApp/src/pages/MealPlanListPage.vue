@@ -1,19 +1,20 @@
 <script lang="ts" setup>
-import useAppStore from '@/stores/appStore';
-import useMealPlanStore from '@/stores/mealPlanStore';
-import { storeToRefs } from 'pinia';
-import { computed, watch, type PropType } from 'vue';
+import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
 import type { ModalParameters } from '@/models/ModalParameters';
-import EntityTablePager from '@/components/EntityTablePager.vue';
-import { toInt, toNumber } from '@/models/FormatHelper';
-import Choices from '@/models/Choices';
-import router from '@/router';
-import ListMealPlansRequest from '@/models/MealPlansListRequest';
+import { storeToRefs } from 'pinia';
+import { computed, watch } from 'vue';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
-import RouterHelper from '@/models/RouterHelper';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import EntityTablePager from '@/components/EntityTablePager.vue';
+import Choices from '@/models/Choices';
+import { toInt, toNumber } from '@/models/FormatHelper';
+import ListMealPlansRequest from '@/models/MealPlansListRequest';
+import RouterHelper from '@/models/RouterHelper';
+import router from '@/router';
+import useAppStore from '@/stores/appStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
 
 const props = defineProps({
   query: {
@@ -99,7 +100,7 @@ watch(
     setListRequestFromQuery();
     mealPlanStore.fetchMealPlanList();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
@@ -109,13 +110,17 @@ watch(
     <AppPageHeading />
     <div class="mt-3">
       <div class="btn-toolbar">
-        <button class="btn btn-secondary" @click="newMealPlan">New</button>
+        <button class="btn btn-secondary" @click="newMealPlan">
+          New
+        </button>
       </div>
     </div>
-    <div class="mt-3">{{ resultCountText }}</div>
+    <div class="mt-3">
+      {{ resultCountText }}
+    </div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
-      :class="{ 'table mt-4': true, 'table-dark': useDarkMode }"
+      class="table mt-4" :class="{ 'table-dark': useDarkMode }"
     >
       <thead>
         <tr>
@@ -128,7 +133,9 @@ watch(
       <tbody>
         <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
           <td>
-            <router-link :to="RouterHelper.editMealPlan(mealPlan)">{{ mealPlan.name }}</router-link>
+            <router-link :to="RouterHelper.editMealPlan(mealPlan)">
+              {{ mealPlan.name }}
+            </router-link>
           </td>
           <td>
             <div class="form-check">
@@ -139,7 +146,7 @@ watch(
                 :checked="currentMealPlan.id === mealPlan.id"
                 :aria-label="`Set ${mealPlan.name} as current meal plan`"
                 @change="() => mealPlanStore.setCurrentMealPlan(mealPlan.id)"
-              />
+              >
             </div>
           </td>
           <td>{{ mealPlan.recipeCount }}</td>

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import useDiscoveryStore from '@/stores/discoveryStore';
-import { storeToRefs } from 'pinia';
-import { onMounted, onUnmounted, ref, type Ref } from 'vue';
+import type { Ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import RecipeCard from '@/components/RecipeCard.vue';
+import { storeToRefs } from 'pinia';
+import { onMounted, onUnmounted, ref } from 'vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import RecipeCard from '@/components/RecipeCard.vue';
+import useDiscoveryStore from '@/stores/discoveryStore';
 
 const discoveryStore = useDiscoveryStore();
 
@@ -26,7 +27,7 @@ function setupLoadMoreObserver() {
     },
     {
       threshold: 1,
-    }
+    },
   );
 
   loadMoreObserver.observe(loadMoreTriggerElement.value);
@@ -64,7 +65,7 @@ onUnmounted(() => {
         title="Randomize"
         @click="randomize"
       >
-        <font-awesome-icon icon="fa-dice-three" />
+        <FontAwesomeIcon icon="fa-dice-three" />
       </button>
     </div>
     <div class="grid mt-2">
@@ -76,7 +77,7 @@ onUnmounted(() => {
         class="g-col-12 g-col-sm-6 g-col-lg-4"
       />
     </div>
-    <div ref="loadMoreTriggerElement" class="m-0"></div>
+    <div ref="loadMoreTriggerElement" class="m-0" />
     <div v-if="isFetchingRecipes" class="m-0 mt-4 text-center">
       <div class="spinner-border m-0" role="status">
         <span class="visually-hidden">Loading...</span>

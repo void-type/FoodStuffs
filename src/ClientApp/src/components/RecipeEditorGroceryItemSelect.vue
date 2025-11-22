@@ -1,15 +1,10 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeUnmount, type PropType } from 'vue';
+import type { PropType } from 'vue';
 import type { SearchGroceryItemsResultItem } from '@/api/data-contracts';
 import type RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
 import { Dropdown } from 'bootstrap';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { trimAndTitleCase } from '@/models/FormatHelper';
-import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
-
-const model = defineModel({
-  type: Number as PropType<number | undefined>,
-  required: true,
-});
 
 const props = defineProps({
   isFieldInError: {
@@ -39,6 +34,11 @@ const props = defineProps({
   },
 });
 
+const model = defineModel({
+  type: Number as PropType<number | undefined>,
+  required: true,
+});
+
 const filterText = ref('');
 
 const filteredSuggestions = computed(() => {
@@ -47,7 +47,7 @@ const filteredSuggestions = computed(() => {
   const filterTextLow = filterText.value.toLowerCase();
 
   return props.suggestions.filter(
-    (x) => !usedIds.includes(x.id) && x.name?.toLowerCase().includes(filterTextLow)
+    x => !usedIds.includes(x.id) && x.name?.toLowerCase().includes(filterTextLow),
   );
 });
 
@@ -113,9 +113,7 @@ onBeforeUnmount(() => {
     </button>
     <ul class="dropdown-menu pt-0 w-100">
       <li class="mb-2">
-        <label :for="`item-${item.uiKey}-name-filter`" class="visually-hidden"
-          >Type to filter options</label
-        >
+        <label :for="`item-${item.uiKey}-name-filter`" class="visually-hidden">Type to filter options</label>
         <input
           :id="`item-${item.uiKey}-name-filter`"
           ref="filterInput"
@@ -123,19 +121,21 @@ onBeforeUnmount(() => {
           type="text"
           class="form-control"
           placeholder="Type to filter options"
-          @input="(e) => (filterText = (e as HTMLInputEvent).target.value)"
-        />
+          @input="(e) => (filterText = (e.target as HTMLInputElement).value)"
+        >
       </li>
       <li v-for="suggestion in filteredSuggestions" :key="suggestion.id">
         <a class="dropdown-item" href="#" @click.prevent="selectSuggestion(suggestion.id)">
           {{ suggestion.name }}
         </a>
       </li>
-      <li v-if="filteredSuggestions.length === 0" class="p-3">No options found</li>
+      <li v-if="filteredSuggestions.length === 0" class="p-3">
+        No options found
+      </li>
       <li
         v-if="
-          filterText.length > 0 &&
-          filteredSuggestions.find((x) => x.name === filterText) === undefined
+          filterText.length > 0
+            && filteredSuggestions.find((x) => x.name === filterText) === undefined
         "
         class="mt-2"
       >

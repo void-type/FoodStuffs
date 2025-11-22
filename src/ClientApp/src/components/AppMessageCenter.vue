@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { storeToRefs } from 'pinia';
 import useMessageStore from '@/stores/messageStore';
 
 const messageStore = useMessageStore();
@@ -14,13 +14,12 @@ const { clearMessage, clearMessageTimeout } = messageStore;
       <div
         v-for="message in messages"
         :key="message.id"
-        :class="{
-          'alert alert-dismissible': true,
+        class="alert alert-dismissible" :class="{
           'alert-danger': message.isError,
           'alert-success': !message.isError,
         }"
       >
-        <font-awesome-icon
+        <FontAwesomeIcon
           v-if="typeof message.timeout === 'undefined'"
           class="opacity-50 me-2"
           icon="fa-thumbtack"
@@ -33,7 +32,7 @@ const { clearMessage, clearMessageTimeout } = messageStore;
           @click="clearMessage(message)"
           @mouseenter="clearMessageTimeout(message)"
           @focusin="clearMessageTimeout(message)"
-        ></button>
+        />
       </div>
     </transition-group>
   </div>

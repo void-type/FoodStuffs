@@ -1,12 +1,7 @@
 <script lang="ts" setup>
-import { type PropType } from 'vue';
-import useMessageStore from '@/stores/messageStore';
+import type { PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-const model = defineModel({
-  type: Number as PropType<number | null | undefined>,
-  required: true,
-});
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -34,11 +29,16 @@ const props = defineProps({
   },
 });
 
+const model = defineModel({
+  type: Number as PropType<number | null | undefined>,
+  required: true,
+});
+
 const messageStore = useMessageStore();
 
-const changeInventory = (amount: number) => {
+function changeInventory(amount: number) {
   model.value = Math.min(props.max, Math.max(props.min, (model.value || 0) + amount));
-};
+}
 </script>
 
 <template>
@@ -51,7 +51,7 @@ const changeInventory = (amount: number) => {
         type="button"
         @click="changeInventory(-1)"
       >
-        <font-awesome-icon icon="fa-minus" />
+        <FontAwesomeIcon icon="fa-minus" />
       </button>
       <input
         :id="id"
@@ -59,32 +59,33 @@ const changeInventory = (amount: number) => {
         required
         type="number"
         min="0"
-        :class="{
-          'form-control': true,
+        class="form-control" :class="{
           'is-invalid': messageStore.isFieldInError(id),
         }"
-      />
+      >
       <button
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"
         @click="changeInventory(1)"
       >
-        <font-awesome-icon icon="fa-plus" />
+        <FontAwesomeIcon icon="fa-plus" />
       </button>
     </div>
   </div>
   <div v-else>
     <label :for="id" class="visually-hidden">Inventory</label>
     <div class="input-group">
-      <div class="input-group-text">Inventory</div>
+      <div class="input-group-text">
+        Inventory
+      </div>
       <button
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"
         @click="changeInventory(-1)"
       >
-        <font-awesome-icon icon="fa-minus" />
+        <FontAwesomeIcon icon="fa-minus" />
       </button>
       <input
         :id="id"
@@ -92,18 +93,17 @@ const changeInventory = (amount: number) => {
         required
         type="number"
         min="0"
-        :class="{
-          'form-control': true,
+        class="form-control" :class="{
           'is-invalid': messageStore.isFieldInError(id),
         }"
-      />
+      >
       <button
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"
         @click="changeInventory(1)"
       >
-        <font-awesome-icon icon="fa-plus" />
+        <FontAwesomeIcon icon="fa-plus" />
       </button>
     </div>
   </div>

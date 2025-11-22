@@ -1,32 +1,33 @@
 <script lang="ts" setup>
-import { computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
-import ApiHelper from '@/models/ApiHelper';
-import useAppStore from '@/stores/appStore';
-import useMessageStore from '@/stores/messageStore';
-import useCategoryStore from '@/stores/categoryStore';
-import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
-import AppPageHeading from '@/components/AppPageHeading.vue';
-import CategoryGetResponse from '@/models/CategoryGetResponse';
-import CategoryWorking from '@/models/CategoryWorking';
-import type { HttpResponse } from '@/api/http-client';
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import type {
   EntityMessageOfInteger,
-  IItemSetOfIFailure,
   GetCategoryResponse,
+  IItemSetOfIFailure,
 } from '@/api/data-contracts';
+import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
-import router from '@/router';
-import {
-  type RouteLocationNormalized,
-  type NavigationGuardNext,
-  onBeforeRouteUpdate,
-  onBeforeRouteLeave,
-} from 'vue-router';
-import TagBadge from '@/components/TagBadge.vue';
-import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
-import RouterHelper from '@/models/RouterHelper';
-import { ChromePicker } from 'vue-color';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
+import { ChromePicker } from 'vue-color';
+import {
+
+  onBeforeRouteLeave,
+  onBeforeRouteUpdate,
+
+} from 'vue-router';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
+import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
+import TagBadge from '@/components/TagBadge.vue';
+import ApiHelper from '@/models/ApiHelper';
+import CategoryGetResponse from '@/models/CategoryGetResponse';
+import CategoryWorking from '@/models/CategoryWorking';
+import RouterHelper from '@/models/RouterHelper';
+import router from '@/router';
+import useAppStore from '@/stores/appStore';
+import useCategoryStore from '@/stores/categoryStore';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   id: {
@@ -64,7 +65,7 @@ async function fetch() {
   const { id } = props;
 
   try {
-    const response = await api().categoriesGet(id);
+    const response = await api().categoriesGet({ id });
     data.source = response.data;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -102,7 +103,7 @@ async function onSaveClick() {
 function onDeleteClick(id: number) {
   function deleteNow() {
     api()
-      .categoriesDelete(id)
+      .categoriesDelete({ id })
       .then(async (response) => {
         data.source = new CategoryGetResponse();
         await categoryStore.fetchCategoriesList();
@@ -180,7 +181,7 @@ watch(
   () => {
     fetch();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -188,7 +189,7 @@ watch(
   () => {
     reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 function changeRouteFromModal(t: RouteLocationNormalized) {
@@ -201,7 +202,7 @@ function changeRouteFromModal(t: RouteLocationNormalized) {
 function beforeRouteChange(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   if (forceImmediateRouteChange) {
     next();
@@ -236,7 +237,7 @@ function handleBeforeUnload(event: BeforeUnloadEvent) {
   if (isDirty.value) {
     event.preventDefault();
     // Required for Chrome to show the confirmation dialog
-    // eslint-disable-next-line no-param-reassign
+
     event.returnValue = '';
     // Required for Firefox to show the confirmation dialog
     return '';
@@ -299,11 +300,10 @@ onBeforeUnmount(() => {
             v-model="data.working.name"
             required
             type="text"
-            :class="{
-              'form-control': true,
+            class="form-control" :class="{
               'is-invalid': messageStore.isFieldInError('name'),
             }"
-          />
+          >
         </div>
         <div class="g-col-12 g-col-md-6">
           <label for="color" class="form-label">Color</label>
@@ -312,12 +312,11 @@ onBeforeUnmount(() => {
               id="color"
               v-model="data.working.color"
               type="text"
-              :class="{
-                'form-control': true,
+              class="form-control" :class="{
                 'is-invalid': messageStore.isFieldInError('color'),
               }"
               title="Enter color hex code"
-            />
+            >
             <button
               class="btn btn-outline-secondary dropdown-toggle"
               type="button"
@@ -326,7 +325,7 @@ onBeforeUnmount(() => {
               aria-expanded="false"
               aria-label="Open color picker"
             >
-              <font-awesome-icon icon="fa-palette" />
+              <FontAwesomeIcon icon="fa-palette" />
             </button>
             <div class="dropdown-menu dropdown-menu-end p-3">
               <div class="mb-2">
@@ -352,7 +351,7 @@ onBeforeUnmount(() => {
               class="form-check-input"
               type="checkbox"
               :class="{ 'is-invalid': messageStore.isFieldInError('showInMealPlan') }"
-            />
+            >
             <label for="showInMealPlan" class="form-check-label">Show in meal plan</label>
           </div>
         </div>
@@ -365,7 +364,9 @@ onBeforeUnmount(() => {
                 {{ recipe.name }}
               </router-link>
               |
-              <router-link :to="RouterHelper.editRecipe(recipe)">Edit</router-link>
+              <router-link :to="RouterHelper.editRecipe(recipe)">
+                Edit
+              </router-link>
             </li>
           </ul>
         </div>

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type { ListCategoriesResponse, SearchFacetValue } from '@/api/data-contracts';
+import { onMounted, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
-import { ref, onMounted, type PropType } from 'vue';
-import useMessageStore from '@/stores/messageStore';
-import { type ListCategoriesResponse, type SearchFacetValue } from '@/api/data-contracts';
 import { toNumberOrNull } from '@/models/FormatHelper';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   facetValues: {
@@ -46,7 +47,7 @@ function getFacetCount(facetValue: number | null | undefined) {
     return null;
   }
 
-  const count = props.facetValues?.find((x) => x.fieldValue === facetValue.toString())?.count || 0;
+  const count = props.facetValues?.find(x => x.fieldValue === facetValue.toString())?.count || 0;
 
   return ` (${count})`;
 }
@@ -57,7 +58,7 @@ onMounted(() => {
     .then((response) => {
       categoryOptions.value = response.data.items || [];
     })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+    .catch(response => messageStore.setApiFailureMessages(response));
 });
 </script>
 
@@ -72,8 +73,7 @@ onMounted(() => {
         aria-expanded="false"
         aria-controls="categoriesCollapse"
       >
-        <label for="categorySearch"
-          >Categories
+        <label for="categorySearch">Categories
           <span v-if="model.categories.length">({{ model.categories.length }} selected)</span>
         </label>
       </button>
@@ -96,16 +96,14 @@ onMounted(() => {
             Select All
           </button>
           <div class="form-check form-switch my-auto">
-            <label class="w-100" for="matchAllCategories" aria-label="Match all selected categories"
-              >Match All</label
-            >
+            <label class="w-100" for="matchAllCategories" aria-label="Match all selected categories">Match All</label>
             <input
               id="matchAllCategories"
               v-model="model.matchAllCategories"
               :checked="model.matchAllCategories"
               class="form-check-input"
               type="checkbox"
-            />
+            >
           </div>
         </div>
         <div class="grid category-scroll">
@@ -120,10 +118,8 @@ onMounted(() => {
               class="form-check-input"
               type="checkbox"
               :value="categoryOption.id"
-            />
-            <label class="form-check-label" :for="`category-${categoryOption.id}`"
-              >{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label
             >
+            <label class="form-check-label" :for="`category-${categoryOption.id}`">{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label>
           </div>
         </div>
       </div>

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
 import type {
   GetMealPlanResponseExcludedGroceryItem,
   GetMealPlanResponseRecipeGroceryItem,
 } from '@/api/data-contracts';
-import { computed, reactive, type PropType } from 'vue';
+import { computed, reactive } from 'vue';
 import GroceryItemInventoryQuantity from './GroceryItemInventoryQuantity.vue';
 
 const props = defineProps({
@@ -43,7 +44,7 @@ const groceryItemsGrouped = computed(() => {
     groupedById.get(item.details.groceryAisleId)?.push(item);
   });
 
-  const grouped = Array.from(groupedById).map((x) => ({
+  const grouped = Array.from(groupedById).map(x => ({
     groceryAisleId: x[0],
     groceryAisle: props.getGroceryAisleDetails(x[0]) || {
       name: 'No aisle',
@@ -93,7 +94,7 @@ function copyList() {
   });
 
   // This doesn't paste as multiple items from firefox (chrome works)
-  const text = lines.join(`\n`);
+  const text = lines.join('\n');
 
   navigator.clipboard.writeText(text);
   data.copyTooltipText = 'List copied!';
@@ -168,7 +169,7 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
       <div class="accordion-item">
         <div class="accordion-header">
           <div
-            :class="['accordion-button', { collapsed: collapsed }]"
+            class="accordion-button" :class="[{ collapsed }]"
             type="button"
             data-bs-toggle="collapse"
             :data-bs-target="`#${collapseId}`"
@@ -182,7 +183,7 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
         </div>
         <div
           :id="collapseId"
-          :class="['accordion-collapse', 'collapse', { show: !collapsed }]"
+          class="accordion-collapse collapse" :class="[{ show: !collapsed }]"
           :data-bs-parent="`#${accordionId}`"
         >
           <div class="accordion-body p-0 card border-none">

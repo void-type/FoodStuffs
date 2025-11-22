@@ -1,12 +1,13 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
 import type { GetMealPlanResponseRecipe } from '@/api/data-contracts';
-import { computed, type PropType } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AppSortHandle from './AppSortHandle.vue';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
-import AppSortHandle from './AppSortHandle.vue';
 import TagBadge from './TagBadge.vue';
 
 const props = defineProps({
@@ -45,14 +46,14 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
               :loading="imgLazy ? 'lazy' : 'eager'"
               width="1600"
               height="1200"
-            />
+            >
             <ImagePlaceholder
               v-else
               class="img-fluid position-absolute top-0 left-0 bottom-0 right-0"
               :class="{ greyscale: recipe.isComplete }"
             />
             <div v-if="recipe.isComplete" class="completion-overlay">
-              <font-awesome-icon icon="fa-check" />
+              <FontAwesomeIcon icon="fa-check" />
             </div>
           </div>
         </router-link>
@@ -105,19 +106,18 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
                   aria-label="edit recipe"
                   :to="RouterHelper.editRecipe(recipe)"
                   @click.stop
-                  >Edit Recipe</router-link
                 >
+                  Edit Recipe
+                </router-link>
               </div>
             </div>
           </div>
           <div class="mt-3 d-flex justify-content-between align-items-center">
             <div>
-              <span v-if="(recipe.mealPlanningSidesCount || 0) > 0"
-                >{{ recipe.mealPlanningSidesCount }} side{{
-                  recipe.mealPlanningSidesCount !== 1 ? 's' : ''
-                }}
-                needed.</span
-              >
+              <span v-if="(recipe.mealPlanningSidesCount || 0) > 0">{{ recipe.mealPlanningSidesCount }} side{{
+                recipe.mealPlanningSidesCount !== 1 ? 's' : ''
+              }}
+                needed.</span>
             </div>
             <div class="form-check my-auto">
               <input
@@ -126,7 +126,7 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
                 class="form-check-input"
                 :checked="recipe.isComplete"
                 @change.stop.prevent="() => emit('recipeCompleted', recipe)"
-              />
+              >
               <label class="form-check-label" :for="`recipe-complete-${recipe.id}`">Complete</label>
             </div>
           </div>

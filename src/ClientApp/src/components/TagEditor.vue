@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
 import type { Tag } from '@/models/Tag';
 import { onClickOutside } from '@vueuse/core';
-import { computed, ref, watch, type PropType } from 'vue';
+import { computed, ref, watch } from 'vue';
 import TagBadge from './TagBadge.vue';
 
 const props = defineProps({
@@ -47,17 +48,17 @@ const showSuggestions = ref(true);
 
 const availableSuggestions = computed(() =>
   props.suggestions
-    .filter((x) => !props.tags.includes(x))
-    .filter((x) => newTag.value && x.name?.toLowerCase()?.includes(newTag.value.toLowerCase()))
+    .filter(x => !props.tags.includes(x))
+    .filter(x => newTag.value && x.name?.toLowerCase()?.includes(newTag.value.toLowerCase())),
 );
 
 const tagEditorRef = ref<HTMLElement | null>(null);
 
 function handleFocusOut(event: FocusEvent) {
   const target = event.relatedTarget as HTMLElement;
-  const isChildOfForm =
-    tagEditorRef.value?.contains(document.activeElement) ||
-    (target && tagEditorRef.value?.contains(target));
+  const isChildOfForm
+    = tagEditorRef.value?.contains(document.activeElement)
+      || (target && tagEditorRef.value?.contains(target));
 
   if (!isChildOfForm) {
     showSuggestions.value = false;
@@ -76,7 +77,7 @@ watch(
     } else {
       showSuggestions.value = false;
     }
-  }
+  },
 );
 </script>
 
@@ -92,7 +93,7 @@ watch(
         :disabled="false"
         autocomplete="off"
         @keydown.stop.prevent.enter="addTagClick(newTag)"
-      />
+      >
       <button class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick(newTag)">
         Add
       </button>

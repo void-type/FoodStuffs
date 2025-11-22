@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import useRecipeStore from '@/stores/recipeStore';
-import useMessageStore from '@/stores/messageStore';
-import router from '@/router';
-import RecipeStoreHelper from '@/models/RecipeStoreHelper';
+import type { HttpResponse } from '@/api/http-client';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { onClickOutside } from '@vueuse/core';
-import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
-import type { HttpResponse } from '@/api/http-client';
-import RouterHelper from '@/models/RouterHelper';
-import { debounce } from '@/models/InputHelper';
-import useGroceryItemStore from '@/stores/groceryItemStore';
 import GroceryItemStoreHelper from '@/models/GroceryItemStoreHelper';
+import { debounce } from '@/models/InputHelper';
+import RecipeStoreHelper from '@/models/RecipeStoreHelper';
+import RouterHelper from '@/models/RouterHelper';
+import router from '@/router';
+import useGroceryItemStore from '@/stores/groceryItemStore';
+import useMessageStore from '@/stores/messageStore';
+import useRecipeStore from '@/stores/recipeStore';
 
 interface UnifiedSuggestion {
   id: string;
@@ -50,7 +50,7 @@ function cycleSearchMode() {
 }
 
 const searchModeIcon = computed(() =>
-  searchMode.value === 'recipe' ? 'fa-utensils' : 'fa-shopping-basket'
+  searchMode.value === 'recipe' ? 'fa-utensils' : 'fa-shopping-basket',
 );
 
 function navigateSearchPage() {
@@ -114,7 +114,7 @@ function suggest(event: Event) {
           return;
         }
 
-        suggestions.value = (response.data?.items || []).map((recipe) => ({
+        suggestions.value = (response.data?.items || []).map(recipe => ({
           id: `recipe-${recipe.id!}`,
           name: recipe.name!,
           icon: 'fa-utensils',
@@ -135,7 +135,7 @@ function suggest(event: Event) {
           return;
         }
 
-        suggestions.value = (response.data?.items || []).map((item) => ({
+        suggestions.value = (response.data?.items || []).map(item => ({
           id: `groceryItem-${item.id!}`,
           name: item.name!,
           icon: 'fa-shopping-basket',
@@ -150,9 +150,9 @@ function suggest(event: Event) {
 
 function handleFocusOut(event: FocusEvent) {
   const target = event.relatedTarget as HTMLElement;
-  const isChildOfForm =
-    searchContainerRef.value?.contains(document.activeElement) ||
-    (target && searchContainerRef.value?.contains(target));
+  const isChildOfForm
+    = searchContainerRef.value?.contains(document.activeElement)
+      || (target && searchContainerRef.value?.contains(target));
 
   if (!isChildOfForm) {
     closeSuggestions();
@@ -165,12 +165,12 @@ onClickOutside(searchContainerRef, () => {
 
 // Global Ctrl + Shift + F to focus the search input.
 const inputRef = ref<HTMLInputElement | null>(null);
-const handleKeydown = (event: KeyboardEvent) => {
+function handleKeydown(event: KeyboardEvent) {
   if (event.ctrlKey && event.shiftKey && event.key === 'F') {
     event.preventDefault();
     inputRef.value?.focus();
   }
-};
+}
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeydown);
@@ -191,7 +191,7 @@ onBeforeUnmount(() => {
         aria-label="Toggle search mode"
         @click.stop.prevent="cycleSearchMode"
       >
-        <font-awesome-icon :icon="searchModeIcon" />
+        <FontAwesomeIcon :icon="searchModeIcon" />
       </button>
       <input
         ref="inputRef"
@@ -204,14 +204,14 @@ onBeforeUnmount(() => {
         :aria-label="`Search ${searchMode === 'recipe' ? 'recipes' : 'grocery items'}`"
         @input="suggest"
         @keydown.enter.stop.prevent="navigateSearchPage"
-      />
+      >
       <button
         class="btn btn-outline-secondary"
         type="button"
         aria-label="Start search"
         @click.stop.prevent="navigateSearchPage"
       >
-        <font-awesome-icon icon="fa-search" />
+        <FontAwesomeIcon icon="fa-search" />
       </button>
     </div>
     <ul v-if="suggestions.length" class="dropdown-menu show">
@@ -224,10 +224,9 @@ onBeforeUnmount(() => {
       >
         <span>
           <router-link :to="suggestion.route" @click="navigateAway">
-            <font-awesome-icon class="me-2" :icon="suggestion.icon" />{{
+            <FontAwesomeIcon class="me-2" :icon="suggestion.icon" />{{
               suggestion.name
-            }}</router-link
-          >
+            }}</router-link>
         </span>
       </li>
     </ul>

@@ -1,17 +1,17 @@
-import { defineStore } from 'pinia';
 import type {
   GetRecipeResponse,
-  SearchRecipesResultItem,
-  SearchRecipesResponse,
-  RecipesSearchParams,
   IItemSetOfSearchRecipesResultItem,
+  RecipesSearchParams,
   SearchFacet,
+  SearchRecipesResponse,
+  SearchRecipesResultItem,
 } from '@/api/data-contracts';
+import type { HttpResponse } from '@/api/http-client';
+import { defineStore } from 'pinia';
+import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
-import ApiHelper from '@/models/ApiHelper';
-import type { HttpResponse } from '@/api/http-client';
 import useMessageStore from './messageStore';
 
 const recentLimit = 7;
@@ -71,7 +71,7 @@ export const useRecipeStore = defineStore('recipe', {
       const recentRecipes = this.recentRecipes.slice();
 
       const indexOfCurrentInRecents = recentRecipes
-        .map((recentRecipe) => recentRecipe.id)
+        .map(recentRecipe => recentRecipe.id)
         .indexOf(recipe.id);
 
       const recipeListItem = {
@@ -96,7 +96,7 @@ export const useRecipeStore = defineStore('recipe', {
       const recentRecipes = this.recentRecipes.slice();
 
       const indexOfCurrentInRecents = recentRecipes.findIndex(
-        (recentRecipe) => recentRecipe.id === id
+        recentRecipe => recentRecipe.id === id,
       );
 
       if (indexOfCurrentInRecents > -1) {
@@ -115,7 +115,7 @@ export const useRecipeStore = defineStore('recipe', {
       const recentRecipes = this.recentRecipes.slice();
 
       const indexOfCurrentInRecents = recentRecipes
-        .map((recentRecipe) => recentRecipe.id)
+        .map(recentRecipe => recentRecipe.id)
         .indexOf(recipe.id);
 
       if (indexOfCurrentInRecents < 0) {

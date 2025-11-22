@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type { ListStorageLocationsResponse, SearchFacetValue } from '@/api/data-contracts';
+import { onMounted, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
-import { ref, onMounted, type PropType } from 'vue';
-import useMessageStore from '@/stores/messageStore';
-import { type ListStorageLocationsResponse, type SearchFacetValue } from '@/api/data-contracts';
 import { toNumberOrNull } from '@/models/FormatHelper';
+import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   facetValues: {
@@ -46,7 +47,7 @@ function getFacetCount(facetValue: number | null | undefined) {
     return null;
   }
 
-  const count = props.facetValues?.find((x) => x.fieldValue === facetValue.toString())?.count || 0;
+  const count = props.facetValues?.find(x => x.fieldValue === facetValue.toString())?.count || 0;
 
   return ` (${count})`;
 }
@@ -57,7 +58,7 @@ onMounted(() => {
     .then((response) => {
       storageLocationOptions.value = response.data.items || [];
     })
-    .catch((response) => messageStore.setApiFailureMessages(response));
+    .catch(response => messageStore.setApiFailureMessages(response));
 });
 </script>
 
@@ -72,8 +73,7 @@ onMounted(() => {
         aria-expanded="false"
         aria-controls="storageLocationsCollapse"
       >
-        <label for="storageLocationSearch"
-          >Storage Locations
+        <label for="storageLocationSearch">Storage Locations
           <span v-if="model.storageLocations.length">
             ({{ model.storageLocations.length }} selected)
           </span>
@@ -102,15 +102,14 @@ onMounted(() => {
               class="w-100"
               for="matchAllStorageLocations"
               aria-label="Match all selected storage locations"
-              >Match All</label
-            >
+            >Match All</label>
             <input
               id="matchAllStorageLocations"
               v-model="model.matchAllStorageLocations"
               :checked="model.matchAllStorageLocations"
               class="form-check-input"
               type="checkbox"
-            />
+            >
           </div>
         </div>
         <div class="grid slim-scroll storage-location-scroll">
@@ -125,7 +124,7 @@ onMounted(() => {
               class="form-check-input"
               type="checkbox"
               :value="storageLocationOption.id"
-            />
+            >
             <label class="form-check-label" :for="`storageLocation-${storageLocationOption.id}`">
               {{ storageLocationOption.name }}{{ getFacetCount(storageLocationOption.id) }}
             </label>

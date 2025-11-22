@@ -1,7 +1,7 @@
 import type {
-  SearchRecipesResultItem,
   GetRecipeResponse,
   RecipesSearchParams,
+  SearchRecipesResultItem,
 } from '@/api/data-contracts';
 import RecipesSearchRequest from './RecipesSearchRequest';
 
@@ -11,7 +11,7 @@ const settingsKeyQueuedRecentRecipe = 'queuedRecentRecipe';
 export default class RecipeStoreHelper {
   static getRecents() {
     return JSON.parse(
-      localStorage.getItem(settingsKeyRecentRecipes) || '[]'
+      localStorage.getItem(settingsKeyRecentRecipes) || '[]',
     ) as SearchRecipesResultItem[];
   }
 
@@ -21,7 +21,7 @@ export default class RecipeStoreHelper {
 
   static getQueuedRecent() {
     return JSON.parse(
-      localStorage.getItem(settingsKeyQueuedRecentRecipe) || 'null'
+      localStorage.getItem(settingsKeyQueuedRecentRecipe) || 'null',
     ) as GetRecipeResponse | null;
   }
 

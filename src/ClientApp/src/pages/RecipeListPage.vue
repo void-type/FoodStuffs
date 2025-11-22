@@ -1,17 +1,19 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type { LocationQuery } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
+import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import EntityTablePager from '@/components/EntityTablePager.vue';
+import RecipeCard from '@/components/RecipeCard.vue';
+import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
 import Choices from '@/models/Choices';
 import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
 import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import useRecipeStore from '@/stores/recipeStore';
-import { storeToRefs } from 'pinia';
-import { watch, type PropType, ref, computed } from 'vue';
-import { useRoute, useRouter, type LocationQuery } from 'vue-router';
-import EntityTablePager from '@/components/EntityTablePager.vue';
-import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
-import RecipeCard from '@/components/RecipeCard.vue';
-import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
-import AppPageHeading from '@/components/AppPageHeading.vue';
-import AppScrollToTop from '@/components/AppScrollToTop.vue';
 
 const props = defineProps({
   query: {
@@ -127,8 +129,8 @@ function changeSort(event: Event) {
 }
 
 function setListRequestFromQuery() {
-  const categories =
-    props.query.categories
+  const categories
+    = props.query.categories
       ?.toString()
       ?.split(',')
       .flatMap((x) => {
@@ -149,7 +151,7 @@ function setListRequestFromQuery() {
 }
 
 const categoryFacets = computed(() => {
-  return listFacets.value.find((x) => x.fieldName === 'Categories')?.values || [];
+  return listFacets.value.find(x => x.fieldName === 'Categories')?.values || [];
 });
 
 function getMealFacetCount(facetValue: boolean | null) {
@@ -157,10 +159,11 @@ function getMealFacetCount(facetValue: boolean | null) {
     return null;
   }
 
-  const count =
-    recipeStore.listFacets
-      .find((x) => x.fieldName === 'IsForMealPlanning')
-      ?.values?.find((x) => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
+  const count
+    = recipeStore.listFacets
+      .find(x => x.fieldName === 'IsForMealPlanning')
+      ?.values
+      ?.find(x => x.fieldValue?.toLowerCase() === facetValue.toString().toLowerCase())
       ?.count || 0;
 
   return ` (${count})`;
@@ -186,7 +189,7 @@ watch(
       navigateSearch(false);
     }
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
@@ -195,7 +198,7 @@ watch(
     setListRequestFromQuery();
     await recipeStore.fetchRecipesList();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
@@ -207,8 +210,9 @@ watch(
       <router-link
         class="d-inline-flex p-2 m-1"
         :to="{ hash: '#search-results', query: route.query }"
-        >Skip to search results</router-link
       >
+        Skip to search results
+      </router-link>
     </div>
 
     <!-- Two column layout -->
@@ -251,7 +255,7 @@ watch(
                         name="isForMealPlanning_Desktop"
                         :value="option.value"
                         @change="startSearchNoHash"
-                      />
+                      >
                       <label
                         class="form-check-label"
                         :for="`isForMealPlanning-desktop-${option.value}`"
@@ -286,7 +290,7 @@ watch(
               enterkeyhint="search"
               class="form-control"
               @keydown.stop.prevent.enter="startSearch"
-            />
+            >
           </div>
           <div class="g-col-12 g-col-md-3">
             <label for="recipeSort" class="form-label">Sort</label>
@@ -345,7 +349,7 @@ watch(
                           name="isForMealPlanning"
                           :value="option.value"
                           @change="startSearchNoHash"
-                        />
+                        >
                         <label class="form-check-label" :for="`isForMealPlanning-${option.value}`">
                           {{ option.text }}{{ getMealFacetCount(option.value) }}
                         </label>
@@ -370,10 +374,14 @@ watch(
           <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
             Clear
           </button>
-          <router-link :to="{ name: 'recipeNew' }" class="btn btn-secondary">New</router-link>
+          <router-link :to="{ name: 'recipeNew' }" class="btn btn-secondary">
+            New
+          </router-link>
         </div>
 
-        <div id="search-results" class="mt-3">{{ resultCountText }}</div>
+        <div id="search-results" class="mt-3">
+          {{ resultCountText }}
+        </div>
         <div class="form-check form-switch mt-4">
           <label class="form-check-label" for="useCompactView">Compact</label>
           <input
@@ -382,7 +390,7 @@ watch(
             :checked="useCompactView"
             class="form-check-input"
             type="checkbox"
-          />
+          >
         </div>
         <div class="grid mt-3">
           <RecipeCard

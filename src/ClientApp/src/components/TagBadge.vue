@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, type PropType } from 'vue';
+import type { PropType } from 'vue';
 import type { Tag } from '@/models/Tag';
+import { computed } from 'vue';
 
 const props = defineProps({
   tag: {
@@ -21,9 +22,9 @@ const badgeStyleComputed = computed(() => {
   }
 
   const hex = color.replace('#', '');
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
+  const r = Number.parseInt(hex.substr(0, 2), 16);
+  const g = Number.parseInt(hex.substr(2, 2), 16);
+  const b = Number.parseInt(hex.substr(4, 2), 16);
 
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   const textColor = luminance > 0.5 ? 'text-dark' : 'text-light';
@@ -31,7 +32,7 @@ const badgeStyleComputed = computed(() => {
   return {
     '--badge-bg-color': color,
     'background-color': 'var(--badge-bg-color, var(--bs-secondary-bg, #6c757d))',
-    color: `var(--${textColor}-color, #fff)`,
+    'color': `var(--${textColor}-color, #fff)`,
   };
 });
 </script>

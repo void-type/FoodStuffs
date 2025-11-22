@@ -2,8 +2,6 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-const route = useRoute();
-
 const props = defineProps({
   title: {
     type: String,
@@ -12,11 +10,15 @@ const props = defineProps({
   },
 });
 
+const route = useRoute();
+
 const pageTitle = computed(() => props.title || route.meta.title);
 </script>
 
 <template>
-  <h1 class="mt-4">{{ pageTitle }}</h1>
+  <h1 class="mt-4">
+    {{ pageTitle }}
+  </h1>
 </template>
 
 <style scoped></style>

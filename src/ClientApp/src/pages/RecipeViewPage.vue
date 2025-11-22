@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { watch, reactive } from 'vue';
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import type { GetRecipeResponse } from '@/api/data-contracts';
-import useRecipeStore from '@/stores/recipeStore';
+import { reactive, watch } from 'vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppPageHeading from '@/components/AppPageHeading.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useMessageStore from '@/stores/messageStore';
-import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
-import AppPageHeading from '@/components/AppPageHeading.vue';
+import useRecipeStore from '@/stores/recipeStore';
 
 const props = defineProps({
   id: {
@@ -28,7 +28,7 @@ const data = reactive({
 
 function fetchRecipe(id: number) {
   api()
-    .recipesGet(id)
+    .recipesGet({ id })
     .then((response) => {
       data.sourceRecipe = response.data;
       RouterHelper.setTitle(route, data.sourceRecipe.name);
@@ -45,7 +45,7 @@ watch(
   () => {
     fetchRecipe(props.id);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onBeforeRouteUpdate((to, from, next) => {

@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import type { IItemSetOfIFailure, IFailure } from '@/api/data-contracts';
+import type { IFailure, IItemSetOfIFailure } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
+import { defineStore } from 'pinia';
 
 const DEFAULT_TIMEOUT = 5;
 
@@ -26,8 +26,8 @@ export default defineStore('message', {
   }),
 
   getters: {
-    isFieldInError: (state) => (fieldName: string) =>
-      state.messages.some((x) => x.fieldName === fieldName && x.isError === true),
+    isFieldInError: state => (fieldName: string) =>
+      state.messages.some(x => x.fieldName === fieldName && x.isError === true),
   },
 
   actions: {
@@ -50,7 +50,7 @@ export default defineStore('message', {
           this.setValidationErrorMessages(failureSet.items || []);
         } else {
           this.setErrorMessage(
-            'Something went wrong. Try refreshing your browser or contact the administrator.'
+            'Something went wrong. Try refreshing your browser or contact the administrator.',
           );
         }
       }
@@ -70,14 +70,14 @@ export default defineStore('message', {
     clearMessageTimeout(message: Message) {
       if (message.timeout) {
         clearTimeout(message.timeout);
-        // eslint-disable-next-line no-param-reassign
+
         message.timeout = undefined;
       }
     },
 
     pushMessage(message: Message) {
       const matchingMessage = this.messages.find(
-        (x) => x.fieldName === message.fieldName && x.text === message.text
+        x => x.fieldName === message.fieldName && x.text === message.text,
       );
 
       if (matchingMessage) {
@@ -85,12 +85,10 @@ export default defineStore('message', {
       }
 
       if (typeof message.autoClear === 'undefined') {
-        // eslint-disable-next-line no-param-reassign
         message.autoClear = DEFAULT_TIMEOUT;
       }
 
       if (typeof message.id === 'undefined') {
-        // eslint-disable-next-line no-param-reassign
         message.id = nextId;
         nextId += 1;
       }
@@ -98,7 +96,6 @@ export default defineStore('message', {
       this.messages.push(message);
 
       if (message.autoClear > 0) {
-        // eslint-disable-next-line no-param-reassign
         message.timeout = setTimeout(() => {
           this.clearMessage(message);
         }, message.autoClear * 1000);
