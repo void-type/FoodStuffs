@@ -10,7 +10,7 @@ RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
 COPY ./build/ ./build
 
 # Copy files that will restore dependencies.
-COPY ./*.sln ./
+COPY ./*.slnx ./
 
 COPY ./.config/ ./.config
 COPY ./nuget.config ./

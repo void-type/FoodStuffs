@@ -1,0 +1,17 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/analyzers/">
+    <Project Path="analyzers/VoidCore.Analyzers/VoidCore.Analyzers.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/FoodStuffs.Model/FoodStuffs.Model.csproj" />
+    <Project Path="src/FoodStuffs.Web/FoodStuffs.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FoodStuffs.Test/FoodStuffs.Test.csproj" />
+  </Folder>
+</Solution>

@@ -25,4 +25,5 @@ coverage
 *.ntvs*
 *.njsproj
 *.sln
+*.slnx
 *.sw?
