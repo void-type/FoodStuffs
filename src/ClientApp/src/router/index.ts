@@ -2,7 +2,6 @@ import { Collapse } from 'bootstrap';
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RouterHelper from '@/models/RouterHelper';
-import useMessageStore from '@/stores/messageStore';
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -242,8 +241,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const messageStore = useMessageStore();
-  messageStore.clearMessages();
   next();
 });
 
