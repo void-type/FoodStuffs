@@ -344,7 +344,7 @@ const sidesHave = computed(() => {
 watch(
   () => props.id,
   () => {
-    if (!isEditingCurrent.value) {
+    if (!isEditingCurrent.value && (props.id || 0) > 0) {
       mealPlanStore.fetchMealPlan(props.id);
     }
   },
