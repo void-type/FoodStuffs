@@ -88,7 +88,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     {
         _logger.LogInformation("Starting rebuild of grocery item search index.");
 
-        await _writeSemaphore.WaitAsync(cancellationToken);
+        await _writeSemaphore.WaitAsync(1000, cancellationToken);
 
         try
         {
@@ -137,7 +137,14 @@ public class GroceryItemIndexService : IGroceryItemIndexService
 
     private async Task AddOrUpdateAsync(IEnumerable<GroceryItem> groceryItems, CancellationToken cancellationToken)
     {
-        await _writeSemaphore.WaitAsync(cancellationToken);
+        var groceryItemsList = groceryItems.ToList();
+
+        var existingIds = groceryItemsList
+            .Select(groceryItem => groceryItem.Id)
+            .Where(ExistsInIndex)
+            .ToHashSet();
+
+        await _writeSemaphore.WaitAsync(1000, cancellationToken);
 
         try
         {
@@ -145,11 +152,11 @@ public class GroceryItemIndexService : IGroceryItemIndexService
 
             var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 
-            foreach (var groceryItem in groceryItems)
+            foreach (var groceryItem in groceryItemsList)
             {
                 var doc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
 
-                if (ExistsInIndex(groceryItem.Id))
+                if (existingIds.Contains(groceryItem.Id))
                 {
                     writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, groceryItem.Id.ToString()), doc);
                 }

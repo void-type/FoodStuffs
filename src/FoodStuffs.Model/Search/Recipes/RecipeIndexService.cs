@@ -88,7 +88,7 @@ public class RecipeIndexService : IRecipeIndexService
     {
         _logger.LogInformation("Starting rebuild of recipe search index.");
 
-        await _writeSemaphore.WaitAsync(cancellationToken);
+        await _writeSemaphore.WaitAsync(1000, cancellationToken);
 
         try
         {
@@ -137,7 +137,14 @@ public class RecipeIndexService : IRecipeIndexService
 
     private async Task AddOrUpdateAsync(IEnumerable<Recipe> recipes, CancellationToken cancellationToken)
     {
-        await _writeSemaphore.WaitAsync(cancellationToken);
+        var recipesList = recipes.ToList();
+
+        var existingIds = recipesList
+            .Select(recipe => recipe.Id)
+            .Where(ExistsInIndex)
+            .ToHashSet();
+
+        await _writeSemaphore.WaitAsync(1000, cancellationToken);
 
         try
         {
@@ -145,11 +152,11 @@ public class RecipeIndexService : IRecipeIndexService
 
             var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
-            foreach (var recipe in recipes)
+            foreach (var recipe in recipesList)
             {
                 var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
 
-                if (ExistsInIndex(recipe.Id))
+                if (existingIds.Contains(recipe.Id))
                 {
                     writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, recipe.Id.ToString()), doc);
                 }
