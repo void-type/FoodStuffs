@@ -38,6 +38,9 @@ try {
   dotnet tool restore
   Stop-OnError
 
+  # Use dotnet tool because the Nuget doesn't seem to set it on build since migrating to slnx.
+  dotnet nbgv cloud
+
   # Lint and build client
   if (-not $SkipClient) {
     Set-Location -Path $webClientProjectFolder
