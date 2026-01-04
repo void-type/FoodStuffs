@@ -34,7 +34,8 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
     private async Task<IResult<EntityMessage<int>>> SaveAsync(SaveGroceryItemRequest request, CancellationToken cancellationToken)
     {
-        var requestedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(request.Name).Trim();
+        // We won't title case because they might contain measurements or other formatting.
+        var requestedName = request.Name.Trim();
 
         var byId = new GroceryItemsWithAllRelatedSpecification(request.Id);
 
