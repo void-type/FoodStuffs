@@ -128,7 +128,7 @@ const { recentRecipes } = storeToRefs(recipeStore);
         </li>
       </ul>
     </li>
-    <li class="nav-item dropdown">
+    <li v-if="recentRecipes.length > 0" class="nav-item dropdown">
       <a
         class="nav-link dropdown-toggle"
         href="#"
@@ -139,13 +139,18 @@ const { recentRecipes } = storeToRefs(recipeStore);
         Recent
       </a>
       <ul class="dropdown-menu">
-        <li v-for="recipe in recentRecipes" :key="recipe.id">
-          <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">
-            {{
-              recipe.name
-            }}
-          </router-link>
-        </li>
+        <template v-for="(recipe, index) in recentRecipes" :key="recipe.id">
+          <li>
+            <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">
+              {{
+                recipe.name
+              }}
+            </router-link>
+          </li>
+          <li v-if="index < recentRecipes.length - 1">
+            <hr class="dropdown-divider">
+          </li>
+        </template>
       </ul>
     </li>
   </ul>
