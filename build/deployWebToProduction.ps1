@@ -50,7 +50,7 @@ try {
 
     Start-Sleep 5
 
-    ROBOCOPY "$webReleaseFolder" "$webDirectoryProduction" /MIR /XF "$webDirectoryProduction\app_offline.htm"
+    ROBOCOPY "$webReleaseFolder" "$webDirectoryProduction" /MIR /XF "$webDirectoryProduction\app_offline.htm" /XD "App_Data"
     Copy-Item -Path "$webSettingsProduction" -Destination $webDirectoryProduction
     Remove-Item -Path "$webDirectoryProduction\app_offline.htm"
   }
