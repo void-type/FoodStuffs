@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
       <li
         v-if="
           filterText.length > 0
-            && filteredSuggestions.find((x) => x.name === filterText) === undefined
+            && filteredSuggestions.find((x) => x.name?.toLowerCase() === filterText?.toLowerCase()) === undefined
         "
         class="mt-2"
       >
