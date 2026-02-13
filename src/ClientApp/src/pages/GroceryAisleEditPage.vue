@@ -11,6 +11,7 @@ import {
 
 } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppInputNumberWithButtons from '@/components/AppInputNumberWithButtons.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import ApiHelper from '@/models/ApiHelper';
@@ -271,18 +272,12 @@ onBeforeUnmount(() => {
             }"
           >
         </div>
-        <div class="g-col-12 g-col-md-6">
-          <label for="order" class="form-label">Shopping list order</label>
-          <input
-            id="order"
-            v-model="data.working.order"
-            required
-            type="number"
-            class="form-control" :class="{
-              'is-invalid': messageStore.isFieldInError('order'),
-            }"
-          >
-        </div>
+        <AppInputNumberWithButtons
+          id="order"
+          v-model="data.working.order"
+          label="Shopping list order"
+          class="g-col-12 g-col-md-6"
+        />
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
         <div v-if="data.source.groceryItems?.length" class="g-col-12 g-col-md-6">
           Used in grocery items

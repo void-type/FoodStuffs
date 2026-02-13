@@ -11,6 +11,7 @@ import {
 
 } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
+import AppInputNumberWithButtons from '@/components/AppInputNumberWithButtons.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import GroceryItemGroceryAisleSelect from '@/components/GroceryItemGroceryAisleSelect.vue';
@@ -310,19 +311,13 @@ onBeforeUnmount(() => {
             }"
           >
         </div>
-        <div class="g-col-12 g-col-md-6">
-          <label for="inventoryQuantity" class="form-label">Inventory</label>
-          <input
-            id="inventoryQuantity"
-            v-model="data.working.inventoryQuantity"
-            required
-            type="number"
-            min="0"
-            class="form-control" :class="{
-              'is-invalid': messageStore.isFieldInError('inventoryQuantity'),
-            }"
-          >
-        </div>
+        <AppInputNumberWithButtons
+          id="inventoryQuantity"
+          v-model="data.working.inventoryQuantity"
+          label="Inventory"
+          class="g-col-12 g-col-md-6"
+          :min="0"
+        />
         <div class="g-col-12 g-col-md-6">
           <label for="groceryAisleId" class="form-label">Grocery aisle</label>
           <GroceryItemGroceryAisleSelect v-model="data.working.groceryAisleId" />
