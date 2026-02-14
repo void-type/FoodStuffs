@@ -80,7 +80,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         relatedRecipeIds.UnionWith(categoryToEdit.Recipes.Select(r => r.Id));
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, relatedRecipeIds, cancellationToken);
+        _searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
 
         return Ok(EntityMessage.Create($"Category {(maybeCategory.HasValue ? "updated" : "added")}.", categoryToEdit.Id));
     }

@@ -80,7 +80,7 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
 
         relatedGroceryItemIds.UnionWith(storageLocationToEdit.GroceryItems.Select(gi => gi.Id));
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, relatedGroceryItemIds, cancellationToken);
+        _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
         return Ok(EntityMessage.Create($"Storage Location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
     }

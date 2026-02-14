@@ -97,9 +97,9 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         relatedRecipeIds.UnionWith(groceryItemToEdit.Recipes.Select(r => r.Id));
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, relatedRecipeIds, cancellationToken);
+        _searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
+        await _searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery Item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }

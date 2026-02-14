@@ -7,25 +7,29 @@ public class SearchIndexService : ISearchIndexService
 {
     private readonly IRecipeIndexService _recipeIndexService;
     private readonly IGroceryItemIndexService _groceryItemIndexService;
+    private readonly SearchIndexBackgroundQueue _queue;
 
     public SearchIndexService(
         IRecipeIndexService recipeIndexService,
-        IGroceryItemIndexService groceryItemIndexService)
+        IGroceryItemIndexService groceryItemIndexService,
+        SearchIndexBackgroundQueue queue)
     {
         _recipeIndexService = recipeIndexService;
         _groceryItemIndexService = groceryItemIndexService;
+        _queue = queue;
     }
 
-    public async Task AddOrUpdateAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken)
+    /// <inheritdoc/>
+    public async Task UpdateAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken)
     {
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.AddOrUpdateAsync(entityId, cancellationToken);
+                await _recipeIndexService.UpdateAsync(entityId, cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.AddOrUpdateAsync(entityId, cancellationToken);
+                await _groceryItemIndexService.UpdateAsync(entityId, cancellationToken);
                 break;
 
             default:
@@ -33,16 +37,17 @@ public class SearchIndexService : ISearchIndexService
         }
     }
 
-    public async Task AddOrUpdateAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken)
+    /// <inheritdoc/>
+    public async Task UpdateAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken)
     {
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.AddOrUpdateAsync(entityIds, cancellationToken);
+                await _recipeIndexService.UpdateAsync(entityIds, cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.AddOrUpdateAsync(entityIds, cancellationToken);
+                await _groceryItemIndexService.UpdateAsync(entityIds, cancellationToken);
                 break;
 
             default:
@@ -50,6 +55,7 @@ public class SearchIndexService : ISearchIndexService
         }
     }
 
+    /// <inheritdoc/>
     public async Task RemoveAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken)
     {
         switch (indexName)
@@ -65,10 +71,9 @@ public class SearchIndexService : ISearchIndexService
             default:
                 throw new ArgumentOutOfRangeException(nameof(indexName), $"Unsupported index: {indexName}");
         }
-
-        await Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public async Task RemoveAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken)
     {
         switch (indexName)
@@ -84,12 +89,20 @@ public class SearchIndexService : ISearchIndexService
             default:
                 throw new ArgumentOutOfRangeException(nameof(indexName), $"Unsupported index: {indexName}");
         }
-
-        await Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
+    public void EnqueueUpdate(SearchIndex indexName, IEnumerable<int> entityIds)
+    {
+        var ids = entityIds.ToList();
+        _queue.Enqueue(new SearchIndexBackgroundAction(indexName, ids));
+    }
+
+    /// <inheritdoc/>
     public async Task RebuildAsync(SearchIndex indexName, CancellationToken cancellationToken)
     {
+        _queue.Clear(indexName);
+
         switch (indexName)
         {
             case SearchIndex.Recipes:

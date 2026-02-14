@@ -81,6 +81,8 @@ try
         typeof(SearchRecipesHandler).Assembly);
 
     // Workers and background services
+    services.AddSingleton<SearchIndexBackgroundQueue>();
+    services.AddHostedService<SearchIndexBackgroundService>();
 
     var app = builder.Build();
 

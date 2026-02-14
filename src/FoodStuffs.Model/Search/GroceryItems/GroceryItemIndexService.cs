@@ -3,7 +3,6 @@ using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Index;
-using Lucene.Net.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VoidCore.EntityFramework;
@@ -19,29 +18,28 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     private readonly ILogger<GroceryItemIndexService> _logger;
     private readonly SearchSettings _settings;
     private readonly FoodStuffsContext _data;
-    private readonly SemaphoreSlim _writeSemaphore;
+    private static readonly SemaphoreSlim _writeSemaphore = new(1, 1);
 
     public GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, SearchSettings settings, FoodStuffsContext data)
     {
         _logger = logger;
         _settings = settings;
         _data = data;
-        _writeSemaphore = new SemaphoreSlim(1, 1);
     }
 
     /// <inheritdoc/>
-    public async Task AddOrUpdateAsync(int groceryItemId, CancellationToken cancellationToken)
+    public async Task UpdateAsync(int groceryItemId, CancellationToken cancellationToken)
     {
-        await AddOrUpdateAsync([groceryItemId], cancellationToken);
+        await UpdateAsync([groceryItemId], cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task AddOrUpdateAsync(IEnumerable<int> groceryItemId, CancellationToken cancellationToken)
+    public async Task UpdateAsync(IEnumerable<int> groceryItemId, CancellationToken cancellationToken)
     {
         var byId = new GroceryItemsWithAllRelatedSpecification(groceryItemId);
 
         var groceryItems = await _data.GroceryItems
-            .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(AddOrUpdateAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
+            .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(UpdateAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
@@ -52,7 +50,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
             return;
         }
 
-        await AddOrUpdateAsync(groceryItems, cancellationToken);
+        await UpdateAsync(groceryItems, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -88,7 +86,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     {
         _logger.LogInformation("Starting rebuild of grocery item search index.");
 
-        await _writeSemaphore.WaitAsync(1000, cancellationToken);
+        await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
@@ -135,16 +133,11 @@ public class GroceryItemIndexService : IGroceryItemIndexService
         }
     }
 
-    private async Task AddOrUpdateAsync(IEnumerable<GroceryItem> groceryItems, CancellationToken cancellationToken)
+    private async Task UpdateAsync(IEnumerable<GroceryItem> groceryItems, CancellationToken cancellationToken)
     {
         var groceryItemsList = groceryItems.ToList();
 
-        var existingIds = groceryItemsList
-            .Select(groceryItem => groceryItem.Id)
-            .Where(ExistsInIndex)
-            .ToHashSet();
-
-        await _writeSemaphore.WaitAsync(1000, cancellationToken);
+        await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
@@ -155,15 +148,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
             foreach (var groceryItem in groceryItemsList)
             {
                 var doc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
-
-                if (existingIds.Contains(groceryItem.Id))
-                {
-                    writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, groceryItem.Id.ToString()), doc);
-                }
-                else
-                {
-                    writers.IndexWriter.AddDocument(doc);
-                }
+                writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, groceryItem.Id.ToString()), doc);
             }
 
             writers.IndexWriter.Commit();
@@ -173,15 +158,5 @@ public class GroceryItemIndexService : IGroceryItemIndexService
         {
             _writeSemaphore.Release();
         }
-    }
-
-    private bool ExistsInIndex(int groceryItemId)
-    {
-        using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
-
-        var query = new TermQuery(new Term(C.FIELD_ID, groceryItemId.ToString()));
-        var topDocs = readers.IndexSearcher.Search(query, 1);
-
-        return topDocs.TotalHits > 0;
     }
 }

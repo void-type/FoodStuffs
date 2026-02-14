@@ -80,7 +80,7 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
 
         relatedGroceryItemIds.UnionWith(groceryAisleToEdit.GroceryItems.Select(gi => gi.Id));
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, relatedGroceryItemIds, cancellationToken);
+        _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
         return Ok(EntityMessage.Create($"Grocery Aisle {(maybeGroceryAisle.HasValue ? "updated" : "added")}.", groceryAisleToEdit.Id));
     }

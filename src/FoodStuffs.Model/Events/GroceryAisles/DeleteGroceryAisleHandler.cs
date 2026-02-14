@@ -34,7 +34,7 @@ public class DeleteGroceryAisleHandler : CustomEventHandlerAbstract<DeleteGrocer
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemIds, cancellationToken);
+                _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
             })
             .SelectAsync(r => EntityMessage.Create("Grocery aisle deleted.", r.Id));
     }

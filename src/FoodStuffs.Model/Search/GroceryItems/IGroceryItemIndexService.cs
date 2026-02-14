@@ -5,12 +5,12 @@ public interface IGroceryItemIndexService
     /// <summary>
     /// Query and update grocery item in the index.
     /// </summary>
-    Task AddOrUpdateAsync(int groceryItemId, CancellationToken cancellationToken);
+    Task UpdateAsync(int groceryItemId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Query and update multiple grocery items in the index.
     /// </summary>
-    Task AddOrUpdateAsync(IEnumerable<int> groceryItemId, CancellationToken cancellationToken);
+    Task UpdateAsync(IEnumerable<int> groceryItemId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Remove grocery item from the index.

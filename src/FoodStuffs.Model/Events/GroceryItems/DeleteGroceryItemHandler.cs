@@ -34,7 +34,7 @@ public class DeleteGroceryItemHandler : CustomEventHandlerAbstract<DeleteGrocery
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeIds, cancellationToken);
+                _searchIndex.EnqueueUpdate(SearchIndex.Recipes, recipeIds);
 
                 await _searchIndex.RemoveAsync(SearchIndex.GroceryItems, si.Id, cancellationToken);
             })

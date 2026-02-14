@@ -5,12 +5,12 @@ public interface IRecipeIndexService
     /// <summary>
     /// Query and update recipe in the index.
     /// </summary>
-    Task AddOrUpdateAsync(int recipeId, CancellationToken cancellationToken);
+    Task UpdateAsync(int recipeId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Query and update multiple recipes in the index.
     /// </summary>
-    Task AddOrUpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken);
+    Task UpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Remove recipe from the index.

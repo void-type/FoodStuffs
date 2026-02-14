@@ -32,7 +32,7 @@ public class PinImageHandler : CustomEventHandlerAbstract<PinImageRequest, Entit
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, i.Recipe.Id, cancellationToken);
+                await _searchIndex.UpdateAsync(SearchIndex.Recipes, i.Recipe.Id, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image pinned.", request.Name));
     }

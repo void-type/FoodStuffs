@@ -34,7 +34,7 @@ public class DeleteCategoryHandler : CustomEventHandlerAbstract<DeleteCategoryRe
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeIds, cancellationToken);
+                _searchIndex.EnqueueUpdate(SearchIndex.Recipes, recipeIds);
             })
             .SelectAsync(r => EntityMessage.Create("Category deleted.", r.Id));
     }

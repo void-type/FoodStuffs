@@ -37,7 +37,7 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, i.RecipeId, cancellationToken);
+                await _searchIndex.UpdateAsync(SearchIndex.Recipes, i.RecipeId, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image deleted.", request.Name));
     }

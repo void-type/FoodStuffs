@@ -71,7 +71,7 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.Recipes, recipeResult.Value.Id, cancellationToken);
+        await _searchIndex.UpdateAsync(SearchIndex.Recipes, recipeResult.Value.Id, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }

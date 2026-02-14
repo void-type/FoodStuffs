@@ -32,7 +32,7 @@ public class DeleteStorageLocationHandler : CustomEventHandlerAbstract<DeleteSto
 
                 await _data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, c.GroceryItems.Select(gi => gi.Id), cancellationToken);
+                _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, c.GroceryItems.Select(gi => gi.Id));
             })
             .SelectAsync(r => EntityMessage.Create("Storage location deleted.", r.Id));
     }

@@ -3,7 +3,6 @@ using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Index;
-using Lucene.Net.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VoidCore.EntityFramework;
@@ -19,29 +18,28 @@ public class RecipeIndexService : IRecipeIndexService
     private readonly ILogger<RecipeIndexService> _logger;
     private readonly SearchSettings _settings;
     private readonly FoodStuffsContext _data;
-    private readonly SemaphoreSlim _writeSemaphore;
+    private static readonly SemaphoreSlim _writeSemaphore = new(1, 1);
 
     public RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettings settings, FoodStuffsContext data)
     {
         _logger = logger;
         _settings = settings;
         _data = data;
-        _writeSemaphore = new SemaphoreSlim(1, 1);
     }
 
     /// <inheritdoc/>
-    public async Task AddOrUpdateAsync(int recipeId, CancellationToken cancellationToken)
+    public async Task UpdateAsync(int recipeId, CancellationToken cancellationToken)
     {
-        await AddOrUpdateAsync([recipeId], cancellationToken);
+        await UpdateAsync([recipeId], cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task AddOrUpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken)
+    public async Task UpdateAsync(IEnumerable<int> recipeId, CancellationToken cancellationToken)
     {
         var byId = new RecipesWithAllRelatedSpecification(recipeId);
 
         var recipes = await _data.Recipes
-            .TagWith($"{nameof(RecipeIndexService)}.{nameof(AddOrUpdateAsync)}({nameof(RecipesWithAllRelatedSpecification)})")
+            .TagWith($"{nameof(RecipeIndexService)}.{nameof(UpdateAsync)}({nameof(RecipesWithAllRelatedSpecification)})")
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
             .OrderBy(x => x.Id)
@@ -52,7 +50,7 @@ public class RecipeIndexService : IRecipeIndexService
             return;
         }
 
-        await AddOrUpdateAsync(recipes, cancellationToken);
+        await UpdateAsync(recipes, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -88,7 +86,7 @@ public class RecipeIndexService : IRecipeIndexService
     {
         _logger.LogInformation("Starting rebuild of recipe search index.");
 
-        await _writeSemaphore.WaitAsync(1000, cancellationToken);
+        await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
@@ -135,16 +133,11 @@ public class RecipeIndexService : IRecipeIndexService
         }
     }
 
-    private async Task AddOrUpdateAsync(IEnumerable<Recipe> recipes, CancellationToken cancellationToken)
+    private async Task UpdateAsync(IEnumerable<Recipe> recipes, CancellationToken cancellationToken)
     {
         var recipesList = recipes.ToList();
 
-        var existingIds = recipesList
-            .Select(recipe => recipe.Id)
-            .Where(ExistsInIndex)
-            .ToHashSet();
-
-        await _writeSemaphore.WaitAsync(1000, cancellationToken);
+        await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
@@ -155,15 +148,7 @@ public class RecipeIndexService : IRecipeIndexService
             foreach (var recipe in recipesList)
             {
                 var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
-
-                if (existingIds.Contains(recipe.Id))
-                {
-                    writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, recipe.Id.ToString()), doc);
-                }
-                else
-                {
-                    writers.IndexWriter.AddDocument(doc);
-                }
+                writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, recipe.Id.ToString()), doc);
             }
 
             writers.IndexWriter.Commit();
@@ -173,15 +158,5 @@ public class RecipeIndexService : IRecipeIndexService
         {
             _writeSemaphore.Release();
         }
-    }
-
-    private bool ExistsInIndex(int recipeId)
-    {
-        using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
-
-        var query = new TermQuery(new Term(C.FIELD_ID, recipeId.ToString()));
-        var topDocs = readers.IndexSearcher.Search(query, 1);
-
-        return topDocs.TotalHits > 0;
     }
 }

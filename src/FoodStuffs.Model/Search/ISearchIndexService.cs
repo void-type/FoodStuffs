@@ -5,12 +5,12 @@ public interface ISearchIndexService
     /// <summary>
     /// Query and update entity in the index.
     /// </summary>
-    Task AddOrUpdateAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken);
+    Task UpdateAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Query and update multiple entities in the index.
     /// </summary>
-    Task AddOrUpdateAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken);
+    Task UpdateAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken);
 
     /// <summary>
     /// Remove entity from the index.
@@ -21,6 +21,11 @@ public interface ISearchIndexService
     /// Remove multiple entities from the index.
     /// </summary>
     Task RemoveAsync(SearchIndex indexName, IEnumerable<int> entityIds, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Enqueue entity IDs for deferred background index updates.
+    /// </summary>
+    void EnqueueUpdate(SearchIndex indexName, IEnumerable<int> entityIds);
 
     /// <summary>
     /// Rebuild the index.

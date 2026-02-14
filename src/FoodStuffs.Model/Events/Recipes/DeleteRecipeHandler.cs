@@ -41,7 +41,7 @@ public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeReques
 
                 await _searchIndex.RemoveAsync(SearchIndex.Recipes, r.Id, cancellationToken);
 
-                await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemIds, cancellationToken);
+                _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
             })
             .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
     }

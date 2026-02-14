@@ -56,7 +56,7 @@ public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGr
 
         await _data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.AddOrUpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
+        await _searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }
