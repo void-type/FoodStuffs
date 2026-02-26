@@ -183,6 +183,16 @@ const groceryAisleFacets = computed(() => {
   return listFacets.value.find(x => x.fieldName === 'GroceryAisle')?.values || [];
 });
 
+const unusedFilterText = computed(() => {
+  const choiceString = Choices.getBooleanChoiceText(listRequest.value.isUnused);
+  return choiceString === 'All' ? '' : ` (${choiceString})`;
+});
+
+const outOfStockFilterText = computed(() => {
+  const choiceString = Choices.getBooleanChoiceText(listRequest.value.isOutOfStock);
+  return choiceString === 'All' ? '' : ` (${choiceString})`;
+});
+
 function getOutOfStockFacetCount(facetValue: boolean | null) {
   if (facetValue == null) {
     return null;
@@ -315,6 +325,18 @@ watch(
         <div>
           <label class="form-label" for="filterAccordionDesktop">Filters</label>
           <div id="filterAccordionDesktop" class="accordion">
+            <GroceryItemSearchStorageLocationsFilter
+              v-model="storageLocationsFilterModel"
+              :facet-values="storageLocationFacets"
+              parent-accordion-id="filterAccordionDesktop"
+              check-class="g-col-12"
+            />
+            <GroceryItemSearchGroceryAislesFilter
+              v-model="groceryAislesFilterModel"
+              :facet-values="groceryAisleFacets"
+              parent-accordion-id="filterAccordionDesktop"
+              check-class="g-col-12"
+            />
             <div class="accordion-item">
               <div class="accordion-header">
                 <button
@@ -325,7 +347,7 @@ watch(
                   aria-expanded="false"
                   aria-controls="isUnusedCollapseDesktop"
                 >
-                  Unused
+                  Unused{{ unusedFilterText }}
                 </button>
               </div>
               <div
@@ -367,7 +389,7 @@ watch(
                   aria-expanded="false"
                   aria-controls="isOutOfStockCollapseDesktop"
                 >
-                  Out of Stock
+                  Out of Stock{{ outOfStockFilterText }}
                 </button>
               </div>
               <div
@@ -399,18 +421,6 @@ watch(
                 </div>
               </div>
             </div>
-            <GroceryItemSearchStorageLocationsFilter
-              v-model="storageLocationsFilterModel"
-              :facet-values="storageLocationFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
-            />
-            <GroceryItemSearchGroceryAislesFilter
-              v-model="groceryAislesFilterModel"
-              :facet-values="groceryAisleFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
-            />
           </div>
         </div>
       </div>
@@ -454,6 +464,16 @@ watch(
           <div class="g-col-12 d-lg-none">
             <label class="form-label" for="filterAccordion">Filters</label>
             <div id="filterAccordion" class="accordion">
+              <GroceryItemSearchStorageLocationsFilter
+                v-model="storageLocationsFilterModel"
+                :facet-values="storageLocationFacets"
+                parent-accordion-id="filterAccordion"
+              />
+              <GroceryItemSearchGroceryAislesFilter
+                v-model="groceryAislesFilterModel"
+                :facet-values="groceryAisleFacets"
+                parent-accordion-id="filterAccordion"
+              />
               <div class="accordion-item">
                 <div class="accordion-header">
                   <button
@@ -464,7 +484,7 @@ watch(
                     aria-expanded="false"
                     aria-controls="isUnusedCollapse"
                   >
-                    Unused
+                    Unused{{ unusedFilterText }}
                   </button>
                 </div>
                 <div
@@ -506,7 +526,7 @@ watch(
                     aria-expanded="false"
                     aria-controls="isOutOfStockCollapse"
                   >
-                    Out of Stock
+                    Out of Stock{{ outOfStockFilterText }}
                   </button>
                 </div>
                 <div
@@ -538,16 +558,6 @@ watch(
                   </div>
                 </div>
               </div>
-              <GroceryItemSearchStorageLocationsFilter
-                v-model="storageLocationsFilterModel"
-                :facet-values="storageLocationFacets"
-                parent-accordion-id="filterAccordion"
-              />
-              <GroceryItemSearchGroceryAislesFilter
-                v-model="groceryAislesFilterModel"
-                :facet-values="groceryAisleFacets"
-                parent-accordion-id="filterAccordion"
-              />
             </div>
           </div>
         </div>

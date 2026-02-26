@@ -154,6 +154,11 @@ const categoryFacets = computed(() => {
   return listFacets.value.find(x => x.fieldName === 'Categories')?.values || [];
 });
 
+const mealPlanningFilterText = computed(() => {
+  const choiceString = Choices.getBooleanChoiceText(listRequest.value.isForMealPlanning);
+  return choiceString === 'All' ? '' : ` (${choiceString})`;
+});
+
 function getMealFacetCount(facetValue: boolean | null) {
   if (facetValue == null) {
     return null;
@@ -232,7 +237,7 @@ watch(
                   aria-expanded="false"
                   aria-controls="isForMealPlanningCollapseDesktop"
                 >
-                  For Meal Planning
+                  For Meal Planning{{ mealPlanningFilterText }}
                 </button>
               </div>
               <div
@@ -326,7 +331,7 @@ watch(
                     aria-expanded="false"
                     aria-controls="isForMealPlanningCollapse"
                   >
-                    For Meal Planning
+                    For Meal Planning{{ mealPlanningFilterText }}
                   </button>
                 </div>
                 <div

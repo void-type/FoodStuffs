@@ -51,4 +51,8 @@ export default class Choices {
       { text: 'Random', value: 'random' },
     ];
   }
+
+  static getBooleanChoiceText(value: boolean | null | undefined) {
+    return this.boolean.find(x => x.value === JSON.parse(value?.toString() || 'null'))?.text || 'All';
+  }
 }

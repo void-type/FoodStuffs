@@ -8,7 +8,7 @@ export default class RecipesSearchRequest implements RecipesSearchParams {
 
   public matchAllCategories = false;
 
-  public isForMealPlanning = null;
+  public isForMealPlanning = true;
 
   public sortBy = Choices.sortOptions[0]!.value;
 

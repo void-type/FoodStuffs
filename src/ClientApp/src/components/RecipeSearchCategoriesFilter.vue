@@ -74,7 +74,9 @@ onMounted(() => {
         aria-controls="categoriesCollapse"
       >
         <label for="categorySearch">Categories
-          <span v-if="model.categories.length">({{ model.categories.length }} selected)</span>
+          <span v-if="model.categories.length">
+            ({{ model.categories.length }})
+          </span>
         </label>
       </button>
     </div>

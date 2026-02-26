@@ -75,7 +75,7 @@ onMounted(() => {
       >
         <label for="storageLocationSearch">Storage Locations
           <span v-if="model.storageLocations.length">
-            ({{ model.storageLocations.length }} selected)
+            ({{ model.storageLocations.length }})
           </span>
         </label>
       </button>

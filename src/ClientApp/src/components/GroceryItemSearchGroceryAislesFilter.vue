@@ -75,7 +75,7 @@ onMounted(() => {
       >
         <label for="groceryAisleSearch">Grocery Aisles
           <span v-if="model.groceryAisles.length">
-            ({{ model.groceryAisles.length }} selected)
+            ({{ model.groceryAisles.length }})
           </span>
         </label>
       </button>
