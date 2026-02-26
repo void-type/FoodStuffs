@@ -18,9 +18,17 @@ public class ImageCompressionService : IImageCompressionService
     {
         using var image = new MagickImage(fileStream);
 
+        // Preserve color profile
+        var profile = image.GetColorProfile();
+
         // Preserve orientation since we'll strip Exif data.
         image.AutoOrient();
         image.Strip();
+
+        if (profile != null)
+        {
+            image.SetProfile(profile);
+        }
 
         if (image.Format == MagickFormat.WebP)
         {
