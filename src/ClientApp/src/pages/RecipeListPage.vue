@@ -62,9 +62,6 @@ function navigateSearch(toResults: boolean) {
 
   if (toResults) {
     routeParams.hash = '#search-results';
-  } else {
-    // Don't scroll when editing filters.
-    routeParams.hash = '#';
   }
   router.push(routeParams);
 }
@@ -78,7 +75,7 @@ function clearSearch() {
 
   // selectedCategories gets its new value from query params.
 
-  navigateSearch(true);
+  navigateSearch(false);
 }
 
 function startSearchNoHash() {

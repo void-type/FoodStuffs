@@ -2,6 +2,7 @@ import type { SearchRecipesResponse, SearchRecipesResultItem } from '@/api/data-
 import type { HttpResponse } from '@/api/http-client';
 import { defineStore } from 'pinia';
 import ApiHelper from '@/models/ApiHelper';
+import Choices from '@/models/Choices';
 import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import useMessageStore from './messageStore';
 
@@ -19,7 +20,7 @@ export default defineStore('discovery', {
   state: (): DiscoveryStoreState => ({
     list: [],
     page: 0,
-    take: 12,
+    take: Choices.defaultPaginationTake.value,
     isFetchingRecipes: false,
     randomSortSeed: null,
   }),
@@ -77,7 +78,7 @@ export default defineStore('discovery', {
         const response = await api().recipesSearch({
           ...new RecipesSearchRequest(),
           page: this.page + 1,
-          take: 12,
+          take: this.take,
           sortBy: 'random',
           randomSortSeed: this.randomSortSeed,
         });

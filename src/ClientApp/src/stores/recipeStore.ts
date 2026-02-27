@@ -36,7 +36,7 @@ export const useRecipeStore = defineStore('recipe', {
       totalCount: 0,
     },
     listFacets: [],
-    listRequest: { ...new RecipesSearchRequest(), take: Choices.defaultPaginationTake.value },
+    listRequest: new RecipesSearchRequest(),
     recentRecipes: RecipeStoreHelper.getRecents(),
   }),
 
@@ -138,7 +138,12 @@ export const useRecipeStore = defineStore('recipe', {
 
     async fetchRecipesList() {
       try {
-        const response = await api().recipesSearch(this.listRequest);
+        const request = { ...this.listRequest };
+        if (!request.searchText && request.categories?.length === 0) {
+          request.sortBy = 'random';
+        }
+
+        const response = await api().recipesSearch(request);
 
         if (response.data) {
           this.setListResponse(response.data);
