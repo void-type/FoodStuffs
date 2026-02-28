@@ -323,7 +323,7 @@ watch(
       <!-- Left rail filters - desktop only -->
       <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
         <div>
-          <label class="form-label" for="filterAccordionDesktop">Filters</label>
+          <label class="form-label visually-hidden" for="filterAccordionDesktop">Filters</label>
           <div id="filterAccordionDesktop" class="accordion">
             <GroceryItemSearchStorageLocationsFilter
               v-model="storageLocationsFilterModel"
@@ -338,9 +338,9 @@ watch(
               check-class="g-col-12"
             />
             <div class="accordion-item">
-              <div class="accordion-header">
+              <div class="accordion-header ">
                 <button
-                  class="accordion-button collapsed"
+                  class="accordion-button collapsed px-3 py-2"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#isUnusedCollapseDesktop"
@@ -382,7 +382,7 @@ watch(
             <div class="accordion-item">
               <div class="accordion-header">
                 <button
-                  class="accordion-button collapsed"
+                  class="accordion-button collapsed px-3 py-2"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#isOutOfStockCollapseDesktop"
@@ -429,7 +429,7 @@ watch(
       <div class="g-col-12 g-col-lg-9">
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-md-9">
-            <label for="searchText" class="form-label">Search</label>
+            <label for="searchText" class="form-label visually-hidden">Search</label>
             <input
               id="searchText"
               v-model="listRequest.searchText"
@@ -437,17 +437,18 @@ watch(
               inputmode="search"
               enterkeyhint="search"
               class="form-control"
+              placeholder="Search..."
               @keydown.stop.prevent.enter="startSearch"
             >
           </div>
           <div class="g-col-12 g-col-md-3">
-            <label for="groceryItemSort" class="form-label">Sort</label>
+            <label for="groceryItemSort" class="form-label visually-hidden">Sort</label>
             <select
               id="groceryItemSort"
               :value="listRequest.sortBy"
               name="groceryItemSort"
               class="form-select"
-              aria-label="Page size"
+              aria-label="Sort options"
               @change="changeSort"
             >
               <option
@@ -462,7 +463,7 @@ watch(
 
           <!-- Mobile filters - only visible on screens smaller than lg -->
           <div class="g-col-12 d-lg-none">
-            <label class="form-label" for="filterAccordion">Filters</label>
+            <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
             <div id="filterAccordion" class="accordion">
               <GroceryItemSearchStorageLocationsFilter
                 v-model="storageLocationsFilterModel"
@@ -477,7 +478,7 @@ watch(
               <div class="accordion-item">
                 <div class="accordion-header">
                   <button
-                    class="accordion-button collapsed"
+                    class="accordion-button collapsed px-3 py-2"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#isUnusedCollapse"
@@ -519,7 +520,7 @@ watch(
               <div class="accordion-item">
                 <div class="accordion-header">
                   <button
-                    class="accordion-button collapsed"
+                    class="accordion-button collapsed px-3 py-2"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#isOutOfStockCollapse"

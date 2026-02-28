@@ -66,7 +66,7 @@ onMounted(() => {
   <div class="accordion-item">
     <div class="accordion-header">
       <button
-        class="accordion-button collapsed"
+        class="accordion-button collapsed px-3 py-2"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#categoriesCollapse"
