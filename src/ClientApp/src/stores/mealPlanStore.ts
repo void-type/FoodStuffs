@@ -87,7 +87,7 @@ export default defineStore('mealPlan', {
       }
 
       addGroceryItem(this.currentMealPlan.excludedGroceryItems || [], groceryItemId, count);
-      await this.saveCurrentMealPlan([], true);
+      await this.saveCurrentMealPlan([], true, true);
     },
 
     async removeFromCurrentPantry(groceryItemId: number | undefined, count = 1) {
@@ -96,7 +96,7 @@ export default defineStore('mealPlan', {
       }
 
       subtractGroceryItem(this.currentMealPlan.excludedGroceryItems || [], groceryItemId, count);
-      await this.saveCurrentMealPlan([], true);
+      await this.saveCurrentMealPlan([], true, true);
     },
 
     async clearCurrentPantry() {
@@ -105,7 +105,7 @@ export default defineStore('mealPlan', {
       }
 
       this.currentMealPlan.excludedGroceryItems = [];
-      await this.saveCurrentMealPlan([], true);
+      await this.saveCurrentMealPlan([], true, true);
     },
 
     async addCurrentRecipe(recipeId: number | null | undefined) {
@@ -117,7 +117,24 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      await this.saveCurrentMealPlan([recipeId]);
+      if (!this.currentMealPlan.id) {
+        await this.saveCurrentMealPlan([recipeId]);
+        return;
+      }
+
+      try {
+        const response = await api().mealPlansAddRecipe({ id: this.currentMealPlan.id, recipeId });
+
+        if (response.data.entity) {
+          this.currentMealPlan = response.data.entity;
+        }
+
+        if (response.data.message) {
+          useMessageStore().setSuccessMessage(response.data.message);
+        }
+      } catch (error) {
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
     },
 
     async removeCurrentRecipe(recipeId: number | null | undefined) {
@@ -129,13 +146,23 @@ export default defineStore('mealPlan', {
         return;
       }
 
-      const { recipes } = this.currentMealPlan;
-
-      if (recipes !== null && typeof recipes !== 'undefined') {
-        this.currentMealPlan.recipes = recipes.filter(x => x.id !== recipeId);
+      if (!this.currentMealPlan.id) {
+        return;
       }
 
-      await this.saveCurrentMealPlan();
+      try {
+        const response = await api().mealPlansRemoveRecipe({ id: this.currentMealPlan.id, recipeId });
+
+        if (response.data.entity) {
+          this.currentMealPlan = response.data.entity;
+        }
+
+        if (response.data.message) {
+          useMessageStore().setSuccessMessage(response.data.message);
+        }
+      } catch (error) {
+        useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+      }
     },
 
     async clearCurrentRecipes() {
@@ -169,28 +196,30 @@ export default defineStore('mealPlan', {
       }
     },
 
-    async saveCurrentMealPlan(additionalRecipeIds: number[] = [], quickSave: boolean = false) {
+    async saveCurrentMealPlan(additionalRecipeIds: number[] = [], quickSave: boolean = false, pantryOnly: boolean = false) {
       const current = this.currentMealPlan;
 
       if (current === null) {
         return;
       }
 
-      const request = current;
+      const request = { ...current };
 
       if (additionalRecipeIds && additionalRecipeIds.length > 0) {
+        request.recipes = request.recipes ?? [];
+
         additionalRecipeIds.forEach((additionalId) => {
-          if (request.recipes === null || typeof request.recipes === 'undefined') {
-            return;
-          }
+          const highestOrder = Math.max(...request.recipes!.map(x => x.order || 0), 0);
 
-          const highestOrder = Math.max(...request.recipes.map(x => x.order || 0), 0);
-
-          request.recipes?.push({
+          request.recipes!.push({
             id: additionalId,
             order: highestOrder + 1,
           });
         });
+      }
+
+      if (pantryOnly) {
+        request.recipes = undefined;
       }
 
       try {
@@ -267,14 +296,12 @@ export default defineStore('mealPlan', {
       const request = mealPlan;
 
       if (additionalRecipeIds && additionalRecipeIds.length > 0) {
+        request.recipes = request.recipes ?? [];
+
         additionalRecipeIds.forEach((additionalId) => {
-          if (request.recipes === null || typeof request.recipes === 'undefined') {
-            return;
-          }
+          const highestOrder = Math.max(...request.recipes!.map(x => x.order || 0), 0);
 
-          const highestOrder = Math.max(...request.recipes.map(x => x.order || 0), 0);
-
-          request.recipes?.push({
+          request.recipes!.push({
             id: additionalId,
             order: highestOrder + 1,
           });

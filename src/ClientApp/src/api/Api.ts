@@ -14,6 +14,7 @@ import type {AddCategoryToAllRecipesRequest,
   CategoriesListParams,
   EntityMessageOfInteger,
   EntityMessageOfString,
+  EntityResponseOfGetMealPlanResponse,
   EntityResponseOfGetRecipeResponse,
   GetCategoryResponse,
   GetGroceryAisleResponse,
@@ -39,9 +40,11 @@ import type {AddCategoryToAllRecipesRequest,
   ImagesGetParams,
   ImagesPinParams,
   ImagesUploadParams,
+  MealPlansAddRecipeParams,
   MealPlansDeleteParams,
   MealPlansGetParams,
   MealPlansListParams,
+  MealPlansRemoveRecipeParams,
   RecipesDeleteParams,
   RecipesGetParams,
   RecipesSearchParams,
@@ -598,6 +601,44 @@ export class Api<
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/meal-plans/${id}`,
       method: "DELETE",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags MealPlans
+   * @name MealPlansAddRecipe
+   * @request POST:/api/meal-plans/{id}/add-recipe/{recipeId}
+   * @response `200` `EntityResponseOfGetMealPlanResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  mealPlansAddRecipe = (
+    { id, recipeId, ...query }: MealPlansAddRecipeParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<EntityResponseOfGetMealPlanResponse, IItemSetOfIFailure>({
+      path: `/api/meal-plans/${id}/add-recipe/${recipeId}`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags MealPlans
+   * @name MealPlansRemoveRecipe
+   * @request POST:/api/meal-plans/{id}/remove-recipe/{recipeId}
+   * @response `200` `EntityResponseOfGetMealPlanResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  mealPlansRemoveRecipe = (
+    { id, recipeId, ...query }: MealPlansRemoveRecipeParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<EntityResponseOfGetMealPlanResponse, IItemSetOfIFailure>({
+      path: `/api/meal-plans/${id}/remove-recipe/${recipeId}`,
+      method: "POST",
       format: "json",
       ...params,
     });

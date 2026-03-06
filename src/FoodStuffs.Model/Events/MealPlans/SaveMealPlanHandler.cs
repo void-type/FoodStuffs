@@ -42,7 +42,12 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         var mealPlanToEdit = maybeMealPlan.Unwrap(() => new MealPlan());
 
         Transfer(request, mealPlanToEdit);
-        await ManageRecipesAsync(request, mealPlanToEdit, cancellationToken);
+
+        if (request.Recipes is not null)
+        {
+            await ManageRecipesAsync(request, mealPlanToEdit, cancellationToken);
+        }
+
         await ManageExcludedGroceryItemsAsync(request, mealPlanToEdit, cancellationToken);
 
         if (maybeMealPlan.HasValue)

@@ -1,4 +1,5 @@
-﻿using FoodStuffs.Model.Events.MealPlans;
+﻿using FoodStuffs.Model.Events;
+using FoodStuffs.Model.Events.MealPlans;
 using FoodStuffs.Model.Events.MealPlans.Models;
 using Microsoft.AspNetCore.Mvc;
 using VoidCore.AspNet.ClientApp;
@@ -69,6 +70,42 @@ public class MealPlansController : ControllerBase
     public async Task<IActionResult> SaveAsync([FromServices] SaveMealPlanHandler saveHandler, [FromBody] SaveMealPlanRequest request)
     {
         return await saveHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Add a recipe to a meal plan.
+    /// </summary>
+    /// <param name="addRecipeHandler"></param>
+    /// <param name="id">The ID of the meal plan</param>
+    /// <param name="recipeId">The ID of the recipe to add</param>
+    [HttpPost("{id}/add-recipe/{recipeId}")]
+    [ProducesResponseType(typeof(EntityResponse<GetMealPlanResponse>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> AddRecipeAsync([FromServices] AddMealPlanRecipeHandler addRecipeHandler, int id, int recipeId)
+    {
+        var request = new AddMealPlanRecipeRequest(id, recipeId);
+
+        return await addRecipeHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Remove a recipe from a meal plan.
+    /// </summary>
+    /// <param name="removeRecipeHandler"></param>
+    /// <param name="id">The ID of the meal plan</param>
+    /// <param name="recipeId">The ID of the recipe to remove</param>
+    [HttpPost("{id}/remove-recipe/{recipeId}")]
+    [ProducesResponseType(typeof(EntityResponse<GetMealPlanResponse>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> RemoveRecipeAsync([FromServices] RemoveMealPlanRecipeHandler removeRecipeHandler, int id, int recipeId)
+    {
+        var request = new RemoveMealPlanRecipeRequest(id, recipeId);
+
+        return await removeRecipeHandler
             .Handle(request)
             .MapAsync(HttpResponder.Respond);
     }

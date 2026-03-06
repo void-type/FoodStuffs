@@ -496,8 +496,8 @@ export interface SaveMealPlanRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  excludedGroceryItems?: SaveMealPlanRequestExcludedGroceryItem[];
-  recipes?: SaveMealPlanRequestRecipe[];
+  excludedGroceryItems?: SaveMealPlanRequestExcludedGroceryItem[] | null;
+  recipes?: SaveMealPlanRequestRecipe[] | null;
 }
 
 export interface SaveMealPlanRequestExcludedGroceryItem {
@@ -514,6 +514,10 @@ export interface SaveMealPlanRequestRecipe {
   order?: number;
   isComplete?: boolean;
 }
+
+export type EntityResponseOfGetMealPlanResponse = UserMessage & {
+  entity?: GetMealPlanResponse | null;
+};
 
 export interface SearchRecipesResponse {
   /** A set of items. Can optionally by a page of a full set. */
@@ -960,6 +964,20 @@ export interface MealPlansDeleteParams {
    * @format int32
    */
   id: number;
+}
+
+export interface MealPlansAddRecipeParams {
+  /** @format int32 */
+  id: number;
+  /** @format int32 */
+  recipeId: number;
+}
+
+export interface MealPlansRemoveRecipeParams {
+  /** @format int32 */
+  id: number;
+  /** @format int32 */
+  recipeId: number;
 }
 
 export interface RecipesSearchParams {

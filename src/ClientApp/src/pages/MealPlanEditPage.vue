@@ -39,7 +39,7 @@ const initialized = ref(false);
 
 // Determine if we're editing a specific meal plan or the current one
 const { currentMealPlan, editingMealPlan } = storeToRefs(mealPlanStore);
-const isEditingCurrent = computed(() => (props.id || 0) === currentMealPlan.value?.id);
+const isEditingCurrent = computed(() => (props.id || 0) > 0 && (props.id || 0) === currentMealPlan.value?.id);
 
 // Use the appropriate meal plan based on whether we're editing current or a specific one
 const activeMealPlan = computed(() =>
@@ -126,6 +126,23 @@ async function onSaveMealPlan(quickSave: boolean = false) {
       router.push({ name: 'mealPlanEdit', params: { id: savedId } });
     }
   }
+}
+
+async function onSaveAndMakeCurrent() {
+  const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
+  if (savedId) {
+    await mealPlanStore.setCurrentMealPlan(savedId);
+    router.push({ name: 'mealPlanEdit', params: { id: savedId } });
+  }
+}
+
+async function onMakeCurrent() {
+  if (!activeMealPlan.value?.id) {
+    return;
+  }
+
+  await mealPlanStore.setCurrentMealPlan(activeMealPlan.value.id);
+  router.push({ name: 'mealPlanEdit', params: { id: activeMealPlan.value.id } });
 }
 
 async function addToPantry(id: number) {
@@ -344,8 +361,8 @@ const sidesHave = computed(() => {
 watch(
   () => props.id,
   () => {
-    if (!isEditingCurrent.value && (props.id || 0) > 0) {
-      mealPlanStore.fetchMealPlan(props.id);
+    if (!isEditingCurrent.value) {
+      mealPlanStore.fetchMealPlan(props.id || null);
     }
   },
   { immediate: true },
@@ -366,6 +383,20 @@ onMounted(async () => {
       <div class="btn-toolbar sticky-top pt-1">
         <button class="btn btn-primary me-2" @click.stop.prevent="() => onSaveMealPlan()">
           Save
+        </button>
+        <button
+          v-if="!isEditingCurrent && !(activeMealPlan?.id)"
+          class="btn btn-primary me-2"
+          @click.stop.prevent="() => onSaveAndMakeCurrent()"
+        >
+          Save and Make Current
+        </button>
+        <button
+          v-if="!isEditingCurrent && (activeMealPlan?.id || 0) > 0"
+          class="btn btn-secondary me-2"
+          @click.stop.prevent="() => onMakeCurrent()"
+        >
+          Make Current
         </button>
         <button
           v-if="(activeMealPlan?.id || 0) > 0"
