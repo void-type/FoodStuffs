@@ -33,7 +33,7 @@ export default class RecipeStoreHelper {
     localStorage.setItem(settingsKeyQueuedRecentRecipe, JSON.stringify(recipe));
   }
 
-  static listRequestToQueryParams(listRequest: RecipesSearchParams) {
+  static listRequestToQueryParams(listRequest: RecipesSearchParams, usePagedResults: boolean) {
     // Query params need to be string or number
     const requestEntries = Object.entries({
       ...listRequest,
@@ -47,6 +47,11 @@ export default class RecipeStoreHelper {
 
     const cleanedEntries = requestEntries
       .filter(([rKey, rValue]) => {
+        // Don't include page in URL when using infinite scroll
+        if (!usePagedResults && rKey === 'page') {
+          return false;
+        }
+
         // Get the matching default value
         const dValue = defaultEntries.find(([dKey]) => dKey === rKey)?.[1];
         // Compare the values

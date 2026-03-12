@@ -21,6 +21,7 @@ interface RecipeStoreState {
   listRequest: RecipesSearchParams;
   listFacets: SearchFacet[];
   recentRecipes: Array<SearchRecipesResultItem>;
+  usePagedResults: boolean;
 }
 
 const api = ApiHelper.client;
@@ -38,13 +39,14 @@ export const useRecipeStore = defineStore('recipe', {
     listFacets: [],
     listRequest: new RecipesSearchRequest(),
     recentRecipes: RecipeStoreHelper.getRecents(),
+    usePagedResults: false,
   }),
 
   getters: {
     currentQueryParams(state) {
       const { listRequest } = state;
 
-      return RecipeStoreHelper.listRequestToQueryParams(listRequest);
+      return RecipeStoreHelper.listRequestToQueryParams(listRequest, state.usePagedResults);
     },
   },
 

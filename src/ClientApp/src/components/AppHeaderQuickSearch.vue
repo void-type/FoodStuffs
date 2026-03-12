@@ -62,7 +62,7 @@ function navigateSearchPage() {
     const query = RecipeStoreHelper.listRequestToQueryParams({
       searchText: searchTextValue,
       take: recipeStore.listRequest.take,
-    });
+    }, false);
 
     router.push({
       name: 'recipeList',

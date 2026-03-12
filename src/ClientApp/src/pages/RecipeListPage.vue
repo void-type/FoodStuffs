@@ -28,7 +28,7 @@ const recipeStore = useRecipeStore();
 const router = useRouter();
 const route = useRoute();
 
-const { listResponse, listRequest, listFacets } = storeToRefs(recipeStore);
+const { listResponse, listRequest, listFacets, usePagedResults } = storeToRefs(recipeStore);
 const { sortOptions } = Choices;
 
 const categoriesFilterModel = ref({
@@ -37,12 +37,12 @@ const categoriesFilterModel = ref({
 });
 
 const useCompactView = ref(false);
-const usePagedResults = ref(false);
 
 const accumulatedItems = ref<Array<SearchRecipesResultItem>>([]);
 const isFetchingMore = ref(false);
 const loadMoreTriggerElement: Ref<Element | undefined> = ref();
 let loadMoreObserver: IntersectionObserver | null = null;
+let isSettingFromQuery = false;
 
 const displayedItems = computed(() => {
   if (usePagedResults.value) {
@@ -253,6 +253,10 @@ function getMealFacetCount(facetValue: boolean | null) {
 }
 
 watch(usePagedResults, async (paged) => {
+  if (isSettingFromQuery) {
+    return;
+  }
+
   if (paged) {
     recipeStore.setListRequest({
       ...listRequest.value,
@@ -261,6 +265,8 @@ watch(usePagedResults, async (paged) => {
 
     await recipeStore.fetchRecipesList();
   }
+
+  navigateSearch(false);
 });
 
 watch(
@@ -289,9 +295,11 @@ watch(
 watch(
   props,
   async () => {
+    isSettingFromQuery = true;
     setListRequestFromQuery();
     await recipeStore.fetchRecipesList();
     accumulatedItems.value = [...(listResponse.value.items || [])];
+    isSettingFromQuery = false;
   },
   { immediate: true },
 );
