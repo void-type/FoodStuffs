@@ -56,12 +56,12 @@ export default class RouterHelper {
     return 0;
   }
 
-  static scrollToTop() {
+  static scrollToTop(behavior: ScrollBehavior = 'smooth') {
+    document.getElementById('main')?.focus();
+
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior,
     });
-
-    document.getElementById('main')?.focus();
   }
 }
