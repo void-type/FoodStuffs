@@ -46,16 +46,15 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         var recipeToEdit = maybeRecipe.Unwrap(() => new Recipe());
 
         // Check for conflicting items by name
-        var byName = new RecipesSpecification(request.Name.Trim());
+        var byName = new RecipesSpecification(request.Name.Trim(), request.Id);
 
-        var conflictingRecipe = await _data.Recipes
+        var conflictingRecipeExists = await _data.Recipes
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
-            .OrderBy(x => x.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .AnyAsync(cancellationToken);
 
-        if (conflictingRecipe is not null && conflictingRecipe.Id != request.Id)
+        if (conflictingRecipeExists)
         {
             return Fail(new Failure("Recipe name already exists.", "name"));
         }

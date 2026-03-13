@@ -5,9 +5,10 @@ namespace FoodStuffs.Model.Data.Queries;
 
 public class RecipesSpecification : QuerySpecificationAbstract<Recipe>
 {
-    public RecipesSpecification(string name)
+    public RecipesSpecification(string name, int excludeId)
     {
         AddCriteria(r => r.Name == name);
+        AddCriteria(r => r.Id != excludeId);
     }
 
     public RecipesSpecification(int id)
