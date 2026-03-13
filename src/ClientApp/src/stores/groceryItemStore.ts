@@ -60,7 +60,8 @@ export default defineStore('groceryItem', {
     async fetchGroceryItemsList() {
       try {
         const request = { ...this.listRequest };
-        if (!request.searchText && request.storageLocations?.length === 0 && request.groceryAisles?.length === 0) {
+        if (!request.searchText && request.storageLocations?.length === 0
+            && request.groceryAisles?.length === 0 && request.sortBy === 'relevance') {
           request.sortBy = 'a-z';
         }
 
