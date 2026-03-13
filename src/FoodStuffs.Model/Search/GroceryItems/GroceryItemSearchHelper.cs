@@ -70,6 +70,23 @@ public static class GroceryItemSearchHelper
             doc.AddFacetField(C.FIELD_STORAGE_LOCATION_IDS, location.Id.ToString());
         }
 
+        var groceryStores = groceryItem.GroceryStores
+            .Select(c => new SearchGroceryItemsResultItemGroceryStore(
+                Id: c.Id,
+                Name: c.Name
+            ))
+            .OrderBy(c => c.Name)
+            .ToArray();
+
+        // GroceryStores: retrievable
+        doc.AddStoredField(C.FIELD_GROCERY_STORES_JSON, JsonSerializer.Serialize(groceryStores));
+
+        foreach (var store in groceryStores)
+        {
+            // GroceryStoreId: facetable
+            doc.AddFacetField(C.FIELD_GROCERY_STORE_IDS, store.Id.ToString());
+        }
+
         if (groceryItem.GroceryAisle is not null)
         {
             // GroceryAisle: retrievable
@@ -99,6 +116,8 @@ public static class GroceryItemSearchHelper
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
             StorageLocations: doc.Get(C.FIELD_STORAGE_LOCATIONS_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemStorageLocation>>(x) ?? []),
+            GroceryStores: doc.Get(C.FIELD_GROCERY_STORES_JSON)
+                .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemGroceryStore>>(x) ?? []),
             GroceryAisle: doc.Get(C.FIELD_GROCERY_AISLE_JSON)
                 .Map(x => x is null ? null : JsonSerializer.Deserialize<SearchGroceryItemsResultItemGroceryAisle>(x))
         );
@@ -121,6 +140,7 @@ public static class GroceryItemSearchHelper
         facetConfig.SetMultiValued(C.FIELD_IS_UNUSED, false);
 
         facetConfig.SetMultiValued(C.FIELD_STORAGE_LOCATION_IDS, true);
+        facetConfig.SetMultiValued(C.FIELD_GROCERY_STORE_IDS, true);
         facetConfig.SetMultiValued(C.FIELD_GROCERY_AISLE_ID, false);
 
         return facetConfig;

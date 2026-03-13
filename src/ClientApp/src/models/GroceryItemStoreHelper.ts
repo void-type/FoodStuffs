@@ -8,12 +8,14 @@ export default class GroceryItemStoreHelper {
       ...listRequest,
       storageLocations: listRequest.storageLocations?.join() || '',
       groceryAisles: listRequest.groceryAisles?.join() || '',
+      groceryStores: listRequest.groceryStores?.join() || '',
     });
 
     const defaultEntries = Object.entries({
       ...new GroceryItemsSearchRequest(),
       storageLocations: new GroceryItemsSearchRequest().storageLocations?.join() || '',
       groceryAisles: new GroceryItemsSearchRequest().groceryAisles?.join() || '',
+      groceryStores: new GroceryItemsSearchRequest().groceryStores?.join() || '',
     });
 
     const cleanedEntries = requestEntries

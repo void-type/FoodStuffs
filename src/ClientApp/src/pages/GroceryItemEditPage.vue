@@ -54,11 +54,22 @@ const isCreateNewMode = computed(() => !isEditMode.value);
 const isDirty = computed(() => JSON.stringify(data.working) !== data.workingInitial);
 
 const storageLocationOptions = ref([] as Array<string>);
+const groceryStoreOptions = ref([] as Array<string>);
 
 async function fetchStorageLocations() {
   try {
     const response = await api().storageLocationsList({ isPagingEnabled: false });
     storageLocationOptions.value
+      = response.data.items?.map(x => x.name || '').filter(x => !isNil(x)) || [];
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
+}
+
+async function fetchGroceryStores() {
+  try {
+    const response = await api().groceryStoresList({ isPagingEnabled: false });
+    groceryStoreOptions.value
       = response.data.items?.map(x => x.name || '').filter(x => !isNil(x)) || [];
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -100,6 +111,7 @@ async function onSaveClick() {
     }
 
     fetchStorageLocations();
+    fetchGroceryStores();
 
     await groceryItemStore.fetchGroceryItemsList();
   } catch (error) {
@@ -177,13 +189,41 @@ function addStorageLocation(tag: string) {
   }
 }
 
-function removeStorageLocation(storageLocationName: string) {
+function removeStorageLocation(tag: { name?: string }) {
+  const storageLocationName = tag.name || '';
   const storageLocations = data.working.storageLocations?.slice() || [];
   const storageLocationIndex = storageLocations.indexOf(storageLocationName);
 
   if (storageLocationIndex > -1) {
     storageLocations.splice(storageLocationIndex, 1);
     data.working.storageLocations = storageLocations;
+  }
+}
+
+function addGroceryStore(tag: string) {
+  const groceryStoreName = trimAndTitleCase(tag);
+
+  const groceryStores = data.working.groceryStores?.slice() || [];
+
+  const groceryStoreDoesNotExist
+    = !groceryStores
+      .map(value => value.toUpperCase())
+      .includes(groceryStoreName.toUpperCase());
+
+  if (groceryStoreDoesNotExist && groceryStoreName.length > 0) {
+    groceryStores.push(groceryStoreName);
+    data.working.groceryStores = groceryStores;
+  }
+}
+
+function removeGroceryStore(tag: { name?: string }) {
+  const groceryStoreName = tag.name || '';
+  const groceryStores = data.working.groceryStores?.slice() || [];
+  const groceryStoreIndex = groceryStores.indexOf(groceryStoreName);
+
+  if (groceryStoreIndex > -1) {
+    groceryStores.splice(groceryStoreIndex, 1);
+    data.working.groceryStores = groceryStores;
   }
 }
 
@@ -332,6 +372,17 @@ onBeforeUnmount(() => {
           :suggestions="storageLocationOptions.map((name) => ({ name }))"
           field-name="storageLocations"
           label="Storage Locations"
+        />
+        <TagEditor
+          class="g-col-12 g-col-md-6" :class="{
+            danger: messageStore.isFieldInError('groceryStores'),
+          }"
+          :tags="(data.working.groceryStores || []).map((name) => ({ name }))"
+          :on-add-tag="addGroceryStore"
+          :on-remove-tag="removeGroceryStore"
+          :suggestions="groceryStoreOptions.map((name) => ({ name }))"
+          field-name="groceryStores"
+          label="Grocery Stores"
         />
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />
         <div v-if="data.source.recipes?.length" class="g-col-12 g-col-md-6">

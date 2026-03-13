@@ -18,5 +18,6 @@ public static class GroceryItemSearchConstants
     public const string FIELD_STORAGE_LOCATIONS_JSON = nameof(GroceryItem.StorageLocations) + "Json";
     public const string FIELD_GROCERY_AISLE_ID = nameof(GroceryItem.GroceryAisle);
     public const string FIELD_GROCERY_AISLE_JSON = nameof(GroceryItem.GroceryAisle) + "Json";
-
+    public const string FIELD_GROCERY_STORE_IDS = nameof(GroceryItem.GroceryStores);
+    public const string FIELD_GROCERY_STORES_JSON = nameof(GroceryItem.GroceryStores) + "Json";
 }

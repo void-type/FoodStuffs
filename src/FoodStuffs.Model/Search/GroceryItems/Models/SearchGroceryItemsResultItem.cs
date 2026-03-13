@@ -9,4 +9,5 @@ public record SearchGroceryItemsResultItem(
     int RecipeCount,
     DateTimeOffset CreatedOn,
     List<SearchGroceryItemsResultItemStorageLocation> StorageLocations,
+    List<SearchGroceryItemsResultItemGroceryStore> GroceryStores,
     SearchGroceryItemsResultItemGroceryAisle? GroceryAisle);

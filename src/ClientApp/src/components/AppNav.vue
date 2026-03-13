@@ -6,6 +6,7 @@ import RouterHelper from '@/models/RouterHelper';
 import useCategoryStore from '@/stores/categoryStore';
 import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import useGroceryItemStore from '@/stores/groceryItemStore';
+import useGroceryStoreStore from '@/stores/groceryStoreStore';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import useRecipeStore from '@/stores/recipeStore';
 import useStorageLocationStore from '@/stores/storageLocationStore';
@@ -14,6 +15,7 @@ const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const groceryItemStore = useGroceryItemStore();
 const categoryStore = useCategoryStore();
+const groceryStoreStore = useGroceryStoreStore();
 const storageLocationStore = useStorageLocationStore();
 const groceryAisleStore = useGroceryAisleStore();
 
@@ -115,6 +117,15 @@ const { recentRecipes } = storeToRefs(recipeStore);
             class="dropdown-item"
           >
             Grocery Aisles
+          </router-link>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <router-link
+            :to="{ name: 'groceryStoreList', query: groceryStoreStore.currentQueryParams }"
+            class="dropdown-item"
+          >
+            Grocery Stores
           </router-link>
         </li>
         <li><hr class="dropdown-divider"></li>

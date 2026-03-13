@@ -12,6 +12,7 @@ import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import GroceryItemInventoryQuantity from '@/components/GroceryItemInventoryQuantity.vue';
 import GroceryItemSearchGroceryAislesFilter from '@/components/GroceryItemSearchGroceryAislesFilter.vue';
+import GroceryItemSearchGroceryStoresFilter from '@/components/GroceryItemSearchGroceryStoresFilter.vue';
 import GroceryItemSearchStorageLocationsFilter from '@/components/GroceryItemSearchStorageLocationsFilter.vue';
 import TagBadge from '@/components/TagBadge.vue';
 import ApiHelper from '@/models/ApiHelper';
@@ -47,6 +48,11 @@ const storageLocationsFilterModel = ref({
 
 const groceryAislesFilterModel = ref({
   groceryAisles: [] as Array<number>,
+});
+
+const groceryStoresFilterModel = ref({
+  groceryStores: [] as Array<number>,
+  matchAllGroceryStores: false,
 });
 
 const resultCountText = computed(() => {
@@ -150,6 +156,15 @@ function setListRequestFromQuery() {
         return n ? [n] : [];
       }) || [];
 
+  const groceryStores
+    = props.query.groceryStores
+      ?.toString()
+      ?.split(',')
+      .flatMap((x) => {
+        const n = toNumberOrNull(x);
+        return n ? [n] : [];
+      }) || [];
+
   const groceryAisles
     = props.query.groceryAisles
       ?.toString()
@@ -163,12 +178,17 @@ function setListRequestFromQuery() {
   storageLocationsFilterModel.value.matchAllStorageLocations
     = props.query.matchAllStorageLocations === 'true';
 
+  groceryStoresFilterModel.value.groceryStores = groceryStores;
+  groceryStoresFilterModel.value.matchAllGroceryStores
+    = props.query.matchAllGroceryStores === 'true';
+
   groceryAislesFilterModel.value.groceryAisles = groceryAisles;
 
   groceryItemStore.setListRequest({
     ...new GroceryItemsSearchRequest(),
     ...props.query,
     storageLocations,
+    groceryStores,
     groceryAisles,
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
@@ -177,6 +197,10 @@ function setListRequestFromQuery() {
 
 const storageLocationFacets = computed(() => {
   return listFacets.value.find(x => x.fieldName === 'StorageLocations')?.values || [];
+});
+
+const groceryStoreFacets = computed(() => {
+  return listFacets.value.find(x => x.fieldName === 'GroceryStores')?.values || [];
 });
 
 const groceryAisleFacets = computed(() => {
@@ -274,6 +298,29 @@ watch(
 );
 
 watch(
+  groceryStoresFilterModel,
+  () => {
+    const { groceryStores, matchAllGroceryStores } = listRequest.value;
+
+    const initialModel = {
+      groceryStores,
+      matchAllGroceryStores,
+    };
+
+    if (JSON.stringify(initialModel) !== JSON.stringify(groceryStoresFilterModel.value)) {
+      groceryItemStore.setListRequest({
+        ...listRequest.value,
+        ...groceryStoresFilterModel.value,
+        page: 1,
+      });
+
+      navigateSearch(false);
+    }
+  },
+  { deep: true },
+);
+
+watch(
   groceryAislesFilterModel,
   () => {
     const { groceryAisles } = listRequest.value;
@@ -328,6 +375,12 @@ watch(
             <GroceryItemSearchStorageLocationsFilter
               v-model="storageLocationsFilterModel"
               :facet-values="storageLocationFacets"
+              parent-accordion-id="filterAccordionDesktop"
+              check-class="g-col-12"
+            />
+            <GroceryItemSearchGroceryStoresFilter
+              v-model="groceryStoresFilterModel"
+              :facet-values="groceryStoreFacets"
               parent-accordion-id="filterAccordionDesktop"
               check-class="g-col-12"
             />
@@ -468,6 +521,11 @@ watch(
               <GroceryItemSearchStorageLocationsFilter
                 v-model="storageLocationsFilterModel"
                 :facet-values="storageLocationFacets"
+                parent-accordion-id="filterAccordion"
+              />
+              <GroceryItemSearchGroceryStoresFilter
+                v-model="groceryStoresFilterModel"
+                :facet-values="groceryStoreFacets"
                 parent-accordion-id="filterAccordion"
               />
               <GroceryItemSearchGroceryAislesFilter
@@ -615,6 +673,14 @@ watch(
                   :key="location.name || ''"
                   class="me-2 mt-2"
                   :tag="{ name: location.name }"
+                />
+              </div>
+              <div v-if="(groceryItem.groceryStores?.length || 0) > 0" class="mt-3">
+                <TagBadge
+                  v-for="store in groceryItem.groceryStores"
+                  :key="store.name || ''"
+                  class="me-2 mt-2"
+                  :tag="{ name: store.name }"
                 />
               </div>
             </div>

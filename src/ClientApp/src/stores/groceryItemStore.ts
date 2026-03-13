@@ -61,7 +61,8 @@ export default defineStore('groceryItem', {
       try {
         const request = { ...this.listRequest };
         if (!request.searchText && request.storageLocations?.length === 0
-            && request.groceryAisles?.length === 0 && request.sortBy === 'relevance') {
+          && request.groceryAisles?.length === 0 && request.groceryStores?.length === 0
+          && request.sortBy === '') {
           request.sortBy = 'a-z';
         }
 

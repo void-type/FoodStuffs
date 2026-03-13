@@ -24,5 +24,7 @@ public class GroceryItem : IAuditableWithOffset
 
     public virtual List<StorageLocation> StorageLocations { get; } = [];
 
+    public virtual List<GroceryStore> GroceryStores { get; } = [];
+
     public virtual List<Recipe> Recipes { get; } = [];
 }

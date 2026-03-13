@@ -69,6 +69,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
         Transfer(requestedName, request, groceryItemToEdit);
 
         await ManageStorageLocationsAsync(request, groceryItemToEdit, cancellationToken);
+        await ManageGroceryStoresAsync(request, groceryItemToEdit, cancellationToken);
 
         if (request.GroceryAisleId is not null)
         {
@@ -142,5 +143,39 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
             .Select(x => new StorageLocation { Name = x });
 
         groceryItem.StorageLocations.AddRange(createdStorageLocations);
+    }
+
+    private async Task ManageGroceryStoresAsync(SaveGroceryItemRequest request, GroceryItem groceryItem, CancellationToken cancellationToken)
+    {
+        var requestedNames = request.GroceryStores
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x).Trim())
+            .ToArray();
+
+        // Remove extra grocery stores.
+        groceryItem.GroceryStores.RemoveAll(x => !requestedNames.Contains(x.Name, StringComparer.OrdinalIgnoreCase));
+
+        var missingNames = requestedNames
+            .Where(n => !groceryItem.GroceryStores.Select(x => x.Name).Contains(n, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        // Find missing grocery stores that already exist.
+        var existingGroceryStores = await _data.GroceryStores
+            .TagWith(GetTag())
+            .Where(x => missingNames.Contains(x.Name))
+            .OrderBy(x => x.Id)
+            // In case there are duplicates, add only the first.
+            .GroupBy(x => x.Name)
+            .Select(g => g.First())
+            .ToListAsync(cancellationToken);
+
+        groceryItem.GroceryStores.AddRange(existingGroceryStores);
+
+        // Create missing GroceryStores that don't exist.
+        var createdGroceryStores = missingNames
+            .Where(x => !groceryItem.GroceryStores.Select(x => x.Name).Contains(x, StringComparer.OrdinalIgnoreCase))
+            .Select(x => new GroceryStore { Name = x });
+
+        groceryItem.GroceryStores.AddRange(createdGroceryStores);
     }
 }

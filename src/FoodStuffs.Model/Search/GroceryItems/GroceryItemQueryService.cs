@@ -235,6 +235,14 @@ public class GroceryItemQueryService : IGroceryItemQueryService
             drillDownQuery,
             baseQuery,
             facetsConfig,
+            C.FIELD_GROCERY_STORE_IDS,
+            request.GroceryStoreIds?.Select(x => x.ToString()).ToArray() ?? [],
+            request.MatchAllGroceryStores);
+
+        LuceneSearchHelper.DrillDownByValues(
+            drillDownQuery,
+            baseQuery,
+            facetsConfig,
             C.FIELD_GROCERY_AISLE_ID,
             request.GroceryAisleIds?.Select(x => x.ToString()).ToArray() ?? [],
             false);

@@ -24,4 +24,6 @@ export default class GroceryItemGetResponse implements GetGroceryItemResponse {
   public groceryAisle: GetGroceryItemResponseGroceryAisle | null = null;
 
   public storageLocations: string[] = [];
+
+  public groceryStores: string[] = [];
 }

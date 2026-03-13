@@ -51,6 +51,9 @@ public class GetGroceryItemHandler : CustomEventHandlerAbstract<GetGroceryItemRe
                     : null,
                 StorageLocations: [.. m.StorageLocations
                     .Select(c => c.Name)
+                    .Order(StringComparer.Ordinal)],
+                GroceryStores: [.. m.GroceryStores
+                    .Select(c => c.Name)
                     .Order(StringComparer.Ordinal)]));
     }
 }

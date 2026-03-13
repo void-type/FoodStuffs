@@ -27,6 +27,7 @@ public class FoodStuffsContext : DbContext
     public virtual DbSet<Recipe> Recipes { get; set; } = null!;
     public virtual DbSet<GroceryItem> GroceryItems { get; set; } = null!;
     public virtual DbSet<StorageLocation> StorageLocations { get; set; } = null!;
+    public virtual DbSet<GroceryStore> GroceryStores { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,6 +105,14 @@ public class FoodStuffsContext : DbContext
                 .IsUnique();
         });
 
+        modelBuilder.Entity<GroceryStore>(entity =>
+        {
+            entity.ToTable(nameof(GroceryStore));
+
+            entity.HasIndex(si => si.Name)
+                .IsUnique();
+        });
+
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.ToTable(nameof(Recipe));
@@ -155,6 +164,13 @@ public class FoodStuffsContext : DbContext
                 .UsingEntity<Dictionary<string, object>>(
                     "GroceryItemStorageLocationRelation",
                     r => r.HasOne<StorageLocation>().WithMany().HasForeignKey("StorageLocationId"),
+                    c => c.HasOne<GroceryItem>().WithMany().HasForeignKey("GroceryItemId"));
+
+            entity.HasMany(r => r.GroceryStores)
+                .WithMany(i => i.GroceryItems)
+                .UsingEntity<Dictionary<string, object>>(
+                    "GroceryItemGroceryStoreRelation",
+                    r => r.HasOne<GroceryStore>().WithMany().HasForeignKey("GroceryStoreId"),
                     c => c.HasOne<GroceryItem>().WithMany().HasForeignKey("GroceryItemId"));
         });
     }

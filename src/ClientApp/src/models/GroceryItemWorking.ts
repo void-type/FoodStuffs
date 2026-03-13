@@ -10,4 +10,6 @@ export default class GroceryItemWorking implements SaveGroceryItemRequest {
   public groceryAisleId: number | undefined | null = null;
 
   public storageLocations: string[] = [];
+
+  public groceryStores: string[] = [];
 }

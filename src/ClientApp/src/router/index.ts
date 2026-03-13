@@ -177,6 +177,33 @@ const router = createRouter({
           ],
         },
         {
+          path: 'grocery-stores',
+          meta: { title: 'Grocery Stores' },
+          children: [
+            {
+              path: '',
+              name: 'groceryStoreList',
+              component: () => import('@/pages/GroceryStoreListPage.vue'),
+              props: route => ({ query: route.query }),
+            },
+            {
+              path: ':id',
+              name: 'groceryStoreEdit',
+              meta: { title: 'Edit Grocery Store' },
+              component: () => import('@/pages/GroceryStoreEditPage.vue'),
+              props: route => ({
+                id: RouterHelper.paramToInt(route.params.id),
+              }),
+            },
+            {
+              path: 'new',
+              name: 'groceryStoreNew',
+              meta: { title: 'New Grocery Store' },
+              component: () => import('@/pages/GroceryStoreEditPage.vue'),
+            },
+          ],
+        },
+        {
           path: 'storage-locations',
           meta: { title: 'Storage Locations' },
           children: [

@@ -79,6 +79,8 @@ public class EnsureIndexHostedService : IHostedService
                     StorageLocationIds: null,
                     MatchAllStorageLocations: false,
                     GroceryAisleIds: null,
+                    GroceryStoreIds: null,
+                    MatchAllGroceryStores: false,
                     IsOutOfStock: null,
                     IsUnused: null,
                     SortBy: null,

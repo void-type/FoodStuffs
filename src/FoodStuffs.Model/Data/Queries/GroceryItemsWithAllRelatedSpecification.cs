@@ -12,6 +12,7 @@ public class GroceryItemsWithAllRelatedSpecification : QuerySpecificationAbstrac
         AddInclude(nameof(GroceryItem.Recipes));
         AddInclude(nameof(GroceryItem.GroceryAisle));
         AddInclude(nameof(GroceryItem.StorageLocations));
+        AddInclude(nameof(GroceryItem.GroceryStores));
     }
 
     public GroceryItemsWithAllRelatedSpecification(int id) : this()

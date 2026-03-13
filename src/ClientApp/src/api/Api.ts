@@ -19,6 +19,7 @@ import type {AddCategoryToAllRecipesRequest,
   GetCategoryResponse,
   GetGroceryAisleResponse,
   GetGroceryItemResponse,
+  GetGroceryStoreResponse,
   GetMealPlanResponse,
   GetRecipeResponse,
   GetStorageLocationResponse,
@@ -29,9 +30,13 @@ import type {AddCategoryToAllRecipesRequest,
   GroceryItemsGetParams,
   GroceryItemsSearchParams,
   GroceryItemsSuggestParams,
+  GroceryStoresDeleteParams,
+  GroceryStoresGetParams,
+  GroceryStoresListParams,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
   IItemSetOfListGroceryAislesResponse,
+  IItemSetOfListGroceryStoresResponse,
   IItemSetOfListMealPlansResponse,
   IItemSetOfListStorageLocationsResponse,
   IItemSetOfSuggestGroceryItemsResultItem,
@@ -53,6 +58,7 @@ import type {AddCategoryToAllRecipesRequest,
   SaveGroceryAisleRequest,
   SaveGroceryItemInventoryRequest,
   SaveGroceryItemRequest,
+  SaveGroceryStoreRequest,
   SaveMealPlanRequest,
   SaveRecipeRequest,
   SaveStorageLocationRequest,
@@ -444,6 +450,89 @@ export class Api<
   /**
    * No description
    *
+   * @tags GroceryStores
+   * @name GroceryStoresList
+   * @summary List grocery stores. All parameters are optional and some have defaults.
+   * @request GET:/api/grocery-stores
+   * @response `200` `IItemSetOfListGroceryStoresResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryStoresList = (
+    query: GroceryStoresListParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<IItemSetOfListGroceryStoresResponse, IItemSetOfIFailure>({
+      path: `/api/grocery-stores`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryStores
+   * @name GroceryStoresSave
+   * @summary Save a grocery store. Will update if found, otherwise a new item will be created.
+   * @request POST:/api/grocery-stores
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryStoresSave = (
+    data: SaveGroceryStoreRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/grocery-stores`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryStores
+   * @name GroceryStoresGet
+   * @summary Get a grocery store.
+   * @request GET:/api/grocery-stores/{id}
+   * @response `200` `GetGroceryStoreResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryStoresGet = (
+    { id, ...query }: GroceryStoresGetParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<GetGroceryStoreResponse, IItemSetOfIFailure>({
+      path: `/api/grocery-stores/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags GroceryStores
+   * @name GroceryStoresDelete
+   * @summary Delete a grocery store.
+   * @request DELETE:/api/grocery-stores/{id}
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  groceryStoresDelete = (
+    { id, ...query }: GroceryStoresDeleteParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/grocery-stores/${id}`,
+      method: "DELETE",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
    * @tags Images
    * @name ImagesGet
    * @summary Get an image.
@@ -609,6 +698,7 @@ export class Api<
    *
    * @tags MealPlans
    * @name MealPlansAddRecipe
+   * @summary Add a recipe to a meal plan.
    * @request POST:/api/meal-plans/{id}/add-recipe/{recipeId}
    * @response `200` `EntityResponseOfGetMealPlanResponse`
    * @response `400` `IItemSetOfIFailure`
@@ -628,6 +718,7 @@ export class Api<
    *
    * @tags MealPlans
    * @name MealPlansRemoveRecipe
+   * @summary Remove a recipe from a meal plan.
    * @request POST:/api/meal-plans/{id}/remove-recipe/{recipeId}
    * @response `200` `EntityResponseOfGetMealPlanResponse`
    * @response `400` `IItemSetOfIFailure`

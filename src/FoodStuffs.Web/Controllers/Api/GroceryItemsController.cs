@@ -25,6 +25,8 @@ public class GroceryItemsController : ControllerBase
     /// <param name="storageLocations">Storage location IDs to filter on</param>
     /// <param name="matchAllStorageLocations">When true, grocery items returned will match all selected storage locations</param>
     /// <param name="groceryAisles">Grocery aisle IDs to filter on</param>
+    /// <param name="groceryStores">Grocery store IDs to filter on</param>
+    /// <param name="matchAllGroceryStores">When true, grocery items returned will match all selected grocery stores</param>
     /// <param name="isOutOfStock">If the grocery items are out of stock</param>
     /// <param name="isUnused">If the grocery items have no relations</param>
     /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
@@ -41,6 +43,8 @@ public class GroceryItemsController : ControllerBase
         [FromQuery] int[]? storageLocations = null,
         [FromQuery] bool matchAllStorageLocations = false,
         [FromQuery] int[]? groceryAisles = null,
+        [FromQuery] int[]? groceryStores = null,
+        [FromQuery] bool matchAllGroceryStores = false,
         [FromQuery] bool? isOutOfStock = null,
         [FromQuery] bool? isUnused = null,
         [FromQuery] string? sortBy = null,
@@ -54,6 +58,8 @@ public class GroceryItemsController : ControllerBase
             StorageLocationIds: storageLocations,
             MatchAllStorageLocations: matchAllStorageLocations,
             GroceryAisleIds: groceryAisles,
+            GroceryStoreIds: groceryStores,
+            MatchAllGroceryStores: matchAllGroceryStores,
             IsOutOfStock: isOutOfStock,
             IsUnused: isUnused,
             SortBy: sortBy,

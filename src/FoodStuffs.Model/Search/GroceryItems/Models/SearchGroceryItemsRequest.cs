@@ -7,6 +7,8 @@ public record SearchGroceryItemsRequest(
     int[]? StorageLocationIds,
     bool MatchAllStorageLocations,
     int[]? GroceryAisleIds,
+    int[]? GroceryStoreIds,
+    bool MatchAllGroceryStores,
     bool? IsOutOfStock,
     bool? IsUnused,
     string? SortBy,

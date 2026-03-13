@@ -10,6 +10,10 @@ export default class GroceryItemsSearchRequest implements GroceryItemsSearchPara
 
   public groceryAisles = [] as number[];
 
+  public groceryStores = [] as number[];
+
+  public matchAllGroceryStores = false;
+
   public isOutOfStock = null;
 
   public isUnused = null;

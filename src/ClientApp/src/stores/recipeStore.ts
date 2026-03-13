@@ -141,7 +141,8 @@ export const useRecipeStore = defineStore('recipe', {
     async fetchRecipesList() {
       try {
         const request = { ...this.listRequest };
-        if (!request.searchText && request.categories?.length === 0 && request.sortBy === 'relevance') {
+        if (!request.searchText && request.categories?.length === 0
+          && request.sortBy === '') {
           request.sortBy = 'random';
         }
 

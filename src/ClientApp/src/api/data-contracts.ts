@@ -277,10 +277,17 @@ export interface SearchGroceryItemsResultItem {
   /** @format date-time */
   createdOn?: string;
   storageLocations?: SearchGroceryItemsResultItemStorageLocation[];
+  groceryStores?: SearchGroceryItemsResultItemGroceryStore[];
   groceryAisle?: SearchGroceryItemsResultItemGroceryAisle | null;
 }
 
 export interface SearchGroceryItemsResultItemStorageLocation {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SearchGroceryItemsResultItemGroceryStore {
   /** @format int32 */
   id?: number;
   name?: string;
@@ -354,6 +361,7 @@ export interface GetGroceryItemResponse {
   recipes?: GetGroceryItemResponseRecipe[];
   groceryAisle?: GetGroceryItemResponseGroceryAisle | null;
   storageLocations?: string[];
+  groceryStores?: string[];
 }
 
 export interface GetGroceryItemResponseRecipe {
@@ -381,6 +389,7 @@ export interface SaveGroceryItemRequest {
   /** @format int32 */
   groceryAisleId?: number | null;
   storageLocations?: string[];
+  groceryStores?: string[];
 }
 
 export interface SaveGroceryItemInventoryRequest {
@@ -388,6 +397,67 @@ export interface SaveGroceryItemInventoryRequest {
   id?: number;
   /** @format int32 */
   inventoryQuantity?: number;
+}
+
+/** A set of items. Can optionally by a page of a full set. */
+export interface IItemSetOfListGroceryStoresResponse {
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
+  count?: number;
+  /** The items in this set. */
+  items?: ListGroceryStoresResponse[];
+  /** When true, this is a page of a full set. */
+  isPagingEnabled?: boolean;
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
+  page?: number;
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
+  take?: number;
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
+  totalCount?: number;
+}
+
+export interface ListGroceryStoresResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format int32 */
+  groceryItemCount?: number;
+}
+
+export interface GetGroceryStoreResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  createdBy?: string;
+  /** @format date-time */
+  createdOn?: string;
+  modifiedBy?: string;
+  /** @format date-time */
+  modifiedOn?: string;
+  groceryItems?: GetGroceryStoreResponseGroceryItem[];
+}
+
+export interface GetGroceryStoreResponseGroceryItem {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+}
+
+export interface SaveGroceryStoreRequest {
+  /** @format int32 */
+  id?: number;
+  name?: string;
 }
 
 /** A UI-friendly message and the Id of the entity that was affected during an event. */
@@ -496,7 +566,7 @@ export interface SaveMealPlanRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  excludedGroceryItems?: SaveMealPlanRequestExcludedGroceryItem[] | null;
+  excludedGroceryItems?: SaveMealPlanRequestExcludedGroceryItem[];
   recipes?: SaveMealPlanRequestRecipe[] | null;
 }
 
@@ -848,6 +918,13 @@ export interface GroceryItemsSearchParams {
   matchAllStorageLocations?: boolean;
   /** Grocery aisle IDs to filter on */
   groceryAisles?: number[] | null;
+  /** Grocery store IDs to filter on */
+  groceryStores?: number[] | null;
+  /**
+   * When true, grocery items returned will match all selected grocery stores
+   * @default false
+   */
+  matchAllGroceryStores?: boolean;
   /** If the grocery items are out of stock */
   isOutOfStock?: boolean | null;
   /** If the grocery items have no relations */
@@ -902,6 +979,46 @@ export interface GroceryItemsGetParams {
 export interface GroceryItemsDeleteParams {
   /**
    * The ID of the grocery item
+   * @format int32
+   */
+  id: number;
+}
+
+export interface GroceryStoresListParams {
+  /** Name contains (case-insensitive) */
+  name?: string | null;
+  /** Specify to show items that have relations or no relations */
+  isUnused?: boolean | null;
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
+export interface GroceryStoresGetParams {
+  /**
+   * The ID of the grocery store to get
+   * @format int32
+   */
+  id: number;
+}
+
+export interface GroceryStoresDeleteParams {
+  /**
+   * The ID of the grocery store
    * @format int32
    */
   id: number;
@@ -967,16 +1084,28 @@ export interface MealPlansDeleteParams {
 }
 
 export interface MealPlansAddRecipeParams {
-  /** @format int32 */
+  /**
+   * The ID of the meal plan
+   * @format int32
+   */
   id: number;
-  /** @format int32 */
+  /**
+   * The ID of the recipe to add
+   * @format int32
+   */
   recipeId: number;
 }
 
 export interface MealPlansRemoveRecipeParams {
-  /** @format int32 */
+  /**
+   * The ID of the meal plan
+   * @format int32
+   */
   id: number;
-  /** @format int32 */
+  /**
+   * The ID of the recipe to remove
+   * @format int32
+   */
   recipeId: number;
 }
 
