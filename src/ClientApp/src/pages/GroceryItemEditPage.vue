@@ -298,6 +298,8 @@ function handleBeforeUnload(event: BeforeUnloadEvent) {
 }
 
 onMounted(() => {
+  fetchStorageLocations();
+  fetchGroceryStores();
   window.addEventListener('beforeunload', handleBeforeUnload);
 });
 
