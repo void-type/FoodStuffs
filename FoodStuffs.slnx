@@ -7,6 +7,8 @@
     <Project Path="src/FoodStuffs.Web/FoodStuffs.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/FoodStuffs.AppHost/FoodStuffs.AppHost.csproj" />
+    <Project Path="tests/FoodStuffs.E2eTest/FoodStuffs.E2eTest.csproj" />
     <Project Path="tests/FoodStuffs.Test/FoodStuffs.Test.csproj" />
   </Folder>
 </Solution>

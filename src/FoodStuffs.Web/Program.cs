@@ -86,6 +86,14 @@ try
 
     var app = builder.Build();
 
+    // Auto-migrate for e2e testing (before hosted services query the DB)
+    if (config.GetValue<bool>("AutoMigrate"))
+    {
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<FoodStuffsContext>();
+        await context.Database.MigrateAsync();
+    }
+
     // Middleware pipeline
     app.UseAlwaysOnShortCircuit();
     app.UseSpaExceptionPage(env);
