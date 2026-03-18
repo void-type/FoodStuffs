@@ -12,7 +12,8 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --fix",
     "generate-api-client": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 sta generate -p https://localhost:5001/swagger/v1/swagger.json -o ./src/api/ --modular --responses --extract-request-params && node scripts/fix-api-files.js && node scripts/fix-api-files.js",
-    "clean-api": "node scripts/fix-api-files.js"
+    "clean-api": "node scripts/fix-api-files.js",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",
+    "@playwright/test": "^1.58.2",
     "@tsconfig/node18": "^18.2.6",
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^24.12.0",

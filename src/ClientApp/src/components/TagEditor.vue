@@ -89,12 +89,13 @@ watch(
         :id="fieldName"
         v-model="newTag"
         :name="fieldName"
+        :data-test-id="`tag-editor-input-${fieldName}`"
         class="form-control"
         :disabled="false"
         autocomplete="off"
         @keydown.stop.prevent.enter="addTagClick(newTag)"
       >
-      <button class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick(newTag)">
+      <button :data-test-id="`tag-editor-add-${fieldName}`" class="btn btn-secondary" type="button" @click.stop.prevent="addTagClick(newTag)">
         Add
       </button>
     </div>

@@ -233,13 +233,14 @@ onBeforeUnmount(() => {
     <AppPageHeading />
     <div class="mt-3">
       <div class="btn-toolbar sticky-top pt-1">
-        <button type="button" class="btn btn-primary me-2" @click.stop.prevent="onSaveClick()">
+        <button type="button" class="btn btn-primary me-2" data-test-id="save-button" @click.stop.prevent="onSaveClick()">
           Save
         </button>
         <div class="dropdown">
           <button
             v-if="isEditMode"
             id="overflowMenuButton"
+            data-test-id="more-button"
             class="btn btn-secondary dropdown-toggle"
             type="button"
             data-bs-toggle="dropdown"
@@ -251,6 +252,7 @@ onBeforeUnmount(() => {
             <li>
               <button
                 class="dropdown-item text-danger"
+                data-test-id="delete-button"
                 @click.stop.prevent="onDeleteClick(data.working.id)"
               >
                 Delete
@@ -265,6 +267,7 @@ onBeforeUnmount(() => {
           <input
             id="name"
             v-model="data.working.name"
+            data-test-id="field-name"
             required
             type="text"
             class="form-control" :class="{

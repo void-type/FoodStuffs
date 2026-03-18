@@ -110,7 +110,7 @@ watch(
     <AppPageHeading />
     <div class="mt-3">
       <div class="btn-toolbar">
-        <button class="btn btn-secondary" @click="newMealPlan">
+        <button class="btn btn-secondary" data-test-id="new-button" @click="newMealPlan">
           New
         </button>
       </div>
@@ -120,6 +120,7 @@ watch(
     </div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
+      data-test-id="results-table"
       class="table mt-4" :class="{ 'table-dark': useDarkMode }"
     >
       <thead>
@@ -131,7 +132,7 @@ watch(
         </tr>
       </thead>
       <tbody>
-        <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id">
+        <tr v-for="mealPlan in listResponse.items" :key="mealPlan.id" :data-test-id="`entity-row-${mealPlan.id}`">
           <td>
             <router-link :to="RouterHelper.editMealPlan(mealPlan)">
               {{ mealPlan.name }}
@@ -151,7 +152,7 @@ watch(
           </td>
           <td>{{ mealPlan.recipeCount }}</td>
           <td>
-            <button class="btn btn-sm btn-danger" @click="() => onDeleteMealPlan(mealPlan.id)">
+            <button class="btn btn-sm btn-danger" :data-test-id="`entity-delete-${mealPlan.id}`" @click="() => onDeleteMealPlan(mealPlan.id)">
               Delete
             </button>
           </td>

@@ -399,6 +399,7 @@ onUnmounted(() => {
             <input
               id="searchText"
               v-model="listRequest.searchText"
+              data-test-id="search-name"
               type="search"
               inputmode="search"
               enterkeyhint="search"
@@ -483,13 +484,13 @@ onUnmounted(() => {
         </div>
 
         <div class="btn-toolbar">
-          <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
+          <button class="btn btn-primary me-2" data-test-id="search-button" type="button" @click.stop.prevent="startSearch()">
             Search
           </button>
           <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
             Clear
           </button>
-          <router-link :to="{ name: 'recipeNew' }" class="btn btn-secondary">
+          <router-link :to="{ name: 'recipeNew' }" data-test-id="new-button" class="btn btn-secondary">
             New
           </router-link>
         </div>

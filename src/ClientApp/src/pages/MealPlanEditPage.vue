@@ -381,7 +381,7 @@ onMounted(async () => {
     <AppPageHeading :title="pageTitle" />
     <div v-if="initialized" class="mt-3">
       <div class="btn-toolbar sticky-top pt-1">
-        <button class="btn btn-primary me-2" @click.stop.prevent="() => onSaveMealPlan()">
+        <button class="btn btn-primary me-2" data-test-id="save-button" @click.stop.prevent="() => onSaveMealPlan()">
           Save
         </button>
         <button
@@ -408,6 +408,7 @@ onMounted(async () => {
         <button
           v-if="(activeMealPlan?.id || 0) > 0"
           id="overflowMenuButton"
+          data-test-id="more-button"
           class="btn btn-secondary dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
@@ -423,6 +424,7 @@ onMounted(async () => {
           <li>
             <button
               class="dropdown-item text-danger"
+              data-test-id="delete-button"
               @click.stop.prevent="() => onDeleteMealPlan()"
             >
               Delete
@@ -442,6 +444,7 @@ onMounted(async () => {
           <input
             id="mealPlanName"
             v-model="activeMealPlan.name"
+            data-test-id="field-name"
             class="form-control"
             @keydown.stop.prevent.enter="() => onSaveMealPlan()"
           >

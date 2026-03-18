@@ -14,6 +14,8 @@ const { clearMessage, clearMessageTimeout } = messageStore;
       <div
         v-for="message in messages"
         :key="message.id"
+        data-test-id="message-alert"
+        :data-test-message-type="message.isError ? 'error' : 'success'"
         class="alert alert-dismissible" :class="{
           'alert-danger': message.isError,
           'alert-success': !message.isError,

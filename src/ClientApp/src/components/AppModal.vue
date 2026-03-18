@@ -77,6 +77,7 @@ watch(modalIsActive, (isActive) => {
           <div class="modal-footer">
             <button
               id="app-modal-cancel-button"
+              data-test-id="modal-cancel"
               type="button"
               class="btn btn-secondary"
               @click="cancelAction"
@@ -85,6 +86,7 @@ watch(modalIsActive, (isActive) => {
             </button>
             <button
               id="app-modal-ok-button"
+              data-test-id="modal-ok"
               type="button"
               class="btn btn-primary"
               @click="okAction"

@@ -486,6 +486,7 @@ watch(
             <input
               id="searchText"
               v-model="listRequest.searchText"
+              data-test-id="search-name"
               type="search"
               inputmode="search"
               enterkeyhint="search"
@@ -622,23 +623,24 @@ watch(
         </div>
 
         <div class="btn-toolbar">
-          <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
+          <button class="btn btn-primary me-2" data-test-id="search-button" type="button" @click.stop.prevent="startSearch()">
             Search
           </button>
-          <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
+          <button class="btn btn-secondary me-2" data-test-id="clear-button" type="button" @click.stop.prevent="clearSearch()">
             Clear
           </button>
-          <router-link :to="{ name: 'groceryItemNew' }" class="btn btn-secondary">
+          <router-link :to="{ name: 'groceryItemNew' }" data-test-id="new-button" class="btn btn-secondary">
             New
           </router-link>
         </div>
         <div id="search-results" class="mt-3">
           {{ resultCountText }}
         </div>
-        <div class="grid mt-4">
+        <div class="grid mt-4" data-test-id="results-list">
           <div
             v-for="groceryItem in listResponse.items"
             :key="groceryItem.id"
+            :data-test-id="`entity-card-${groceryItem.id}`"
             class="card g-col-12 g-col-md-6"
           >
             <div class="card-header">

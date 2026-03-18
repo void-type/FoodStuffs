@@ -206,7 +206,7 @@ onMounted(async () => {
 <template>
   <div>
     <div class="btn-toolbar sticky-top pt-1">
-      <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
+      <button type="button" class="btn btn-primary me-2" data-test-id="save-button" @click.stop.prevent="saveClick()">
         Save
       </button>
       <RecipeCurrentMealPlanButton v-if="isEditMode" class="me-2" :recipe-id="sourceRecipe.id" />
@@ -214,6 +214,7 @@ onMounted(async () => {
         <button
           v-if="isEditMode"
           id="overflowMenuButton"
+          data-test-id="more-button"
           class="btn btn-secondary dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
@@ -238,6 +239,7 @@ onMounted(async () => {
           <li>
             <button
               class="dropdown-item text-danger"
+              data-test-id="delete-button"
               @click.stop.prevent="onRecipeDelete(sourceRecipe.id)"
             >
               Delete
@@ -252,6 +254,7 @@ onMounted(async () => {
         <input
           id="name"
           v-model="data.workingRecipe.name"
+          data-test-id="field-name"
           required
           type="text"
           class="form-control" :class="{ 'is-invalid': messageStore.isFieldInError('name') }"
@@ -273,6 +276,7 @@ onMounted(async () => {
           <input
             id="isForMealPlanning"
             v-model="data.workingRecipe.isForMealPlanning"
+            data-test-id="field-isForMealPlanning"
             class="form-check-input"
             type="checkbox"
             :class="{ 'is-invalid': messageStore.isFieldInError('isForMealPlanning') }"
@@ -301,6 +305,7 @@ onMounted(async () => {
         <textarea
           id="sides"
           v-model="data.workingRecipe.sides"
+          data-test-id="field-sides"
           rows="5"
           class="form-control" :class="{
             'is-invalid': messageStore.isFieldInError('sides'),

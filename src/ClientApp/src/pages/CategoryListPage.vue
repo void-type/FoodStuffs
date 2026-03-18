@@ -152,6 +152,7 @@ watch(
           <input
             id="nameSearch"
             v-model="listRequest.name"
+            data-test-id="search-name"
             class="form-control"
             @keydown.stop.prevent.enter="startSearch"
           >
@@ -175,13 +176,13 @@ watch(
         </div>
       </div>
       <div class="btn-toolbar">
-        <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
+        <button data-test-id="search-button" class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
           Search
         </button>
-        <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
+        <button data-test-id="clear-button" class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
           Clear
         </button>
-        <router-link :to="{ name: 'categoryNew' }" class="btn btn-secondary">
+        <router-link data-test-id="new-button" :to="{ name: 'categoryNew' }" class="btn btn-secondary">
           New
         </router-link>
       </div>
@@ -191,6 +192,7 @@ watch(
     </div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
+      data-test-id="results-table"
       class="table mt-4" :class="{ 'table-dark': useDarkMode }"
     >
       <thead>
@@ -201,15 +203,15 @@ watch(
         </tr>
       </thead>
       <tbody>
-        <tr v-for="category in listResponse.items" :key="category.id">
+        <tr v-for="category in listResponse.items" :key="category.id" :data-test-id="`entity-row-${category.id}`">
           <td>
-            <router-link :to="{ name: 'categoryEdit', params: { id: category.id } }">
+            <router-link :data-test-id="`entity-name-${category.id}`" :to="{ name: 'categoryEdit', params: { id: category.id } }">
               {{ category.name }}
             </router-link>
           </td>
           <td>{{ category.recipeCount }}</td>
           <td>
-            <button class="btn btn-sm btn-danger" @click="() => onDeleteCategory(category.id)">
+            <button :data-test-id="`entity-delete-${category.id}`" class="btn btn-sm btn-danger" @click="() => onDeleteCategory(category.id)">
               Delete
             </button>
           </td>

@@ -152,6 +152,7 @@ watch(
           <input
             id="nameSearch"
             v-model="listRequest.name"
+            data-test-id="search-name"
             class="form-control"
             @keydown.stop.prevent.enter="startSearch"
           >
@@ -175,13 +176,13 @@ watch(
         </div>
       </div>
       <div class="btn-toolbar">
-        <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
+        <button class="btn btn-primary me-2" type="button" data-test-id="search-button" @click.stop.prevent="startSearch()">
           Search
         </button>
-        <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
+        <button class="btn btn-secondary me-2" type="button" data-test-id="clear-button" @click.stop.prevent="clearSearch()">
           Clear
         </button>
-        <router-link :to="{ name: 'storageLocationNew' }" class="btn btn-secondary">
+        <router-link :to="{ name: 'storageLocationNew' }" class="btn btn-secondary" data-test-id="new-button">
           New
         </router-link>
       </div>
@@ -191,7 +192,7 @@ watch(
     </div>
     <table
       v-if="(listResponse.items?.length || 0) > 0"
-      class="table mt-4" :class="{ 'table-dark': useDarkMode }"
+      class="table mt-4" :class="{ 'table-dark': useDarkMode }" data-test-id="results-table"
     >
       <thead>
         <tr>
@@ -201,9 +202,9 @@ watch(
         </tr>
       </thead>
       <tbody>
-        <tr v-for="storageLocation in listResponse.items" :key="storageLocation.id">
+        <tr v-for="storageLocation in listResponse.items" :key="storageLocation.id" :data-test-id="`entity-row-${storageLocation.id}`">
           <td>
-            <router-link :to="{ name: 'storageLocationEdit', params: { id: storageLocation.id } }">
+            <router-link :to="{ name: 'storageLocationEdit', params: { id: storageLocation.id } }" :data-test-id="`entity-name-${storageLocation.id}`">
               {{ storageLocation.name }}
             </router-link>
           </td>
@@ -211,6 +212,7 @@ watch(
           <td>
             <button
               class="btn btn-sm btn-danger"
+              :data-test-id="`entity-delete-${storageLocation.id}`"
               @click="() => onDeleteStorageLocation(storageLocation.id)"
             >
               Delete

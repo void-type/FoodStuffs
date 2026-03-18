@@ -46,6 +46,7 @@ function changeInventory(amount: number) {
     <label :for="id" class="form-label">{{ label }}</label>
     <div class="input-group">
       <button
+        :data-test-id="`number-decrement-${id}`"
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"
@@ -56,6 +57,7 @@ function changeInventory(amount: number) {
       <input
         :id="id"
         v-model="model"
+        :data-test-id="`number-input-${id}`"
         required
         type="number"
         min="0"
@@ -64,6 +66,7 @@ function changeInventory(amount: number) {
         }"
       >
       <button
+        :data-test-id="`number-increment-${id}`"
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"
@@ -80,6 +83,7 @@ function changeInventory(amount: number) {
         Inventory
       </div>
       <button
+        :data-test-id="`number-decrement-${id}`"
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"
@@ -90,6 +94,7 @@ function changeInventory(amount: number) {
       <input
         :id="id"
         v-model="model"
+        :data-test-id="`number-input-${id}`"
         required
         type="number"
         min="0"
@@ -98,6 +103,7 @@ function changeInventory(amount: number) {
         }"
       >
       <button
+        :data-test-id="`number-increment-${id}`"
         class="btn btn-outline-secondary text-monospace"
         aria-label="Decrement inventory by one."
         type="button"

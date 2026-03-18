@@ -1,0 +1,61 @@
+import { expect, test } from '@playwright/test';
+import { TEST_MARKER } from './constants';
+
+test.describe.serial('Grocery Items CRUD', () => {
+  const testName = `Test Item ${TEST_MARKER}`;
+  const updatedName = `${testName} Updated`;
+
+  test('create a new grocery item', async ({ page }) => {
+    await page.goto('/grocery-items/new');
+    await page.getByTestId('field-name').fill(testName);
+    await page.getByTestId('number-increment-inventoryQuantity').click();
+    await page.getByTestId('number-increment-inventoryQuantity').click();
+    await page.getByTestId('save-button').click();
+    await expect(page.locator('[data-test-id="message-alert"][data-test-message-type="success"]')).toBeVisible();
+    await expect(page).toHaveURL(/\/grocery-items\/\d+/);
+  });
+
+  test('verify grocery item appears in list', async ({ page }) => {
+    await page.goto('/grocery-items');
+    await page.getByTestId('search-name').fill(TEST_MARKER);
+    await page.getByTestId('search-button').click();
+    await expect(page.getByText(testName)).toBeVisible();
+  });
+
+  test('update the grocery item', async ({ page }) => {
+    await page.goto('/grocery-items');
+    await page.getByTestId('search-name').fill(TEST_MARKER);
+    await page.getByTestId('search-button').click();
+    await page.getByText(testName).click();
+    await page.getByTestId('field-name').clear();
+    await page.getByTestId('field-name').fill(updatedName);
+    await page.getByTestId('number-increment-inventoryQuantity').click();
+    await page.getByTestId('save-button').click();
+    await expect(page.locator('[data-test-id="message-alert"][data-test-message-type="success"]')).toBeVisible();
+  });
+
+  test('verify updated grocery item in list', async ({ page }) => {
+    await page.goto('/grocery-items');
+    await page.getByTestId('search-name').fill(TEST_MARKER);
+    await page.getByTestId('search-button').click();
+    await expect(page.getByText(updatedName)).toBeVisible();
+  });
+
+  test('delete the grocery item', async ({ page }) => {
+    await page.goto('/grocery-items');
+    await page.getByTestId('search-name').fill(TEST_MARKER);
+    await page.getByTestId('search-button').click();
+    await page.getByText(updatedName).click();
+    await page.getByTestId('more-button').click();
+    await page.getByTestId('delete-button').click();
+    await page.getByTestId('modal-ok').click();
+    await expect(page).toHaveURL(/\/grocery-items/);
+  });
+
+  test('verify grocery item is deleted', async ({ page }) => {
+    await page.goto('/grocery-items');
+    await page.getByTestId('search-name').fill(TEST_MARKER);
+    await page.getByTestId('search-button').click();
+    await expect(page.getByText('Found no grocery items.')).toBeVisible();
+  });
+});
