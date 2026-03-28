@@ -16,6 +16,7 @@ import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import ApiHelper from '@/models/ApiHelper';
 import GroceryStoreGetResponse from '@/models/GroceryStoreGetResponse';
 import GroceryStoreWorking from '@/models/GroceryStoreWorking';
+import RouterHelper from '@/models/RouterHelper';
 import router from '@/router';
 import useAppStore from '@/stores/appStore';
 import useGroceryStoreStore from '@/stores/groceryStoreStore';
@@ -270,7 +271,7 @@ onBeforeUnmount(() => {
           Used in grocery items
           <ul>
             <li v-for="groceryItem in data.source.groceryItems" :key="groceryItem.id">
-              <router-link :to="{ name: 'groceryItemEdit', params: { id: groceryItem.id } }">
+              <router-link :to="RouterHelper.editGroceryItem(groceryItem)">
                 {{ groceryItem.name }}
               </router-link>
             </li>

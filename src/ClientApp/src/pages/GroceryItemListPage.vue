@@ -19,6 +19,7 @@ import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
 import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
+import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
 import useGroceryItemStore from '@/stores/groceryItemStore';
 import useMessageStore from '@/stores/messageStore';
@@ -642,7 +643,7 @@ watch(
             class="card g-col-12 g-col-md-6"
           >
             <div class="card-header">
-              <router-link :to="{ name: 'groceryItemEdit', params: { id: groceryItem.id } }">
+              <router-link :to="RouterHelper.editGroceryItem(groceryItem)">
                 {{ groceryItem.name }}
               </router-link>
             </div>

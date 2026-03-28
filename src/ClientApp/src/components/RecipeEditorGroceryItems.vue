@@ -7,6 +7,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { clamp } from '@/models/FormatHelper';
 import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
+import RouterHelper from '@/models/RouterHelper';
 import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
 import AppSortHandle from './AppSortHandle.vue';
 import GroceryItemInventoryQuantity from './GroceryItemInventoryQuantity.vue';
@@ -199,7 +200,7 @@ onBeforeUnmount(() => {
             />
             <div class="btn-toolbar g-col-12">
               <router-link
-                :to="{ name: 'groceryItemEdit', params: { id: item.id } }"
+                :to="RouterHelper.editGroceryItem(item)"
                 class="btn btn-secondary btn-sm"
               >
                 Edit

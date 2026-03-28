@@ -270,13 +270,9 @@ onBeforeUnmount(() => {
         <div v-if="data.source.groceryItems?.length" class="g-col-12 g-col-md-6">
           Used in grocery items
           <ul>
-            <li v-for="recipe in data.source.groceryItems" :key="recipe.id">
-              <router-link :to="RouterHelper.viewRecipe(recipe)">
-                {{ recipe.name }}
-              </router-link>
-              |
-              <router-link :to="RouterHelper.editRecipe(recipe)">
-                Edit
+            <li v-for="groceryItem in data.source.groceryItems" :key="groceryItem.id">
+              <router-link :to="RouterHelper.editGroceryItem(groceryItem)">
+                {{ groceryItem.name }}
               </router-link>
             </li>
           </ul>
