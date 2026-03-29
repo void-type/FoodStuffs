@@ -90,18 +90,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
 
         try
         {
-            var indexFolder = _settings.GetIndexFolder(C.INDEX_NAME);
-            var taxonomyFolder = _settings.GetTaxonomyFolder(C.INDEX_NAME);
-
-            if (Directory.Exists(indexFolder))
-            {
-                Directory.Delete(indexFolder, recursive: true);
-            }
-
-            if (Directory.Exists(taxonomyFolder))
-            {
-                Directory.Delete(taxonomyFolder, recursive: true);
-            }
+            LuceneDirectoryHelper.PrepareForRebuild(_settings, C.INDEX_NAME);
 
             using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
 
