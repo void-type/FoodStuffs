@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
+import useImageLightboxStore from '@/stores/imageLightboxStore';
 import AppSortHandle from './AppSortHandle.vue';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
@@ -18,6 +19,7 @@ const props = defineProps({
 });
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
+const imageLightboxStore = useImageLightboxStore();
 
 function flipCard() {
   const card = document.getElementById(recipeCardId.value);
@@ -52,6 +54,15 @@ function flipCard() {
               height="1200"
             >
             <ImagePlaceholder v-else class="img-fluid position-absolute top-0 left-0" />
+            <button
+              v-if="recipe.image != null"
+              type="button"
+              class="btn btn-dark btn-sm position-absolute bottom-0 end-0 m-1 opacity-75 d-print-none"
+              aria-label="Enlarge image"
+              @click.stop.prevent="imageLightboxStore.open([recipe.image!])"
+            >
+              <FontAwesomeIcon icon="fa-expand" />
+            </button>
           </div>
         </router-link>
       </div>

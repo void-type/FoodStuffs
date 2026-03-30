@@ -3,6 +3,7 @@ import {
   faArrowUp,
   faCheck,
   faDiceThree,
+  faExpand,
   faGripVertical,
   faMinus,
   faMoon,
@@ -28,6 +29,7 @@ fontAwesomeConfig.autoAddCss = false;
 
 library.add(
   faArrowUp,
+  faExpand,
   faRotateRight,
   faMoon,
   faSearch,

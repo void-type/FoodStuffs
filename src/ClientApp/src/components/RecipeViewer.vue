@@ -8,6 +8,7 @@ import ApiHelper from '@/models/ApiHelper';
 import { isNil } from '@/models/FormatHelper';
 import RouterHelper from '@/models/RouterHelper';
 import { toTimeSpanString } from '@/models/TimeSpanHelper';
+import useImageLightboxStore from '@/stores/imageLightboxStore';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 
@@ -21,6 +22,7 @@ const props = defineProps({
 const showImage = ref(true);
 const carouselIndex = ref(0);
 const uniqueId = crypto.randomUUID();
+const imageLightboxStore = useImageLightboxStore();
 
 const images = computed(() => {
   const { pinnedImage } = props.recipe;
@@ -100,7 +102,7 @@ onMounted(() => {
               :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
-              :aria-label="`Show image ${i}`"
+              :aria-label="`Show image ${i + 1}`"
             />
           </div>
           <div class="carousel-inner">
@@ -111,12 +113,14 @@ onMounted(() => {
             >
               <img
                 class="img-fluid rounded object-fit-cover"
+                role="button"
                 :src="ApiHelper.imageUrl(imageName)"
-                :alt="`image ${i} of ${recipe.name}`"
+                :alt="`image ${i + 1} of ${recipe.name}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
                 width="1600"
                 height="1200"
-                style="aspect-ratio: 4 / 3"
+                style="aspect-ratio: 4 / 3; cursor: pointer"
+                @click="imageLightboxStore.open(images, i)"
               >
             </div>
           </div>

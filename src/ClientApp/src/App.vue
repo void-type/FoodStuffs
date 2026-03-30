@@ -6,6 +6,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppMessageCenter from '@/components/AppMessageCenter.vue';
 import AppModal from '@/components/AppModal.vue';
 import AppNav from '@/components/AppNav.vue';
+import ImageLightbox from '@/components/ImageLightbox.vue';
 import ApiHelper from '@/models/ApiHelper';
 import DarkModeHelper from '@/models/DarkModeHelper';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
@@ -67,6 +68,7 @@ onMounted(() => {
   </main>
   <AppMessageCenter />
   <AppModal />
+  <ImageLightbox />
   <AppFooter />
 </template>
 

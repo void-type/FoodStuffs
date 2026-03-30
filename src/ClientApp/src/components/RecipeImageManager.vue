@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { onMounted, ref, watch } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import { clamp } from '@/models/FormatHelper';
+import useImageLightboxStore from '@/stores/imageLightboxStore';
 import useMessageStore from '@/stores/messageStore';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
@@ -58,6 +59,7 @@ const props = defineProps({
 });
 
 const messageStore = useMessageStore();
+const imageLightboxStore = useImageLightboxStore();
 
 const uploadFile: Ref<File | null> = ref(null);
 const uploadInProgress = ref(false);
@@ -201,7 +203,7 @@ onMounted(() => {
               :data-bs-slide-to="i"
               :class="{ active: i === carouselIndex }"
               :aria-current="i === carouselIndex"
-              :aria-label="`Show image ${i}`"
+              :aria-label="`Show image ${i + 1}`"
             />
           </div>
           <div class="carousel-inner">
@@ -232,12 +234,14 @@ onMounted(() => {
               </button>
               <img
                 class="img-fluid rounded object-fit-cover"
+                role="button"
                 :src="ApiHelper.imageUrl(imageName)"
-                :alt="`image ${i}`"
+                :alt="`image ${i + 1}`"
                 :loading="i > 0 ? 'lazy' : 'eager'"
                 width="1600"
                 height="1200"
-                style="aspect-ratio: 4 / 3"
+                style="aspect-ratio: 4 / 3; cursor: pointer"
+                @click="imageLightboxStore.open(props.images, i)"
               >
             </div>
           </div>

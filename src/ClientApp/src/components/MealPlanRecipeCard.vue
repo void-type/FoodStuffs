@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
+import useImageLightboxStore from '@/stores/imageLightboxStore';
 import AppSortHandle from './AppSortHandle.vue';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
@@ -20,6 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['recipeCompleted', 'recipeRemoved']);
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
+const imageLightboxStore = useImageLightboxStore();
 </script>
 
 <template>
@@ -55,6 +57,15 @@ const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
             <div v-if="recipe.isComplete" class="completion-overlay">
               <FontAwesomeIcon icon="fa-check" />
             </div>
+            <button
+              v-if="recipe.image != null && !recipe.isComplete"
+              type="button"
+              class="btn btn-dark btn-sm position-absolute bottom-0 end-0 m-1 opacity-75 d-print-none"
+              aria-label="Enlarge image"
+              @click.stop.prevent="imageLightboxStore.open([recipe.image!])"
+            >
+              <FontAwesomeIcon icon="fa-expand" />
+            </button>
           </div>
         </router-link>
       </div>
