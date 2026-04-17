@@ -382,12 +382,16 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
           placeholder="https://..."
           @keyup.enter="applyLink"
           @keyup.escape="cancelLink"
-        />
+        >
         <button class="btn btn-sm btn-outline-secondary" title="Clear" @click="linkUrl = ''">
           <FontAwesomeIcon icon="fa-times" />
         </button>
-        <button class="btn btn-sm btn-outline-secondary" @click="applyLink">Apply</button>
-        <button class="btn btn-sm btn-outline-secondary" @click="cancelLink">Cancel</button>
+        <button class="btn btn-sm btn-outline-secondary" @click="applyLink">
+          Apply
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" @click="cancelLink">
+          Cancel
+        </button>
       </div>
     </div>
     <EditorContent :id="id" class="rich-text" :editor="editor" />
