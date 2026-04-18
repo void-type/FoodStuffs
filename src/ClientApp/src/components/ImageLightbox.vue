@@ -2,7 +2,7 @@
 import type bootstrap from 'bootstrap';
 import { Carousel, Modal } from 'bootstrap';
 import { storeToRefs } from 'pinia';
-import { onMounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import useImageLightboxStore from '@/stores/imageLightboxStore';
 
@@ -21,15 +21,33 @@ function getCarousel() {
   return Carousel.getOrCreateInstance(el, { interval: false });
 }
 
+let pushedState = false;
+
+function onPopState() {
+  pushedState = false;
+  store.close();
+}
+
 watch(isActive, (active) => {
   if (active) {
+    history.pushState({ lightbox: true }, '');
+    pushedState = true;
     getModal().show();
   } else {
     getModal().hide();
+    if (pushedState) {
+      pushedState = false;
+      history.back();
+    }
   }
 });
 
+onUnmounted(() => {
+  window.removeEventListener('popstate', onPopState);
+});
+
 onMounted(() => {
+  window.addEventListener('popstate', onPopState);
   const modalEl = document.getElementById('image-lightbox');
 
   if (modalEl !== null) {
