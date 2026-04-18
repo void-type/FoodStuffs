@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import Link from '@tiptap/extension-link';
+import { Extension, textInputRule } from '@tiptap/core';
 import Typography from '@tiptap/extension-typography';
 import StarterKit from '@tiptap/starter-kit';
-import { EditorContent, Extension, textInputRule, useEditor } from '@tiptap/vue-3';
+import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { html as beautifyHtml } from 'js-beautify';
 import { nextTick, ref, watch } from 'vue';
 
@@ -45,22 +45,23 @@ const CustomReplacer = Extension.create({
 const editor = useEditor({
   injectCSS: false,
   extensions: [
-    StarterKit,
+    StarterKit.configure({
+      link: {
+        openOnClick: false,
+        autolink: true,
+        linkOnPaste: true,
+        HTMLAttributes: {
+          rel: 'noopener noreferrer',
+          target: '_blank',
+        },
+      },
+    }),
     Typography.configure({
       oneHalf: false,
       oneQuarter: false,
       threeQuarters: false,
     }),
     CustomReplacer,
-    Link.configure({
-      openOnClick: false,
-      autolink: true,
-      linkOnPaste: true,
-      HTMLAttributes: {
-        rel: 'noopener noreferrer',
-        target: '_blank',
-      },
-    }),
   ],
   content: model.value,
   onUpdate: () => {
@@ -90,7 +91,7 @@ watch(
       return;
     }
 
-    editor.value?.commands?.setContent(value || '', false);
+    editor.value?.commands?.setContent(value || '', { emitUpdate: false });
   },
 );
 

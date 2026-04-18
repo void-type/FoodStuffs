@@ -1,4 +1,4 @@
-namespace FoodStuffs.Model.Search.Lucene;
+﻿namespace FoodStuffs.Model.Search.Lucene;
 
 public static class LuceneDirectoryHelper
 {
