@@ -20,6 +20,14 @@ interface UnifiedSuggestion {
   route: object;
 }
 
+const props = defineProps({
+  isSmall: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
+
 const searchText = defineModel<string | null | undefined>();
 
 const messageStore = useMessageStore();
@@ -183,7 +191,13 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="searchContainerRef" @focusout="handleFocusOut">
-    <div class="input-group" title="Use control + shift + F to focus the search.">
+    <div
+      class="input-group"
+      :class="{
+        'input-group-sm': props.isSmall,
+      }"
+      title="Use control + shift + F to focus the search."
+    >
       <button
         class="btn btn-outline-secondary"
         type="button"

@@ -37,15 +37,13 @@ const searchText = ref('');
 </script>
 
 <template>
-  <header id="header" class="navbar navbar-expand-md navbar-dark bg-primary d-print-none">
+  <header id="header" class="navbar navbar-expand-md navbar-dark bg-primary sticky-top d-print-none">
     <nav class="container-xxl">
       <router-link :to="{ name: 'home' }" class="navbar-brand">
         <img
           :src="logoSvg"
           alt="logo"
-          class="d-inline-block align-text-top"
-          width="24"
-          height="24"
+          class="navbar-brand-logo d-inline-block align-text-top"
         >
         {{ applicationName }}
       </router-link>
@@ -61,7 +59,7 @@ const searchText = ref('');
       >
         <span class="navbar-toggler-icon" />
       </button>
-      <AppHeaderQuickSearch v-model="searchText" class="mt-2 d-sm-none w-100" />
+      <AppHeaderQuickSearch v-model="searchText" class="mt-1 d-sm-none w-100" :is-small="true" />
       <div id="navbar-menu" class="navbar-collapse collapse">
         <slot name="navItems" />
         <AppHeaderQuickSearch v-model="searchText" class="ms-auto me-2 d-none d-md-block" />
@@ -114,4 +112,29 @@ const searchText = ref('');
   </header>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.navbar-brand-logo {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 575.98px) {
+  .navbar-brand-logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .navbar-brand {
+    font-size: 18px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .navbar-toggler-icon {
+    display: block;
+    width: 1em;
+    height: 1em;
+    padding-top: 0.2em;
+  }
+}
+</style>
