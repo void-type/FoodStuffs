@@ -57,7 +57,7 @@ onUnmounted(() => {
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: 990;
 }
 
 .fade-enter-active,
