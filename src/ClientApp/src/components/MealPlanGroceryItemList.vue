@@ -271,8 +271,7 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
   position: absolute;
   z-index: 1;
   bottom: 150%;
-  left: 50%;
-  margin-left: -60px;
+  right: 0;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -281,8 +280,7 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
   content: '';
   position: absolute;
   top: 100%;
-  left: 50%;
-  margin-left: -5px;
+  right: 10px;
   border-width: 5px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
