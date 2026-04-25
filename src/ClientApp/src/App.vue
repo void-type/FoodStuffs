@@ -25,6 +25,14 @@ const route = useRoute();
 const api = ApiHelper.client;
 
 onMounted(() => {
+  const header = document.getElementById('header');
+  if (header) {
+    const updateNavbarHeight = () =>
+      document.documentElement.style.setProperty('--navbar-height', `${header.offsetHeight}px`);
+    updateNavbarHeight();
+    new ResizeObserver(updateNavbarHeight).observe(header);
+  }
+
   appStore.setDarkMode(DarkModeHelper.getInitialDarkModeSetting());
 
   recipeStore.addToRecent(RecipeStoreHelper.getQueuedRecent());

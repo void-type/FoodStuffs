@@ -120,7 +120,9 @@ header {
 }
 
 .btn-toolbar.sticky-top {
-  z-index: 5;
+  top: var(--navbar-height, 0px);
+  z-index: 15;
+  background-color: var(--bs-body-bg);
   pointer-events: none;
 
   * {

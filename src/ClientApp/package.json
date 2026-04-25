@@ -20,6 +20,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/vue-fontawesome": "^3.2.0",
     "@popperjs/core": "^2.11.8",
+    "@tiptap/extension-link": "^3.22.4",
     "@tiptap/extension-typography": "^3.22.4",
     "@tiptap/pm": "^3.22.4",
     "@tiptap/starter-kit": "^3.22.4",

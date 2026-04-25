@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { Extension, textInputRule } from '@tiptap/core';
+import Link from '@tiptap/extension-link';
 import Typography from '@tiptap/extension-typography';
 import StarterKit from '@tiptap/starter-kit';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
@@ -45,15 +46,13 @@ const CustomReplacer = Extension.create({
 const editor = useEditor({
   injectCSS: false,
   extensions: [
-    StarterKit.configure({
-      link: {
-        openOnClick: false,
-        autolink: true,
-        linkOnPaste: true,
-        HTMLAttributes: {
-          rel: 'noopener noreferrer',
-          target: '_blank',
-        },
+    StarterKit,
+    Link.configure({
+      openOnClick: false,
+      autolink: true,
+      HTMLAttributes: {
+        rel: 'noopener noreferrer',
+        target: '_blank',
       },
     }),
     Typography.configure({
@@ -108,7 +107,11 @@ function openLinkPanel() {
 
 function applyLink() {
   if (linkUrl.value) {
-    editor.value?.chain().focus().setLink({ href: linkUrl.value }).run();
+    editor.value
+      ?.chain()
+      .focus()
+      .setLink({ href: linkUrl.value })
+      .run();
   } else {
     editor.value?.chain().focus().unsetLink().run();
   }
@@ -120,15 +123,23 @@ function cancelLink() {
   editor.value?.chain().focus().run();
 }
 
-const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
+const toolbarButtonClass = 'btn btn-sm btn-outline-secondary rounded-0';
 </script>
 
 <template>
   <div v-if="editor && !showSource">
-    <div class="editor-toolbars pb-2">
+    <div class="editor-toolbars pt-1">
       <div class="btn-toolbar flex-wrap" role="toolbar" aria-label="Rich text editor toolbar">
         <!-- History -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="History">
+        <div class="btn-group me-2" role="group" aria-label="Source and history">
+          <button
+            v-if="!disabledButtons.includes('source')"
+            :class="toolbarButtonClass"
+            title="View HTML source"
+            @click="toggleSource"
+          >
+            <FontAwesomeIcon icon="fa-terminal" />
+          </button>
           <button
             v-if="!disabledButtons.includes('undo')"
             :class="toolbarButtonClass"
@@ -150,7 +161,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </div>
 
         <!-- Inline marks -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="Text formatting">
+        <div class="btn-group me-2" role="group" aria-label="Text formatting">
           <button
             v-if="!disabledButtons.includes('bold')"
             :disabled="!editor.can().toggleBold()"
@@ -190,7 +201,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </div>
 
         <!-- Block type -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="Block type">
+        <div class="btn-group me-2" role="group" aria-label="Block type">
           <button
             v-if="!disabledButtons.includes('paragraph')"
             :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('paragraph') }"
@@ -268,7 +279,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </div>
 
         <!-- Lists -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="Lists">
+        <div class="btn-group me-2" role="group" aria-label="Lists">
           <button
             v-if="!disabledButtons.includes('bullet')"
             :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bulletList') }"
@@ -288,7 +299,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </div>
 
         <!-- Insert -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="Insert">
+        <div class="btn-group me-2" role="group" aria-label="Insert">
           <button
             v-if="!disabledButtons.includes('horizontalRule')"
             :class="toolbarButtonClass"
@@ -308,7 +319,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </div>
 
         <!-- Link -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="Link">
+        <div class="btn-group me-2" role="group" aria-label="Link">
           <button
             v-if="!disabledButtons.includes('link')"
             :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('link') }"
@@ -329,7 +340,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
         </div>
 
         <!-- Utility -->
-        <div class="btn-group me-1 mb-1" role="group" aria-label="Utility">
+        <div class="btn-group me-2" role="group" aria-label="Utility">
           <button
             v-if="!disabledButtons.includes('clearMarks')"
             :class="toolbarButtonClass"
@@ -362,14 +373,6 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
           >
             Blockquote
           </button>
-          <button
-            v-if="!disabledButtons.includes('source')"
-            :class="toolbarButtonClass"
-            title="View HTML source"
-            @click="toggleSource"
-          >
-            <FontAwesomeIcon icon="fa-terminal" />
-          </button>
         </div>
       </div>
 
@@ -398,9 +401,9 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
     <EditorContent :id="id" class="rich-text" :editor="editor" />
   </div>
   <div v-if="!editor || showSource">
-    <div class="editor-toolbars pb-2">
+    <div class="editor-toolbars">
       <div class="btn-toolbar" role="toolbar">
-        <div class="btn-group me-1 mb-1" role="group">
+        <div class="btn-group me-1" role="group">
           <button
             v-if="!disabledButtons.includes('source')"
             :class="toolbarButtonClass"
@@ -422,7 +425,7 @@ const toolbarButtonClass = 'btn btn-outline-secondary rounded-0';
 <style lang="scss">
 .editor-toolbars {
   position: sticky;
-  top: 0;
+  top: calc(var(--navbar-height, 0px) + var(--save-bar-height, 0px));
   z-index: 10;
   background-color: var(--bs-body-bg);
 }

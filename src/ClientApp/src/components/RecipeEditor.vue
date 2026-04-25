@@ -8,7 +8,7 @@ import type {
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { Tag } from '@/models/Tag';
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import { trimAndTitleCase } from '@/models/FormatHelper';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
@@ -197,15 +197,31 @@ watch(isRecipeDirty, () => {
   props.onRecipeDirtyStateChange(isRecipeDirty.value);
 });
 
+const saveBarRef = ref<HTMLElement | null>(null);
+const rootRef = ref<HTMLElement | null>(null);
+let saveBarObserver: ResizeObserver | null = null;
+
 onMounted(async () => {
   fetchCategories();
   fetchGroceryItems();
+
+  if (saveBarRef.value && rootRef.value) {
+    const updateSaveBarHeight = () =>
+      rootRef.value!.style.setProperty('--save-bar-height', `${saveBarRef.value!.offsetHeight}px`);
+    updateSaveBarHeight();
+    saveBarObserver = new ResizeObserver(updateSaveBarHeight);
+    saveBarObserver.observe(saveBarRef.value);
+  }
+});
+
+onBeforeUnmount(() => {
+  saveBarObserver?.disconnect();
 });
 </script>
 
 <template>
-  <div>
-    <div class="btn-toolbar sticky-top pt-1">
+  <div ref="rootRef">
+    <div ref="saveBarRef" class="btn-toolbar sticky-top pt-1">
       <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
         Save
       </button>
@@ -308,7 +324,7 @@ onMounted(async () => {
         />
       </div>
       <div class="g-col-12">
-        <label for="directions" class="form-label">Directions</label>
+        <label for="directions" class="form-label mb-1">Directions</label>
         <RichTextEditor
           id="directions"
           v-model="data.workingRecipe.directions"
