@@ -131,249 +131,235 @@ const toolbarButtonClass = 'btn btn-sm btn-outline-secondary rounded-0';
     <div class="editor-toolbars pt-1">
       <div class="btn-toolbar flex-wrap" role="toolbar" aria-label="Rich text editor toolbar">
         <!-- History -->
-        <div class="btn-group me-2" role="group" aria-label="Source and history">
-          <button
-            v-if="!disabledButtons.includes('source')"
-            :class="toolbarButtonClass"
-            title="View HTML source"
-            @click="toggleSource"
-          >
-            <FontAwesomeIcon icon="fa-terminal" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('undo')"
-            :class="toolbarButtonClass"
-            :disabled="!editor.can().undo()"
-            title="Undo"
-            @click="editor.chain().focus().undo().run()"
-          >
-            <FontAwesomeIcon icon="fa-rotate-left" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('redo')"
-            :class="toolbarButtonClass"
-            :disabled="!editor.can().redo()"
-            title="Redo"
-            @click="editor.chain().focus().redo().run()"
-          >
-            <FontAwesomeIcon icon="fa-rotate-right" />
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('source')"
+          :class="toolbarButtonClass"
+          title="View HTML source"
+          @click="toggleSource"
+        >
+          <FontAwesomeIcon icon="fa-terminal" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('undo')"
+          :class="toolbarButtonClass"
+          :disabled="!editor.can().undo()"
+          title="Undo"
+          @click="editor.chain().focus().undo().run()"
+        >
+          <FontAwesomeIcon icon="fa-rotate-left" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('redo')"
+          :class="toolbarButtonClass"
+          :disabled="!editor.can().redo()"
+          title="Redo"
+          @click="editor.chain().focus().redo().run()"
+        >
+          <FontAwesomeIcon icon="fa-rotate-right" />
+        </button>
 
         <!-- Inline marks -->
-        <div class="btn-group me-2" role="group" aria-label="Text formatting">
-          <button
-            v-if="!disabledButtons.includes('bold')"
-            :disabled="!editor.can().toggleBold()"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bold') }"
-            title="Bold"
-            @click="editor.chain().focus().toggleBold().run()"
-          >
-            <FontAwesomeIcon icon="fa-bold" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('italic')"
-            :disabled="!editor.can().toggleItalic()"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('italic') }"
-            title="Italic"
-            @click="editor.chain().focus().toggleItalic().run()"
-          >
-            <FontAwesomeIcon icon="fa-italic" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('strike')"
-            :disabled="!editor.can().toggleStrike()"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('strike') }"
-            title="Strikethrough"
-            @click="editor.chain().focus().toggleStrike().run()"
-          >
-            <FontAwesomeIcon icon="fa-strikethrough" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('code')"
-            :disabled="!editor.can().toggleCode()"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('code') }"
-            title="Inline code"
-            @click="editor.chain().focus().toggleCode().run()"
-          >
-            <FontAwesomeIcon icon="fa-code" />
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('bold')"
+          :disabled="!editor.can().toggleBold()"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bold') }"
+          title="Bold"
+          @click="editor.chain().focus().toggleBold().run()"
+        >
+          <FontAwesomeIcon icon="fa-bold" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('italic')"
+          :disabled="!editor.can().toggleItalic()"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('italic') }"
+          title="Italic"
+          @click="editor.chain().focus().toggleItalic().run()"
+        >
+          <FontAwesomeIcon icon="fa-italic" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('strike')"
+          :disabled="!editor.can().toggleStrike()"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('strike') }"
+          title="Strikethrough"
+          @click="editor.chain().focus().toggleStrike().run()"
+        >
+          <FontAwesomeIcon icon="fa-strikethrough" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('code')"
+          :disabled="!editor.can().toggleCode()"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('code') }"
+          title="Inline code"
+          @click="editor.chain().focus().toggleCode().run()"
+        >
+          <FontAwesomeIcon icon="fa-code" />
+        </button>
 
         <!-- Block type -->
-        <div class="btn-group me-2" role="group" aria-label="Block type">
-          <button
-            v-if="!disabledButtons.includes('paragraph')"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('paragraph') }"
-            title="Paragraph"
-            @click="editor.chain().focus().setParagraph().run()"
-          >
-            <FontAwesomeIcon icon="fa-paragraph" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('h1')"
-            :class="{
-              [toolbarButtonClass]: true,
-              'is-active': editor.isActive('heading', { level: 1 }),
-            }"
-            title="Heading 1"
-            @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-          >
-            <FontAwesomeIcon icon="fa-heading" /><small>1</small>
-          </button>
-          <button
-            v-if="!disabledButtons.includes('h2')"
-            :class="{
-              [toolbarButtonClass]: true,
-              'is-active': editor.isActive('heading', { level: 2 }),
-            }"
-            title="Heading 2"
-            @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-          >
-            <FontAwesomeIcon icon="fa-heading" /><small>2</small>
-          </button>
-          <button
-            v-if="!disabledButtons.includes('h3')"
-            :class="{
-              [toolbarButtonClass]: true,
-              'is-active': editor.isActive('heading', { level: 3 }),
-            }"
-            title="Heading 3"
-            @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-          >
-            <FontAwesomeIcon icon="fa-heading" /><small>3</small>
-          </button>
-          <button
-            v-if="!disabledButtons.includes('h4')"
-            :class="{
-              [toolbarButtonClass]: true,
-              'is-active': editor.isActive('heading', { level: 4 }),
-            }"
-            title="Heading 4"
-            @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
-          >
-            <FontAwesomeIcon icon="fa-heading" /><small>4</small>
-          </button>
-          <button
-            v-if="!disabledButtons.includes('h5')"
-            :class="{
-              [toolbarButtonClass]: true,
-              'is-active': editor.isActive('heading', { level: 5 }),
-            }"
-            title="Heading 5"
-            @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
-          >
-            <FontAwesomeIcon icon="fa-heading" /><small>5</small>
-          </button>
-          <button
-            v-if="!disabledButtons.includes('h6')"
-            :class="{
-              [toolbarButtonClass]: true,
-              'is-active': editor.isActive('heading', { level: 6 }),
-            }"
-            title="Heading 6"
-            @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
-          >
-            <FontAwesomeIcon icon="fa-heading" /><small>6</small>
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('paragraph')"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('paragraph') }"
+          title="Paragraph"
+          @click="editor.chain().focus().setParagraph().run()"
+        >
+          <FontAwesomeIcon icon="fa-paragraph" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('h1')"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 1 }),
+          }"
+          title="Heading 1"
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+        >
+          <FontAwesomeIcon icon="fa-heading" /><small>1</small>
+        </button>
+        <button
+          v-if="!disabledButtons.includes('h2')"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 2 }),
+          }"
+          title="Heading 2"
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+        >
+          <FontAwesomeIcon icon="fa-heading" /><small>2</small>
+        </button>
+        <button
+          v-if="!disabledButtons.includes('h3')"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 3 }),
+          }"
+          title="Heading 3"
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+        >
+          <FontAwesomeIcon icon="fa-heading" /><small>3</small>
+        </button>
+        <button
+          v-if="!disabledButtons.includes('h4')"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 4 }),
+          }"
+          title="Heading 4"
+          @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+        >
+          <FontAwesomeIcon icon="fa-heading" /><small>4</small>
+        </button>
+        <button
+          v-if="!disabledButtons.includes('h5')"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 5 }),
+          }"
+          title="Heading 5"
+          @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
+        >
+          <FontAwesomeIcon icon="fa-heading" /><small>5</small>
+        </button>
+        <button
+          v-if="!disabledButtons.includes('h6')"
+          :class="{
+            [toolbarButtonClass]: true,
+            'is-active': editor.isActive('heading', { level: 6 }),
+          }"
+          title="Heading 6"
+          @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
+        >
+          <FontAwesomeIcon icon="fa-heading" /><small>6</small>
+        </button>
 
         <!-- Lists -->
-        <div class="btn-group me-2" role="group" aria-label="Lists">
-          <button
-            v-if="!disabledButtons.includes('bullet')"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bulletList') }"
-            title="Bullet list"
-            @click="editor.chain().focus().toggleBulletList().run()"
-          >
-            <FontAwesomeIcon icon="fa-list-ul" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('ordered')"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('orderedList') }"
-            title="Numbered list"
-            @click="editor.chain().focus().toggleOrderedList().run()"
-          >
-            <FontAwesomeIcon icon="fa-list-ol" />
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('bullet')"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('bulletList') }"
+          title="Bullet list"
+          @click="editor.chain().focus().toggleBulletList().run()"
+        >
+          <FontAwesomeIcon icon="fa-list-ul" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('ordered')"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('orderedList') }"
+          title="Numbered list"
+          @click="editor.chain().focus().toggleOrderedList().run()"
+        >
+          <FontAwesomeIcon icon="fa-list-ol" />
+        </button>
 
         <!-- Insert -->
-        <div class="btn-group me-2" role="group" aria-label="Insert">
-          <button
-            v-if="!disabledButtons.includes('horizontalRule')"
-            :class="toolbarButtonClass"
-            title="Horizontal rule"
-            @click="editor.chain().focus().setHorizontalRule().run()"
-          >
-            <FontAwesomeIcon icon="fa-ruler-horizontal" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('hardBreak')"
-            :class="toolbarButtonClass"
-            title="Hard break"
-            @click="editor.chain().focus().setHardBreak().run()"
-          >
-            ↵
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('horizontalRule')"
+          :class="toolbarButtonClass"
+          title="Horizontal rule"
+          @click="editor.chain().focus().setHorizontalRule().run()"
+        >
+          <FontAwesomeIcon icon="fa-ruler-horizontal" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('hardBreak')"
+          :class="toolbarButtonClass"
+          title="Hard break"
+          @click="editor.chain().focus().setHardBreak().run()"
+        >
+          ↵
+        </button>
 
         <!-- Link -->
-        <div class="btn-group me-2" role="group" aria-label="Link">
-          <button
-            v-if="!disabledButtons.includes('link')"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('link') }"
-            title="Set link"
-            @click="openLinkPanel"
-          >
-            <FontAwesomeIcon icon="fa-link" />
-          </button>
-          <button
-            v-if="!disabledButtons.includes('unlink')"
-            :class="toolbarButtonClass"
-            :disabled="!editor.isActive('link')"
-            title="Remove link"
-            @click="editor.chain().focus().unsetLink().run()"
-          >
-            <FontAwesomeIcon icon="fa-link-slash" />
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('link')"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('link') }"
+          title="Set link"
+          @click="openLinkPanel"
+        >
+          <FontAwesomeIcon icon="fa-link" />
+        </button>
+        <button
+          v-if="!disabledButtons.includes('unlink')"
+          :class="toolbarButtonClass"
+          :disabled="!editor.isActive('link')"
+          title="Remove link"
+          @click="editor.chain().focus().unsetLink().run()"
+        >
+          <FontAwesomeIcon icon="fa-link-slash" />
+        </button>
 
         <!-- Utility -->
-        <div class="btn-group me-2" role="group" aria-label="Utility">
-          <button
-            v-if="!disabledButtons.includes('clearMarks')"
-            :class="toolbarButtonClass"
-            title="Clear marks"
-            @click="editor.chain().focus().unsetAllMarks().run()"
-          >
-            Clear marks
-          </button>
-          <button
-            v-if="!disabledButtons.includes('clearNodes')"
-            :class="toolbarButtonClass"
-            title="Clear nodes"
-            @click="editor.chain().focus().clearNodes().run()"
-          >
-            Clear nodes
-          </button>
-          <button
-            v-if="!disabledButtons.includes('codeBlock')"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('codeBlock') }"
-            title="Code block"
-            @click="editor.chain().focus().toggleCodeBlock().run()"
-          >
-            Code block
-          </button>
-          <button
-            v-if="!disabledButtons.includes('blockquote')"
-            :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('blockquote') }"
-            title="Blockquote"
-            @click="editor.chain().focus().toggleBlockquote().run()"
-          >
-            Blockquote
-          </button>
-        </div>
+        <button
+          v-if="!disabledButtons.includes('clearMarks')"
+          :class="toolbarButtonClass"
+          title="Clear marks"
+          @click="editor.chain().focus().unsetAllMarks().run()"
+        >
+          Clear marks
+        </button>
+        <button
+          v-if="!disabledButtons.includes('clearNodes')"
+          :class="toolbarButtonClass"
+          title="Clear nodes"
+          @click="editor.chain().focus().clearNodes().run()"
+        >
+          Clear nodes
+        </button>
+        <button
+          v-if="!disabledButtons.includes('codeBlock')"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('codeBlock') }"
+          title="Code block"
+          @click="editor.chain().focus().toggleCodeBlock().run()"
+        >
+          Code block
+        </button>
+        <button
+          v-if="!disabledButtons.includes('blockquote')"
+          :class="{ [toolbarButtonClass]: true, 'is-active': editor.isActive('blockquote') }"
+          title="Blockquote"
+          @click="editor.chain().focus().toggleBlockquote().run()"
+        >
+          Blockquote
+        </button>
       </div>
 
       <!-- Link input panel -->
