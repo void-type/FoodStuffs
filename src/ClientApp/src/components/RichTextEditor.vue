@@ -387,7 +387,7 @@ const toolbarButtonClass = 'btn btn-sm btn-outline-secondary rounded-0';
     <EditorContent :id="id" class="rich-text" :editor="editor" />
   </div>
   <div v-if="!editor || showSource">
-    <div class="editor-toolbars">
+    <div class="editor-toolbars pt-1">
       <div class="btn-toolbar" role="toolbar">
         <div class="btn-group me-1" role="group">
           <button
