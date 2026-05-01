@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.Recipes;
+using FoodStuffs.Model.HomeAssistant;
 using FoodStuffs.Model.ImageCompression;
 using FoodStuffs.Model.Search;
 using FoodStuffs.Model.Search.GroceryItems;
@@ -8,6 +9,7 @@ using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Startup;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Net.Http.Headers;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
@@ -46,6 +48,7 @@ try
     // Settings
     services.AddSettingsSingleton<WebApplicationSettings>(config, true).Validate();
     services.AddSettingsSingleton<SearchSettings>(config, true).Validate();
+    services.AddSettingsSingleton<HomeAssistantSettings>(config);
 
     // Infrastructure
     services.AddControllers();
@@ -73,6 +76,15 @@ try
 
     services.AddScoped<ISearchIndexService, SearchIndexService>();
     services.AddHostedService<EnsureIndexHostedService>();
+
+    services.AddHttpClient("HomeAssistant", (serviceProvider, client) =>
+    {
+        var settings = serviceProvider.GetRequiredService<HomeAssistantSettings>();
+        client.BaseAddress = new Uri(settings.ApiEndpoint);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.AccessToken);
+    });
+
+    services.AddScoped<HomeAssistantClient>();
 
     // Auto-register Domain Events
     services.AddDomainEvents(

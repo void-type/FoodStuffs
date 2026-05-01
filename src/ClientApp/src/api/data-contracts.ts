@@ -1024,6 +1024,11 @@ export interface GroceryStoresDeleteParams {
   id: number;
 }
 
+export interface HomeAssistantSetReminderThawMeatParams {
+  /** The desired state of the "Remind to Thaw Meat" input boolean. */
+  state?: boolean;
+}
+
 export interface ImagesGetParams {
   /** The name of the image to download */
   name: string;

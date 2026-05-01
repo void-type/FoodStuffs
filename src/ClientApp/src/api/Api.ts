@@ -33,6 +33,7 @@ import type {AddCategoryToAllRecipesRequest,
   GroceryStoresDeleteParams,
   GroceryStoresGetParams,
   GroceryStoresListParams,
+  HomeAssistantSetReminderThawMeatParams,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
   IItemSetOfListGroceryAislesResponse,
@@ -170,10 +171,7 @@ export class Api<
    * @response `200` `GetCategoryResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  categoriesGet = (
-    { id, ...query }: CategoriesGetParams,
-    params: RequestParams = {},
-  ) =>
+  categoriesGet = ({ id }: CategoriesGetParams, params: RequestParams = {}) =>
     this.request<GetCategoryResponse, IItemSetOfIFailure>({
       path: `/api/categories/${id}`,
       method: "GET",
@@ -191,7 +189,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   categoriesDelete = (
-    { id, ...query }: CategoriesDeleteParams,
+    { id }: CategoriesDeleteParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
@@ -276,7 +274,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   groceryAislesGet = (
-    { id, ...query }: GroceryAislesGetParams,
+    { id }: GroceryAislesGetParams,
     params: RequestParams = {},
   ) =>
     this.request<GetGroceryAisleResponse, IItemSetOfIFailure>({
@@ -296,7 +294,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   groceryAislesDelete = (
-    { id, ...query }: GroceryAislesDeleteParams,
+    { id }: GroceryAislesDeleteParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
@@ -380,7 +378,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   groceryItemsGet = (
-    { id, ...query }: GroceryItemsGetParams,
+    { id }: GroceryItemsGetParams,
     params: RequestParams = {},
   ) =>
     this.request<GetGroceryItemResponse, IItemSetOfIFailure>({
@@ -400,7 +398,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   groceryItemsDelete = (
-    { id, ...query }: GroceryItemsDeleteParams,
+    { id }: GroceryItemsDeleteParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
@@ -501,7 +499,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   groceryStoresGet = (
-    { id, ...query }: GroceryStoresGetParams,
+    { id }: GroceryStoresGetParams,
     params: RequestParams = {},
   ) =>
     this.request<GetGroceryStoreResponse, IItemSetOfIFailure>({
@@ -521,13 +519,66 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   groceryStoresDelete = (
-    { id, ...query }: GroceryStoresDeleteParams,
+    { id }: GroceryStoresDeleteParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/grocery-stores/${id}`,
       method: "DELETE",
       format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags HomeAssistant
+   * @name HomeAssistantIsEnabled
+   * @summary Get whether Home Assistant integration is enabled. This can be used by the client to conditionally show Home Assistant-related features.
+   * @request GET:/api/home-assistant/is-enabled
+   * @response `200` `boolean`
+   */
+  homeAssistantIsEnabled = (params: RequestParams = {}) =>
+    this.request<boolean, any>({
+      path: `/api/home-assistant/is-enabled`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags HomeAssistant
+   * @name HomeAssistantGetReminderThawMeatState
+   * @summary Get the current state of the "Remind to Thaw Meat" input boolean in Home Assistant.
+   * @request GET:/api/home-assistant/reminder-thaw-meat-state
+   * @response `200` `boolean`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  homeAssistantGetReminderThawMeatState = (params: RequestParams = {}) =>
+    this.request<boolean, IItemSetOfIFailure>({
+      path: `/api/home-assistant/reminder-thaw-meat-state`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags HomeAssistant
+   * @name HomeAssistantSetReminderThawMeat
+   * @summary Set the state of the "Remind to Thaw Meat" input boolean in Home Assistant.
+   * @request POST:/api/home-assistant/set-reminder-thaw-meat
+   * @response `200` `void`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  homeAssistantSetReminderThawMeat = (
+    query: HomeAssistantSetReminderThawMeatParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, IItemSetOfIFailure>({
+      path: `/api/home-assistant/set-reminder-thaw-meat`,
+      method: "POST",
+      query: query,
       ...params,
     });
   /**
@@ -540,11 +591,8 @@ export class Api<
    * @response `200` `File`
    * @response `400` `IItemSetOfIFailure`
    */
-  imagesGet = (
-    { name, ...query }: ImagesGetParams,
-    params: RequestParams = {},
-  ) =>
-    this.request<File, IItemSetOfIFailure>({
+  imagesGet = ({ name }: ImagesGetParams, params: RequestParams = {}) =>
+    this.request<Blob, IItemSetOfIFailure>({
       path: `/api/images/${name}`,
       method: "GET",
       ...params,
@@ -559,10 +607,7 @@ export class Api<
    * @response `200` `EntityMessageOfString`
    * @response `400` `IItemSetOfIFailure`
    */
-  imagesDelete = (
-    { name, ...query }: ImagesDeleteParams,
-    params: RequestParams = {},
-  ) =>
+  imagesDelete = ({ name }: ImagesDeleteParams, params: RequestParams = {}) =>
     this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images/${name}`,
       method: "DELETE",
@@ -606,10 +651,7 @@ export class Api<
    * @response `200` `EntityMessageOfString`
    * @response `400` `IItemSetOfIFailure`
    */
-  imagesPin = (
-    { name, ...query }: ImagesPinParams,
-    params: RequestParams = {},
-  ) =>
+  imagesPin = ({ name }: ImagesPinParams, params: RequestParams = {}) =>
     this.request<EntityMessageOfString, IItemSetOfIFailure>({
       path: `/api/images/pin/${name}`,
       method: "POST",
@@ -663,10 +705,7 @@ export class Api<
    * @response `200` `GetMealPlanResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  mealPlansGet = (
-    { id, ...query }: MealPlansGetParams,
-    params: RequestParams = {},
-  ) =>
+  mealPlansGet = ({ id }: MealPlansGetParams, params: RequestParams = {}) =>
     this.request<GetMealPlanResponse, IItemSetOfIFailure>({
       path: `/api/meal-plans/${id}`,
       method: "GET",
@@ -684,7 +723,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   mealPlansDelete = (
-    { id, ...query }: MealPlansDeleteParams,
+    { id }: MealPlansDeleteParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
@@ -704,7 +743,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   mealPlansAddRecipe = (
-    { id, recipeId, ...query }: MealPlansAddRecipeParams,
+    { id, recipeId }: MealPlansAddRecipeParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityResponseOfGetMealPlanResponse, IItemSetOfIFailure>({
@@ -724,7 +763,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   mealPlansRemoveRecipe = (
-    { id, recipeId, ...query }: MealPlansRemoveRecipeParams,
+    { id, recipeId }: MealPlansRemoveRecipeParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityResponseOfGetMealPlanResponse, IItemSetOfIFailure>({
@@ -798,10 +837,7 @@ export class Api<
    * @response `200` `GetRecipeResponse`
    * @response `400` `IItemSetOfIFailure`
    */
-  recipesGet = (
-    { id, ...query }: RecipesGetParams,
-    params: RequestParams = {},
-  ) =>
+  recipesGet = ({ id }: RecipesGetParams, params: RequestParams = {}) =>
     this.request<GetRecipeResponse, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
       method: "GET",
@@ -818,10 +854,7 @@ export class Api<
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
    */
-  recipesDelete = (
-    { id, ...query }: RecipesDeleteParams,
-    params: RequestParams = {},
-  ) =>
+  recipesDelete = ({ id }: RecipesDeleteParams, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
       method: "DELETE",
@@ -898,7 +931,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   storageLocationsGet = (
-    { id, ...query }: StorageLocationsGetParams,
+    { id }: StorageLocationsGetParams,
     params: RequestParams = {},
   ) =>
     this.request<GetStorageLocationResponse, IItemSetOfIFailure>({
@@ -918,7 +951,7 @@ export class Api<
    * @response `400` `IItemSetOfIFailure`
    */
   storageLocationsDelete = (
-    { id, ...query }: StorageLocationsDeleteParams,
+    { id }: StorageLocationsDeleteParams,
     params: RequestParams = {},
   ) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({

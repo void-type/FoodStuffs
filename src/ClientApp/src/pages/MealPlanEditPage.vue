@@ -115,6 +115,8 @@ const pantry = computed(() => {
 });
 
 const showSortHandle = ref(false);
+const isHaEnabled = ref(false);
+const thawMeatReminderOn = ref(false);
 
 async function onSaveMealPlan(quickSave: boolean = false) {
   if (isEditingCurrent.value) {
@@ -368,9 +370,32 @@ watch(
   { immediate: true },
 );
 
+async function onThawMeatReminderToggle() {
+  try {
+    await api().homeAssistantSetReminderThawMeat({ state: thawMeatReminderOn.value });
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    // Revert toggle on failure
+    thawMeatReminderOn.value = !thawMeatReminderOn.value;
+  }
+}
+
 onMounted(async () => {
   await fetchGroceryItems();
   await fetchGroceryAisles();
+
+  try {
+    const haEnabledResponse = await api().homeAssistantIsEnabled();
+    isHaEnabled.value = haEnabledResponse.data === true;
+
+    if (isHaEnabled.value) {
+      const stateResponse = await api().homeAssistantGetReminderThawMeatState();
+      thawMeatReminderOn.value = stateResponse.data === true;
+    }
+  } catch {
+    // HA errors are non-critical; don't surface to user
+  }
+
   initialized.value = true;
 });
 </script>
@@ -435,6 +460,16 @@ onMounted(async () => {
         <span v-if="sidesHave < sidesNeeded" class="text-danger">
           ({{ sidesNeeded - sidesHave }} more needed)
         </span>
+      </div>
+      <div v-if="isHaEnabled" class="form-check form-switch mt-3">
+        <label class="form-check-label" for="thawMeatReminder">Thaw Meat Reminder</label>
+        <input
+          id="thawMeatReminder"
+          v-model="thawMeatReminderOn"
+          class="form-check-input"
+          type="checkbox"
+          @change="onThawMeatReminderToggle"
+        >
       </div>
       <div class="grid mt-3">
         <div class="g-col-12 g-col-md-6">
