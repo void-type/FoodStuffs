@@ -84,6 +84,10 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
             groceryItemToEdit.GroceryAisle = groceryAisle;
         }
+        else
+        {
+            groceryItemToEdit.GroceryAisle = null;
+        }
 
         if (maybeGroceryItem.HasValue)
         {
