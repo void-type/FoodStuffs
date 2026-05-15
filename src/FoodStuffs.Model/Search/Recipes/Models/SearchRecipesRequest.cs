@@ -6,6 +6,8 @@ public record SearchRecipesRequest(
     string? SearchText,
     int[]? CategoryIds,
     bool MatchAllCategories,
+    int[]? GroceryItemIds,
+    bool MatchAllGroceryItems,
     bool? IsForMealPlanning,
     string? SortBy,
     string? RandomSortSeed,

@@ -67,13 +67,22 @@ public static class RecipeSearchHelper
 
         var groceryItems = recipe.GroceryItemRelations
             .Select(x => new SearchRecipesResultItemGroceryItem(
+                Id: x.GroceryItemId,
                 Name: x.GroceryItem.Name,
                 Quantity: x.Quantity,
                 Order: x.Order
-            ));
+            ))
+            .OrderBy(x => x.Order)
+            .ToArray();
 
         // Grocery items: retrievable
         doc.AddStoredField(C.FIELD_MEAL_GROCERY_ITEMS_JSON, JsonSerializer.Serialize(groceryItems));
+
+        foreach (var groceryItem in groceryItems)
+        {
+            // GroceryItemId: facetable
+            doc.AddFacetField(C.FIELD_GROCERY_ITEM_IDS, groceryItem.Id.ToString());
+        }
 
         var image = recipe.DefaultImage;
 
@@ -121,6 +130,7 @@ public static class RecipeSearchHelper
 
         facetConfig.SetMultiValued(C.FIELD_IS_FOR_MEAL_PLANNING, false);
         facetConfig.SetMultiValued(C.FIELD_CATEGORY_IDS, true);
+        facetConfig.SetMultiValued(C.FIELD_GROCERY_ITEM_IDS, true);
 
         return facetConfig;
     }

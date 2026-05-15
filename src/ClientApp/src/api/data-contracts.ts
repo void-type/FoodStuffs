@@ -646,6 +646,8 @@ export interface SearchRecipesResultItemCategory {
 }
 
 export interface SearchRecipesResultItemGroceryItem {
+  /** @format int32 */
+  id?: number;
   name?: string;
   /** @format int32 */
   quantity?: number;
@@ -1124,6 +1126,13 @@ export interface RecipesSearchParams {
    * @default false
    */
   matchAllCategories?: boolean;
+  /** Grocery item IDs to filter on */
+  groceryItemIds?: number[] | null;
+  /**
+   * When true, recipes returned will match all selected grocery items
+   * @default false
+   */
+  matchAllGroceryItems?: boolean;
   /** If the recipes should be enabled for meal planning */
   isForMealPlanning?: boolean | null;
   /** Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score. */

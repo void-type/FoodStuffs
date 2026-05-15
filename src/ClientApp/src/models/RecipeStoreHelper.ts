@@ -38,11 +38,13 @@ export default class RecipeStoreHelper {
     const requestEntries = Object.entries({
       ...listRequest,
       categories: listRequest.categories?.join() || '',
+      groceryItemIds: listRequest.groceryItemIds?.join() || '',
     });
 
     const defaultEntries = Object.entries({
       ...new RecipesSearchRequest(),
       categories: new RecipesSearchRequest().categories?.join() || '',
+      groceryItemIds: new RecipesSearchRequest().groceryItemIds?.join() || '',
     });
 
     const cleanedEntries = requestEntries

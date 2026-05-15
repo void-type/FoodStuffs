@@ -25,6 +25,8 @@ public class RecipesController : ControllerBase
     /// <param name="searchText">Search text (case-insensitive)</param>
     /// <param name="categories">Category IDs to filter on</param>
     /// <param name="matchAllCategories">When true, recipes returned will match all selected categories</param>
+    /// <param name="groceryItemIds">Grocery item IDs to filter on</param>
+    /// <param name="matchAllGroceryItems">When true, recipes returned will match all selected grocery items</param>
     /// <param name="isForMealPlanning">If the recipes should be enabled for meal planning</param>
     /// <param name="sortBy">Field name to sort by (case-insensitive). Options are: newest, oldest, a-z, z-a, random. Default if empty is search score.</param>
     /// <param name="randomSortSeed">Give a seed for stable random sorting. By default is stable for 24 hours on the server.</param>
@@ -39,6 +41,8 @@ public class RecipesController : ControllerBase
         [FromQuery] string? searchText = null,
         [FromQuery] int[]? categories = null,
         [FromQuery] bool matchAllCategories = false,
+        [FromQuery] int[]? groceryItemIds = null,
+        [FromQuery] bool matchAllGroceryItems = false,
         [FromQuery] bool? isForMealPlanning = null,
         [FromQuery] string? sortBy = null,
         [FromQuery] string? randomSortSeed = null,
@@ -50,6 +54,8 @@ public class RecipesController : ControllerBase
             SearchText: searchText,
             CategoryIds: categories,
             MatchAllCategories: matchAllCategories,
+            GroceryItemIds: groceryItemIds,
+            MatchAllGroceryItems: matchAllGroceryItems,
             IsForMealPlanning: isForMealPlanning,
             SortBy: sortBy,
             RandomSortSeed: randomSortSeed,

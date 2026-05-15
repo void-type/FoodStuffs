@@ -226,6 +226,14 @@ public class RecipeQueryService : IRecipeQueryService
             request.CategoryIds?.Select(x => x.ToString()).ToArray() ?? [],
             request.MatchAllCategories);
 
+        LuceneSearchHelper.DrillDownByValues(
+            drillDownQuery,
+            baseQuery,
+            facetsConfig,
+            C.FIELD_GROCERY_ITEM_IDS,
+            request.GroceryItemIds?.Select(x => x.ToString()).ToArray() ?? [],
+            request.MatchAllGroceryItems);
+
         return drillDownQuery;
     }
 

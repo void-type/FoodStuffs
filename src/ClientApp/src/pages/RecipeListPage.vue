@@ -11,6 +11,7 @@ import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
+import RecipeSearchGroceryItemsFilter from '@/components/RecipeSearchGroceryItemsFilter.vue';
 import Choices from '@/models/Choices';
 import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
 import RecipesSearchRequest from '@/models/RecipesSearchRequest';
@@ -34,6 +35,11 @@ const { sortOptions } = Choices;
 const categoriesFilterModel = ref({
   categories: [] as Array<number>,
   matchAllCategories: false,
+});
+
+const groceryItemsFilterModel = ref({
+  groceryItemIds: [] as Array<number>,
+  matchAllGroceryItems: false,
 });
 
 const useCompactView = ref(false);
@@ -213,6 +219,18 @@ function setListRequestFromQuery() {
   categoriesFilterModel.value.categories = categories;
   categoriesFilterModel.value.matchAllCategories = props.query.matchAllCategories === 'true';
 
+  const groceryItemIds
+    = props.query.groceryItemIds
+      ?.toString()
+      ?.split(',')
+      .flatMap((x) => {
+        const n = toNumberOrNull(x);
+        return n ? [n] : [];
+      }) || [];
+
+  groceryItemsFilterModel.value.groceryItemIds = groceryItemIds;
+  groceryItemsFilterModel.value.matchAllGroceryItems = props.query.matchAllGroceryItems === 'true';
+
   const page = toNumber(Number(props.query.page), 1);
 
   if (page > 1) {
@@ -223,6 +241,7 @@ function setListRequestFromQuery() {
     ...new RecipesSearchRequest(),
     ...props.query,
     categories,
+    groceryItemIds,
     page,
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   });
@@ -230,6 +249,10 @@ function setListRequestFromQuery() {
 
 const categoryFacets = computed(() => {
   return listFacets.value.find(x => x.fieldName === 'Categories')?.values || [];
+});
+
+const groceryItemFacets = computed(() => {
+  return listFacets.value.find(x => x.fieldName === 'GroceryItemRelations')?.values || [];
 });
 
 const mealPlanningFilterText = computed(() => {
@@ -283,6 +306,29 @@ watch(
       recipeStore.setListRequest({
         ...listRequest.value,
         ...categoriesFilterModel.value,
+        page: 1,
+      });
+
+      navigateSearch(false);
+    }
+  },
+  { deep: true },
+);
+
+watch(
+  groceryItemsFilterModel,
+  () => {
+    const { groceryItemIds, matchAllGroceryItems } = listRequest.value;
+
+    const initialModel = {
+      groceryItemIds,
+      matchAllGroceryItems,
+    };
+
+    if (JSON.stringify(initialModel) !== JSON.stringify(groceryItemsFilterModel.value)) {
+      recipeStore.setListRequest({
+        ...listRequest.value,
+        ...groceryItemsFilterModel.value,
         page: 1,
       });
 
@@ -387,6 +433,12 @@ onUnmounted(() => {
               parent-accordion-id="filterAccordionDesktop"
               check-class="g-col-12"
             />
+            <RecipeSearchGroceryItemsFilter
+              v-model="groceryItemsFilterModel"
+              :facet-values="groceryItemFacets"
+              parent-accordion-id="filterAccordionDesktop"
+              check-class="g-col-12"
+            />
           </div>
         </div>
       </div>
@@ -476,6 +528,11 @@ onUnmounted(() => {
               <RecipeSearchCategoriesFilter
                 v-model="categoriesFilterModel"
                 :facet-values="categoryFacets"
+                parent-accordion-id="filterAccordion"
+              />
+              <RecipeSearchGroceryItemsFilter
+                v-model="groceryItemsFilterModel"
+                :facet-values="groceryItemFacets"
                 parent-accordion-id="filterAccordion"
               />
             </div>

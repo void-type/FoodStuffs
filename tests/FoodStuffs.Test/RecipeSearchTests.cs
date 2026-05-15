@@ -50,7 +50,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, null, false, null, null, null, true, 2, 1));
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, null, null, true, 2, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -65,7 +65,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, null, false, null, null, null, false, 0, 0));
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, null, null, false, 0, 0));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(3, result.Value.Results.Count);
@@ -82,7 +82,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, null, false, null, "z-a", null, true, 1, 1));
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, "z-a", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -98,7 +98,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, null, false, null, "a-z", null, true, 1, 1));
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, "a-z", null, true, 1, 1));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -114,7 +114,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest("Hutdug", null, false, null, null, null, true, 1, 2));
+            .Handle(new SearchRecipesRequest("Hutdug", null, false, null, false, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -132,7 +132,7 @@ public class RecipeSearchTests : IAsyncLifetime
         var cat = context.Categories.ToList();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, [1, 2, 3], false, null, null, null, true, 1, 4));
+            .Handle(new SearchRecipesRequest(null, [1, 2, 3], false, null, false, null, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Results.Count);
@@ -152,7 +152,7 @@ public class RecipeSearchTests : IAsyncLifetime
         var cat = context.Categories.ToList();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, [1, 4], true, null, null, null, true, 1, 4));
+            .Handle(new SearchRecipesRequest(null, [1, 4], true, null, false, null, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -170,7 +170,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, null, false, true, null, null, true, 1, 4));
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, true, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Results.Count);
@@ -188,7 +188,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest("nothing matches", null, false, null, null, null, true, 1, 2));
+            .Handle(new SearchRecipesRequest("nothing matches", null, false, null, false, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Results.Count);
@@ -201,7 +201,7 @@ public class RecipeSearchTests : IAsyncLifetime
         await using var context = Deps.FoodStuffsContext().Seed();
 
         var result = await new SearchRecipesHandler(QueryService)
-            .Handle(new SearchRecipesRequest(null, [1000, 2000, 3000], false, null, null, null, true, 1, 2));
+            .Handle(new SearchRecipesRequest(null, [1000, 2000, 3000], false, null, false, null, null, null, true, 1, 2));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Results.Count);

@@ -55,6 +55,8 @@ public class EnsureIndexHostedService : IHostedService
                     SearchText: null,
                     CategoryIds: null,
                     MatchAllCategories: false,
+                    GroceryItemIds: null,
+                    MatchAllGroceryItems: false,
                     IsForMealPlanning: null,
                     SortBy: null,
                     RandomSortSeed: null,
