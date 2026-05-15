@@ -45,7 +45,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         if (request.Recipes is not null)
         {
-            await ManageRecipesAsync(request, mealPlanToEdit, cancellationToken);
+            await ManageRecipesAsync(request.Recipes, mealPlanToEdit, cancellationToken);
         }
 
         await ManageExcludedGroceryItemsAsync(request, mealPlanToEdit, cancellationToken);
@@ -69,9 +69,9 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         mealPlan.Name = request.Name;
     }
 
-    private async Task ManageRecipesAsync(SaveMealPlanRequest request, MealPlan mealPlan, CancellationToken cancellationToken)
+    private async Task ManageRecipesAsync(List<SaveMealPlanRequestRecipe> recipes, MealPlan mealPlan, CancellationToken cancellationToken)
     {
-        var requestedRecipeIds = request.Recipes
+        var requestedRecipeIds = recipes
             .Select(x => x.Id)
             .ToArray();
 
@@ -100,7 +100,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         mealPlan.RecipeRelations
             .ForEach(relation =>
             {
-                var requestedRecipe = request.Recipes
+                var requestedRecipe = recipes
                     .Find(x => x.Id == relation.Recipe.Id);
 
                 if (requestedRecipe == null)
