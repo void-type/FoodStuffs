@@ -39,6 +39,8 @@ Note that prior to v9, this project used Database First and SQL scripts.
 
 v9 and onwards uses EF Code First with EF migrations, but there may be SQL scripts or migrator console apps that need to be run.
 
+Check Git history for older migration tools.
+
 ### Local build (production and development)
 
 Install the following tools:
