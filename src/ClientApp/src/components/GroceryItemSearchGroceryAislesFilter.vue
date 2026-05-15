@@ -20,7 +20,7 @@ const props = defineProps({
   checkClass: {
     type: String,
     required: false,
-    default: 'g-col-6 g-col-md-4',
+    default: 'g-col-12 g-col-md-6 g-col-lg-4',
   },
 });
 

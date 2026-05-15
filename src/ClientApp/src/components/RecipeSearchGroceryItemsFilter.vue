@@ -20,14 +20,14 @@ const props = defineProps({
   checkClass: {
     type: String,
     required: false,
-    default: 'g-col-6 g-col-md-4',
+    default: 'g-col-12 g-col-md-6 g-col-lg-4',
   },
 });
 
 const model = defineModel({
   type: Object as PropType<{ groceryItemIds: Array<number>; matchAllGroceryItems: boolean }>,
   required: true,
-  default: [],
+  default: () => ({ groceryItemIds: [], matchAllGroceryItems: false }),
 });
 
 const messageStore = useMessageStore();
