@@ -38,15 +38,25 @@ interface GroceryItemOption {
   name: string;
 }
 
+const DISPLAY_LIMIT = 50;
+
 const allGroceryItems = ref([] as Array<GroceryItemOption>);
 const filterText = ref('');
 
 const groceryItemOptions = computed(() => {
   const text = filterText.value.trim().toLowerCase();
-  if (!text) {
-    return allGroceryItems.value;
-  }
-  return allGroceryItems.value.filter(x => x.name.toLowerCase().includes(text));
+  const filtered = text
+    ? allGroceryItems.value.filter(x => x.name.toLowerCase().includes(text))
+    : allGroceryItems.value;
+  return filtered.slice(0, DISPLAY_LIMIT);
+});
+
+const groceryItemsOverLimit = computed(() => {
+  const text = filterText.value.trim().toLowerCase();
+  const total = text
+    ? allGroceryItems.value.filter(x => x.name.toLowerCase().includes(text)).length
+    : allGroceryItems.value.length;
+  return total > DISPLAY_LIMIT ? total : null;
 });
 
 function selectAll() {
@@ -133,6 +143,9 @@ onMounted(() => {
             placeholder="Filter grocery items..."
             aria-label="Filter grocery items"
           >
+        </div>
+        <div v-if="groceryItemsOverLimit" class="mb-2 text-muted small">
+          Showing {{ DISPLAY_LIMIT }} of {{ groceryItemsOverLimit }} — refine filter to see more.
         </div>
         <div class="grid grocery-item-scroll">
           <div

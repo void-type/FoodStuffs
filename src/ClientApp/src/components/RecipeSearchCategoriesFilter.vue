@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import type { ListCategoriesResponse, SearchFacetValue } from '@/api/data-contracts';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import { toNumberOrNull } from '@/models/FormatHelper';
 import useMessageStore from '@/stores/messageStore';
@@ -33,10 +33,29 @@ const model = defineModel({
 const messageStore = useMessageStore();
 const api = ApiHelper.client;
 
-const categoryOptions = ref([] as Array<ListCategoriesResponse>);
+const DISPLAY_LIMIT = 50;
+
+const allCategories = ref([] as Array<ListCategoriesResponse>);
+const filterText = ref('');
+
+const categoryOptions = computed(() => {
+  const text = filterText.value.trim().toLowerCase();
+  const filtered = text
+    ? allCategories.value.filter(x => x.name?.toLowerCase().includes(text))
+    : allCategories.value;
+  return filtered.slice(0, DISPLAY_LIMIT);
+});
+
+const categoriesOverLimit = computed(() => {
+  const text = filterText.value.trim().toLowerCase();
+  const total = text
+    ? allCategories.value.filter(x => x.name?.toLowerCase().includes(text)).length
+    : allCategories.value.length;
+  return total > DISPLAY_LIMIT ? total : null;
+});
 
 function selectAll() {
-  model.value.categories = categoryOptions.value.flatMap((x) => {
+  model.value.categories = allCategories.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
     return n ? [n] : [];
   });
@@ -56,7 +75,7 @@ onMounted(() => {
   api()
     .categoriesList({ isPagingEnabled: false })
     .then((response) => {
-      categoryOptions.value = response.data.items || [];
+      allCategories.value = response.data.items || [];
     })
     .catch(response => messageStore.setApiFailureMessages(response));
 });
@@ -107,6 +126,19 @@ onMounted(() => {
               type="checkbox"
             >
           </div>
+        </div>
+        <div class="mb-2">
+          <input
+            id="categorySearch"
+            v-model="filterText"
+            type="search"
+            class="form-control form-control-sm"
+            placeholder="Filter categories..."
+            aria-label="Filter categories"
+          >
+        </div>
+        <div v-if="categoriesOverLimit" class="mb-2 text-muted small">
+          Showing {{ DISPLAY_LIMIT }} of {{ categoriesOverLimit }} — refine filter to see more.
         </div>
         <div class="grid category-scroll">
           <div
