@@ -9,6 +9,7 @@ try {
 
   npm install --no-audit
   npx ncu -u --target minor
+  Remove-Item -Force package-lock.json -ErrorAction SilentlyContinue
   npm install --no-audit
 
   Set-Location -Path $projectRoot
