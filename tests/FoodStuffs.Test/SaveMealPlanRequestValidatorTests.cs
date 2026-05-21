@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Events.MealPlans;
+﻿using FoodStuffs.Model.Events.MealPlans;
 using FoodStuffs.Model.Events.MealPlans.Models;
 using Xunit;
 

@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Events.GroceryAisles;
+﻿using FoodStuffs.Model.Events.GroceryAisles;
 using FoodStuffs.Model.Events.GroceryAisles.Models;
 using Xunit;
 
