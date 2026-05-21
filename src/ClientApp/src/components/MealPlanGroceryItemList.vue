@@ -4,6 +4,7 @@ import type {
   GetMealPlanResponseExcludedGroceryItem,
   GetMealPlanResponseRecipeGroceryItem,
 } from '@/api/data-contracts';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { computed, reactive } from 'vue';
 import GroceryItemInventoryQuantity from './GroceryItemInventoryQuantity.vue';
 
@@ -18,6 +19,7 @@ const props = defineProps({
   collapsed: { type: Boolean, required: false, default: false },
   getGroceryItemDetails: { type: Function, required: true },
   getGroceryAisleDetails: { type: Function, required: true },
+  getRecipesForGroceryItem: { type: Function, required: true },
 });
 
 interface GroupItem extends GetMealPlanResponseExcludedGroceryItem {
@@ -142,9 +144,32 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
                 class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6 d-flex justify-content-between align-items-center"
               >
                 <span>{{ item.quantity }}x {{ item.details.name }}</span>
-                <button type="button" class="btn btn-sm btn-primary" @click="onItemClick(item.id)">
-                  {{ buttonLabel }}
-                </button>
+                <div class="d-flex gap-1">
+                  <div class="dropdown">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      aria-label="Recipe info"
+                      @click.stop.prevent
+                    >
+                      <FontAwesomeIcon icon="fa-circle-info" />
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li
+                        v-for="recipe in getRecipesForGroceryItem(item.id)"
+                        :key="recipe.name"
+                        class="dropdown-item recipe-info-item"
+                      >
+                        {{ recipe.quantity }}x {{ recipe.name }}
+                      </li>
+                    </ul>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-primary" @click="onItemClick(item.id)">
+                    {{ buttonLabel }}
+                  </button>
+                </div>
               </div>
               <GroceryItemInventoryQuantity
                 :id="`inventory-${item.id}`"
@@ -223,13 +248,36 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
                       class="g-col-12 g-col-sm-6 g-col-md-12 g-col-xl-6 d-flex justify-content-between align-items-center"
                     >
                       <span>{{ item.quantity }}x {{ item.details.name }}</span>
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-primary"
-                        @click="onItemClick(item.id)"
-                      >
-                        {{ buttonLabel }}
-                      </button>
+                      <div class="d-flex gap-1">
+                        <div class="dropdown">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Recipe info"
+                            @click.stop.prevent
+                          >
+                            <FontAwesomeIcon icon="fa-circle-info" />
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li
+                              v-for="recipe in getRecipesForGroceryItem(item.id)"
+                              :key="recipe.name"
+                              class="dropdown-item recipe-info-item"
+                            >
+                              {{ recipe.quantity }}x {{ recipe.name }}
+                            </li>
+                          </ul>
+                        </div>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-primary"
+                          @click="onItemClick(item.id)"
+                        >
+                          {{ buttonLabel }}
+                        </button>
+                      </div>
                     </div>
                     <GroceryItemInventoryQuantity
                       :id="`inventory-${item.id}`"
@@ -289,5 +337,10 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
 .copy-tooltip:hover .copy-tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+:deep(.recipe-info-item) {
+  cursor: default;
+  pointer-events: none;
 }
 </style>

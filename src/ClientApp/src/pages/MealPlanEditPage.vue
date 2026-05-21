@@ -256,6 +256,18 @@ function findGroceryAisle(id: number | undefined) {
   return groceryAisleOptions.value.find(x => x.id === id);
 }
 
+function findRecipesForGroceryItem(id: number | undefined) {
+  if (!id) {
+    return [];
+  }
+  return (activeMealPlan.value?.recipes || [])
+    .filter(recipe => recipe.groceryItems?.some(gi => gi.id === id))
+    .map(recipe => ({
+      name: recipe.name || '',
+      quantity: recipe.groceryItems?.find(gi => gi.id === id)?.quantity ?? 0,
+    }));
+}
+
 function updateOrdersByIndex() {
   if (activeMealPlan.value === undefined || activeMealPlan.value === null) {
     return;
@@ -580,6 +592,7 @@ onMounted(async () => {
             :show-copy-list="true"
             :get-grocery-item-details="findGroceryItem"
             :get-grocery-aisle-details="findGroceryAisle"
+            :get-recipes-for-grocery-item="findRecipesForGroceryItem"
           />
         </div>
         <div class="g-col-12 g-col-md-6">
@@ -592,6 +605,7 @@ onMounted(async () => {
             :collapsed="true"
             :get-grocery-item-details="findGroceryItem"
             :get-grocery-aisle-details="findGroceryAisle"
+            :get-recipes-for-grocery-item="findRecipesForGroceryItem"
           />
         </div>
       </div>
