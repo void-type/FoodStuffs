@@ -63,6 +63,6 @@ public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGr
 
     private static void Transfer(SaveGroceryItemInventoryRequest request, GroceryItem groceryItem)
     {
-        groceryItem.InventoryQuantity = request.InventoryQuantity;
+        groceryItem.InventoryQuantity = request.InventoryQuantity ?? 0;
     }
 }

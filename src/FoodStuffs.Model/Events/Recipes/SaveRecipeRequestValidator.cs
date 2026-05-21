@@ -11,8 +11,14 @@ public class SaveRecipeRequestValidator : RuleValidatorAbstract<SaveRecipeReques
         CreateRule(new Failure("Name is required.", "name"))
             .InvalidWhen(entity => string.IsNullOrWhiteSpace(entity.Name));
 
+        CreateRule(new Failure("Grocery items quantity is required.", "groceryItems"))
+            .InvalidWhen(entity => entity.GroceryItems?.Exists(i => i.Quantity is null) ?? false);
+
         CreateRule(new Failure("Grocery items quantity must be 1 or greater.", "groceryItems"))
             .InvalidWhen(entity => entity.GroceryItems?.Exists(i => i.Quantity <= 0) ?? false);
+
+        CreateRule(new Failure("Side count is required.", "mealPlanningSidesCount"))
+            .InvalidWhen(entity => entity.MealPlanningSidesCount is null);
 
         CreateRule(new Failure("Side count must be 0 or greater.", "mealPlanningSidesCount"))
             .InvalidWhen(entity => entity.MealPlanningSidesCount < 0);

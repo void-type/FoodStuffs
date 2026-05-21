@@ -13,5 +13,8 @@ public class SaveGroceryAisleRequestValidator : RuleValidatorAbstract<SaveGrocer
 
         CreateRule(new Failure("Name can't be longer than 450 characters.", "name"))
             .InvalidWhen(entity => entity.Name?.Length > 450);
+
+        CreateRule(new Failure("Shopping list order is required.", "order"))
+            .InvalidWhen(entity => entity.Order is null);
     }
 }

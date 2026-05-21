@@ -88,6 +88,6 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
     private static void Transfer(SaveGroceryAisleRequest request, string formattedName, GroceryAisle groceryAisle)
     {
         groceryAisle.Name = formattedName;
-        groceryAisle.Order = request.Order;
+        groceryAisle.Order = request.Order ?? 0;
     }
 }

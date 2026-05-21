@@ -2,4 +2,4 @@
 
 public record SaveMealPlanRequestExcludedGroceryItem(
     int Id,
-    int Quantity);
+    int? Quantity);

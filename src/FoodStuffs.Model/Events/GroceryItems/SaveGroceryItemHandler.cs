@@ -112,7 +112,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
     private static void Transfer(string formattedName, SaveGroceryItemRequest request, GroceryItem groceryItem)
     {
         groceryItem.Name = formattedName;
-        groceryItem.InventoryQuantity = request.InventoryQuantity;
+        groceryItem.InventoryQuantity = request.InventoryQuantity ?? 0;
     }
 
     private async Task ManageStorageLocationsAsync(SaveGroceryItemRequest request, GroceryItem groceryItem, CancellationToken cancellationToken)

@@ -99,7 +99,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         recipe.PrepTimeMinutes = request.PrepTimeMinutes;
         recipe.CookTimeMinutes = request.CookTimeMinutes;
         recipe.IsForMealPlanning = request.IsForMealPlanning;
-        recipe.MealPlanningSidesCount = request.MealPlanningSidesCount;
+        recipe.MealPlanningSidesCount = request.MealPlanningSidesCount ?? 0;
     }
 
     private async Task ManageCategoriesAsync(SaveRecipeRequest request, Recipe recipe, CancellationToken cancellationToken)
@@ -179,8 +179,8 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
                 continue;
             }
 
-            item.Quantity = requestedItem.Quantity;
-            item.Order = requestedItem.Order;
+            item.Quantity = requestedItem.Quantity ?? 1;
+            item.Order = requestedItem.Order ?? 0;
         }
     }
 }

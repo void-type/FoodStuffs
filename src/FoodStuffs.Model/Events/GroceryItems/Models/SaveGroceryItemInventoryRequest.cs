@@ -2,4 +2,4 @@
 
 public record SaveGroceryItemInventoryRequest(
     int Id,
-    int InventoryQuantity);
+    int? InventoryQuantity);

@@ -8,6 +8,6 @@ public record SaveRecipeRequest(
     int? CookTimeMinutes,
     int? PrepTimeMinutes,
     bool IsForMealPlanning,
-    int MealPlanningSidesCount,
+    int? MealPlanningSidesCount,
     List<SaveRecipeRequestGroceryItem> GroceryItems,
     List<string> Categories);

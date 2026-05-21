@@ -2,5 +2,5 @@
 
 public record SaveRecipeRequestGroceryItem(
     int Id,
-    int Quantity,
-    int Order);
+    int? Quantity,
+    int? Order);

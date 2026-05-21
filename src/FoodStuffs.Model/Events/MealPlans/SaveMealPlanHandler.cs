@@ -108,7 +108,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
                     return;
                 }
 
-                relation.Order = requestedRecipe.Order;
+                relation.Order = requestedRecipe.Order ?? 0;
                 relation.IsComplete = requestedRecipe.IsComplete;
             });
     }
@@ -156,7 +156,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
                 continue;
             }
 
-            item.Quantity = requestedItem.Quantity;
+            item.Quantity = requestedItem.Quantity ?? 0;
         }
     }
 }

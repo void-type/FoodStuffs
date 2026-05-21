@@ -3,7 +3,7 @@
 public record SaveGroceryItemRequest(
     int Id,
     string Name,
-    int InventoryQuantity,
+    int? InventoryQuantity,
     int? GroceryAisleId,
     List<string> StorageLocations,
     List<string> GroceryStores);

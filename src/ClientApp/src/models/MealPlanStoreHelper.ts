@@ -1,6 +1,6 @@
 import type {
+  GetMealPlanResponseExcludedGroceryItem,
   MealPlansListParams,
-  SaveMealPlanRequestExcludedGroceryItem,
 } from '@/api/data-contracts';
 import { isNil } from './FormatHelper';
 import MealPlansListRequest from './MealPlansListRequest';
@@ -38,8 +38,8 @@ export function listRequestToQueryParams(listRequest: MealPlansListParams) {
 }
 
 export function countGroceryItems(
-  acc: SaveMealPlanRequestExcludedGroceryItem[],
-  curr: SaveMealPlanRequestExcludedGroceryItem,
+  acc: GetMealPlanResponseExcludedGroceryItem[],
+  curr: GetMealPlanResponseExcludedGroceryItem,
 ) {
   const { id, quantity } = curr;
 
@@ -54,16 +54,14 @@ export function countGroceryItems(
     acc.push(match);
   }
 
-  if (match.quantity === undefined) {
-    match.quantity = 0;
-  }
+  match.quantity ??= 0;
 
   match.quantity += quantity || 0;
   return acc;
 }
 
 export function addGroceryItem(
-  groceryItems: SaveMealPlanRequestExcludedGroceryItem[],
+  groceryItems: GetMealPlanResponseExcludedGroceryItem[],
   id: number,
   count = 1,
 ) {
@@ -74,15 +72,13 @@ export function addGroceryItem(
     groceryItems.push(groceryItem);
   }
 
-  if (groceryItem.quantity === undefined) {
-    groceryItem.quantity = 0;
-  }
+  groceryItem.quantity ??= 0;
 
   groceryItem.quantity += count;
 }
 
 export function subtractGroceryItem(
-  groceryItems: SaveMealPlanRequestExcludedGroceryItem[],
+  groceryItems: GetMealPlanResponseExcludedGroceryItem[],
   id: number,
   count = 1,
 ) {
@@ -92,9 +88,7 @@ export function subtractGroceryItem(
     return;
   }
 
-  if (groceryItem.quantity === undefined) {
-    groceryItem.quantity = 0;
-  }
+  groceryItem.quantity ??= 0;
 
   groceryItem.quantity -= count;
 

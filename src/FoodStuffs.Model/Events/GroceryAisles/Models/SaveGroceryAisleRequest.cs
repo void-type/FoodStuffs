@@ -3,4 +3,4 @@
 public record SaveGroceryAisleRequest(
     int Id,
     string Name,
-    int Order);
+    int? Order);

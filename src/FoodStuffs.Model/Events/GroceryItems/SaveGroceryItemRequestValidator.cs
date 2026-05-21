@@ -14,6 +14,9 @@ public class SaveGroceryItemRequestValidator : RuleValidatorAbstract<SaveGrocery
         CreateRule(new Failure("Name can't be longer than 450 characters.", "name"))
             .InvalidWhen(entity => entity.Name.Length > 450);
 
+        CreateRule(new Failure("Inventory quantity is required.", "inventoryQuantity"))
+            .InvalidWhen(entity => entity.InventoryQuantity is null);
+
         CreateRule(new Failure("Inventory quantity must be 0 or greater.", "inventoryQuantity"))
             .InvalidWhen(entity => entity.InventoryQuantity < 0);
 

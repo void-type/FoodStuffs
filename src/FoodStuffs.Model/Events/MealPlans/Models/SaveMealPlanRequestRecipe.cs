@@ -2,5 +2,5 @@
 
 public record SaveMealPlanRequestRecipe(
     int Id,
-    int Order,
+    int? Order,
     bool IsComplete);

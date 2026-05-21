@@ -87,6 +87,58 @@ public class SaveRecipeRequestValidatorTests
     [Theory]
     [InlineData(-1)]
     [InlineData(-1000)]
+    public void Recipe_invalid_when_meal_planning_sides_count_negative(int? count)
+    {
+        var recipe = new SaveRecipeRequest(0, "null", "null", string.Empty, 10, 10, false, count, [], []);
+        var validator = new SaveRecipeRequestValidator();
+        var result = validator.Validate(recipe);
+
+        Assert.True(result.IsFailed);
+        Assert.Contains(result.Failures, x => x.UiHandle == "mealPlanningSidesCount");
+    }
+
+    [Fact]
+    public void Recipe_invalid_when_meal_planning_sides_count_null()
+    {
+        var recipe = new SaveRecipeRequest(0, "null", "null", string.Empty, 10, 10, false, null, [], []);
+        var validator = new SaveRecipeRequestValidator();
+        var result = validator.Validate(recipe);
+
+        Assert.True(result.IsFailed);
+        Assert.Contains(result.Failures, x => x.UiHandle == "mealPlanningSidesCount");
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(1000)]
+    public void Recipe_valid_when_meal_planning_sides_count_non_negative(int count)
+    {
+        var recipe = new SaveRecipeRequest(0, "null", "null", string.Empty, 10, 10, false, count, [], []);
+        var validator = new SaveRecipeRequestValidator();
+        var result = validator.Validate(recipe);
+
+        Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public void Recipe_invalid_when_grocery_item_quantity_null()
+    {
+        var groceryItems = new List<SaveRecipeRequestGroceryItem>
+        {
+            new(1, null, 1),
+        };
+        var recipe = new SaveRecipeRequest(0, "null", "null", string.Empty, 10, 10, false, 2, groceryItems, []);
+        var validator = new SaveRecipeRequestValidator();
+        var result = validator.Validate(recipe);
+
+        Assert.True(result.IsFailed);
+        Assert.Contains(result.Failures, x => x.UiHandle == "groceryItems");
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-1000)]
     public void Recipe_invalid_when_prep_time_negative(int? time)
     {
         var recipe = new SaveRecipeRequest(0, "null", "null", string.Empty, 10, time, false, 2, [], []);

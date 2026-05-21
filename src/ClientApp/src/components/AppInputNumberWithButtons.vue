@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed } from 'vue';
 import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
@@ -36,6 +37,15 @@ const model = defineModel({
 
 const messageStore = useMessageStore();
 
+// Vue's v-model on type="number" emits "" when the field is cleared.
+// Convert empty string to null so the API receives null instead of "".
+const inputValue = computed({
+  get: () => model.value,
+  set: (val: unknown) => {
+    model.value = val === '' ? null : (val as number | null | undefined);
+  },
+});
+
 function changeInventory(amount: number) {
   model.value = Math.min(props.max, Math.max(props.min, (model.value || 0) + amount));
 }
@@ -55,7 +65,7 @@ function changeInventory(amount: number) {
       </button>
       <input
         :id="id"
-        v-model="model"
+        v-model="inputValue"
         required
         type="number"
         min="0"
@@ -89,7 +99,7 @@ function changeInventory(amount: number) {
       </button>
       <input
         :id="id"
-        v-model="model"
+        v-model="inputValue"
         required
         type="number"
         min="0"

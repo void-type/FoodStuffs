@@ -227,7 +227,7 @@ export interface SaveGroceryAisleRequest {
   id?: number;
   name?: string;
   /** @format int32 */
-  order?: number;
+  order?: number | null;
 }
 
 export interface SearchGroceryItemsResponse {
@@ -385,7 +385,7 @@ export interface SaveGroceryItemRequest {
   id?: number;
   name?: string;
   /** @format int32 */
-  inventoryQuantity?: number;
+  inventoryQuantity?: number | null;
   /** @format int32 */
   groceryAisleId?: number | null;
   storageLocations?: string[];
@@ -396,7 +396,7 @@ export interface SaveGroceryItemInventoryRequest {
   /** @format int32 */
   id?: number;
   /** @format int32 */
-  inventoryQuantity?: number;
+  inventoryQuantity?: number | null;
 }
 
 /** A set of items. Can optionally by a page of a full set. */
@@ -574,14 +574,14 @@ export interface SaveMealPlanRequestExcludedGroceryItem {
   /** @format int32 */
   id?: number;
   /** @format int32 */
-  quantity?: number;
+  quantity?: number | null;
 }
 
 export interface SaveMealPlanRequestRecipe {
   /** @format int32 */
   id?: number;
   /** @format int32 */
-  order?: number;
+  order?: number | null;
   isComplete?: boolean;
 }
 
@@ -753,7 +753,7 @@ export interface SaveRecipeRequest {
   prepTimeMinutes?: number | null;
   isForMealPlanning?: boolean;
   /** @format int32 */
-  mealPlanningSidesCount?: number;
+  mealPlanningSidesCount?: number | null;
   groceryItems?: SaveRecipeRequestGroceryItem[];
   categories?: string[];
 }
@@ -762,9 +762,9 @@ export interface SaveRecipeRequestGroceryItem {
   /** @format int32 */
   id?: number;
   /** @format int32 */
-  quantity?: number;
+  quantity?: number | null;
   /** @format int32 */
-  order?: number;
+  order?: number | null;
 }
 
 /** A set of items. Can optionally by a page of a full set. */

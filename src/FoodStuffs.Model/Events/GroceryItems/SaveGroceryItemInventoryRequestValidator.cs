@@ -8,6 +8,9 @@ public class SaveGroceryItemInventoryRequestValidator : RuleValidatorAbstract<Sa
 {
     public SaveGroceryItemInventoryRequestValidator()
     {
+        CreateRule(new Failure("Grocery item inventory quantity is required.", "inventoryQuantity"))
+            .InvalidWhen(entity => entity.InventoryQuantity is null);
+
         CreateRule(new Failure("Grocery item inventory quantity must be 0 or greater.", "inventoryQuantity"))
             .InvalidWhen(entity => entity.InventoryQuantity < 0);
     }
