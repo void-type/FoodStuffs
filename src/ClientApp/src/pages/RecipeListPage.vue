@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import type { PropType, Ref } from 'vue';
+import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
-import type { SearchRecipesResultItem } from '@/api/data-contracts';
 import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -29,7 +28,7 @@ const recipeStore = useRecipeStore();
 const router = useRouter();
 const route = useRoute();
 
-const { listResponse, listRequest, listFacets, usePagedResults } = storeToRefs(recipeStore);
+const { listResponse, listRequest, listFacets, usePagedResults, accumulatedItems, accumulatedItemsQueryKey } = storeToRefs(recipeStore);
 const { sortOptions } = Choices;
 
 const categoriesFilterModel = ref({
@@ -44,9 +43,8 @@ const groceryItemsFilterModel = ref({
 
 const useCompactView = ref(false);
 
-const accumulatedItems = ref<Array<SearchRecipesResultItem>>([]);
 const isFetchingMore = ref(false);
-const loadMoreTriggerElement: Ref<Element | undefined> = ref();
+const loadMoreTriggerElement = ref<Element | undefined>();
 let loadMoreObserver: IntersectionObserver | null = null;
 let isSettingFromQuery = false;
 
@@ -75,14 +73,6 @@ async function fetchNextPage() {
     });
 
     await recipeStore.fetchRecipesList();
-
-    const newItems = (listResponse.value.items || []).filter(
-      newItem => !accumulatedItems.value.some((existingItem: SearchRecipesResultItem) => existingItem.id === newItem.id),
-    );
-
-    if (newItems.length > 0) {
-      accumulatedItems.value = [...accumulatedItems.value, ...newItems];
-    }
   } finally {
     isFetchingMore.value = false;
   }
@@ -154,6 +144,8 @@ function clearSearch() {
     isPagingEnabled: listRequest.value.isPagingEnabled,
   });
 
+  recipeStore.resetAccumulatedItems();
+
   // selectedCategories gets its new value from query params.
 
   navigateSearch(false);
@@ -165,6 +157,8 @@ function startSearchNoHash() {
     page: 1,
   });
 
+  recipeStore.resetAccumulatedItems();
+
   navigateSearch(false);
 }
 
@@ -173,6 +167,8 @@ function startSearch() {
     ...listRequest.value,
     page: 1,
   });
+
+  recipeStore.resetAccumulatedItems();
 
   navigateSearch(true);
 }
@@ -343,8 +339,18 @@ watch(
   async () => {
     isSettingFromQuery = true;
     setListRequestFromQuery();
-    await recipeStore.fetchRecipesList();
-    accumulatedItems.value = [...(listResponse.value.items || [])];
+
+    const queryKey = JSON.stringify(props.query);
+    const isRestoringFromBack = !usePagedResults.value
+      && queryKey === accumulatedItemsQueryKey.value
+      && accumulatedItems.value.length > 0;
+
+    if (!isRestoringFromBack) {
+      recipeStore.resetAccumulatedItems();
+      await recipeStore.fetchRecipesList();
+      recipeStore.setAccumulatedItemsQueryKey(queryKey);
+    }
+
     isSettingFromQuery = false;
   },
   { immediate: true },
@@ -551,29 +557,29 @@ onUnmounted(() => {
           </router-link>
         </div>
 
-        <div id="search-results" class="mt-3">
-          {{ resultCountText }}
-        </div>
-        <div class="mt-4">
-          <div class="form-check form-check-inline form-switch">
-            <label class="form-check-label" for="useCompactView">Compact</label>
-            <input
-              id="useCompactView"
-              v-model="useCompactView"
-              :checked="useCompactView"
-              class="form-check-input"
-              type="checkbox"
-            >
-          </div>
-          <div class="form-check form-check-inline form-switch">
-            <label class="form-check-label" for="usePagedResults">Paged</label>
-            <input
-              id="usePagedResults"
-              v-model="usePagedResults"
-              :checked="usePagedResults"
-              class="form-check-input"
-              type="checkbox"
-            >
+        <div id="search-results" class="mt-3 d-flex flex-wrap justify-content-between align-items-center row-gap-2">
+          <span>{{ resultCountText }}</span>
+          <div>
+            <div class="form-check form-check-inline form-switch mb-0">
+              <label class="form-check-label" for="useCompactView">Compact</label>
+              <input
+                id="useCompactView"
+                v-model="useCompactView"
+                :checked="useCompactView"
+                class="form-check-input"
+                type="checkbox"
+              >
+            </div>
+            <div class="form-check form-check-inline form-switch mb-0">
+              <label class="form-check-label" for="usePagedResults">Paged</label>
+              <input
+                id="usePagedResults"
+                v-model="usePagedResults"
+                :checked="usePagedResults"
+                class="form-check-input"
+                type="checkbox"
+              >
+            </div>
           </div>
         </div>
         <div class="grid mt-3">

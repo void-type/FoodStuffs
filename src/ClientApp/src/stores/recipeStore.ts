@@ -22,6 +22,8 @@ interface RecipeStoreState {
   listFacets: SearchFacet[];
   recentRecipes: Array<SearchRecipesResultItem>;
   usePagedResults: boolean;
+  accumulatedItems: SearchRecipesResultItem[];
+  accumulatedItemsQueryKey: string;
 }
 
 const api = ApiHelper.client;
@@ -40,6 +42,8 @@ export const useRecipeStore = defineStore('recipe', {
     listRequest: new RecipesSearchRequest(),
     recentRecipes: RecipeStoreHelper.getRecents(),
     usePagedResults: false,
+    accumulatedItems: [],
+    accumulatedItemsQueryKey: '',
   }),
 
   getters: {
@@ -138,6 +142,15 @@ export const useRecipeStore = defineStore('recipe', {
       RecipeStoreHelper.storeQueuedRecent(recipe);
     },
 
+    resetAccumulatedItems() {
+      this.accumulatedItems = [];
+      this.accumulatedItemsQueryKey = '';
+    },
+
+    setAccumulatedItemsQueryKey(key: string) {
+      this.accumulatedItemsQueryKey = key;
+    },
+
     async fetchRecipesList() {
       try {
         const request = { ...this.listRequest };
@@ -150,6 +163,20 @@ export const useRecipeStore = defineStore('recipe', {
 
         if (response.data) {
           this.setListResponse(response.data);
+
+          if (!this.usePagedResults) {
+            const newItems = response.data.results?.items || [];
+            if ((request.page || 1) <= 1) {
+              this.accumulatedItems = [...newItems];
+            } else {
+              const filtered = newItems.filter(
+                newItem => !this.accumulatedItems.some(existing => existing.id === newItem.id),
+              );
+              if (filtered.length > 0) {
+                this.accumulatedItems = [...this.accumulatedItems, ...filtered];
+              }
+            }
+          }
         }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
