@@ -5,7 +5,11 @@
   "linux": {
     "options": {
       "shell": {
-        "executable": "pwsh"
+        "executable": "pwsh",
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ]
       }
     }
   },
