@@ -121,7 +121,7 @@ function reset() {
 
 async function createGroceryItem(name: string) {
   try {
-    const response = await api().groceryItemsSave({ name, storageLocations: [], groceryStores: [] });
+    const response = await api().groceryItemsSave({ name, inventoryQuantity: 0, storageLocations: [], groceryStores: [] });
 
     if (response.data.message) {
       messageStore.setSuccessMessage(response.data.message);
