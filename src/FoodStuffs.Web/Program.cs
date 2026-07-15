@@ -66,7 +66,11 @@ try
 
     config.GetRequiredConnectionString<FoodStuffsContext>();
     services.AddDbContext<FoodStuffsContext>(options => options
-        .UseSqlServer("Name=FoodStuffs", b => b.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName)));
+        .UseSqlServer("Name=FoodStuffs", sqlOptions =>
+        {
+            sqlOptions.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName);
+            sqlOptions.EnableRetryOnFailure();
+        }));
 
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();
