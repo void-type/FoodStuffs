@@ -27,7 +27,6 @@ const props = defineProps({
 const model = defineModel({
   type: Object as PropType<{ groceryItemIds: Array<number>; matchAllGroceryItems: boolean }>,
   required: true,
-  default: () => ({ groceryItemIds: [], matchAllGroceryItems: false }),
 });
 
 const messageStore = useMessageStore();
@@ -151,7 +150,8 @@ onMounted(() => {
           <div
             v-for="item in groceryItemOptions"
             :key="item.id"
-            :class="`${checkClass} form-check m-0`"
+            class="form-check m-0"
+            :class="checkClass"
           >
             <input
               :id="`grocery-item-${item.id}`"

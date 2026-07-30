@@ -25,7 +25,7 @@ public class GetImageHandler : CustomEventHandlerAbstract<GetImageRequest, Simpl
             .MapAsync(Maybe.From)
             .ToResultAsync(new ImageNotFoundFailure())
             .ThenAsync(ValidateBlobIsNotNull)
-            .SelectAsync(r => new SimpleFile(r.ImageBlob!.Bytes, r.FileName));
+            .SelectAsync(r => new SimpleFile(r.ImageBlob.Bytes, r.FileName));
     }
 
     private static IResult<Image> ValidateBlobIsNotNull(Image r)

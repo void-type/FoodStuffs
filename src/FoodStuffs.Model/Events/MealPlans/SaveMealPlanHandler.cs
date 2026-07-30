@@ -56,7 +56,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
         }
         else
         {
-            _data.MealPlans.Add(mealPlanToEdit);
+            await _data.MealPlans.AddAsync(mealPlanToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

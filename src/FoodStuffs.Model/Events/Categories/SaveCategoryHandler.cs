@@ -73,7 +73,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
         }
         else
         {
-            _data.Categories.Add(categoryToEdit);
+            await _data.Categories.AddAsync(categoryToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

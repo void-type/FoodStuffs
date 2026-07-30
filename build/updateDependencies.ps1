@@ -7,9 +7,9 @@ try {
 
   Set-Location -Path $webClientProjectFolder
 
-  npm install --no-audit
   npx ncu -u --target minor
   Remove-Item -Force package-lock.json -ErrorAction SilentlyContinue
+  Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
   npm install --no-audit
 
   Set-Location -Path $projectRoot

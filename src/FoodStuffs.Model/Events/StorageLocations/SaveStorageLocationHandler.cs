@@ -73,7 +73,7 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
         }
         else
         {
-            _data.StorageLocations.Add(storageLocationToEdit);
+            await _data.StorageLocations.AddAsync(storageLocationToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

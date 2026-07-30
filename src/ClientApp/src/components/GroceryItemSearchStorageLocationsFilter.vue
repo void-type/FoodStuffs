@@ -27,7 +27,6 @@ const props = defineProps({
 const model = defineModel({
   type: Object as PropType<{ storageLocations: Array<number>; matchAllStorageLocations: boolean }>,
   required: true,
-  default: [],
 });
 
 const messageStore = useMessageStore();
@@ -116,7 +115,8 @@ onMounted(() => {
           <div
             v-for="storageLocationOption in storageLocationOptions"
             :key="storageLocationOption.id"
-            :class="`${checkClass} form-check m-0`"
+            class="form-check m-0"
+            :class="checkClass"
           >
             <input
               :id="`storageLocation-${storageLocationOption.id}`"

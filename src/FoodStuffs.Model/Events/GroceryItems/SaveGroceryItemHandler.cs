@@ -95,7 +95,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
         }
         else
         {
-            _data.GroceryItems.Add(groceryItemToEdit);
+            await _data.GroceryItems.AddAsync(groceryItemToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

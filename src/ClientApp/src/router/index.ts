@@ -9,7 +9,7 @@ const router = createRouter({
       && to.query.page === from.query.page) {
       return false;
     }
-    
+
     if (to.hash) {
       document.getElementById(to.hash.slice(1))?.focus();
       return {

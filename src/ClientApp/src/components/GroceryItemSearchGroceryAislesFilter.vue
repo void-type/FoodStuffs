@@ -27,7 +27,6 @@ const props = defineProps({
 const model = defineModel({
   type: Object as PropType<{ groceryAisles: Array<number> }>,
   required: true,
-  default: [],
 });
 
 const messageStore = useMessageStore();
@@ -102,7 +101,8 @@ onMounted(() => {
           <div
             v-for="groceryAisleOption in groceryAisleOptions"
             :key="groceryAisleOption.id"
-            :class="`${checkClass} form-check m-0`"
+            class="form-check m-0"
+            :class="checkClass"
           >
             <input
               :id="`groceryAisle-${groceryAisleOption.id}`"

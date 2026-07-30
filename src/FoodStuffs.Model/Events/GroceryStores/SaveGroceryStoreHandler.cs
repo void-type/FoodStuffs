@@ -73,7 +73,7 @@ public class SaveGroceryStoreHandler : CustomEventHandlerAbstract<SaveGrocerySto
         }
         else
         {
-            _data.GroceryStores.Add(groceryStoreToEdit);
+            await _data.GroceryStores.AddAsync(groceryStoreToEdit, cancellationToken);
         }
 
         await _data.SaveChangesAsync(cancellationToken);

@@ -27,7 +27,6 @@ const props = defineProps({
 const model = defineModel({
   type: Object as PropType<{ categories: Array<number>; matchAllCategories: boolean }>,
   required: true,
-  default: () => ({ categories: [], matchAllCategories: false }),
 });
 
 const messageStore = useMessageStore();
@@ -144,7 +143,8 @@ onMounted(() => {
           <div
             v-for="categoryOption in categoryOptions"
             :key="categoryOption.id"
-            :class="`${checkClass} form-check m-0`"
+            class="form-check m-0"
+            :class="checkClass"
           >
             <input
               :id="`category-${categoryOption.id}`"
