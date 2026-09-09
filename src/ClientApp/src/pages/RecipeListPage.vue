@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
@@ -389,7 +388,6 @@ onUnmounted(() => {
 
 <template>
   <div class="container-xxl">
-    <AppBreadcrumbs />
     <AppPageHeading />
     <div id="skip-filters" class="container-xxl visually-hidden-focusable">
       <router-link

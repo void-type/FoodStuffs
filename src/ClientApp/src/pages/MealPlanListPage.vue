@@ -4,7 +4,6 @@ import type { LocationQuery } from 'vue-router';
 import type { ModalParameters } from '@/models/ModalParameters';
 import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
-import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
@@ -106,7 +105,6 @@ watch(
 
 <template>
   <div class="container-xxl">
-    <AppBreadcrumbs />
     <AppPageHeading />
     <div class="mt-3">
       <div class="btn-toolbar">
