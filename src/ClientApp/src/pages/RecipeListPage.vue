@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -115,7 +116,7 @@ const resultCountText = computed(() => {
   }
 
   if (!usePagedResults.value) {
-    return `Showing ${accumulatedItems.value.length} of ${totalCount} recipes.`;
+    return `Found ${totalCount} recipes.`;
   }
 
   const base = ((itemSet.page || 0) - 1) * (itemSet.take || 0);
@@ -254,6 +255,24 @@ const groceryItemFacets = computed(() => {
 const mealPlanningFilterText = computed(() => {
   const choiceString = Choices.getBooleanChoiceText(listRequest.value.isForMealPlanning);
   return choiceString === 'All' ? '' : ` (${choiceString})`;
+});
+
+const activeFilterCount = computed(() => {
+  let count = 0;
+
+  if (listRequest.value.isForMealPlanning !== null && typeof listRequest.value.isForMealPlanning !== 'undefined') {
+    count += 1;
+  }
+
+  if (categoriesFilterModel.value.categories.length > 0) {
+    count += 1;
+  }
+
+  if (groceryItemsFilterModel.value.groceryItemIds.length > 0) {
+    count += 1;
+  }
+
+  return count;
 });
 
 function getMealFacetCount(facetValue: boolean | null) {
@@ -447,25 +466,66 @@ onUnmounted(() => {
             />
           </div>
         </div>
+        <div class="d-flex gap-3 mt-3">
+          <div class="form-check form-switch mb-0">
+            <label class="form-check-label" for="useCompactViewDesktop">Compact</label>
+            <input
+              id="useCompactViewDesktop"
+              v-model="useCompactView"
+              :checked="useCompactView"
+              class="form-check-input"
+              type="checkbox"
+            >
+          </div>
+          <div class="form-check form-switch mb-0">
+            <label class="form-check-label" for="usePagedResultsDesktop">Paged</label>
+            <input
+              id="usePagedResultsDesktop"
+              v-model="usePagedResults"
+              :checked="usePagedResults"
+              class="form-check-input"
+              type="checkbox"
+            >
+          </div>
+        </div>
       </div>
 
       <!-- Main content area -->
       <div class="g-col-12 g-col-lg-9">
         <div class="grid mb-3 gap-sm">
-          <div class="g-col-12 g-col-md-9">
-            <label for="searchText" class="form-label visually-hidden">Search</label>
-            <input
-              id="searchText"
-              v-model="listRequest.searchText"
-              type="search"
-              inputmode="search"
-              enterkeyhint="search"
-              class="form-control"
-              placeholder="Search..."
-              @keydown.stop.prevent.enter="startSearch"
+          <div class="g-col-12 g-col-lg-9 d-flex gap-2">
+            <div class="flex-grow-1">
+              <label for="searchText" class="form-label visually-hidden">Search</label>
+              <input
+                id="searchText"
+                v-model="listRequest.searchText"
+                type="search"
+                inputmode="search"
+                enterkeyhint="search"
+                class="form-control"
+                placeholder="Search..."
+                @keydown.stop.prevent.enter="startSearch"
+              >
+            </div>
+            <button
+              class="btn btn-outline-secondary flex-shrink-0 d-lg-none position-relative"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#recipeSearchOptions"
+              aria-controls="recipeSearchOptions"
+              aria-label="Sort and Filters"
             >
+              <FontAwesomeIcon icon="fa-filter" />
+              <span
+                v-if="activeFilterCount > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+              >
+                {{ activeFilterCount }}
+                <span class="visually-hidden">active filters</span>
+              </span>
+            </button>
           </div>
-          <div class="g-col-12 g-col-md-3">
+          <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
             <label for="recipeSort" class="form-label visually-hidden">Sort</label>
             <select
               id="recipeSort"
@@ -484,65 +544,6 @@ onUnmounted(() => {
               </option>
             </select>
           </div>
-
-          <!-- Mobile filters - only visible on screens smaller than lg -->
-          <div class="g-col-12 d-lg-none">
-            <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
-            <div id="filterAccordion" class="accordion">
-              <div class="accordion-item">
-                <div class="accordion-header">
-                  <button
-                    class="accordion-button collapsed px-3 py-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#isForMealPlanningCollapse"
-                    aria-expanded="false"
-                    aria-controls="isForMealPlanningCollapse"
-                  >
-                    For Meal Planning{{ mealPlanningFilterText }}
-                  </button>
-                </div>
-                <div
-                  id="isForMealPlanningCollapse"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#filterAccordion"
-                >
-                  <div class="accordion-body">
-                    <div>
-                      <div
-                        v-for="option in Choices.boolean"
-                        :key="option.value?.toString()"
-                        class="form-check"
-                      >
-                        <input
-                          :id="`isForMealPlanning-${option.value}`"
-                          v-model="listRequest.isForMealPlanning"
-                          class="form-check-input"
-                          type="radio"
-                          name="isForMealPlanning"
-                          :value="option.value"
-                          @change="startSearchNoHash"
-                        >
-                        <label class="form-check-label" :for="`isForMealPlanning-${option.value}`">
-                          {{ option.text }}{{ getMealFacetCount(option.value) }}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <RecipeSearchCategoriesFilter
-                v-model="categoriesFilterModel"
-                :facet-values="categoryFacets"
-                parent-accordion-id="filterAccordion"
-              />
-              <RecipeSearchGroceryItemsFilter
-                v-model="groceryItemsFilterModel"
-                :facet-values="groceryItemFacets"
-                parent-accordion-id="filterAccordion"
-              />
-            </div>
-          </div>
         </div>
 
         <div class="btn-toolbar">
@@ -557,30 +558,133 @@ onUnmounted(() => {
           </router-link>
         </div>
 
-        <div id="search-results" class="mt-3 d-flex flex-wrap justify-content-between align-items-center row-gap-2">
-          <span>{{ resultCountText }}</span>
-          <div>
-            <div class="form-check form-check-inline form-switch mb-0">
-              <label class="form-check-label" for="useCompactView">Compact</label>
-              <input
-                id="useCompactView"
-                v-model="useCompactView"
-                :checked="useCompactView"
-                class="form-check-input"
-                type="checkbox"
-              >
+        <Teleport to="body">
+          <div
+            id="recipeSearchOptions"
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            aria-labelledby="recipeSearchOptionsLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 id="recipeSearchOptionsLabel" class="offcanvas-title">
+                Sort &amp; Filters
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              />
             </div>
-            <div class="form-check form-check-inline form-switch mb-0">
-              <label class="form-check-label" for="usePagedResults">Paged</label>
-              <input
-                id="usePagedResults"
-                v-model="usePagedResults"
-                :checked="usePagedResults"
-                class="form-check-input"
-                type="checkbox"
-              >
+            <div class="offcanvas-body">
+              <div class="mb-3">
+                <label for="recipeSortMobile" class="form-label">Sort</label>
+                <select
+                  id="recipeSortMobile"
+                  :value="listRequest.sortBy"
+                  name="recipeSortMobile"
+                  class="form-select"
+                  aria-label="Sort recipes by"
+                  @change="changeSort"
+                >
+                  <option
+                    v-for="sortOption in sortOptions"
+                    :key="sortOption.value"
+                    :value="sortOption.value"
+                  >
+                    {{ sortOption.text }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Mobile filters - only visible on screens smaller than lg, otherwise shown in the left rail -->
+              <div class="d-lg-none">
+                <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
+                <div id="filterAccordion" class="accordion">
+                  <div class="accordion-item">
+                    <div class="accordion-header">
+                      <button
+                        class="accordion-button collapsed px-3 py-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#isForMealPlanningCollapse"
+                        aria-expanded="false"
+                        aria-controls="isForMealPlanningCollapse"
+                      >
+                        For Meal Planning{{ mealPlanningFilterText }}
+                      </button>
+                    </div>
+                    <div
+                      id="isForMealPlanningCollapse"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#filterAccordion"
+                    >
+                      <div class="accordion-body">
+                        <div>
+                          <div
+                            v-for="option in Choices.boolean"
+                            :key="option.value?.toString()"
+                            class="form-check"
+                          >
+                            <input
+                              :id="`isForMealPlanning-${option.value}`"
+                              v-model="listRequest.isForMealPlanning"
+                              class="form-check-input"
+                              type="radio"
+                              name="isForMealPlanning"
+                              :value="option.value"
+                              @change="startSearchNoHash"
+                            >
+                            <label class="form-check-label" :for="`isForMealPlanning-${option.value}`">
+                              {{ option.text }}{{ getMealFacetCount(option.value) }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <RecipeSearchCategoriesFilter
+                    v-model="categoriesFilterModel"
+                    :facet-values="categoryFacets"
+                    parent-accordion-id="filterAccordion"
+                  />
+                  <RecipeSearchGroceryItemsFilter
+                    v-model="groceryItemsFilterModel"
+                    :facet-values="groceryItemFacets"
+                    parent-accordion-id="filterAccordion"
+                  />
+                </div>
+              </div>
+
+              <!-- View toggles - only visible on screens smaller than lg, otherwise shown in the left rail -->
+              <div class="d-flex gap-3 mt-3 d-lg-none">
+                <div class="form-check form-switch mb-0">
+                  <label class="form-check-label" for="useCompactView">Compact</label>
+                  <input
+                    id="useCompactView"
+                    v-model="useCompactView"
+                    :checked="useCompactView"
+                    class="form-check-input"
+                    type="checkbox"
+                  >
+                </div>
+                <div class="form-check form-switch mb-0">
+                  <label class="form-check-label" for="usePagedResults">Paged</label>
+                  <input
+                    id="usePagedResults"
+                    v-model="usePagedResults"
+                    :checked="usePagedResults"
+                    class="form-check-input"
+                    type="checkbox"
+                  >
+                </div>
+              </div>
             </div>
           </div>
+        </Teleport>
+
+        <div id="search-results" class="mt-3">
+          <small class="text-muted">{{ resultCountText }}</small>
         </div>
         <div class="grid mt-3">
           <RecipeCard

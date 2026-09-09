@@ -3,6 +3,7 @@ import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -216,6 +217,32 @@ const unusedFilterText = computed(() => {
 const outOfStockFilterText = computed(() => {
   const choiceString = Choices.getBooleanChoiceText(listRequest.value.isOutOfStock);
   return choiceString === 'All' ? '' : ` (${choiceString})`;
+});
+
+const activeFilterCount = computed(() => {
+  let count = 0;
+
+  if (listRequest.value.isUnused !== null && typeof listRequest.value.isUnused !== 'undefined') {
+    count += 1;
+  }
+
+  if (listRequest.value.isOutOfStock !== null && typeof listRequest.value.isOutOfStock !== 'undefined') {
+    count += 1;
+  }
+
+  if (storageLocationsFilterModel.value.storageLocations.length > 0) {
+    count += 1;
+  }
+
+  if (groceryStoresFilterModel.value.groceryStores.length > 0) {
+    count += 1;
+  }
+
+  if (groceryAislesFilterModel.value.groceryAisles.length > 0) {
+    count += 1;
+  }
+
+  return count;
 });
 
 function getOutOfStockFacetCount(facetValue: boolean | null) {
@@ -482,20 +509,39 @@ watch(
       <!-- Main content area -->
       <div class="g-col-12 g-col-lg-9">
         <div class="grid mb-3 gap-sm">
-          <div class="g-col-12 g-col-md-9">
-            <label for="searchText" class="form-label visually-hidden">Search</label>
-            <input
-              id="searchText"
-              v-model="listRequest.searchText"
-              type="search"
-              inputmode="search"
-              enterkeyhint="search"
-              class="form-control"
-              placeholder="Search..."
-              @keydown.stop.prevent.enter="startSearch"
+          <div class="g-col-12 g-col-lg-9 d-flex gap-2">
+            <div class="flex-grow-1">
+              <label for="searchText" class="form-label visually-hidden">Search</label>
+              <input
+                id="searchText"
+                v-model="listRequest.searchText"
+                type="search"
+                inputmode="search"
+                enterkeyhint="search"
+                class="form-control"
+                placeholder="Search..."
+                @keydown.stop.prevent.enter="startSearch"
+              >
+            </div>
+            <button
+              class="btn btn-outline-secondary flex-shrink-0 d-lg-none position-relative"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#groceryItemSearchOptions"
+              aria-controls="groceryItemSearchOptions"
+              aria-label="Sort and Filters"
             >
+              <FontAwesomeIcon icon="fa-filter" />
+              <span
+                v-if="activeFilterCount > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+              >
+                {{ activeFilterCount }}
+                <span class="visually-hidden">active filters</span>
+              </span>
+            </button>
           </div>
-          <div class="g-col-12 g-col-md-3">
+          <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
             <label for="groceryItemSort" class="form-label visually-hidden">Sort</label>
             <select
               id="groceryItemSort"
@@ -514,112 +560,6 @@ watch(
               </option>
             </select>
           </div>
-
-          <!-- Mobile filters - only visible on screens smaller than lg -->
-          <div class="g-col-12 d-lg-none">
-            <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
-            <div id="filterAccordion" class="accordion">
-              <GroceryItemSearchStorageLocationsFilter
-                v-model="storageLocationsFilterModel"
-                :facet-values="storageLocationFacets"
-                parent-accordion-id="filterAccordion"
-              />
-              <GroceryItemSearchGroceryStoresFilter
-                v-model="groceryStoresFilterModel"
-                :facet-values="groceryStoreFacets"
-                parent-accordion-id="filterAccordion"
-              />
-              <GroceryItemSearchGroceryAislesFilter
-                v-model="groceryAislesFilterModel"
-                :facet-values="groceryAisleFacets"
-                parent-accordion-id="filterAccordion"
-              />
-              <div class="accordion-item">
-                <div class="accordion-header">
-                  <button
-                    class="accordion-button collapsed px-3 py-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#isUnusedCollapse"
-                    aria-expanded="false"
-                    aria-controls="isUnusedCollapse"
-                  >
-                    Unused{{ unusedFilterText }}
-                  </button>
-                </div>
-                <div
-                  id="isUnusedCollapse"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#filterAccordion"
-                >
-                  <div class="accordion-body">
-                    <div class="form-group">
-                      <div
-                        v-for="option in Choices.boolean"
-                        :key="option.value?.toString()"
-                        class="form-check"
-                      >
-                        <input
-                          :id="`isUnused-${option.value}`"
-                          v-model="listRequest.isUnused"
-                          class="form-check-input"
-                          type="radio"
-                          name="isUnused"
-                          :value="option.value"
-                          @change="startSearchNoHash"
-                        >
-                        <label class="form-check-label" :for="`isUnused-${option.value}`">
-                          {{ option.text }}{{ getUnusedFacetCount(option.value) }}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <div class="accordion-header">
-                  <button
-                    class="accordion-button collapsed px-3 py-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#isOutOfStockCollapse"
-                    aria-expanded="false"
-                    aria-controls="isOutOfStockCollapse"
-                  >
-                    Out of Stock{{ outOfStockFilterText }}
-                  </button>
-                </div>
-                <div
-                  id="isOutOfStockCollapse"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#filterAccordion"
-                >
-                  <div class="accordion-body">
-                    <div class="form-group">
-                      <div
-                        v-for="option in Choices.boolean"
-                        :key="option.value?.toString()"
-                        class="form-check"
-                      >
-                        <input
-                          :id="`isOutOfStock-${option.value}`"
-                          v-model="listRequest.isOutOfStock"
-                          class="form-check-input"
-                          type="radio"
-                          name="isOutOfStock"
-                          :value="option.value"
-                          @change="startSearchNoHash"
-                        >
-                        <label class="form-check-label" :for="`isOutOfStock-${option.value}`">
-                          {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div class="btn-toolbar">
@@ -633,8 +573,157 @@ watch(
             New
           </router-link>
         </div>
+
+        <Teleport to="body">
+          <div
+            id="groceryItemSearchOptions"
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            aria-labelledby="groceryItemSearchOptionsLabel"
+          >
+            <div class="offcanvas-header">
+              <h5 id="groceryItemSearchOptionsLabel" class="offcanvas-title">
+                Sort &amp; Filters
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              />
+            </div>
+            <div class="offcanvas-body">
+              <div class="mb-3">
+                <label for="groceryItemSortMobile" class="form-label">Sort</label>
+                <select
+                  id="groceryItemSortMobile"
+                  :value="listRequest.sortBy"
+                  name="groceryItemSortMobile"
+                  class="form-select"
+                  aria-label="Sort options"
+                  @change="changeSort"
+                >
+                  <option
+                    v-for="sortOption in sortOptions"
+                    :key="sortOption.value"
+                    :value="sortOption.value"
+                  >
+                    {{ sortOption.text }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Mobile filters - only visible on screens smaller than lg, otherwise shown in the left rail -->
+              <div class="d-lg-none">
+                <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
+                <div id="filterAccordion" class="accordion">
+                  <GroceryItemSearchStorageLocationsFilter
+                    v-model="storageLocationsFilterModel"
+                    :facet-values="storageLocationFacets"
+                    parent-accordion-id="filterAccordion"
+                  />
+                  <GroceryItemSearchGroceryStoresFilter
+                    v-model="groceryStoresFilterModel"
+                    :facet-values="groceryStoreFacets"
+                    parent-accordion-id="filterAccordion"
+                  />
+                  <GroceryItemSearchGroceryAislesFilter
+                    v-model="groceryAislesFilterModel"
+                    :facet-values="groceryAisleFacets"
+                    parent-accordion-id="filterAccordion"
+                  />
+                  <div class="accordion-item">
+                    <div class="accordion-header">
+                      <button
+                        class="accordion-button collapsed px-3 py-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#isUnusedCollapse"
+                        aria-expanded="false"
+                        aria-controls="isUnusedCollapse"
+                      >
+                        Unused{{ unusedFilterText }}
+                      </button>
+                    </div>
+                    <div
+                      id="isUnusedCollapse"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#filterAccordion"
+                    >
+                      <div class="accordion-body">
+                        <div class="form-group">
+                          <div
+                            v-for="option in Choices.boolean"
+                            :key="option.value?.toString()"
+                            class="form-check"
+                          >
+                            <input
+                              :id="`isUnused-${option.value}`"
+                              v-model="listRequest.isUnused"
+                              class="form-check-input"
+                              type="radio"
+                              name="isUnused"
+                              :value="option.value"
+                              @change="startSearchNoHash"
+                            >
+                            <label class="form-check-label" :for="`isUnused-${option.value}`">
+                              {{ option.text }}{{ getUnusedFacetCount(option.value) }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <div class="accordion-header">
+                      <button
+                        class="accordion-button collapsed px-3 py-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#isOutOfStockCollapse"
+                        aria-expanded="false"
+                        aria-controls="isOutOfStockCollapse"
+                      >
+                        Out of Stock{{ outOfStockFilterText }}
+                      </button>
+                    </div>
+                    <div
+                      id="isOutOfStockCollapse"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#filterAccordion"
+                    >
+                      <div class="accordion-body">
+                        <div class="form-group">
+                          <div
+                            v-for="option in Choices.boolean"
+                            :key="option.value?.toString()"
+                            class="form-check"
+                          >
+                            <input
+                              :id="`isOutOfStock-${option.value}`"
+                              v-model="listRequest.isOutOfStock"
+                              class="form-check-input"
+                              type="radio"
+                              name="isOutOfStock"
+                              :value="option.value"
+                              @change="startSearchNoHash"
+                            >
+                            <label class="form-check-label" :for="`isOutOfStock-${option.value}`">
+                              {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Teleport>
+
         <div id="search-results" class="mt-3">
-          {{ resultCountText }}
+          <small class="text-muted">{{ resultCountText }}</small>
         </div>
         <div class="grid mt-4">
           <div
