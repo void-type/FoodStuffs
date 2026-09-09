@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type bootstrap from 'bootstrap';
-import type { PropType, Ref } from 'vue';
+import type { PropType } from 'vue';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { onMounted, ref, watch } from 'vue';
@@ -61,30 +61,23 @@ const props = defineProps({
 const messageStore = useMessageStore();
 const imageLightboxStore = useImageLightboxStore();
 
-const uploadFile: Ref<File | null> = ref(null);
-const uploadInProgress = ref(false);
+const uploadingCount = ref(0);
+const isDragOver = ref(false);
 const carouselIndex = ref(0);
 const uniqueId = crypto.randomUUID();
 
-function uploadImageClick() {
-  if (uploadFile.value === null) {
-    return;
-  }
+const fileSizeLimit = 30000000;
 
-  const fileSizeLimit = 30000000;
+function toMiB(bytes: number) {
+  const mb = bytes / (1024 * 1024);
+  return Math.round(mb * 100) / 100;
+}
 
-  function toMiB(bytes: number) {
-    const mb = bytes / (1024 * 1024);
-    return Math.round(mb * 100) / 100;
-  }
-
-  if (uploadFile.value.size > fileSizeLimit) {
-    const sizeMiB = toMiB(uploadFile.value.size);
-    const limitMiB = toMiB(fileSizeLimit);
-
+function uploadFile(file: File) {
+  if (!file.type.startsWith('image/')) {
     messageStore.setValidationErrorMessages([
       {
-        message: `Your file (${sizeMiB} MB) exceeds the limit (${limitMiB} MB).`,
+        message: `"${file.name}" is not an image and was skipped.`,
         uiHandle: 'upload',
       },
     ]);
@@ -92,22 +85,54 @@ function uploadImageClick() {
     return;
   }
 
-  uploadInProgress.value = true;
+  if (file.size > fileSizeLimit) {
+    const sizeMiB = toMiB(file.size);
+    const limitMiB = toMiB(fileSizeLimit);
 
-  props.onImageUpload(uploadFile.value);
-}
+    messageStore.setValidationErrorMessages([
+      {
+        message: `"${file.name}" (${sizeMiB} MB) exceeds the limit (${limitMiB} MB).`,
+        uiHandle: 'upload',
+      },
+    ]);
 
-function uploadFileChange(event: Event | DragEvent) {
-  const files
-    = (event as HTMLInputEvent)?.target?.files
-      || (event as DragEvent)?.dataTransfer?.files
-      || new FileList();
-
-  if (files.length < 1) {
     return;
   }
 
-  uploadFile.value = files[0] || null;
+  uploadingCount.value += 1;
+
+  props.onImageUpload(file);
+}
+
+function processFiles(files: FileList | null) {
+  if (files === null || files.length < 1) {
+    return;
+  }
+
+  Array.from(files).forEach(uploadFile);
+}
+
+function uploadFileChange(event: Event) {
+  const input = (event as HTMLInputEvent).target;
+
+  processFiles(input?.files || null);
+
+  if (input !== null && input !== undefined) {
+    input.value = '';
+  }
+}
+
+function dropzoneDrop(event: DragEvent) {
+  isDragOver.value = false;
+  processFiles(event.dataTransfer?.files || null);
+}
+
+function dropzoneDragOver() {
+  isDragOver.value = true;
+}
+
+function dropzoneDragLeave() {
+  isDragOver.value = false;
 }
 
 function deleteImageClick(name: string) {
@@ -132,21 +157,14 @@ watch([() => props.recipeChangedToken], () => {
 watch(
   () => props.imageUploadSuccessToken,
   () => {
-    const fileInput = document.getElementById('upload-file') as HTMLInputElement;
-
-    if (fileInput !== null) {
-      fileInput.value = '';
-    }
-
-    uploadFile.value = null;
-    uploadInProgress.value = false;
+    uploadingCount.value = Math.max(0, uploadingCount.value - 1);
   },
 );
 
 watch(
   () => props.imageUploadFailToken,
   () => {
-    uploadInProgress.value = false;
+    uploadingCount.value = Math.max(0, uploadingCount.value - 1);
   },
 );
 
@@ -167,25 +185,32 @@ onMounted(() => {
     <label for="upload-file" class="form-label">Upload image</label>
     <div class="grid">
       <div class="g-col-12 g-col-md-6">
-        <input
-          id="upload-file"
-          type="file"
-          class="form-control" :class="{
+        <label
+          for="upload-file"
+          class="upload-dropzone d-flex flex-column align-items-center justify-content-center text-center p-4"
+          :class="{
+            'is-dragover': isDragOver,
             'is-invalid': isFieldInError('upload-file'),
           }"
-          @drop="uploadFileChange"
-          @change="uploadFileChange"
+          @dragover.prevent="dropzoneDragOver"
+          @dragenter.prevent="dropzoneDragOver"
+          @dragleave.prevent="dropzoneDragLeave"
+          @drop.prevent="dropzoneDrop"
         >
-        <div class="btn-toolbar mt-3">
-          <button
-            class="btn btn-primary"
-            type="button"
-            :disabled="uploadFile === null || uploadInProgress"
-            @click.stop.prevent="uploadImageClick()"
+          <FontAwesomeIcon icon="fa-cloud-arrow-up" size="2x" class="mb-2 text-secondary" />
+          <span>Drag and drop images here, or click to browse</span>
+          <span v-if="uploadingCount > 0" class="text-primary mt-2">
+            Uploading {{ uploadingCount }} image{{ uploadingCount === 1 ? '' : 's' }}...
+          </span>
+          <input
+            id="upload-file"
+            type="file"
+            class="visually-hidden"
+            accept="image/*"
+            multiple
+            @change="uploadFileChange"
           >
-            {{ uploadInProgress ? 'Uploading...' : 'Upload' }}
-          </button>
-        </div>
+        </label>
       </div>
       <div class="g-col-12 g-col-md-6 text-center">
         <div
@@ -271,6 +296,26 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.upload-dropzone {
+  cursor: pointer;
+  border: 2px dashed var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  min-height: 100%;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+
+  &:hover,
+  &.is-dragover {
+    background-color: var(--bs-tertiary-bg);
+    border-color: var(--bs-primary);
+  }
+
+  &.is-invalid {
+    border-color: var(--bs-danger);
+  }
+}
+
 .image-button {
   position: absolute;
   top: 0;
