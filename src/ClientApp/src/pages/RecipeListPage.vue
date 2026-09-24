@@ -402,69 +402,75 @@ onUnmounted(() => {
     <div class="grid mt-3 gap-lg">
       <!-- Left rail filters - desktop only -->
       <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
-        <div>
-          <label class="form-label visually-hidden" for="filterAccordionDesktop">Filters</label>
-          <div id="filterAccordionDesktop" class="accordion">
-            <div class="accordion-item">
-              <div class="accordion-header">
-                <button
-                  class="accordion-button collapsed px-3 py-2"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#isForMealPlanningCollapseDesktop"
-                  aria-expanded="false"
-                  aria-controls="isForMealPlanningCollapseDesktop"
-                >
-                  For Meal Planning{{ mealPlanningFilterText }}
-                </button>
-              </div>
-              <div
-                id="isForMealPlanningCollapseDesktop"
-                class="accordion-collapse collapse"
-                data-bs-parent="#filterAccordionDesktop"
+        <div class="mb-3">
+          <span id="isForMealPlanningLabelDesktop" class="form-label d-block mb-1">For Meal Planning{{ mealPlanningFilterText }}</span>
+          <div class="btn-group" role="group" aria-labelledby="isForMealPlanningLabelDesktop">
+            <template v-for="option in Choices.boolean" :key="option.value?.toString()">
+              <input
+                :id="`isForMealPlanning-desktop-${option.value}`"
+                v-model="listRequest.isForMealPlanning"
+                class="btn-check"
+                type="radio"
+                name="isForMealPlanning_Desktop"
+                autocomplete="off"
+                :value="option.value"
+                @change="startSearchNoHash"
               >
-                <div class="accordion-body">
-                  <div>
-                    <div
-                      v-for="option in Choices.boolean"
-                      :key="option.value?.toString()"
-                      class="form-check"
-                    >
-                      <input
-                        :id="`isForMealPlanning-desktop-${option.value}`"
-                        v-model="listRequest.isForMealPlanning"
-                        class="form-check-input"
-                        type="radio"
-                        name="isForMealPlanning_Desktop"
-                        :value="option.value"
-                        @change="startSearchNoHash"
-                      >
-                      <label
-                        class="form-check-label"
-                        :for="`isForMealPlanning-desktop-${option.value}`"
-                      >
-                        {{ option.text }}{{ getMealFacetCount(option.value) }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <label
+                class="btn btn-outline-secondary btn-sm"
+                :for="`isForMealPlanning-desktop-${option.value}`"
+              >
+                {{ option.text }}{{ getMealFacetCount(option.value) }}
+              </label>
+            </template>
+          </div>
+        </div>
+        <div class="mb-3">
+          <ul id="filterTabsDesktop" class="nav nav-tabs" role="tablist" aria-label="Filters">
+            <li class="nav-item" role="presentation">
+              <button
+                id="categoriesTabDesktop"
+                class="nav-link active"
+                data-bs-toggle="tab"
+                data-bs-target="#categoriesTabPaneDesktop"
+                type="button"
+                role="tab"
+                aria-controls="categoriesTabPaneDesktop"
+                aria-selected="true"
+              >
+                Categories<span v-if="categoriesFilterModel.categories.length"> ({{ categoriesFilterModel.categories.length }})</span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                id="groceryItemsTabDesktop"
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#groceryItemsTabPaneDesktop"
+                type="button"
+                role="tab"
+                aria-controls="groceryItemsTabPaneDesktop"
+                aria-selected="false"
+              >
+                Grocery Items<span v-if="groceryItemsFilterModel.groceryItemIds.length"> ({{ groceryItemsFilterModel.groceryItemIds.length }})</span>
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content border border-top-0 rounded-bottom p-3">
             <RecipeSearchCategoriesFilter
               v-model="categoriesFilterModel"
               :facet-values="categoryFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
+              tab-pane-id="categoriesTabPaneDesktop"
+              active
             />
             <RecipeSearchGroceryItemsFilter
               v-model="groceryItemsFilterModel"
               :facet-values="groceryItemFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
+              tab-pane-id="groceryItemsTabPaneDesktop"
             />
           </div>
         </div>
-        <div class="d-flex gap-3 mt-3">
+        <div class="d-flex gap-3">
           <div class="form-check form-switch mb-0">
             <label class="form-check-label" for="useCompactViewDesktop">Compact</label>
             <input
@@ -597,65 +603,73 @@ onUnmounted(() => {
 
               <!-- Mobile filters - only visible on screens smaller than lg, otherwise shown in the left rail -->
               <div class="d-lg-none">
-                <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
-                <div id="filterAccordion" class="accordion">
-                  <div class="accordion-item">
-                    <div class="accordion-header">
-                      <button
-                        class="accordion-button collapsed px-3 py-2"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#isForMealPlanningCollapse"
-                        aria-expanded="false"
-                        aria-controls="isForMealPlanningCollapse"
+                <div class="mb-3">
+                  <span id="isForMealPlanningLabel" class="form-label d-block mb-1">For Meal Planning{{ mealPlanningFilterText }}</span>
+                  <div class="btn-group" role="group" aria-labelledby="isForMealPlanningLabel">
+                    <template v-for="option in Choices.boolean" :key="option.value?.toString()">
+                      <input
+                        :id="`isForMealPlanning-${option.value}`"
+                        v-model="listRequest.isForMealPlanning"
+                        class="btn-check"
+                        type="radio"
+                        name="isForMealPlanning"
+                        autocomplete="off"
+                        :value="option.value"
+                        @change="startSearchNoHash"
                       >
-                        For Meal Planning{{ mealPlanningFilterText }}
-                      </button>
-                    </div>
-                    <div
-                      id="isForMealPlanningCollapse"
-                      class="accordion-collapse collapse"
-                      data-bs-parent="#filterAccordion"
-                    >
-                      <div class="accordion-body">
-                        <div>
-                          <div
-                            v-for="option in Choices.boolean"
-                            :key="option.value?.toString()"
-                            class="form-check"
-                          >
-                            <input
-                              :id="`isForMealPlanning-${option.value}`"
-                              v-model="listRequest.isForMealPlanning"
-                              class="form-check-input"
-                              type="radio"
-                              name="isForMealPlanning"
-                              :value="option.value"
-                              @change="startSearchNoHash"
-                            >
-                            <label class="form-check-label" :for="`isForMealPlanning-${option.value}`">
-                              {{ option.text }}{{ getMealFacetCount(option.value) }}
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      <label class="btn btn-outline-secondary btn-sm" :for="`isForMealPlanning-${option.value}`">
+                        {{ option.text }}{{ getMealFacetCount(option.value) }}
+                      </label>
+                    </template>
                   </div>
+                </div>
+                <ul id="filterTabsMobile" class="nav nav-tabs" role="tablist" aria-label="Filters">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      id="categoriesTabMobile"
+                      class="nav-link active"
+                      data-bs-toggle="tab"
+                      data-bs-target="#categoriesTabPaneMobile"
+                      type="button"
+                      role="tab"
+                      aria-controls="categoriesTabPaneMobile"
+                      aria-selected="true"
+                    >
+                      Categories<span v-if="categoriesFilterModel.categories.length"> ({{ categoriesFilterModel.categories.length }})</span>
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      id="groceryItemsTabMobile"
+                      class="nav-link"
+                      data-bs-toggle="tab"
+                      data-bs-target="#groceryItemsTabPaneMobile"
+                      type="button"
+                      role="tab"
+                      aria-controls="groceryItemsTabPaneMobile"
+                      aria-selected="false"
+                    >
+                      Grocery Items<span v-if="groceryItemsFilterModel.groceryItemIds.length"> ({{ groceryItemsFilterModel.groceryItemIds.length }})</span>
+                    </button>
+                  </li>
+                </ul>
+                <div class="tab-content border border-top-0 rounded-bottom p-3 mb-3">
                   <RecipeSearchCategoriesFilter
                     v-model="categoriesFilterModel"
                     :facet-values="categoryFacets"
-                    parent-accordion-id="filterAccordion"
+                    tab-pane-id="categoriesTabPaneMobile"
+                    active
                   />
                   <RecipeSearchGroceryItemsFilter
                     v-model="groceryItemsFilterModel"
                     :facet-values="groceryItemFacets"
-                    parent-accordion-id="filterAccordion"
+                    tab-pane-id="groceryItemsTabPaneMobile"
                   />
                 </div>
               </div>
 
               <!-- View toggles - only visible on screens smaller than lg, otherwise shown in the left rail -->
-              <div class="d-flex gap-3 mt-3 d-lg-none">
+              <div class="d-flex gap-3 d-lg-none">
                 <div class="form-check form-switch mb-0">
                   <label class="form-check-label" for="useCompactView">Compact</label>
                   <input

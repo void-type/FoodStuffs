@@ -12,15 +12,14 @@ const props = defineProps({
     required: false,
     default: [],
   },
-  parentAccordionId: {
+  tabPaneId: {
     type: String,
-    required: false,
-    default: 'filterAccordion',
+    required: true,
   },
-  checkClass: {
-    type: String,
+  active: {
+    type: Boolean,
     required: false,
-    default: 'g-col-12 g-col-md-6 g-col-lg-4',
+    default: false,
   },
 });
 
@@ -62,74 +61,55 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="accordion-item">
-    <div class="accordion-header">
+  <div
+    :id="tabPaneId"
+    class="tab-pane fade"
+    :class="{ 'show active': active }"
+    role="tabpanel"
+    tabindex="0"
+  >
+    <div class="btn-toolbar mb-3">
       <button
-        class="accordion-button collapsed px-3 py-2"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#storageLocationsCollapse"
-        aria-expanded="false"
-        aria-controls="storageLocationsCollapse"
+        v-if="model.storageLocations.length"
+        class="btn btn-sm btn-secondary me-2"
+        @click.stop.prevent="model.storageLocations = []"
       >
-        <label for="storageLocationSearch">Storage Locations
-          <span v-if="model.storageLocations.length">
-            ({{ model.storageLocations.length }})
-          </span>
-        </label>
+        Select None
       </button>
+      <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
+        Select All
+      </button>
+      <div class="form-check form-switch my-auto">
+        <label
+          class="w-100"
+          for="matchAllStorageLocations"
+          aria-label="Match all selected storage locations"
+        >Match All</label>
+        <input
+          id="matchAllStorageLocations"
+          v-model="model.matchAllStorageLocations"
+          :checked="model.matchAllStorageLocations"
+          class="form-check-input"
+          type="checkbox"
+        >
+      </div>
     </div>
-    <div
-      id="storageLocationsCollapse"
-      class="accordion-collapse collapse"
-      :data-bs-parent="`#${props.parentAccordionId}`"
-    >
-      <div class="accordion-body">
-        <div class="btn-toolbar mb-3">
-          <button
-            v-if="model.storageLocations.length"
-            class="btn btn-sm btn-secondary me-2"
-            @click.stop.prevent="model.storageLocations = []"
-          >
-            Select None
-          </button>
-          <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
-            Select All
-          </button>
-          <div class="form-check form-switch my-auto">
-            <label
-              class="w-100"
-              for="matchAllStorageLocations"
-              aria-label="Match all selected storage locations"
-            >Match All</label>
-            <input
-              id="matchAllStorageLocations"
-              v-model="model.matchAllStorageLocations"
-              :checked="model.matchAllStorageLocations"
-              class="form-check-input"
-              type="checkbox"
-            >
-          </div>
-        </div>
-        <div class="grid slim-scroll storage-location-scroll">
-          <div
-            v-for="storageLocationOption in storageLocationOptions"
-            :key="storageLocationOption.id"
-            class="form-check m-0"
-            :class="checkClass"
-          >
-            <input
-              :id="`storageLocation-${storageLocationOption.id}`"
-              v-model.lazy.number="model.storageLocations"
-              class="form-check-input"
-              type="checkbox"
-              :value="storageLocationOption.id"
-            >
-            <label class="form-check-label" :for="`storageLocation-${storageLocationOption.id}`">
-              {{ storageLocationOption.name }}{{ getFacetCount(storageLocationOption.id) }}
-            </label>
-          </div>
-        </div>
+    <div class="grid slim-scroll storage-location-scroll">
+      <div
+        v-for="storageLocationOption in storageLocationOptions"
+        :key="storageLocationOption.id"
+        class="form-check m-0 g-col-12"
+      >
+        <input
+          :id="`storageLocation-${storageLocationOption.id}`"
+          v-model.lazy.number="model.storageLocations"
+          class="form-check-input"
+          type="checkbox"
+          :value="storageLocationOption.id"
+        >
+        <label class="form-check-label" :for="`storageLocation-${storageLocationOption.id}`">
+          {{ storageLocationOption.name }}{{ getFacetCount(storageLocationOption.id) }}
+        </label>
       </div>
     </div>
   </div>

@@ -12,15 +12,14 @@ const props = defineProps({
     required: false,
     default: [],
   },
-  parentAccordionId: {
+  tabPaneId: {
     type: String,
-    required: false,
-    default: 'filterAccordion',
+    required: true,
   },
-  checkClass: {
-    type: String,
+  active: {
+    type: Boolean,
     required: false,
-    default: 'g-col-12 g-col-md-6 g-col-lg-4',
+    default: false,
   },
 });
 
@@ -81,81 +80,62 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="accordion-item">
-    <div class="accordion-header">
+  <div
+    :id="tabPaneId"
+    class="tab-pane fade"
+    :class="{ 'show active': active }"
+    role="tabpanel"
+    tabindex="0"
+  >
+    <div class="btn-toolbar mb-3">
       <button
-        class="accordion-button collapsed px-3 py-2"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#categoriesCollapse"
-        aria-expanded="false"
-        aria-controls="categoriesCollapse"
+        v-if="model.categories.length"
+        class="btn btn-sm btn-secondary me-2"
+        @click.stop.prevent="model.categories = []"
       >
-        <label for="categorySearch">Categories
-          <span v-if="model.categories.length">
-            ({{ model.categories.length }})
-          </span>
-        </label>
+        Select None
       </button>
+      <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
+        Select All
+      </button>
+      <div class="form-check form-switch my-auto">
+        <label class="w-100" for="matchAllCategories" aria-label="Match all selected categories">Match All</label>
+        <input
+          id="matchAllCategories"
+          v-model="model.matchAllCategories"
+          :checked="model.matchAllCategories"
+          class="form-check-input"
+          type="checkbox"
+        >
+      </div>
     </div>
-    <div
-      id="categoriesCollapse"
-      class="accordion-collapse collapse"
-      :data-bs-parent="`#${props.parentAccordionId}`"
-    >
-      <div class="accordion-body">
-        <div class="btn-toolbar mb-3">
-          <button
-            v-if="model.categories.length"
-            class="btn btn-sm btn-secondary me-2"
-            @click.stop.prevent="model.categories = []"
-          >
-            Select None
-          </button>
-          <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
-            Select All
-          </button>
-          <div class="form-check form-switch my-auto">
-            <label class="w-100" for="matchAllCategories" aria-label="Match all selected categories">Match All</label>
-            <input
-              id="matchAllCategories"
-              v-model="model.matchAllCategories"
-              :checked="model.matchAllCategories"
-              class="form-check-input"
-              type="checkbox"
-            >
-          </div>
-        </div>
-        <div class="mb-2">
-          <input
-            id="categorySearch"
-            v-model="filterText"
-            type="search"
-            class="form-control form-control-sm"
-            placeholder="Filter categories..."
-            aria-label="Filter categories"
-          >
-        </div>
-        <div v-if="categoriesOverLimit" class="mb-2 text-muted small">
-          Showing {{ DISPLAY_LIMIT }} of {{ categoriesOverLimit }} — refine filter to see more.
-        </div>
-        <div class="grid category-scroll">
-          <div
-            v-for="categoryOption in categoryOptions"
-            :key="categoryOption.id"
-            class="form-check m-0"
-            :class="checkClass"
-          >
-            <input
-              :id="`category-${categoryOption.id}`"
-              v-model.lazy.number="model.categories"
-              class="form-check-input"
-              type="checkbox"
-              :value="categoryOption.id"
-            >
-            <label class="form-check-label" :for="`category-${categoryOption.id}`">{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label>
-          </div>
-        </div>
+    <div class="mb-2">
+      <input
+        id="categorySearch"
+        v-model="filterText"
+        type="search"
+        class="form-control form-control-sm"
+        placeholder="Filter categories..."
+        aria-label="Filter categories"
+      >
+    </div>
+    <div v-if="categoriesOverLimit" class="mb-2 text-muted small">
+      Showing {{ DISPLAY_LIMIT }} of {{ categoriesOverLimit }} — refine filter to see more.
+    </div>
+    <div class="grid category-scroll">
+      <div
+        v-for="categoryOption in categoryOptions"
+        :key="categoryOption.id"
+        class="form-check m-0 g-col-12"
+      >
+        <input
+          :id="`category-${categoryOption.id}`"
+          v-model.lazy.number="model.categories"
+          class="form-check-input"
+          type="checkbox"
+          :value="categoryOption.id"
+        >
+        <label class="form-check-label" :for="`category-${categoryOption.id}`">{{ categoryOption.name }}{{ getFacetCount(categoryOption.id) }}</label>
       </div>
     </div>
   </div>

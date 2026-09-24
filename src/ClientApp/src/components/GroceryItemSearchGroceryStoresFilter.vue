@@ -12,15 +12,14 @@ const props = defineProps({
     required: false,
     default: [],
   },
-  parentAccordionId: {
+  tabPaneId: {
     type: String,
-    required: false,
-    default: 'filterAccordion',
+    required: true,
   },
-  checkClass: {
-    type: String,
+  active: {
+    type: Boolean,
     required: false,
-    default: 'g-col-12 g-col-md-6 g-col-lg-4',
+    default: false,
   },
 });
 
@@ -62,74 +61,55 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="accordion-item">
-    <div class="accordion-header">
+  <div
+    :id="tabPaneId"
+    class="tab-pane fade"
+    :class="{ 'show active': active }"
+    role="tabpanel"
+    tabindex="0"
+  >
+    <div class="btn-toolbar mb-3">
       <button
-        class="accordion-button collapsed px-3 py-2"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#groceryStoresCollapse"
-        aria-expanded="false"
-        aria-controls="groceryStoresCollapse"
+        v-if="model.groceryStores.length"
+        class="btn btn-sm btn-secondary me-2"
+        @click.stop.prevent="model.groceryStores = []"
       >
-        <label for="groceryStoreSearch">Grocery Stores
-          <span v-if="model.groceryStores.length">
-            ({{ model.groceryStores.length }})
-          </span>
-        </label>
+        Select None
       </button>
+      <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
+        Select All
+      </button>
+      <div class="form-check form-switch my-auto">
+        <label
+          class="w-100"
+          for="matchAllGroceryStores"
+          aria-label="Match all selected grocery stores"
+        >Match All</label>
+        <input
+          id="matchAllGroceryStores"
+          v-model="model.matchAllGroceryStores"
+          :checked="model.matchAllGroceryStores"
+          class="form-check-input"
+          type="checkbox"
+        >
+      </div>
     </div>
-    <div
-      id="groceryStoresCollapse"
-      class="accordion-collapse collapse"
-      :data-bs-parent="`#${props.parentAccordionId}`"
-    >
-      <div class="accordion-body">
-        <div class="btn-toolbar mb-3">
-          <button
-            v-if="model.groceryStores.length"
-            class="btn btn-sm btn-secondary me-2"
-            @click.stop.prevent="model.groceryStores = []"
-          >
-            Select None
-          </button>
-          <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
-            Select All
-          </button>
-          <div class="form-check form-switch my-auto">
-            <label
-              class="w-100"
-              for="matchAllGroceryStores"
-              aria-label="Match all selected grocery stores"
-            >Match All</label>
-            <input
-              id="matchAllGroceryStores"
-              v-model="model.matchAllGroceryStores"
-              :checked="model.matchAllGroceryStores"
-              class="form-check-input"
-              type="checkbox"
-            >
-          </div>
-        </div>
-        <div class="grid slim-scroll grocery-store-scroll">
-          <div
-            v-for="groceryStoreOption in groceryStoreOptions"
-            :key="groceryStoreOption.id"
-            class="form-check m-0"
-            :class="checkClass"
-          >
-            <input
-              :id="`groceryStore-${groceryStoreOption.id}`"
-              v-model.lazy.number="model.groceryStores"
-              class="form-check-input"
-              type="checkbox"
-              :value="groceryStoreOption.id"
-            >
-            <label class="form-check-label" :for="`groceryStore-${groceryStoreOption.id}`">
-              {{ groceryStoreOption.name }}{{ getFacetCount(groceryStoreOption.id) }}
-            </label>
-          </div>
-        </div>
+    <div class="grid slim-scroll grocery-store-scroll">
+      <div
+        v-for="groceryStoreOption in groceryStoreOptions"
+        :key="groceryStoreOption.id"
+        class="form-check m-0 g-col-12"
+      >
+        <input
+          :id="`groceryStore-${groceryStoreOption.id}`"
+          v-model.lazy.number="model.groceryStores"
+          class="form-check-input"
+          type="checkbox"
+          :value="groceryStoreOption.id"
+        >
+        <label class="form-check-label" :for="`groceryStore-${groceryStoreOption.id}`">
+          {{ groceryStoreOption.name }}{{ getFacetCount(groceryStoreOption.id) }}
+        </label>
       </div>
     </div>
   </div>

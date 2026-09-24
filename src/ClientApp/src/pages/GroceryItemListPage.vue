@@ -395,111 +395,108 @@ watch(
     <div class="grid mt-3 gap-lg">
       <!-- Left rail filters - desktop only -->
       <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
+        <div class="mb-3">
+          <span id="isOutOfStockLabelDesktop" class="form-label d-block mb-1">Out of Stock{{ outOfStockFilterText }}</span>
+          <div class="btn-group" role="group" aria-labelledby="isOutOfStockLabelDesktop">
+            <template v-for="option in Choices.boolean" :key="option.value?.toString()">
+              <input
+                :id="`isOutOfStockDesktop-${option.value}`"
+                v-model="listRequest.isOutOfStock"
+                class="btn-check"
+                type="radio"
+                name="isOutOfStockDesktop"
+                autocomplete="off"
+                :value="option.value"
+                @change="startSearchNoHash"
+              >
+              <label class="btn btn-outline-secondary btn-sm" :for="`isOutOfStockDesktop-${option.value}`">
+                {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
+              </label>
+            </template>
+          </div>
+        </div>
+        <div class="mb-3">
+          <span id="isUnusedLabelDesktop" class="form-label d-block mb-1">Unused{{ unusedFilterText }}</span>
+          <div class="btn-group" role="group" aria-labelledby="isUnusedLabelDesktop">
+            <template v-for="option in Choices.boolean" :key="option.value?.toString()">
+              <input
+                :id="`isUnusedDesktop-${option.value}`"
+                v-model="listRequest.isUnused"
+                class="btn-check"
+                type="radio"
+                name="isUnusedDesktop"
+                autocomplete="off"
+                :value="option.value"
+                @change="startSearchNoHash"
+              >
+              <label class="btn btn-outline-secondary btn-sm" :for="`isUnusedDesktop-${option.value}`">
+                {{ option.text }}{{ getUnusedFacetCount(option.value) }}
+              </label>
+            </template>
+          </div>
+        </div>
         <div>
-          <label class="form-label visually-hidden" for="filterAccordionDesktop">Filters</label>
-          <div id="filterAccordionDesktop" class="accordion">
+          <ul id="filterTabsDesktop" class="nav nav-tabs" role="tablist" aria-label="Filters">
+            <li class="nav-item" role="presentation">
+              <button
+                id="storageLocationsTabDesktop"
+                class="nav-link active"
+                data-bs-toggle="tab"
+                data-bs-target="#storageLocationsTabPaneDesktop"
+                type="button"
+                role="tab"
+                aria-controls="storageLocationsTabPaneDesktop"
+                aria-selected="true"
+              >
+                Storage Locations<span v-if="storageLocationsFilterModel.storageLocations.length"> ({{ storageLocationsFilterModel.storageLocations.length }})</span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                id="groceryStoresTabDesktop"
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#groceryStoresTabPaneDesktop"
+                type="button"
+                role="tab"
+                aria-controls="groceryStoresTabPaneDesktop"
+                aria-selected="false"
+              >
+                Grocery Stores<span v-if="groceryStoresFilterModel.groceryStores.length"> ({{ groceryStoresFilterModel.groceryStores.length }})</span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                id="groceryAislesTabDesktop"
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#groceryAislesTabPaneDesktop"
+                type="button"
+                role="tab"
+                aria-controls="groceryAislesTabPaneDesktop"
+                aria-selected="false"
+              >
+                Grocery Aisles<span v-if="groceryAislesFilterModel.groceryAisles.length"> ({{ groceryAislesFilterModel.groceryAisles.length }})</span>
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content border border-top-0 rounded-bottom p-3">
             <GroceryItemSearchStorageLocationsFilter
               v-model="storageLocationsFilterModel"
               :facet-values="storageLocationFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
+              tab-pane-id="storageLocationsTabPaneDesktop"
+              active
             />
             <GroceryItemSearchGroceryStoresFilter
               v-model="groceryStoresFilterModel"
               :facet-values="groceryStoreFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
+              tab-pane-id="groceryStoresTabPaneDesktop"
             />
             <GroceryItemSearchGroceryAislesFilter
               v-model="groceryAislesFilterModel"
               :facet-values="groceryAisleFacets"
-              parent-accordion-id="filterAccordionDesktop"
-              check-class="g-col-12"
+              tab-pane-id="groceryAislesTabPaneDesktop"
             />
-            <div class="accordion-item">
-              <div class="accordion-header ">
-                <button
-                  class="accordion-button collapsed px-3 py-2"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#isUnusedCollapseDesktop"
-                  aria-expanded="false"
-                  aria-controls="isUnusedCollapseDesktop"
-                >
-                  Unused{{ unusedFilterText }}
-                </button>
-              </div>
-              <div
-                id="isUnusedCollapseDesktop"
-                class="accordion-collapse collapse"
-                data-bs-parent="#filterAccordionDesktop"
-              >
-                <div class="accordion-body">
-                  <div class="form-group">
-                    <div
-                      v-for="option in Choices.boolean"
-                      :key="option.value?.toString()"
-                      class="form-check"
-                    >
-                      <input
-                        :id="`isUnusedDesktop-${option.value}`"
-                        v-model="listRequest.isUnused"
-                        class="form-check-input"
-                        type="radio"
-                        name="isUnusedDesktop"
-                        :value="option.value"
-                        @change="startSearchNoHash"
-                      >
-                      <label class="form-check-label" :for="`isUnusedDesktop-${option.value}`">
-                        {{ option.text }}{{ getUnusedFacetCount(option.value) }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <div class="accordion-header">
-                <button
-                  class="accordion-button collapsed px-3 py-2"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#isOutOfStockCollapseDesktop"
-                  aria-expanded="false"
-                  aria-controls="isOutOfStockCollapseDesktop"
-                >
-                  Out of Stock{{ outOfStockFilterText }}
-                </button>
-              </div>
-              <div
-                id="isOutOfStockCollapseDesktop"
-                class="accordion-collapse collapse"
-                data-bs-parent="#filterAccordionDesktop"
-              >
-                <div class="accordion-body">
-                  <div class="form-group">
-                    <div
-                      v-for="option in Choices.boolean"
-                      :key="option.value?.toString()"
-                      class="form-check"
-                    >
-                      <input
-                        :id="`isOutOfStockDesktop-${option.value}`"
-                        v-model="listRequest.isOutOfStock"
-                        class="form-check-input"
-                        type="radio"
-                        name="isOutOfStockDesktop"
-                        :value="option.value"
-                        @change="startSearchNoHash"
-                      >
-                      <label class="form-check-label" :for="`isOutOfStockDesktop-${option.value}`">
-                        {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -613,107 +610,107 @@ watch(
 
               <!-- Mobile filters - only visible on screens smaller than lg, otherwise shown in the left rail -->
               <div class="d-lg-none">
-                <label class="form-label visually-hidden" for="filterAccordion">Filters</label>
-                <div id="filterAccordion" class="accordion">
+                <div class="mb-3">
+                  <span id="isOutOfStockLabel" class="form-label d-block mb-1">Out of Stock{{ outOfStockFilterText }}</span>
+                  <div class="btn-group" role="group" aria-labelledby="isOutOfStockLabel">
+                    <template v-for="option in Choices.boolean" :key="option.value?.toString()">
+                      <input
+                        :id="`isOutOfStock-${option.value}`"
+                        v-model="listRequest.isOutOfStock"
+                        class="btn-check"
+                        type="radio"
+                        name="isOutOfStock"
+                        autocomplete="off"
+                        :value="option.value"
+                        @change="startSearchNoHash"
+                      >
+                      <label class="btn btn-outline-secondary btn-sm" :for="`isOutOfStock-${option.value}`">
+                        {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
+                      </label>
+                    </template>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <span id="isUnusedLabel" class="form-label d-block mb-1">Unused{{ unusedFilterText }}</span>
+                  <div class="btn-group" role="group" aria-labelledby="isUnusedLabel">
+                    <template v-for="option in Choices.boolean" :key="option.value?.toString()">
+                      <input
+                        :id="`isUnused-${option.value}`"
+                        v-model="listRequest.isUnused"
+                        class="btn-check"
+                        type="radio"
+                        name="isUnused"
+                        autocomplete="off"
+                        :value="option.value"
+                        @change="startSearchNoHash"
+                      >
+                      <label class="btn btn-outline-secondary btn-sm" :for="`isUnused-${option.value}`">
+                        {{ option.text }}{{ getUnusedFacetCount(option.value) }}
+                      </label>
+                    </template>
+                  </div>
+                </div>
+                <ul id="filterTabsMobile" class="nav nav-tabs" role="tablist" aria-label="Filters">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      id="storageLocationsTabMobile"
+                      class="nav-link active"
+                      data-bs-toggle="tab"
+                      data-bs-target="#storageLocationsTabPaneMobile"
+                      type="button"
+                      role="tab"
+                      aria-controls="storageLocationsTabPaneMobile"
+                      aria-selected="true"
+                    >
+                      Storage Locations<span v-if="storageLocationsFilterModel.storageLocations.length"> ({{ storageLocationsFilterModel.storageLocations.length }})</span>
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      id="groceryStoresTabMobile"
+                      class="nav-link"
+                      data-bs-toggle="tab"
+                      data-bs-target="#groceryStoresTabPaneMobile"
+                      type="button"
+                      role="tab"
+                      aria-controls="groceryStoresTabPaneMobile"
+                      aria-selected="false"
+                    >
+                      Grocery Stores<span v-if="groceryStoresFilterModel.groceryStores.length"> ({{ groceryStoresFilterModel.groceryStores.length }})</span>
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      id="groceryAislesTabMobile"
+                      class="nav-link"
+                      data-bs-toggle="tab"
+                      data-bs-target="#groceryAislesTabPaneMobile"
+                      type="button"
+                      role="tab"
+                      aria-controls="groceryAislesTabPaneMobile"
+                      aria-selected="false"
+                    >
+                      Grocery Aisles<span v-if="groceryAislesFilterModel.groceryAisles.length"> ({{ groceryAislesFilterModel.groceryAisles.length }})</span>
+                    </button>
+                  </li>
+                </ul>
+                <div class="tab-content border border-top-0 rounded-bottom p-3">
                   <GroceryItemSearchStorageLocationsFilter
                     v-model="storageLocationsFilterModel"
                     :facet-values="storageLocationFacets"
-                    parent-accordion-id="filterAccordion"
+                    tab-pane-id="storageLocationsTabPaneMobile"
+                    active
                   />
                   <GroceryItemSearchGroceryStoresFilter
                     v-model="groceryStoresFilterModel"
                     :facet-values="groceryStoreFacets"
-                    parent-accordion-id="filterAccordion"
+                    tab-pane-id="groceryStoresTabPaneMobile"
                   />
                   <GroceryItemSearchGroceryAislesFilter
                     v-model="groceryAislesFilterModel"
                     :facet-values="groceryAisleFacets"
-                    parent-accordion-id="filterAccordion"
+                    tab-pane-id="groceryAislesTabPaneMobile"
                   />
-                  <div class="accordion-item">
-                    <div class="accordion-header">
-                      <button
-                        class="accordion-button collapsed px-3 py-2"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#isUnusedCollapse"
-                        aria-expanded="false"
-                        aria-controls="isUnusedCollapse"
-                      >
-                        Unused{{ unusedFilterText }}
-                      </button>
-                    </div>
-                    <div
-                      id="isUnusedCollapse"
-                      class="accordion-collapse collapse"
-                      data-bs-parent="#filterAccordion"
-                    >
-                      <div class="accordion-body">
-                        <div class="form-group">
-                          <div
-                            v-for="option in Choices.boolean"
-                            :key="option.value?.toString()"
-                            class="form-check"
-                          >
-                            <input
-                              :id="`isUnused-${option.value}`"
-                              v-model="listRequest.isUnused"
-                              class="form-check-input"
-                              type="radio"
-                              name="isUnused"
-                              :value="option.value"
-                              @change="startSearchNoHash"
-                            >
-                            <label class="form-check-label" :for="`isUnused-${option.value}`">
-                              {{ option.text }}{{ getUnusedFacetCount(option.value) }}
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-                    <div class="accordion-header">
-                      <button
-                        class="accordion-button collapsed px-3 py-2"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#isOutOfStockCollapse"
-                        aria-expanded="false"
-                        aria-controls="isOutOfStockCollapse"
-                      >
-                        Out of Stock{{ outOfStockFilterText }}
-                      </button>
-                    </div>
-                    <div
-                      id="isOutOfStockCollapse"
-                      class="accordion-collapse collapse"
-                      data-bs-parent="#filterAccordion"
-                    >
-                      <div class="accordion-body">
-                        <div class="form-group">
-                          <div
-                            v-for="option in Choices.boolean"
-                            :key="option.value?.toString()"
-                            class="form-check"
-                          >
-                            <input
-                              :id="`isOutOfStock-${option.value}`"
-                              v-model="listRequest.isOutOfStock"
-                              class="form-check-input"
-                              type="radio"
-                              name="isOutOfStock"
-                              :value="option.value"
-                              @change="startSearchNoHash"
-                            >
-                            <label class="form-check-label" :for="`isOutOfStock-${option.value}`">
-                              {{ option.text }}{{ getOutOfStockFacetCount(option.value) }}
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

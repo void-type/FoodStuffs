@@ -12,15 +12,14 @@ const props = defineProps({
     required: false,
     default: [],
   },
-  parentAccordionId: {
+  tabPaneId: {
     type: String,
-    required: false,
-    default: 'filterAccordion',
+    required: true,
   },
-  checkClass: {
-    type: String,
+  active: {
+    type: Boolean,
     required: false,
-    default: 'g-col-12 g-col-md-6 g-col-lg-4',
+    default: false,
   },
 });
 
@@ -62,60 +61,41 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="accordion-item">
-    <div class="accordion-header">
+  <div
+    :id="tabPaneId"
+    class="tab-pane fade"
+    :class="{ 'show active': active }"
+    role="tabpanel"
+    tabindex="0"
+  >
+    <div class="btn-toolbar mb-3">
       <button
-        class="accordion-button collapsed px-3 py-2"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#groceryAislesCollapse"
-        aria-expanded="false"
-        aria-controls="groceryAislesCollapse"
+        v-if="model.groceryAisles.length"
+        class="btn btn-sm btn-secondary me-2"
+        @click.stop.prevent="model.groceryAisles = []"
       >
-        <label for="groceryAisleSearch">Grocery Aisles
-          <span v-if="model.groceryAisles.length">
-            ({{ model.groceryAisles.length }})
-          </span>
-        </label>
+        Select None
+      </button>
+      <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
+        Select All
       </button>
     </div>
-    <div
-      id="groceryAislesCollapse"
-      class="accordion-collapse collapse"
-      :data-bs-parent="`#${props.parentAccordionId}`"
-    >
-      <div class="accordion-body">
-        <div class="btn-toolbar mb-3">
-          <button
-            v-if="model.groceryAisles.length"
-            class="btn btn-sm btn-secondary me-2"
-            @click.stop.prevent="model.groceryAisles = []"
-          >
-            Select None
-          </button>
-          <button v-else class="btn btn-sm btn-secondary me-2" @click.stop.prevent="selectAll">
-            Select All
-          </button>
-        </div>
-        <div class="grid slim-scroll grocery-aisle-scroll">
-          <div
-            v-for="groceryAisleOption in groceryAisleOptions"
-            :key="groceryAisleOption.id"
-            class="form-check m-0"
-            :class="checkClass"
-          >
-            <input
-              :id="`groceryAisle-${groceryAisleOption.id}`"
-              v-model.lazy.number="model.groceryAisles"
-              class="form-check-input"
-              type="checkbox"
-              :value="groceryAisleOption.id"
-            >
-            <label class="form-check-label" :for="`groceryAisle-${groceryAisleOption.id}`">
-              {{ groceryAisleOption.name }}{{ getFacetCount(groceryAisleOption.id) }}
-            </label>
-          </div>
-        </div>
+    <div class="grid slim-scroll grocery-aisle-scroll">
+      <div
+        v-for="groceryAisleOption in groceryAisleOptions"
+        :key="groceryAisleOption.id"
+        class="form-check m-0 g-col-12"
+      >
+        <input
+          :id="`groceryAisle-${groceryAisleOption.id}`"
+          v-model.lazy.number="model.groceryAisles"
+          class="form-check-input"
+          type="checkbox"
+          :value="groceryAisleOption.id"
+        >
+        <label class="form-check-label" :for="`groceryAisle-${groceryAisleOption.id}`">
+          {{ groceryAisleOption.name }}{{ getFacetCount(groceryAisleOption.id) }}
+        </label>
       </div>
     </div>
   </div>
