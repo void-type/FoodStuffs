@@ -436,7 +436,7 @@ watch(
           </div>
         </div>
         <div>
-          <ul id="filterTabsDesktop" class="nav nav-tabs nav-fill" role="tablist" aria-label="Filters">
+          <ul id="filterTabsDesktop" class="nav nav-tabs nav-justified" role="tablist" aria-label="Filters">
             <li class="nav-item" role="presentation">
               <button
                 id="storageLocationsTabDesktop"
@@ -650,7 +650,7 @@ watch(
                     </template>
                   </div>
                 </div>
-                <ul id="filterTabsMobile" class="nav nav-tabs nav-fill" role="tablist" aria-label="Filters">
+                <ul id="filterTabsMobile" class="nav nav-tabs nav-justified" role="tablist" aria-label="Filters">
                   <li class="nav-item" role="presentation">
                     <button
                       id="storageLocationsTabMobile"
