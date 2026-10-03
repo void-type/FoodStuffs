@@ -1,4 +1,4 @@
-import { Collapse } from 'bootstrap';
+import { Collapse, Offcanvas } from 'bootstrap';
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RouterHelper from '@/models/RouterHelper';
@@ -273,6 +273,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // Close any open offcanvas (e.g. mobile filter flyouts) before navigating away.
+  // This must happen before the page unmounts so Bootstrap can properly remove its backdrop.
+  document.querySelectorAll<HTMLElement>('.offcanvas.show').forEach((el) => {
+    Offcanvas.getInstance(el)?.hide();
+  });
+
   next();
 });
 
