@@ -426,7 +426,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="mb-3">
-          <ul id="filterTabsDesktop" class="nav nav-tabs" role="tablist" aria-label="Filters">
+          <ul id="filterTabsDesktop" class="nav nav-tabs nav-justified" role="tablist" aria-label="Filters">
             <li class="nav-item" role="presentation">
               <button
                 id="categoriesTabDesktop"
@@ -623,7 +623,7 @@ onUnmounted(() => {
                     </template>
                   </div>
                 </div>
-                <ul id="filterTabsMobile" class="nav nav-tabs" role="tablist" aria-label="Filters">
+                <ul id="filterTabsMobile" class="nav nav-tabs nav-justified" role="tablist" aria-label="Filters">
                   <li class="nav-item" role="presentation">
                     <button
                       id="categoriesTabMobile"
