@@ -273,11 +273,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // Close any open offcanvas (e.g. mobile filter flyouts) before navigating away.
-  // This must happen before the page unmounts so Bootstrap can properly remove its backdrop.
-  document.querySelectorAll<HTMLElement>('.offcanvas.show').forEach((el) => {
-    Offcanvas.getInstance(el)?.hide();
-  });
+  // Close any open offcanvas (e.g. mobile filter flyouts) when actually leaving a page.
+  // Filter changes re-navigate to the same route name with a different query, so those
+  // shouldn't close the flyout. This must happen before the page unmounts so Bootstrap
+  // can properly remove its backdrop.
+  if (to.name !== from.name) {
+    document.querySelectorAll<HTMLElement>('.offcanvas.show').forEach((el) => {
+      Offcanvas.getInstance(el)?.hide();
+    });
+  }
 
   next();
 });
