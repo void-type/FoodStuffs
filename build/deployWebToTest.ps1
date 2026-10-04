@@ -1,6 +1,11 @@
 # Run this script as a server administrator from the scripts directory
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
-param()
+param(
+  # Use the already-built app (dotnet ef --no-build) to run the database migration
+  # instead of rebuilding. Use this when the app is running locally, since a
+  # rebuild would fail on locked files and leave the app offline.
+  [switch] $NoBuild
+)
 
 function Stop-OnError([string]$errorMessage) {
   if ($LASTEXITCODE -eq 0) {
@@ -45,7 +50,9 @@ try {
       '--connection', "$connectionString"
     )
 
-    .$PSScriptRoot/dbApplyMigration.ps1 -AdditionalArgs $migrationArgs
+    # Release matches build.ps1's default configuration, so this applies the migration
+    # using the same compiled assemblies that were published to $webReleaseFolder.
+    .$PSScriptRoot/dbApplyMigration.ps1 -AdditionalArgs $migrationArgs -NoBuild:$NoBuild -Configuration 'Release'
     Stop-OnError -errorMessage 'Database migration failed.'
 
     Start-Sleep 5
