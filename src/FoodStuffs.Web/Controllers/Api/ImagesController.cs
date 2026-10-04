@@ -30,6 +30,9 @@ public class ImagesController : ControllerBase
 
         return await getHandler
             .Handle(request)
+            // Image file names are unique (GUID-based) and are never modified in place, so successful
+            // responses can be cached by browsers and proxies indefinitely.
+            .TeeOnSuccessAsync(() => Response.Headers.CacheControl = "public, max-age=31536000, immutable")
             .MapAsync(HttpResponder.RespondWithInlineFile);
     }
 
