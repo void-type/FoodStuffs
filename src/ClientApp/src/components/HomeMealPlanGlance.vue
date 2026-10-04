@@ -15,6 +15,13 @@ const messageStore = useMessageStore();
 
 const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 
+// Mirror MealPlanEditPage's display order: incomplete recipes (in plan order) first, then completed.
+const orderedCurrentRecipes = computed(() => {
+  const incomplete = currentRecipes.value.filter(recipe => !recipe.isComplete);
+  const completed = currentRecipes.value.filter(recipe => recipe.isComplete);
+  return [...incomplete, ...completed];
+});
+
 const latestMealPlanId = ref<number | null>(null);
 const latestMealPlanName = ref('');
 
@@ -72,7 +79,7 @@ onMounted(fetchLatestMealPlan);
     </p>
     <div v-if="currentRecipes.length > 0" class="grid">
       <RecipeCard
-        v-for="recipe in currentRecipes"
+        v-for="recipe in orderedCurrentRecipes"
         :key="recipe.id"
         :recipe="recipe"
         class="g-col-6 g-col-md-3"

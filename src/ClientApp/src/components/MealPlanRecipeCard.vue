@@ -77,58 +77,38 @@ const imageLightboxStore = useImageLightboxStore();
           </router-link>
         </div>
         <div class="card-body">
-          <div class="btn-toolbar mt-2">
-            <span>
-              <TagBadge
-                v-for="tag in recipe.categories"
-                :key="tag.name"
-                :tag="tag"
-                class="mb-1 me-1"
-              />
-            </span>
-            <button
-              :id="`overflowMenuButton-recipe-${recipe.id}`"
-              class="btn btn-sm btn-secondary dropdown-toggle ms-auto"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              More
-            </button>
-            <div
-              class="dropdown-menu p-3"
-              :aria-labelledby="`overflowMenuButton-recipe-${recipe.id}`"
-            >
-              <div v-if="!isCurrentPlan">
-                <button
-                  class="btn btn-sm btn-secondary mb-2"
-                  @click.prevent.stop="() => emit('recipeRemoved', recipe)"
-                >
-                  Remove From This Plan
-                </button>
-              </div>
-              <div>
-                <RecipeCurrentMealPlanButton class="btn-sm mb-2" :recipe-id="recipe.id" />
-              </div>
-              <div>
-                <router-link
-                  type="button"
-                  class="btn btn-sm btn-secondary"
-                  aria-label="edit recipe"
-                  :to="RouterHelper.editRecipe(recipe)"
-                  @click.stop
-                >
-                  Edit Recipe
-                </router-link>
-              </div>
-            </div>
+          <div class="mt-2">
+            <TagBadge
+              v-for="tag in recipe.categories"
+              :key="tag.name"
+              :tag="tag"
+              class="mb-1 me-1"
+            />
+          </div>
+          <div v-if="(recipe.mealPlanningSidesCount || 0) > 0" class="mt-2">
+            {{ recipe.mealPlanningSidesCount }} side{{ recipe.mealPlanningSidesCount !== 1 ? 's' : '' }} needed.
           </div>
           <div class="mt-3 d-flex justify-content-between align-items-center">
-            <div>
-              <span v-if="(recipe.mealPlanningSidesCount || 0) > 0">{{ recipe.mealPlanningSidesCount }} side{{
-                recipe.mealPlanningSidesCount !== 1 ? 's' : ''
-              }}
-                needed.</span>
+            <div class="d-flex align-items-center gap-2">
+              <router-link
+                type="button"
+                class="btn btn-dark btn-sm opacity-75 d-print-none"
+                aria-label="Edit recipe"
+                :to="RouterHelper.editRecipe(recipe)"
+                @click.stop
+              >
+                <FontAwesomeIcon icon="fa-pen" />
+              </router-link>
+              <button
+                v-if="!isCurrentPlan"
+                type="button"
+                class="btn btn-dark btn-sm opacity-75 d-print-none"
+                aria-label="Remove recipe from this plan"
+                @click.prevent.stop="() => emit('recipeRemoved', recipe)"
+              >
+                <FontAwesomeIcon icon="fa-times" />
+              </button>
+              <RecipeCurrentMealPlanButton class="btn-sm" invert :recipe-id="recipe.id" />
             </div>
             <div class="form-check my-auto">
               <input

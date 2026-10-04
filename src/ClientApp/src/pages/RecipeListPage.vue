@@ -705,7 +705,7 @@ onUnmounted(() => {
             :recipe="recipe"
             :lazy="i > 6"
             :show-compact-view="useCompactView"
-            class="g-col-12 g-col-sm-6"
+            class="g-col-6 g-col-md-3"
           />
         </div>
         <div v-if="!usePagedResults" ref="loadMoreTriggerElement" class="m-0" />

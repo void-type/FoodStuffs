@@ -9,6 +9,11 @@ const props = defineProps({
     type: Number as PropType<number | null | undefined>,
     required: true,
   },
+  invert: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const mealPlanStore = useMealPlanStore();
@@ -18,19 +23,29 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
 <template>
   <button
     v-if="mealPlanStore.currentRecipesContains(props.recipeId)"
-    class="btn btn-secondary"
+    type="button"
+    class="btn position-relative"
+    :class="props.invert ? 'btn-dark' : 'btn-secondary'"
     :aria-label="`Remove recipe from current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.removeCurrentRecipe(props.recipeId)"
   >
-    <FontAwesomeIcon icon="fa-minus" /> Current Plan
+    <FontAwesomeIcon icon="fa-calendar-days" />
+    <span class="badge rounded-pill text-bg-danger position-absolute top-0 start-100 translate-middle">
+      <FontAwesomeIcon icon="fa-minus" />
+    </span>
   </button>
   <button
     v-else
-    class="btn btn-secondary"
+    type="button"
+    class="btn position-relative"
+    :class="props.invert ? 'btn-dark' : 'btn-secondary'"
     :aria-label="`Add recipe to current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.addCurrentRecipe(props.recipeId)"
   >
-    <FontAwesomeIcon icon="fa-plus" /> Current Plan
+    <FontAwesomeIcon icon="fa-calendar-days" />
+    <span class="badge rounded-pill text-bg-secondary position-absolute top-0 start-100 translate-middle">
+      <FontAwesomeIcon icon="fa-plus" />
+    </span>
   </button>
 </template>
 

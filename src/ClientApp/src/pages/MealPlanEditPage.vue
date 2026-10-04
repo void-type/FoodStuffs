@@ -527,7 +527,7 @@ onMounted(async () => {
               :lazy="i > 6"
               :show-sort-handle="showSortHandle"
               :is-current-plan="isEditingCurrent"
-              class="g-col-12 g-col-lg-6"
+              class="g-col-6 g-col-lg-4"
               @recipe-completed="onRecipeCompleted"
               @recipe-removed="onRecipeRemoved"
             />
@@ -572,7 +572,7 @@ onMounted(async () => {
                 :recipe="recipe"
                 :lazy="i > 6"
                 :show-sort-handle="showSortHandle"
-                class="g-col-12 g-col-lg-6"
+                class="g-col-6 g-col-lg-4"
                 @recipe-completed="onRecipeCompleted"
               />
             </VueDraggable>
