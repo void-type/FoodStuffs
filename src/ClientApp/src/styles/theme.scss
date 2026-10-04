@@ -20,6 +20,17 @@ $gray-900: #453f3b;
 
 $bg-navbar: #5a4433;
 
+// Heading scale: Bootstrap's defaults (h1 2.5rem down to h6 1rem) are too large for
+// this app's density and clash with the h1 page-title convention. This "comfortable"
+// scale keeps h1 modest while ensuring every level stays visually distinguishable.
+$h1-font-size: 2rem; // 32px, page titles (AppPageHeading)
+$h2-font-size: 1.625rem; // 26px, section headings (Directions, Discover, etc.)
+$h3-font-size: 1.375rem; // 22px
+$h4-font-size: 1.125rem; // 18px
+$h5-font-size: 1rem; // 16px, modal/offcanvas titles
+$h6-font-size: 0.875rem; // 14px
+$headings-font-weight: 600;
+
 $font-family-sans-serif:
   '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
 

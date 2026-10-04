@@ -26,7 +26,6 @@ import { clamp } from '@/models/FormatHelper';
 import RecipeGetResponse from '@/models/RecipeGetResponse';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
-import useDiscoveryStore from '@/stores/discoveryStore';
 import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 
@@ -57,7 +56,6 @@ const data = reactive({
 const appStore = useAppStore();
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
-const discoveryStore = useDiscoveryStore();
 const router = useRouter();
 const route = useRoute();
 const api = ApiHelper.client;
@@ -164,7 +162,6 @@ function onRecipeDelete(id: number) {
     api()
       .recipesDelete({ id })
       .then(async (response) => {
-        discoveryStore.removeFromList(props.id);
         recipeStore.removeFromRecent(props.id);
         setSources(new RecipeGetResponse());
         await recipeStore.fetchRecipesList();

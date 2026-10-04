@@ -146,12 +146,12 @@ onMounted(() => {
         <ImagePlaceholder v-else class="img-fluid rounded" />
       </div>
     </div>
-    <div v-if="!isNil(recipe.directions)" class="mt-3">
+    <div v-if="!isNil(recipe.directions)" class="mt-4">
       <h2>Directions</h2>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="rich-text" v-html="recipe.directions" />
     </div>
-    <div v-if="!isNil(recipe.sides)" class="mt-3">
+    <div v-if="!isNil(recipe.sides)" class="mt-4">
       <h2>Sides</h2>
       <div v-if="(recipe.mealPlanningSidesCount || 0) > 0" class="mb-3 d-print-none">
         <div>
@@ -168,7 +168,7 @@ onMounted(() => {
         {{ recipe.sides }}
       </div>
     </div>
-    <div v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-3 d-print-none">
+    <div v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-4 d-print-none">
       <h2 class="mb-0">
         Grocery Items
       </h2>
@@ -189,7 +189,7 @@ onMounted(() => {
           || 0 > 0
           || (recipe.categories || []).length > 0
       "
-      class="mt-3"
+      class="mt-4"
     >
       <h2>Stats</h2>
       <div v-if="recipe.prepTimeMinutes || 0 > 0">
@@ -202,7 +202,7 @@ onMounted(() => {
         Categories: {{ (recipe.categories?.map((x) => x.name || '') || []).join(', ') }}
       </div>
     </div>
-    <EntityAuditInfo class="mt-3" :entity="recipe" />
+    <EntityAuditInfo class="mt-4" :entity="recipe" />
   </div>
 </template>
 

@@ -16,7 +16,7 @@ const pageTitle = computed(() => props.title || route.meta.title);
 </script>
 
 <template>
-  <h1 class="h4 mt-3">
+  <h1 class="mt-3">
     {{ pageTitle }}
   </h1>
 </template>

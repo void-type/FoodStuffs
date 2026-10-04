@@ -14,7 +14,7 @@ import RecipesSearchRequest from '@/models/RecipesSearchRequest';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import useMessageStore from './messageStore';
 
-const recentLimit = 7;
+const recentLimit = 4;
 
 interface RecipeStoreState {
   listResponse: IItemSetOfSearchRecipesResultItem;
@@ -82,6 +82,7 @@ export const useRecipeStore = defineStore('recipe', {
 
       const recipeListItem = {
         ...recipe,
+        image: recipe.defaultImage,
       };
 
       if (indexOfCurrentInRecents > -1) {
@@ -130,6 +131,7 @@ export const useRecipeStore = defineStore('recipe', {
 
       const recipeListItem = {
         ...recipe,
+        image: recipe.defaultImage,
       };
 
       recentRecipes[indexOfCurrentInRecents] = recipeListItem;

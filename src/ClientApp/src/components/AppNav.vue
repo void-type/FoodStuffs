@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { computed } from 'vue';
-import { isNil } from '@/models/FormatHelper';
-import RouterHelper from '@/models/RouterHelper';
 import useCategoryStore from '@/stores/categoryStore';
 import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import useGroceryItemStore from '@/stores/groceryItemStore';
@@ -19,19 +17,7 @@ const groceryStoreStore = useGroceryStoreStore();
 const storageLocationStore = useStorageLocationStore();
 const groceryAisleStore = useGroceryAisleStore();
 
-const planName = computed(() => {
-  const name = mealPlanStore.currentMealPlan?.name;
-
-  if (isNil(name)) {
-    return '';
-  }
-
-  const recipeCount = mealPlanStore.currentRecipes.length;
-
-  return `${name} (${recipeCount})`;
-});
-
-const { recentRecipes } = storeToRefs(recipeStore);
+const hasCurrentMealPlan = computed(() => (mealPlanStore.currentMealPlan.id || 0) > 0);
 </script>
 
 <template>
@@ -62,19 +48,6 @@ const { recentRecipes } = storeToRefs(recipeStore);
             class="dropdown-item"
           >
             Meal Plans
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            v-if="(mealPlanStore.currentMealPlan.id || 0) > 0"
-            :to="{
-              name: 'mealPlanEdit',
-              params: { id: mealPlanStore.currentMealPlan.id },
-              query: mealPlanStore.currentQueryParams,
-            }"
-            class="dropdown-item"
-          >
-            Edit Current Meal Plan<br><small>{{ planName }}</small>
           </router-link>
         </li>
         <li><hr class="dropdown-divider"></li>
@@ -139,32 +112,45 @@ const { recentRecipes } = storeToRefs(recipeStore);
         </li>
       </ul>
     </li>
-    <li v-if="recentRecipes.length > 0" class="nav-item dropdown">
-      <a
-        class="nav-link dropdown-toggle"
-        href="#"
-        role="button"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
+    <li class="nav-item current-meal-plan-nav-item">
+      <router-link
+        v-if="hasCurrentMealPlan"
+        :to="{
+          name: 'mealPlanEdit',
+          params: { id: mealPlanStore.currentMealPlan.id },
+          query: mealPlanStore.currentQueryParams,
+        }"
+        class="nav-link"
+        :title="mealPlanStore.currentMealPlan.name"
       >
-        Recent
-      </a>
-      <ul class="dropdown-menu">
-        <template v-for="(recipe, index) in recentRecipes" :key="recipe.id">
-          <li>
-            <router-link :to="RouterHelper.viewRecipe(recipe)" class="dropdown-item">
-              {{
-                recipe.name
-              }}
-            </router-link>
-          </li>
-          <li v-if="index < recentRecipes.length - 1">
-            <hr class="dropdown-divider">
-          </li>
-        </template>
-      </ul>
+        <FontAwesomeIcon icon="fa-calendar-days" class="me-1" /><span class="current-meal-plan-name">{{ mealPlanStore.currentMealPlan.name }}</span>
+      </router-link>
+      <router-link
+        v-else
+        :to="{ name: 'mealPlanList', query: mealPlanStore.currentQueryParams }"
+        class="nav-link"
+      >
+        <FontAwesomeIcon icon="fa-calendar-days" class="me-1" />Select Meal Plan
+      </router-link>
     </li>
   </ul>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// Keep long meal plan names from wrapping the navbar to multiple lines.
+.current-meal-plan-nav-item {
+  min-width: 0;
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+  }
+
+  .current-meal-plan-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 12rem;
+  }
+}
+</style>

@@ -6,9 +6,9 @@ import { computed } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useImageLightboxStore from '@/stores/imageLightboxStore';
+import useMealPlanStore from '@/stores/mealPlanStore';
 import AppSortHandle from './AppSortHandle.vue';
 import ImagePlaceholder from './ImagePlaceholder.vue';
-import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
 import TagBadge from './TagBadge.vue';
 
 const props = defineProps({
@@ -20,6 +20,22 @@ const props = defineProps({
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
 const imageLightboxStore = useImageLightboxStore();
+const mealPlanStore = useMealPlanStore();
+
+const isInCurrentMealPlan = computed(() => mealPlanStore.currentRecipesContains(props.recipe.id));
+
+const mealPlanButtonLabel = computed(() =>
+  isInCurrentMealPlan.value
+    ? `Remove recipe from current meal plan (${mealPlanStore.currentMealPlan.name})`
+    : `Add recipe to current meal plan (${mealPlanStore.currentMealPlan.name})`);
+
+function toggleCurrentMealPlan() {
+  if (isInCurrentMealPlan.value) {
+    mealPlanStore.removeCurrentRecipe(props.recipe.id);
+  } else {
+    mealPlanStore.addCurrentRecipe(props.recipe.id);
+  }
+}
 
 function flipCard() {
   const card = document.getElementById(recipeCardId.value);
@@ -42,8 +58,8 @@ function flipCard() {
     </div>
     <div v-if="!props.showCompactView" class="card-flip-container">
       <div class="card-flip-front">
-        <router-link class="card-link card-hover" :to="RouterHelper.viewRecipe(recipe)">
-          <div class="image-container">
+        <div class="image-container">
+          <router-link class="card-link card-hover" :to="RouterHelper.viewRecipe(recipe)">
             <img
               v-if="recipe.image != null"
               class="img-fluid"
@@ -54,19 +70,58 @@ function flipCard() {
               height="1200"
             >
             <ImagePlaceholder v-else class="img-fluid position-absolute top-0 left-0" />
-            <button
-              v-if="recipe.image != null"
-              type="button"
-              class="btn btn-dark btn-sm position-absolute bottom-0 end-0 m-1 opacity-75 d-print-none"
-              aria-label="Enlarge image"
-              @click.stop.prevent="imageLightboxStore.open([recipe.image!])"
+          </router-link>
+          <router-link
+            type="button"
+            class="btn btn-dark btn-sm position-absolute top-0 start-0 m-1 opacity-75 d-print-none"
+            aria-label="Edit recipe"
+            :to="RouterHelper.editRecipe(recipe)"
+            @click.stop
+          >
+            <FontAwesomeIcon icon="fa-pen" />
+          </router-link>
+          <button
+            type="button"
+            class="btn btn-dark btn-sm position-absolute bottom-0 start-0 m-1 opacity-75 d-print-none"
+            :aria-label="mealPlanButtonLabel"
+            @click.stop.prevent="toggleCurrentMealPlan"
+          >
+            <FontAwesomeIcon icon="fa-calendar-days" />
+            <span
+              class="badge rounded-pill position-absolute top-0 start-100 translate-middle"
+              :class="isInCurrentMealPlan ? 'text-bg-danger' : 'text-bg-secondary'"
             >
-              <FontAwesomeIcon icon="fa-expand" />
-            </button>
-          </div>
-        </router-link>
+              <FontAwesomeIcon :icon="isInCurrentMealPlan ? 'fa-minus' : 'fa-plus'" />
+            </span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-dark btn-sm position-absolute top-0 end-0 m-1 opacity-75 d-print-none"
+            aria-label="Flip card"
+            @click.stop.prevent="flipCard"
+          >
+            <FontAwesomeIcon icon="fa-rotate" />
+          </button>
+          <button
+            v-if="recipe.image != null"
+            type="button"
+            class="btn btn-dark btn-sm position-absolute bottom-0 end-0 m-1 opacity-75 d-print-none"
+            aria-label="Enlarge image"
+            @click.stop.prevent="imageLightboxStore.open([recipe.image!])"
+          >
+            <FontAwesomeIcon icon="fa-expand" />
+          </button>
+        </div>
       </div>
       <div class="card-flip-back card-body d-none">
+        <button
+          type="button"
+          class="btn btn-dark btn-sm position-absolute top-0 end-0 m-1 opacity-75 d-print-none"
+          aria-label="Flip back"
+          @click.stop.prevent="flipCard"
+        >
+          <FontAwesomeIcon icon="fa-rotate" />
+        </button>
         <div class="card-flip-back-inner slim-scroll">
           <div v-if="(recipe.groceryItems?.length || 0) > 0">
             <div>Grocery Items</div>
@@ -95,37 +150,37 @@ function flipCard() {
         </div>
       </div>
     </div>
-    <div v-else class="card-body">
-      <div v-if="(recipe.categories?.length || 0) > 0">
+    <div v-else class="card-body position-relative">
+      <router-link
+        type="button"
+        class="btn btn-dark btn-sm position-absolute top-0 start-0 m-1 opacity-75 d-print-none"
+        aria-label="Edit recipe"
+        :to="RouterHelper.editRecipe(recipe)"
+        @click.stop
+      >
+        <FontAwesomeIcon icon="fa-pen" />
+      </router-link>
+      <button
+        type="button"
+        class="btn btn-dark btn-sm position-absolute bottom-0 start-0 m-1 opacity-75 d-print-none"
+        :aria-label="mealPlanButtonLabel"
+        @click.stop.prevent="toggleCurrentMealPlan"
+      >
+        <FontAwesomeIcon icon="fa-calendar-days" />
+        <span
+          class="badge rounded-pill position-absolute top-0 start-100 translate-middle"
+          :class="isInCurrentMealPlan ? 'text-bg-danger' : 'text-bg-secondary'"
+        >
+          <FontAwesomeIcon :icon="isInCurrentMealPlan ? 'fa-minus' : 'fa-plus'" />
+        </span>
+      </button>
+      <div v-if="(recipe.categories?.length || 0) > 0" class="compact-categories">
         <TagBadge
           v-for="category in recipe.categories"
           :key="category.name || ''"
           class="mb-1 me-1"
           :tag="category"
         />
-      </div>
-    </div>
-    <div class="card-footer">
-      <div class="btn-toolbar">
-        <router-link
-          type="button"
-          class="btn btn-sm btn-secondary me-2"
-          aria-label="edit recipe"
-          :to="RouterHelper.editRecipe(recipe)"
-          @click.stop
-        >
-          Edit
-        </router-link>
-        <RecipeCurrentMealPlanButton class="btn-sm" :recipe-id="recipe.id" />
-        <div v-if="!props.showCompactView" class="ms-auto">
-          <button
-            class="btn btn-sm btn-outline-secondary"
-            aria-label="flip card"
-            @click.stop.prevent="flipCard"
-          >
-            <FontAwesomeIcon icon="fa-rotate" />
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -147,6 +202,11 @@ function flipCard() {
     height: 100%;
     object-fit: cover;
   }
+}
+
+// Reserve space so the edit/meal-plan corner buttons don't sit on top of the category badges.
+.compact-categories {
+  padding-left: 2.5rem;
 }
 
 .card-header {
