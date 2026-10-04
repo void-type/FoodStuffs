@@ -18,6 +18,7 @@ public static class GroceryItemSearchHelper
         var isOutOfStock = (groceryItem.InventoryQuantity < 1).ToString();
         var isUnused = (!groceryItem.Recipes.Any()).ToString();
         var createdOn = groceryItem.CreatedOn.ToString("o");
+        var modifiedOn = groceryItem.ModifiedOn.ToString("o");
 
         var doc = new Document
         {
@@ -51,6 +52,11 @@ public static class GroceryItemSearchHelper
             new StoredField(C.FIELD_CREATED_ON, createdOn),
             // CreatedOn: sortable
             new SortedDocValuesField(C.FIELD_CREATED_ON, new BytesRef(createdOn)),
+
+            // ModifiedOn: retrievable
+            new StoredField(C.FIELD_MODIFIED_ON, modifiedOn),
+            // ModifiedOn: sortable
+            new SortedDocValuesField(C.FIELD_MODIFIED_ON, new BytesRef(modifiedOn)),
         };
 
         var storageLocations = groceryItem.StorageLocations
@@ -114,6 +120,7 @@ public static class GroceryItemSearchHelper
             InventoryQuantity: int.Parse(doc.Get(C.FIELD_INVENTORY_QUANTITY) ?? "0"),
             RecipeCount: int.Parse(doc.Get(C.FIELD_RECIPE_COUNT) ?? "0"),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
+            ModifiedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_MODIFIED_ON) ?? DateTime.MinValue,
             StorageLocations: doc.Get(C.FIELD_STORAGE_LOCATIONS_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemStorageLocation>>(x) ?? []),
             GroceryStores: doc.Get(C.FIELD_GROCERY_STORES_JSON)

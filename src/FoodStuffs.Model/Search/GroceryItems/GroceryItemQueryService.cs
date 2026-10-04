@@ -35,14 +35,15 @@ public class GroceryItemQueryService : IGroceryItemQueryService
         };
 
         var sort = BuildSortCriteria(request);
+        var numHits = GetNumHits(request, _settings);
 
         // Use DrillSideways for proper facet counting
         var drillDownQuery = BuildDrillDownQuery(request, facetsConfig, baseQuery);
         var drillSideways = new DrillSideways(searcher, facetsConfig, readers.TaxonomyReader);
 
         var drillResult = sort is null
-            ? drillSideways.Search(drillDownQuery, _settings.MaxResults)
-            : drillSideways.Search(drillDownQuery, null, null, _settings.MaxResults, sort, false, false);
+            ? drillSideways.Search(drillDownQuery, numHits)
+            : drillSideways.Search(drillDownQuery, null, null, numHits, sort, false, false);
 
         var pagination = request.GetPaginationOptions();
         var scoreDocs = new List<ScoreDoc>(drillResult.Hits.ScoreDocs);
@@ -250,6 +251,23 @@ public class GroceryItemQueryService : IGroceryItemQueryService
         return drillDownQuery;
     }
 
+    /// <summary>
+    /// Lucene's top-N collectors only need to track enough hits to cover the requested page, not the
+    /// configured max. Random sort shuffles the whole retrieved pool after collection, so it needs a
+    /// consistent pool size across page requests and always collects up to the max.
+    /// </summary>
+    private static int GetNumHits(SearchGroceryItemsRequest request, SearchSettings settings)
+    {
+        if (!request.IsPagingEnabled || request.SortBy?.ToUpperInvariant() == "RANDOM")
+        {
+            return settings.MaxResults;
+        }
+
+        var hitsNeededForPage = request.Page * request.Take;
+
+        return Math.Clamp(hitsNeededForPage, 1, settings.MaxResults);
+    }
+
     private static Sort? BuildSortCriteria(SearchGroceryItemsRequest request)
     {
         // If "RANDOM", we shuffle topDocs results later.
@@ -259,6 +277,10 @@ public class GroceryItemQueryService : IGroceryItemQueryService
                 new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
             "OLDEST" => new Sort(
                 new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, false)),
+            "RECENTLY-UPDATED" => new Sort(
+                new SortField(C.FIELD_MODIFIED_ON, SortFieldType.STRING, true)),
+            "LEAST-RECENTLY-UPDATED" => new Sort(
+                new SortField(C.FIELD_MODIFIED_ON, SortFieldType.STRING, false)),
             "A-Z" => new Sort(
                 new SortField(C.FIELD_NAME, SortFieldType.STRING, false),
                 new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, false)),

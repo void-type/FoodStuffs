@@ -109,6 +109,60 @@ public class RecipeSearchTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task SearchRecipes_can_sort_ascending_on_a_later_page_without_losing_itemsAsync()
+    {
+        // Covers the optimization where Lucene is only asked to collect enough sorted hits to cover
+        // the requested page (Page * Take) instead of always collecting up to the configured max.
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var result = await new SearchRecipesHandler(QueryService)
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, "a-z", null, true, 2, 1));
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, result.Value.Results.Count);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+        Assert.Equal(2, result.Value.Results.Page);
+        Assert.Equal(1, result.Value.Results.Take);
+        Assert.Equal("Hotdog", result.Value.Results.Items.First().Name);
+    }
+
+    [Fact]
+    public async Task SearchRecipes_includes_modifiedOn_in_resultsAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var result = await new SearchRecipesHandler(QueryService)
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, null, null, true, 1, 4));
+
+        Assert.True(result.IsSuccess);
+        Assert.All(result.Value.Results.Items, item => Assert.Equal(Deps.DateTimeServiceLate.Moment, item.ModifiedOn));
+    }
+
+    [Fact]
+    public async Task SearchRecipes_can_sort_by_recently_updatedAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var result = await new SearchRecipesHandler(QueryService)
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, "recently-updated", null, true, 1, 4));
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+    }
+
+    [Fact]
+    public async Task SearchRecipes_can_sort_by_least_recently_updatedAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var result = await new SearchRecipesHandler(QueryService)
+            .Handle(new SearchRecipesRequest(null, null, false, null, false, null, "least-recently-updated", null, true, 1, 4));
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(3, result.Value.Results.TotalCount);
+    }
+
+    [Fact]
     public async Task SearchRecipes_can_search_by_recipe_nameAsync()
     {
         await using var context = Deps.FoodStuffsContext().Seed();

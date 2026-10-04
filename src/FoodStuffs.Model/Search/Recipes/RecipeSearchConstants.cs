@@ -10,6 +10,7 @@ public static class RecipeSearchConstants
     public const string FIELD_NAME = nameof(Recipe.Name);
     public const string FIELD_NAME_PREFIX = nameof(Recipe.Name) + "Prefix";
     public const string FIELD_CREATED_ON = nameof(Recipe.CreatedOn);
+    public const string FIELD_MODIFIED_ON = nameof(Recipe.ModifiedOn);
     public const string FIELD_IS_FOR_MEAL_PLANNING = nameof(Recipe.IsForMealPlanning);
     public const string FIELD_MEAL_PLANNING_SIDES_COUNT = nameof(Recipe.MealPlanningSidesCount);
     public const string FIELD_IMAGE = nameof(Recipe.DefaultImage);

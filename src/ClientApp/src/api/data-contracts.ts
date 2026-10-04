@@ -276,6 +276,8 @@ export interface SearchGroceryItemsResultItem {
   recipeCount?: number;
   /** @format date-time */
   createdOn?: string;
+  /** @format date-time */
+  modifiedOn?: string;
   storageLocations?: SearchGroceryItemsResultItemStorageLocation[];
   groceryStores?: SearchGroceryItemsResultItemGroceryStore[];
   groceryAisle?: SearchGroceryItemsResultItemGroceryAisle | null;
@@ -632,6 +634,8 @@ export interface SearchRecipesResultItem {
   mealPlanningSidesCount?: number;
   /** @format date-time */
   createdOn?: string;
+  /** @format date-time */
+  modifiedOn?: string;
   slug?: string;
   categories?: SearchRecipesResultItemCategory[];
   groceryItems?: SearchRecipesResultItemGroceryItem[];

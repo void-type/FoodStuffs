@@ -10,6 +10,7 @@ public static class GroceryItemSearchConstants
     public const string FIELD_NAME = nameof(GroceryItem.Name);
     public const string FIELD_NAME_PREFIX = nameof(GroceryItem.Name) + "Prefix";
     public const string FIELD_CREATED_ON = nameof(GroceryItem.CreatedOn);
+    public const string FIELD_MODIFIED_ON = nameof(GroceryItem.ModifiedOn);
     public const string FIELD_INVENTORY_QUANTITY = nameof(GroceryItem.InventoryQuantity);
     public const string FIELD_RECIPE_COUNT = "RecipeCount";
     public const string FIELD_IS_OUT_OF_STOCK = "IsOutOfStock";

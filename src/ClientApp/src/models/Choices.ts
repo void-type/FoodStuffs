@@ -46,6 +46,8 @@ export default class Choices {
       { text: 'Relevance', value: '' },
       { text: 'Newest', value: 'newest' },
       { text: 'Oldest', value: 'oldest' },
+      { text: 'Recently Updated', value: 'recently-updated' },
+      { text: 'Least Recently Updated', value: 'least-recently-updated' },
       { text: 'A-Z', value: 'a-z' },
       { text: 'Z-A', value: 'z-a' },
       { text: 'Random', value: 'random' },

@@ -17,6 +17,7 @@ public static class RecipeSearchHelper
     {
         var isForMealPlanning = recipe.IsForMealPlanning.ToString();
         var createdOn = recipe.CreatedOn.ToString("o");
+        var modifiedOn = recipe.ModifiedOn.ToString("o");
 
         var doc = new Document
         {
@@ -42,6 +43,11 @@ public static class RecipeSearchHelper
             new StoredField(C.FIELD_CREATED_ON, createdOn),
             // CreatedOn: sortable
             new SortedDocValuesField(C.FIELD_CREATED_ON, new BytesRef(createdOn)),
+
+            // ModifiedOn: retrievable
+            new StoredField(C.FIELD_MODIFIED_ON, modifiedOn),
+            // ModifiedOn: sortable
+            new SortedDocValuesField(C.FIELD_MODIFIED_ON, new BytesRef(modifiedOn)),
 
             // Slug: retrievable
             new StoredField(C.FIELD_SLUG, recipe.Slug),
@@ -104,6 +110,7 @@ public static class RecipeSearchHelper
             IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
             MealPlanningSidesCount: int.Parse(doc.Get(C.FIELD_MEAL_PLANNING_SIDES_COUNT) ?? "0"),
             CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
+            ModifiedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_MODIFIED_ON) ?? DateTime.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
             Categories: doc.Get(C.FIELD_CATEGORIES_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemCategory>>(x) ?? []),

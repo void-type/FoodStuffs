@@ -6,6 +6,7 @@ public record SearchRecipesResultItem(
     bool IsForMealPlanning,
     int MealPlanningSidesCount,
     DateTimeOffset CreatedOn,
+    DateTimeOffset ModifiedOn,
     string Slug,
     List<SearchRecipesResultItemCategory> Categories,
     List<SearchRecipesResultItemGroceryItem> GroceryItems,
