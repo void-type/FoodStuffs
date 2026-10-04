@@ -527,7 +527,7 @@ onMounted(async () => {
               :lazy="i > 6"
               :show-sort-handle="showSortHandle"
               :is-current-plan="isEditingCurrent"
-              class="g-col-6 g-col-lg-4"
+              class="g-col-12 g-col-md-6 g-col-lg-4"
               @recipe-completed="onRecipeCompleted"
               @recipe-removed="onRecipeRemoved"
             />
