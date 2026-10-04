@@ -119,6 +119,18 @@ header {
   column-gap: 0;
 }
 
+// Two-column layout for search/filter pages (left filter rail + main content).
+// The left rail never gets narrower than our offcanvas flyouts (400px), so its
+// justified filter tabs stay usable instead of being squeezed by the viewport.
+.search-page-grid {
+  display: grid;
+  gap: $grid-gutter-width;
+
+  @include media-breakpoint-up(lg) {
+    grid-template-columns: minmax(400px, 25%) minmax(0, 1fr);
+  }
+}
+
 .btn-toolbar.sticky-top {
   top: var(--navbar-height, 0px);
   z-index: 15;

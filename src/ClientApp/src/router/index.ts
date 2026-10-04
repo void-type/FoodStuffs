@@ -1,6 +1,7 @@
-import { Collapse, Offcanvas } from 'bootstrap';
+import { Collapse } from 'bootstrap';
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
+import OffcanvasHelper from '@/models/OffcanvasHelper';
 import RouterHelper from '@/models/RouterHelper';
 
 const router = createRouter({
@@ -278,9 +279,7 @@ router.beforeEach((to, from, next) => {
   // shouldn't close the flyout. This must happen before the page unmounts so Bootstrap
   // can properly remove its backdrop.
   if (to.name !== from.name) {
-    document.querySelectorAll<HTMLElement>('.offcanvas.show').forEach((el) => {
-      Offcanvas.getInstance(el)?.hide();
-    });
+    OffcanvasHelper.closeAllOpen();
   }
 
   next();

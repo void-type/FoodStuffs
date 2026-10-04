@@ -399,9 +399,9 @@ onUnmounted(() => {
     </div>
 
     <!-- Two column layout -->
-    <div class="grid mt-3 gap-lg">
+    <div class="search-page-grid mt-3">
       <!-- Left rail filters - desktop only -->
-      <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
+      <div class="d-none d-lg-block">
         <div class="mb-3">
           <span id="isForMealPlanningLabelDesktop" class="form-label d-block mb-1">For Meal Planning{{ mealPlanningFilterText }}</span>
           <div class="btn-group" role="group" aria-labelledby="isForMealPlanningLabelDesktop">
@@ -495,7 +495,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Main content area -->
-      <div class="g-col-12 g-col-lg-9">
+      <div>
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-lg-9 d-flex gap-2">
             <div class="flex-grow-1">

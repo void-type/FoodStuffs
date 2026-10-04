@@ -9,6 +9,7 @@ import AppNav from '@/components/AppNav.vue';
 import ImageLightbox from '@/components/ImageLightbox.vue';
 import ApiHelper from '@/models/ApiHelper';
 import DarkModeHelper from '@/models/DarkModeHelper';
+import OffcanvasHelper from '@/models/OffcanvasHelper';
 import RecipeStoreHelper from '@/models/RecipeStoreHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
@@ -34,6 +35,8 @@ onMounted(() => {
   }
 
   appStore.setDarkMode(DarkModeHelper.getInitialDarkModeSetting());
+
+  OffcanvasHelper.closeOnDesktopResize();
 
   recipeStore.addToRecent(RecipeStoreHelper.getQueuedRecent());
 

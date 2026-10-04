@@ -392,9 +392,9 @@ watch(
     </div>
 
     <!-- Two column layout -->
-    <div class="grid mt-3 gap-lg">
+    <div class="search-page-grid mt-3">
       <!-- Left rail filters - desktop only -->
-      <div class="g-col-12 g-col-lg-3 d-none d-lg-block">
+      <div class="d-none d-lg-block">
         <div class="mb-3">
           <span id="isOutOfStockLabelDesktop" class="form-label d-block mb-1">Out of Stock{{ outOfStockFilterText }}</span>
           <div class="btn-group" role="group" aria-labelledby="isOutOfStockLabelDesktop">
@@ -502,7 +502,7 @@ watch(
       </div>
 
       <!-- Main content area -->
-      <div class="g-col-12 g-col-lg-9">
+      <div>
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-lg-9 d-flex gap-2">
             <div class="flex-grow-1">
@@ -724,7 +724,7 @@ watch(
           <div
             v-for="groceryItem in listResponse.items"
             :key="groceryItem.id"
-            class="card g-col-12 g-col-md-6"
+            class="card grocery-item-card g-col-12 g-col-md-6"
           >
             <div class="card-header">
               <router-link :to="RouterHelper.editGroceryItem(groceryItem)">
@@ -740,15 +740,14 @@ watch(
                   Delete
                 </button>
               </div>
-              <div class="grid">
+              <div class="grocery-item-card-details">
                 <GroceryItemInventoryQuantity
                   :id="`${groceryItem.id}-inventoryQuantity`"
                   v-model="groceryItem.inventoryQuantity"
                   :item-id="groceryItem.id"
                   :inline="true"
-                  class="g-col-12 g-col-sm-6 g-col-md-12 g-col-lg-6"
                 />
-                <div class="g-col-12 g-col-sm-6 g-col-md-12 g-col-lg-6">
+                <div>
                   Used in {{ groceryItem.recipeCount }} recipes.
                 </div>
               </div>
@@ -784,4 +783,21 @@ watch(
   <AppScrollToTop />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// The inventory control and "used in" text should only sit side-by-side when the
+// card itself is wide enough to fit them, regardless of the page's viewport width
+// (e.g. a narrow card in a 2-up results grid shouldn't cram these into 2 columns).
+.grocery-item-card {
+  container-type: inline-size;
+}
+
+.grocery-item-card-details {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+
+  @container (min-width: 420px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
