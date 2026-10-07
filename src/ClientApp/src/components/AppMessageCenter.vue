@@ -23,8 +23,7 @@ const { clearMessage, clearMessageTimeout } = messageStore;
           v-if="typeof message.timeout === 'undefined'"
           class="opacity-50 me-2"
           icon="fa-thumbtack"
-        />
-        {{ message.text }}
+        />{{ message.text }}
         <button
           type="button"
           class="btn-close"

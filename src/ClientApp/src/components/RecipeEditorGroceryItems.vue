@@ -160,8 +160,7 @@ onBeforeUnmount(() => {
             aria-expanded="false"
             :aria-controls="`item-${item.uiKey}-accordion-collapse`"
           >
-            <AppSortHandle class="pe-3" />
-            {{ item.quantity }}x {{ getGroceryItem(item.id)?.name }}
+            <AppSortHandle class="pe-3" />{{ item.quantity }}x {{ getGroceryItem(item.id)?.name }}
           </button>
         </div>
         <div

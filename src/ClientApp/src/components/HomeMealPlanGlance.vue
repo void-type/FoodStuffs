@@ -61,8 +61,7 @@ onMounted(fetchLatestMealPlan);
       role="alert"
     >
       <span>
-        <FontAwesomeIcon icon="fa-calendar-days" class="me-1" />
-        You're not on the latest meal plan ("{{ latestMealPlanName }}").
+        <FontAwesomeIcon icon="fa-calendar-days" class="me-1" />You're not on the latest meal plan ("{{ latestMealPlanName }}").
       </span>
       <button type="button" class="btn btn-sm btn-warning" @click="switchToLatestMealPlan">
         Switch to Latest
