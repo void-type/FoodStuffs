@@ -120,14 +120,32 @@ header {
 }
 
 // Two-column layout for search/filter pages (left filter rail + main content).
-// The left rail never gets narrower than our offcanvas flyouts (400px), so its
+// The left rail never gets narrower than our offcanvas flyouts (350px), so its
 // justified filter tabs stay usable instead of being squeezed by the viewport.
 .search-page-grid {
   display: grid;
   gap: $grid-gutter-width;
 
   @include media-breakpoint-up(lg) {
-    grid-template-columns: minmax(400px, 25%) minmax(0, 1fr);
+    grid-template-columns: minmax(350px, 25%) minmax(0, 1fr);
+  }
+}
+
+// Container query based grid for recipe card listings. A fixed-width sidebar
+// (see .search-page-grid) can leave very little room for cards regardless of
+// viewport size, so cards stay full width until there's enough room (768px)
+// for two per row, based on the grid's actual rendered width.
+.recipe-grid-container {
+  container-type: inline-size;
+}
+
+.recipe-grid-item {
+  grid-column: span 12;
+}
+
+@container (min-width: 768px) {
+  .recipe-grid-item {
+    grid-column: span 6;
   }
 }
 

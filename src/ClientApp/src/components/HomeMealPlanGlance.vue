@@ -73,16 +73,15 @@ onMounted(fetchLatestMealPlan);
     </h2>
     <p v-if="hasCurrentMealPlan">
       <router-link :to="RouterHelper.editMealPlan(currentMealPlan)">
-        <FontAwesomeIcon icon="fa-calendar-days" class="me-2" />
-        {{ currentMealPlan.name }}
+        <FontAwesomeIcon icon="fa-calendar-days" class="me-2" />{{ currentMealPlan.name }}
       </router-link>
     </p>
-    <div v-if="currentRecipes.length > 0" class="grid">
+    <div v-if="currentRecipes.length > 0" class="grid recipe-grid-container">
       <RecipeCard
         v-for="recipe in orderedCurrentRecipes"
         :key="recipe.id"
         :recipe="recipe"
-        class="g-col-6 g-col-md-3"
+        class="recipe-grid-item"
       />
     </div>
   </div>

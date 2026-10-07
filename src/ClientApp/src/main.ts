@@ -32,6 +32,7 @@ import {
   faTerminal,
   faThumbtack,
   faTimes,
+  faUser,
   faUtensils,
 } from '@fortawesome/free-solid-svg-icons';
 import { createPinia } from 'pinia';
@@ -77,6 +78,7 @@ library.add(
   faTerminal,
   faThumbtack,
   faTimes,
+  faUser,
   faUtensils,
 );
 

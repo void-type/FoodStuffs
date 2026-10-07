@@ -146,10 +146,18 @@ onMounted(() => {
         <ImagePlaceholder v-else class="img-fluid rounded" />
       </div>
     </div>
-    <div v-if="!isNil(recipe.directions)" class="mt-4">
-      <h2>Directions</h2>
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <div class="rich-text" v-html="recipe.directions" />
+    <div v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-4 d-print-none">
+      <h2 class="mb-0">
+        Grocery Items
+      </h2>
+      <div class="badge p-0 mb-2 text-muted">
+        <small>Not printed.</small>
+      </div>
+      <ul>
+        <li v-for="item in recipe.groceryItems || []" :key="item.id">
+          {{ item.quantity }}x {{ item.name }}
+        </li>
+      </ul>
     </div>
     <div v-if="!isNil(recipe.sides)" class="mt-4">
       <h2>Sides</h2>
@@ -168,18 +176,10 @@ onMounted(() => {
         {{ recipe.sides }}
       </div>
     </div>
-    <div v-if="(recipe.groceryItems?.length || 0) > 0" class="mt-4 d-print-none">
-      <h2 class="mb-0">
-        Grocery Items
-      </h2>
-      <div class="badge p-0 mb-2 text-muted">
-        <small>Not printed.</small>
-      </div>
-      <ul>
-        <li v-for="item in recipe.groceryItems || []" :key="item.id">
-          {{ item.quantity }}x {{ item.name }}
-        </li>
-      </ul>
+    <div v-if="!isNil(recipe.directions)" class="mt-4">
+      <h2>Directions</h2>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div class="rich-text" v-html="recipe.directions" />
     </div>
     <div
       v-if="

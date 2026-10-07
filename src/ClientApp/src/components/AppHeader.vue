@@ -73,8 +73,13 @@ const searchText = ref('');
               class="nav-link dropdown-toggle"
               data-bs-toggle="dropdown"
               data-bs-auto-close="outside"
-            ><span>{{ user.login }}</span></a>
+              :aria-label="user.login"
+            ><FontAwesomeIcon icon="fa-user" /></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li class="dropdown-item-text">
+                {{ user.login }}
+              </li>
+              <li><hr class="dropdown-divider"></li>
               <!-- <li class="dropdown-item-text fw-bold">Roles</li>
               <li v-for="role in user.authorizedAs" :key="role" class="dropdown-item-text">
                 {{ role }}

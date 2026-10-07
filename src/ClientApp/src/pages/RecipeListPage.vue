@@ -41,8 +41,6 @@ const groceryItemsFilterModel = ref({
   matchAllGroceryItems: false,
 });
 
-const useCompactView = ref(false);
-
 const isFetchingMore = ref(false);
 const loadMoreTriggerElement = ref<Element | undefined>();
 let loadMoreObserver: IntersectionObserver | null = null;
@@ -472,16 +470,6 @@ onUnmounted(() => {
         </div>
         <div class="d-flex gap-3">
           <div class="form-check form-switch mb-0">
-            <label class="form-check-label" for="useCompactViewDesktop">Compact</label>
-            <input
-              id="useCompactViewDesktop"
-              v-model="useCompactView"
-              :checked="useCompactView"
-              class="form-check-input"
-              type="checkbox"
-            >
-          </div>
-          <div class="form-check form-switch mb-0">
             <label class="form-check-label" for="usePagedResultsDesktop">Paged</label>
             <input
               id="usePagedResultsDesktop"
@@ -495,7 +483,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Main content area -->
-      <div>
+      <div class="recipe-grid-container">
         <div class="grid mb-3 gap-sm">
           <div class="g-col-12 g-col-lg-9 d-flex gap-2">
             <div class="flex-grow-1">
@@ -671,16 +659,6 @@ onUnmounted(() => {
               <!-- View toggles - only visible on screens smaller than lg, otherwise shown in the left rail -->
               <div class="d-flex gap-3 d-lg-none">
                 <div class="form-check form-switch mb-0">
-                  <label class="form-check-label" for="useCompactView">Compact</label>
-                  <input
-                    id="useCompactView"
-                    v-model="useCompactView"
-                    :checked="useCompactView"
-                    class="form-check-input"
-                    type="checkbox"
-                  >
-                </div>
-                <div class="form-check form-switch mb-0">
                   <label class="form-check-label" for="usePagedResults">Paged</label>
                   <input
                     id="usePagedResults"
@@ -704,8 +682,7 @@ onUnmounted(() => {
             :key="recipe.id"
             :recipe="recipe"
             :lazy="i > 6"
-            :show-compact-view="useCompactView"
-            class="g-col-6 g-col-md-3"
+            class="recipe-grid-item"
           />
         </div>
         <div v-if="!usePagedResults" ref="loadMoreTriggerElement" class="m-0" />
@@ -726,5 +703,3 @@ onUnmounted(() => {
   </div>
   <AppScrollToTop />
 </template>
-
-<style lang="scss" scoped></style>

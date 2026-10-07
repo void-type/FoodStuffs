@@ -39,12 +39,12 @@ onMounted(fetchDiscoveryRecipes);
 <template>
   <div v-if="list.length > 0" class="mt-4">
     <h2>Discover</h2>
-    <div class="grid">
+    <div class="grid recipe-grid-container">
       <RecipeCard
         v-for="recipe in list"
         :key="recipe.id"
         :recipe="recipe"
-        class="g-col-6 g-col-md-3"
+        class="recipe-grid-item"
       />
     </div>
   </div>

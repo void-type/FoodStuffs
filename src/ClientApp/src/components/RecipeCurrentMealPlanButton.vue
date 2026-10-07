@@ -24,28 +24,24 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
   <button
     v-if="mealPlanStore.currentRecipesContains(props.recipeId)"
     type="button"
-    class="btn position-relative"
+    class="btn"
     :class="props.invert ? 'btn-dark' : 'btn-secondary'"
     :aria-label="`Remove recipe from current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.removeCurrentRecipe(props.recipeId)"
   >
     <FontAwesomeIcon icon="fa-calendar-days" />
-    <span class="badge rounded-pill text-bg-danger position-absolute top-0 start-100 translate-middle">
-      <FontAwesomeIcon icon="fa-minus" />
-    </span>
+    <FontAwesomeIcon icon="fa-minus" size="xs" class="text-danger ms-1" />
   </button>
   <button
     v-else
     type="button"
-    class="btn position-relative"
+    class="btn"
     :class="props.invert ? 'btn-dark' : 'btn-secondary'"
     :aria-label="`Add recipe to current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.addCurrentRecipe(props.recipeId)"
   >
     <FontAwesomeIcon icon="fa-calendar-days" />
-    <span class="badge rounded-pill text-bg-secondary position-absolute top-0 start-100 translate-middle">
-      <FontAwesomeIcon icon="fa-plus" />
-    </span>
+    <FontAwesomeIcon icon="fa-plus" size="xs" class="ms-1" />
   </button>
 </template>
 
