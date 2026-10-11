@@ -537,7 +537,7 @@ onMounted(async () => {
       <div
         v-if="(completedRecipes?.length || 0) > 0"
         id="completedAccordion"
-        class="mt-4 accordion"
+        class="mt-4 accordion accordion-flush"
       >
         <div class="accordion-item">
           <div class="accordion-header">
@@ -563,7 +563,7 @@ onMounted(async () => {
               group="completed"
               ghost-class="ghost"
               handle=".sort-handle"
-              class="grid gap-sm"
+              class="grid gap-sm pt-3"
               @end="onSortEnd"
             >
               <MealPlanRecipeCard
@@ -572,7 +572,8 @@ onMounted(async () => {
                 :recipe="recipe"
                 :lazy="i > 6"
                 :show-sort-handle="showSortHandle"
-                class="g-col-6 g-col-lg-4"
+                :is-current-plan="isEditingCurrent"
+                class="g-col-12 g-col-md-6 g-col-lg-4"
                 @recipe-completed="onRecipeCompleted"
               />
             </VueDraggable>
@@ -613,4 +614,9 @@ onMounted(async () => {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.accordion-button {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+}
+</style>

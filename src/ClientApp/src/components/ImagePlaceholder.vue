@@ -24,8 +24,7 @@ defineProps({
   max-width: 100%;
   align-items: center;
   justify-content: center;
-  background-color: inherit;
+  background-color: rgba(var(--bs-body-color-rgb), 0.05);
   display: flex;
-  outline: var(--bs-border-width) solid var(--bs-border-color);
 }
 </style>

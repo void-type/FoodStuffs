@@ -25,7 +25,7 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
     v-if="mealPlanStore.currentRecipesContains(props.recipeId)"
     type="button"
     class="btn"
-    :class="props.invert ? 'btn-dark' : 'btn-secondary'"
+    :class="props.invert ? 'btn-outline-secondary' : 'btn-secondary'"
     :aria-label="`Remove recipe from current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.removeCurrentRecipe(props.recipeId)"
   >
@@ -36,7 +36,7 @@ const { currentMealPlan } = storeToRefs(mealPlanStore);
     v-else
     type="button"
     class="btn"
-    :class="props.invert ? 'btn-dark' : 'btn-secondary'"
+    :class="props.invert ? 'btn-outline-secondary' : 'btn-secondary'"
     :aria-label="`Add recipe to current meal plan (${currentMealPlan.name})`"
     @click.stop.prevent="mealPlanStore.addCurrentRecipe(props.recipeId)"
   >

@@ -149,6 +149,12 @@ header {
   }
 }
 
+@container (min-width: 1200px) {
+  .recipe-grid-item {
+    grid-column: span 4;
+  }
+}
+
 .btn-toolbar.sticky-top {
   top: var(--navbar-height, 0px);
   z-index: 15;

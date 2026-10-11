@@ -130,7 +130,7 @@ const hasCurrentMealPlan = computed(() => (mealPlanStore.currentMealPlan.id || 0
         :to="{ name: 'mealPlanList', query: mealPlanStore.currentQueryParams }"
         class="nav-link"
       >
-        <FontAwesomeIcon icon="fa-calendar-days" class="me-1" />Select Meal Plan
+        <FontAwesomeIcon icon="fa-calendar-days" class="me-1" />Meal Plans
       </router-link>
     </li>
   </ul>
@@ -140,17 +140,14 @@ const hasCurrentMealPlan = computed(() => (mealPlanStore.currentMealPlan.id || 0
 // Keep long meal plan names from wrapping the navbar to multiple lines.
 .current-meal-plan-nav-item {
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 12rem;
 
   .nav-link {
     display: flex;
     align-items: center;
-  }
-
-  .current-meal-plan-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 12rem;
   }
 }
 </style>
