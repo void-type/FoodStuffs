@@ -10,6 +10,7 @@ import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import AppSearchInput from '@/components/AppSearchInput.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
+import TagBadge from '@/components/TagBadge.vue';
 import ApiHelper from '@/models/ApiHelper';
 import CategoriesListRequest from '@/models/CategoriesListRequest';
 import Choices from '@/models/Choices';
@@ -202,9 +203,7 @@ watch(
       <tbody>
         <tr v-for="category in listResponse.items" :key="category.id">
           <td>
-            <router-link :to="{ name: 'categoryEdit', params: { id: category.id } }">
-              {{ category.name }}
-            </router-link>
+            <TagBadge :tag="category" :to="{ name: 'categoryEdit', params: { id: category.id } }" />
           </td>
           <td>{{ category.recipeCount }}</td>
           <td>
