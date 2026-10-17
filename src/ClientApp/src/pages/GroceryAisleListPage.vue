@@ -8,6 +8,7 @@ import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import AppSearchInput from '@/components/AppSearchInput.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
@@ -58,7 +59,7 @@ function navigateSearch() {
   });
 }
 
-function clearSearch() {
+function resetSearch() {
   groceryAisleStore.listRequest = {
     ...new GroceryAislesListRequest(),
     take: listRequest.value.take,
@@ -147,12 +148,12 @@ watch(
       <div class="grid mb-3 gap-sm">
         <div class="g-col-12 g-col-md-6">
           <label for="nameSearch" class="form-label">Name</label>
-          <input
+          <AppSearchInput
             id="nameSearch"
             v-model="listRequest.name"
-            class="form-control"
             @keydown.stop.prevent.enter="startSearch"
-          >
+            @clear="startSearch"
+          />
         </div>
         <div class="g-col-6 g-col-md-3">
           <label class="form-label" for="isUnused">Unused</label>
@@ -176,8 +177,8 @@ watch(
         <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
           Search
         </button>
-        <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
-          Clear
+        <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="resetSearch()">
+          Reset
         </button>
         <router-link :to="{ name: 'groceryAisleNew' }" class="btn btn-secondary">
           New

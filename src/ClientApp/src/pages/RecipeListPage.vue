@@ -7,6 +7,7 @@ import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import AppSearchInput from '@/components/AppSearchInput.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import RecipeCard from '@/components/RecipeCard.vue';
 import RecipeSearchCategoriesFilter from '@/components/RecipeSearchCategoriesFilter.vue';
@@ -135,7 +136,7 @@ function navigateSearch(toResults: boolean) {
   router.push(routeParams);
 }
 
-function clearSearch() {
+function resetSearch() {
   recipeStore.setListRequest({
     ...new RecipesSearchRequest(),
     take: listRequest.value.take,
@@ -488,16 +489,16 @@ onUnmounted(() => {
           <div class="g-col-12 g-col-lg-9 d-flex gap-2">
             <div class="flex-grow-1">
               <label for="searchText" class="form-label visually-hidden">Search</label>
-              <input
+              <AppSearchInput
                 id="searchText"
                 v-model="listRequest.searchText"
                 type="search"
                 inputmode="search"
                 enterkeyhint="search"
-                class="form-control"
                 placeholder="Search..."
                 @keydown.stop.prevent.enter="startSearch"
-              >
+                @clear="startSearch"
+              />
             </div>
             <button
               class="btn btn-outline-secondary flex-shrink-0 d-lg-none position-relative"
@@ -542,8 +543,8 @@ onUnmounted(() => {
           <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
             Search
           </button>
-          <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
-            Clear
+          <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="resetSearch()">
+            Reset
           </button>
           <router-link :to="{ name: 'recipeNew' }" class="btn btn-secondary">
             New

@@ -9,6 +9,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
+import AppSearchInput from '@/components/AppSearchInput.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import GroceryItemInventoryQuantity from '@/components/GroceryItemInventoryQuantity.vue';
 import GroceryItemSearchGroceryAislesFilter from '@/components/GroceryItemSearchGroceryAislesFilter.vue';
@@ -88,7 +89,7 @@ function navigateSearch(toResults: boolean) {
   router.push(routeParams);
 }
 
-function clearSearch() {
+function resetSearch() {
   groceryItemStore.setListRequest({
     ...new GroceryItemsSearchRequest(),
     take: listRequest.value.take,
@@ -507,16 +508,16 @@ watch(
           <div class="g-col-12 g-col-lg-9 d-flex gap-2">
             <div class="flex-grow-1">
               <label for="searchText" class="form-label visually-hidden">Search</label>
-              <input
+              <AppSearchInput
                 id="searchText"
                 v-model="listRequest.searchText"
                 type="search"
                 inputmode="search"
                 enterkeyhint="search"
-                class="form-control"
                 placeholder="Search..."
                 @keydown.stop.prevent.enter="startSearch"
-              >
+                @clear="startSearch"
+              />
             </div>
             <button
               class="btn btn-outline-secondary flex-shrink-0 d-lg-none position-relative"
@@ -561,8 +562,8 @@ watch(
           <button class="btn btn-primary me-2" type="button" @click.stop.prevent="startSearch()">
             Search
           </button>
-          <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="clearSearch()">
-            Clear
+          <button class="btn btn-secondary me-2" type="button" @click.stop.prevent="resetSearch()">
+            Reset
           </button>
           <router-link :to="{ name: 'groceryItemNew' }" class="btn btn-secondary">
             New
