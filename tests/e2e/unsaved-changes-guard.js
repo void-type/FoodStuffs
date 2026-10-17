@@ -38,6 +38,9 @@ async (page) => {
       window.dispatchEvent(ev);
       return ev.defaultPrevented;
     });
+  // After a failure the page may be dirty; stop its beforeunload prompt so the next navigation can't hang on a native dialog.
+  const disarmUnloadPrompt = () =>
+    page.evaluate(() => window.addEventListener('beforeunload', ev => ev.stopImmediatePropagation(), true)).catch(() => {});
 
   for (const e of entities) {
     const url = `${base}/${e.seg}/${e.existing}`;
@@ -75,6 +78,7 @@ async (page) => {
       }
     } catch (err) {
       log(`${k}: existing-entity scenarios`, false, String(err).split('\n')[0]);
+      await disarmUnloadPrompt();
     }
 
     // New record: create, redirect without a prompt, then the guard must still work.
@@ -99,6 +103,7 @@ async (page) => {
       await page.waitForSelector('.modal.show', { state: 'detached', timeout: 3000 }).catch(() => {});
     } catch (err) {
       log(`${k}: create flow`, false, String(err).split('\n')[0]);
+      await disarmUnloadPrompt();
     }
 
     // Delete the test record in place; navigating away while dirty would raise a native dialog.

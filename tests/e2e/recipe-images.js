@@ -129,6 +129,7 @@ async (page) => {
     await expectState('returning to the recipe starts on the first image', { count: 2, active: 0 });
   } catch (err) {
     check('script completed', false, String(err).split('\n')[0]);
+    await page.evaluate(() => window.addEventListener('beforeunload', ev => ev.stopImmediatePropagation(), true)).catch(() => {});
   }
 
   // Delete the test recipe.

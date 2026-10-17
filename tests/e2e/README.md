@@ -7,6 +7,7 @@ Self-checking browser tests for UI flows that unit tests can't cover. They drive
 |----------|----------------------------|--------|
 | `guard`  | `unsaved-changes-guard.js` | Leave/unload prompt on the Recipe, Category, Grocery Item/Aisle/Store and Storage Location edit pages, including right after creating a record. |
 | `images` | `recipe-images.js`         | Recipe image upload (single and multiple), rejection of non-images, pin, delete, carousel position, failed upload. |
+| `shortcut` | `save-shortcut.js`       | Ctrl+S saves from inside a field (and the rich text editor) on the Recipe, Category, Grocery Item/Aisle/Store, Storage Location and Meal Plan edit pages, and is ignored with a dialog open. |
 
 ## Running
 

@@ -18,15 +18,16 @@
 #>
 [CmdletBinding()]
 param(
-  [ValidateSet('all', 'guard', 'images')]
+  [ValidateSet('all', 'guard', 'images', 'shortcut')]
   [string] $Suite = 'all',
   [string] $BaseUrl = 'https://localhost:5001',
   [int] $TimeoutMinutes = 10
 )
 
 $suites = [ordered]@{
-  guard  = 'unsaved-changes-guard.js'
-  images = 'recipe-images.js'
+  guard    = 'unsaved-changes-guard.js'
+  images   = 'recipe-images.js'
+  shortcut = 'save-shortcut.js'
 }
 
 if (-not (Get-Command playwright-cli -ErrorAction SilentlyContinue)) {
