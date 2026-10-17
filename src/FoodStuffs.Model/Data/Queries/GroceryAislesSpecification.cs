@@ -70,9 +70,11 @@ public class GroceryAislesSpecification : QuerySpecificationAbstract<GroceryAisl
                 break;
             case "ORDER":
                 AddOrderBy(c => c.Order, request.SortDescending);
+                AddOrderBy(c => c.Name);
                 break;
             default:
                 AddOrderBy(c => c.Order);
+                AddOrderBy(c => c.Name);
                 break;
         }
     }
