@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import type {
   EntityResponseOfGetRecipeResponse,
   GetRecipeResponse,
@@ -8,21 +7,15 @@ import type {
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
 import type RecipeWorking from '@/models/RecipeWorking';
-import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
-import {
-
-  onBeforeRouteLeave,
-  onBeforeRouteUpdate,
-
-  useRoute,
-  useRouter,
-} from 'vue-router';
+import { computed, reactive, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import RecipeEditor from '@/components/RecipeEditor.vue';
 import RecipeImageManager from '@/components/RecipeImageManager.vue';
+import useRecipeImages from '@/composables/useRecipeImages';
+import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
-import { clamp } from '@/models/FormatHelper';
 import RecipeGetResponse from '@/models/RecipeGetResponse';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
@@ -44,13 +37,7 @@ const props = defineProps({
 
 const data = reactive({
   sourceRecipe: new RecipeGetResponse() as GetRecipeResponse,
-  sourceImages: [] as string[],
   isRecipeDirty: false,
-  suggestedImage: null as string | null,
-  pinnedImage: null as string | null,
-  imageUploadSuccessToken: 0,
-  imageUploadFailToken: 0,
-  recipeChangeToken: 0,
 });
 
 const appStore = useAppStore();
@@ -60,18 +47,26 @@ const router = useRouter();
 const route = useRoute();
 const api = ApiHelper.client;
 
+const {
+  images: sourceImages,
+  suggestedImage,
+  pinnedImage,
+  setSource: setImageSource,
+  uploadImage,
+  deleteImage,
+  pinImage,
+} = useRecipeImages(() => props.id);
+
+useUnsavedChangesGuard(() => data.isRecipeDirty, {
+  onLeave: () => recipeStore.addToRecent(data.sourceRecipe),
+});
+
 // Editing existing
 const isEditMode = computed(() => (props.id || 0) > 0);
 // Create copy of existing
 const isCreateCopyMode = computed(() => !isEditMode.value && (props.copy || 0) > 0);
 // Create new
 const isCreateNewMode = computed(() => !isEditMode.value && !isCreateCopyMode.value);
-
-function setImageSources(getRecipeResponse: GetRecipeResponse) {
-  const { images, pinnedImage } = getRecipeResponse;
-  data.sourceImages = images || [];
-  data.pinnedImage = pinnedImage || null;
-}
 
 function setSources(getRecipeResponse: GetRecipeResponse) {
   if (isCreateCopyMode.value === true) {
@@ -87,8 +82,7 @@ function setSources(getRecipeResponse: GetRecipeResponse) {
   }
 
   RouterHelper.setTitle(route, data.sourceRecipe.name);
-  setImageSources(data.sourceRecipe);
-  data.suggestedImage = null;
+  setImageSource(data.sourceRecipe);
 }
 
 async function fetchRecipe() {
@@ -103,7 +97,6 @@ async function fetchRecipe() {
 
   try {
     const response = await api().recipesGet({ id });
-    data.recipeChangeToken += 1;
     setSources(response.data);
     if (isEditMode.value) {
       recipeStore.queueRecent(response.data);
@@ -111,15 +104,6 @@ async function fetchRecipe() {
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
     data.sourceRecipe = new RecipeGetResponse();
-  }
-}
-
-async function fetchImages(recipeId: number) {
-  try {
-    const response = await api().recipesGet({ id: recipeId });
-    setImageSources(response.data);
-  } catch (error) {
-    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
 }
 
@@ -189,73 +173,6 @@ function onRecipeDirtyStateChange(value: boolean) {
   data.isRecipeDirty = value;
 }
 
-function onImageUpload(file: File) {
-  api()
-    .imagesUpload({ recipeId: props.id }, { file })
-    .then(async (response) => {
-      if (response.data.message) {
-        messageStore.setSuccessMessage(response.data.message);
-      }
-
-      data.suggestedImage = response.data.id || null;
-      fetchImages(props.id);
-      await recipeStore.fetchRecipesList();
-      data.imageUploadSuccessToken += 1;
-    })
-    .catch((response) => {
-      data.imageUploadFailToken += 1;
-      messageStore.setApiFailureMessages(response);
-    });
-}
-
-function onImageDelete(name: string) {
-  function deleteImage() {
-    api()
-      .imagesDelete({ name })
-      .then(async (response) => {
-        if (response.data.message) {
-          messageStore.setSuccessMessage(response.data.message);
-        }
-
-        const suggestedImageIndex = clamp(
-          data.sourceImages.indexOf(name) - 1,
-          0,
-          data.sourceImages.length - 1,
-        );
-        data.suggestedImage = data.sourceImages[suggestedImageIndex] || null;
-        fetchImages(props.id);
-        await recipeStore.fetchRecipesList();
-      })
-      .catch((response) => {
-        messageStore.setApiFailureMessages(response);
-      });
-  }
-
-  const parameters: ModalParameters = {
-    title: 'Delete image',
-    description: 'Do you really want to delete this image?',
-    okAction: deleteImage,
-  };
-
-  appStore.showModal(parameters);
-}
-
-function onImagePin(name: string) {
-  api()
-    .imagesPin({ name })
-    .then(async (response) => {
-      if (response.data.message) {
-        messageStore.setSuccessMessage(response.data.message);
-      }
-      data.suggestedImage = name;
-      fetchImages(props.id);
-      await recipeStore.fetchRecipesList();
-    })
-    .catch((response) => {
-      messageStore.setApiFailureMessages(response);
-    });
-}
-
 watch(
   () => props.id,
   () => {
@@ -263,72 +180,6 @@ watch(
   },
   { immediate: true },
 );
-
-let forceImmediateRouteChange = false;
-
-function changeRouteFromModal(t: RouteLocationNormalized) {
-  recipeStore.addToRecent(data.sourceRecipe);
-  forceImmediateRouteChange = true;
-  router.push(t).then(() => {
-    forceImmediateRouteChange = false;
-  });
-}
-
-function beforeRouteChange(
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
-  next: NavigationGuardNext,
-) {
-  if (forceImmediateRouteChange) {
-    next();
-    return;
-  }
-
-  if (data.isRecipeDirty) {
-    const parameters: ModalParameters = {
-      title: 'Unsaved changes',
-      description: 'You have unsaved changes. Do you really want to leave?',
-      okAction: () => changeRouteFromModal(to),
-    };
-
-    next(false);
-    appStore.showModal(parameters);
-    return;
-  }
-
-  recipeStore.addToRecent(data.sourceRecipe);
-  changeRouteFromModal(to);
-  next();
-}
-
-onBeforeRouteUpdate(async (to, from, next) => {
-  beforeRouteChange(to, from, next);
-});
-
-onBeforeRouteLeave(async (to, from, next) => {
-  beforeRouteChange(to, from, next);
-});
-
-function handleBeforeUnload(event: BeforeUnloadEvent) {
-  if (data.isRecipeDirty) {
-    event.preventDefault();
-    // Required for Chrome to show the confirmation dialog
-
-    event.returnValue = '';
-    // Required for Firefox to show the confirmation dialog
-    return '';
-  }
-
-  return null;
-}
-
-onMounted(() => {
-  window.addEventListener('beforeunload', handleBeforeUnload);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('beforeunload', handleBeforeUnload);
-});
 </script>
 
 <template>
@@ -346,15 +197,13 @@ onBeforeUnmount(() => {
       <template #images>
         <RecipeImageManager
           v-if="isEditMode"
-          :images="data.sourceImages"
-          :suggested-image="data.suggestedImage"
-          :pinned-image="data.pinnedImage"
-          :on-image-upload="onImageUpload"
-          :image-upload-success-token="data.imageUploadSuccessToken"
-          :image-upload-fail-token="data.imageUploadFailToken"
-          :recipe-changed-token="data.recipeChangeToken"
-          :on-image-delete="onImageDelete"
-          :on-image-pin="onImagePin"
+          :recipe-id="props.id"
+          :images="sourceImages"
+          :suggested-image="suggestedImage"
+          :pinned-image="pinnedImage"
+          :on-image-upload="uploadImage"
+          :on-image-delete="deleteImage"
+          :on-image-pin="pinImage"
         />
         <div v-else class="alert alert-secondary mb-0">
           <strong>Note:</strong> You can upload images after saving.

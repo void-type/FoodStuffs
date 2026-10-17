@@ -11,6 +11,12 @@ import useMessageStore from '@/stores/messageStore';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 
 const props = defineProps({
+  // Used to reset the carousel when a different recipe is loaded.
+  recipeId: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   images: {
     type: Array as PropType<Array<string>>,
     required: true,
@@ -26,19 +32,7 @@ const props = defineProps({
     default: null,
   },
   onImageUpload: {
-    type: Function,
-    required: true,
-  },
-  imageUploadSuccessToken: {
-    type: Number,
-    required: true,
-  },
-  imageUploadFailToken: {
-    type: Number,
-    required: true,
-  },
-  recipeChangedToken: {
-    type: Number,
+    type: Function as PropType<(file: File) => Promise<unknown>>,
     required: true,
   },
   onImageDelete: {
@@ -101,7 +95,9 @@ function uploadFile(file: File) {
 
   uploadingCount.value += 1;
 
-  props.onImageUpload(file);
+  props.onImageUpload(file).finally(() => {
+    uploadingCount.value = Math.max(0, uploadingCount.value - 1);
+  });
 }
 
 function processFiles(files: FileList | null) {
@@ -150,21 +146,10 @@ watch([() => props.images, () => props.suggestedImage], () => {
   carouselIndex.value = clamp(newIndex, 0, props.images.length - 1);
 });
 
-watch([() => props.recipeChangedToken], () => {
-  carouselIndex.value = 0;
-});
-
 watch(
-  () => props.imageUploadSuccessToken,
+  () => props.recipeId,
   () => {
-    uploadingCount.value = Math.max(0, uploadingCount.value - 1);
-  },
-);
-
-watch(
-  () => props.imageUploadFailToken,
-  () => {
-    uploadingCount.value = Math.max(0, uploadingCount.value - 1);
+    carouselIndex.value = 0;
   },
 );
 
