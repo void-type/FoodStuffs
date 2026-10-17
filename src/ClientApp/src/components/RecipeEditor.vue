@@ -9,6 +9,7 @@ import type {
 import type { HttpResponse } from '@/api/http-client';
 import type { Tag } from '@/models/Tag';
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import useSaveShortcut from '@/composables/useSaveShortcut';
 import ApiHelper from '@/models/ApiHelper';
 import { trimAndTitleCase } from '@/models/FormatHelper';
 import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
@@ -176,6 +177,8 @@ async function saveClick() {
   await mealPlanStore.setCurrentMealPlan(getCurrentMealPlanFromStorage());
 }
 
+useSaveShortcut(saveClick);
+
 watch(
   () => props.sourceRecipe,
   () => {
@@ -223,7 +226,13 @@ onBeforeUnmount(() => {
 <template>
   <div ref="rootRef">
     <div ref="saveBarRef" class="btn-toolbar sticky-top pt-1">
-      <button type="button" class="btn btn-primary me-2" @click.stop.prevent="saveClick()">
+      <button
+        type="button"
+        class="btn btn-primary me-2"
+        title="Save (Ctrl+S)"
+        aria-keyshortcuts="Control+S Meta+S"
+        @click.stop.prevent="saveClick()"
+      >
         Save
       </button>
       <RecipeCurrentMealPlanButton v-if="isEditMode" class="me-2" :recipe-id="sourceRecipe.id" />

@@ -9,6 +9,7 @@ import AppPageHeading from '@/components/AppPageHeading.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import GroceryItemGroceryAisleSelect from '@/components/GroceryItemGroceryAisleSelect.vue';
 import TagEditor from '@/components/TagEditor.vue';
+import useSaveShortcut from '@/composables/useSaveShortcut';
 import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
 import { isNil, trimAndTitleCase } from '@/models/FormatHelper';
@@ -88,6 +89,7 @@ async function fetch() {
 }
 
 const { navigateWithoutPrompt } = useUnsavedChangesGuard(isDirty);
+useSaveShortcut(onSaveClick);
 
 async function onSaveClick() {
   try {
@@ -248,7 +250,13 @@ onMounted(() => {
     <AppPageHeading />
     <div class="mt-3">
       <div class="btn-toolbar sticky-top pt-1">
-        <button type="button" class="btn btn-primary me-2" @click.stop.prevent="onSaveClick()">
+        <button
+          type="button"
+          class="btn btn-primary me-2"
+          title="Save (Ctrl+S)"
+          aria-keyshortcuts="Control+S Meta+S"
+          @click.stop.prevent="onSaveClick()"
+        >
           Save
         </button>
         <div class="dropdown">

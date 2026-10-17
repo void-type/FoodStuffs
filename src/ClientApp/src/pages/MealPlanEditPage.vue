@@ -15,6 +15,7 @@ import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import MealPlanGroceryItemList from '@/components/MealPlanGroceryItemList.vue';
 import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
+import useSaveShortcut from '@/composables/useSaveShortcut';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
@@ -129,6 +130,9 @@ async function onSaveMealPlan(quickSave: boolean = false) {
     }
   }
 }
+
+// Nothing to save until the meal plan has loaded.
+useSaveShortcut(() => (initialized.value ? onSaveMealPlan() : undefined));
 
 async function onSaveAndMakeCurrent() {
   const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
@@ -418,7 +422,12 @@ onMounted(async () => {
     <AppPageHeading :title="pageTitle" />
     <div v-if="initialized" class="mt-3">
       <div class="btn-toolbar sticky-top pt-1">
-        <button class="btn btn-primary me-2" @click.stop.prevent="() => onSaveMealPlan()">
+        <button
+          class="btn btn-primary me-2"
+          title="Save (Ctrl+S)"
+          aria-keyshortcuts="Control+S Meta+S"
+          @click.stop.prevent="() => onSaveMealPlan()"
+        >
           Save
         </button>
         <button
