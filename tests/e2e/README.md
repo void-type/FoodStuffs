@@ -5,9 +5,10 @@ Self-checking browser tests for UI flows that unit tests can't cover. They drive
 
 | Suite    | File                       | Covers |
 |----------|----------------------------|--------|
-| `guard`  | `unsaved-changes-guard.js` | Leave/unload prompt on the Recipe, Category, Grocery Item/Aisle/Store and Storage Location edit pages, including right after creating a record. |
+| `guard`  | `unsaved-changes-guard.js` | Leave/unload prompt on the Recipe, Category, Grocery Item/Aisle/Store, Storage Location and Meal Plan edit pages (including the current meal plan), and right after creating a record. |
 | `images` | `recipe-images.js`         | Recipe image upload (single and multiple), rejection of non-images, pin, delete, carousel position, failed upload. |
 | `shortcut` | `save-shortcut.js`       | Ctrl+S saves from inside a field (and the rich text editor) on the Recipe, Category, Grocery Item/Aisle/Store, Storage Location and Meal Plan edit pages, and is ignored with a dialog open. |
+| `tags`   | `tag-editor.js`            | Keyboard flow of the tag editor: arrow keys highlight suggestions, Enter or Tab then Enter on Add adds, Escape closes, focus returns to the field. Creates no data. |
 
 ## Running
 
@@ -18,6 +19,7 @@ Self-checking browser tests for UI flows that unit tests can't cover. They drive
 ```powershell
 ./tests/e2e/run.ps1                  # all suites
 ./tests/e2e/run.ps1 -Suite images    # one suite
+./tests/e2e/run.ps1 -Suite guard -Only mealplan,recipe   # only some entities (guard and shortcut suites)
 ./tests/e2e/run.ps1 -BaseUrl https://localhost:5001
 ```
 

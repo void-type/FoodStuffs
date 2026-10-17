@@ -13,14 +13,19 @@
 .PARAMETER BaseUrl
   The running app's URL.
 
+.PARAMETER Only
+  Comma-separated entity keys to restrict the guard and shortcut suites to while iterating,
+  for example `-Only mealplan,recipe`. Keys: recipe, category, aisle, store, location, item, mealplan.
+
 .PARAMETER TimeoutMinutes
   How long to wait for each suite before giving up.
 #>
 [CmdletBinding()]
 param(
-  [ValidateSet('all', 'guard', 'images', 'shortcut')]
+  [ValidateSet('all', 'guard', 'images', 'shortcut', 'tags')]
   [string] $Suite = 'all',
   [string] $BaseUrl = 'https://localhost:5001',
+  [string] $Only = '',
   [int] $TimeoutMinutes = 10
 )
 
@@ -28,6 +33,7 @@ $suites = [ordered]@{
   guard    = 'unsaved-changes-guard.js'
   images   = 'recipe-images.js'
   shortcut = 'save-shortcut.js'
+  tags     = 'tag-editor.js'
 }
 
 if (-not (Get-Command playwright-cli -ErrorAction SilentlyContinue)) {
@@ -49,6 +55,9 @@ try {
     playwright-cli close 2>&1 | Out-Null
     playwright-cli open $BaseUrl 2>&1 | Out-Null
     playwright-cli localstorage-delete e2eResults 2>&1 | Out-Null
+    if ($Only) {
+      playwright-cli localstorage-set e2eOnly $Only 2>&1 | Out-Null
+    }
     # run-code can return before the script ends (native dialogs make the CLI report a modal state),
     # so run it in the background and poll the results the script saves to localStorage.
     $job = Start-Job -ScriptBlock {

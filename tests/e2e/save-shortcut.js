@@ -23,6 +23,9 @@ async (page) => {
     { key: 'mealplan', seg: 'meal-plans', api: 'meal-plans', name: '#mealPlanName' },
   ];
 
+  // Optional comma-separated list of entity keys to run (set by `run.ps1 -Only`).
+  const only = (await page.evaluate(() => localStorage.getItem('e2eOnly')) || '').split(',').filter(Boolean);
+
   const getField = async (api, id, field) =>
     page.evaluate(([u, f]) => fetch(u).then(r => r.json()).then(j => j[f]), [`/api/${api}/${id}`, field]);
   // Poll until the saved field has the expected value (or give up).
@@ -54,7 +57,7 @@ async (page) => {
   });
   const defaultPrevented = () => page.evaluate(() => window.e2eDefaultPrevented);
 
-  for (const e of entities) {
+  for (const e of entities.filter(x => only.length === 0 || only.includes(x.key))) {
     const k = e.key;
     let id = null;
 
