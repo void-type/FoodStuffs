@@ -342,23 +342,25 @@ onBeforeUnmount(() => {
       :on-recipe-dirty-state-change="onRecipeDirtyStateChange"
       :is-edit-mode="isEditMode"
       class="mt-3"
-    />
-    <RecipeImageManager
-      v-if="isEditMode"
-      :images="data.sourceImages"
-      :suggested-image="data.suggestedImage"
-      :pinned-image="data.pinnedImage"
-      :on-image-upload="onImageUpload"
-      :image-upload-success-token="data.imageUploadSuccessToken"
-      :image-upload-fail-token="data.imageUploadFailToken"
-      :recipe-changed-token="data.recipeChangeToken"
-      :on-image-delete="onImageDelete"
-      :on-image-pin="onImagePin"
-      class="mt-3"
-    />
-    <div v-else class="alert alert-secondary mt-3">
-      <strong>Note:</strong> You can upload images after saving.
-    </div>
+    >
+      <template #images>
+        <RecipeImageManager
+          v-if="isEditMode"
+          :images="data.sourceImages"
+          :suggested-image="data.suggestedImage"
+          :pinned-image="data.pinnedImage"
+          :on-image-upload="onImageUpload"
+          :image-upload-success-token="data.imageUploadSuccessToken"
+          :image-upload-fail-token="data.imageUploadFailToken"
+          :recipe-changed-token="data.recipeChangeToken"
+          :on-image-delete="onImageDelete"
+          :on-image-pin="onImagePin"
+        />
+        <div v-else class="alert alert-secondary mb-0">
+          <strong>Note:</strong> You can upload images after saving.
+        </div>
+      </template>
+    </RecipeEditor>
   </div>
 </template>
 

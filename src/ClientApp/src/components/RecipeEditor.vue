@@ -274,17 +274,6 @@ onBeforeUnmount(() => {
           class="form-control" :class="{ 'is-invalid': messageStore.isFieldInError('name') }"
         >
       </div>
-      <TagEditor
-        class="g-col-12 g-col-md-6" :class="{
-          danger: messageStore.isFieldInError('categories'),
-        }"
-        :tags="data.workingRecipe.categories"
-        :on-add-tag="addCategory"
-        :on-remove-tag="removeCategory"
-        :suggestions="categoryOptions"
-        field-name="categories"
-        label="Categories"
-      />
       <div class="g-col-12">
         <div class="form-check">
           <input
@@ -297,13 +286,6 @@ onBeforeUnmount(() => {
           <label for="isForMealPlanning" class="form-check-label">For meal planning</label>
         </div>
       </div>
-      <AppInputNumberWithButtons
-        id="mealPlanningSidesCount"
-        v-model="data.workingRecipe.mealPlanningSidesCount"
-        label="Sides count"
-        class="g-col-12 g-col-md-6"
-        :min="0"
-      />
       <div class="g-col-12 g-col-md-6">
         <label for="grocery-item-list" class="form-label">Grocery items</label>
         <RecipeEditorGroceryItems
@@ -313,6 +295,27 @@ onBeforeUnmount(() => {
           :on-create-item="createGroceryItem"
         />
       </div>
+      <TagEditor
+        class="g-col-12 g-col-md-6" :class="{
+          danger: messageStore.isFieldInError('categories'),
+        }"
+        :tags="data.workingRecipe.categories"
+        :on-add-tag="addCategory"
+        :on-remove-tag="removeCategory"
+        :suggestions="categoryOptions"
+        field-name="categories"
+        label="Categories"
+      />
+      <div v-if="$slots.images" class="g-col-12">
+        <slot name="images" />
+      </div>
+      <AppInputNumberWithButtons
+        id="mealPlanningSidesCount"
+        v-model="data.workingRecipe.mealPlanningSidesCount"
+        label="Sides count"
+        class="g-col-12 g-col-md-6"
+        :min="0"
+      />
       <div class="g-col-12 g-col-md-6">
         <label for="sides" class="form-label">Sides</label>
         <textarea

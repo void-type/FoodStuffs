@@ -187,7 +187,7 @@ onMounted(() => {
       <div class="g-col-12 g-col-md-6">
         <label
           for="upload-file"
-          class="upload-dropzone d-flex flex-column align-items-center justify-content-center text-center p-4"
+          class="upload-dropzone d-flex flex-md-column align-items-center justify-content-center text-center px-3 py-2 p-md-4"
           :class="{
             'is-dragover': isDragOver,
             'is-invalid': isFieldInError('upload-file'),
@@ -197,11 +197,13 @@ onMounted(() => {
           @dragleave.prevent="dropzoneDragLeave"
           @drop.prevent="dropzoneDrop"
         >
-          <FontAwesomeIcon icon="fa-cloud-arrow-up" size="2x" class="mb-2 text-secondary" />
-          <span>Drag and drop images here, or click to browse</span>
-          <span v-if="uploadingCount > 0" class="text-primary mt-2">
-            Uploading {{ uploadingCount }} image{{ uploadingCount === 1 ? '' : 's' }}...
-          </span>
+          <FontAwesomeIcon icon="fa-cloud-arrow-up" class="upload-icon me-2 me-md-0 mb-md-2 text-secondary" />
+          <div>
+            <span>Drag and drop images here, or click to browse</span>
+            <span v-if="uploadingCount > 0" class="d-block text-primary mt-1 mt-md-2">
+              Uploading {{ uploadingCount }} image{{ uploadingCount === 1 ? '' : 's' }}...
+            </span>
+          </div>
           <input
             id="upload-file"
             type="file"
@@ -313,6 +315,16 @@ onMounted(() => {
 
   &.is-invalid {
     border-color: var(--bs-danger);
+  }
+}
+
+.upload-icon {
+  // Inline with the text on mobile, larger and stacked on md+.
+  font-size: 1.25rem;
+  flex-shrink: 0;
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
   }
 }
 
