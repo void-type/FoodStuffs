@@ -3,7 +3,7 @@ import type bootstrap from 'bootstrap';
 import type { PropType } from 'vue';
 import type { HTMLInputEvent } from '@/models/HTMLInputEvent';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, ref, useTemplateRef, watch } from 'vue';
 import ApiHelper from '@/models/ApiHelper';
 import { clamp } from '@/models/FormatHelper';
 import useImageLightboxStore from '@/stores/imageLightboxStore';
@@ -58,6 +58,7 @@ const imageLightboxStore = useImageLightboxStore();
 const uploadingCount = ref(0);
 const isDragOver = ref(false);
 const carouselIndex = ref(0);
+const carouselElement = useTemplateRef<HTMLElement>('carouselElement');
 const uniqueId = crypto.randomUUID();
 
 const fileSizeLimit = 30000000;
@@ -153,15 +154,23 @@ watch(
   },
 );
 
-onMounted(() => {
-  const carouselElement = document.getElementById('image-carousel');
+// Keep carouselIndex in step with the slide the user moved to, so refreshing images doesn't jump back.
+function onSlid(event: Event) {
+  carouselIndex.value = (event as unknown as bootstrap.Carousel.Event).to;
+}
 
-  if (carouselElement !== null) {
-    carouselElement.addEventListener('slid.bs.carousel', (event) => {
-      const carouselEvent = event as unknown as bootstrap.Carousel.Event;
-      carouselIndex.value = carouselEvent.to;
-    });
-  }
+// The carousel only exists while there are images, so follow the element as it comes and goes.
+watch(
+  carouselElement,
+  (element, previousElement) => {
+    previousElement?.removeEventListener('slid.bs.carousel', onSlid);
+    element?.addEventListener('slid.bs.carousel', onSlid);
+  },
+  { flush: 'post' },
+);
+
+onBeforeUnmount(() => {
+  carouselElement.value?.removeEventListener('slid.bs.carousel', onSlid);
 });
 </script>
 
@@ -203,6 +212,7 @@ onMounted(() => {
         <div
           v-if="images.length > 0"
           :id="`image-carousel-${uniqueId}`"
+          ref="carouselElement"
           class="carousel slide"
           data-bs-interval="false"
         >
