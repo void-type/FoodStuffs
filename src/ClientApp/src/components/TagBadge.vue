@@ -4,24 +4,45 @@ import type { RouteLocationRaw } from 'vue-router';
 import type { Tag } from '@/models/Tag';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import { DEFAULT_TAG_COLOR } from '@/models/Tag';
 
 const props = defineProps({
   tag: {
     type: Object as PropType<Tag>,
     required: false,
-    default: () => ({ color: '#000000' }),
+    default: () => ({ color: DEFAULT_TAG_COLOR }),
   },
-  // When set, the badge renders as a link.
+  // Renders the badge as a link.
   to: {
     type: [String, Object] as PropType<RouteLocationRaw | undefined>,
     required: false,
     default: undefined,
   },
+  // Renders the badge as a button that emits "remove". Takes precedence over "to".
+  removable: { type: Boolean, required: false, default: false },
 });
+
+const emit = defineEmits(['remove']);
+
+const rootComponent = computed(() => {
+  if (props.removable) {
+    return 'button';
+  }
+
+  return props.to ? RouterLink : 'span';
+});
+
+const isInteractive = computed(() => props.removable || !!props.to);
+
+function onClick() {
+  if (props.removable) {
+    emit('remove');
+  }
+}
 
 const badgeStyleComputed = computed(() => {
   const { color } = props.tag;
-  if (!color || color === '#000000') {
+  if (!color || color === DEFAULT_TAG_COLOR) {
     // .text-bg-secondary
     return {
       color: '#000 !important',
@@ -47,18 +68,21 @@ const badgeStyleComputed = computed(() => {
 
 <template>
   <component
-    :is="to ? RouterLink : 'span'"
+    :is="rootComponent"
     class="badge rounded-pill"
-    :class="{ 'badge-link': to }"
-    :to="to"
+    :class="{ 'badge-interactive': isInteractive, 'border-0': removable }"
+    :to="removable ? undefined : to"
+    :type="removable ? 'button' : undefined"
+    :aria-label="removable ? `Click to remove ${tag.name}.` : undefined"
     :style="badgeStyleComputed"
+    @click="onClick"
   >
     {{ props.tag.name }}
   </component>
 </template>
 
 <style lang="scss" scoped>
-.badge-link {
+.badge-interactive {
   text-decoration: none;
 
   &:hover,

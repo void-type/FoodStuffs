@@ -1,10 +1,16 @@
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import useAppStore from '@/stores/appStore';
 import { isNil } from './FormatHelper';
+import RecipesSearchRequest from './RecipesSearchRequest';
+import RecipeStoreHelper from './RecipeStoreHelper';
 
 interface RouteRecipe {
   id?: number;
   slug?: string | null;
+}
+
+interface RouteCategory {
+  id?: number;
 }
 
 interface RouteGroceryItem {
@@ -34,6 +40,16 @@ export default class RouterHelper {
 
   static editRecipe(recipe: RouteRecipe) {
     return { name: 'recipeEdit', params: { id: recipe.id, slug: recipe.slug } };
+  }
+
+  static searchRecipesByCategory(category: RouteCategory) {
+    // Search all recipes, not just the meal planning ones.
+    const query = RecipeStoreHelper.listRequestToQueryParams(
+      { ...new RecipesSearchRequest(), categories: [category.id || 0], isForMealPlanning: null },
+      false,
+    );
+
+    return { name: 'recipeList', query };
   }
 
   static editGroceryItem(groceryItem: RouteGroceryItem) {

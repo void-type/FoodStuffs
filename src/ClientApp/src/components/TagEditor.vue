@@ -123,11 +123,10 @@ watch(
       <TagBadge
         v-for="tag in tags"
         :key="tag.name"
-        type="button"
-        :aria-label="`Click to remove ${tag.name}.`"
+        removable
         class="me-2 mt-2"
         :tag="tag"
-        @click.stop.prevent="removeTagClick(tag)"
+        @remove="removeTagClick(tag)"
       />
     </div>
   </div>

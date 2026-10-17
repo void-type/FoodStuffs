@@ -82,7 +82,12 @@ const imageLightboxStore = useImageLightboxStore();
           {{ sidesCount }} side{{ sidesCount !== 1 ? 's' : '' }}
         </div>
         <div v-if="cardCategories.length > 0" class="d-flex flex-wrap gap-1">
-          <TagBadge v-for="tag in cardCategories" :key="tag.id" :tag="tag" />
+          <TagBadge
+            v-for="tag in cardCategories"
+            :key="tag.id"
+            :tag="tag"
+            :to="RouterHelper.searchRecipesByCategory(tag)"
+          />
         </div>
         <slot />
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-auto">

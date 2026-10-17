@@ -15,6 +15,7 @@ import { getCurrentMealPlanFromStorage } from '@/models/MealPlanStoreHelper';
 import RecipeGroceryItemWorking from '@/models/RecipeGroceryItemWorking';
 import RecipeWorking from '@/models/RecipeWorking';
 import RouterHelper from '@/models/RouterHelper';
+import { DEFAULT_TAG_COLOR } from '@/models/Tag';
 import useMealPlanStore from '@/stores/mealPlanStore';
 import useMessageStore from '@/stores/messageStore';
 import AppInputNumberWithButtons from './AppInputNumberWithButtons.vue';
@@ -153,7 +154,7 @@ function addCategory(tag: string) {
     = !categories.map(value => value?.name?.toUpperCase()).includes(categoryName.toUpperCase());
 
   if (categoryDoesNotExist && categoryName.length > 0) {
-    categories.push({ id: 0, name: categoryName, color: '#000000' });
+    categories.push({ id: 0, name: categoryName, color: DEFAULT_TAG_COLOR });
     data.workingRecipe.categories = categories;
   }
 }
