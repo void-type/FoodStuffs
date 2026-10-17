@@ -88,7 +88,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
     private static void Transfer(string formattedName, SaveCategoryRequest request, Category category)
     {
         category.Name = formattedName;
-        category.ShowInMealPlan = request.ShowInMealPlan;
+        category.ShowOnCards = request.ShowOnCards;
         category.Color = request.Color;
     }
 }

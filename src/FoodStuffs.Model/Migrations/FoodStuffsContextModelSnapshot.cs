@@ -17,7 +17,7 @@ namespace FoodStuffs.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("ProductVersion", "10.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -52,7 +52,7 @@ namespace FoodStuffs.Model.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("ShowInMealPlan")
+                    b.Property<bool>("ShowOnCards")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");

@@ -57,7 +57,8 @@ public static class RecipeSearchHelper
             .Select(c => new SearchRecipesResultItemCategory(
                 Id: c.Id,
                 Name: c.Name,
-                Color: c.Color
+                Color: c.Color,
+                ShowOnCards: c.ShowOnCards
             ))
             .OrderBy(c => c.Name)
             .ToArray();

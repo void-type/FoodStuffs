@@ -2,11 +2,9 @@
 import type { PropType } from 'vue';
 import type { GetMealPlanResponseRecipe } from '@/api/data-contracts';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { computed } from 'vue';
 import RecipeCard from './RecipeCard.vue';
-import TagBadge from './TagBadge.vue';
 
-const props = defineProps({
+defineProps({
   recipe: { type: Object as PropType<GetMealPlanResponseRecipe>, required: true },
   imgLazy: { type: Boolean, required: false, default: false },
   showSortHandle: { type: Boolean, required: false, default: false },
@@ -14,9 +12,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['recipeCompleted', 'recipeRemoved']);
-
-const hasCategories = computed(() => (props.recipe.categories?.length || 0) > 0);
-const hasSides = computed(() => (props.recipe.mealPlanningSidesCount || 0) > 0);
 </script>
 
 <template>
@@ -32,13 +27,6 @@ const hasSides = computed(() => (props.recipe.mealPlanningSidesCount || 0) > 0);
         <FontAwesomeIcon icon="fa-check" />
       </div>
     </template>
-
-    <div v-if="hasSides" class="small text-muted">
-      {{ recipe.mealPlanningSidesCount }} side{{ recipe.mealPlanningSidesCount !== 1 ? 's' : '' }} needed.
-    </div>
-    <div v-if="hasCategories" class="d-flex flex-wrap gap-1">
-      <TagBadge v-for="tag in recipe.categories" :key="tag.name" :tag="tag" />
-    </div>
 
     <template #actions>
       <button

@@ -3,7 +3,7 @@
 public record GetCategoryResponse(
     int Id,
     string Name,
-    bool ShowInMealPlan,
+    bool ShowOnCards,
     string Color,
     string CreatedBy,
     DateTimeOffset CreatedOn,

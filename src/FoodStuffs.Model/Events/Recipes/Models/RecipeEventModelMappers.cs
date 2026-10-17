@@ -28,7 +28,8 @@ public static class RecipeEventModelMappers
             .Select(c => new GetRecipeResponseCategory(
                 Id: c.Id,
                 Name: c.Name,
-                Color: c.Color
+                Color: c.Color,
+                ShowOnCards: c.ShowOnCards
             ))
             .OrderBy(c => c.Name)],
             GroceryItems: [.. r.GroceryItemRelations

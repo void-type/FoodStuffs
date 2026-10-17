@@ -8,7 +8,7 @@ public class Category : IAuditableWithOffset
 
     public string Name { get; set; } = null!;
 
-    public bool ShowInMealPlan { get; set; }
+    public bool ShowOnCards { get; set; }
 
     public string Color { get; set; } = null!;
 

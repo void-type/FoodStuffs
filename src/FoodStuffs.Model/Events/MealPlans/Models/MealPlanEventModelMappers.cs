@@ -28,11 +28,11 @@ public static class MealPlanEventModelMappers
                     mealPlanningSidesCount: rel.Recipe.MealPlanningSidesCount,
                     Image: rel.Recipe.DefaultImage?.FileName,
                     Categories: [.. rel.Recipe.Categories
-                        .Where(c => c.ShowInMealPlan)
                         .Select(c => new GetMealPlanResponseRecipeCategory(
                             Id: c.Id,
                             Name: c.Name,
-                            Color: c.Color
+                            Color: c.Color,
+                            ShowOnCards: c.ShowOnCards
                         ))
                         .OrderBy(c => c.Name)],
                     GroceryItems: [.. rel.Recipe.GroceryItemRelations

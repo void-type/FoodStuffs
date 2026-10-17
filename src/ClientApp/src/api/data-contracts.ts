@@ -122,7 +122,7 @@ export interface GetCategoryResponse {
   /** @format int32 */
   id?: number;
   name?: string;
-  showInMealPlan?: boolean;
+  showOnCards?: boolean;
   color?: string;
   createdBy?: string;
   /** @format date-time */
@@ -154,7 +154,7 @@ export interface SaveCategoryRequest {
   /** @format int32 */
   id?: number;
   name?: string;
-  showInMealPlan?: boolean;
+  showOnCards?: boolean;
   color?: string;
 }
 
@@ -548,6 +548,7 @@ export interface GetMealPlanResponseRecipeCategory {
   id?: number;
   name?: string;
   color?: string;
+  showOnCards?: boolean;
 }
 
 export interface GetMealPlanResponseRecipeGroceryItem {
@@ -647,6 +648,7 @@ export interface SearchRecipesResultItemCategory {
   id?: number;
   name?: string;
   color?: string;
+  showOnCards?: boolean;
 }
 
 export interface SearchRecipesResultItemGroceryItem {
@@ -727,6 +729,7 @@ export interface GetRecipeResponseCategory {
   id?: number;
   name?: string;
   color?: string;
+  showOnCards?: boolean;
 }
 
 export interface GetRecipeResponseGroceryItem {

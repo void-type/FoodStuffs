@@ -3,5 +3,5 @@
 public record SaveCategoryRequest(
     int Id,
     string Name,
-    bool ShowInMealPlan,
+    bool ShowOnCards,
     string Color);

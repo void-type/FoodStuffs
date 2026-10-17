@@ -5,7 +5,7 @@ export default class CategoryWorking implements SaveCategoryRequest {
 
   public name: string = '';
 
-  public showInMealPlan: boolean = false;
+  public showOnCards: boolean = false;
 
   public color: string = '#000000';
 }

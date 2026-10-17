@@ -8,12 +8,15 @@ import useImageLightboxStore from '@/stores/imageLightboxStore';
 import AppSortHandle from './AppSortHandle.vue';
 import ImagePlaceholder from './ImagePlaceholder.vue';
 import RecipeCurrentMealPlanButton from './RecipeCurrentMealPlanButton.vue';
+import TagBadge from './TagBadge.vue';
 
-// Minimal shape shared by both search results and meal plan recipes.
+// Minimal shape shared by search results, meal plan recipes, and recently viewed recipes.
 interface RecipeCardRecipe {
   id?: number;
   name?: string;
   image?: string | null;
+  mealPlanningSidesCount?: number;
+  categories?: { id?: number; name?: string; color?: string; showOnCards?: boolean }[];
 }
 
 const props = defineProps({
@@ -31,6 +34,8 @@ const props = defineProps({
 });
 
 const recipeCardId = computed(() => `recipe-card-${props.recipe.id}`);
+const cardCategories = computed(() => (props.recipe.categories || []).filter(c => c.showOnCards));
+const sidesCount = computed(() => props.recipe.mealPlanningSidesCount || 0);
 const imageLightboxStore = useImageLightboxStore();
 </script>
 
@@ -73,6 +78,12 @@ const imageLightboxStore = useImageLightboxStore();
         </button>
       </div>
       <div class="card-body flex-grow-1 d-flex flex-column gap-2 min-w-0">
+        <div v-if="sidesCount > 0" class="small text-muted">
+          {{ sidesCount }} side{{ sidesCount !== 1 ? 's' : '' }}
+        </div>
+        <div v-if="cardCategories.length > 0" class="d-flex flex-wrap gap-1">
+          <TagBadge v-for="tag in cardCategories" :key="tag.id" :tag="tag" />
+        </div>
         <slot />
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-auto">
           <div class="d-flex flex-wrap gap-3">

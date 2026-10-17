@@ -346,13 +346,13 @@ onBeforeUnmount(() => {
         <div class="g-col-12">
           <div class="form-check">
             <input
-              id="showInMealPlan"
-              v-model="data.working.showInMealPlan"
+              id="showOnCards"
+              v-model="data.working.showOnCards"
               class="form-check-input"
               type="checkbox"
-              :class="{ 'is-invalid': messageStore.isFieldInError('showInMealPlan') }"
+              :class="{ 'is-invalid': messageStore.isFieldInError('showOnCards') }"
             >
-            <label for="showInMealPlan" class="form-check-label">Show in meal plan</label>
+            <label for="showOnCards" class="form-check-label">Show on cards</label>
           </div>
         </div>
         <EntityAuditInfo v-if="data.source.id" class="g-col-12" :entity="data.source" />

@@ -3,4 +3,5 @@
 public record SearchRecipesResultItemCategory(
     int Id,
     string Name,
-    string Color);
+    string Color,
+    bool ShowOnCards);

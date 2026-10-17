@@ -3,4 +3,5 @@
 public record GetMealPlanResponseRecipeCategory(
     int Id,
     string Name,
-    string Color);
+    string Color,
+    bool ShowOnCards);
