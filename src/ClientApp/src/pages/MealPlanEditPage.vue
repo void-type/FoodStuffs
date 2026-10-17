@@ -16,6 +16,7 @@ import AppPageHeading from '@/components/AppPageHeading.vue';
 import MealPlanGroceryItemList from '@/components/MealPlanGroceryItemList.vue';
 import MealPlanRecipeCard from '@/components/MealPlanRecipeCard.vue';
 import useSaveShortcut from '@/composables/useSaveShortcut';
+import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
@@ -119,14 +120,34 @@ const showSortHandle = ref(false);
 const isHaEnabled = ref(false);
 const thawMeatReminderOn = ref(false);
 
+// The name is the only field that isn't saved as soon as it changes; everything else quick-saves.
+// Edit a copy so unsaved typing is distinguishable from what's saved (and so quick saves don't persist it by accident).
+const workingName = ref('');
+
+watch(
+  () => activeMealPlan.value?.name,
+  (name) => {
+    workingName.value = name || '';
+  },
+  { immediate: true },
+);
+
+const isDirty = computed(() => initialized.value && workingName.value !== (activeMealPlan.value?.name || ''));
+
+const { navigateWithoutPrompt } = useUnsavedChangesGuard(isDirty);
+
 async function onSaveMealPlan(quickSave: boolean = false) {
+  if (!quickSave) {
+    activeMealPlan.value.name = workingName.value;
+  }
+
   if (isEditingCurrent.value) {
     await mealPlanStore.saveCurrentMealPlan([], quickSave);
   } else {
     const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
     if (savedId && !props.id) {
       // If this was a new meal plan, redirect to the edit page with the new ID
-      router.push({ name: 'mealPlanEdit', params: { id: savedId } });
+      await navigateWithoutPrompt({ name: 'mealPlanEdit', params: { id: savedId } });
     }
   }
 }
@@ -135,10 +156,12 @@ async function onSaveMealPlan(quickSave: boolean = false) {
 useSaveShortcut(() => (initialized.value ? onSaveMealPlan() : undefined));
 
 async function onSaveAndMakeCurrent() {
+  activeMealPlan.value.name = workingName.value;
+
   const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
   if (savedId) {
     await mealPlanStore.setCurrentMealPlan(savedId);
-    router.push({ name: 'mealPlanEdit', params: { id: savedId } });
+    await navigateWithoutPrompt({ name: 'mealPlanEdit', params: { id: savedId } });
   }
 }
 
@@ -221,7 +244,7 @@ async function onDeleteMealPlan() {
     description: 'Do you really want to delete this meal plan?',
     okAction: async () => {
       await mealPlanStore.deleteMealPlan(activeMealPlan.value.id);
-      router.push({ name: 'mealPlanList' });
+      await navigateWithoutPrompt({ name: 'mealPlanList' });
     },
   };
 
@@ -497,7 +520,7 @@ onMounted(async () => {
           <label for="nameSearch" class="form-label">Name</label>
           <input
             id="mealPlanName"
-            v-model="activeMealPlan.name"
+            v-model="workingName"
             class="form-control"
             @keydown.stop.prevent.enter="() => onSaveMealPlan()"
           >
