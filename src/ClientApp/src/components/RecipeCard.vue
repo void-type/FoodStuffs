@@ -77,7 +77,7 @@ const imageLightboxStore = useImageLightboxStore();
           <FontAwesomeIcon icon="fa-expand" />
         </button>
       </div>
-      <div class="card-body flex-grow-1 d-flex flex-column gap-2 min-w-0">
+      <div class="card-body flex-grow-1 d-flex flex-column gap-2 min-w-0 p-2">
         <div v-if="sidesCount > 0" class="small text-muted">
           {{ sidesCount }} side{{ sidesCount !== 1 ? 's' : '' }}
         </div>
