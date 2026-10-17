@@ -9,11 +9,13 @@ import { useRouter } from 'vue-router';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import AppSearchInput from '@/components/AppSearchInput.vue';
+import AppSortableTableHeader from '@/components/AppSortableTableHeader.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { toInt, toNumber } from '@/models/FormatHelper';
 import GroceryAislesListRequest from '@/models/GroceryAislesListRequest';
+import TableSortHelper from '@/models/TableSortHelper';
 import useAppStore from '@/stores/appStore';
 import useGroceryAisleStore from '@/stores/groceryAisleStore';
 import useMessageStore from '@/stores/messageStore';
@@ -84,6 +86,16 @@ function changePage(page: number) {
   navigateSearch();
 }
 
+function changeSort(sortBy: string) {
+  groceryAisleStore.listRequest = {
+    ...listRequest.value,
+    ...TableSortHelper.next(listRequest.value, sortBy),
+    page: 1,
+  };
+
+  navigateSearch();
+}
+
 function changeTake(take: number) {
   groceryAisleStore.listRequest = {
     ...listRequest.value,
@@ -99,6 +111,7 @@ function setListRequestFromQuery() {
   groceryAisleStore.listRequest = {
     ...new GroceryAislesListRequest(),
     ...props.query,
+    sortDescending: props.query.sortDescending === 'true',
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   };
@@ -194,9 +207,27 @@ watch(
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Order</th>
-          <th>Grocery Items</th>
+          <AppSortableTableHeader
+            label="Name"
+            sort-key="name"
+            :sort-by="listRequest.sortBy"
+            :sort-descending="listRequest.sortDescending"
+            @sort="changeSort"
+          />
+          <AppSortableTableHeader
+            label="Order"
+            sort-key="order"
+            :sort-by="listRequest.sortBy"
+            :sort-descending="listRequest.sortDescending"
+            @sort="changeSort"
+          />
+          <AppSortableTableHeader
+            label="Grocery Items"
+            sort-key="groceryItemCount"
+            :sort-by="listRequest.sortBy"
+            :sort-descending="listRequest.sortDescending"
+            @sort="changeSort"
+          />
           <th>Actions</th>
         </tr>
       </thead>

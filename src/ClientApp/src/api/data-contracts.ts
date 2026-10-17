@@ -841,6 +841,13 @@ export interface CategoriesListParams {
   name?: string | null;
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
+  /** Column to sort by (case-insensitive). Options are: name, showOnCards, recipeCount. Default if empty is name. */
+  sortBy?: string | null;
+  /**
+   * Sort descending instead of ascending
+   * @default false
+   */
+  sortDescending?: boolean;
   /**
    * Set false to get all results
    * @default true
@@ -881,6 +888,13 @@ export interface GroceryAislesListParams {
   name?: string | null;
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
+  /** Column to sort by (case-insensitive). Options are: name, order, groceryItemCount. Default if empty is order. */
+  sortBy?: string | null;
+  /**
+   * Sort descending instead of ascending
+   * @default false
+   */
+  sortDescending?: boolean;
   /**
    * Set false to get all results
    * @default true
@@ -999,6 +1013,13 @@ export interface GroceryStoresListParams {
   name?: string | null;
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
+  /** Column to sort by (case-insensitive). Options are: name, groceryItemCount. Default if empty is name. */
+  sortBy?: string | null;
+  /**
+   * Sort descending instead of ascending
+   * @default false
+   */
+  sortDescending?: boolean;
   /**
    * Set false to get all results
    * @default true
@@ -1203,6 +1224,13 @@ export interface StorageLocationsListParams {
   name?: string | null;
   /** Specify to show items that have relations or no relations */
   isUnused?: boolean | null;
+  /** Column to sort by (case-insensitive). Options are: name, groceryItemCount. Default if empty is name. */
+  sortBy?: string | null;
+  /**
+   * Sort descending instead of ascending
+   * @default false
+   */
+  sortDescending?: boolean;
   /**
    * Set false to get all results
    * @default true

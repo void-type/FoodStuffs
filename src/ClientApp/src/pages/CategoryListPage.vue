@@ -10,12 +10,14 @@ import { useRouter } from 'vue-router';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
 import AppSearchInput from '@/components/AppSearchInput.vue';
+import AppSortableTableHeader from '@/components/AppSortableTableHeader.vue';
 import EntityTablePager from '@/components/EntityTablePager.vue';
 import TagBadge from '@/components/TagBadge.vue';
 import ApiHelper from '@/models/ApiHelper';
 import CategoriesListRequest from '@/models/CategoriesListRequest';
 import Choices from '@/models/Choices';
 import { toInt, toNumber } from '@/models/FormatHelper';
+import TableSortHelper from '@/models/TableSortHelper';
 import useAppStore from '@/stores/appStore';
 import useCategoryStore from '@/stores/categoryStore';
 import useMessageStore from '@/stores/messageStore';
@@ -86,6 +88,16 @@ function changePage(page: number) {
   navigateSearch();
 }
 
+function changeSort(sortBy: string) {
+  categoryStore.listRequest = {
+    ...listRequest.value,
+    ...TableSortHelper.next(listRequest.value, sortBy),
+    page: 1,
+  };
+
+  navigateSearch();
+}
+
 function changeTake(take: number) {
   categoryStore.listRequest = {
     ...listRequest.value,
@@ -101,6 +113,7 @@ function setListRequestFromQuery() {
   categoryStore.listRequest = {
     ...new CategoriesListRequest(),
     ...props.query,
+    sortDescending: props.query.sortDescending === 'true',
     page: toNumber(Number(props.query.page), 1),
     take: toNumber(Number(props.query.take), Choices.defaultPaginationTake.value),
   };
@@ -196,9 +209,27 @@ watch(
     >
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Show on cards</th>
-          <th>Recipes</th>
+          <AppSortableTableHeader
+            label="Name"
+            sort-key="name"
+            :sort-by="listRequest.sortBy"
+            :sort-descending="listRequest.sortDescending"
+            @sort="changeSort"
+          />
+          <AppSortableTableHeader
+            label="Show on cards"
+            sort-key="showOnCards"
+            :sort-by="listRequest.sortBy"
+            :sort-descending="listRequest.sortDescending"
+            @sort="changeSort"
+          />
+          <AppSortableTableHeader
+            label="Recipes"
+            sort-key="recipeCount"
+            :sort-by="listRequest.sortBy"
+            :sort-descending="listRequest.sortDescending"
+            @sort="changeSort"
+          />
           <th>Actions</th>
         </tr>
       </thead>

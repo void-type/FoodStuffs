@@ -21,17 +21,21 @@ public class GroceryStoresController : ControllerBase
     /// <param name="listHandler"></param>
     /// <param name="name">Name contains (case-insensitive)</param>
     /// <param name="isUnused">Specify to show items that have relations or no relations</param>
+    /// <param name="sortBy">Column to sort by (case-insensitive). Options are: name, groceryItemCount. Default if empty is name.</param>
+    /// <param name="sortDescending">Sort descending instead of ascending</param>
     /// <param name="isPagingEnabled">Set false to get all results</param>
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet]
     [ProducesResponseType(typeof(IItemSet<ListGroceryStoresResponse>), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
-    public async Task<IActionResult> ListAsync([FromServices] ListGroceryStoresHandler listHandler, string? name = null, bool? isUnused = null, bool isPagingEnabled = true, int page = 1, int take = 30)
+    public async Task<IActionResult> ListAsync([FromServices] ListGroceryStoresHandler listHandler, string? name = null, bool? isUnused = null, string? sortBy = null, bool sortDescending = false, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
         var request = new ListGroceryStoresRequest(
             NameSearch: name,
             IsUnused: isUnused,
+            SortBy: sortBy,
+            SortDescending: sortDescending,
             IsPagingEnabled: isPagingEnabled,
             Page: page,
             Take: take);

@@ -6,6 +6,10 @@ export default class GroceryStoresListRequest implements GroceryStoresListParams
 
   public isUnused = null;
 
+  public sortBy = '';
+
+  public sortDescending = false;
+
   public isPagingEnabled = true;
 
   public page = 1;

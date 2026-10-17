@@ -7,9 +7,16 @@ namespace FoodStuffs.Model.Data.Queries;
 
 public class StorageLocationsSpecification : QuerySpecificationAbstract<StorageLocation>
 {
-    public StorageLocationsSpecification(Expression<Func<StorageLocation, bool>>[] criteria) : base(criteria)
+    public StorageLocationsSpecification(Expression<Func<StorageLocation, bool>>[] criteria) : this(criteria, applyDefaultOrdering: true)
     {
-        AddOrderBy(c => c.Name);
+    }
+
+    private StorageLocationsSpecification(Expression<Func<StorageLocation, bool>>[] criteria, bool applyDefaultOrdering) : base(criteria)
+    {
+        if (applyDefaultOrdering)
+        {
+            AddOrderBy(c => c.Name);
+        }
     }
 
     public StorageLocationsSpecification(int id)
@@ -22,9 +29,10 @@ public class StorageLocationsSpecification : QuerySpecificationAbstract<StorageL
         AddCriteria(r => r.Name == name);
     }
 
-    public StorageLocationsSpecification(ListStorageLocationsRequest request) : this(criteria: [])
+    public StorageLocationsSpecification(ListStorageLocationsRequest request) : this(criteria: [], applyDefaultOrdering: false)
     {
         AddInclude(nameof(StorageLocation.GroceryItems));
+        AddOrderings(request);
 
         // StringComparison overloads aren't supported in EF's SQL Server driver, but we want to ensure case-insensitive compare regardless of collation
         // Need to use Linq methods for EF
@@ -46,5 +54,22 @@ public class StorageLocationsSpecification : QuerySpecificationAbstract<StorageL
         }
 
 #pragma warning restore CA1860 // Avoid using 'Enumerable.Any()' extension method
+    }
+
+    private void AddOrderings(ListStorageLocationsRequest request)
+    {
+        switch (request.SortBy?.ToUpperInvariant())
+        {
+            case "GROCERYITEMCOUNT":
+                AddOrderBy(c => c.GroceryItems.Count, request.SortDescending);
+                AddOrderBy(c => c.Name);
+                break;
+            case "NAME":
+                AddOrderBy(c => c.Name, request.SortDescending);
+                break;
+            default:
+                AddOrderBy(c => c.Name);
+                break;
+        }
     }
 }

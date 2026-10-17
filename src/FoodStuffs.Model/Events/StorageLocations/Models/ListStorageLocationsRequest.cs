@@ -5,6 +5,8 @@ namespace FoodStuffs.Model.Events.StorageLocations.Models;
 public record ListStorageLocationsRequest(
     string? NameSearch,
     bool? IsUnused,
+    string? SortBy,
+    bool SortDescending,
     bool IsPagingEnabled,
     int Page,
     int Take) : IPaginatedRequest;

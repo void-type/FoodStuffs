@@ -6,6 +6,10 @@ export default class CategoriesListRequest implements CategoriesListParams {
 
   public isUnused = null;
 
+  public sortBy = '';
+
+  public sortDescending = false;
+
   public isPagingEnabled = true;
 
   public page = 1;
