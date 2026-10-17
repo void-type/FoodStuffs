@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import type {
   EntityMessageOfInteger,
   GetCategoryResponse,
@@ -8,18 +7,13 @@ import type {
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { ChromePicker } from 'vue-color';
-import {
-
-  onBeforeRouteLeave,
-  onBeforeRouteUpdate,
-
-} from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
 import TagBadge from '@/components/TagBadge.vue';
+import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
 import CategoryGetResponse from '@/models/CategoryGetResponse';
 import CategoryWorking from '@/models/CategoryWorking';
@@ -73,7 +67,7 @@ async function fetch() {
   }
 }
 
-let forceImmediateRouteChange = false;
+const { navigateWithoutPrompt } = useUnsavedChangesGuard(isDirty);
 
 async function onSaveClick() {
   async function onPostSave(response: HttpResponse<EntityMessageOfInteger, IItemSetOfIFailure>) {
@@ -88,8 +82,7 @@ async function onSaveClick() {
     const response = await api().categoriesSave(data.working);
 
     if (!isEditMode.value) {
-      forceImmediateRouteChange = true;
-      await router.push({ name: 'categoryEdit', params: { id: response.data.id } });
+      await navigateWithoutPrompt({ name: 'categoryEdit', params: { id: response.data.id } });
     } else {
       await fetch();
     }
@@ -191,68 +184,6 @@ watch(
   },
   { immediate: true },
 );
-
-function changeRouteFromModal(t: RouteLocationNormalized) {
-  forceImmediateRouteChange = true;
-  router.push(t).then(() => {
-    forceImmediateRouteChange = false;
-  });
-}
-
-function beforeRouteChange(
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
-  next: NavigationGuardNext,
-) {
-  if (forceImmediateRouteChange) {
-    next();
-    return;
-  }
-
-  if (isDirty.value) {
-    const parameters: ModalParameters = {
-      title: 'Unsaved changes',
-      description: 'You have unsaved changes. Do you really want to leave?',
-      okAction: () => changeRouteFromModal(to),
-    };
-
-    next(false);
-    appStore.showModal(parameters);
-    return;
-  }
-
-  changeRouteFromModal(to);
-  next();
-}
-
-onBeforeRouteUpdate(async (to, from, next) => {
-  beforeRouteChange(to, from, next);
-});
-
-onBeforeRouteLeave(async (to, from, next) => {
-  beforeRouteChange(to, from, next);
-});
-
-function handleBeforeUnload(event: BeforeUnloadEvent) {
-  if (isDirty.value) {
-    event.preventDefault();
-    // Required for Chrome to show the confirmation dialog
-
-    event.returnValue = '';
-    // Required for Firefox to show the confirmation dialog
-    return '';
-  }
-
-  return null;
-}
-
-onMounted(() => {
-  window.addEventListener('beforeunload', handleBeforeUnload);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('beforeunload', handleBeforeUnload);
-});
 </script>
 
 <template>

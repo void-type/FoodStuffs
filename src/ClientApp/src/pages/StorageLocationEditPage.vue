@@ -1,18 +1,12 @@
 <script lang="ts" setup>
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import type { GetStorageLocationResponse } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
-import { computed, onBeforeUnmount, onMounted, reactive, watch } from 'vue';
-import {
-
-  onBeforeRouteLeave,
-  onBeforeRouteUpdate,
-
-} from 'vue-router';
+import { computed, reactive, watch } from 'vue';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import EntityAuditInfo from '@/components/EntityAuditInfo.vue';
+import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import StorageLocationGetResponse from '@/models/StorageLocationGetResponse';
@@ -66,15 +60,14 @@ async function fetch() {
   }
 }
 
-let forceImmediateRouteChange = false;
+const { navigateWithoutPrompt } = useUnsavedChangesGuard(isDirty);
 
 async function onSaveClick() {
   try {
     const response = await api().storageLocationsSave(data.working);
 
     if (!isEditMode.value) {
-      forceImmediateRouteChange = true;
-      await router.push({ name: 'storageLocationEdit', params: { id: response.data.id } });
+      await navigateWithoutPrompt({ name: 'storageLocationEdit', params: { id: response.data.id } });
     } else {
       await fetch();
     }
@@ -142,39 +135,6 @@ function reset() {
   data.working = newWorking;
 }
 
-function changeRouteFromModal(t: RouteLocationNormalized) {
-  forceImmediateRouteChange = true;
-  router.push(t).then(() => {
-    forceImmediateRouteChange = false;
-  });
-}
-
-function beforeRouteChange(
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
-  next: NavigationGuardNext,
-) {
-  if (forceImmediateRouteChange) {
-    next();
-    return;
-  }
-
-  if (isDirty.value) {
-    const parameters: ModalParameters = {
-      title: 'Unsaved changes',
-      description: 'You have unsaved changes. Do you really want to leave?',
-      okAction: () => changeRouteFromModal(to),
-    };
-
-    next(false);
-    appStore.showModal(parameters);
-    return;
-  }
-
-  changeRouteFromModal(to);
-  next();
-}
-
 watch(
   () => props.id,
   () => {
@@ -190,35 +150,6 @@ watch(
   },
   { immediate: true },
 );
-
-onBeforeRouteUpdate(async (to, from, next) => {
-  beforeRouteChange(to, from, next);
-});
-
-onBeforeRouteLeave(async (to, from, next) => {
-  beforeRouteChange(to, from, next);
-});
-
-function handleBeforeUnload(event: BeforeUnloadEvent) {
-  if (isDirty.value) {
-    event.preventDefault();
-    // Required for Chrome to show the confirmation dialog
-
-    event.returnValue = '';
-    // Required for Firefox to show the confirmation dialog
-    return '';
-  }
-
-  return null;
-}
-
-onMounted(() => {
-  window.addEventListener('beforeunload', handleBeforeUnload);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('beforeunload', handleBeforeUnload);
-});
 </script>
 
 <template>
