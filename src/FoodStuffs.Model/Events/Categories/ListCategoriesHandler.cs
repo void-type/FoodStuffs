@@ -36,6 +36,7 @@ public class ListCategoriesHandler : CustomEventHandlerAbstract<ListCategoriesRe
                 Id: x.Category.Id,
                 Name: x.Category.Name,
                 Color: x.Category.Color,
+                ShowOnCards: x.Category.ShowOnCards,
                 RecipeCount: x.RecipeCount))
             .MapAsync(Ok);
     }

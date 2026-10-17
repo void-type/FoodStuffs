@@ -76,6 +76,7 @@ export interface ListCategoriesResponse {
   id?: number;
   name?: string;
   color?: string;
+  showOnCards?: boolean;
   /** @format int32 */
   recipeCount?: number;
 }

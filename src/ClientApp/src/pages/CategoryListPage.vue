@@ -3,6 +3,7 @@ import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
 import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -196,6 +197,7 @@ watch(
       <thead>
         <tr>
           <th>Name</th>
+          <th>Show on cards</th>
           <th>Recipes</th>
           <th>Actions</th>
         </tr>
@@ -204,6 +206,13 @@ watch(
         <tr v-for="category in listResponse.items" :key="category.id">
           <td>
             <TagBadge :tag="category" :to="{ name: 'categoryEdit', params: { id: category.id } }" />
+          </td>
+          <td>
+            <template v-if="category.showOnCards">
+              <FontAwesomeIcon icon="fa-check" aria-hidden="true" />
+              <span class="visually-hidden">Yes</span>
+            </template>
+            <span v-else class="visually-hidden">No</span>
           </td>
           <td>{{ category.recipeCount }}</td>
           <td>
