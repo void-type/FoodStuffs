@@ -224,6 +224,7 @@ onBeforeUnmount(() => {
       <div
         v-if="hasIngredientsCard"
         class="recipe-ingredients g-col-12 g-col-md-5 g-col-lg-4 order-3 order-md-4"
+        :class="{ 'g-start-md-8 g-start-lg-9': !hasDirections }"
       >
         <div class="card">
           <div class="card-body">
