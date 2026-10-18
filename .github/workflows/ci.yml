@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    # Only build main when something that ends up in the app (or the build itself) changes.
+    paths:
+      - 'src/**'
+      - 'analyzers/**'
+      - 'Directory.Build.props'
+      - 'nuget.config'
+      - 'Dockerfile'
+      - 'version.json'
+      - '.config/**'
+      - 'build/build.ps1'
+      - 'build/buildSettings.ps1'
+      - '.github/workflows/ci.yml'
+  # Run manually from main to tag and create a GitHub release.
+  workflow_dispatch:
+
+# Pushes are batched: a queued run is replaced by a newer one. Manual releases get their own group so a push can't replace them.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Nerdbank.GitVersioning needs full history to calculate the version height.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: src/ClientApp/package-lock.json
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build, test, and publish
+        shell: pwsh
+        run: ./build/build.ps1
+
+      - name: Get version
+        id: version
+        run: echo "version=$(dotnet nbgv get-version -v NuGetPackageVersion)" >> "$GITHUB_OUTPUT"
+
+      - name: Coverage summary
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: |
+          $summary = './artifacts/testCoverage/SummaryGithub.md'
+          if (Test-Path $summary) { Get-Content $summary | Add-Content $env:GITHUB_STEP_SUMMARY }
+
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            artifacts/testResults
+            artifacts/testCoverage
+          retention-days: 14
+
+  # The app is deployed from a local build, so a release is only a tag and notes. GitHub adds the source archives.
+  release:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the tag and GitHub release
+    steps:
+      - name: Tag and create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "Release v$VERSION already exists."
+          else
+            gh release create "v$VERSION" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "v$VERSION" \
+              --generate-notes
+          fi

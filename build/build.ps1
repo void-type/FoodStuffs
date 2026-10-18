@@ -109,7 +109,7 @@ try {
       dotnet reportgenerator `
         '-reports:./artifacts/testResults/*/coverage.cobertura.xml' `
         '-targetdir:./artifacts/testCoverage' `
-        '-reporttypes:HtmlInline_AzurePipelines' `
+        '-reporttypes:Html;MarkdownSummaryGithub' `
         '-filefilters:-*.g.cs'
       Stop-OnError
     }

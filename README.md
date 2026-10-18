@@ -2,8 +2,7 @@
 
 [![License](https://img.shields.io/github/license/void-type/FoodStuffs.svg)](https://github.com/void-type/FoodStuffs/blob/main/LICENSE.txt)
 [![ReleaseVersion](https://img.shields.io/github/release/void-type/FoodStuffs.svg)](https://github.com/void-type/FoodStuffs/releases)
-[![Build Status](https://img.shields.io/azure-devops/build/void-type/VoidCore/18/main)](https://dev.azure.com/void-type/VoidCore/_build/latest?definitionId=18&branchName=main)
-[![Test Coverage](https://img.shields.io/azure-devops/coverage/void-type/VoidCore/18/main)](https://dev.azure.com/void-type/VoidCore/_build/latest?definitionId=18&branchName=main)
+[![Build Status](https://github.com/void-type/FoodStuffs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/void-type/FoodStuffs/actions/workflows/ci.yml)
 
 A web application for managing recipes.
 
@@ -57,6 +56,8 @@ Run build.ps1 to make a production build.
 ```powershell
 ./build/build.ps1
 ```
+
+CI runs on [GitHub Actions](https://github.com/void-type/FoodStuffs/actions/workflows/ci.yml). To tag and create a GitHub release, run the CI workflow manually on main. Deployment is done from a local build with the scripts below.
 
 ### IIS Deployment
 
