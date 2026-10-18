@@ -315,26 +315,31 @@ onBeforeUnmount(() => {
         field-name="categories"
         label="Categories"
       />
-      <div v-if="$slots.images" class="g-col-12">
-        <slot name="images" />
-      </div>
-      <AppInputNumberWithButtons
-        id="mealPlanningSidesCount"
-        v-model="data.workingRecipe.mealPlanningSidesCount"
-        label="Sides count"
-        class="g-col-12 g-col-md-6"
-        :min="0"
-      />
-      <div class="g-col-12 g-col-md-6">
-        <label for="sides" class="form-label">Sides</label>
-        <textarea
-          id="sides"
-          v-model="data.workingRecipe.sides"
-          rows="5"
-          class="form-control" :class="{
-            'is-invalid': messageStore.isFieldInError('sides'),
-          }"
-        />
+      <div class="g-col-12 grid">
+        <div class="g-col-12 g-col-md-6 order-md-2">
+          <slot name="images" />
+        </div>
+        <div class="g-col-12 g-col-md-6 order-md-1 d-flex flex-column gap-3">
+          <div class="order-md-2">
+            <AppInputNumberWithButtons
+              id="mealPlanningSidesCount"
+              v-model="data.workingRecipe.mealPlanningSidesCount"
+              label="Sides count"
+              :min="0"
+            />
+          </div>
+          <div class="order-md-1">
+            <label for="sides" class="form-label">Sides</label>
+            <textarea
+              id="sides"
+              v-model="data.workingRecipe.sides"
+              rows="5"
+              class="form-control" :class="{
+                'is-invalid': messageStore.isFieldInError('sides'),
+              }"
+            />
+          </div>
+        </div>
       </div>
       <div class="g-col-12">
         <label for="directions" class="form-label mb-1">Directions</label>

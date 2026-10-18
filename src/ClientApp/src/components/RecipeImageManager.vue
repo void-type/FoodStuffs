@@ -177,117 +177,113 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <label for="upload-file" class="form-label">Upload image</label>
-    <div class="grid">
-      <div class="g-col-12 g-col-md-6">
-        <label
-          for="upload-file"
-          class="upload-dropzone d-flex flex-md-column align-items-center justify-content-center text-center px-3 py-2 p-md-4"
-          :class="{
-            'is-dragover': isDragOver,
-            'is-invalid': isFieldInError('upload-file'),
-          }"
-          @dragover.prevent="dropzoneDragOver"
-          @dragenter.prevent="dropzoneDragOver"
-          @dragleave.prevent="dropzoneDragLeave"
-          @drop.prevent="dropzoneDrop"
-        >
-          <FontAwesomeIcon icon="fa-cloud-arrow-up" class="upload-icon me-2 me-md-0 mb-md-2 text-secondary" />
-          <div>
-            <span>Drag and drop images here, or click to browse</span>
-            <span v-if="uploadingCount > 0" class="d-block text-primary mt-1 mt-md-2">
-              Uploading {{ uploadingCount }} image{{ uploadingCount === 1 ? '' : 's' }}...
-            </span>
-          </div>
-          <input
-            id="upload-file"
-            type="file"
-            class="visually-hidden"
-            accept="image/*"
-            multiple
-            @change="uploadFileChange"
-          >
-        </label>
+    <label
+      for="upload-file"
+      class="upload-dropzone d-flex align-items-center justify-content-center text-center px-3 py-2 mb-3"
+      :class="{
+        'is-dragover': isDragOver,
+        'is-invalid': isFieldInError('upload-file'),
+      }"
+      @dragover.prevent="dropzoneDragOver"
+      @dragenter.prevent="dropzoneDragOver"
+      @dragleave.prevent="dropzoneDragLeave"
+      @drop.prevent="dropzoneDrop"
+    >
+      <FontAwesomeIcon icon="fa-cloud-arrow-up" class="upload-icon me-2 text-secondary" />
+      <div>
+        <span>Drag and drop images here, or click to browse</span>
+        <span v-if="uploadingCount > 0" class="d-block text-primary mt-1">
+          Uploading {{ uploadingCount }} image{{ uploadingCount === 1 ? '' : 's' }}...
+        </span>
       </div>
-      <div class="g-col-12 g-col-md-6 text-center">
-        <div
-          v-if="images.length > 0"
-          :id="`image-carousel-${uniqueId}`"
-          ref="carouselElement"
-          class="carousel slide"
-          data-bs-interval="false"
-        >
-          <div class="carousel-indicators d-print-none">
-            <button
-              v-for="(imageName, i) in images"
-              :key="`${imageName}:${props.suggestedImage}`"
-              type="button"
-              :data-bs-target="`#image-carousel-${uniqueId}`"
-              :data-bs-slide-to="i"
-              :class="{ active: i === carouselIndex }"
-              :aria-current="i === carouselIndex"
-              :aria-label="`Show image ${i + 1}`"
-            />
-          </div>
-          <div class="carousel-inner">
-            <div
-              v-for="(imageName, i) in images"
-              :key="`${imageName}:${props.suggestedImage}`"
-              class="carousel-item" :class="{ active: i === carouselIndex }"
-            >
-              <button
-                v-if="images.length > 0 && imageName !== pinnedImage"
-                type="button"
-                class="btn btn-light btn-sm image-button image-button-left d-print-none"
-                title="Pin image"
-                @click.stop.prevent="pinImageClick(imageName)"
-              >
-                <span class="visually-hidden">Pin image</span>
-                <FontAwesomeIcon icon="fa-thumbtack" />
-              </button>
-              <button
-                v-if="images.length > 0"
-                type="button"
-                class="btn btn-danger btn-sm image-button image-button-right d-print-none"
-                title="Delete image"
-                @click.stop.prevent="deleteImageClick(imageName)"
-              >
-                <span class="visually-hidden">Delete image</span>
-                <FontAwesomeIcon icon="fa-times" />
-              </button>
-              <img
-                class="img-fluid rounded object-fit-cover"
-                role="button"
-                :src="ApiHelper.imageUrl(imageName)"
-                :alt="`image ${i + 1}`"
-                :loading="i > 0 ? 'lazy' : 'eager'"
-                width="1600"
-                height="1200"
-                style="aspect-ratio: 4 / 3; cursor: pointer"
-                @click="imageLightboxStore.open(props.images, i)"
-              >
-            </div>
-          </div>
+      <input
+        id="upload-file"
+        type="file"
+        class="visually-hidden"
+        accept="image/*"
+        multiple
+        @change="uploadFileChange"
+      >
+    </label>
+    <div class="text-center">
+      <div
+        v-if="images.length > 0"
+        :id="`image-carousel-${uniqueId}`"
+        ref="carouselElement"
+        class="carousel slide"
+        data-bs-interval="false"
+      >
+        <div class="carousel-indicators d-print-none">
           <button
-            class="carousel-control-prev d-print-none"
+            v-for="(imageName, i) in images"
+            :key="`${imageName}:${props.suggestedImage}`"
             type="button"
             :data-bs-target="`#image-carousel-${uniqueId}`"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true" />
-            <span class="visually-hidden">Previous image</span>
-          </button>
-          <button
-            class="carousel-control-next d-print-none"
-            type="button"
-            :data-bs-target="`#image-carousel-${uniqueId}`"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true" />
-            <span class="visually-hidden">Next image</span>
-          </button>
+            :data-bs-slide-to="i"
+            :class="{ active: i === carouselIndex }"
+            :aria-current="i === carouselIndex"
+            :aria-label="`Show image ${i + 1}`"
+          />
         </div>
-        <ImagePlaceholder v-else class="img-fluid rounded" />
+        <div class="carousel-inner">
+          <div
+            v-for="(imageName, i) in images"
+            :key="`${imageName}:${props.suggestedImage}`"
+            class="carousel-item" :class="{ active: i === carouselIndex }"
+          >
+            <button
+              v-if="images.length > 0 && imageName !== pinnedImage"
+              type="button"
+              class="btn btn-light btn-sm image-button image-button-left d-print-none"
+              title="Pin image"
+              @click.stop.prevent="pinImageClick(imageName)"
+            >
+              <span class="visually-hidden">Pin image</span>
+              <FontAwesomeIcon icon="fa-thumbtack" />
+            </button>
+            <button
+              v-if="images.length > 0"
+              type="button"
+              class="btn btn-danger btn-sm image-button image-button-right d-print-none"
+              title="Delete image"
+              @click.stop.prevent="deleteImageClick(imageName)"
+            >
+              <span class="visually-hidden">Delete image</span>
+              <FontAwesomeIcon icon="fa-times" />
+            </button>
+            <img
+              class="img-fluid rounded object-fit-cover"
+              role="button"
+              :src="ApiHelper.imageUrl(imageName)"
+              :alt="`image ${i + 1}`"
+              :loading="i > 0 ? 'lazy' : 'eager'"
+              width="1600"
+              height="1200"
+              style="aspect-ratio: 4 / 3; cursor: pointer"
+              @click="imageLightboxStore.open(props.images, i)"
+            >
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev d-print-none"
+          type="button"
+          :data-bs-target="`#image-carousel-${uniqueId}`"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true" />
+          <span class="visually-hidden">Previous image</span>
+        </button>
+        <button
+          class="carousel-control-next d-print-none"
+          type="button"
+          :data-bs-target="`#image-carousel-${uniqueId}`"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true" />
+          <span class="visually-hidden">Next image</span>
+        </button>
       </div>
+      <ImagePlaceholder v-else class="img-fluid rounded" />
     </div>
   </div>
 </template>
@@ -297,7 +293,6 @@ onBeforeUnmount(() => {
   cursor: pointer;
   border: 2px dashed var(--bs-border-color);
   border-radius: var(--bs-border-radius);
-  min-height: 100%;
   transition:
     background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out;
@@ -314,13 +309,8 @@ onBeforeUnmount(() => {
 }
 
 .upload-icon {
-  // Inline with the text on mobile, larger and stacked on md+.
   font-size: 1.25rem;
   flex-shrink: 0;
-
-  @media (min-width: 768px) {
-    font-size: 2rem;
-  }
 }
 
 .image-button {
