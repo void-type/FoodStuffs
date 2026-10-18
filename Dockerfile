@@ -13,8 +13,6 @@ COPY ./build/ ./build
 COPY ./*.slnx ./
 
 COPY ./.config/ ./.config
-COPY ./nuget.config ./
-
 COPY ./src/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./src/${file%.*}/ && mv $file ./src/${file%.*}/; done
 
