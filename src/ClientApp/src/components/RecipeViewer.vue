@@ -110,7 +110,7 @@ onBeforeUnmount(() => {
         <div
           :id="`image-carousel-${uniqueId}`"
           ref="carouselElement"
-          class="carousel slide"
+          class="carousel slide recipe-carousel"
           data-bs-interval="false"
         >
           <div v-if="images.length > 1" class="carousel-indicators">
@@ -251,6 +251,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+// The 4:3 images get very tall when the column is wide, so cap the width and center it.
+.recipe-carousel {
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
 .sides-text {
   white-space: pre-wrap;
 }

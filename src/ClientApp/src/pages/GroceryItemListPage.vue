@@ -705,7 +705,7 @@ watch(
                 Recipes
               </th>
               <th scope="col">
-                Location, store &amp; aisle
+                Location, Store &amp; Aisle
               </th>
             </tr>
           </thead>
