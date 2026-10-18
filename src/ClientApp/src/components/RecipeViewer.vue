@@ -45,7 +45,8 @@ const groceryItems = computed(() => props.recipe.groceryItems || []);
 const sidesCount = computed(() => props.recipe.mealPlanningSidesCount || 0);
 const hasSides = computed(() => !isNil(props.recipe.sides));
 const hasDirections = computed(() => !isNil(props.recipe.directions));
-const hasSideColumn = computed(() => groceryItems.value.length > 0 || hasSides.value);
+const hasIngredientsCard = computed(() => groceryItems.value.length > 0 || hasSides.value);
+const hasLeftColumn = computed(() => images.value.length > 0 || hasIngredientsCard.value);
 
 const timings = computed(() => {
   const prep = props.recipe.prepTimeMinutes || 0;
@@ -104,140 +105,144 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <div class="grid align-items-center">
-      <!-- Image first on mobile, to the right on md+. Not printed. -->
-      <div v-if="images.length > 0" class="g-col-12 g-col-md-6 order-md-2 d-print-none">
-        <div
-          :id="`image-carousel-${uniqueId}`"
-          ref="carouselElement"
-          class="carousel slide recipe-carousel"
-          data-bs-interval="false"
-        >
-          <div v-if="images.length > 1" class="carousel-indicators">
-            <button
-              v-for="(imageName, i) in images"
-              :key="imageName"
-              type="button"
-              :data-bs-target="`#image-carousel-${uniqueId}`"
-              :data-bs-slide-to="i"
-              :class="{ active: i === carouselIndex }"
-              :aria-current="i === carouselIndex"
-              :aria-label="`Show image ${i + 1}`"
-            />
-          </div>
-          <div class="carousel-inner rounded">
-            <div
-              v-for="(imageName, i) in images"
-              :key="imageName"
-              class="carousel-item" :class="{ active: i === carouselIndex }"
-            >
-              <img
-                class="d-block w-100 h-auto object-fit-cover"
-                role="button"
-                :src="ApiHelper.imageUrl(imageName)"
-                :alt="`image ${i + 1} of ${recipe.name}`"
-                :loading="i > 0 ? 'lazy' : 'eager'"
-                width="1600"
-                height="1200"
-                style="aspect-ratio: 4 / 3; cursor: pointer"
-                @click="imageLightboxStore.open(images, i)"
+    <!--
+      On md+ the image and ingredients are the left column, the summary and directions the right.
+      Below md (and when printing) the columns dissolve, leaving the order: image, summary, ingredients, directions.
+    -->
+    <div class="grid">
+      <div v-if="hasLeftColumn" class="recipe-column g-col-md-5 g-col-lg-4">
+        <div v-if="images.length > 0" class="g-col-12 order-1 d-print-none">
+          <div
+            :id="`image-carousel-${uniqueId}`"
+            ref="carouselElement"
+            class="carousel slide recipe-carousel"
+            data-bs-interval="false"
+          >
+            <div v-if="images.length > 1" class="carousel-indicators">
+              <button
+                v-for="(imageName, i) in images"
+                :key="imageName"
+                type="button"
+                :data-bs-target="`#image-carousel-${uniqueId}`"
+                :data-bs-slide-to="i"
+                :class="{ active: i === carouselIndex }"
+                :aria-current="i === carouselIndex"
+                :aria-label="`Show image ${i + 1}`"
+              />
+            </div>
+            <div class="carousel-inner rounded">
+              <div
+                v-for="(imageName, i) in images"
+                :key="imageName"
+                class="carousel-item" :class="{ active: i === carouselIndex }"
               >
+                <img
+                  class="d-block w-100 h-auto object-fit-cover"
+                  role="button"
+                  :src="ApiHelper.imageUrl(imageName)"
+                  :alt="`image ${i + 1} of ${recipe.name}`"
+                  :loading="i > 0 ? 'lazy' : 'eager'"
+                  width="1600"
+                  height="1200"
+                  style="aspect-ratio: 4 / 3; cursor: pointer"
+                  @click="imageLightboxStore.open(images, i)"
+                >
+              </div>
+            </div>
+            <template v-if="images.length > 1">
+              <button
+                type="button"
+                class="carousel-control-prev"
+                :data-bs-target="`#image-carousel-${uniqueId}`"
+                data-bs-slide="prev"
+              >
+                <span class="carousel-control-prev-icon" aria-hidden="true" />
+                <span class="visually-hidden">Previous image</span>
+              </button>
+              <button
+                type="button"
+                class="carousel-control-next"
+                :data-bs-target="`#image-carousel-${uniqueId}`"
+                data-bs-slide="next"
+              >
+                <span class="carousel-control-next-icon" aria-hidden="true" />
+                <span class="visually-hidden">Next image</span>
+              </button>
+            </template>
+          </div>
+        </div>
+        <div v-if="hasIngredientsCard" class="g-col-12 order-3">
+          <div class="card">
+            <div class="card-body">
+              <section v-if="groceryItems.length > 0">
+                <h2 class="h4">
+                  Ingredients
+                </h2>
+                <ul class="list-unstyled mb-0">
+                  <li
+                    v-for="item in groceryItems"
+                    :key="item.id"
+                    class="d-flex align-items-baseline justify-content-between gap-2 py-1"
+                  >
+                    <span>
+                      {{ item.quantity }}x
+                      <router-link :to="RouterHelper.editGroceryItem(item)">{{ item.name }}</router-link>
+                    </span>
+                    <span class="badge flex-shrink-0 d-print-none" :class="stockStatus(item).badgeClass">
+                      {{ stockStatus(item).text }}
+                    </span>
+                  </li>
+                </ul>
+              </section>
+              <section v-if="hasSides" :class="{ 'mt-4': groceryItems.length > 0 }">
+                <h2 class="h4">
+                  Sides
+                </h2>
+                <div class="sides-text">
+                  {{ recipe.sides }}
+                </div>
+              </section>
             </div>
           </div>
-          <template v-if="images.length > 1">
-            <button
-              type="button"
-              class="carousel-control-prev"
-              :data-bs-target="`#image-carousel-${uniqueId}`"
-              data-bs-slide="prev"
-            >
-              <span class="carousel-control-prev-icon" aria-hidden="true" />
-              <span class="visually-hidden">Previous image</span>
-            </button>
-            <button
-              type="button"
-              class="carousel-control-next"
-              :data-bs-target="`#image-carousel-${uniqueId}`"
-              data-bs-slide="next"
-            >
-              <span class="carousel-control-next-icon" aria-hidden="true" />
-              <span class="visually-hidden">Next image</span>
-            </button>
-          </template>
         </div>
       </div>
-      <div class="recipe-summary g-col-12 order-md-1" :class="{ 'g-col-md-6': images.length > 0 }">
-        <h1 class="mb-3">
-          {{ recipe.name }}
-        </h1>
-        <div v-if="categories.length > 0" class="d-flex flex-wrap gap-1 mb-3">
-          <TagBadge
-            v-for="category in categories"
-            :key="category.id"
-            :tag="category"
-            :to="RouterHelper.searchRecipesByCategory(category)"
-          />
-        </div>
-        <ul v-if="hasMeta" class="list-inline text-muted mb-0">
-          <li v-if="timings.prep" class="list-inline-item me-3">
-            <FontAwesomeIcon icon="fa-kitchen-set" class="me-1" aria-hidden="true" />Prep {{ timings.prep }}
-          </li>
-          <li v-if="timings.cook" class="list-inline-item me-3">
-            <FontAwesomeIcon icon="fa-fire" class="me-1" aria-hidden="true" />Cook {{ timings.cook }}
-          </li>
-          <li v-if="timings.total" class="list-inline-item me-3">
-            <FontAwesomeIcon icon="fa-clock" class="me-1" aria-hidden="true" />Total {{ timings.total }}
-          </li>
-          <li v-if="sidesCount > 0" class="list-inline-item me-3 d-print-none">
-            <FontAwesomeIcon icon="fa-utensils" class="me-1" aria-hidden="true" />{{ sidesCount }} side{{ sidesCount !== 1 ? 's' : '' }}
-          </li>
-        </ul>
-        <div class="btn-toolbar mt-3 d-print-none">
-          <router-link :to="RouterHelper.editRecipe(recipe)" class="btn btn-primary me-2">
-            Edit
-          </router-link>
-          <RecipeCurrentMealPlanButton :recipe-id="recipe.id" />
-        </div>
-      </div>
-    </div>
-
-    <div class="grid mt-4">
-      <div v-if="hasSideColumn" class="g-col-12 g-col-lg-4">
-        <div class="card">
-          <div class="card-body">
-            <section v-if="groceryItems.length > 0">
-              <h2 class="h4">
-                Ingredients
-              </h2>
-              <ul class="list-unstyled mb-0">
-                <li
-                  v-for="item in groceryItems"
-                  :key="item.id"
-                  class="d-flex align-items-baseline justify-content-between gap-2 py-1"
-                >
-                  <span>
-                    {{ item.quantity }}x
-                    <router-link :to="RouterHelper.editGroceryItem(item)">{{ item.name }}</router-link>
-                  </span>
-                  <span class="badge flex-shrink-0 d-print-none" :class="stockStatus(item).badgeClass">
-                    {{ stockStatus(item).text }}
-                  </span>
-                </li>
-              </ul>
-            </section>
-            <section v-if="hasSides" :class="{ 'mt-4': groceryItems.length > 0 }">
-              <h2 class="h4">
-                Sides
-              </h2>
-              <div class="sides-text">
-                {{ recipe.sides }}
-              </div>
-            </section>
+      <div
+        class="recipe-column g-col-12" :class="{ 'g-col-md-7 g-col-lg-8': hasLeftColumn }"
+      >
+        <div class="g-col-12 order-2">
+          <h1 class="mb-3">
+            {{ recipe.name }}
+          </h1>
+          <div v-if="categories.length > 0" class="d-flex flex-wrap gap-1 mb-3">
+            <TagBadge
+              v-for="category in categories"
+              :key="category.id"
+              :tag="category"
+              :to="RouterHelper.searchRecipesByCategory(category)"
+            />
+          </div>
+          <ul v-if="hasMeta" class="list-inline text-muted mb-0">
+            <li v-if="timings.prep" class="list-inline-item me-3">
+              <FontAwesomeIcon icon="fa-kitchen-set" class="me-1" aria-hidden="true" />Prep {{ timings.prep }}
+            </li>
+            <li v-if="timings.cook" class="list-inline-item me-3">
+              <FontAwesomeIcon icon="fa-fire" class="me-1" aria-hidden="true" />Cook {{ timings.cook }}
+            </li>
+            <li v-if="timings.total" class="list-inline-item me-3">
+              <FontAwesomeIcon icon="fa-clock" class="me-1" aria-hidden="true" />Total {{ timings.total }}
+            </li>
+            <li v-if="sidesCount > 0" class="list-inline-item me-3 d-print-none">
+              <FontAwesomeIcon icon="fa-utensils" class="me-1" aria-hidden="true" />{{ sidesCount }} side{{ sidesCount !== 1 ? 's' : '' }}
+            </li>
+          </ul>
+          <div class="btn-toolbar mt-3 d-print-none">
+            <router-link :to="RouterHelper.editRecipe(recipe)" class="btn btn-primary me-2">
+              Edit
+            </router-link>
+            <RecipeCurrentMealPlanButton :recipe-id="recipe.id" />
           </div>
         </div>
-      </div>
-      <div v-if="hasDirections" class="g-col-12" :class="{ 'g-col-lg-8': hasSideColumn }">
-        <section>
+        <section v-if="hasDirections" class="g-col-12 order-4">
           <h2 class="h4">
             Directions
           </h2>
@@ -251,6 +256,17 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+// Dissolved below md so the children join the page grid and can be ordered across both columns.
+.recipe-column {
+  display: contents;
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
 // The 4:3 images get very tall when the column is wide, so cap the width and center it.
 .recipe-carousel {
   max-width: 28rem;
@@ -262,9 +278,8 @@ onBeforeUnmount(() => {
 }
 
 @media print {
-  // The image isn't printed, so let the summary use the full width.
-  .recipe-summary {
-    grid-column: 1 / -1;
+  .recipe-column {
+    display: contents;
   }
 
   .card {
