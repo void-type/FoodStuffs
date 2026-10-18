@@ -271,6 +271,19 @@ onBeforeUnmount(() => {
   margin-inline: auto;
 }
 
+// Pin the banner to row 1 and the body to row 2 so a missing image or directions can't let
+// ingredients move up into the banner row.
+@media screen and (min-width: 768px) {
+  .recipe-summary {
+    grid-row: 1;
+  }
+
+  .recipe-ingredients,
+  .recipe-directions {
+    grid-row: 2;
+  }
+}
+
 .sides-text {
   white-space: pre-wrap;
 }
