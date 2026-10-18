@@ -3,7 +3,6 @@ import type { GetRecipeResponse } from '@/api/data-contracts';
 import { reactive, watch } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute } from 'vue-router';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue';
-import AppPageHeading from '@/components/AppPageHeading.vue';
 import RecipeViewer from '@/components/RecipeViewer.vue';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
@@ -62,7 +61,6 @@ onBeforeRouteLeave((to, from, next) => {
 <template>
   <div class="container-xxl">
     <AppBreadcrumbs />
-    <AppPageHeading :title="data.sourceRecipe?.name" />
     <RecipeViewer v-if="data.sourceRecipe !== null" class="mt-3" :recipe="data.sourceRecipe" />
   </div>
 </template>
