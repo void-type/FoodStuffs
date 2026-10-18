@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <section v-if="hasDirections" class="g-col-12 order-4">
-          <h2 class="h4">
+          <h2>
             Directions
           </h2>
           <!-- eslint-disable-next-line vue/no-v-html -->
