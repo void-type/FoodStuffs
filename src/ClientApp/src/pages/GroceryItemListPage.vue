@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
-import type { HttpResponse } from '@/api/http-client';
-import type { ModalParameters } from '@/models/ModalParameters';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
@@ -16,14 +14,12 @@ import GroceryItemSearchGroceryAislesFilter from '@/components/GroceryItemSearch
 import GroceryItemSearchGroceryStoresFilter from '@/components/GroceryItemSearchGroceryStoresFilter.vue';
 import GroceryItemSearchStorageLocationsFilter from '@/components/GroceryItemSearchStorageLocationsFilter.vue';
 import TagBadge from '@/components/TagBadge.vue';
-import ApiHelper from '@/models/ApiHelper';
 import Choices from '@/models/Choices';
 import { toInt, toNumber, toNumberOrNull } from '@/models/FormatHelper';
 import GroceryItemsSearchRequest from '@/models/GroceryItemsSearchRequest';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
 import useGroceryItemStore from '@/stores/groceryItemStore';
-import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
   query: {
@@ -34,12 +30,11 @@ const props = defineProps({
 });
 
 const appStore = useAppStore();
-const messageStore = useMessageStore();
 const groceryItemStore = useGroceryItemStore();
 const router = useRouter();
 const route = useRoute();
-const api = ApiHelper.client;
 
+const { useDarkMode } = storeToRefs(appStore);
 const { listResponse, listRequest, listFacets } = storeToRefs(groceryItemStore);
 const { sortOptions } = Choices;
 
@@ -273,33 +268,6 @@ function getUnusedFacetCount(facetValue: boolean | null) {
       ?.count || 0;
 
   return ` (${count})`;
-}
-
-async function onDeleteGroceryItem(id: number | null | undefined) {
-  async function deleteGroceryItem() {
-    if (!id) {
-      return;
-    }
-
-    try {
-      const response = await api().groceryItemsDelete({ id });
-      await groceryItemStore.fetchGroceryItemsList();
-
-      if (response.data.message) {
-        messageStore.setSuccessMessage(response.data.message);
-      }
-    } catch (error) {
-      messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
-    }
-  }
-
-  const parameters: ModalParameters = {
-    title: 'Delete grocery item',
-    description: 'Do you really want to delete this grocery item?',
-    okAction: () => deleteGroceryItem(),
-  };
-
-  appStore.showModal(parameters);
 }
 
 watch(
@@ -721,56 +689,68 @@ watch(
         <div id="search-results" class="mt-3">
           <small class="text-muted">{{ resultCountText }}</small>
         </div>
-        <div class="grid mt-4">
-          <div
-            v-for="groceryItem in listResponse.items"
-            :key="groceryItem.id"
-            class="card grocery-item-card g-col-12 g-col-md-6"
-          >
-            <div class="card-header">
-              <router-link :to="RouterHelper.editGroceryItem(groceryItem)">
-                {{ groceryItem.name }}
-              </router-link>
-            </div>
-            <div class="card-body">
-              <div class="btn-toolbar d-none">
-                <button
-                  class="btn btn-sm btn-danger ms-auto"
-                  @click="() => onDeleteGroceryItem(groceryItem.id)"
-                >
-                  Delete
-                </button>
-              </div>
-              <div class="grocery-item-card-details">
+        <table
+          v-if="(listResponse.items?.length || 0) > 0"
+          class="table table-grocery-items align-middle mt-4" :class="{ 'table-dark': useDarkMode }"
+        >
+          <thead>
+            <tr>
+              <th scope="col">
+                Name
+              </th>
+              <th scope="col">
+                Inventory
+              </th>
+              <th scope="col">
+                Recipes
+              </th>
+              <th scope="col">
+                Location, store &amp; aisle
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="groceryItem in listResponse.items" :key="groceryItem.id">
+              <td class="cell-name">
+                <router-link :to="RouterHelper.editGroceryItem(groceryItem)">
+                  {{ groceryItem.name }}
+                </router-link>
+              </td>
+              <td class="cell-inventory">
                 <GroceryItemInventoryQuantity
                   :id="`${groceryItem.id}-inventoryQuantity`"
                   v-model="groceryItem.inventoryQuantity"
                   :item-id="groceryItem.id"
-                  :inline="true"
+                  compact
                 />
-                <div>
-                  Used in {{ groceryItem.recipeCount }} recipes.
+              </td>
+              <td class="cell-recipes">
+                {{ groceryItem.recipeCount }}<span class="d-md-none"> recipe{{ groceryItem.recipeCount === 1 ? '' : 's' }}</span>
+              </td>
+              <td class="cell-tags">
+                <div class="d-flex flex-wrap gap-1">
+                  <TagBadge
+                    v-for="location in groceryItem.storageLocations"
+                    :key="`location-${location.id}`"
+                    :tag="{ name: location.name }"
+                    :to="RouterHelper.searchGroceryItemsByStorageLocation(location)"
+                  />
+                  <TagBadge
+                    v-for="store in groceryItem.groceryStores"
+                    :key="`store-${store.id}`"
+                    :tag="{ name: store.name }"
+                    :to="RouterHelper.searchGroceryItemsByGroceryStore(store)"
+                  />
+                  <TagBadge
+                    v-if="groceryItem.groceryAisle"
+                    :tag="{ name: groceryItem.groceryAisle.name }"
+                    :to="RouterHelper.searchGroceryItemsByGroceryAisle(groceryItem.groceryAisle)"
+                  />
                 </div>
-              </div>
-              <div v-if="(groceryItem.storageLocations?.length || 0) > 0" class="mt-3">
-                <TagBadge
-                  v-for="location in groceryItem.storageLocations"
-                  :key="location.name || ''"
-                  class="me-2 mt-2"
-                  :tag="{ name: location.name }"
-                />
-              </div>
-              <div v-if="(groceryItem.groceryStores?.length || 0) > 0" class="mt-3">
-                <TagBadge
-                  v-for="store in groceryItem.groceryStores"
-                  :key="store.name || ''"
-                  class="me-2 mt-2"
-                  :tag="{ name: store.name }"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <EntityTablePager
           v-if="(listResponse.items?.length || 0) > 0"
           :list-request="listRequest"
@@ -785,20 +765,56 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-// The inventory control and "used in" text should only sit side-by-side when the
-// card itself is wide enough to fit them, regardless of the page's viewport width
-// (e.g. a narrow card in a 2-up results grid shouldn't cram these into 2 columns).
-.grocery-item-card {
-  container-type: inline-size;
-}
+// Below md each row becomes a stacked block: name and inventory on top, recipe count, then the
+// location/store/aisle badges across the full width.
+@media (max-width: 767.98px) {
+  .table-grocery-items {
+    thead {
+      display: none;
+    }
 
-.grocery-item-card-details {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
+    tbody tr {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        'name inventory'
+        'recipes inventory'
+        'tags tags';
+      column-gap: 0.75rem;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: var(--bs-border-width) solid var(--bs-table-border-color);
+    }
 
-  @container (min-width: 420px) {
-    grid-template-columns: 1fr 1fr;
+    td {
+      padding: 0.125rem 0;
+      border-bottom-width: 0;
+      box-shadow: none;
+    }
+
+    .cell-name {
+      grid-area: name;
+      font-weight: 500;
+    }
+
+    .cell-inventory {
+      grid-area: inventory;
+    }
+
+    .cell-recipes {
+      grid-area: recipes;
+      color: var(--bs-secondary-color);
+      font-size: 0.875rem;
+    }
+
+    .cell-tags {
+      grid-area: tags;
+      padding-top: 0.5rem;
+
+      &:has(> div:empty) {
+        display: none;
+      }
+    }
   }
 }
 </style>

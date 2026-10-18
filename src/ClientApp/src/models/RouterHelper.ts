@@ -1,6 +1,9 @@
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
+import type { GroceryItemsSearchParams } from '@/api/data-contracts';
 import useAppStore from '@/stores/appStore';
 import { isNil } from './FormatHelper';
+import GroceryItemsSearchRequest from './GroceryItemsSearchRequest';
+import GroceryItemStoreHelper from './GroceryItemStoreHelper';
 import RecipesSearchRequest from './RecipesSearchRequest';
 import RecipeStoreHelper from './RecipeStoreHelper';
 
@@ -14,6 +17,10 @@ interface RouteCategory {
 }
 
 interface RouteGroceryItem {
+  id?: number;
+}
+
+interface RouteGroceryItemFilter {
   id?: number;
 }
 
@@ -54,6 +61,27 @@ export default class RouterHelper {
 
   static editGroceryItem(groceryItem: RouteGroceryItem) {
     return { name: 'groceryItemEdit', params: { id: groceryItem.id } };
+  }
+
+  static searchGroceryItemsByStorageLocation(storageLocation: RouteGroceryItemFilter) {
+    return RouterHelper.searchGroceryItems({ storageLocations: [storageLocation.id || 0] });
+  }
+
+  static searchGroceryItemsByGroceryStore(groceryStore: RouteGroceryItemFilter) {
+    return RouterHelper.searchGroceryItems({ groceryStores: [groceryStore.id || 0] });
+  }
+
+  static searchGroceryItemsByGroceryAisle(groceryAisle: RouteGroceryItemFilter) {
+    return RouterHelper.searchGroceryItems({ groceryAisles: [groceryAisle.id || 0] });
+  }
+
+  private static searchGroceryItems(filter: Partial<GroceryItemsSearchParams>) {
+    const query = GroceryItemStoreHelper.listRequestToQueryParams({
+      ...new GroceryItemsSearchRequest(),
+      ...filter,
+    });
+
+    return { name: 'groceryItemList', query };
   }
 
   static editMealPlan(mealPlan: RouteMealPlan) {

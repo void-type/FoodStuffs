@@ -22,6 +22,12 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  // A small always-visible stepper without a label, for table cells whose header provides the label.
+  compact: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const model = defineModel({
@@ -64,7 +70,7 @@ function toggleExpanded() {
 </script>
 
 <template>
-  <div v-if="!inline">
+  <div v-if="!inline && !compact">
     <label :for="id" class="form-label">Inventory</label>
     <div class="input-group">
       <button
@@ -88,6 +94,39 @@ function toggleExpanded() {
       >
       <button
         class="btn btn-outline-secondary text-monospace"
+        aria-label="Increment inventory by one."
+        type="button"
+        @click="changeInventory(1)"
+      >
+        <FontAwesomeIcon icon="fa-plus" />
+      </button>
+    </div>
+  </div>
+  <div v-else-if="compact">
+    <label :for="id" class="visually-hidden">Inventory</label>
+    <div class="input-group input-group-sm compact-stepper">
+      <button
+        class="btn btn-outline-secondary"
+        aria-label="Decrement inventory by one."
+        type="button"
+        @click="changeInventory(-1)"
+      >
+        <FontAwesomeIcon icon="fa-minus" />
+      </button>
+      <input
+        :id="id"
+        v-model="model"
+        required
+        type="number"
+        min="0"
+        class="form-control text-center"
+        :class="{
+          'is-invalid': messageStore.isFieldInError(id),
+        }"
+        @change="onInventoryChange()"
+      >
+      <button
+        class="btn btn-outline-secondary"
         aria-label="Increment inventory by one."
         type="button"
         @click="changeInventory(1)"
@@ -140,6 +179,21 @@ function toggleExpanded() {
 </template>
 
 <style scoped>
+.compact-stepper {
+  width: 9rem;
+}
+
+.compact-stepper input[type='number'] {
+  min-width: 2.5rem;
+  appearance: textfield;
+}
+
+.compact-stepper input[type='number']::-webkit-inner-spin-button,
+.compact-stepper input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 .input-group-text {
   cursor: pointer;
 }
