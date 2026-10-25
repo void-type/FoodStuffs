@@ -53,10 +53,13 @@ public class GroceryItemQueryService : IGroceryItemQueryService
             var seed = request.RandomSortSeed is not null ?
                 request.RandomSortSeed.GetHashCode() :
                 _dateTimeService.MomentWithOffset.Date.GetHashCode();
+                // We don't worry about cryptographic security for random sorting here.
+#pragma warning disable S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
             var random = new Random(seed);
-#pragma warning disable SCS0005
+#pragma warning restore S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
+#pragma warning disable SCS0005 // Weak random number generator.
             scoreDocs.Sort((_, __) => random.Next(-1, 2));
-#pragma warning restore SCS0005
+#pragma warning restore SCS0005 // Weak random number generator.
         }
 
         var resultItems = scoreDocs
