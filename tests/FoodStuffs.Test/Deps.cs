@@ -1,7 +1,6 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Web.Auth;
-using Microsoft.EntityFrameworkCore;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Responses.Files;
 using VoidCore.Model.Time;
@@ -32,13 +31,10 @@ public static class Deps
 
     public static FoodStuffsContext FoodStuffsContext(string? dbName = null)
     {
-        return new FoodStuffsContext(
-            new DbContextOptionsBuilder<FoodStuffsContext>()
-            .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
-            .Options,
+        return SqliteFoodStuffsContext.Create(
+            dbName ?? Guid.NewGuid().ToString(),
             DateTimeServiceLate,
-            CurrentUserAccessor
-        );
+            CurrentUserAccessor);
     }
 
     public static FoodStuffsContext Seed(this FoodStuffsContext context)
@@ -101,7 +97,7 @@ public static class Deps
 
         var image1 = new Image
         {
-            RecipeId = recipe1.Id,
+            Recipe = recipe1,
             FileName = "1.png",
             CreatedBy = "Long John Silver2",
             CreatedOn = new DateTime(2019, 11, 8),
@@ -115,7 +111,7 @@ public static class Deps
 
         var image2 = new Image
         {
-            RecipeId = recipe1.Id,
+            Recipe = recipe1,
             FileName = "2.png",
             CreatedBy = "Long John Silver2",
             CreatedOn = new DateTime(2019, 11, 8),
