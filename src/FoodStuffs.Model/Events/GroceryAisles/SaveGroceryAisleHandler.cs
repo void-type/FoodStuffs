@@ -12,23 +12,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.GroceryAisles;
 
-public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAisleRequest, EntityMessage<int>>
+public class SaveGroceryAisleHandler(FoodStuffsContext data, SaveGroceryAisleRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveGroceryAisleRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveGroceryAisleRequestValidator _validator;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveGroceryAisleHandler(FoodStuffsContext data, SaveGroceryAisleRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _validator = validator;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryAisleRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -38,7 +27,7 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
 
         var byId = new GroceryAislesSpecification(request.Id);
 
-        var maybeGroceryAisle = await _data.GroceryAisles
+        var maybeGroceryAisle = await data.GroceryAisles
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -50,7 +39,7 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
         // Check for conflicting items by name
         var byName = new GroceryAislesSpecification(requestedName);
 
-        var conflictingGroceryAisle = await _data.GroceryAisles
+        var conflictingGroceryAisle = await data.GroceryAisles
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
@@ -69,18 +58,18 @@ public class SaveGroceryAisleHandler : CustomEventHandlerAbstract<SaveGroceryAis
 
         if (maybeGroceryAisle.HasValue)
         {
-            _data.GroceryAisles.Update(groceryAisleToEdit);
+            data.GroceryAisles.Update(groceryAisleToEdit);
         }
         else
         {
-            await _data.GroceryAisles.AddAsync(groceryAisleToEdit, cancellationToken);
+            await data.GroceryAisles.AddAsync(groceryAisleToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
         relatedGroceryItemIds.UnionWith(groceryAisleToEdit.GroceryItems.Select(gi => gi.Id));
 
-        _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
+        searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
         return Ok(EntityMessage.Create($"Grocery Aisle {(maybeGroceryAisle.HasValue ? "updated" : "added")}.", groceryAisleToEdit.Id));
     }

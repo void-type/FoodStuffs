@@ -7,20 +7,11 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class DeleteStorageLocationHandler : CustomEventHandlerAbstract<DeleteStorageLocationRequest, EntityMessage<int>>
+public class DeleteStorageLocationHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<DeleteStorageLocationRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-
-    public DeleteStorageLocationHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteStorageLocationRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.StorageLocations
+        return await data.StorageLocations
             .TagWith(GetTag())
             .Include(c => c.GroceryItems)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
@@ -28,11 +19,11 @@ public class DeleteStorageLocationHandler : CustomEventHandlerAbstract<DeleteSto
             .ToResultAsync(new StorageLocationNotFoundFailure())
             .TeeOnSuccessAsync(async c =>
             {
-                _data.StorageLocations.Remove(c);
+                data.StorageLocations.Remove(c);
 
-                await _data.SaveChangesAsync(cancellationToken);
+                await data.SaveChangesAsync(cancellationToken);
 
-                _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, c.GroceryItems.Select(gi => gi.Id));
+                searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, c.GroceryItems.Select(gi => gi.Id));
             })
             .SelectAsync(r => EntityMessage.Create("Storage location deleted.", r.Id));
     }

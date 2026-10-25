@@ -7,20 +7,13 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class GetStorageLocationHandler : CustomEventHandlerAbstract<GetStorageLocationRequest, GetStorageLocationResponse>
+public class GetStorageLocationHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<GetStorageLocationRequest, GetStorageLocationResponse>
 {
-    private readonly FoodStuffsContext _data;
-
-    public GetStorageLocationHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<GetStorageLocationResponse>> Handle(GetStorageLocationRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new StorageLocationsWithAllRelatedSpecification(request.Id);
 
-        return await _data.StorageLocations
+        return await data.StorageLocations
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)

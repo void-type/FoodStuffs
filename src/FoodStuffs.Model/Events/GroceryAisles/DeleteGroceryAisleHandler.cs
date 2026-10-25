@@ -7,20 +7,11 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.GroceryAisles;
 
-public class DeleteGroceryAisleHandler : CustomEventHandlerAbstract<DeleteGroceryAisleRequest, EntityMessage<int>>
+public class DeleteGroceryAisleHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<DeleteGroceryAisleRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-
-    public DeleteGroceryAisleHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteGroceryAisleRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.GroceryAisles
+        return await data.GroceryAisles
             .TagWith(GetTag())
             .Include(c => c.GroceryItems)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
@@ -30,11 +21,11 @@ public class DeleteGroceryAisleHandler : CustomEventHandlerAbstract<DeleteGrocer
             {
                 var groceryItemIds = c.GroceryItems.Select(gi => gi.Id).ToList();
 
-                _data.GroceryAisles.Remove(c);
+                data.GroceryAisles.Remove(c);
 
-                await _data.SaveChangesAsync(cancellationToken);
+                await data.SaveChangesAsync(cancellationToken);
 
-                _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
+                searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
             })
             .SelectAsync(r => EntityMessage.Create("Grocery aisle deleted.", r.Id));
     }

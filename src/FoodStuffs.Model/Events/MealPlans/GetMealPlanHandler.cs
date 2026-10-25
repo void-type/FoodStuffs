@@ -7,20 +7,13 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.MealPlans;
 
-public class GetMealPlanHandler : CustomEventHandlerAbstract<GetMealPlanRequest, GetMealPlanResponse>
+public class GetMealPlanHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<GetMealPlanRequest, GetMealPlanResponse>
 {
-    private readonly FoodStuffsContext _data;
-
-    public GetMealPlanHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<GetMealPlanResponse>> Handle(GetMealPlanRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new MealPlansWithAllRelatedSpecification(request.Id);
 
-        return await _data.MealPlans
+        return await data.MealPlans
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)

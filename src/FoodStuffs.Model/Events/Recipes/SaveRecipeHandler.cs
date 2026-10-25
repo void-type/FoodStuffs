@@ -11,23 +11,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, EntityResponse<GetRecipeResponse>>
+public class SaveRecipeHandler(FoodStuffsContext data, SaveRecipeRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveRecipeRequest, EntityResponse<GetRecipeResponse>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-    private readonly SaveRecipeRequestValidator _validator;
-
-    public SaveRecipeHandler(FoodStuffsContext data, SaveRecipeRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-        _validator = validator;
-    }
-
     public override async Task<IResult<EntityResponse<GetRecipeResponse>>> Handle(SaveRecipeRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -35,7 +24,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
     {
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
-        var maybeRecipe = await _data.Recipes
+        var maybeRecipe = await data.Recipes
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -48,7 +37,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
         // Check for conflicting items by name
         var byName = new RecipesSpecification(request.Name.Trim(), request.Id);
 
-        var conflictingRecipeExists = await _data.Recipes
+        var conflictingRecipeExists = await data.Recipes
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
@@ -69,20 +58,20 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         if (maybeRecipe.HasValue)
         {
-            _data.Recipes.Update(recipeToEdit);
+            data.Recipes.Update(recipeToEdit);
         }
         else
         {
-            await _data.Recipes.AddAsync(recipeToEdit, cancellationToken);
+            await data.Recipes.AddAsync(recipeToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.UpdateAsync(SearchIndex.Recipes, recipeToEdit.Id, cancellationToken);
+        await searchIndex.UpdateAsync(SearchIndex.Recipes, recipeToEdit.Id, cancellationToken);
 
         relatedGroceryItemIds.UnionWith(recipeToEdit.GroceryItemRelations.Select(x => x.GroceryItemId));
 
-        _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
+        searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
         var response = EntityResponse.Create(
             $"Recipe {(maybeRecipe.HasValue ? "updated" : "added")}.",
@@ -117,7 +106,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
             .ToList();
 
         // Find missing categories that already exist.
-        var existingCategories = await _data.Categories
+        var existingCategories = await data.Categories
             .TagWith(GetTag())
             .Where(x => missingNames.Contains(x.Name))
             .OrderBy(x => x.Id)
@@ -152,7 +141,7 @@ public class SaveRecipeHandler : CustomEventHandlerAbstract<SaveRecipeRequest, E
 
         var specification = new GroceryItemsSpecification(missingItemIds);
 
-        var missingItems = await _data.GroceryItems
+        var missingItems = await data.GroceryItems
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);

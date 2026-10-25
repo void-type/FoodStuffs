@@ -12,23 +12,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.Categories;
 
-public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryRequest, EntityMessage<int>>
+public class SaveCategoryHandler(FoodStuffsContext data, SaveCategoryRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveCategoryRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveCategoryRequestValidator _validator;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveCategoryHandler(FoodStuffsContext data, SaveCategoryRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _validator = validator;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveCategoryRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -38,7 +27,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         var byId = new CategoriesWithAllRelatedSpecification(request.Id);
 
-        var maybeCategory = await _data.Categories
+        var maybeCategory = await data.Categories
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -49,7 +38,7 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
         // Check for conflicting items by name
         var byName = new CategoriesSpecification(formattedName);
 
-        var conflictingCategory = await _data.Categories
+        var conflictingCategory = await data.Categories
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
@@ -69,18 +58,18 @@ public class SaveCategoryHandler : CustomEventHandlerAbstract<SaveCategoryReques
 
         if (maybeCategory.HasValue)
         {
-            _data.Categories.Update(categoryToEdit);
+            data.Categories.Update(categoryToEdit);
         }
         else
         {
-            await _data.Categories.AddAsync(categoryToEdit, cancellationToken);
+            await data.Categories.AddAsync(categoryToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
         relatedRecipeIds.UnionWith(categoryToEdit.Recipes.Select(r => r.Id));
 
-        _searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
+        searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
 
         return Ok(EntityMessage.Create($"Category {(maybeCategory.HasValue ? "updated" : "added")}.", categoryToEdit.Id));
     }

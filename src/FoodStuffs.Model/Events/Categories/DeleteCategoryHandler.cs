@@ -7,20 +7,11 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Categories;
 
-public class DeleteCategoryHandler : CustomEventHandlerAbstract<DeleteCategoryRequest, EntityMessage<int>>
+public class DeleteCategoryHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<DeleteCategoryRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-
-    public DeleteCategoryHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteCategoryRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.Categories
+        return await data.Categories
             .TagWith(GetTag())
             .Include(c => c.Recipes)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
@@ -30,11 +21,11 @@ public class DeleteCategoryHandler : CustomEventHandlerAbstract<DeleteCategoryRe
             {
                 var recipeIds = c.Recipes.ConvertAll(r => r.Id);
 
-                _data.Categories.Remove(c);
+                data.Categories.Remove(c);
 
-                await _data.SaveChangesAsync(cancellationToken);
+                await data.SaveChangesAsync(cancellationToken);
 
-                _searchIndex.EnqueueUpdate(SearchIndex.Recipes, recipeIds);
+                searchIndex.EnqueueUpdate(SearchIndex.Recipes, recipeIds);
             })
             .SelectAsync(r => EntityMessage.Create("Category deleted.", r.Id));
     }

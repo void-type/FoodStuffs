@@ -5,17 +5,10 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.GroceryItems;
 
-public class SearchGroceryItemsHandler : EventHandlerSyncAbstract<SearchGroceryItemsRequest, SearchGroceryItemsResponse>
+public class SearchGroceryItemsHandler(IGroceryItemQueryService query) : EventHandlerSyncAbstract<SearchGroceryItemsRequest, SearchGroceryItemsResponse>
 {
-    private readonly IGroceryItemQueryService _query;
-
-    public SearchGroceryItemsHandler(IGroceryItemQueryService query)
-    {
-        _query = query;
-    }
-
     protected override IResult<SearchGroceryItemsResponse> HandleSync(SearchGroceryItemsRequest request)
     {
-        return Ok(_query.Search(request));
+        return Ok(query.Search(request));
     }
 }

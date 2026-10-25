@@ -11,23 +11,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.GroceryItems;
 
-public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGroceryItemInventoryRequest, EntityMessage<int>>
+public class SaveGroceryItemInventoryHandler(FoodStuffsContext data, SaveGroceryItemInventoryRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveGroceryItemInventoryRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveGroceryItemInventoryRequestValidator _validator;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveGroceryItemInventoryHandler(FoodStuffsContext data, SaveGroceryItemInventoryRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _validator = validator;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryItemInventoryRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -35,7 +24,7 @@ public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGr
     {
         var byId = new GroceryItemsWithAllRelatedSpecification(request.Id);
 
-        var maybeGroceryItem = await _data.GroceryItems
+        var maybeGroceryItem = await data.GroceryItems
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -52,11 +41,11 @@ public class SaveGroceryItemInventoryHandler : CustomEventHandlerAbstract<SaveGr
 
         Transfer(request, groceryItemToEdit);
 
-        _data.GroceryItems.Update(groceryItemToEdit);
+        data.GroceryItems.Update(groceryItemToEdit);
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
+        await searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }

@@ -7,20 +7,13 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.GroceryStores;
 
-public class GetGroceryStoreHandler : CustomEventHandlerAbstract<GetGroceryStoreRequest, GetGroceryStoreResponse>
+public class GetGroceryStoreHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<GetGroceryStoreRequest, GetGroceryStoreResponse>
 {
-    private readonly FoodStuffsContext _data;
-
-    public GetGroceryStoreHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<GetGroceryStoreResponse>> Handle(GetGroceryStoreRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new GroceryStoresWithAllRelatedSpecification(request.Id);
 
-        return await _data.GroceryStores
+        return await data.GroceryStores
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)

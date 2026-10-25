@@ -7,19 +7,14 @@ namespace FoodStuffs.Web.Controllers;
 /// <summary>
 /// Home controller.
 /// </summary>
+/// <remarks>
+/// Construct a new controller.
+/// </remarks>
 [ApiExplorerSettings(IgnoreApi = true)]
 [Route("/")]
-public partial class HomeController : Controller
+public partial class HomeController(ILogger<HomeController> logger) : Controller
 {
-    private readonly ILogger _logger;
-
-    /// <summary>
-    /// Construct a new controller.
-    /// </summary>
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger _logger = logger;
 
     /// <summary>
     /// Home page.

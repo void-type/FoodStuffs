@@ -8,19 +8,12 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.MealPlans;
 
-public class AddMealPlanRecipeHandler : CustomEventHandlerAbstract<AddMealPlanRecipeRequest, EntityResponse<GetMealPlanResponse>>
+public class AddMealPlanRecipeHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<AddMealPlanRecipeRequest, EntityResponse<GetMealPlanResponse>>
 {
-    private readonly FoodStuffsContext _data;
-
-    public AddMealPlanRecipeHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<EntityResponse<GetMealPlanResponse>>> Handle(AddMealPlanRecipeRequest request, CancellationToken cancellationToken = default)
     {
         var maybeMealPlan = await MealPlanQueryHelper.FindWithAllRelatedAsync(
-            _data, request.Id, GetTag(), cancellationToken);
+            data, request.Id, GetTag(), cancellationToken);
 
         if (!maybeMealPlan.HasValue)
         {
@@ -37,7 +30,7 @@ public class AddMealPlanRecipeHandler : CustomEventHandlerAbstract<AddMealPlanRe
 
         var recipeSpec = new RecipesSpecification(request.RecipeId);
 
-        var maybeRecipe = await _data.Recipes
+        var maybeRecipe = await data.Recipes
             .TagWith(GetTag(recipeSpec))
             .ApplyEfSpecification(recipeSpec)
             .OrderBy(x => x.Id)
@@ -59,11 +52,11 @@ public class AddMealPlanRecipeHandler : CustomEventHandlerAbstract<AddMealPlanRe
             Order = maxOrder + 1,
         });
 
-        _data.MealPlans.Update(mealPlan);
-        await _data.SaveChangesAsync(cancellationToken);
+        data.MealPlans.Update(mealPlan);
+        await data.SaveChangesAsync(cancellationToken);
 
         var reloadedMealPlan = await MealPlanQueryHelper.GetWithAllRelatedAsync(
-            _data, request.Id, GetTag(), cancellationToken);
+            data, request.Id, GetTag(), cancellationToken);
 
         return Ok(EntityResponse.Create("Recipe added to meal plan.", reloadedMealPlan.ToGetMealPlanResponse()));
     }

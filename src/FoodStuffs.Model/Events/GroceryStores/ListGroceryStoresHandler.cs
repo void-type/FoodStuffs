@@ -8,22 +8,15 @@ using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.Events.GroceryStores;
 
-public class ListGroceryStoresHandler : CustomEventHandlerAbstract<ListGroceryStoresRequest, IItemSet<ListGroceryStoresResponse>>
+public class ListGroceryStoresHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<ListGroceryStoresRequest, IItemSet<ListGroceryStoresResponse>>
 {
-    private readonly FoodStuffsContext _data;
-
-    public ListGroceryStoresHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<IItemSet<ListGroceryStoresResponse>>> Handle(ListGroceryStoresRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
         var specification = new GroceryStoresSpecification(request);
 
-        return await _data.GroceryStores
+        return await data.GroceryStores
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .Select(pl => new

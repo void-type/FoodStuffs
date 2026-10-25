@@ -7,27 +7,18 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Categories;
 
-public class AddCategoryToAllRecipesHandler : CustomEventHandlerAbstract<AddCategoryToAllRecipesRequest, EntityMessage<int>>
+public class AddCategoryToAllRecipesHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<AddCategoryToAllRecipesRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-
-    public AddCategoryToAllRecipesHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(AddCategoryToAllRecipesRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.Categories
+        return await data.Categories
             .TagWith(GetTag())
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             .MapAsync(Maybe.From)
             .ToResultAsync(new CategoryNotFoundFailure())
             .TeeOnSuccessAsync(async c =>
             {
-                var recipesToAdd = await _data.Recipes
+                var recipesToAdd = await data.Recipes
                     .TagWith(GetTag())
                     .Include(r => r.Categories)
                     .Where(r => r.Categories.All(cat => cat.Id != c.Id))
@@ -35,9 +26,9 @@ public class AddCategoryToAllRecipesHandler : CustomEventHandlerAbstract<AddCate
 
                 recipesToAdd.ForEach(r => r.Categories.Add(c));
 
-                await _data.SaveChangesAsync(cancellationToken);
+                await data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
+                await searchIndex.RebuildAsync(SearchIndex.Recipes, cancellationToken);
             })
             .SelectAsync(r => EntityMessage.Create("Category added to all recipes.", r.Id));
     }

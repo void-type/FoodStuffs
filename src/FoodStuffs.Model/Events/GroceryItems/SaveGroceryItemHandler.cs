@@ -12,23 +12,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.GroceryItems;
 
-public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItemRequest, EntityMessage<int>>
+public class SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveGroceryItemRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveGroceryItemRequestValidator _validator;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _validator = validator;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryItemRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -39,7 +28,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         var byId = new GroceryItemsWithAllRelatedSpecification(request.Id);
 
-        var maybeGroceryItem = await _data.GroceryItems
+        var maybeGroceryItem = await data.GroceryItems
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -50,7 +39,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
         // Check for conflicting items by name
         var byName = new GroceryItemsSpecification(requestedName);
 
-        var conflictingGroceryItem = await _data.GroceryItems
+        var conflictingGroceryItem = await data.GroceryItems
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
@@ -73,7 +62,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         if (request.GroceryAisleId is not null)
         {
-            var groceryAisle = await _data.GroceryAisles
+            var groceryAisle = await data.GroceryAisles
                 .TagWith(GetTag())
                 .FirstOrDefaultAsync(gd => gd.Id == request.GroceryAisleId, cancellationToken);
 
@@ -91,20 +80,20 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
 
         if (maybeGroceryItem.HasValue)
         {
-            _data.GroceryItems.Update(groceryItemToEdit);
+            data.GroceryItems.Update(groceryItemToEdit);
         }
         else
         {
-            await _data.GroceryItems.AddAsync(groceryItemToEdit, cancellationToken);
+            await data.GroceryItems.AddAsync(groceryItemToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
         relatedRecipeIds.UnionWith(groceryItemToEdit.Recipes.Select(r => r.Id));
 
-        _searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
+        searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
 
-        await _searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
+        await searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery Item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }
@@ -130,7 +119,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
             .ToList();
 
         // Find missing storage locations that already exist.
-        var existingStorageLocations = await _data.StorageLocations
+        var existingStorageLocations = await data.StorageLocations
             .TagWith(GetTag())
             .Where(x => missingNames.Contains(x.Name))
             .OrderBy(x => x.Id)
@@ -164,7 +153,7 @@ public class SaveGroceryItemHandler : CustomEventHandlerAbstract<SaveGroceryItem
             .ToList();
 
         // Find missing grocery stores that already exist.
-        var existingGroceryStores = await _data.GroceryStores
+        var existingGroceryStores = await data.GroceryStores
             .TagWith(GetTag())
             .Where(x => missingNames.Contains(x.Name))
             .OrderBy(x => x.Id)

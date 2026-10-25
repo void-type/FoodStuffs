@@ -3,21 +3,11 @@ using FoodStuffs.Model.Search.Recipes;
 
 namespace FoodStuffs.Model.Search;
 
-public class SearchIndexService : ISearchIndexService
+public class SearchIndexService(
+    IRecipeIndexService recipeIndexService,
+    IGroceryItemIndexService groceryItemIndexService,
+    SearchIndexBackgroundQueue queue) : ISearchIndexService
 {
-    private readonly IRecipeIndexService _recipeIndexService;
-    private readonly IGroceryItemIndexService _groceryItemIndexService;
-    private readonly SearchIndexBackgroundQueue _queue;
-
-    public SearchIndexService(
-        IRecipeIndexService recipeIndexService,
-        IGroceryItemIndexService groceryItemIndexService,
-        SearchIndexBackgroundQueue queue)
-    {
-        _recipeIndexService = recipeIndexService;
-        _groceryItemIndexService = groceryItemIndexService;
-        _queue = queue;
-    }
 
     /// <inheritdoc/>
     public async Task UpdateAsync(SearchIndex indexName, int entityId, CancellationToken cancellationToken)
@@ -25,11 +15,11 @@ public class SearchIndexService : ISearchIndexService
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.UpdateAsync(entityId, cancellationToken);
+                await recipeIndexService.UpdateAsync(entityId, cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.UpdateAsync(entityId, cancellationToken);
+                await groceryItemIndexService.UpdateAsync(entityId, cancellationToken);
                 break;
 
             default:
@@ -43,11 +33,11 @@ public class SearchIndexService : ISearchIndexService
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.UpdateAsync(entityIds, cancellationToken);
+                await recipeIndexService.UpdateAsync(entityIds, cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.UpdateAsync(entityIds, cancellationToken);
+                await groceryItemIndexService.UpdateAsync(entityIds, cancellationToken);
                 break;
 
             default:
@@ -61,11 +51,11 @@ public class SearchIndexService : ISearchIndexService
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.RemoveAsync(entityId, cancellationToken);
+                await recipeIndexService.RemoveAsync(entityId, cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.RemoveAsync(entityId, cancellationToken);
+                await groceryItemIndexService.RemoveAsync(entityId, cancellationToken);
                 break;
 
             default:
@@ -79,11 +69,11 @@ public class SearchIndexService : ISearchIndexService
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.RemoveAsync(entityIds, cancellationToken);
+                await recipeIndexService.RemoveAsync(entityIds, cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.RemoveAsync(entityIds, cancellationToken);
+                await groceryItemIndexService.RemoveAsync(entityIds, cancellationToken);
                 break;
 
             default:
@@ -95,22 +85,22 @@ public class SearchIndexService : ISearchIndexService
     public void EnqueueUpdate(SearchIndex indexName, IEnumerable<int> entityIds)
     {
         var ids = entityIds.ToList();
-        _queue.Enqueue(new SearchIndexBackgroundAction(indexName, ids));
+        queue.Enqueue(new SearchIndexBackgroundAction(indexName, ids));
     }
 
     /// <inheritdoc/>
     public async Task RebuildAsync(SearchIndex indexName, CancellationToken cancellationToken)
     {
-        _queue.Clear(indexName);
+        queue.Clear(indexName);
 
         switch (indexName)
         {
             case SearchIndex.Recipes:
-                await _recipeIndexService.RebuildAsync(cancellationToken);
+                await recipeIndexService.RebuildAsync(cancellationToken);
                 break;
 
             case SearchIndex.GroceryItems:
-                await _groceryItemIndexService.RebuildAsync(cancellationToken);
+                await groceryItemIndexService.RebuildAsync(cancellationToken);
                 break;
 
             default:

@@ -11,21 +11,13 @@ using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
 
 namespace FoodStuffs.Model.Search.Recipes;
 
-public class RecipeQueryService : IRecipeQueryService
+public class RecipeQueryService(SearchSettings settings, IDateTimeService dateTimeService) : IRecipeQueryService
 {
-    private readonly IDateTimeService _dateTimeService;
-    private readonly SearchSettings _settings;
-
-    public RecipeQueryService(SearchSettings settings, IDateTimeService dateTimeService)
-    {
-        _dateTimeService = dateTimeService;
-        _settings = settings;
-    }
 
     /// <inheritdoc/>
     public SearchRecipesResponse Search(SearchRecipesRequest request)
     {
-        using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
+        using var readers = new LuceneReaders(settings, C.INDEX_NAME);
         var searcher = readers.IndexSearcher;
         var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
@@ -35,7 +27,7 @@ public class RecipeQueryService : IRecipeQueryService
         };
 
         var sort = BuildSortCriteria(request);
-        var numHits = GetNumHits(request, _settings);
+        var numHits = GetNumHits(request, settings);
 
         // Use DrillSideways for proper facet counting
         var drillDownQuery = BuildDrillDownQuery(request, facetsConfig, baseQuery);
@@ -52,8 +44,8 @@ public class RecipeQueryService : IRecipeQueryService
         {
             var seed = request.RandomSortSeed is not null ?
                 request.RandomSortSeed.GetHashCode() :
-                _dateTimeService.MomentWithOffset.Date.GetHashCode();
-                // We don't worry about cryptographic security for random sorting here.
+                dateTimeService.MomentWithOffset.Date.GetHashCode();
+            // We don't worry about cryptographic security for random sorting here.
 #pragma warning disable S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
             var random = new Random(seed);
 #pragma warning restore S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
@@ -82,7 +74,7 @@ public class RecipeQueryService : IRecipeQueryService
                 return new List<SuggestRecipesResultItem>().ToItemSet(request.GetPaginationOptions());
             }
 
-            using var readers = new LuceneReaders(_settings, C.INDEX_NAME);
+            using var readers = new LuceneReaders(settings, C.INDEX_NAME);
             var searcher = readers.IndexSearcher;
 
             var query = new BooleanQuery()
@@ -109,7 +101,7 @@ public class RecipeQueryService : IRecipeQueryService
     {
         var searchText = requestText?.Trim()?.ToLowerInvariant();
 
-        var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
+        var analyzer = new StandardAnalyzer(settings.LuceneVersion);
         var queryBuilder = new QueryBuilder(analyzer);
         var query = new BooleanQuery();
 
@@ -164,7 +156,7 @@ public class RecipeQueryService : IRecipeQueryService
     {
         var searchText = requestText?.Trim()?.ToLowerInvariant();
 
-        var analyzer = new StandardAnalyzer(_settings.LuceneVersion);
+        var analyzer = new StandardAnalyzer(settings.LuceneVersion);
         var queryBuilder = new QueryBuilder(analyzer);
         var query = new BooleanQuery();
 

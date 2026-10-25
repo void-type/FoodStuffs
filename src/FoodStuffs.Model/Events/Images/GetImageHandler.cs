@@ -7,18 +7,11 @@ using VoidCore.Model.Responses.Files;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class GetImageHandler : CustomEventHandlerAbstract<GetImageRequest, SimpleFile>
+public class GetImageHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<GetImageRequest, SimpleFile>
 {
-    private readonly FoodStuffsContext _data;
-
-    public GetImageHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<SimpleFile>> Handle(GetImageRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.Images
+        return await data.Images
             .TagWith(GetTag())
             .Include(x => x.ImageBlob)
             .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)

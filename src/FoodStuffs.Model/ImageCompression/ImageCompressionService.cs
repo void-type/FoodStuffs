@@ -4,14 +4,8 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodStuffs.Model.ImageCompression;
 
-public class ImageCompressionService : IImageCompressionService
+public class ImageCompressionService(ILogger<ImageCompressionService> logger) : IImageCompressionService
 {
-    private readonly ILogger<ImageCompressionService> _logger;
-
-    public ImageCompressionService(ILogger<ImageCompressionService> logger)
-    {
-        _logger = logger;
-    }
 
     /// <inheritdoc/>
     public async Task<MemoryStream> CompressAndResizeImageAsync(Stream fileStream, int quality, ResizeSettings resizeSettings, CancellationToken cancellationToken)
@@ -32,7 +26,7 @@ public class ImageCompressionService : IImageCompressionService
 
         if (image.Format == MagickFormat.WebP)
         {
-            _logger.LogInformation("Skipping compression. Already webp.");
+            logger.LogInformation("Skipping compression. Already webp.");
 
             var uncompressedStream = new MemoryStream();
             await image.WriteAsync(uncompressedStream, cancellationToken);
@@ -74,7 +68,7 @@ public class ImageCompressionService : IImageCompressionService
         var outputStream = new MemoryStream();
         await image.WriteAsync(outputStream, defines, cancellationToken);
 
-        _logger.LogInformation("Compressed image from {OldSize} KB to {NewSize} KB.", fileStream.Length / 1024, outputStream.Length / 1024);
+        logger.LogInformation("Compressed image from {OldSize} KB to {NewSize} KB.", fileStream.Length / 1024, outputStream.Length / 1024);
 
         return outputStream;
     }

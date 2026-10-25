@@ -7,20 +7,13 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class GetRecipeHandler : CustomEventHandlerAbstract<GetRecipeRequest, GetRecipeResponse>
+public class GetRecipeHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<GetRecipeRequest, GetRecipeResponse>
 {
-    private readonly FoodStuffsContext _data;
-
-    public GetRecipeHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<GetRecipeResponse>> Handle(GetRecipeRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new RecipesWithAllRelatedSpecification(request.Id);
 
-        return await _data.Recipes
+        return await data.Recipes
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)

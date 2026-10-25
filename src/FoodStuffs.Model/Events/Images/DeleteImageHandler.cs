@@ -7,20 +7,11 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest, EntityMessage<string>>
+public class DeleteImageHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<DeleteImageRequest, EntityMessage<string>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-
-    public DeleteImageHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<string>>> Handle(DeleteImageRequest request, CancellationToken cancellationToken = default)
     {
-        return await _data.Images
+        return await data.Images
             .TagWith(GetTag())
             .Include(x => x.Recipe)
             .FirstOrDefaultAsync(i => i.FileName == request.Name, cancellationToken)
@@ -33,11 +24,11 @@ public class DeleteImageHandler : CustomEventHandlerAbstract<DeleteImageRequest,
                     i.Recipe.PinnedImageId = null;
                 }
 
-                _data.Remove(i);
+                data.Remove(i);
 
-                await _data.SaveChangesAsync(cancellationToken);
+                await data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.UpdateAsync(SearchIndex.Recipes, i.RecipeId, cancellationToken);
+                await searchIndex.UpdateAsync(SearchIndex.Recipes, i.RecipeId, cancellationToken);
             })
             .SelectAsync(_ => EntityMessage.Create("Image deleted.", request.Name));
     }

@@ -117,8 +117,9 @@ csharp_style_conditional_delegate_call = true:suggestion
 # File-scoped namespace declarations
 csharp_style_namespace_declarations = file_scoped:warning
 
-# Don't prefer primary constructors
-csharp_style_prefer_primary_constructors = false
+# Prefer primary constructors
+csharp_style_prefer_primary_constructors = true
+dotnet_diagnostic.IDE0290.severity = warning
 
 # Code block preferences
 csharp_prefer_braces = true:warning

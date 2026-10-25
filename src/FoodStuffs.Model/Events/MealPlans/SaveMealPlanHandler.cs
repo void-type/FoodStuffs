@@ -10,21 +10,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.MealPlans;
 
-public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanRequest, EntityMessage<int>>
+public class SaveMealPlanHandler(FoodStuffsContext data, SaveMealPlanRequestValidator validator) : CustomEventHandlerAbstract<SaveMealPlanRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveMealPlanRequestValidator _validator;
-
-    public SaveMealPlanHandler(FoodStuffsContext data, SaveMealPlanRequestValidator validator)
-    {
-        _data = data;
-        _validator = validator;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveMealPlanRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -32,7 +23,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
     {
         var byId = new MealPlansWithAllRelatedSpecification(request.Id);
 
-        var maybeMealPlan = await _data.MealPlans
+        var maybeMealPlan = await data.MealPlans
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -52,14 +43,14 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         if (maybeMealPlan.HasValue)
         {
-            _data.MealPlans.Update(mealPlanToEdit);
+            data.MealPlans.Update(mealPlanToEdit);
         }
         else
         {
-            await _data.MealPlans.AddAsync(mealPlanToEdit, cancellationToken);
+            await data.MealPlans.AddAsync(mealPlanToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
         return Ok(EntityMessage.Create($"Meal plan {(maybeMealPlan.HasValue ? "updated" : "added")}.", mealPlanToEdit.Id));
     }
@@ -84,7 +75,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         var specification = new RecipesSpecification(missingRecipeIds);
 
-        var missingRecipes = await _data.Recipes
+        var missingRecipes = await data.Recipes
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);
@@ -129,7 +120,7 @@ public class SaveMealPlanHandler : CustomEventHandlerAbstract<SaveMealPlanReques
 
         var specification = new GroceryItemsSpecification(missingItemIds);
 
-        var missingItems = await _data.GroceryItems
+        var missingItems = await data.GroceryItems
             .TagWith(GetTag(specification))
             .ApplyEfSpecification(specification)
             .ToListAsync(cancellationToken);

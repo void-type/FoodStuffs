@@ -11,21 +11,10 @@ using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
 
 namespace FoodStuffs.Model.Search.Recipes;
 
-public class RecipeIndexService : IRecipeIndexService
+public class RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettings settings, FoodStuffsContext data) : IRecipeIndexService
 {
     private const int BATCH_SIZE = 100;
-
-    private readonly ILogger<RecipeIndexService> _logger;
-    private readonly SearchSettings _settings;
-    private readonly FoodStuffsContext _data;
     private static readonly SemaphoreSlim _writeSemaphore = new(1, 1);
-
-    public RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettings settings, FoodStuffsContext data)
-    {
-        _logger = logger;
-        _settings = settings;
-        _data = data;
-    }
 
     /// <inheritdoc/>
     public async Task UpdateAsync(int recipeId, CancellationToken cancellationToken)
@@ -38,7 +27,7 @@ public class RecipeIndexService : IRecipeIndexService
     {
         var byId = new RecipesWithAllRelatedSpecification(recipeId);
 
-        var recipes = await _data.Recipes
+        var recipes = await data.Recipes
             .TagWith($"{nameof(RecipeIndexService)}.{nameof(UpdateAsync)}({nameof(RecipesWithAllRelatedSpecification)})")
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -66,7 +55,7 @@ public class RecipeIndexService : IRecipeIndexService
 
         try
         {
-            using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
 
             foreach (var recipeId in recipeIds)
             {
@@ -84,15 +73,15 @@ public class RecipeIndexService : IRecipeIndexService
     /// <inheritdoc/>
     public async Task RebuildAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Starting rebuild of recipe search index.");
+        logger.LogInformation("Starting rebuild of recipe search index.");
 
         await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
-            LuceneDirectoryHelper.PrepareForRebuild(_settings, C.INDEX_NAME);
+            LuceneDirectoryHelper.PrepareForRebuild(settings, C.INDEX_NAME);
 
-            using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE, C.INDEX_NAME);
 
             var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
@@ -105,7 +94,7 @@ public class RecipeIndexService : IRecipeIndexService
                 var pagination = new PaginationOptions(page, BATCH_SIZE);
                 var withAllRelated = new RecipesWithAllRelatedSpecification();
 
-                var recipes = await _data.Recipes
+                var recipes = await data.Recipes
                     .TagWith($"{nameof(RecipeIndexService)}.{nameof(RebuildAsync)}({nameof(RecipesWithAllRelatedSpecification)})")
                     .AsSplitQuery()
                     .ApplyEfSpecification(withAllRelated)
@@ -127,7 +116,7 @@ public class RecipeIndexService : IRecipeIndexService
             writers.IndexWriter.Commit();
             writers.TaxonomyWriter.Commit();
 
-            _logger.LogInformation("Finished rebuild of recipe search index. {DocCount} documents.", numIndexed);
+            logger.LogInformation("Finished rebuild of recipe search index. {DocCount} documents.", numIndexed);
         }
         finally
         {
@@ -143,7 +132,7 @@ public class RecipeIndexService : IRecipeIndexService
 
         try
         {
-            using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
 
             var facetsConfig = RecipeSearchHelper.FacetsConfig();
 

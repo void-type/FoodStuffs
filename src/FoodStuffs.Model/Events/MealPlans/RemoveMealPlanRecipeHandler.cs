@@ -4,19 +4,12 @@ using VoidCore.Model.Functional;
 
 namespace FoodStuffs.Model.Events.MealPlans;
 
-public class RemoveMealPlanRecipeHandler : CustomEventHandlerAbstract<RemoveMealPlanRecipeRequest, EntityResponse<GetMealPlanResponse>>
+public class RemoveMealPlanRecipeHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<RemoveMealPlanRecipeRequest, EntityResponse<GetMealPlanResponse>>
 {
-    private readonly FoodStuffsContext _data;
-
-    public RemoveMealPlanRecipeHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<EntityResponse<GetMealPlanResponse>>> Handle(RemoveMealPlanRecipeRequest request, CancellationToken cancellationToken = default)
     {
         var maybeMealPlan = await MealPlanQueryHelper.FindWithAllRelatedAsync(
-            _data, request.Id, GetTag(), cancellationToken);
+            data, request.Id, GetTag(), cancellationToken);
 
         if (!maybeMealPlan.HasValue)
         {
@@ -35,11 +28,11 @@ public class RemoveMealPlanRecipeHandler : CustomEventHandlerAbstract<RemoveMeal
 
         mealPlan.RecipeRelations.Remove(existingRelation);
 
-        _data.MealPlans.Update(mealPlan);
-        await _data.SaveChangesAsync(cancellationToken);
+        data.MealPlans.Update(mealPlan);
+        await data.SaveChangesAsync(cancellationToken);
 
         var reloadedMealPlan = await MealPlanQueryHelper.GetWithAllRelatedAsync(
-            _data, request.Id, GetTag(), cancellationToken);
+            data, request.Id, GetTag(), cancellationToken);
 
         return Ok(EntityResponse.Create("Recipe removed from meal plan.", reloadedMealPlan.ToGetMealPlanResponse()));
     }

@@ -10,21 +10,8 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Images;
 
-public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, EntityMessage<string>>
+public class SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveImageRequest, EntityMessage<string>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ILogger<SaveImageHandler> _logger;
-    private readonly IImageCompressionService _compressor;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> logger, IImageCompressionService imageCompressionService, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _logger = logger;
-        _compressor = imageCompressionService;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<string>>> Handle(SaveImageRequest request, CancellationToken cancellationToken = default)
     {
         // If we want to handle large files via streaming, we can use https://code-maze.com/aspnetcore-upload-large-files/.
@@ -36,7 +23,7 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
         // 2. configure FormOptions in startup for options.MultipartBodyLengthLimit = <byte size>
         // 3. edit the client-side upload validation in the RecipeEdit.vue file.
 
-        var recipeResult = await _data.Recipes
+        var recipeResult = await data.Recipes
             .TagWith(GetTag())
             .AsSingleQuery()
             .Include(x => x.Images)
@@ -69,9 +56,9 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
 
         recipeResult.Value.Images.Add(image);
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
-        await _searchIndex.UpdateAsync(SearchIndex.Recipes, recipeResult.Value.Id, cancellationToken);
+        await searchIndex.UpdateAsync(SearchIndex.Recipes, recipeResult.Value.Id, cancellationToken);
 
         return Ok(EntityMessage.Create("Image uploaded.", image.FileName));
     }
@@ -80,14 +67,14 @@ public class SaveImageHandler : CustomEventHandlerAbstract<SaveImageRequest, Ent
     {
         try
         {
-            await using var compressedFileContent = await _compressor
+            await using var compressedFileContent = await imageCompressionService
                 .CompressAndResizeImageAsync(request.FileStream, 95, ResizeSettings.CenterCrop(4, 3, 1600), cancellationToken);
 
             return Result.Ok(compressedFileContent.ToArray());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception thrown while compressing image.");
+            logger.LogError(ex, "Exception thrown while compressing image.");
             return Result.Fail<byte[]>(new Failure("There was an error while processing your image.", "upload-file"));
         }
     }

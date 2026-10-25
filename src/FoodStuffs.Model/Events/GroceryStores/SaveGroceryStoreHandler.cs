@@ -12,23 +12,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.GroceryStores;
 
-public class SaveGroceryStoreHandler : CustomEventHandlerAbstract<SaveGroceryStoreRequest, EntityMessage<int>>
+public class SaveGroceryStoreHandler(FoodStuffsContext data, SaveGroceryStoreRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveGroceryStoreRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveGroceryStoreRequestValidator _validator;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveGroceryStoreHandler(FoodStuffsContext data, SaveGroceryStoreRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _validator = validator;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveGroceryStoreRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -38,7 +27,7 @@ public class SaveGroceryStoreHandler : CustomEventHandlerAbstract<SaveGrocerySto
 
         var byId = new GroceryStoresWithAllRelatedSpecification(request.Id);
 
-        var maybeGroceryStore = await _data.GroceryStores
+        var maybeGroceryStore = await data.GroceryStores
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -49,7 +38,7 @@ public class SaveGroceryStoreHandler : CustomEventHandlerAbstract<SaveGrocerySto
         // Check for conflicting items by name
         var byName = new GroceryStoresSpecification(requestedName);
 
-        var conflictingGroceryStore = await _data.GroceryStores
+        var conflictingGroceryStore = await data.GroceryStores
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
@@ -69,18 +58,18 @@ public class SaveGroceryStoreHandler : CustomEventHandlerAbstract<SaveGrocerySto
 
         if (maybeGroceryStore.HasValue)
         {
-            _data.GroceryStores.Update(groceryStoreToEdit);
+            data.GroceryStores.Update(groceryStoreToEdit);
         }
         else
         {
-            await _data.GroceryStores.AddAsync(groceryStoreToEdit, cancellationToken);
+            await data.GroceryStores.AddAsync(groceryStoreToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
         relatedGroceryItemIds.UnionWith(groceryStoreToEdit.GroceryItems.Select(gi => gi.Id));
 
-        _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
+        searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
         return Ok(EntityMessage.Create($"Grocery Store {(maybeGroceryStore.HasValue ? "updated" : "added")}.", groceryStoreToEdit.Id));
     }

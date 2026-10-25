@@ -9,22 +9,13 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
-public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
+public class DeleteRecipeHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly ISearchIndexService _searchIndex;
-
-    public DeleteRecipeHandler(FoodStuffsContext data, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
     {
         var byId = new RecipesSpecification(request.Id);
 
-        return await _data.Recipes
+        return await data.Recipes
             .TagWith(GetTag(byId))
             .ApplyEfSpecification(byId)
             .Include(r => r.GroceryItemRelations)
@@ -35,13 +26,13 @@ public class DeleteRecipeHandler : CustomEventHandlerAbstract<DeleteRecipeReques
             {
                 var groceryItemIds = r.GroceryItemRelations.Select(gr => gr.GroceryItemId).ToList();
 
-                _data.Recipes.Remove(r);
+                data.Recipes.Remove(r);
 
-                await _data.SaveChangesAsync(cancellationToken);
+                await data.SaveChangesAsync(cancellationToken);
 
-                await _searchIndex.RemoveAsync(SearchIndex.Recipes, r.Id, cancellationToken);
+                await searchIndex.RemoveAsync(SearchIndex.Recipes, r.Id, cancellationToken);
 
-                _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
+                searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
             })
             .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
     }

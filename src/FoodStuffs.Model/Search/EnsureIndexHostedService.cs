@@ -13,20 +13,11 @@ namespace FoodStuffs.Model.Search;
 /// <summary>
 /// This service will rebuild the index on startup if it doesn't exist or if it's corrupted.
 /// </summary>
-public class EnsureIndexHostedService : IHostedService
+public class EnsureIndexHostedService(ILogger<EnsureIndexHostedService> logger, IServiceProvider serviceProvider) : IHostedService
 {
-    private readonly ILogger<EnsureIndexHostedService> _logger;
-    private readonly IServiceProvider _serviceProvider;
-
-    public EnsureIndexHostedService(ILogger<EnsureIndexHostedService> logger, IServiceProvider serviceProvider)
-    {
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-    }
-
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
 
         var needsRebuild = false;
 
@@ -43,7 +34,7 @@ public class EnsureIndexHostedService : IHostedService
 
         if (folders.Any(x => !Directory.Exists(x)))
         {
-            _logger.LogWarning("One or more index folders are missing on startup. Rebuilding.");
+            logger.LogWarning("One or more index folders are missing on startup. Rebuilding.");
             needsRebuild = true;
         }
         else
@@ -69,7 +60,7 @@ public class EnsureIndexHostedService : IHostedService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Recipe index test failed. Index may be corrupted. Rebuilding.");
+                logger.LogError(ex, "Recipe index test failed. Index may be corrupted. Rebuilding.");
                 needsRebuild = true;
             }
 
@@ -96,7 +87,7 @@ public class EnsureIndexHostedService : IHostedService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Grocery items index test failed. Index may be corrupted. Rebuilding.");
+                logger.LogError(ex, "Grocery items index test failed. Index may be corrupted. Rebuilding.");
                 needsRebuild = true;
             }
         }

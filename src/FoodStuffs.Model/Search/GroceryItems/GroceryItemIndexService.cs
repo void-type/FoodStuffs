@@ -11,21 +11,10 @@ using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
 
 namespace FoodStuffs.Model.Search.GroceryItems;
 
-public class GroceryItemIndexService : IGroceryItemIndexService
+public class GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, SearchSettings settings, FoodStuffsContext data) : IGroceryItemIndexService
 {
     private const int BATCH_SIZE = 100;
-
-    private readonly ILogger<GroceryItemIndexService> _logger;
-    private readonly SearchSettings _settings;
-    private readonly FoodStuffsContext _data;
     private static readonly SemaphoreSlim _writeSemaphore = new(1, 1);
-
-    public GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, SearchSettings settings, FoodStuffsContext data)
-    {
-        _logger = logger;
-        _settings = settings;
-        _data = data;
-    }
 
     /// <inheritdoc/>
     public async Task UpdateAsync(int groceryItemId, CancellationToken cancellationToken)
@@ -38,7 +27,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     {
         var byId = new GroceryItemsWithAllRelatedSpecification(groceryItemId);
 
-        var groceryItems = await _data.GroceryItems
+        var groceryItems = await data.GroceryItems
             .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(UpdateAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -66,7 +55,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
 
         try
         {
-            using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
 
             foreach (var groceryItemId in groceryItemIds)
             {
@@ -84,15 +73,15 @@ public class GroceryItemIndexService : IGroceryItemIndexService
     /// <inheritdoc/>
     public async Task RebuildAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Starting rebuild of grocery item search index.");
+        logger.LogInformation("Starting rebuild of grocery item search index.");
 
         await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
-            LuceneDirectoryHelper.PrepareForRebuild(_settings, C.INDEX_NAME);
+            LuceneDirectoryHelper.PrepareForRebuild(settings, C.INDEX_NAME);
 
-            using var writers = new LuceneWriters(_settings, OpenMode.CREATE, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE, C.INDEX_NAME);
 
             var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 
@@ -105,7 +94,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
                 var pagination = new PaginationOptions(page, BATCH_SIZE);
                 var withAllRelated = new GroceryItemsWithAllRelatedSpecification();
 
-                var groceryItems = await _data.GroceryItems
+                var groceryItems = await data.GroceryItems
                     .TagWith($"{nameof(GroceryItemIndexService)}.{nameof(RebuildAsync)}({nameof(GroceryItemsWithAllRelatedSpecification)})")
                     .AsSplitQuery()
                     .ApplyEfSpecification(withAllRelated)
@@ -127,7 +116,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
             writers.IndexWriter.Commit();
             writers.TaxonomyWriter.Commit();
 
-            _logger.LogInformation("Finished rebuild of grocery item search index. {DocCount} documents.", numIndexed);
+            logger.LogInformation("Finished rebuild of grocery item search index. {DocCount} documents.", numIndexed);
         }
         finally
         {
@@ -143,7 +132,7 @@ public class GroceryItemIndexService : IGroceryItemIndexService
 
         try
         {
-            using var writers = new LuceneWriters(_settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
 
             var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 

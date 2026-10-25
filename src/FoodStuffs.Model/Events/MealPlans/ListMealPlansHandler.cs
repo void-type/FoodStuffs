@@ -7,20 +7,13 @@ using VoidCore.Model.Responses.Collections;
 
 namespace FoodStuffs.Model.Events.MealPlans;
 
-public class ListMealPlansHandler : CustomEventHandlerAbstract<ListMealPlansRequest, IItemSet<ListMealPlansResponse>>
+public class ListMealPlansHandler(FoodStuffsContext data) : CustomEventHandlerAbstract<ListMealPlansRequest, IItemSet<ListMealPlansResponse>>
 {
-    private readonly FoodStuffsContext _data;
-
-    public ListMealPlansHandler(FoodStuffsContext data)
-    {
-        _data = data;
-    }
-
     public override async Task<IResult<IItemSet<ListMealPlansResponse>>> Handle(ListMealPlansRequest request, CancellationToken cancellationToken = default)
     {
         var paginationOptions = request.GetPaginationOptions();
 
-        return await _data.MealPlans
+        return await data.MealPlans
             .TagWith(GetTag())
             .Include(mp => mp.RecipeRelations)
             .OrderByDescending(mp => mp.CreatedOn)

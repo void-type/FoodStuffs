@@ -4,27 +4,16 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodStuffs.Model.Search;
 
-public class SearchIndexBackgroundService : BackgroundService
+public class SearchIndexBackgroundService(SearchIndexBackgroundQueue queue, IServiceProvider serviceProvider, ILogger<SearchIndexBackgroundService> logger) : BackgroundService
 {
-    private readonly SearchIndexBackgroundQueue _queue;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<SearchIndexBackgroundService> _logger;
-
-    public SearchIndexBackgroundService(SearchIndexBackgroundQueue queue, IServiceProvider serviceProvider, ILogger<SearchIndexBackgroundService> logger)
-    {
-        _queue = queue;
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await foreach (var action in _queue.Reader.ReadAllAsync(stoppingToken))
+        await foreach (var action in queue.Reader.ReadAllAsync(stoppingToken))
         {
             // Grab this action plus any others already queued
             var pending = new List<SearchIndexBackgroundAction> { action };
 
-            while (_queue.Reader.TryRead(out var additional))
+            while (queue.Reader.TryRead(out var additional))
             {
                 pending.Add(additional);
             }
@@ -46,11 +35,11 @@ public class SearchIndexBackgroundService : BackgroundService
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
-        _queue.Complete();
+        queue.Complete();
         await base.StopAsync(cancellationToken);
 
         // ExecuteAsync is now stopped, safe to drain remaining items
-        while (_queue.Reader.TryRead(out var action))
+        while (queue.Reader.TryRead(out var action))
         {
             await ProcessActionAsync(action, cancellationToken);
         }
@@ -60,13 +49,13 @@ public class SearchIndexBackgroundService : BackgroundService
     {
         try
         {
-            using var scope = _serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateScope();
             var searchIndex = scope.ServiceProvider.GetRequiredService<ISearchIndexService>();
             await searchIndex.UpdateAsync(action.IndexName, action.EntityIds, cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing deferred search index action for {IndexName} with {Count} entities.",
+            logger.LogError(ex, "Error processing deferred search index action for {IndexName} with {Count} entities.",
                 action.IndexName, action.EntityIds.Count);
         }
     }

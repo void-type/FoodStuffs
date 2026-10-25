@@ -12,23 +12,12 @@ using VoidCore.Model.RuleValidator;
 
 namespace FoodStuffs.Model.Events.StorageLocations;
 
-public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorageLocationRequest, EntityMessage<int>>
+public class SaveStorageLocationHandler(FoodStuffsContext data, SaveStorageLocationRequestValidator validator, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<SaveStorageLocationRequest, EntityMessage<int>>
 {
-    private readonly FoodStuffsContext _data;
-    private readonly SaveStorageLocationRequestValidator _validator;
-    private readonly ISearchIndexService _searchIndex;
-
-    public SaveStorageLocationHandler(FoodStuffsContext data, SaveStorageLocationRequestValidator validator, ISearchIndexService searchIndex)
-    {
-        _data = data;
-        _validator = validator;
-        _searchIndex = searchIndex;
-    }
-
     public override async Task<IResult<EntityMessage<int>>> Handle(SaveStorageLocationRequest request, CancellationToken cancellationToken = default)
     {
         return await request
-            .Validate(_validator)
+            .Validate(validator)
             .ThenAsync(async request => await SaveAsync(request, cancellationToken));
     }
 
@@ -38,7 +27,7 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
 
         var byId = new StorageLocationsWithAllRelatedSpecification(request.Id);
 
-        var maybeStorageLocation = await _data.StorageLocations
+        var maybeStorageLocation = await data.StorageLocations
             .TagWith(GetTag(byId))
             .AsSplitQuery()
             .ApplyEfSpecification(byId)
@@ -49,7 +38,7 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
         // Check for conflicting items by name
         var byName = new StorageLocationsSpecification(requestedName);
 
-        var conflictingStorageLocation = await _data.StorageLocations
+        var conflictingStorageLocation = await data.StorageLocations
             .TagWith(GetTag(byName))
             .AsSplitQuery()
             .ApplyEfSpecification(byName)
@@ -69,18 +58,18 @@ public class SaveStorageLocationHandler : CustomEventHandlerAbstract<SaveStorage
 
         if (maybeStorageLocation.HasValue)
         {
-            _data.StorageLocations.Update(storageLocationToEdit);
+            data.StorageLocations.Update(storageLocationToEdit);
         }
         else
         {
-            await _data.StorageLocations.AddAsync(storageLocationToEdit, cancellationToken);
+            await data.StorageLocations.AddAsync(storageLocationToEdit, cancellationToken);
         }
 
-        await _data.SaveChangesAsync(cancellationToken);
+        await data.SaveChangesAsync(cancellationToken);
 
         relatedGroceryItemIds.UnionWith(storageLocationToEdit.GroceryItems.Select(gi => gi.Id));
 
-        _searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
+        searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
         return Ok(EntityMessage.Create($"Storage Location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
     }
