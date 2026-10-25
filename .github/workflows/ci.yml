@@ -10,6 +10,7 @@ on:
       - 'src/**'
       - 'analyzers/**'
       - 'Directory.Build.props'
+      - 'Directory.Packages.props'
       - 'Dockerfile'
       - 'version.json'
       - '.config/**'

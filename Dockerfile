@@ -23,6 +23,7 @@ COPY ./tests/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./tests/${file%.*}/ && mv $file ./tests/${file%.*}/; done
 
 COPY ./Directory.Build.props ./
+COPY ./Directory.Packages.props ./
 COPY ./src/Directory.Build.props ./src/
 
 COPY ./src/ClientApp/package.json ./src/ClientApp/
