@@ -30,7 +30,9 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 
 This project uses Entity Framework Code First.
 
-To create a new database, or to update your existing database, run `./build/dbApplyMigration.ps1`.
+Pending migrations are applied automatically when the web app starts, including after deployment.
+
+To create or update a database without starting the app, run `./build/dbApplyMigration.ps1`.
 
 #### Database update history
 

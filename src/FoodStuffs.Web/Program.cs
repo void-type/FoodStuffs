@@ -102,6 +102,14 @@ try
 
     var app = builder.Build();
 
+    // Apply pending migrations before hosted services (like search indexing) start.
+    // EF tooling aborts the host at Build(), so this doesn't run during dotnet ef commands.
+    using (var scope = app.Services.CreateScope())
+    {
+        Log.Information("Applying database migrations.");
+        await scope.ServiceProvider.GetRequiredService<FoodStuffsContext>().Database.MigrateAsync();
+    }
+
     // Middleware pipeline
     app.UseAlwaysOnShortCircuit();
     app.UseSpaExceptionPage(env);
