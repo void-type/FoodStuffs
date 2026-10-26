@@ -1,4 +1,4 @@
-﻿using FoodStuffs.Model.Data;
+using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Queries;
 using FoodStuffs.Model.Events.Recipes.Models;
 using FoodStuffs.Model.Search;
@@ -9,6 +9,9 @@ using VoidCore.Model.Responses.Messages;
 
 namespace FoodStuffs.Model.Events.Recipes;
 
+/// <summary>
+/// Moves a recipe to the recycle bin, which hides it everywhere, including meal plans. Use <see cref="PermanentlyDeleteRecipeHandler"/> to remove it for good.
+/// </summary>
 public class DeleteRecipeHandler(FoodStuffsContext data, ISearchIndexService searchIndex) : CustomEventHandlerAbstract<DeleteRecipeRequest, EntityMessage<int>>
 {
     public override async Task<IResult<EntityMessage<int>>> Handle(DeleteRecipeRequest request, CancellationToken cancellationToken = default)
@@ -26,7 +29,7 @@ public class DeleteRecipeHandler(FoodStuffsContext data, ISearchIndexService sea
             {
                 var groceryItemIds = r.GroceryItemRelations.Select(gr => gr.GroceryItemId).ToList();
 
-                data.Recipes.Remove(r);
+                r.IsDeleted = true;
 
                 await data.SaveChangesAsync(cancellationToken);
 
@@ -34,6 +37,6 @@ public class DeleteRecipeHandler(FoodStuffsContext data, ISearchIndexService sea
 
                 searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, groceryItemIds);
             })
-            .SelectAsync(r => EntityMessage.Create("Recipe deleted.", r.Id));
+            .SelectAsync(r => EntityMessage.Create("Recipe moved to the recycle bin.", r.Id));
     }
 }

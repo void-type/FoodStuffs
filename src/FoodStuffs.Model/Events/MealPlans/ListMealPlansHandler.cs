@@ -20,7 +20,8 @@ public class ListMealPlansHandler(FoodStuffsContext data) : CustomEventHandlerAb
             .Select(mp => new
             {
                 MealPlan = mp,
-                RecipeCount = mp.RecipeRelations.Count
+                // Relations to recipes in the recycle bin are kept so restoring puts them back, but they aren't counted.
+                RecipeCount = mp.RecipeRelations.Count(r => !r.Recipe.IsDeleted)
             })
             .ToItemSet(paginationOptions, cancellationToken)
             .SelectAsync(x => new ListMealPlansResponse(

@@ -22,12 +22,14 @@ public static class Deps
 
         TimeProviderLate = new FakeTimeProvider(Late);
         AuditInterceptor = new AuditableSaveChangesInterceptor(TimeProviderLate, CurrentUserAccessor);
+        SoftDeleteInterceptor = new SoftDeletableSaveChangesInterceptor(TimeProviderLate, CurrentUserAccessor) { RequireRecycleBin = true };
     }
 
     public static readonly DateTimeOffset Early;
     public static readonly DateTimeOffset Late;
     public static readonly TimeProvider TimeProviderLate;
     public static readonly AuditableSaveChangesInterceptor AuditInterceptor;
+    public static readonly SoftDeletableSaveChangesInterceptor SoftDeleteInterceptor;
     public static readonly ICurrentUserAccessor CurrentUserAccessor;
 
     public const string PngBase64String = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQAAAAA3bvkkAAAACklEQVQI12NoAAAAggCB3UNq9AAAAABJRU5ErkJggg==";
@@ -36,7 +38,8 @@ public static class Deps
     {
         return SqliteFoodStuffsContext.Create(
             dbName ?? Guid.NewGuid().ToString(),
-            AuditInterceptor);
+            AuditInterceptor,
+            SoftDeleteInterceptor);
     }
 
     public static FoodStuffsContext Seed(this FoodStuffsContext context)

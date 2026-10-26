@@ -776,6 +776,44 @@ export interface SaveRecipeRequestGroceryItem {
 }
 
 /** A set of items. Can optionally by a page of a full set. */
+export interface IItemSetOfListDeletedRecipesResponse {
+  /**
+   * The count of items in this set.
+   * @format int32
+   */
+  count?: number;
+  /** The items in this set. */
+  items?: ListDeletedRecipesResponse[];
+  /** When true, this is a page of a full set. */
+  isPagingEnabled?: boolean;
+  /**
+   * If paging is enabled, this represents the page number in the total set.
+   * @format int32
+   */
+  page?: number;
+  /**
+   * If paging is enabled, the requested number of results per page.
+   * @format int32
+   */
+  take?: number;
+  /**
+   * The count of all the items in the total set. If paging is enabled, the total number of results in all pages.
+   * @format int32
+   */
+  totalCount?: number;
+}
+
+export interface ListDeletedRecipesResponse {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format date-time */
+  deletedOn?: string | null;
+  deletedBy?: string;
+}
+
+
+/** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListStorageLocationsResponse {
   /**
    * The count of items in this set.
@@ -1218,6 +1256,43 @@ export interface RecipesDeleteParams {
    */
   id: number;
 }
+
+export interface RecipesListDeletedParams {
+  /**
+   * Set false to get all results
+   * @default true
+   */
+  isPagingEnabled?: boolean;
+  /**
+   * The page of results to retrieve
+   * @format int32
+   * @default 1
+   */
+  page?: number;
+  /**
+   * How many items in a page
+   * @format int32
+   * @default 30
+   */
+  take?: number;
+}
+
+export interface RecipesRestoreParams {
+  /**
+   * The ID of the recipe
+   * @format int32
+   */
+  id: number;
+}
+
+export interface RecipesPermanentlyDeleteParams {
+  /**
+   * The ID of the recipe
+   * @format int32
+   */
+  id: number;
+}
+
 
 export interface StorageLocationsListParams {
   /** Name contains (case-insensitive) */

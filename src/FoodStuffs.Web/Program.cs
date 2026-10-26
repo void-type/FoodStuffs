@@ -9,6 +9,7 @@ using FoodStuffs.Web.Auth;
 using FoodStuffs.Web.Health;
 using FoodStuffs.Web.Startup;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
 using System.Net.Http.Headers;
 using VoidCore.AspNet.ClientApp;
@@ -65,6 +66,12 @@ try
     services.AddHttpContextAccessor();
     services.AddSingleton(TimeProvider.System);
     services.AddSingleton<AuditableSaveChangesInterceptor>();
+    services.AddSingleton(provider => new SoftDeletableSaveChangesInterceptor(
+        provider.GetRequiredService<TimeProvider>(),
+        provider.GetRequiredService<ICurrentUserAccessor>())
+    {
+        RequireRecycleBin = true
+    });
     services.AddSingleton<IImageCompressionService, ImageCompressionService>();
 
     config.GetRequiredConnectionString<FoodStuffsContext>();
@@ -74,7 +81,11 @@ try
             sqlOptions.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName);
             sqlOptions.EnableRetryOnFailure();
         })
-        .AddInterceptors(provider.GetRequiredService<AuditableSaveChangesInterceptor>()));
+        .AddInterceptors(
+            provider.GetRequiredService<AuditableSaveChangesInterceptor>(),
+            provider.GetRequiredService<SoftDeletableSaveChangesInterceptor>())
+        // Images and meal plan relations are only reached through their recipe, so they are hidden along with it.
+        .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.PossibleIncorrectRequiredNavigationWithQueryFilterInteractionWarning)));
 
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();

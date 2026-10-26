@@ -24,14 +24,15 @@ public sealed class SqliteFoodStuffsContext : FoodStuffsContext
     }
 
     /// <param name="auditInterceptor">Share one instance across contexts so EF can reuse its internal service provider.</param>
-    public static SqliteFoodStuffsContext Create(string name, AuditableSaveChangesInterceptor auditInterceptor)
+    /// <param name="softDeleteInterceptor">Share one instance across contexts so EF can reuse its internal service provider.</param>
+    public static SqliteFoodStuffsContext Create(string name, AuditableSaveChangesInterceptor auditInterceptor, SoftDeletableSaveChangesInterceptor softDeleteInterceptor)
     {
         var connection = new SqliteConnection($"Data Source={name};Mode=Memory;Cache=Shared");
         connection.Open();
 
         var options = new DbContextOptionsBuilder<FoodStuffsContext>()
             .UseSqlite(connection)
-            .AddInterceptors(auditInterceptor)
+            .AddInterceptors(auditInterceptor, softDeleteInterceptor)
             .Options;
 
         var context = new SqliteFoodStuffsContext(options, connection);

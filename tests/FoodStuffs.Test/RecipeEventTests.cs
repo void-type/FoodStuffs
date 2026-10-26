@@ -3,6 +3,7 @@ using FoodStuffs.Model.Events.Recipes.Models;
 using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
+using VoidCore.EntityFramework;
 using Xunit;
 
 namespace FoodStuffs.Test;
@@ -36,26 +37,13 @@ public class RecipeEventTests
     }
 
     [Fact]
-    public async Task DeleteRecipe_deletes_recipe_and_returns_id_when_recipe_existsAsync()
+    public async Task DeleteRecipe_moves_recipe_to_the_recycle_bin_when_recipe_existsAsync()
     {
-        // Due to the way we delete, we need a fresh dbcontext to remove tracked entities.
-        await using var context1 = Deps.FoodStuffsContext("delete images").Seed();
-
-        await using var context = Deps.FoodStuffsContext("delete images");
+        await using var context = Deps.FoodStuffsContext().Seed();
 
         var recipeToDelete = context.Recipes
             .Include(r => r.Images)
-            .ThenInclude(r => r.ImageBlob)
-            .AsNoTracking()
             .First(r => r.Name == "Cheeseburger");
-
-        // For testing, we need to pull in all entities so EF can cascade delete.
-        // In prod, SQL Server will do the cascading without needing to bring them into memory.
-        var _ = context.Images.Include(x => x.ImageBlob).ToList();
-
-        Assert.True(recipeToDelete.Images.Count != 0);
-        Assert.True(recipeToDelete.Images.Select(i => i.ImageBlob).Any());
-        Assert.Equal(recipeToDelete.Images.Count, recipeToDelete.Images.Select(i => i.ImageBlob).Count());
 
         var indexService = Substitute.For<ISearchIndexService>();
 
@@ -63,12 +51,20 @@ public class RecipeEventTests
             .Handle(new DeleteRecipeRequest(recipeToDelete.Id));
 
         Assert.True(result.IsSuccess);
-
         Assert.Equal(recipeToDelete.Id, result.Value.Id);
 
-        var imageIds = recipeToDelete.Images.Select(i => i.Id);
+        await indexService.Received(1).RemoveAsync(SearchIndex.Recipes, recipeToDelete.Id, Arg.Any<CancellationToken>());
 
-        Assert.Empty(context.Images.Where(i => imageIds.Contains(i.Id)).AsNoTracking().ToList());
+        var deletedRecipe = await context.Recipes
+            .OnlySoftDeleted()
+            .AsNoTracking()
+            .Include(r => r.Images)
+            .SingleAsync(r => r.Id == recipeToDelete.Id);
+
+        Assert.True(deletedRecipe.IsDeleted);
+        Assert.Equal(Deps.Late, deletedRecipe.DeletedOn);
+        Assert.Equal(Deps.CurrentUserAccessor.GetUserName(), deletedRecipe.DeletedBy);
+        Assert.Equal(recipeToDelete.Images.Count, deletedRecipe.Images.Count);
     }
 
     [Fact]

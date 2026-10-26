@@ -36,6 +36,7 @@ import type {AddCategoryToAllRecipesRequest,
   HomeAssistantSetReminderThawMeatParams,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
+  IItemSetOfListDeletedRecipesResponse,
   IItemSetOfListGroceryAislesResponse,
   IItemSetOfListGroceryStoresResponse,
   IItemSetOfListMealPlansResponse,
@@ -53,6 +54,9 @@ import type {AddCategoryToAllRecipesRequest,
   MealPlansRemoveRecipeParams,
   RecipesDeleteParams,
   RecipesGetParams,
+  RecipesListDeletedParams,
+  RecipesPermanentlyDeleteParams,
+  RecipesRestoreParams,
   RecipesSearchParams,
   RecipesSuggestParams,
   SaveCategoryRequest,
@@ -849,7 +853,7 @@ export class Api<
    *
    * @tags Recipes
    * @name RecipesDelete
-   * @summary Delete a recipe.
+   * @summary Delete a recipe by moving it to the recycle bin.
    * @request DELETE:/api/recipes/{id}
    * @response `200` `EntityMessageOfInteger`
    * @response `400` `IItemSetOfIFailure`
@@ -857,6 +861,64 @@ export class Api<
   recipesDelete = ({ id }: RecipesDeleteParams, params: RequestParams = {}) =>
     this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
       path: `/api/recipes/${id}`,
+      method: "DELETE",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
+   * @name RecipesListDeleted
+   * @summary List the recipes in the recycle bin, most recently deleted first.
+   * @request GET:/api/recipes/deleted
+   * @response `200` `IItemSetOfListDeletedRecipesResponse`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  recipesListDeleted = (
+    query: RecipesListDeletedParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<IItemSetOfListDeletedRecipesResponse, IItemSetOfIFailure>({
+      path: `/api/recipes/deleted`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
+   * @name RecipesRestore
+   * @summary Restore a recipe from the recycle bin.
+   * @request POST:/api/recipes/{id}/restore
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  recipesRestore = ({ id }: RecipesRestoreParams, params: RequestParams = {}) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/recipes/${id}/restore`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
+   * @name RecipesPermanentlyDelete
+   * @summary Permanently delete a recipe that is in the recycle bin.
+   * @request DELETE:/api/recipes/{id}/permanent
+   * @response `200` `EntityMessageOfInteger`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  recipesPermanentlyDelete = (
+    { id }: RecipesPermanentlyDeleteParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<EntityMessageOfInteger, IItemSetOfIFailure>({
+      path: `/api/recipes/${id}/permanent`,
       method: "DELETE",
       format: "json",
       ...params,

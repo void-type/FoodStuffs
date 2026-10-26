@@ -110,6 +110,15 @@ const hasCurrentMealPlan = computed(() => (mealPlanStore.currentMealPlan.id || 0
             Storage Locations
           </router-link>
         </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <router-link
+            :to="{ name: 'recycleBin' }"
+            class="dropdown-item"
+          >
+            Recycle Bin
+          </router-link>
+        </li>
       </ul>
     </li>
     <li class="nav-item current-meal-plan-nav-item">

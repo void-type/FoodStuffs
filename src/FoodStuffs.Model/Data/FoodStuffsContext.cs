@@ -1,10 +1,12 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using VoidCore.EntityFramework;
 
 namespace FoodStuffs.Model.Data;
 
 /// <summary>
-/// Audit properties are set by <see cref="VoidCore.EntityFramework.AuditableSaveChangesInterceptor"/>, which is added where the context is registered.
+/// Audit properties are set by <see cref="VoidCore.EntityFramework.AuditableSaveChangesInterceptor"/> and soft-delete properties by
+/// <see cref="VoidCore.EntityFramework.SoftDeletableSaveChangesInterceptor"/>. Both are added where the context is registered.
 /// </summary>
 public class FoodStuffsContext : DbContext
 {
@@ -26,5 +28,8 @@ public class FoodStuffsContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FoodStuffsContext).Assembly);
+
+        // Hide soft-deleted recipes from every query. Must be called after the entity configurations.
+        modelBuilder.ApplySoftDeleteQueryFilter();
     }
 }

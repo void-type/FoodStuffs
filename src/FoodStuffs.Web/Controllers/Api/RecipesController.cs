@@ -128,7 +128,7 @@ public class RecipesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a recipe.
+    /// Delete a recipe by moving it to the recycle bin.
     /// </summary>
     /// <param name="deleteHandler"></param>
     /// <param name="id">The ID of the recipe</param>
@@ -138,6 +138,62 @@ public class RecipesController : ControllerBase
     public async Task<IActionResult> DeleteAsync([FromServices] DeleteRecipeHandler deleteHandler, int id)
     {
         var request = new DeleteRecipeRequest(id);
+
+        return await deleteHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// List the recipes in the recycle bin, most recently deleted first.
+    /// </summary>
+    /// <param name="listHandler"></param>
+    /// <param name="isPagingEnabled">Set false to get all results</param>
+    /// <param name="page">The page of results to retrieve</param>
+    /// <param name="take">How many items in a page</param>
+    [HttpGet("deleted")]
+    [ProducesResponseType(typeof(IItemSet<ListDeletedRecipesResponse>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> ListDeletedAsync([FromServices] ListDeletedRecipesHandler listHandler, bool isPagingEnabled = true, int page = 1, int take = 30)
+    {
+        var request = new ListDeletedRecipesRequest(
+            IsPagingEnabled: isPagingEnabled,
+            Page: page,
+            Take: take);
+
+        return await listHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Restore a recipe from the recycle bin.
+    /// </summary>
+    /// <param name="restoreHandler"></param>
+    /// <param name="id">The ID of the recipe</param>
+    [HttpPost("{id}/restore")]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> RestoreAsync([FromServices] RestoreRecipeHandler restoreHandler, int id)
+    {
+        var request = new RestoreRecipeRequest(id);
+
+        return await restoreHandler
+            .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Permanently delete a recipe that is in the recycle bin.
+    /// </summary>
+    /// <param name="deleteHandler"></param>
+    /// <param name="id">The ID of the recipe</param>
+    [HttpDelete("{id}/permanent")]
+    [ProducesResponseType(typeof(EntityMessage<int>), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> PermanentlyDeleteAsync([FromServices] PermanentlyDeleteRecipeHandler deleteHandler, int id)
+    {
+        var request = new PermanentlyDeleteRecipeRequest(id);
 
         return await deleteHandler
             .Handle(request)

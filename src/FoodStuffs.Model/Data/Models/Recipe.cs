@@ -3,7 +3,7 @@ using VoidCore.Model.Text;
 
 namespace FoodStuffs.Model.Data.Models;
 
-public class Recipe : IAuditable
+public class Recipe : IAuditable, ISoftDeletable
 {
     public int Id { get; set; }
 
@@ -28,6 +28,12 @@ public class Recipe : IAuditable
     public string ModifiedBy { get; set; } = null!;
 
     public DateTimeOffset ModifiedOn { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public string DeletedBy { get; set; } = string.Empty;
+
+    public DateTimeOffset? DeletedOn { get; set; }
 
     public string Slug => Name.Slugify(230, true);
 

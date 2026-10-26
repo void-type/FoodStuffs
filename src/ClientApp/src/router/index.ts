@@ -237,6 +237,12 @@ const router = createRouter({
           ],
         },
         {
+          path: 'recycle-bin',
+          name: 'recycleBin',
+          meta: { title: 'Recycle Bin' },
+          component: () => import('@/pages/RecycleBinPage.vue'),
+        },
+        {
           path: 'grocery-items',
           meta: { title: 'Grocery Items' },
           children: [

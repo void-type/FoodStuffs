@@ -162,7 +162,7 @@ function onRecipeDelete(id: number) {
 
   const parameters: ModalParameters = {
     title: 'Delete recipe',
-    description: 'Do you really want to delete this recipe?',
+    description: 'Do you really want to move this recipe to the recycle bin? You can restore it from the Admin menu.',
     okAction: deleteRecipe,
   };
 
