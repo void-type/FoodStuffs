@@ -16,7 +16,7 @@ This application demonstrates the [VoidCore](https://github.com/void-type/VoidCo
 - Category tags on recipes. Appear as facets in search.
 - Images for recipes with automatic cropping/compression.
 - Copy recipes.
-- Recycle bin for deleted recipes. Restore them or delete them permanently from the Admin menu.
+- Recycle bin for deleted recipes. Restore them or delete them permanently from the Admin menu. Recipes are purged automatically after 90 days, configurable with `RecycleBin:RetentionDays` (0 turns it off).
 - Home page has random sort and infinite scroll for recipe discovery.
 - Paginated and robust search backed by Lucene.
 - Recent recipe history list.

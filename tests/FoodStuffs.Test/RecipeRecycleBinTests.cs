@@ -5,6 +5,7 @@ using FoodStuffs.Model.Events.MealPlans;
 using FoodStuffs.Model.Events.MealPlans.Models;
 using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.Events.Recipes.Models;
+using FoodStuffs.Model.RecycleBin;
 using FoodStuffs.Model.Search;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
@@ -114,14 +115,88 @@ public class RecipeRecycleBinTests
 
         await DeleteAsync(context, recipe.Id);
 
-        var result = await new ListDeletedRecipesHandler(context).Handle(new ListDeletedRecipesRequest(true, 1, 30));
+        var result = await new ListDeletedRecipesHandler(context, new RecycleBinSettings { RetentionDays = 30 })
+            .Handle(new ListDeletedRecipesRequest(true, 1, 30));
 
         Assert.True(result.IsSuccess);
-        var item = Assert.Single(result.Value.Items);
+        Assert.Equal(30, result.Value.RetentionDays);
+        var item = Assert.Single(result.Value.Recipes.Items);
         Assert.Equal(recipe.Id, item.Id);
         Assert.Equal("Hotdog", item.Name);
         Assert.Equal(Deps.Late, item.DeletedOn);
+        Assert.Equal(Deps.Late.AddDays(30), item.PurgeOn);
         Assert.Equal(Deps.CurrentUserAccessor.GetUserName(), item.DeletedBy);
+    }
+
+    [Fact]
+    public async Task ListDeletedRecipes_has_no_retention_when_auto_purge_is_offAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        await DeleteAsync(context, context.Recipes.First().Id);
+
+        var result = await new ListDeletedRecipesHandler(context, new RecycleBinSettings { RetentionDays = 0 })
+            .Handle(new ListDeletedRecipesRequest(true, 1, 30));
+
+        Assert.Null(result.Value.RetentionDays);
+        Assert.Null(Assert.Single(result.Value.Recipes.Items).PurgeOn);
+    }
+
+    [Fact]
+    public async Task EmptyRecycleBin_permanently_deletes_only_deleted_recipesAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var recipes = context.Recipes.OrderBy(r => r.Id).ToList();
+        await DeleteAsync(context, recipes[0].Id);
+        await DeleteAsync(context, recipes[1].Id);
+
+        var result = await new EmptyRecycleBinHandler(context).Handle(new EmptyRecycleBinRequest());
+
+        Assert.True(result.IsSuccess);
+        Assert.Contains("2 recipes", result.Value.Message);
+        Assert.Equal([recipes[2].Id], context.Recipes.IncludeSoftDeleted().Select(r => r.Id).ToList());
+    }
+
+    [Fact]
+    public async Task PurgeExpiredRecipes_deletes_only_recipes_deleted_before_the_retentionAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var recipes = context.Recipes.OrderBy(r => r.Id).ToList();
+
+        // Deleted outside the handler so DeletedOn can be set directly. The interceptor keeps existing DeletedOn values.
+        recipes[0].IsDeleted = true;
+        recipes[0].DeletedOn = Deps.Late.AddDays(-91);
+        recipes[1].IsDeleted = true;
+        recipes[1].DeletedOn = Deps.Late.AddDays(-89);
+        await context.SaveChangesAsync();
+
+        var result = await new PurgeExpiredRecipesHandler(context, new RecycleBinSettings { RetentionDays = 90 }, Deps.TimeProviderLate)
+            .Handle(new PurgeExpiredRecipesRequest());
+
+        Assert.True(result.IsSuccess);
+        Assert.Contains("Purged 1 recipe", result.Value.Message);
+
+        var remaining = await context.Recipes.IncludeSoftDeleted().OrderBy(r => r.Id).Select(r => r.Id).ToListAsync();
+        Assert.Equal([recipes[1].Id, recipes[2].Id], remaining);
+    }
+
+    [Fact]
+    public async Task PurgeExpiredRecipes_does_nothing_when_auto_purge_is_offAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var recipe = context.Recipes.First();
+        recipe.IsDeleted = true;
+        recipe.DeletedOn = Deps.Late.AddDays(-1000);
+        await context.SaveChangesAsync();
+
+        var result = await new PurgeExpiredRecipesHandler(context, new RecycleBinSettings { RetentionDays = 0 }, Deps.TimeProviderLate)
+            .Handle(new PurgeExpiredRecipesRequest());
+
+        Assert.True(result.IsSuccess);
+        Assert.True(await context.Recipes.OnlySoftDeleted().AnyAsync());
     }
 
     [Fact]

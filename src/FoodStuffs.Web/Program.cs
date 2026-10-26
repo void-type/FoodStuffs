@@ -2,6 +2,7 @@
 using FoodStuffs.Model.Events.Recipes;
 using FoodStuffs.Model.HomeAssistant;
 using FoodStuffs.Model.ImageCompression;
+using FoodStuffs.Model.RecycleBin;
 using FoodStuffs.Model.Search;
 using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.Recipes;
@@ -118,6 +119,11 @@ try
     // Workers and background services
     services.AddSingleton<SearchIndexBackgroundQueue>();
     services.AddHostedService<SearchIndexBackgroundService>();
+
+    // The section is optional so the defaults apply when it's missing.
+    var recycleBinSettings = config.GetSection("RecycleBin").Get<RecycleBinSettings>() ?? new();
+    services.AddSingleton(recycleBinSettings);
+    services.AddHostedService<RecycleBinPurgeHostedService>();
 
     var app = builder.Build();
 

@@ -775,15 +775,22 @@ export interface SaveRecipeRequestGroceryItem {
   order?: number | null;
 }
 
+export interface ListDeletedRecipesResponse {
+  /** @format int32 */
+  retentionDays?: number | null;
+  /** A set of items. Can optionally by a page of a full set. */
+  recipes?: IItemSetOfListDeletedRecipesResponseRecipe;
+}
+
 /** A set of items. Can optionally by a page of a full set. */
-export interface IItemSetOfListDeletedRecipesResponse {
+export interface IItemSetOfListDeletedRecipesResponseRecipe {
   /**
    * The count of items in this set.
    * @format int32
    */
   count?: number;
   /** The items in this set. */
-  items?: ListDeletedRecipesResponse[];
+  items?: ListDeletedRecipesResponseRecipe[];
   /** When true, this is a page of a full set. */
   isPagingEnabled?: boolean;
   /**
@@ -803,15 +810,16 @@ export interface IItemSetOfListDeletedRecipesResponse {
   totalCount?: number;
 }
 
-export interface ListDeletedRecipesResponse {
+export interface ListDeletedRecipesResponseRecipe {
   /** @format int32 */
   id?: number;
   name?: string;
   /** @format date-time */
   deletedOn?: string | null;
   deletedBy?: string;
+  /** @format date-time */
+  purgeOn?: string | null;
 }
-
 
 /** A set of items. Can optionally by a page of a full set. */
 export interface IItemSetOfListStorageLocationsResponse {

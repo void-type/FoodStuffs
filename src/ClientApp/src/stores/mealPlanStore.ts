@@ -179,6 +179,28 @@ export default defineStore('mealPlan', {
       storeCurrentMealPlanInStorage(null);
     },
 
+    /**
+     * Reloads the current meal plan so it reflects changes made elsewhere, like a recipe deleted or restored in
+     * another tab. Other failures are ignored so a network blip doesn't clear the meal plan.
+     */
+    async refreshCurrentMealPlan() {
+      const id = this.currentMealPlan.id;
+
+      if (!id) {
+        return;
+      }
+
+      try {
+        const response = await api().mealPlansGet({ id });
+        this.currentMealPlan = response.data;
+      } catch (error) {
+        // The meal plan was deleted elsewhere.
+        if ((error as HttpResponse<unknown, unknown>).status === 400) {
+          this.newCurrentMealPlan();
+        }
+      }
+    },
+
     async setCurrentMealPlan(id: number | null | undefined) {
       if (isNil(id)) {
         return;

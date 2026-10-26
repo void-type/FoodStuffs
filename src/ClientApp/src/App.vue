@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useEventListener } from '@vueuse/core';
 import { onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import AppFooter from '@/components/AppFooter.vue';
@@ -24,6 +25,13 @@ const recipeStore = useRecipeStore();
 const mealPlanStore = useMealPlanStore();
 const route = useRoute();
 const api = ApiHelper.client;
+
+// The meal plan can change in other tabs or by other users while this tab is in the background.
+useEventListener(document, 'visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    mealPlanStore.refreshCurrentMealPlan();
+  }
+});
 
 onMounted(() => {
   const header = document.getElementById('header');

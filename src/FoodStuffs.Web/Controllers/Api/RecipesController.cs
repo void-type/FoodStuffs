@@ -152,7 +152,7 @@ public class RecipesController : ControllerBase
     /// <param name="page">The page of results to retrieve</param>
     /// <param name="take">How many items in a page</param>
     [HttpGet("deleted")]
-    [ProducesResponseType(typeof(IItemSet<ListDeletedRecipesResponse>), 200)]
+    [ProducesResponseType(typeof(ListDeletedRecipesResponse), 200)]
     [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
     public async Task<IActionResult> ListDeletedAsync([FromServices] ListDeletedRecipesHandler listHandler, bool isPagingEnabled = true, int page = 1, int take = 30)
     {
@@ -163,6 +163,20 @@ public class RecipesController : ControllerBase
 
         return await listHandler
             .Handle(request)
+            .MapAsync(HttpResponder.Respond);
+    }
+
+    /// <summary>
+    /// Permanently delete every recipe in the recycle bin.
+    /// </summary>
+    /// <param name="emptyHandler"></param>
+    [HttpDelete("deleted")]
+    [ProducesResponseType(typeof(UserMessage), 200)]
+    [ProducesResponseType(typeof(IItemSet<IFailure>), 400)]
+    public async Task<IActionResult> EmptyRecycleBinAsync([FromServices] EmptyRecycleBinHandler emptyHandler)
+    {
+        return await emptyHandler
+            .Handle(new EmptyRecycleBinRequest())
             .MapAsync(HttpResponder.Respond);
     }
 

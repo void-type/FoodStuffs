@@ -36,7 +36,6 @@ import type {AddCategoryToAllRecipesRequest,
   HomeAssistantSetReminderThawMeatParams,
   IItemSetOfIFailure,
   IItemSetOfListCategoriesResponse,
-  IItemSetOfListDeletedRecipesResponse,
   IItemSetOfListGroceryAislesResponse,
   IItemSetOfListGroceryStoresResponse,
   IItemSetOfListMealPlansResponse,
@@ -47,6 +46,7 @@ import type {AddCategoryToAllRecipesRequest,
   ImagesGetParams,
   ImagesPinParams,
   ImagesUploadParams,
+  ListDeletedRecipesResponse,
   MealPlansAddRecipeParams,
   MealPlansDeleteParams,
   MealPlansGetParams,
@@ -872,17 +872,34 @@ export class Api<
    * @name RecipesListDeleted
    * @summary List the recipes in the recycle bin, most recently deleted first.
    * @request GET:/api/recipes/deleted
-   * @response `200` `IItemSetOfListDeletedRecipesResponse`
+   * @response `200` `ListDeletedRecipesResponse`
    * @response `400` `IItemSetOfIFailure`
    */
   recipesListDeleted = (
     query: RecipesListDeletedParams,
     params: RequestParams = {},
   ) =>
-    this.request<IItemSetOfListDeletedRecipesResponse, IItemSetOfIFailure>({
+    this.request<ListDeletedRecipesResponse, IItemSetOfIFailure>({
       path: `/api/recipes/deleted`,
       method: "GET",
       query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Recipes
+   * @name RecipesEmptyRecycleBin
+   * @summary Permanently delete every recipe in the recycle bin.
+   * @request DELETE:/api/recipes/deleted
+   * @response `200` `UserMessage`
+   * @response `400` `IItemSetOfIFailure`
+   */
+  recipesEmptyRecycleBin = (params: RequestParams = {}) =>
+    this.request<UserMessage, IItemSetOfIFailure>({
+      path: `/api/recipes/deleted`,
+      method: "DELETE",
       format: "json",
       ...params,
     });

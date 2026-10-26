@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ListDeletedRecipesResponse } from '@/api/data-contracts';
+import type { ListDeletedRecipesResponseRecipe } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
 import type { ModalParameters } from '@/models/ModalParameters';
 import { storeToRefs } from 'pinia';
@@ -16,7 +16,8 @@ const api = ApiHelper.client;
 
 const { useDarkMode } = storeToRefs(appStore);
 
-const recipes = ref<ListDeletedRecipesResponse[]>([]);
+const recipes = ref<ListDeletedRecipesResponseRecipe[]>([]);
+const retentionDays = ref<number | null>(null);
 
 const resultCountText = computed(() => {
   const count = recipes.value.length;
@@ -29,7 +30,8 @@ const resultCountText = computed(() => {
 async function fetchDeletedRecipes() {
   try {
     const response = await api().recipesListDeleted({ isPagingEnabled: false });
-    recipes.value = response.data.items || [];
+    recipes.value = response.data.recipes?.items || [];
+    retentionDays.value = response.data.retentionDays ?? null;
   } catch (error) {
     messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
@@ -79,6 +81,29 @@ function onPermanentlyDeleteRecipe(id: number | null | undefined) {
   appStore.showModal(parameters);
 }
 
+function onEmptyRecycleBin() {
+  async function emptyRecycleBin() {
+    try {
+      const response = await api().recipesEmptyRecycleBin();
+      await fetchDeletedRecipes();
+
+      if (response.data.message) {
+        messageStore.setSuccessMessage(response.data.message);
+      }
+    } catch (error) {
+      messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+    }
+  }
+
+  const parameters: ModalParameters = {
+    title: 'Empty recycle bin',
+    description: 'Do you really want to permanently delete every recipe in the recycle bin? This can\'t be undone.',
+    okAction: () => emptyRecycleBin(),
+  };
+
+  appStore.showModal(parameters);
+}
+
 fetchDeletedRecipes();
 </script>
 
@@ -87,8 +112,21 @@ fetchDeletedRecipes();
     <AppPageHeading />
     <p class="mt-3">
       Deleted recipes are hidden until you restore them.
+      <template v-if="retentionDays">
+        Recipes are permanently deleted automatically {{ retentionDays }} days after they are deleted.
+      </template>
     </p>
-    <div>
+    <div class="btn-toolbar">
+      <button
+        class="btn btn-danger me-2"
+        type="button"
+        :disabled="recipes.length === 0"
+        @click.stop.prevent="onEmptyRecycleBin()"
+      >
+        Empty recycle bin
+      </button>
+    </div>
+    <div class="mt-3">
       {{ resultCountText }}
     </div>
     <table
@@ -99,6 +137,9 @@ fetchDeletedRecipes();
         <tr>
           <th>Name</th>
           <th>Deleted</th>
+          <th v-if="retentionDays">
+            Permanently deleted on
+          </th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -106,6 +147,9 @@ fetchDeletedRecipes();
         <tr v-for="recipe in recipes" :key="recipe.id">
           <td>{{ recipe.name }}</td>
           <td>{{ DateHelper.dateTimeForView(recipe.deletedOn) }} by {{ recipe.deletedBy }}</td>
+          <td v-if="retentionDays">
+            {{ DateHelper.dateTimeForView(recipe.purgeOn) }}
+          </td>
           <td>
             <button class="btn btn-sm btn-primary me-2" @click="() => onRestoreRecipe(recipe.id)">
               Restore

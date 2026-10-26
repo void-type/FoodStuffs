@@ -50,7 +50,10 @@ async function switchToLatestMealPlan() {
   await mealPlanStore.setCurrentMealPlan(latestMealPlanId.value);
 }
 
-onMounted(fetchLatestMealPlan);
+onMounted(() => {
+  mealPlanStore.refreshCurrentMealPlan();
+  fetchLatestMealPlan();
+});
 </script>
 
 <template>

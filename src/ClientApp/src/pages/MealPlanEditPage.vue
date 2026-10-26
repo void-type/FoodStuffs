@@ -402,7 +402,9 @@ const sidesHave = computed(() => {
 watch(
   () => props.id,
   () => {
-    if (!isEditingCurrent.value) {
+    if (isEditingCurrent.value) {
+      mealPlanStore.refreshCurrentMealPlan();
+    } else {
       mealPlanStore.fetchMealPlan(props.id || null);
     }
   },
