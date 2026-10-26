@@ -6,12 +6,14 @@ using FoodStuffs.Model.Search;
 using FoodStuffs.Model.Search.GroceryItems;
 using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Web.Auth;
+using FoodStuffs.Web.Health;
 using FoodStuffs.Web.Startup;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Net.Http.Headers;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
+using VoidCore.AspNet.Health;
 using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
@@ -83,6 +85,10 @@ try
     services.AddScoped<ISearchIndexService, SearchIndexService>();
     services.AddHostedService<EnsureIndexHostedService>();
 
+    services.AddHealthChecks()
+        .AddDbContextCheck<FoodStuffsContext>("database")
+        .AddCheck<SearchIndexHealthCheck>("search-index");
+
     services.AddHttpClient("HomeAssistant", (serviceProvider, client) =>
     {
         var settings = serviceProvider.GetRequiredService<HomeAssistantSettings>();
@@ -123,6 +129,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseCurrentUserLogging();
     app.UseSwaggerAndUi();
+    app.MapHealthEndpoint();
     app.UseSpaEndpoints();
 
     Log.Information("Starting host.");

@@ -78,3 +78,9 @@ You don't need .NET or Node locally to run this application in [Docker](https://
 ```powershell
 docker build
 ```
+
+## Health Check
+
+`GET /health` returns 200 when healthy and 503 when unhealthy. The JSON body lists each check (database connectivity and readable Lucene indexes) with its description and any error message, so an external monitor can alert on it and relay the details.
+
+The error messages can include server names, so only expose this endpoint to trusted monitors.
