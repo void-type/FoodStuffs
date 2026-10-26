@@ -51,24 +51,28 @@ const filteredSuggestions = computed(() => {
   );
 });
 
-function selectSuggestion(id: number | undefined) {
-  filterText.value = '';
-  model.value = id;
-}
-
 const dropdownParent = ref<HTMLElement | null>(null);
 const dropdownButton = ref<HTMLButtonElement | null>(null);
 const filterInput = ref<HTMLInputElement | null>(null);
+
+function hideDropdown() {
+  if (dropdownButton.value) {
+    Dropdown.getOrCreateInstance(dropdownButton.value).hide();
+  }
+}
+
+// The dropdown only auto-closes on outside clicks so touching the menu background doesn't dismiss it.
+function selectSuggestion(id: number | undefined) {
+  filterText.value = '';
+  model.value = id;
+  hideDropdown();
+}
 
 async function createGroceryItem(name: string) {
   const newId = await props.onCreateItem(name);
 
   if (newId) {
     selectSuggestion(newId);
-    if (dropdownButton.value) {
-      const dropdown = Dropdown.getOrCreateInstance(dropdownButton.value);
-      dropdown.hide();
-    }
   }
 }
 
@@ -106,6 +110,7 @@ onBeforeUnmount(() => {
       class="form-select first-form-item"
       type="button"
       data-bs-toggle="dropdown"
+      data-bs-auto-close="outside"
       aria-expanded="false"
       @keydown="onDropdownKeydown"
     >

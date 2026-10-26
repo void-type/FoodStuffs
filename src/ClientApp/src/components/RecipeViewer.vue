@@ -266,9 +266,16 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 // The 4:3 images get very tall when the column is wide, so cap the width and center it.
+// On phones the image stacks above the summary, so keep it small to save vertical space.
 .recipe-carousel {
-  max-width: 28rem;
+  max-width: 16rem;
   margin-inline: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .recipe-carousel {
+    max-width: 28rem;
+  }
 }
 
 // Pin the banner to row 1 and the body to row 2 so a missing image or directions can't let
