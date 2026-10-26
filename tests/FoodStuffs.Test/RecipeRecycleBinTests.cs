@@ -1,6 +1,8 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Model.Events.Categories;
 using FoodStuffs.Model.Events.Categories.Models;
+using FoodStuffs.Model.Events.Images;
+using FoodStuffs.Model.Events.Images.Models;
 using FoodStuffs.Model.Events.MealPlans;
 using FoodStuffs.Model.Events.MealPlans.Models;
 using FoodStuffs.Model.Events.Recipes;
@@ -309,6 +311,25 @@ public class RecipeRecycleBinTests
         context.Recipes.Remove(context.Recipes.First());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => context.SaveChangesAsync());
+    }
+
+    [Fact]
+    public async Task Image_changes_are_not_found_for_recipes_in_the_recycle_binAsync()
+    {
+        await using var context = Deps.FoodStuffsContext().Seed();
+
+        var recipe = context.Recipes.Include(r => r.Images).First(r => r.Name == "Cheeseburger");
+        var fileName = recipe.Images.First().FileName;
+
+        await DeleteAsync(context, recipe.Id);
+
+        var indexService = Substitute.For<ISearchIndexService>();
+
+        var pinResult = await new PinImageHandler(context, indexService).Handle(new PinImageRequest(fileName));
+        var deleteResult = await new DeleteImageHandler(context, indexService).Handle(new DeleteImageRequest(fileName));
+
+        Assert.True(pinResult.IsFailed);
+        Assert.True(deleteResult.IsFailed);
     }
 
     private static async Task DeleteAsync(FoodStuffs.Model.Data.FoodStuffsContext context, int recipeId)
