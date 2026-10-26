@@ -6,6 +6,11 @@ public class SingleUserAccessor : ICurrentUserAccessor
 {
     private static readonly DomainUser _singleUser = new("SingleUser", []);
 
+    public string GetUserName()
+    {
+        return _singleUser.Login;
+    }
+
     public async Task<DomainUser> GetUser()
     {
         return await Task.FromResult(_singleUser);

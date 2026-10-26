@@ -3,7 +3,7 @@ using VoidCore.Model.Text;
 
 namespace FoodStuffs.Model.Data.Models;
 
-public class Recipe : IAuditableWithOffset
+public class Recipe : IAuditable
 {
     public int Id { get; set; }
 

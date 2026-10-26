@@ -69,7 +69,7 @@ public class ImageEventTests
 
         Assert.True(myFile.Length > image.ImageBlob.Bytes.Length);
         Assert.Equal(recipe.Id, image.RecipeId);
-        Assert.Equal(Deps.DateTimeServiceLate.Moment, image.ModifiedOn);
+        Assert.Equal(Deps.Late, image.ModifiedOn);
     }
 
     [Fact]

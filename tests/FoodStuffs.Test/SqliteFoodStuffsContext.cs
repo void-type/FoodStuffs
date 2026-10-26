@@ -3,8 +3,7 @@ using FoodStuffs.Model.Data.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VoidCore.Model.Auth;
-using VoidCore.Model.Time;
+using VoidCore.EntityFramework;
 
 namespace FoodStuffs.Test;
 
@@ -18,24 +17,24 @@ public sealed class SqliteFoodStuffsContext : FoodStuffsContext
 
     private SqliteFoodStuffsContext(
         DbContextOptions<FoodStuffsContext> options,
-        SqliteConnection connection,
-        IDateTimeService dateTimeService,
-        ICurrentUserAccessor currentUserAccessor)
-        : base(options, dateTimeService, currentUserAccessor)
+        SqliteConnection connection)
+        : base(options)
     {
         _connection = connection;
     }
 
-    public static SqliteFoodStuffsContext Create(string name, IDateTimeService dateTimeService, ICurrentUserAccessor currentUserAccessor)
+    /// <param name="auditInterceptor">Share one instance across contexts so EF can reuse its internal service provider.</param>
+    public static SqliteFoodStuffsContext Create(string name, AuditableSaveChangesInterceptor auditInterceptor)
     {
         var connection = new SqliteConnection($"Data Source={name};Mode=Memory;Cache=Shared");
         connection.Open();
 
         var options = new DbContextOptionsBuilder<FoodStuffsContext>()
             .UseSqlite(connection)
+            .AddInterceptors(auditInterceptor)
             .Options;
 
-        var context = new SqliteFoodStuffsContext(options, connection, dateTimeService, currentUserAccessor);
+        var context = new SqliteFoodStuffsContext(options, connection);
         context.Database.EnsureCreated();
         return context;
     }

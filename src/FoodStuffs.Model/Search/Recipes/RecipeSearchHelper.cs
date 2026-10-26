@@ -16,8 +16,8 @@ public static class RecipeSearchHelper
     public static Document ToDocument(this Recipe recipe)
     {
         var isForMealPlanning = recipe.IsForMealPlanning.ToString();
-        var createdOn = recipe.CreatedOn.ToString("o");
-        var modifiedOn = recipe.ModifiedOn.ToString("o");
+        var createdOn = recipe.CreatedOn.ToUniversalTime().ToString("o");
+        var modifiedOn = recipe.ModifiedOn.ToUniversalTime().ToString("o");
 
         var doc = new Document
         {
@@ -110,8 +110,8 @@ public static class RecipeSearchHelper
             Name: doc.Get(C.FIELD_NAME),
             IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
             MealPlanningSidesCount: int.Parse(doc.Get(C.FIELD_MEAL_PLANNING_SIDES_COUNT) ?? "0"),
-            CreatedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_CREATED_ON) ?? DateTime.MinValue,
-            ModifiedOn: doc.GetStringFieldAsDateTimeOrNull(C.FIELD_MODIFIED_ON) ?? DateTime.MinValue,
+            CreatedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FIELD_CREATED_ON) ?? DateTimeOffset.MinValue,
+            ModifiedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FIELD_MODIFIED_ON) ?? DateTimeOffset.MinValue,
             Slug: doc.Get(C.FIELD_SLUG),
             Categories: doc.Get(C.FIELD_CATEGORIES_JSON)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemCategory>>(x) ?? []),

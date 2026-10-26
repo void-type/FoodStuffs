@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Data.Models;
 
-public class GroceryAisle : IAuditableWithOffset
+public class GroceryAisle : IAuditable
 {
     public int Id { get; set; }
 

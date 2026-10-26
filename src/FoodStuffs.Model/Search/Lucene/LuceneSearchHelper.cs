@@ -8,10 +8,10 @@ namespace FoodStuffs.Model.Search.Lucene;
 public static class LuceneSearchHelper
 {
     /// <summary>
-    /// Convert a string field to a DateTime, or return null if the field is empty.
-    /// DateTimes should be stored using .ToString("o") to ensure they are stored in a sortable and parsable format.
+    /// Convert a string field to a DateTimeOffset, or return null if the field is empty.
+    /// DateTimeOffsets should be stored using .ToUniversalTime().ToString("o") to ensure they are stored in a sortable and parsable format.
     /// </summary>
-    public static DateTime? GetStringFieldAsDateTimeOrNull(this Document doc, string fieldName)
+    public static DateTimeOffset? GetStringFieldAsDateTimeOffsetOrNull(this Document doc, string fieldName)
     {
         var value = doc.Get(fieldName);
 
@@ -20,8 +20,7 @@ public static class LuceneSearchHelper
             return null;
         }
 
-        // This should yield the same DateTime (date, time and kind) that was originally stored and won't be affected by parser's timezone.
-        return DateTime.ParseExact(value, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+        return DateTimeOffset.ParseExact(value, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
     }
 
     /// <summary>

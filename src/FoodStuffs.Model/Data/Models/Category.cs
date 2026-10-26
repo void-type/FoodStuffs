@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Data.Models;
 
-public class Category : IAuditableWithOffset
+public class Category : IAuditable
 {
     public int Id { get; set; }
 

@@ -6,12 +6,11 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
 using VoidCore.Model.Responses.Collections;
-using VoidCore.Model.Time;
 using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
 
 namespace FoodStuffs.Model.Search.GroceryItems;
 
-public class GroceryItemQueryService(SearchSettings settings, IDateTimeService dateTimeService) : IGroceryItemQueryService
+public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeProvider) : IGroceryItemQueryService
 {
 
     /// <inheritdoc/>
@@ -44,7 +43,7 @@ public class GroceryItemQueryService(SearchSettings settings, IDateTimeService d
         {
             var seed = request.RandomSortSeed is not null ?
                 request.RandomSortSeed.GetHashCode() :
-                dateTimeService.MomentWithOffset.Date.GetHashCode();
+                timeProvider.GetLocalNow().Date.GetHashCode();
             // We don't worry about cryptographic security for random sorting here.
 #pragma warning disable S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
             var random = new Random(seed);

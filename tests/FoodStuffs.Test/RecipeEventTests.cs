@@ -101,8 +101,8 @@ public class RecipeEventTests
 
         Assert.NotNull(recipe);
 
-        Assert.Equal(Deps.DateTimeServiceLate.Moment, recipe.CreatedOn);
-        Assert.Equal(Deps.DateTimeServiceLate.Moment, recipe.ModifiedOn);
+        Assert.Equal(Deps.Late, recipe.CreatedOn);
+        Assert.Equal(Deps.Late, recipe.ModifiedOn);
         Assert.DoesNotContain("Category1", recipe.Categories.Select(c => c.Name));
         Assert.Contains("Category2", recipe.Categories.Select(c => c.Name));
         Assert.Contains("Category3", recipe.Categories.Select(c => c.Name));
@@ -127,7 +127,7 @@ public class RecipeEventTests
         var updatedRecipe = await context.Recipes.FindAsync(existingRecipeId);
         Assert.NotNull(updatedRecipe);
 
-        Assert.Equal(Deps.DateTimeServiceLate.Moment, updatedRecipe.ModifiedOn);
+        Assert.Equal(Deps.Late, updatedRecipe.ModifiedOn);
         Assert.DoesNotContain("Category1", updatedRecipe.Categories.Select(c => c.Name));
         Assert.Contains("Category2", updatedRecipe.Categories.Select(c => c.Name));
         Assert.Contains("Category3", updatedRecipe.Categories.Select(c => c.Name));

@@ -1,9 +1,10 @@
 ﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using FoodStuffs.Web.Auth;
+using Microsoft.Extensions.Time.Testing;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Responses.Files;
-using VoidCore.Model.Time;
 
 namespace FoodStuffs.Test;
 
@@ -16,15 +17,17 @@ public static class Deps
     {
         CurrentUserAccessor = new SingleUserAccessor();
 
-        var early = new DateTime(2001, 1, 1, 11, 11, 11, DateTimeKind.Utc);
-        var late = new DateTime(2002, 2, 2, 22, 22, 22, DateTimeKind.Utc);
+        Early = new DateTimeOffset(2001, 1, 1, 11, 11, 11, TimeSpan.Zero);
+        Late = new DateTimeOffset(2002, 2, 2, 22, 22, 22, TimeSpan.Zero);
 
-        DateTimeServiceEarly = new DiscreteDateTimeService(early, new DateTimeOffset(early));
-        DateTimeServiceLate = new DiscreteDateTimeService(late, new DateTimeOffset(late));
+        TimeProviderLate = new FakeTimeProvider(Late);
+        AuditInterceptor = new AuditableSaveChangesInterceptor(TimeProviderLate, CurrentUserAccessor);
     }
 
-    public static readonly IDateTimeService DateTimeServiceEarly;
-    public static readonly IDateTimeService DateTimeServiceLate;
+    public static readonly DateTimeOffset Early;
+    public static readonly DateTimeOffset Late;
+    public static readonly TimeProvider TimeProviderLate;
+    public static readonly AuditableSaveChangesInterceptor AuditInterceptor;
     public static readonly ICurrentUserAccessor CurrentUserAccessor;
 
     public const string PngBase64String = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQAAAAA3bvkkAAAACklEQVQI12NoAAAAggCB3UNq9AAAAABJRU5ErkJggg==";
@@ -33,8 +36,7 @@ public static class Deps
     {
         return SqliteFoodStuffsContext.Create(
             dbName ?? Guid.NewGuid().ToString(),
-            DateTimeServiceLate,
-            CurrentUserAccessor);
+            AuditInterceptor);
     }
 
     public static FoodStuffsContext Seed(this FoodStuffsContext context)
@@ -51,8 +53,8 @@ public static class Deps
             Sides = "side",
             CookTimeMinutes = 21,
             PrepTimeMinutes = 2,
-            CreatedOn = DateTimeServiceEarly.Moment,
-            ModifiedOn = DateTimeServiceLate.Moment,
+            CreatedOn = Early,
+            ModifiedOn = Late,
             CreatedBy = "11",
             ModifiedBy = "12"
         }).Entity;
@@ -69,8 +71,8 @@ public static class Deps
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
             IsForMealPlanning = true,
-            CreatedOn = DateTimeServiceEarly.Moment,
-            ModifiedOn = DateTimeServiceLate.Moment,
+            CreatedOn = Early,
+            ModifiedOn = Late,
             CreatedBy = "11",
             ModifiedBy = "11"
         }).Entity;
@@ -84,8 +86,8 @@ public static class Deps
             Sides = "side",
             CookTimeMinutes = 2,
             PrepTimeMinutes = 2,
-            CreatedOn = DateTimeServiceEarly.Moment,
-            ModifiedOn = DateTimeServiceLate.Moment,
+            CreatedOn = Early,
+            ModifiedOn = Late,
             CreatedBy = "11",
             ModifiedBy = "11"
         }).Entity;
@@ -100,9 +102,9 @@ public static class Deps
             Recipe = recipe1,
             FileName = "1.png",
             CreatedBy = "Long John Silver2",
-            CreatedOn = new DateTime(2019, 11, 8),
+            CreatedOn = new DateTimeOffset(2019, 11, 8, 0, 0, 0, TimeSpan.Zero),
             ModifiedBy = "Long John Silver2",
-            ModifiedOn = new DateTime(2019, 11, 8),
+            ModifiedOn = new DateTimeOffset(2019, 11, 8, 0, 0, 0, TimeSpan.Zero),
             ImageBlob = new ImageBlob
             {
                 Bytes = file.Content.AsBytes,
@@ -114,9 +116,9 @@ public static class Deps
             Recipe = recipe1,
             FileName = "2.png",
             CreatedBy = "Long John Silver2",
-            CreatedOn = new DateTime(2019, 11, 8),
+            CreatedOn = new DateTimeOffset(2019, 11, 8, 0, 0, 0, TimeSpan.Zero),
             ModifiedBy = "Long John Silver2",
-            ModifiedOn = new DateTime(2019, 11, 8),
+            ModifiedOn = new DateTimeOffset(2019, 11, 8, 0, 0, 0, TimeSpan.Zero),
             ImageBlob = new ImageBlob
             {
                 Bytes = file.Content.AsBytes,

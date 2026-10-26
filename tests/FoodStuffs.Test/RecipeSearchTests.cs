@@ -41,7 +41,7 @@ public class RecipeSearchTests : IAsyncLifetime
         var indexService = new RecipeIndexService(logger, settings, context);
         await indexService.RebuildAsync(CancellationToken.None);
 
-        return new RecipeQueryService(settings, new UtcNowDateTimeService());
+        return new RecipeQueryService(settings, TimeProvider.System);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class RecipeSearchTests : IAsyncLifetime
             .Handle(new SearchRecipesRequest(null, null, false, null, false, null, null, null, true, 1, 4));
 
         Assert.True(result.IsSuccess);
-        Assert.All(result.Value.Results.Items, item => Assert.Equal(Deps.DateTimeServiceLate.Moment, item.ModifiedOn));
+        Assert.All(result.Value.Results.Items, item => Assert.Equal(Deps.Late, item.ModifiedOn));
     }
 
     [Fact]

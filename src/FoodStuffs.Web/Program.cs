@@ -15,9 +15,9 @@ using VoidCore.AspNet.Configuration;
 using VoidCore.AspNet.Logging;
 using VoidCore.AspNet.Routing;
 using VoidCore.AspNet.Security;
+using VoidCore.EntityFramework;
 using VoidCore.Model.Auth;
 using VoidCore.Model.Configuration;
-using VoidCore.Model.Time;
 
 try
 {
@@ -61,16 +61,18 @@ try
 
     // Dependencies
     services.AddHttpContextAccessor();
-    services.AddSingleton<IDateTimeService, NowDateTimeService>();
+    services.AddSingleton(TimeProvider.System);
+    services.AddSingleton<AuditableSaveChangesInterceptor>();
     services.AddSingleton<IImageCompressionService, ImageCompressionService>();
 
     config.GetRequiredConnectionString<FoodStuffsContext>();
-    services.AddDbContext<FoodStuffsContext>(options => options
+    services.AddDbContext<FoodStuffsContext>((provider, options) => options
         .UseSqlServer("Name=FoodStuffs", sqlOptions =>
         {
             sqlOptions.MigrationsAssembly(typeof(FoodStuffsContext).Assembly.FullName);
             sqlOptions.EnableRetryOnFailure();
-        }));
+        })
+        .AddInterceptors(provider.GetRequiredService<AuditableSaveChangesInterceptor>()));
 
     services.AddScoped<IRecipeIndexService, RecipeIndexService>();
     services.AddScoped<IRecipeQueryService, RecipeQueryService>();
