@@ -6,13 +6,26 @@ const DEFAULT_TIMEOUT = 5;
 
 let nextId = 0;
 
-interface Message {
+interface MessageAction {
+  label: string;
+  handler: () => void | Promise<void>;
+}
+
+interface MessageOptions {
+  action?: MessageAction;
+  // Seconds before the message clears. undefined = default, 0 = never.
+  autoClear?: number;
+}
+
+export interface Message {
   timeout?: number;
   text: string;
   fieldName: string | null;
   isError: boolean;
   // undefined = default, 0 = never
   autoClear?: number;
+  // Optional button shown in the message, e.g. Undo.
+  action?: MessageAction;
   id?: number;
 }
 
@@ -67,14 +80,6 @@ export default defineStore('message', {
       }
     },
 
-    clearMessageTimeout(message: Message) {
-      if (message.timeout) {
-        clearTimeout(message.timeout);
-
-        message.timeout = undefined;
-      }
-    },
-
     pushMessage(message: Message) {
       const matchingMessage = this.messages.find(
         x => x.fieldName === message.fieldName && x.text === message.text,
@@ -102,11 +107,13 @@ export default defineStore('message', {
       }
     },
 
-    setSuccessMessage(message: string) {
+    setSuccessMessage(message: string, options: MessageOptions = {}) {
       this.pushMessage({
         text: message,
         fieldName: null,
         isError: false,
+        action: options.action,
+        autoClear: options.autoClear,
       });
     },
 

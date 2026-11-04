@@ -136,20 +136,22 @@ const isDirty = computed(() => initialized.value && workingName.value !== (activ
 
 const { navigateWithoutPrompt } = useUnsavedChangesGuard(isDirty);
 
-async function onSaveMealPlan(quickSave: boolean = false) {
+async function onSaveMealPlan(quickSave: boolean = false, silent: boolean = false): Promise<boolean> {
   if (!quickSave) {
     activeMealPlan.value.name = workingName.value;
   }
 
   if (isEditingCurrent.value) {
-    await mealPlanStore.saveCurrentMealPlan([], quickSave);
-  } else {
-    const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
-    if (savedId && !props.id) {
-      // If this was a new meal plan, redirect to the edit page with the new ID
-      await navigateWithoutPrompt({ name: 'mealPlanEdit', params: { id: savedId } });
-    }
+    return mealPlanStore.saveCurrentMealPlan([], quickSave, false, silent);
   }
+
+  const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value, [], silent);
+  if (savedId && !props.id) {
+    // If this was a new meal plan, redirect to the edit page with the new ID
+    await navigateWithoutPrompt({ name: 'mealPlanEdit', params: { id: savedId } });
+  }
+
+  return savedId !== null;
 }
 
 // Nothing to save until the meal plan has loaded.
@@ -349,11 +351,46 @@ function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
 }
 
 async function onRecipeRemoved(recipe: GetMealPlanResponseRecipe) {
-  if (!activeMealPlan.value?.recipes) {
+  const mealPlan = activeMealPlan.value;
+  if (!mealPlan?.recipes) {
     return;
   }
 
-  activeMealPlan.value.recipes = activeMealPlan.value.recipes.filter(r => r.id !== recipe.id);
+  const index = mealPlan.recipes.findIndex(r => r.id === recipe.id);
+  if (index < 0) {
+    return;
+  }
+
+  const mealPlanId = mealPlan.id;
+  mealPlan.recipes = mealPlan.recipes.filter(r => r.id !== recipe.id);
+
+  updateOrdersByIndex();
+
+  // The save message is silenced so the only toast is the one with Undo.
+  if (!(await onSaveMealPlan(true, true))) {
+    return;
+  }
+
+  messageStore.setSuccessMessage(`Removed ${recipe.name} from the meal plan.`, {
+    autoClear: 10,
+    action: { label: 'Undo', handler: () => onUndoRecipeRemoved(mealPlanId, recipe, index) },
+  });
+}
+
+async function onUndoRecipeRemoved(mealPlanId: number | undefined, recipe: GetMealPlanResponseRecipe, index: number) {
+  const recipes = activeMealPlan.value?.recipes;
+
+  // The toast outlives page navigation, so make sure we're still on the plan the recipe came from.
+  if (!recipes || activeMealPlan.value.id !== mealPlanId) {
+    messageStore.setErrorMessage('Can\'t undo because the meal plan is no longer open.');
+    return;
+  }
+
+  if (recipes.some(r => r.id === recipe.id)) {
+    return;
+  }
+
+  recipes.splice(Math.min(index, recipes.length), 0, recipe);
 
   updateOrdersByIndex();
   await onSaveMealPlan(true);
@@ -609,6 +646,7 @@ onMounted(async () => {
                 :is-current-plan="isEditingCurrent"
                 class="g-col-12 g-col-md-6 g-col-lg-4"
                 @recipe-completed="onRecipeCompleted"
+                @recipe-removed="onRecipeRemoved"
               />
             </VueDraggable>
           </div>

@@ -1,6 +1,7 @@
 import type {
   GetMealPlanResponse,
   GetMealPlanResponseExcludedGroceryItem,
+  GetMealPlanResponseRecipe,
   IItemSetOfListMealPlansResponse,
   MealPlansListParams,
 } from '@/api/data-contracts';
@@ -150,19 +151,51 @@ export default defineStore('mealPlan', {
         return;
       }
 
+      const mealPlanId = this.currentMealPlan.id;
+      const index = (this.currentMealPlan.recipes ?? []).findIndex(r => r.id === recipeId);
+      const removed = index >= 0 ? { ...this.currentMealPlan.recipes![index] } : null;
+
       try {
-        const response = await api().mealPlansRemoveRecipe({ id: this.currentMealPlan.id, recipeId });
+        const response = await api().mealPlansRemoveRecipe({ id: mealPlanId, recipeId });
 
         if (response.data.entity) {
           this.currentMealPlan = response.data.entity;
         }
 
-        if (response.data.message) {
+        if (removed) {
+          // Replaces the server's message so the only toast is the one with Undo.
+          useMessageStore().setSuccessMessage(`Removed ${removed.name} from the current meal plan.`, {
+            autoClear: 10,
+            action: { label: 'Undo', handler: () => this.undoRemoveCurrentRecipe(mealPlanId, removed, index) },
+          });
+        } else if (response.data.message) {
           useMessageStore().setSuccessMessage(response.data.message);
         }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
+    },
+
+    async undoRemoveCurrentRecipe(mealPlanId: number, recipe: GetMealPlanResponseRecipe, index: number) {
+      if (this.currentMealPlan.id !== mealPlanId) {
+        useMessageStore().setErrorMessage('Can\'t undo because the current meal plan has changed.');
+        return;
+      }
+
+      const recipes = this.currentMealPlan.recipes ?? [];
+
+      if (recipes.some(r => r.id === recipe.id)) {
+        return;
+      }
+
+      // Restores the original position and completion state, which adding by id wouldn't.
+      recipes.splice(Math.min(index, recipes.length), 0, recipe);
+      recipes.forEach((r, i) => {
+        r.order = i + 1;
+      });
+      this.currentMealPlan.recipes = recipes;
+
+      await this.saveCurrentMealPlan();
     },
 
     async clearCurrentRecipes() {
@@ -218,11 +251,11 @@ export default defineStore('mealPlan', {
       }
     },
 
-    async saveCurrentMealPlan(additionalRecipeIds: number[] = [], quickSave: boolean = false, pantryOnly: boolean = false) {
+    async saveCurrentMealPlan(additionalRecipeIds: number[] = [], quickSave: boolean = false, pantryOnly: boolean = false, silent: boolean = false): Promise<boolean> {
       const current = this.currentMealPlan;
 
       if (current === null) {
-        return;
+        return false;
       }
 
       const request = { ...current };
@@ -247,7 +280,7 @@ export default defineStore('mealPlan', {
       try {
         const response = await api().mealPlansSave(request);
 
-        if (response.data.message) {
+        if (response.data.message && !silent) {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
@@ -256,8 +289,11 @@ export default defineStore('mealPlan', {
           await this.setCurrentMealPlan(response.data.id);
           await this.fetchMealPlanList();
         }
+
+        return true;
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+        return false;
       }
     },
 
@@ -310,6 +346,7 @@ export default defineStore('mealPlan', {
     async saveMealPlan(
       mealPlan: GetMealPlanResponse,
       additionalRecipeIds: number[] = [],
+      silent: boolean = false,
     ): Promise<number | null> {
       if (mealPlan === null) {
         return null;
@@ -333,7 +370,8 @@ export default defineStore('mealPlan', {
       try {
         const response = await api().mealPlansSave(request);
 
-        if (response.data.message) {
+        // Silent saves let the caller show its own message, like one with an Undo action.
+        if (response.data.message && !silent) {
           useMessageStore().setSuccessMessage(response.data.message);
         }
 
