@@ -203,6 +203,17 @@ dotnet_diagnostic.S6967.severity = none
 # CA2016: Forward the 'CancellationToken' parameter to methods
 dotnet_diagnostic.CA2016.severity = warning
 
+# Code metrics and dead-code analysis
+dotnet_diagnostic.CA1501.severity = warning
+dotnet_diagnostic.CA1502.severity = warning
+dotnet_diagnostic.CA1505.severity = warning
+dotnet_diagnostic.CA1506.severity = warning
+dotnet_diagnostic.CA1508.severity = warning
+
+# Program.cs is expected to be busy
+[**/Program.cs]
+dotnet_diagnostic.CA1506.severity = none
+
 [*.{cs,vb}]
 
 ## Naming styles

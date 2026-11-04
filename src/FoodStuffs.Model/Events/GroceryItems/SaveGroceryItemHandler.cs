@@ -36,17 +36,7 @@ public class SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemReque
             .FirstOrDefaultAsync(cancellationToken)
             .MapAsync(Maybe.From);
 
-        // Check for conflicting items by name
-        var byName = new GroceryItemsSpecification(requestedName);
-
-        var conflictingGroceryItem = await data.GroceryItems
-            .TagWith(GetTag(byName))
-            .AsSplitQuery()
-            .ApplyEfSpecification(byName)
-            .OrderBy(x => x.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (conflictingGroceryItem is not null && conflictingGroceryItem.Id != request.Id)
+        if (await HasNameConflictAsync(requestedName, request.Id, cancellationToken))
         {
             return Fail(new Failure("Grocery item name already exists.", "name"));
         }
@@ -60,11 +50,9 @@ public class SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemReque
         await ManageStorageLocationsAsync(request, groceryItemToEdit, cancellationToken);
         await ManageGroceryStoresAsync(request, groceryItemToEdit, cancellationToken);
 
-        if (request.GroceryAisleId is not null)
+        if (request.GroceryAisleId is { } groceryAisleId)
         {
-            var groceryAisle = await data.GroceryAisles
-                .TagWith(GetTag())
-                .FirstOrDefaultAsync(gd => gd.Id == request.GroceryAisleId, cancellationToken);
+            var groceryAisle = await FindGroceryAisleAsync(groceryAisleId, cancellationToken);
 
             if (groceryAisle is null)
             {
@@ -91,11 +79,37 @@ public class SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemReque
 
         relatedRecipeIds.UnionWith(groceryItemToEdit.Recipes.Select(r => r.Id));
 
-        searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
-
-        await searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemToEdit.Id, cancellationToken);
+        await UpdateSearchIndexAsync(groceryItemToEdit.Id, relatedRecipeIds, cancellationToken);
 
         return Ok(EntityMessage.Create($"Grocery Item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
+    }
+
+    private async Task<bool> HasNameConflictAsync(string requestedName, int requestId, CancellationToken cancellationToken)
+    {
+        var byName = new GroceryItemsSpecification(requestedName);
+
+        var conflictingGroceryItem = await data.GroceryItems
+            .TagWith(GetTag(byName))
+            .AsSplitQuery()
+            .ApplyEfSpecification(byName)
+            .OrderBy(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return conflictingGroceryItem is not null && conflictingGroceryItem.Id != requestId;
+    }
+
+    private async Task<GroceryAisle?> FindGroceryAisleAsync(int groceryAisleId, CancellationToken cancellationToken)
+    {
+        return await data.GroceryAisles
+            .TagWith(GetTag())
+            .FirstOrDefaultAsync(gd => gd.Id == groceryAisleId, cancellationToken);
+    }
+
+    private async Task UpdateSearchIndexAsync(int groceryItemId, HashSet<int> relatedRecipeIds, CancellationToken cancellationToken)
+    {
+        searchIndex.EnqueueUpdate(SearchIndex.Recipes, relatedRecipeIds);
+
+        await searchIndex.UpdateAsync(SearchIndex.GroceryItems, groceryItemId, cancellationToken);
     }
 
     private static void Transfer(string formattedName, SaveGroceryItemRequest request, GroceryItem groceryItem)
