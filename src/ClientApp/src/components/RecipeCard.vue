@@ -104,8 +104,8 @@ const imageLightboxStore = useImageLightboxStore();
             <RecipeCurrentMealPlanButton class="btn-sm d-print-none" invert :recipe-id="recipe.id" />
             <slot name="actions" />
           </div>
-          <slot name="trailing" />
         </div>
+        <slot name="footer" />
       </div>
     </div>
   </div>

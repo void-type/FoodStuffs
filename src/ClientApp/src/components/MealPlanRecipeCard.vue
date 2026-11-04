@@ -40,17 +40,16 @@ const emit = defineEmits(['recipeCompleted', 'recipeRemoved']);
       </button>
     </template>
 
-    <template #trailing>
-      <div class="form-check my-auto">
-        <input
-          :id="`recipe-complete-${recipe.id}`"
-          type="checkbox"
-          class="form-check-input"
-          :checked="recipe.isComplete"
-          @change.stop.prevent="() => emit('recipeCompleted', recipe)"
-        >
-        <label class="form-check-label" :for="`recipe-complete-${recipe.id}`">Complete</label>
-      </div>
+    <template #footer>
+      <button
+        type="button"
+        class="btn btn-sm align-self-start"
+        :class="recipe.isComplete ? 'btn-outline-primary' : 'btn-primary'"
+        :aria-pressed="recipe.isComplete"
+        @click.prevent.stop="() => emit('recipeCompleted', recipe)"
+      >
+        <FontAwesomeIcon icon="fa-check" class="me-1" />{{ recipe.isComplete ? 'Completed (undo)' : 'Mark complete' }}
+      </button>
     </template>
   </RecipeCard>
 </template>
