@@ -4,7 +4,6 @@ using FoodStuffs.Model.Search.Recipes;
 using FoodStuffs.Model.Search.Recipes.Models;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using VoidCore.Model.Time;
 using Xunit;
 
 namespace FoodStuffs.Test;

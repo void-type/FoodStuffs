@@ -1,4 +1,4 @@
-namespace FoodStuffs.Model.RecycleBin;
+﻿namespace FoodStuffs.Model.RecycleBin;
 
 public class RecycleBinSettings
 {

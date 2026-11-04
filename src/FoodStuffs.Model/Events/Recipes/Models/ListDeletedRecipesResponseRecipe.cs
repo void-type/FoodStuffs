@@ -1,5 +1,8 @@
-namespace FoodStuffs.Model.Events.Recipes.Models;
+﻿namespace FoodStuffs.Model.Events.Recipes.Models;
 
+/// <summary>
+/// 
+/// </summary>
 /// <param name="PurgeOn">When the recipe will be permanently deleted automatically. Null when automatic deletion is off.</param>
 public record ListDeletedRecipesResponseRecipe(
     int Id,

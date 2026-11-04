@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Events.Recipes.Models;
 using FoodStuffs.Model.RecycleBin;
 using Microsoft.EntityFrameworkCore;

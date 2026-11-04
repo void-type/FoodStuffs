@@ -1,4 +1,4 @@
-using FoodStuffs.Model.Data;
+﻿using FoodStuffs.Model.Data;
 using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using VoidCore.EntityFramework;
