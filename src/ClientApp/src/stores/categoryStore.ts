@@ -24,7 +24,9 @@ export default defineStore('category', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new CategoriesListRequest() },
+    listRequest: {
+      ...new CategoriesListRequest(),
+    },
   }),
 
   getters: {

@@ -69,7 +69,10 @@ async function onSaveClick() {
     const response = await api().storageLocationsSave(data.working);
 
     if (!isEditMode.value) {
-      await navigateWithoutPrompt({ name: 'storageLocationEdit', params: { id: response.data.id } });
+      await navigateWithoutPrompt({
+        name: 'storageLocationEdit',
+        params: { id: response.data.id },
+      });
     } else {
       await fetch();
     }

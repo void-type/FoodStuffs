@@ -4,7 +4,9 @@ export function clamp(value: number, min: number, max: number) {
 
 export function toNumber(value: string | number | undefined | null, defaultValue = 0) {
   const number = Number(value);
-  return !Number.isNaN(number) ? number : defaultValue;
+  return !Number.isNaN(number)
+    ? number
+    : defaultValue;
 }
 
 export function toInt(value: string | number | undefined | null, defaultValue = 0) {
@@ -17,7 +19,9 @@ export function toNumberOrNull(value: string | number | undefined | null) {
   }
 
   const number = Number(value);
-  return !Number.isNaN(number) ? number : null;
+  return !Number.isNaN(number)
+    ? number
+    : null;
 }
 
 export function trimAndTitleCase(value: string) {

@@ -72,18 +72,28 @@ const pageRange = computed(() => {
 
   // Near the start
   if (startOffset === 1) {
-    return [...range(limit - 1, startOffset), '…'];
+    return [
+      ...range(limit - 1, startOffset),
+      '…',
+    ];
   }
 
   const offsetLimit = totalPages - limit + 1;
 
   // In the middle
   if (startOffset < offsetLimit) {
-    return ['…', ...range(limit - 2, startOffset + 1), '…'];
+    return [
+      '…',
+      ...range(limit - 2, startOffset + 1),
+      '…',
+    ];
   }
 
   // Near the end
-  return ['…', ...range(limit - 1, offsetLimit + 1)];
+  return [
+    '…',
+    ...range(limit - 1, offsetLimit + 1),
+  ];
 });
 </script>
 

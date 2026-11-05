@@ -130,7 +130,10 @@ async function onRecipeSave(recipe: RecipeWorking) {
     data.isRecipeDirty = false;
 
     if (!isEditMode.value) {
-      await router.push({ name: 'recipeEdit', params: { id: response.data.entity?.id } });
+      await router.push({
+        name: 'recipeEdit',
+        params: { id: response.data.entity?.id },
+      });
     } else {
       await fetchRecipe();
     }

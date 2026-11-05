@@ -31,7 +31,9 @@ export default defineStore('groceryItem', {
       totalCount: 0,
     },
     listFacets: [],
-    listRequest: { ...new GroceryItemsSearchRequest() },
+    listRequest: {
+      ...new GroceryItemsSearchRequest(),
+    },
   }),
 
   getters: {

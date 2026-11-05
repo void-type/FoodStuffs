@@ -27,7 +27,9 @@ export default defineStore('groceryStore', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new GroceryStoresListRequest() },
+    listRequest: {
+      ...new GroceryStoresListRequest(),
+    },
   }),
 
   getters: {

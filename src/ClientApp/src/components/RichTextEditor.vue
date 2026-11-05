@@ -16,7 +16,17 @@ defineProps({
   disabledButtons: {
     type: Array<string>,
     required: false,
-    default: () => ['h1', 'h2', 'h6', 'code', 'clearMarks', 'clearNodes', 'hardBreak', 'blockquote', 'codeBlock'],
+    default: () => [
+      'h1',
+      'h2',
+      'h6',
+      'code',
+      'clearMarks',
+      'clearNodes',
+      'hardBreak',
+      'blockquote',
+      'codeBlock',
+    ],
   },
 });
 

@@ -175,7 +175,10 @@ export const useRecipeStore = defineStore('recipe', {
                 newItem => !this.accumulatedItems.some(existing => existing.id === newItem.id),
               );
               if (filtered.length > 0) {
-                this.accumulatedItems = [...this.accumulatedItems, ...filtered];
+                this.accumulatedItems = [
+                  ...this.accumulatedItems,
+                  ...filtered,
+                ];
               }
             }
           }

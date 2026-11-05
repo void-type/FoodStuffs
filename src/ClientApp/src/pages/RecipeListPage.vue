@@ -208,7 +208,9 @@ function setListRequestFromQuery() {
       ?.split(',')
       .flatMap((x) => {
         const n = toNumberOrNull(x);
-        return n ? [n] : [];
+        return n
+          ? [n]
+          : [];
       }) || [];
 
   categoriesFilterModel.value.categories = categories;
@@ -220,7 +222,9 @@ function setListRequestFromQuery() {
       ?.split(',')
       .flatMap((x) => {
         const n = toNumberOrNull(x);
-        return n ? [n] : [];
+        return n
+          ? [n]
+          : [];
       }) || [];
 
   groceryItemsFilterModel.value.groceryItemIds = groceryItemIds;
@@ -252,7 +256,9 @@ const groceryItemFacets = computed(() => {
 
 const mealPlanningFilterText = computed(() => {
   const choiceString = Choices.getBooleanChoiceText(listRequest.value.isForMealPlanning);
-  return choiceString === 'All' ? '' : ` (${choiceString})`;
+  return choiceString === 'All'
+    ? ''
+    : ` (${choiceString})`;
 });
 
 const activeFilterCount = computed(() => {

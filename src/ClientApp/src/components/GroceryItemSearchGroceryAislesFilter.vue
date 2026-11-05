@@ -36,7 +36,9 @@ const groceryAisleOptions = ref([] as Array<ListGroceryAislesResponse>);
 function selectAll() {
   model.value.groceryAisles = groceryAisleOptions.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
-    return n ? [n] : [];
+    return n
+      ? [n]
+      : [];
   });
 }
 

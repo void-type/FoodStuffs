@@ -36,7 +36,9 @@ const storageLocationOptions = ref([] as Array<ListStorageLocationsResponse>);
 function selectAll() {
   model.value.storageLocations = storageLocationOptions.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
-    return n ? [n] : [];
+    return n
+      ? [n]
+      : [];
   });
 }
 

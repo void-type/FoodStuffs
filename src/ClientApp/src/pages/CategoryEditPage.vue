@@ -84,7 +84,10 @@ async function onSaveClick() {
     const response = await api().categoriesSave(data.working);
 
     if (!isEditMode.value) {
-      await navigateWithoutPrompt({ name: 'categoryEdit', params: { id: response.data.id } });
+      await navigateWithoutPrompt({
+        name: 'categoryEdit',
+        params: { id: response.data.id },
+      });
     } else {
       await fetch();
     }

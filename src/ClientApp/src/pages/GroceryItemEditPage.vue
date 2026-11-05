@@ -96,7 +96,10 @@ async function onSaveClick() {
     const response = await api().groceryItemsSave(data.working);
 
     if (!isEditMode.value) {
-      await navigateWithoutPrompt({ name: 'groceryItemEdit', params: { id: response.data.id } });
+      await navigateWithoutPrompt({
+        name: 'groceryItemEdit',
+        params: { id: response.data.id },
+      });
     } else {
       await fetch();
     }

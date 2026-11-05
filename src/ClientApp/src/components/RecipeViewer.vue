@@ -53,10 +53,16 @@ const timings = computed(() => {
   const cook = props.recipe.cookTimeMinutes || 0;
 
   return {
-    prep: prep > 0 ? toTimeSpanString(prep) : null,
-    cook: cook > 0 ? toTimeSpanString(cook) : null,
+    prep: prep > 0
+      ? toTimeSpanString(prep)
+      : null,
+    cook: cook > 0
+      ? toTimeSpanString(cook)
+      : null,
     // Only useful when it differs from the single value shown.
-    total: prep > 0 && cook > 0 ? toTimeSpanString(prep + cook) : null,
+    total: prep > 0 && cook > 0
+      ? toTimeSpanString(prep + cook)
+      : null,
   };
 });
 

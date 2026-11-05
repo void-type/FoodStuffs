@@ -23,7 +23,9 @@ const resultCountText = computed(() => {
   const count = recipes.value.length;
 
   return count > 0
-    ? `Found ${count} deleted ${count === 1 ? 'recipe' : 'recipes'}.`
+    ? `Found ${count} deleted ${count === 1
+      ? 'recipe'
+      : 'recipes'}.`
     : 'The recycle bin is empty.';
 });
 

@@ -140,10 +140,17 @@ function pinImageClick(name: string) {
   props.onImagePin(name);
 }
 
-watch([() => props.images, () => props.suggestedImage], () => {
+watch([
+  () => props.images,
+  () => props.suggestedImage,
+], () => {
   const suggestedImageIndex
-    = props.suggestedImage === null ? -1 : props.images.indexOf(props.suggestedImage);
-  const newIndex = suggestedImageIndex > -1 ? suggestedImageIndex : carouselIndex.value;
+    = props.suggestedImage === null
+      ? -1
+      : props.images.indexOf(props.suggestedImage);
+  const newIndex = suggestedImageIndex > -1
+    ? suggestedImageIndex
+    : carouselIndex.value;
   carouselIndex.value = clamp(newIndex, 0, props.images.length - 1);
 });
 

@@ -33,7 +33,9 @@ export default function useRecipeImages(getRecipeId: () => number) {
 
   async function refresh() {
     try {
-      const response = await api().recipesGet({ id: getRecipeId() });
+      const response = await api().recipesGet({
+        id: getRecipeId(),
+      });
       applyImages(response.data);
     } catch (error) {
       messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
@@ -41,12 +43,17 @@ export default function useRecipeImages(getRecipeId: () => number) {
   }
 
   async function onImagesChanged() {
-    await Promise.all([refresh(), recipeStore.fetchRecipesList()]);
+    await Promise.all([
+      refresh(),
+      recipeStore.fetchRecipesList(),
+    ]);
   }
 
   async function uploadImage(file: File) {
     try {
-      const response = await api().imagesUpload({ recipeId: getRecipeId() }, { file });
+      const response = await api().imagesUpload({
+        recipeId: getRecipeId(),
+      }, { file });
 
       if (response.data.message) {
         messageStore.setSuccessMessage(response.data.message);
@@ -104,5 +111,13 @@ export default function useRecipeImages(getRecipeId: () => number) {
     }
   }
 
-  return { images, suggestedImage, pinnedImage, setSource, uploadImage, deleteImage, pinImage };
+  return {
+    images,
+    suggestedImage,
+    pinnedImage,
+    setSource,
+    uploadImage,
+    deleteImage,
+    pinImage,
+  };
 }

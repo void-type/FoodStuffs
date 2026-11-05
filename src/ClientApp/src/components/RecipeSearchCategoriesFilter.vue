@@ -49,13 +49,17 @@ const categoriesOverLimit = computed(() => {
   const total = text
     ? allCategories.value.filter(x => x.name?.toLowerCase().includes(text)).length
     : allCategories.value.length;
-  return total > DISPLAY_LIMIT ? total : null;
+  return total > DISPLAY_LIMIT
+    ? total
+    : null;
 });
 
 function selectAll() {
   model.value.categories = allCategories.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
-    return n ? [n] : [];
+    return n
+      ? [n]
+      : [];
   });
 }
 

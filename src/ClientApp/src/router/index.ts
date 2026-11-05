@@ -120,7 +120,10 @@ const router = createRouter({
                 const currentMealPlanId = getCurrentMealPlanFromStorage();
 
                 if (currentMealPlanId) {
-                  return { name: 'mealPlanEdit', params: { id: currentMealPlanId } };
+                  return {
+                    name: 'mealPlanEdit',
+                    params: { id: currentMealPlanId },
+                  };
                 }
 
                 return { name: 'mealPlanList' };

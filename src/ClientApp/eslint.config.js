@@ -13,7 +13,11 @@ export default antfu({
     // Enforce curly braces for all control statements
     'curly': ['error', 'all'],
     // Enforce consistent brace style
-    'style/brace-style': ['error', '1tbs', { allowSingleLine: false }],
+    'style/brace-style': [
+      'error',
+      '1tbs',
+      { allowSingleLine: false },
+    ],
     // Enforce semicolons
     'style/semi': ['error', 'always'],
     // Enforce trailing commas in multiline

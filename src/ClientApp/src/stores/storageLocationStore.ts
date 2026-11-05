@@ -27,7 +27,9 @@ export default defineStore('storageLocation', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new StorageLocationsListRequest() },
+    listRequest: {
+      ...new StorageLocationsListRequest(),
+    },
   }),
 
   getters: {

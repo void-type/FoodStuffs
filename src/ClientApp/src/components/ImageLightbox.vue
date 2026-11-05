@@ -70,7 +70,9 @@ function onPointerDown(e: PointerEvent) {
   activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
   if (activePointers.size === 2) {
-    const [p1, p2] = [...activePointers.values()];
+    const [p1, p2] = [
+      ...activePointers.values(),
+    ];
     pinchStartDist = dist2d(p1, p2);
     pinchStartScale = zoomScale.value;
   } else if (activePointers.size === 1) {
@@ -83,7 +85,9 @@ function onPointerDown(e: PointerEvent) {
 
     const now = Date.now();
     if (now - lastTapTime < 300 && dist2d({ x: e.clientX, y: e.clientY }, { x: lastTapX, y: lastTapY }) < 40) {
-      zoomScale.value > 1 ? resetZoom() : (zoomScale.value = 2.5);
+      zoomScale.value > 1
+        ? resetZoom()
+        : (zoomScale.value = 2.5);
       lastTapTime = 0;
     } else {
       lastTapTime = now;
@@ -100,7 +104,9 @@ function onPointerMove(e: PointerEvent) {
   activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
   if (activePointers.size === 2) {
-    const [p1, p2] = [...activePointers.values()];
+    const [p1, p2] = [
+      ...activePointers.values(),
+    ];
     zoomScale.value = Math.min(5, Math.max(1, (dist2d(p1, p2) / pinchStartDist) * pinchStartScale));
     if (zoomScale.value <= 1) {
       zoomPanX.value = 0;
@@ -122,13 +128,17 @@ function onPointerUp(e: PointerEvent) {
     const dx = e.clientX - swipeStartX;
     const dy = e.clientY - swipeStartY;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-      dx < 0 ? getCarousel()?.next() : getCarousel()?.prev();
+      dx < 0
+        ? getCarousel()?.next()
+        : getCarousel()?.prev();
     }
   }
 
   // Transitioning from pinch (2→1 touch): reset drag anchor to remaining finger
   if (!hadSinglePointer && activePointers.size === 1) {
-    const [remaining] = [...activePointers.values()];
+    const [remaining] = [
+      ...activePointers.values(),
+    ];
     dragStartX = remaining.x;
     dragStartY = remaining.y;
     dragStartPanX = zoomPanX.value;
@@ -142,7 +152,9 @@ function onPointerCancel(e: PointerEvent) {
 }
 
 function onWheel(e: WheelEvent) {
-  const delta = e.deltaY < 0 ? 0.2 : -0.2;
+  const delta = e.deltaY < 0
+    ? 0.2
+    : -0.2;
   zoomScale.value = Math.min(5, Math.max(1, zoomScale.value + delta));
   if (zoomScale.value <= 1) {
     zoomPanX.value = 0;

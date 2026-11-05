@@ -19,7 +19,10 @@ const { currentMealPlan, currentRecipes } = storeToRefs(mealPlanStore);
 const orderedCurrentRecipes = computed(() => {
   const incomplete = currentRecipes.value.filter(recipe => !recipe.isComplete);
   const completed = currentRecipes.value.filter(recipe => recipe.isComplete);
-  return [...incomplete, ...completed];
+  return [
+    ...incomplete,
+    ...completed,
+  ];
 });
 
 const latestMealPlanId = ref<number | null>(null);

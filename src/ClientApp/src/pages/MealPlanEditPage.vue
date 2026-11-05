@@ -58,7 +58,10 @@ const completedRecipes = computed({
     }
     const incompleteList
       = activeMealPlan.value.recipes?.filter(recipe => !recipe.isComplete) || [];
-    activeMealPlan.value.recipes = [...value, ...incompleteList];
+    activeMealPlan.value.recipes = [
+      ...value,
+      ...incompleteList,
+    ];
   },
 });
 
@@ -71,7 +74,10 @@ const incompleteRecipes = computed({
       return;
     }
     const completedList = activeMealPlan.value.recipes?.filter(recipe => recipe.isComplete) || [];
-    activeMealPlan.value.recipes = [...completedList, ...value];
+    activeMealPlan.value.recipes = [
+      ...completedList,
+      ...value,
+    ];
   },
 });
 
@@ -148,14 +154,19 @@ async function onSaveMealPlan(quickSave: boolean = false, silent: boolean = fals
   const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value, [], silent);
   if (savedId && !props.id) {
     // If this was a new meal plan, redirect to the edit page with the new ID
-    await navigateWithoutPrompt({ name: 'mealPlanEdit', params: { id: savedId } });
+    await navigateWithoutPrompt({
+      name: 'mealPlanEdit',
+      params: { id: savedId },
+    });
   }
 
   return savedId !== null;
 }
 
 // Nothing to save until the meal plan has loaded.
-useSaveShortcut(() => (initialized.value ? onSaveMealPlan() : undefined));
+useSaveShortcut(() => (initialized.value
+  ? onSaveMealPlan()
+  : undefined));
 
 async function onSaveAndMakeCurrent() {
   activeMealPlan.value.name = workingName.value;
@@ -163,7 +174,10 @@ async function onSaveAndMakeCurrent() {
   const savedId = await mealPlanStore.saveMealPlan(activeMealPlan.value);
   if (savedId) {
     await mealPlanStore.setCurrentMealPlan(savedId);
-    await navigateWithoutPrompt({ name: 'mealPlanEdit', params: { id: savedId } });
+    await navigateWithoutPrompt({
+      name: 'mealPlanEdit',
+      params: { id: savedId },
+    });
   }
 }
 
@@ -173,7 +187,10 @@ async function onMakeCurrent() {
   }
 
   await mealPlanStore.setCurrentMealPlan(activeMealPlan.value.id);
-  router.push({ name: 'mealPlanEdit', params: { id: activeMealPlan.value.id } });
+  router.push({
+    name: 'mealPlanEdit',
+    params: { id: activeMealPlan.value.id },
+  });
 }
 
 async function addToPantry(id: number) {
@@ -373,7 +390,10 @@ async function onRecipeRemoved(recipe: GetMealPlanResponseRecipe) {
 
   messageStore.setSuccessMessage(`Removed ${recipe.name} from the meal plan.`, {
     autoClear: 10,
-    action: { label: 'Undo', handler: () => onUndoRecipeRemoved(mealPlanId, recipe, index) },
+    action: {
+      label: 'Undo',
+      handler: () => onUndoRecipeRemoved(mealPlanId, recipe, index),
+    },
   });
 }
 
@@ -429,7 +449,9 @@ const sidesHave = computed(() => {
   // Count how many sides are included in the meal plan. A side is recipe with Category that looks like {name: 'Side'}
   return (
     activeMealPlan.value.recipes?.reduce(
-      (acc, recipe) => acc + (recipe.categories?.some(cat => cat.name === 'Side') ? 1 : 0),
+      (acc, recipe) => acc + (recipe.categories?.some(cat => cat.name === 'Side')
+        ? 1
+        : 0),
       0,
     ) || 0
   );

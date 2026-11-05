@@ -45,7 +45,15 @@ export default defineConfig(async ({ command }) => {
     await new Promise((resolve) => {
       spawn(
         'dotnet',
-        ['dev-certs', 'https', '--export-path', cert, '--format', 'Pem', '--no-password'],
+        [
+          'dev-certs',
+          'https',
+          '--export-path',
+          cert,
+          '--format',
+          'Pem',
+          '--no-password',
+        ],
         { stdio: 'inherit' },
       ).on('exit', (code) => {
         resolve(null);
@@ -57,7 +65,9 @@ export default defineConfig(async ({ command }) => {
   }
 
   return {
-    plugins: [vue()],
+    plugins: [
+      vue(),
+    ],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

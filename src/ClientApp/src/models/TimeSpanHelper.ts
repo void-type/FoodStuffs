@@ -1,8 +1,12 @@
 import { isNil, toInt } from '@/models/FormatHelper';
 
 function stringifyUnit(value: number, unitSingle: string, unitPlural = '') {
-  const unit = value === 1 || isNil(unitPlural) ? unitSingle : unitPlural;
-  return value !== 0 ? `${value} ${unit}` : '';
+  const unit = value === 1 || isNil(unitPlural)
+    ? unitSingle
+    : unitPlural;
+  return value !== 0
+    ? `${value} ${unit}`
+    : '';
 }
 
 export function clampHours(totalMinutes: number) {

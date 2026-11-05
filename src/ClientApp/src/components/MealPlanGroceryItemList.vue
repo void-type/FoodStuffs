@@ -81,7 +81,9 @@ function clear() {
 
 const itemCount = computed(() => {
   const count = props.groceryItems.length;
-  return count > 0 ? ` (${count})` : '';
+  return count > 0
+    ? ` (${count})`
+    : '';
 });
 
 function copyList() {

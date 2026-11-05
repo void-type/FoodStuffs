@@ -150,7 +150,9 @@ function setListRequestFromQuery() {
       ?.split(',')
       .flatMap((x) => {
         const n = toNumberOrNull(x);
-        return n ? [n] : [];
+        return n
+          ? [n]
+          : [];
       }) || [];
 
   const groceryStores
@@ -159,7 +161,9 @@ function setListRequestFromQuery() {
       ?.split(',')
       .flatMap((x) => {
         const n = toNumberOrNull(x);
-        return n ? [n] : [];
+        return n
+          ? [n]
+          : [];
       }) || [];
 
   const groceryAisles
@@ -168,7 +172,9 @@ function setListRequestFromQuery() {
       ?.split(',')
       .flatMap((x) => {
         const n = toNumberOrNull(x);
-        return n ? [n] : [];
+        return n
+          ? [n]
+          : [];
       }) || [];
 
   storageLocationsFilterModel.value.storageLocations = storageLocations;
@@ -206,12 +212,16 @@ const groceryAisleFacets = computed(() => {
 
 const unusedFilterText = computed(() => {
   const choiceString = Choices.getBooleanChoiceText(listRequest.value.isUnused);
-  return choiceString === 'All' ? '' : ` (${choiceString})`;
+  return choiceString === 'All'
+    ? ''
+    : ` (${choiceString})`;
 });
 
 const outOfStockFilterText = computed(() => {
   const choiceString = Choices.getBooleanChoiceText(listRequest.value.isOutOfStock);
-  return choiceString === 'All' ? '' : ` (${choiceString})`;
+  return choiceString === 'All'
+    ? ''
+    : ` (${choiceString})`;
 });
 
 const activeFilterCount = computed(() => {

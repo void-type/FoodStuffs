@@ -53,12 +53,16 @@ function clearSearch() {
 }
 
 function cycleSearchMode() {
-  searchMode.value = searchMode.value === 'recipe' ? 'groceryItem' : 'recipe';
+  searchMode.value = searchMode.value === 'recipe'
+    ? 'groceryItem'
+    : 'recipe';
   closeSuggestions();
 }
 
 const searchModeIcon = computed(() =>
-  searchMode.value === 'recipe' ? 'fa-utensils' : 'fa-shopping-basket',
+  searchMode.value === 'recipe'
+    ? 'fa-utensils'
+    : 'fa-shopping-basket',
 );
 
 function navigateSearchPage() {

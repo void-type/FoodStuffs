@@ -18,7 +18,10 @@ export default function listRequestToQueryParams(listRequest: StorageLocationsLi
       // Compare the values
       return JSON.stringify(rValue) !== JSON.stringify(dValue);
     })
-    .map(([qpKey, qpValue]) => [qpKey, String(qpValue)]);
+    .map(([qpKey, qpValue]) => [
+      qpKey,
+      String(qpValue),
+    ]);
 
   return Object.fromEntries(cleanedEntries);
 }

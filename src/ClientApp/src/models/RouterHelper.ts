@@ -42,17 +42,27 @@ export default class RouterHelper {
   }
 
   static viewRecipe(recipe: RouteRecipe) {
-    return { name: 'recipeView', params: { id: recipe.id, slug: recipe.slug } };
+    return {
+      name: 'recipeView',
+      params: { id: recipe.id, slug: recipe.slug },
+    };
   }
 
   static editRecipe(recipe: RouteRecipe) {
-    return { name: 'recipeEdit', params: { id: recipe.id, slug: recipe.slug } };
+    return {
+      name: 'recipeEdit',
+      params: { id: recipe.id, slug: recipe.slug },
+    };
   }
 
   static searchRecipesByCategory(category: RouteCategory) {
     // Search all recipes, not just the meal planning ones.
     const query = RecipeStoreHelper.listRequestToQueryParams(
-      { ...new RecipesSearchRequest(), categories: [category.id || 0], isForMealPlanning: null },
+      {
+        ...new RecipesSearchRequest(),
+        categories: [category.id || 0],
+        isForMealPlanning: null,
+      },
       false,
     );
 
@@ -60,19 +70,28 @@ export default class RouterHelper {
   }
 
   static editGroceryItem(groceryItem: RouteGroceryItem) {
-    return { name: 'groceryItemEdit', params: { id: groceryItem.id } };
+    return {
+      name: 'groceryItemEdit',
+      params: { id: groceryItem.id },
+    };
   }
 
   static searchGroceryItemsByStorageLocation(storageLocation: RouteGroceryItemFilter) {
-    return RouterHelper.searchGroceryItems({ storageLocations: [storageLocation.id || 0] });
+    return RouterHelper.searchGroceryItems({
+      storageLocations: [storageLocation.id || 0],
+    });
   }
 
   static searchGroceryItemsByGroceryStore(groceryStore: RouteGroceryItemFilter) {
-    return RouterHelper.searchGroceryItems({ groceryStores: [groceryStore.id || 0] });
+    return RouterHelper.searchGroceryItems({
+      groceryStores: [groceryStore.id || 0],
+    });
   }
 
   static searchGroceryItemsByGroceryAisle(groceryAisle: RouteGroceryItemFilter) {
-    return RouterHelper.searchGroceryItems({ groceryAisles: [groceryAisle.id || 0] });
+    return RouterHelper.searchGroceryItems({
+      groceryAisles: [groceryAisle.id || 0],
+    });
   }
 
   private static searchGroceryItems(filter: Partial<GroceryItemsSearchParams>) {
@@ -85,12 +104,17 @@ export default class RouterHelper {
   }
 
   static editMealPlan(mealPlan: RouteMealPlan) {
-    return { name: 'mealPlanEdit', params: { id: mealPlan.id } };
+    return {
+      name: 'mealPlanEdit',
+      params: { id: mealPlan.id },
+    };
   }
 
   static paramToInt(param: string | string[] | undefined | null) {
     if (Array.isArray(param)) {
-      return param.length > 0 && param[0] ? Number.parseInt(param[0], 10) : 0;
+      return param.length > 0 && param[0]
+        ? Number.parseInt(param[0], 10)
+        : 0;
     }
 
     if (typeof param === 'string') {

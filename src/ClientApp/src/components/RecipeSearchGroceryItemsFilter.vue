@@ -54,13 +54,17 @@ const groceryItemsOverLimit = computed(() => {
   const total = text
     ? allGroceryItems.value.filter(x => x.name.toLowerCase().includes(text)).length
     : allGroceryItems.value.length;
-  return total > DISPLAY_LIMIT ? total : null;
+  return total > DISPLAY_LIMIT
+    ? total
+    : null;
 });
 
 function selectAll() {
   model.value.groceryItemIds = allGroceryItems.value.flatMap((x) => {
     const n = toNumberOrNull(x.id);
-    return n ? [n] : [];
+    return n
+      ? [n]
+      : [];
   });
 }
 
@@ -79,7 +83,11 @@ onMounted(() => {
     .groceryItemsSearch({ isPagingEnabled: false })
     .then((response) => {
       allGroceryItems.value = (response.data.results?.items || [])
-        .flatMap(x => (x.id && x.name ? [{ id: x.id, name: x.name }] : []))
+        .flatMap(x => (x.id && x.name
+          ? [
+              { id: x.id, name: x.name },
+            ]
+          : []))
         .sort((a, b) => a.name.localeCompare(b.name));
     })
     .catch(response => messageStore.setApiFailureMessages(response));

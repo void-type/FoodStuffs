@@ -26,33 +26,59 @@
     "@tiptap/pm": "^3.32.2",
     "@tiptap/starter-kit": "^3.32.2",
     "@tiptap/vue-3": "^3.32.2",
-    "@vueuse/core": "^14.4.0",
+    "@vueuse/core": "^15.0.0",
     "bootstrap": "^5.3.8",
     "date-fns": "^4.4.0",
     "js-beautify": "^2.0.3",
-    "pinia": "^3.0.4",
+    "pinia": "^4.1.0",
     "vue": "^3.5.44",
     "vue-color": "^3.3.3",
     "vue-draggable-plus": "^0.6.1",
     "vue-router": "^5.4.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^8.3.0",
+    "@antfu/eslint-config": "^10.0.0",
     "@tsconfig/node18": "^18.2.7",
     "@types/bootstrap": "^5.2.11",
     "@types/js-beautify": "^1.14.3",
-    "@types/node": "^25.9.9",
+    "@types/node": "^26.6.6",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/tsconfig": "^0.9.1",
     "cross-env": "^10.1.0",
     "eslint": "^10.14.0",
     "eslint-plugin-format": "^2.0.1",
-    "npm-check-updates": "^21.0.3",
-    "npm-run-all": "^4.1.5",
+    "npm-check-updates": "^23.1.1",
+    "npm-run-all2": "^9.0.4",
     "sass": "^1.107.1",
     "swagger-typescript-api": "^13.13.0",
     "typescript": "~6.0.3",
     "vite": "^8.3.5",
     "vue-tsc": "^3.3.14"
+  },
+  "overrides": {
+    "@eslint/config-array": {
+      "minimatch": "^11.0.4"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.4"
+    },
+    "editorconfig": {
+      "minimatch": "^11.0.4"
+    },
+    "eslint": {
+      "minimatch": "^11.0.4"
+    },
+    "glob": {
+      "minimatch": "^11.0.4"
+    },
+    "js-beautify": {
+      "glob": "^14.0.3"
+    },
+    "micromark-extension-math": {
+      "katex": "^0.19.1"
+    },
+    "oxfmt": {
+      "tinypool": "^2.2.0"
+    }
   }
 }

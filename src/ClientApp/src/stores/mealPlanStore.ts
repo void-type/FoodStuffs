@@ -40,7 +40,9 @@ export default defineStore('mealPlan', {
       take: Choices.defaultPaginationTake.value,
       totalCount: 0,
     },
-    listRequest: { ...new ListMealPlansRequest() },
+    listRequest: {
+      ...new ListMealPlansRequest(),
+    },
     currentMealPlan: MealPlanWorking.createForStore(),
     editingMealPlan: MealPlanWorking.createForStore(),
   }),
@@ -153,7 +155,9 @@ export default defineStore('mealPlan', {
 
       const mealPlanId = this.currentMealPlan.id;
       const index = (this.currentMealPlan.recipes ?? []).findIndex(r => r.id === recipeId);
-      const removed = index >= 0 ? { ...this.currentMealPlan.recipes![index] } : null;
+      const removed = index >= 0
+        ? { ...this.currentMealPlan.recipes![index] }
+        : null;
 
       try {
         const response = await api().mealPlansRemoveRecipe({ id: mealPlanId, recipeId });
@@ -166,7 +170,10 @@ export default defineStore('mealPlan', {
           // Replaces the server's message so the only toast is the one with Undo.
           useMessageStore().setSuccessMessage(`Removed ${removed.name} from the current meal plan.`, {
             autoClear: 10,
-            action: { label: 'Undo', handler: () => this.undoRemoveCurrentRecipe(mealPlanId, removed, index) },
+            action: {
+              label: 'Undo',
+              handler: () => this.undoRemoveCurrentRecipe(mealPlanId, removed, index),
+            },
           });
         } else if (response.data.message) {
           useMessageStore().setSuccessMessage(response.data.message);

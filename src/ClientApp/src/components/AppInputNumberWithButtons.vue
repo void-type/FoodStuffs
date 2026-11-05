@@ -42,7 +42,9 @@ const messageStore = useMessageStore();
 const inputValue = computed({
   get: () => model.value,
   set: (val: unknown) => {
-    model.value = val === '' ? null : (val as number | null | undefined);
+    model.value = val === ''
+      ? null
+      : (val as number | null | undefined);
   },
 });
 
