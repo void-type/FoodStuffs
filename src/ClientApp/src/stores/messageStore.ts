@@ -15,6 +15,8 @@ interface MessageOptions {
   action?: MessageAction;
   // Seconds before the message clears. undefined = default, 0 = never.
   autoClear?: number;
+  // A new message replaces any existing message with the same key, even if the text differs.
+  key?: string;
 }
 
 export interface Message {
@@ -26,6 +28,8 @@ export interface Message {
   autoClear?: number;
   // Optional button shown in the message, e.g. Undo.
   action?: MessageAction;
+  // Groups messages from related actions so rapid repeats replace each other instead of stacking.
+  key?: string;
   id?: number;
 }
 
@@ -74,6 +78,8 @@ export default defineStore('message', {
     },
 
     clearMessage(message: Message) {
+      clearTimeout(message.timeout);
+
       const index = this.messages.indexOf(message);
       if (index > -1) {
         this.messages.splice(index, 1);
@@ -82,7 +88,9 @@ export default defineStore('message', {
 
     pushMessage(message: Message) {
       const matchingMessage = this.messages.find(
-        x => x.fieldName === message.fieldName && x.text === message.text,
+        x => message.key
+          ? x.key === message.key
+          : x.fieldName === message.fieldName && x.text === message.text,
       );
 
       if (matchingMessage) {
@@ -114,6 +122,7 @@ export default defineStore('message', {
         isError: false,
         action: options.action,
         autoClear: options.autoClear,
+        key: options.key,
       });
     },
 

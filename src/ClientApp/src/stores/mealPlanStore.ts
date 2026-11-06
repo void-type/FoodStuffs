@@ -30,6 +30,9 @@ interface MealPlanStoreState {
 
 const api = ApiHelper.client;
 
+// Meal plan edits share a toast key so a burst of edits shows only the latest message.
+export const MEAL_PLAN_MESSAGE_KEY = 'meal-plan';
+
 export default defineStore('mealPlan', {
   state: (): MealPlanStoreState => ({
     listResponse: {
@@ -84,31 +87,31 @@ export default defineStore('mealPlan', {
   },
 
   actions: {
-    async addToCurrentPantry(groceryItemId: number | undefined, count = 1) {
+    async addToCurrentPantry(groceryItemId: number | undefined, count = 1, silent = false): Promise<boolean> {
       if (this.currentMealPlan === null || isNil(groceryItemId)) {
-        return;
+        return false;
       }
 
       addGroceryItem(this.currentMealPlan.excludedGroceryItems || [], groceryItemId, count);
-      await this.saveCurrentMealPlan([], true, true);
+      return this.saveCurrentMealPlan([], true, true, silent);
     },
 
-    async removeFromCurrentPantry(groceryItemId: number | undefined, count = 1) {
+    async removeFromCurrentPantry(groceryItemId: number | undefined, count = 1, silent = false): Promise<boolean> {
       if (this.currentMealPlan === null || isNil(groceryItemId)) {
-        return;
+        return false;
       }
 
       subtractGroceryItem(this.currentMealPlan.excludedGroceryItems || [], groceryItemId, count);
-      await this.saveCurrentMealPlan([], true, true);
+      return this.saveCurrentMealPlan([], true, true, silent);
     },
 
-    async clearCurrentPantry() {
+    async clearCurrentPantry(silent = false): Promise<boolean> {
       if (this.currentMealPlan === null) {
-        return;
+        return false;
       }
 
       this.currentMealPlan.excludedGroceryItems = [];
-      await this.saveCurrentMealPlan([], true, true);
+      return this.saveCurrentMealPlan([], true, true, silent);
     },
 
     async addCurrentRecipe(recipeId: number | null | undefined) {
@@ -121,9 +124,13 @@ export default defineStore('mealPlan', {
       }
 
       if (!this.currentMealPlan.id) {
-        await this.saveCurrentMealPlan([recipeId]);
+        if (await this.saveCurrentMealPlan([recipeId], false, false, true)) {
+          this.announceRecipeAdded(recipeId);
+        }
         return;
       }
+
+      const alreadyOnPlan = this.currentRecipesContains(recipeId);
 
       try {
         const response = await api().mealPlansAddRecipe({ id: this.currentMealPlan.id, recipeId });
@@ -132,12 +139,26 @@ export default defineStore('mealPlan', {
           this.currentMealPlan = response.data.entity;
         }
 
-        if (response.data.message) {
+        if (alreadyOnPlan && response.data.message) {
           useMessageStore().setSuccessMessage(response.data.message);
+        } else {
+          this.announceRecipeAdded(recipeId);
         }
       } catch (error) {
         useMessageStore().setApiFailureMessages(error as HttpResponse<unknown, unknown>);
       }
+    },
+
+    announceRecipeAdded(recipeId: number) {
+      const recipeName = this.currentMealPlan.recipes?.find(r => r.id === recipeId)?.name;
+      const planName = this.currentMealPlan.name || 'the meal plan';
+
+      useMessageStore().setSuccessMessage(
+        recipeName
+          ? `Added ${recipeName} to ${planName}.`
+          : 'Recipe added to the meal plan.',
+        { key: MEAL_PLAN_MESSAGE_KEY },
+      );
     },
 
     async removeCurrentRecipe(recipeId: number | null | undefined) {
@@ -170,6 +191,7 @@ export default defineStore('mealPlan', {
           // Replaces the server's message so the only toast is the one with Undo.
           useMessageStore().setSuccessMessage(`Removed ${removed.name} from the current meal plan.`, {
             autoClear: 10,
+            key: MEAL_PLAN_MESSAGE_KEY,
             action: {
               label: 'Undo',
               handler: () => this.undoRemoveCurrentRecipe(mealPlanId, removed, index),
@@ -202,16 +224,20 @@ export default defineStore('mealPlan', {
       });
       this.currentMealPlan.recipes = recipes;
 
-      await this.saveCurrentMealPlan();
+      if (await this.saveCurrentMealPlan([], false, false, true)) {
+        useMessageStore().setSuccessMessage(`Restored ${recipe.name} to the current meal plan.`, {
+          key: MEAL_PLAN_MESSAGE_KEY,
+        });
+      }
     },
 
-    async clearCurrentRecipes() {
+    async clearCurrentRecipes(silent = false): Promise<boolean> {
       if (this.currentMealPlan === null) {
-        return;
+        return false;
       }
 
       this.currentMealPlan.recipes = [];
-      await this.saveCurrentMealPlan();
+      return this.saveCurrentMealPlan([], false, false, silent);
     },
 
     async newCurrentMealPlan() {

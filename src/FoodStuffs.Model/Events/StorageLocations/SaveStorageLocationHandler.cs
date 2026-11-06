@@ -71,7 +71,7 @@ public class SaveStorageLocationHandler(FoodStuffsContext data, SaveStorageLocat
 
         searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
-        return Ok(EntityMessage.Create($"Storage Location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
+        return Ok(EntityMessage.Create($"Storage location {(maybeStorageLocation.HasValue ? "updated" : "added")}.", storageLocationToEdit.Id));
     }
 
     private static void Transfer(string formattedName, StorageLocation storageLocation)

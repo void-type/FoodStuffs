@@ -20,7 +20,7 @@ import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
 import RouterHelper from '@/models/RouterHelper';
 import useAppStore from '@/stores/appStore';
-import useMealPlanStore from '@/stores/mealPlanStore';
+import useMealPlanStore, { MEAL_PLAN_MESSAGE_KEY } from '@/stores/mealPlanStore';
 import useMessageStore from '@/stores/messageStore';
 
 const props = defineProps({
@@ -193,50 +193,95 @@ async function onMakeCurrent() {
   });
 }
 
-async function addToPantry(id: number) {
-  if (isEditingCurrent.value) {
-    await mealPlanStore.addToCurrentPantry(id);
-  } else {
-    // Add to editing meal plan pantry
-    if (!activeMealPlan.value.excludedGroceryItems) {
-      activeMealPlan.value.excludedGroceryItems = [];
-    }
-    const existing = activeMealPlan.value.excludedGroceryItems.find(x => x.id === id);
+function announce(text: string, action?: { label: string; handler: () => void | Promise<void> }) {
+  messageStore.setSuccessMessage(text, {
+    key: MEAL_PLAN_MESSAGE_KEY,
+    action,
+    autoClear: action ? 10 : undefined,
+  });
+}
+
+async function moveNonCurrentPantryItem(id: number, toPantry: boolean): Promise<boolean> {
+  const mealPlan = activeMealPlan.value;
+
+  if (toPantry) {
+    mealPlan.excludedGroceryItems ??= [];
+
+    const existing = mealPlan.excludedGroceryItems.find(x => x.id === id);
     if (existing) {
       existing.quantity = (existing.quantity || 0) + 1;
     } else {
-      activeMealPlan.value.excludedGroceryItems.push({ id, quantity: 1 });
+      mealPlan.excludedGroceryItems.push({ id, quantity: 1 });
     }
-    await onSaveMealPlan(true);
+  } else {
+    const existing = mealPlan.excludedGroceryItems?.find(x => x.id === id);
+    if (!existing) {
+      return false;
+    }
+
+    existing.quantity = Math.max(0, (existing.quantity || 0) - 1);
+    if (existing.quantity === 0) {
+      mealPlan.excludedGroceryItems = mealPlan.excludedGroceryItems!.filter(x => x.id !== id);
+    }
   }
+
+  return onSaveMealPlan(true, true);
 }
 
-async function removeFromPantry(id: number) {
+async function movePantryItem(id: number, toPantry: boolean, isUndo = false) {
+  const mealPlanId = activeMealPlan.value?.id;
+
+  let saved: boolean;
   if (isEditingCurrent.value) {
-    await mealPlanStore.removeFromCurrentPantry(id);
+    saved = toPantry
+      ? await mealPlanStore.addToCurrentPantry(id, 1, true)
+      : await mealPlanStore.removeFromCurrentPantry(id, 1, true);
   } else {
-    // Remove from editing meal plan pantry
-    if (!activeMealPlan.value.excludedGroceryItems) {
-      return;
-    }
-    const existing = activeMealPlan.value.excludedGroceryItems.find(x => x.id === id);
-    if (existing) {
-      existing.quantity = Math.max(0, (existing.quantity || 0) - 1);
-      if (existing.quantity === 0) {
-        activeMealPlan.value.excludedGroceryItems
-          = activeMealPlan.value.excludedGroceryItems.filter(x => x.id !== id);
-      }
-    }
-    await onSaveMealPlan(true);
+    saved = await moveNonCurrentPantryItem(id, toPantry);
   }
+
+  if (!saved) {
+    return;
+  }
+
+  const name = findGroceryItem(id)?.name || 'Item';
+  const destination = toPantry ? 'pantry' : 'shopping list';
+
+  if (isUndo) {
+    announce(`Moved ${name} back to the ${destination}.`);
+    return;
+  }
+
+  announce(`Moved ${name} to the ${destination}.`, {
+    label: 'Undo',
+    handler: () => undoPantryMove(mealPlanId, id, !toPantry),
+  });
 }
+
+async function undoPantryMove(mealPlanId: number | undefined, id: number, toPantry: boolean) {
+  // The toast outlives page navigation, so make sure we're still on the plan the item came from.
+  if (activeMealPlan.value?.id !== mealPlanId) {
+    messageStore.setErrorMessage('Can\'t undo because the meal plan is no longer open.');
+    return;
+  }
+
+  await movePantryItem(id, toPantry, true);
+}
+
+const addToPantry = (id: number) => movePantryItem(id, true);
+const removeFromPantry = (id: number) => movePantryItem(id, false);
 
 async function clearPantry() {
+  let saved: boolean;
   if (isEditingCurrent.value) {
-    await mealPlanStore.clearCurrentPantry();
+    saved = await mealPlanStore.clearCurrentPantry(true);
   } else {
     activeMealPlan.value.excludedGroceryItems = [];
-    await onSaveMealPlan(true);
+    saved = await onSaveMealPlan(true, true);
+  }
+
+  if (saved) {
+    announce('Cleared the pantry.');
   }
 }
 
@@ -244,12 +289,17 @@ async function onClearRecipes() {
   const parameters: ModalParameters = {
     title: 'Clear meal plan',
     description: 'Do you really want to remove all recipes from this meal plan?',
-    okAction: () => {
+    okAction: async () => {
+      let saved: boolean;
       if (isEditingCurrent.value) {
-        mealPlanStore.clearCurrentRecipes();
+        saved = await mealPlanStore.clearCurrentRecipes(true);
       } else {
         activeMealPlan.value.recipes = [];
-        onSaveMealPlan();
+        saved = await onSaveMealPlan(false, true);
+      }
+
+      if (saved) {
+        announce('Removed all recipes from the meal plan.');
       }
     },
   };
@@ -332,24 +382,20 @@ function updateOrdersByIndex() {
 }
 
 function onSortEnd() {
-  nextTick(() => {
+  nextTick(async () => {
     updateOrdersByIndex();
-    if (isEditingCurrent.value) {
-      mealPlanStore.saveCurrentMealPlan([], true);
-    } else {
-      onSaveMealPlan(true);
+    if (await onSaveMealPlan(true, true)) {
+      announce('Recipe order saved.');
     }
   });
 }
 
-function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
+async function onRecipeCompleted(recipe: GetMealPlanResponseRecipe) {
   recipe.isComplete = !recipe.isComplete;
 
   updateOrdersByIndex();
-  if (isEditingCurrent.value) {
-    mealPlanStore.saveCurrentMealPlan([], true);
-  } else {
-    onSaveMealPlan(true);
+  if (await onSaveMealPlan(true, true)) {
+    announce(`Marked ${recipe.name} ${recipe.isComplete ? 'complete' : 'not complete'}.`);
   }
 
   if (!recipe.isComplete) {
@@ -388,12 +434,9 @@ async function onRecipeRemoved(recipe: GetMealPlanResponseRecipe) {
     return;
   }
 
-  messageStore.setSuccessMessage(`Removed ${recipe.name} from the meal plan.`, {
-    autoClear: 10,
-    action: {
-      label: 'Undo',
-      handler: () => onUndoRecipeRemoved(mealPlanId, recipe, index),
-    },
+  announce(`Removed ${recipe.name} from the meal plan.`, {
+    label: 'Undo',
+    handler: () => onUndoRecipeRemoved(mealPlanId, recipe, index),
   });
 }
 
@@ -413,7 +456,9 @@ async function onUndoRecipeRemoved(mealPlanId: number | undefined, recipe: GetMe
   recipes.splice(Math.min(index, recipes.length), 0, recipe);
 
   updateOrdersByIndex();
-  await onSaveMealPlan(true);
+  if (await onSaveMealPlan(true, true)) {
+    announce(`Restored ${recipe.name} to the meal plan.`);
+  }
 }
 
 const pageTitle = computed(() => {

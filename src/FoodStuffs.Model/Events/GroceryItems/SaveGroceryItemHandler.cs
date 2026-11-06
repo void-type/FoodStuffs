@@ -81,7 +81,7 @@ public class SaveGroceryItemHandler(FoodStuffsContext data, SaveGroceryItemReque
 
         await UpdateSearchIndexAsync(groceryItemToEdit.Id, relatedRecipeIds, cancellationToken);
 
-        return Ok(EntityMessage.Create($"Grocery Item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
+        return Ok(EntityMessage.Create($"Grocery item {(maybeGroceryItem.HasValue ? "updated" : "added")}.", groceryItemToEdit.Id));
     }
 
     private async Task<bool> HasNameConflictAsync(string requestedName, int requestId, CancellationToken cancellationToken)

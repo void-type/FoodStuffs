@@ -71,7 +71,7 @@ public class SaveGroceryStoreHandler(FoodStuffsContext data, SaveGroceryStoreReq
 
         searchIndex.EnqueueUpdate(SearchIndex.GroceryItems, relatedGroceryItemIds);
 
-        return Ok(EntityMessage.Create($"Grocery Store {(maybeGroceryStore.HasValue ? "updated" : "added")}.", groceryStoreToEdit.Id));
+        return Ok(EntityMessage.Create($"Grocery store {(maybeGroceryStore.HasValue ? "updated" : "added")}.", groceryStoreToEdit.Id));
     }
 
     private static void Transfer(string formattedName, GroceryStore groceryStore)

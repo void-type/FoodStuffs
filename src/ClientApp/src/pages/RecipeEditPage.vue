@@ -5,7 +5,6 @@ import type {
   IItemSetOfIFailure,
 } from '@/api/data-contracts';
 import type { HttpResponse } from '@/api/http-client';
-import type { ModalParameters } from '@/models/ModalParameters';
 import type RecipeWorking from '@/models/RecipeWorking';
 import { computed, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -18,7 +17,6 @@ import useUnsavedChangesGuard from '@/composables/useUnsavedChangesGuard';
 import ApiHelper from '@/models/ApiHelper';
 import RecipeGetResponse from '@/models/RecipeGetResponse';
 import RouterHelper from '@/models/RouterHelper';
-import useAppStore from '@/stores/appStore';
 import useMessageStore from '@/stores/messageStore';
 import useRecipeStore from '@/stores/recipeStore';
 
@@ -40,7 +38,6 @@ const data = reactive({
   isRecipeDirty: false,
 });
 
-const appStore = useAppStore();
 const messageStore = useMessageStore();
 const recipeStore = useRecipeStore();
 const router = useRouter();
@@ -144,32 +141,47 @@ async function onRecipeSave(recipe: RecipeWorking) {
   }
 }
 
-function onRecipeDelete(id: number) {
-  function deleteRecipe() {
-    api()
-      .recipesDelete({ id })
-      .then(async (response) => {
-        recipeStore.removeFromRecent(props.id);
-        setSources(new RecipeGetResponse());
-        await recipeStore.fetchRecipesList();
-        router.push({ name: 'recipeList', query: recipeStore.currentQueryParams }).then(() => {
-          if (response.data.message) {
-            messageStore.setSuccessMessage(response.data.message);
-          }
-        });
-      })
-      .catch((response) => {
-        messageStore.setApiFailureMessages(response);
-      });
+async function onRecipeDelete(id: number) {
+  const { name, slug } = data.sourceRecipe;
+
+  try {
+    const response = await api().recipesDelete({ id });
+
+    recipeStore.removeFromRecent(props.id);
+    setSources(new RecipeGetResponse());
+    await recipeStore.fetchRecipesList();
+    await router.push({ name: 'recipeList', query: recipeStore.currentQueryParams });
+
+    messageStore.setSuccessMessage(
+      name
+        ? `Moved ${name} to the recycle bin.`
+        : response.data.message || 'Recipe moved to the recycle bin.',
+      {
+        autoClear: 10,
+        action: {
+          label: 'Undo',
+          handler: () => onUndoRecipeDelete(id, slug),
+        },
+      },
+    );
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
   }
+}
 
-  const parameters: ModalParameters = {
-    title: 'Delete recipe',
-    description: 'Do you really want to move this recipe to the recycle bin? You can restore it from the Admin menu.',
-    okAction: deleteRecipe,
-  };
+async function onUndoRecipeDelete(id: number, slug: string | null | undefined) {
+  try {
+    const response = await api().recipesRestore({ id });
 
-  appStore.showModal(parameters);
+    await recipeStore.fetchRecipesList();
+    await router.push(RouterHelper.editRecipe({ id, slug }));
+
+    if (response.data.message) {
+      messageStore.setSuccessMessage(response.data.message);
+    }
+  } catch (error) {
+    messageStore.setApiFailureMessages(error as HttpResponse<unknown, unknown>);
+  }
 }
 
 function onRecipeDirtyStateChange(value: boolean) {
