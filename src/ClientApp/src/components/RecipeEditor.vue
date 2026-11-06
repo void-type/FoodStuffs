@@ -271,7 +271,7 @@ onBeforeUnmount(() => {
               class="dropdown-item text-danger"
               @click.stop.prevent="onRecipeDelete(sourceRecipe.id)"
             >
-              Delete
+              Move to recycle bin
             </button>
           </li>
         </ul>
