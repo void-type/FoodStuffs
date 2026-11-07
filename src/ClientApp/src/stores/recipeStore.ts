@@ -24,6 +24,7 @@ interface RecipeStoreState {
   usePagedResults: boolean;
   accumulatedItems: SearchRecipesResultItem[];
   accumulatedItemsQueryKey: string;
+  accumulatedPage: number;
 }
 
 const api = ApiHelper.client;
@@ -44,6 +45,7 @@ export const useRecipeStore = defineStore('recipe', {
     usePagedResults: false,
     accumulatedItems: [],
     accumulatedItemsQueryKey: '',
+    accumulatedPage: 0,
   }),
 
   getters: {
@@ -147,6 +149,7 @@ export const useRecipeStore = defineStore('recipe', {
     resetAccumulatedItems() {
       this.accumulatedItems = [];
       this.accumulatedItemsQueryKey = '';
+      this.accumulatedPage = 0;
     },
 
     setAccumulatedItemsQueryKey(key: string) {
@@ -168,6 +171,8 @@ export const useRecipeStore = defineStore('recipe', {
 
           if (!this.usePagedResults) {
             const newItems = response.data.results?.items || [];
+            // The page isn't in the URL for infinite scroll, so track the last loaded page here.
+            this.accumulatedPage = request.page || 1;
             if ((request.page || 1) <= 1) {
               this.accumulatedItems = [...newItems];
             } else {

@@ -3,7 +3,7 @@ import type { PropType } from 'vue';
 import type { LocationQuery } from 'vue-router';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppPageHeading from '@/components/AppPageHeading.vue';
 import AppScrollToTop from '@/components/AppScrollToTop.vue';
@@ -29,7 +29,7 @@ const recipeStore = useRecipeStore();
 const router = useRouter();
 const route = useRoute();
 
-const { listResponse, listRequest, listFacets, usePagedResults, accumulatedItems, accumulatedItemsQueryKey } = storeToRefs(recipeStore);
+const { listResponse, listRequest, listFacets, usePagedResults, accumulatedItems, accumulatedItemsQueryKey, accumulatedPage } = storeToRefs(recipeStore);
 const { sortOptions } = Choices;
 
 const categoriesFilterModel = ref({
@@ -55,8 +55,23 @@ const displayedItems = computed(() => {
 });
 
 const hasMoreResults = computed(() => {
-  return accumulatedItems.value.length < (listResponse.value.totalCount || 0);
+  const totalCount = listResponse.value.totalCount || 0;
+  const take = listRequest.value.take || listResponse.value.take || 1;
+
+  return accumulatedItems.value.length < totalCount
+    && accumulatedPage.value * take < totalCount;
 });
+
+// The observer only fires when visibility changes, so re-observe to get a fresh check
+// in case the trigger is still in view after new items were added.
+async function recheckLoadMoreTrigger() {
+  await nextTick();
+
+  if (loadMoreObserver && loadMoreTriggerElement.value) {
+    loadMoreObserver.unobserve(loadMoreTriggerElement.value);
+    loadMoreObserver.observe(loadMoreTriggerElement.value);
+  }
+}
 
 async function fetchNextPage() {
   if (isFetchingMore.value || !hasMoreResults.value) {
@@ -64,16 +79,23 @@ async function fetchNextPage() {
   }
 
   isFetchingMore.value = true;
+  const pageBefore = accumulatedPage.value;
 
   try {
+    // Page isn't in the URL for infinite scroll, so it can't be derived from listRequest after going back.
     recipeStore.setListRequest({
       ...listRequest.value,
-      page: (listRequest.value.page || 1) + 1,
+      page: pageBefore + 1,
     });
 
     await recipeStore.fetchRecipesList();
   } finally {
     isFetchingMore.value = false;
+  }
+
+  // Skip on failure so a persistent error doesn't loop.
+  if (accumulatedPage.value > pageBefore) {
+    await recheckLoadMoreTrigger();
   }
 }
 
@@ -84,12 +106,14 @@ function setupLoadMoreObserver() {
 
   loadMoreObserver = new IntersectionObserver(
     async (entries) => {
-      if (entries.length > 0 && entries[0]?.isIntersecting) {
+      if (entries.some(entry => entry.isIntersecting)) {
         await fetchNextPage();
       }
     },
     {
-      threshold: 1,
+      // Start loading before the user reaches the bottom.
+      rootMargin: '0px 0px 400px 0px',
+      threshold: 0,
     },
   );
 
@@ -697,6 +721,11 @@ onUnmounted(() => {
           <div class="spinner-border m-0" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
+        </div>
+        <div v-if="!usePagedResults && hasMoreResults && !isFetchingMore" class="m-0 mt-4 text-center">
+          <button type="button" class="btn btn-outline-secondary" @click="fetchNextPage()">
+            Load more
+          </button>
         </div>
         <EntityTablePager
           v-if="(listResponse.items?.length || 0) > 0 && usePagedResults"
