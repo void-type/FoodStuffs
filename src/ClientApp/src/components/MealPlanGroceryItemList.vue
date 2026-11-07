@@ -158,7 +158,7 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
                     >
                       <FontAwesomeIcon icon="fa-circle-info" />
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end recipe-info-menu">
                       <li
                         v-for="recipe in getRecipesForGroceryItem(item.id)"
                         :key="recipe.name"
@@ -262,7 +262,7 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
                           >
                             <FontAwesomeIcon icon="fa-circle-info" />
                           </button>
-                          <ul class="dropdown-menu">
+                          <ul class="dropdown-menu dropdown-menu-end recipe-info-menu">
                             <li
                               v-for="recipe in getRecipesForGroceryItem(item.id)"
                               :key="recipe.name"
@@ -341,8 +341,15 @@ const collapseId = computed(() => `collapse-${Math.random().toString(36).substr(
   opacity: 1;
 }
 
+.recipe-info-menu {
+  width: max-content;
+  max-width: min(20rem, calc(100vw - 2rem));
+}
+
 :deep(.recipe-info-item) {
   cursor: default;
   pointer-events: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 </style>
