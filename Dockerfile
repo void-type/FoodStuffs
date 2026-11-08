@@ -16,9 +16,6 @@ COPY ./.config/ ./.config
 COPY ./src/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./src/${file%.*}/ && mv $file ./src/${file%.*}/; done
 
-COPY ./analyzers/*/*.csproj ./
-RUN for file in $(ls *.csproj); do mkdir -p ./analyzers/${file%.*}/ && mv $file ./analyzers/${file%.*}/; done
-
 COPY ./tests/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./tests/${file%.*}/ && mv $file ./tests/${file%.*}/; done
 

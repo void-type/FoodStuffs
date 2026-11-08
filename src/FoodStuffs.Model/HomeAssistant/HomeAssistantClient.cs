@@ -33,7 +33,7 @@ public class HomeAssistantClient(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to get 'Remind to Thaw Meat' entity state from Home Assistant.");
+            HomeAssistantLogMessages.GetThawMeatStateFailed(logger, ex);
             return Result.Fail<bool>(new Failure("Failed to get 'Remind to Thaw Meat' entity state from Home Assistant.", "thawMeat"));
         }
     }
@@ -55,7 +55,7 @@ public class HomeAssistantClient(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to set 'Remind to Thaw Meat' entity state in Home Assistant.");
+            HomeAssistantLogMessages.SetThawMeatStateFailed(logger, ex);
             return Result.Fail(new Failure("Failed to set 'Remind to Thaw Meat' entity state in Home Assistant.", "thawMeat"));
         }
     }
@@ -96,12 +96,9 @@ public class HomeAssistantClient(
         var content = new StringContent($@"{{ ""entity_id"": ""{entityId}"" }}", Encoding.UTF8, "application/json");
         var response = await HttpClient.PostAsync($"/api/services/input_boolean/turn_{(state ? "on" : "off")}", content);
 
-        logger.LogInformation(
-            "Set entity state request sent to Home Assistant for entity ID: {EntityId}. Desired state: {State}. Response status code: {StatusCode}. Response content:\n{ResponseContent}",
-            entityId,
-            state,
-            response.StatusCode,
-            await response.Content.ReadAsStringAsync());
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        HomeAssistantLogMessages.SetEntityStateRequestSent(logger, entityId, state, response.StatusCode, responseContent);
 
         response.EnsureSuccessStatusCode();
     }

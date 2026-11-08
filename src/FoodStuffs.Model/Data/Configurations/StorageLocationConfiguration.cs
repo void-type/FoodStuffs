@@ -6,11 +6,11 @@ namespace FoodStuffs.Model.Data.Configurations;
 
 public class StorageLocationConfiguration : IEntityTypeConfiguration<StorageLocation>
 {
-    public void Configure(EntityTypeBuilder<StorageLocation> entity)
+    public void Configure(EntityTypeBuilder<StorageLocation> builder)
     {
-        entity.ToTable(nameof(StorageLocation));
+        builder.ToTable(nameof(StorageLocation));
 
-        entity.HasIndex(si => si.Name)
+        builder.HasIndex(si => si.Name)
             .IsUnique();
     }
 }

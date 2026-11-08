@@ -6,7 +6,7 @@ namespace FoodStuffs.Model.Search;
 public class SearchIndexService(
     IRecipeIndexService recipeIndexService,
     IGroceryItemIndexService groceryItemIndexService,
-    SearchIndexBackgroundQueue queue) : ISearchIndexService
+    SearchIndexBackgroundChannel queue) : ISearchIndexService
 {
 
     /// <inheritdoc/>

@@ -5,6 +5,7 @@ using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Index;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Responses.Collections;
 using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
@@ -55,11 +56,11 @@ public class GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, Se
 
         try
         {
-            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.IndexName);
 
             foreach (var groceryItemId in groceryItemIds)
             {
-                writers.IndexWriter.DeleteDocuments(new Term(C.FIELD_ID, groceryItemId.ToString()));
+                writers.IndexWriter.DeleteDocuments(new Term(C.FieldId, groceryItemId.ToString(CultureInfo.InvariantCulture)));
             }
 
             writers.IndexWriter.Commit();
@@ -73,15 +74,15 @@ public class GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, Se
     /// <inheritdoc/>
     public async Task RebuildAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Starting rebuild of grocery item search index.");
+        GroceryItemIndexLogMessages.RebuildStarted(logger);
 
         await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
-            LuceneDirectoryHelper.PrepareForRebuild(settings, C.INDEX_NAME);
+            LuceneDirectoryHelper.PrepareForRebuild(settings, C.IndexName);
 
-            using var writers = new LuceneWriters(settings, OpenMode.CREATE, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE, C.IndexName);
 
             var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 
@@ -116,7 +117,7 @@ public class GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, Se
             writers.IndexWriter.Commit();
             writers.TaxonomyWriter.Commit();
 
-            logger.LogInformation("Finished rebuild of grocery item search index. {DocCount} documents.", numIndexed);
+            GroceryItemIndexLogMessages.RebuildFinished(logger, numIndexed);
         }
         finally
         {
@@ -132,14 +133,14 @@ public class GroceryItemIndexService(ILogger<GroceryItemIndexService> logger, Se
 
         try
         {
-            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.IndexName);
 
             var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 
             foreach (var groceryItem in groceryItemsList)
             {
                 var doc = facetsConfig.Build(writers.TaxonomyWriter, groceryItem.ToDocument());
-                writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, groceryItem.Id.ToString()), doc);
+                writers.IndexWriter.UpdateDocument(new Term(C.FieldId, groceryItem.Id.ToString(CultureInfo.InvariantCulture)), doc);
             }
 
             writers.IndexWriter.Commit();

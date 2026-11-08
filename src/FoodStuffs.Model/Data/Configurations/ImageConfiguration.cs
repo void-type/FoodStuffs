@@ -6,21 +6,21 @@ namespace FoodStuffs.Model.Data.Configurations;
 
 public class ImageConfiguration : IEntityTypeConfiguration<Image>
 {
-    public void Configure(EntityTypeBuilder<Image> entity)
+    public void Configure(EntityTypeBuilder<Image> builder)
     {
-        entity.ToTable(nameof(Image));
+        builder.ToTable(nameof(Image));
 
-        entity.Property(i => i.FileName)
+        builder.Property(i => i.FileName)
             .HasDefaultValueSql("NEWID()");
 
-        entity.HasIndex(i => i.FileName)
+        builder.HasIndex(i => i.FileName)
             .IsUnique();
 
-        entity.OwnsOne(i => i.ImageBlob)
+        builder.OwnsOne(i => i.ImageBlob)
             .ToTable(nameof(ImageBlob))
             .WithOwner();
 
-        entity.Navigation(i => i.ImageBlob)
+        builder.Navigation(i => i.ImageBlob)
             .AutoInclude(false);
     }
 }

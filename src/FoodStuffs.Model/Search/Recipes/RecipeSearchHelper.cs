@@ -5,6 +5,7 @@ using Lucene.Net.Documents;
 using Lucene.Net.Documents.Extensions;
 using Lucene.Net.Facet;
 using Lucene.Net.Util;
+using System.Globalization;
 using System.Text.Json;
 using VoidCore.Model.Functional;
 using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
@@ -16,43 +17,59 @@ public static class RecipeSearchHelper
     public static Document ToDocument(this Recipe recipe)
     {
         var isForMealPlanning = recipe.IsForMealPlanning.ToString();
-        var createdOn = recipe.CreatedOn.ToUniversalTime().ToString("o");
-        var modifiedOn = recipe.ModifiedOn.ToUniversalTime().ToString("o");
+        var createdOn = recipe.CreatedOn.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+        var modifiedOn = recipe.ModifiedOn.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
 
         var doc = new Document
         {
             // Id: retrievable, filterable
-            new StringField(C.FIELD_ID, recipe.Id.ToString(), Field.Store.YES),
+            new StringField(C.FieldId, recipe.Id.ToString(CultureInfo.InvariantCulture), Field.Store.YES),
 
             // Name: retrievable, searchable
-            new TextField(C.FIELD_NAME, recipe.Name, Field.Store.YES),
+            new TextField(C.FieldName, recipe.Name, Field.Store.YES),
             // Name: sortable
-            new SortedDocValuesField(C.FIELD_NAME, new BytesRef(recipe.Name)),
+            new SortedDocValuesField(C.FieldName, new BytesRef(recipe.Name)),
             // Name: Verbatim string for prefix search, needs to be lowercase
-            new StringField(C.FIELD_NAME_PREFIX, recipe.Name.ToLower(), Field.Store.NO),
+            new StringField(C.FieldNamePrefix, recipe.Name.ToLowerInvariant(), Field.Store.NO),
 
             // IsForMealPlanning: retrievable
-            new StoredField(C.FIELD_IS_FOR_MEAL_PLANNING, isForMealPlanning),
+            new StoredField(C.FieldIsForMealPlanning, isForMealPlanning),
             // IsForMealPlanning: facetable
-            new FacetField(C.FIELD_IS_FOR_MEAL_PLANNING, isForMealPlanning),
+            new FacetField(C.FieldIsForMealPlanning, isForMealPlanning),
 
             // MealPlanningSidesCount: retrievable
-            new StoredField(C.FIELD_MEAL_PLANNING_SIDES_COUNT, recipe.MealPlanningSidesCount.ToString()),
+            new StoredField(C.FieldMealPlanningSidesCount, recipe.MealPlanningSidesCount.ToString(CultureInfo.InvariantCulture)),
 
             // CreatedOn: retrievable
-            new StoredField(C.FIELD_CREATED_ON, createdOn),
+            new StoredField(C.FieldCreatedOn, createdOn),
             // CreatedOn: sortable
-            new SortedDocValuesField(C.FIELD_CREATED_ON, new BytesRef(createdOn)),
+            new SortedDocValuesField(C.FieldCreatedOn, new BytesRef(createdOn)),
 
             // ModifiedOn: retrievable
-            new StoredField(C.FIELD_MODIFIED_ON, modifiedOn),
+            new StoredField(C.FieldModifiedOn, modifiedOn),
             // ModifiedOn: sortable
-            new SortedDocValuesField(C.FIELD_MODIFIED_ON, new BytesRef(modifiedOn)),
+            new SortedDocValuesField(C.FieldModifiedOn, new BytesRef(modifiedOn)),
 
             // Slug: retrievable
-            new StoredField(C.FIELD_SLUG, recipe.Slug),
+            new StoredField(C.FieldSlug, recipe.Slug),
         };
 
+        AddCategories(doc, recipe);
+        AddGroceryItems(doc, recipe);
+
+        var image = recipe.DefaultImage;
+
+        if (image is not null)
+        {
+            // Image: retrievable
+            doc.AddStoredField(C.FieldImage, image.FileName);
+        }
+
+        return doc;
+    }
+
+    private static void AddCategories(Document doc, Recipe recipe)
+    {
         var categories = recipe.Categories
             .Select(c => new SearchRecipesResultItemCategory(
                 Id: c.Id,
@@ -60,18 +77,21 @@ public static class RecipeSearchHelper
                 Color: c.Color,
                 ShowOnCards: c.ShowOnCards
             ))
-            .OrderBy(c => c.Name)
+            .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         // Categories: retrievable
-        doc.AddStoredField(C.FIELD_CATEGORIES_JSON, JsonSerializer.Serialize(categories));
+        doc.AddStoredField(C.FieldCategoriesJson, JsonSerializer.Serialize(categories));
 
         foreach (var category in categories)
         {
             // CategoryId: facetable
-            doc.AddFacetField(C.FIELD_CATEGORY_IDS, category.Id.ToString());
+            doc.AddFacetField(C.FieldCategoryIds, category.Id.ToString(CultureInfo.InvariantCulture));
         }
+    }
 
+    private static void AddGroceryItems(Document doc, Recipe recipe)
+    {
         var groceryItems = recipe.GroceryItemRelations
             .Select(x => new SearchRecipesResultItemGroceryItem(
                 Id: x.GroceryItemId,
@@ -83,41 +103,31 @@ public static class RecipeSearchHelper
             .ToArray();
 
         // Grocery items: retrievable
-        doc.AddStoredField(C.FIELD_MEAL_GROCERY_ITEMS_JSON, JsonSerializer.Serialize(groceryItems));
+        doc.AddStoredField(C.FieldMealGroceryItemsJson, JsonSerializer.Serialize(groceryItems));
 
         foreach (var groceryItem in groceryItems)
         {
             // GroceryItemId: facetable
-            doc.AddFacetField(C.FIELD_GROCERY_ITEM_IDS, groceryItem.Id.ToString());
+            doc.AddFacetField(C.FieldGroceryItemIds, groceryItem.Id.ToString(CultureInfo.InvariantCulture));
         }
-
-        var image = recipe.DefaultImage;
-
-        if (image is not null)
-        {
-            // Image: retrievable
-            doc.AddStoredField(C.FIELD_IMAGE, image.FileName);
-        }
-
-        return doc;
     }
 
     public static SearchRecipesResultItem ToSearchResultItem(this Document doc)
     {
         return new SearchRecipesResultItem
         (
-            Id: int.Parse(doc.Get(C.FIELD_ID)),
-            Name: doc.Get(C.FIELD_NAME),
-            IsForMealPlanning: bool.Parse(doc.Get(C.FIELD_IS_FOR_MEAL_PLANNING)),
-            MealPlanningSidesCount: int.Parse(doc.Get(C.FIELD_MEAL_PLANNING_SIDES_COUNT) ?? "0"),
-            CreatedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FIELD_CREATED_ON) ?? DateTimeOffset.MinValue,
-            ModifiedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FIELD_MODIFIED_ON) ?? DateTimeOffset.MinValue,
-            Slug: doc.Get(C.FIELD_SLUG),
-            Categories: doc.Get(C.FIELD_CATEGORIES_JSON)
+            Id: int.Parse(doc.GetFieldValue(C.FieldId), CultureInfo.InvariantCulture),
+            Name: doc.GetFieldValue(C.FieldName),
+            IsForMealPlanning: bool.Parse(doc.GetFieldValue(C.FieldIsForMealPlanning)),
+            MealPlanningSidesCount: int.Parse(doc.GetFieldValue(C.FieldMealPlanningSidesCount) ?? "0", CultureInfo.InvariantCulture),
+            CreatedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FieldCreatedOn) ?? DateTimeOffset.MinValue,
+            ModifiedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FieldModifiedOn) ?? DateTimeOffset.MinValue,
+            Slug: doc.GetFieldValue(C.FieldSlug),
+            Categories: doc.GetFieldValue(C.FieldCategoriesJson)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemCategory>>(x) ?? []),
-            GroceryItems: doc.Get(C.FIELD_MEAL_GROCERY_ITEMS_JSON)
+            GroceryItems: doc.GetFieldValue(C.FieldMealGroceryItemsJson)
                 .Map(x => JsonSerializer.Deserialize<List<SearchRecipesResultItemGroceryItem>>(x) ?? []),
-            Image: doc.Get(C.FIELD_IMAGE)
+            Image: doc.GetFieldValue(C.FieldImage)
         );
     }
 
@@ -125,10 +135,10 @@ public static class RecipeSearchHelper
     {
         return new SuggestRecipesResultItem
         (
-            Id: int.Parse(doc.Get(C.FIELD_ID)),
-            Name: doc.Get(C.FIELD_NAME),
-            Slug: doc.Get(C.FIELD_SLUG),
-            Image: doc.Get(C.FIELD_IMAGE)
+            Id: int.Parse(doc.GetFieldValue(C.FieldId), CultureInfo.InvariantCulture),
+            Name: doc.GetFieldValue(C.FieldName),
+            Slug: doc.GetFieldValue(C.FieldSlug),
+            Image: doc.GetFieldValue(C.FieldImage)
         );
     }
 
@@ -136,9 +146,9 @@ public static class RecipeSearchHelper
     {
         var facetConfig = new FacetsConfig();
 
-        facetConfig.SetMultiValued(C.FIELD_IS_FOR_MEAL_PLANNING, false);
-        facetConfig.SetMultiValued(C.FIELD_CATEGORY_IDS, true);
-        facetConfig.SetMultiValued(C.FIELD_GROCERY_ITEM_IDS, true);
+        facetConfig.SetMultiValued(C.FieldIsForMealPlanning, false);
+        facetConfig.SetMultiValued(C.FieldCategoryIds, true);
+        facetConfig.SetMultiValued(C.FieldGroceryItemIds, true);
 
         return facetConfig;
     }

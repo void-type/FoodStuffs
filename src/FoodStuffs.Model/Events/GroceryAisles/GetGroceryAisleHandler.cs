@@ -30,7 +30,7 @@ public class GetGroceryAisleHandler(FoodStuffsContext data) : CustomEventHandler
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
                 GroceryItems: [.. m.GroceryItems
-                    .OrderBy(r => r.Name)
+                    .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
                     .Select(r => new GetGroceryAisleResponseGroceryItem(
                         Id: r.Id,
                         Name: r.Name))]));

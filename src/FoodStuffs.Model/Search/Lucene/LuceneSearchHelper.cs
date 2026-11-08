@@ -1,6 +1,7 @@
 ﻿using Lucene.Net.Documents;
 using Lucene.Net.Facet;
 using Lucene.Net.Search;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace FoodStuffs.Model.Search.Lucene;
@@ -8,12 +9,22 @@ namespace FoodStuffs.Model.Search.Lucene;
 public static class LuceneSearchHelper
 {
     /// <summary>
+    /// Get the stored string value of a field, or null if the document does not have the field.
+    /// </summary>
+    [SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "Document.Get(string) returns the stored string verbatim; no culture-sensitive formatting occurs.")]
+    [SuppressMessage("Meziantou.Analyzer", "MA0011:IFormatProvider is missing", Justification = "Document.Get(string) returns the stored string verbatim; no culture-sensitive formatting occurs.")]
+    public static string GetFieldValue(this Document doc, string fieldName)
+    {
+        return doc.Get(fieldName);
+    }
+
+    /// <summary>
     /// Convert a string field to a DateTimeOffset, or return null if the field is empty.
     /// DateTimeOffsets should be stored using .ToUniversalTime().ToString("o") to ensure they are stored in a sortable and parsable format.
     /// </summary>
     public static DateTimeOffset? GetStringFieldAsDateTimeOffsetOrNull(this Document doc, string fieldName)
     {
-        var value = doc.Get(fieldName);
+        var value = doc.GetFieldValue(fieldName);
 
         if (string.IsNullOrWhiteSpace(value))
         {

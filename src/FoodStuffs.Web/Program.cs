@@ -12,6 +12,7 @@ using FoodStuffs.Web.Startup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
+using System.Globalization;
 using System.Net.Http.Headers;
 using VoidCore.AspNet.ClientApp;
 using VoidCore.AspNet.Configuration;
@@ -41,7 +42,7 @@ try
 
     Log.Logger = new LoggerConfiguration()
         // Set a default logger if none configured or configuration not found.
-        .WriteTo.Console()
+        .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
         .ReadFrom.Configuration(config)
         .CreateLogger();
 
@@ -117,7 +118,7 @@ try
         typeof(SearchRecipesHandler).Assembly);
 
     // Workers and background services
-    services.AddSingleton<SearchIndexBackgroundQueue>();
+    services.AddSingleton<SearchIndexBackgroundChannel>();
     services.AddHostedService<SearchIndexBackgroundService>();
 
     // The section is optional so the defaults apply when it's missing.

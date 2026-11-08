@@ -74,7 +74,7 @@ public class SaveImageHandler(FoodStuffsContext data, ILogger<SaveImageHandler> 
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Exception thrown while compressing image.");
+            ImageLogMessages.CompressionFailed(logger, ex);
             return Result.Fail<byte[]>(new Failure("There was an error while processing your image.", "upload-file"));
         }
     }

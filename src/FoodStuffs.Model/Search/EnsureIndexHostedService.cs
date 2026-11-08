@@ -26,70 +26,23 @@ public class EnsureIndexHostedService(ILogger<EnsureIndexHostedService> logger, 
 
         var folders = new[]
         {
-            config.GetIndexFolder(RecipeSearchConstants.INDEX_NAME),
-            config.GetTaxonomyFolder(RecipeSearchConstants.INDEX_NAME),
-            config.GetIndexFolder(GroceryItemSearchConstants.INDEX_NAME),
-            config.GetTaxonomyFolder(GroceryItemSearchConstants.INDEX_NAME)
+            config.GetIndexFolder(RecipeSearchConstants.IndexName),
+            config.GetTaxonomyFolder(RecipeSearchConstants.IndexName),
+            config.GetIndexFolder(GroceryItemSearchConstants.IndexName),
+            config.GetTaxonomyFolder(GroceryItemSearchConstants.IndexName)
         };
 
         if (folders.Any(x => !Directory.Exists(x)))
         {
-            logger.LogWarning("One or more index folders are missing on startup. Rebuilding.");
+            EnsureIndexLogMessages.IndexFoldersMissing(logger);
             needsRebuild = true;
         }
         else
         {
-            // Test the index by performing a simple search
-            try
-            {
-                var testRequest = new SearchRecipesRequest(
-                    SearchText: null,
-                    CategoryIds: null,
-                    MatchAllCategories: false,
-                    GroceryItemIds: null,
-                    MatchAllGroceryItems: false,
-                    IsForMealPlanning: null,
-                    SortBy: null,
-                    RandomSortSeed: null,
-                    IsPagingEnabled: true,
-                    Page: 1,
-                    Take: 5);
+            var recipeIndexHealthy = await TestRecipeIndexAsync(scope.ServiceProvider, cancellationToken);
+            var groceryItemIndexHealthy = await TestGroceryItemIndexAsync(scope.ServiceProvider, cancellationToken);
 
-                var searchHandler = scope.ServiceProvider.GetRequiredService<SearchRecipesHandler>();
-                await searchHandler.Handle(testRequest, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Recipe index test failed. Index may be corrupted. Rebuilding.");
-                needsRebuild = true;
-            }
-
-            // Test the index by performing a simple search
-            try
-            {
-                var testRequest = new SearchGroceryItemsRequest(
-                    SearchText: null,
-                    StorageLocationIds: null,
-                    MatchAllStorageLocations: false,
-                    GroceryAisleIds: null,
-                    GroceryStoreIds: null,
-                    MatchAllGroceryStores: false,
-                    IsOutOfStock: null,
-                    IsUnused: null,
-                    SortBy: null,
-                    RandomSortSeed: null,
-                    IsPagingEnabled: true,
-                    Page: 1,
-                    Take: 5);
-
-                var searchHandler = scope.ServiceProvider.GetRequiredService<SearchGroceryItemsHandler>();
-                await searchHandler.Handle(testRequest, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Grocery items index test failed. Index may be corrupted. Rebuilding.");
-                needsRebuild = true;
-            }
+            needsRebuild = !recipeIndexHealthy || !groceryItemIndexHealthy;
         }
 
         if (needsRebuild)
@@ -103,5 +56,67 @@ public class EnsureIndexHostedService(ILogger<EnsureIndexHostedService> logger, 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
+    }
+
+    // Test the index by performing a simple search
+    private async Task<bool> TestRecipeIndexAsync(IServiceProvider services, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var testRequest = new SearchRecipesRequest(
+                SearchText: null,
+                CategoryIds: null,
+                MatchAllCategories: false,
+                GroceryItemIds: null,
+                MatchAllGroceryItems: false,
+                IsForMealPlanning: null,
+                SortBy: null,
+                RandomSortSeed: null,
+                IsPagingEnabled: true,
+                Page: 1,
+                Take: 5);
+
+            var searchHandler = services.GetRequiredService<SearchRecipesHandler>();
+            await searchHandler.Handle(testRequest, cancellationToken);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            EnsureIndexLogMessages.RecipeIndexTestFailed(logger, ex);
+            return false;
+        }
+    }
+
+    // Test the index by performing a simple search
+    private async Task<bool> TestGroceryItemIndexAsync(IServiceProvider services, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var testRequest = new SearchGroceryItemsRequest(
+                SearchText: null,
+                StorageLocationIds: null,
+                MatchAllStorageLocations: false,
+                GroceryAisleIds: null,
+                GroceryStoreIds: null,
+                MatchAllGroceryStores: false,
+                IsOutOfStock: null,
+                IsUnused: null,
+                SortBy: null,
+                RandomSortSeed: null,
+                IsPagingEnabled: true,
+                Page: 1,
+                Take: 5);
+
+            var searchHandler = services.GetRequiredService<SearchGroceryItemsHandler>();
+            await searchHandler.Handle(testRequest, cancellationToken);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            EnsureIndexLogMessages.GroceryItemIndexTestFailed(logger, ex);
+            return false;
+        }
     }
 }

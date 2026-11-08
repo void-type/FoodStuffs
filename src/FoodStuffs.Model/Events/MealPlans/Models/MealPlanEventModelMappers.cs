@@ -34,7 +34,7 @@ public static class MealPlanEventModelMappers
                             Color: c.Color,
                             ShowOnCards: c.ShowOnCards
                         ))
-                        .OrderBy(c => c.Name)],
+                        .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)],
                     GroceryItems: [.. rel.Recipe.GroceryItemRelations
                         .Select(i =>
                             new GetMealPlanResponseRecipeGroceryItem(

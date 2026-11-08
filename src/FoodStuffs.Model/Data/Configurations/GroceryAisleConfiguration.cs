@@ -6,11 +6,11 @@ namespace FoodStuffs.Model.Data.Configurations;
 
 public class GroceryAisleConfiguration : IEntityTypeConfiguration<GroceryAisle>
 {
-    public void Configure(EntityTypeBuilder<GroceryAisle> entity)
+    public void Configure(EntityTypeBuilder<GroceryAisle> builder)
     {
-        entity.ToTable(nameof(GroceryAisle));
+        builder.ToTable(nameof(GroceryAisle));
 
-        entity.HasIndex(si => si.Name)
+        builder.HasIndex(si => si.Name)
             .IsUnique();
     }
 }

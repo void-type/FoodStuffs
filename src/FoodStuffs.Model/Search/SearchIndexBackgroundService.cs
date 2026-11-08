@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodStuffs.Model.Search;
 
-public class SearchIndexBackgroundService(SearchIndexBackgroundQueue queue, IServiceProvider serviceProvider, ILogger<SearchIndexBackgroundService> logger) : BackgroundService
+public class SearchIndexBackgroundService(SearchIndexBackgroundChannel queue, IServiceProvider serviceProvider, ILogger<SearchIndexBackgroundService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -55,8 +55,7 @@ public class SearchIndexBackgroundService(SearchIndexBackgroundQueue queue, ISer
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error processing deferred search index action for {IndexName} with {Count} entities.",
-                action.IndexName, action.EntityIds.Count);
+            SearchIndexBackgroundLogMessages.DeferredActionFailed(logger, ex, action.IndexName, action.EntityIds.Count);
         }
     }
 }

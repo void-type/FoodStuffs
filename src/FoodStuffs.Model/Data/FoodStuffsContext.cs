@@ -1,5 +1,6 @@
 ﻿using FoodStuffs.Model.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using VoidCore.EntityFramework;
 
 namespace FoodStuffs.Model.Data;
@@ -10,6 +11,7 @@ namespace FoodStuffs.Model.Data;
 /// </summary>
 public class FoodStuffsContext : DbContext
 {
+    [SuppressMessage("Usage", "MA0056:Do not call overridable members in constructor", Justification = "DbContext.ChangeTracker is the standard way to configure change tracking in the constructor; the base ChangeTracker is used.")]
     public FoodStuffsContext(DbContextOptions<FoodStuffsContext> options)
         : base(options)
     {

@@ -5,6 +5,8 @@ using Lucene.Net.Facet;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using VoidCore.Model.Responses.Collections;
 using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
 
@@ -16,7 +18,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
     /// <inheritdoc/>
     public SearchGroceryItemsResponse Search(SearchGroceryItemsRequest request)
     {
-        using var readers = new LuceneReaders(settings, C.INDEX_NAME);
+        using var readers = new LuceneReaders(settings, C.IndexName);
         var searcher = readers.IndexSearcher;
         var facetsConfig = GroceryItemSearchHelper.FacetsConfig();
 
@@ -41,16 +43,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
 
         if (request.SortBy?.ToUpperInvariant() == "RANDOM")
         {
-            var seed = request.RandomSortSeed is not null ?
-                request.RandomSortSeed.GetHashCode() :
-                timeProvider.GetLocalNow().Date.GetHashCode();
-            // We don't worry about cryptographic security for random sorting here.
-#pragma warning disable S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
-            var random = new Random(seed);
-#pragma warning restore S2245 // Pseudorandom number generators (PRNGs) should not be used in security contexts
-#pragma warning disable SCS0005 // Weak random number generator.
-            scoreDocs.Sort((_, __) => random.Next(-1, 2));
-#pragma warning restore SCS0005 // Weak random number generator.
+            Shuffle(scoreDocs, request.RandomSortSeed);
         }
 
         var resultItems = scoreDocs
@@ -63,6 +56,16 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
         return new(resultItems, resultFacets);
     }
 
+    [SuppressMessage("Security", "S2245:Using pseudorandom number generators (PRNGs) is security-sensitive", Justification = "The Random is only used to shuffle search results, not in a security context.")]
+    private void Shuffle(List<ScoreDoc> scoreDocs, string? randomSortSeed)
+    {
+        var seed = randomSortSeed is not null ?
+            StringComparer.Ordinal.GetHashCode(randomSortSeed) :
+            timeProvider.GetLocalNow().Date.GetHashCode();
+        var random = new Random(seed);
+        scoreDocs.Sort((_, __) => random.Next(-1, 2));
+    }
+
     public IItemSet<SuggestGroceryItemsResultItem> Suggest(SuggestGroceryItemsRequest request)
     {
         // In the future we should use Lucene suggester.
@@ -73,7 +76,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
                 return new List<SuggestGroceryItemsResultItem>().ToItemSet(request.GetPaginationOptions());
             }
 
-            using var readers = new LuceneReaders(settings, C.INDEX_NAME);
+            using var readers = new LuceneReaders(settings, C.IndexName);
             var searcher = readers.IndexSearcher;
 
             var query = new BooleanQuery()
@@ -110,13 +113,13 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
             // If the exact phrase is found (with the given word slop), it will be boosted by the given amount.
             // Word slop is the number of intervening words allowed between the terms in the phrase.
             // CreatePhraseQuery can return null in some cases.
-            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
+            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FieldName, searchText, 2);
             phraseQuery.Boost = 9;
             query.Add(phraseQuery, Occur.SHOULD);
 
             // Query for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
             // If you would like ALL terms to match, use MUST instead of SHOULD.
-            var wordQuery = queryBuilder.CreateBooleanQuery(C.FIELD_NAME, searchText, Occur.SHOULD);
+            var wordQuery = queryBuilder.CreateBooleanQuery(C.FieldName, searchText, Occur.SHOULD);
             wordQuery.Boost = 3;
             query.Add(wordQuery, Occur.SHOULD);
 
@@ -125,7 +128,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
 
             if (!string.IsNullOrWhiteSpace(lastTerm))
             {
-                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
+                var lastWildcard = new WildcardQuery(new Term(C.FieldName, lastTerm + "*"))
                 {
                     Boost = 3
                 };
@@ -135,7 +138,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
 
             // Partial word matches using fuzzy queries to account for spelling errors and similar words.
             // The Levenshtein distance is the number of single-character edits (insertions, deletions, or substitutions) required to change one word into the other.
-            var fuzzyQuery = new FuzzyQuery(new Term(C.FIELD_NAME, searchText), 2)
+            var fuzzyQuery = new FuzzyQuery(new Term(C.FieldName, searchText), 2)
             {
                 Boost = 0.3f
             };
@@ -163,7 +166,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
         if (!string.IsNullOrWhiteSpace(searchText) && searchText.Length > 1)
         {
             // Boost when the exact phrase is at the beginning of the field.
-            var prefixQuery = new PrefixQuery(new Term(C.FIELD_NAME_PREFIX, searchText.ToLower()))
+            var prefixQuery = new PrefixQuery(new Term(C.FieldNamePrefix, searchText.ToLowerInvariant()))
             {
                 Boost = 18
             };
@@ -172,13 +175,13 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
             // If the exact phrase is found (with the given word slop), it will be boosted by the given amount.
             // Word slop is the number of intervening words allowed between the terms in the phrase.
             // CreatePhraseQuery can return null in some cases.
-            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FIELD_NAME, searchText, 2);
+            var phraseQuery = queryBuilder.CreatePhraseQuery(C.FieldName, searchText, 2);
             phraseQuery.Boost = 9;
             query.Add(phraseQuery, Occur.SHOULD);
 
             // Query for ANY (SHOULD) of the given terms. If at least one term is found in the field, it will match but be scored lower than phrase.
             // If you would like ALL terms to match, use MUST instead of SHOULD.
-            var wordQuery = queryBuilder.CreateBooleanQuery(C.FIELD_NAME, searchText, Occur.SHOULD);
+            var wordQuery = queryBuilder.CreateBooleanQuery(C.FieldName, searchText, Occur.SHOULD);
             wordQuery.Boost = 3;
             query.Add(wordQuery, Occur.SHOULD);
 
@@ -187,7 +190,7 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
 
             if (!string.IsNullOrWhiteSpace(lastTerm))
             {
-                var lastWildcard = new WildcardQuery(new Term(C.FIELD_NAME, lastTerm + "*"))
+                var lastWildcard = new WildcardQuery(new Term(C.FieldName, lastTerm + "*"))
                 {
                     Boost = 3
                 };
@@ -210,36 +213,36 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
 
         LuceneSearchHelper.DrillDownByValue(
             drillDownQuery,
-            C.FIELD_IS_OUT_OF_STOCK,
+            C.FieldIsOutOfStock,
             request.IsOutOfStock?.ToString());
 
         LuceneSearchHelper.DrillDownByValue(
             drillDownQuery,
-            C.FIELD_IS_UNUSED,
+            C.FieldIsUnused,
             request.IsUnused?.ToString());
 
         LuceneSearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,
-            C.FIELD_STORAGE_LOCATION_IDS,
-            request.StorageLocationIds?.Select(x => x.ToString()).ToArray() ?? [],
+            C.FieldStorageLocationIds,
+            request.StorageLocationIds?.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray() ?? [],
             request.MatchAllStorageLocations);
 
         LuceneSearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,
-            C.FIELD_GROCERY_STORE_IDS,
-            request.GroceryStoreIds?.Select(x => x.ToString()).ToArray() ?? [],
+            C.FieldGroceryStoreIds,
+            request.GroceryStoreIds?.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray() ?? [],
             request.MatchAllGroceryStores);
 
         LuceneSearchHelper.DrillDownByValues(
             drillDownQuery,
             baseQuery,
             facetsConfig,
-            C.FIELD_GROCERY_AISLE_ID,
-            request.GroceryAisleIds?.Select(x => x.ToString()).ToArray() ?? [],
+            C.FieldGroceryAisleId,
+            request.GroceryAisleIds?.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray() ?? [],
             false);
 
         return drillDownQuery;
@@ -268,19 +271,19 @@ public class GroceryItemQueryService(SearchSettings settings, TimeProvider timeP
         return (request.SortBy?.ToUpperInvariant()) switch
         {
             "NEWEST" => new Sort(
-                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
+                new SortField(C.FieldCreatedOn, SortFieldType.STRING, true)),
             "OLDEST" => new Sort(
-                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, false)),
+                new SortField(C.FieldCreatedOn, SortFieldType.STRING, false)),
             "RECENTLY-UPDATED" => new Sort(
-                new SortField(C.FIELD_MODIFIED_ON, SortFieldType.STRING, true)),
+                new SortField(C.FieldModifiedOn, SortFieldType.STRING, true)),
             "LEAST-RECENTLY-UPDATED" => new Sort(
-                new SortField(C.FIELD_MODIFIED_ON, SortFieldType.STRING, false)),
+                new SortField(C.FieldModifiedOn, SortFieldType.STRING, false)),
             "A-Z" => new Sort(
-                new SortField(C.FIELD_NAME, SortFieldType.STRING, false),
-                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, false)),
+                new SortField(C.FieldName, SortFieldType.STRING, false),
+                new SortField(C.FieldCreatedOn, SortFieldType.STRING, false)),
             "Z-A" => new Sort(
-                new SortField(C.FIELD_NAME, SortFieldType.STRING, true),
-                new SortField(C.FIELD_CREATED_ON, SortFieldType.STRING, true)),
+                new SortField(C.FieldName, SortFieldType.STRING, true),
+                new SortField(C.FieldCreatedOn, SortFieldType.STRING, true)),
             _ => null,
         };
     }

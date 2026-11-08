@@ -6,11 +6,11 @@ namespace FoodStuffs.Model.Data.Configurations;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-    public void Configure(EntityTypeBuilder<Category> entity)
+    public void Configure(EntityTypeBuilder<Category> builder)
     {
-        entity.ToTable(nameof(Category));
+        builder.ToTable(nameof(Category));
 
-        entity.HasIndex(si => si.Name)
+        builder.HasIndex(si => si.Name)
             .IsUnique();
     }
 }

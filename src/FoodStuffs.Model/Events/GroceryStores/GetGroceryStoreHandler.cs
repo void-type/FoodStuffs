@@ -32,6 +32,6 @@ public class GetGroceryStoreHandler(FoodStuffsContext data) : CustomEventHandler
                     .Select(r => new GetGroceryStoreResponseGroceryItem(
                         Id: r.Id,
                         Name: r.Name))
-                    .OrderBy(r => r.Name)]));
+                    .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)]));
     }
 }

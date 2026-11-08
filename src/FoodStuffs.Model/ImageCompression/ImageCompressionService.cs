@@ -26,7 +26,7 @@ public class ImageCompressionService(ILogger<ImageCompressionService> logger) : 
 
         if (image.Format == MagickFormat.WebP)
         {
-            logger.LogInformation("Skipping compression. Already webp.");
+            ImageCompressionLogMessages.SkippingCompression(logger);
 
             var uncompressedStream = new MemoryStream();
             await image.WriteAsync(uncompressedStream, cancellationToken);
@@ -46,6 +46,18 @@ public class ImageCompressionService(ILogger<ImageCompressionService> logger) : 
             defines.Method = 5;
         }
 
+        ResizeImage(image, resizeSettings);
+
+        var outputStream = new MemoryStream();
+        await image.WriteAsync(outputStream, defines, cancellationToken);
+
+        ImageCompressionLogMessages.Compressed(logger, fileStream.Length / 1024, outputStream.Length / 1024);
+
+        return outputStream;
+    }
+
+    private static void ResizeImage(MagickImage image, ResizeSettings resizeSettings)
+    {
         switch (resizeSettings.Operation)
         {
             case ResizeOperation.CenterCrop:
@@ -64,13 +76,6 @@ public class ImageCompressionService(ILogger<ImageCompressionService> logger) : 
                 }
                 break;
         }
-
-        var outputStream = new MemoryStream();
-        await image.WriteAsync(outputStream, defines, cancellationToken);
-
-        logger.LogInformation("Compressed image from {OldSize} KB to {NewSize} KB.", fileStream.Length / 1024, outputStream.Length / 1024);
-
-        return outputStream;
     }
 
     private static bool ShouldResizeWidth(ResizeSettings resizeSettings, MagickImage image)

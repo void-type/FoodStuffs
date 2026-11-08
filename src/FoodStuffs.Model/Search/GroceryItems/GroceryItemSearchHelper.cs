@@ -5,6 +5,7 @@ using Lucene.Net.Documents;
 using Lucene.Net.Documents.Extensions;
 using Lucene.Net.Facet;
 using Lucene.Net.Util;
+using System.Globalization;
 using System.Text.Json;
 using VoidCore.Model.Functional;
 using C = FoodStuffs.Model.Search.GroceryItems.GroceryItemSearchConstants;
@@ -16,116 +17,129 @@ public static class GroceryItemSearchHelper
     public static Document ToDocument(this GroceryItem groceryItem)
     {
         var isOutOfStock = (groceryItem.InventoryQuantity < 1).ToString();
-        var isUnused = (!groceryItem.Recipes.Any()).ToString();
-        var createdOn = groceryItem.CreatedOn.ToUniversalTime().ToString("o");
-        var modifiedOn = groceryItem.ModifiedOn.ToUniversalTime().ToString("o");
+        var isUnused = (groceryItem.Recipes.Count == 0).ToString();
+        var createdOn = groceryItem.CreatedOn.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+        var modifiedOn = groceryItem.ModifiedOn.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
 
         var doc = new Document
         {
             // Id: retrievable, filterable
-            new StringField(C.FIELD_ID, groceryItem.Id.ToString(), Field.Store.YES),
+            new StringField(C.FieldId, groceryItem.Id.ToString(CultureInfo.InvariantCulture), Field.Store.YES),
 
             // Name: retrievable, searchable
-            new TextField(C.FIELD_NAME, groceryItem.Name, Field.Store.YES),
+            new TextField(C.FieldName, groceryItem.Name, Field.Store.YES),
             // Name: sortable
-            new SortedDocValuesField(C.FIELD_NAME, new BytesRef(groceryItem.Name)),
+            new SortedDocValuesField(C.FieldName, new BytesRef(groceryItem.Name)),
             // Name: Verbatim string for prefix search, needs to be lowercase
-            new StringField(C.FIELD_NAME_PREFIX, groceryItem.Name.ToLower(), Field.Store.NO),
+            new StringField(C.FieldNamePrefix, groceryItem.Name.ToLowerInvariant(), Field.Store.NO),
 
             // IsOutOfStock: retrievable
-            new StoredField(C.FIELD_IS_OUT_OF_STOCK, isOutOfStock),
+            new StoredField(C.FieldIsOutOfStock, isOutOfStock),
             // IsOutOfStock: facetable
-            new FacetField(C.FIELD_IS_OUT_OF_STOCK, isOutOfStock),
+            new FacetField(C.FieldIsOutOfStock, isOutOfStock),
 
             // IsUnused: retrievable
-            new StoredField(C.FIELD_IS_UNUSED, isUnused),
+            new StoredField(C.FieldIsUnused, isUnused),
             // IsUnused: facetable
-            new FacetField(C.FIELD_IS_UNUSED, isUnused),
+            new FacetField(C.FieldIsUnused, isUnused),
 
             // InventoryQuantity: retrievable
-            new StoredField(C.FIELD_INVENTORY_QUANTITY, groceryItem.InventoryQuantity.ToString()),
+            new StoredField(C.FieldInventoryQuantity, groceryItem.InventoryQuantity.ToString(CultureInfo.InvariantCulture)),
 
             // RecipeCount: retrievable
-            new StoredField(C.FIELD_RECIPE_COUNT, groceryItem.Recipes.Count.ToString()),
+            new StoredField(C.FieldRecipeCount, groceryItem.Recipes.Count.ToString(CultureInfo.InvariantCulture)),
 
             // CreatedOn: retrievable
-            new StoredField(C.FIELD_CREATED_ON, createdOn),
+            new StoredField(C.FieldCreatedOn, createdOn),
             // CreatedOn: sortable
-            new SortedDocValuesField(C.FIELD_CREATED_ON, new BytesRef(createdOn)),
+            new SortedDocValuesField(C.FieldCreatedOn, new BytesRef(createdOn)),
 
             // ModifiedOn: retrievable
-            new StoredField(C.FIELD_MODIFIED_ON, modifiedOn),
+            new StoredField(C.FieldModifiedOn, modifiedOn),
             // ModifiedOn: sortable
-            new SortedDocValuesField(C.FIELD_MODIFIED_ON, new BytesRef(modifiedOn)),
+            new SortedDocValuesField(C.FieldModifiedOn, new BytesRef(modifiedOn)),
         };
 
+        AddStorageLocations(doc, groceryItem);
+        AddGroceryStores(doc, groceryItem);
+        AddGroceryAisle(doc, groceryItem);
+
+        return doc;
+    }
+
+    private static void AddStorageLocations(Document doc, GroceryItem groceryItem)
+    {
         var storageLocations = groceryItem.StorageLocations
             .Select(c => new SearchGroceryItemsResultItemStorageLocation(
                 Id: c.Id,
                 Name: c.Name
             ))
-            .OrderBy(c => c.Name)
+            .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         // StorageLocations: retrievable
-        doc.AddStoredField(C.FIELD_STORAGE_LOCATIONS_JSON, JsonSerializer.Serialize(storageLocations));
+        doc.AddStoredField(C.FieldStorageLocationsJson, JsonSerializer.Serialize(storageLocations));
 
         foreach (var location in storageLocations)
         {
             // LocationId: facetable
-            doc.AddFacetField(C.FIELD_STORAGE_LOCATION_IDS, location.Id.ToString());
+            doc.AddFacetField(C.FieldStorageLocationIds, location.Id.ToString(CultureInfo.InvariantCulture));
         }
+    }
 
+    private static void AddGroceryStores(Document doc, GroceryItem groceryItem)
+    {
         var groceryStores = groceryItem.GroceryStores
             .Select(c => new SearchGroceryItemsResultItemGroceryStore(
                 Id: c.Id,
                 Name: c.Name
             ))
-            .OrderBy(c => c.Name)
+            .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
         // GroceryStores: retrievable
-        doc.AddStoredField(C.FIELD_GROCERY_STORES_JSON, JsonSerializer.Serialize(groceryStores));
+        doc.AddStoredField(C.FieldGroceryStoresJson, JsonSerializer.Serialize(groceryStores));
 
         foreach (var store in groceryStores)
         {
             // GroceryStoreId: facetable
-            doc.AddFacetField(C.FIELD_GROCERY_STORE_IDS, store.Id.ToString());
+            doc.AddFacetField(C.FieldGroceryStoreIds, store.Id.ToString(CultureInfo.InvariantCulture));
         }
+    }
 
+    private static void AddGroceryAisle(Document doc, GroceryItem groceryItem)
+    {
         if (groceryItem.GroceryAisle is not null)
         {
             // GroceryAisle: retrievable
-            doc.AddStoredField(C.FIELD_GROCERY_AISLE_JSON, JsonSerializer.Serialize(new SearchGroceryItemsResultItemGroceryAisle(
+            doc.AddStoredField(C.FieldGroceryAisleJson, JsonSerializer.Serialize(new SearchGroceryItemsResultItemGroceryAisle(
                 Id: groceryItem.GroceryAisle.Id,
                 Name: groceryItem.GroceryAisle.Name,
                 Order: groceryItem.GroceryAisle.Order
             )));
 
             // GroceryAisleId: facetable
-            doc.AddFacetField(C.FIELD_GROCERY_AISLE_ID, groceryItem.GroceryAisle.Id.ToString());
+            doc.AddFacetField(C.FieldGroceryAisleId, groceryItem.GroceryAisle.Id.ToString(CultureInfo.InvariantCulture));
         }
-
-        return doc;
     }
 
     public static SearchGroceryItemsResultItem ToSearchResultItem(this Document doc)
     {
         return new SearchGroceryItemsResultItem
         (
-            Id: int.Parse(doc.Get(C.FIELD_ID)),
-            Name: doc.Get(C.FIELD_NAME),
-            IsOutOfStock: bool.Parse(doc.Get(C.FIELD_IS_OUT_OF_STOCK)),
-            IsUnused: bool.Parse(doc.Get(C.FIELD_IS_UNUSED)),
-            InventoryQuantity: int.Parse(doc.Get(C.FIELD_INVENTORY_QUANTITY) ?? "0"),
-            RecipeCount: int.Parse(doc.Get(C.FIELD_RECIPE_COUNT) ?? "0"),
-            CreatedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FIELD_CREATED_ON) ?? DateTimeOffset.MinValue,
-            ModifiedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FIELD_MODIFIED_ON) ?? DateTimeOffset.MinValue,
-            StorageLocations: doc.Get(C.FIELD_STORAGE_LOCATIONS_JSON)
+            Id: int.Parse(doc.GetFieldValue(C.FieldId), CultureInfo.InvariantCulture),
+            Name: doc.GetFieldValue(C.FieldName),
+            IsOutOfStock: bool.Parse(doc.GetFieldValue(C.FieldIsOutOfStock)),
+            IsUnused: bool.Parse(doc.GetFieldValue(C.FieldIsUnused)),
+            InventoryQuantity: int.Parse(doc.GetFieldValue(C.FieldInventoryQuantity) ?? "0", CultureInfo.InvariantCulture),
+            RecipeCount: int.Parse(doc.GetFieldValue(C.FieldRecipeCount) ?? "0", CultureInfo.InvariantCulture),
+            CreatedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FieldCreatedOn) ?? DateTimeOffset.MinValue,
+            ModifiedOn: doc.GetStringFieldAsDateTimeOffsetOrNull(C.FieldModifiedOn) ?? DateTimeOffset.MinValue,
+            StorageLocations: doc.GetFieldValue(C.FieldStorageLocationsJson)
                 .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemStorageLocation>>(x) ?? []),
-            GroceryStores: doc.Get(C.FIELD_GROCERY_STORES_JSON)
+            GroceryStores: doc.GetFieldValue(C.FieldGroceryStoresJson)
                 .Map(x => JsonSerializer.Deserialize<List<SearchGroceryItemsResultItemGroceryStore>>(x) ?? []),
-            GroceryAisle: doc.Get(C.FIELD_GROCERY_AISLE_JSON)
+            GroceryAisle: doc.GetFieldValue(C.FieldGroceryAisleJson)
                 .Map(x => x is null ? null : JsonSerializer.Deserialize<SearchGroceryItemsResultItemGroceryAisle>(x))
         );
     }
@@ -134,8 +148,8 @@ public static class GroceryItemSearchHelper
     {
         return new SuggestGroceryItemsResultItem
         (
-            Id: int.Parse(doc.Get(C.FIELD_ID)),
-            Name: doc.Get(C.FIELD_NAME)
+            Id: int.Parse(doc.GetFieldValue(C.FieldId), CultureInfo.InvariantCulture),
+            Name: doc.GetFieldValue(C.FieldName)
         );
     }
 
@@ -143,12 +157,12 @@ public static class GroceryItemSearchHelper
     {
         var facetConfig = new FacetsConfig();
 
-        facetConfig.SetMultiValued(C.FIELD_IS_OUT_OF_STOCK, false);
-        facetConfig.SetMultiValued(C.FIELD_IS_UNUSED, false);
+        facetConfig.SetMultiValued(C.FieldIsOutOfStock, false);
+        facetConfig.SetMultiValued(C.FieldIsUnused, false);
 
-        facetConfig.SetMultiValued(C.FIELD_STORAGE_LOCATION_IDS, true);
-        facetConfig.SetMultiValued(C.FIELD_GROCERY_STORE_IDS, true);
-        facetConfig.SetMultiValued(C.FIELD_GROCERY_AISLE_ID, false);
+        facetConfig.SetMultiValued(C.FieldStorageLocationIds, true);
+        facetConfig.SetMultiValued(C.FieldGroceryStoreIds, true);
+        facetConfig.SetMultiValued(C.FieldGroceryAisleId, false);
 
         return facetConfig;
     }

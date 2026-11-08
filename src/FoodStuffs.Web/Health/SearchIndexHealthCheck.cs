@@ -19,7 +19,7 @@ public class SearchIndexHealthCheck(SearchSettings settings) : IHealthCheck
 
         try
         {
-            foreach (var indexName in new[] { RecipeSearchConstants.INDEX_NAME, GroceryItemSearchConstants.INDEX_NAME })
+            foreach (var indexName in new[] { RecipeSearchConstants.IndexName, GroceryItemSearchConstants.IndexName })
             {
                 using var readers = new LuceneReaders(settings, indexName);
                 counts.Add($"{indexName}: {readers.IndexReader.NumDocs} documents");

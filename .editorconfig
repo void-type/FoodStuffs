@@ -1,6 +1,7 @@
 # Schema: http://EditorConfig.org
-# Docs: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
-# Adapted from: https://github.com/dotnet/efcore/blob/master/.editorconfig
+# Docs: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-style-rule-options
+# Analyzer rule severities live in .globalconfig
+# Adapted from: https://github.com/dotnet/efcore/blob/main/.editorconfig
 
 # top-most EditorConfig file
 root = true
@@ -179,40 +180,23 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
-# Analyzers
-# Remove unused usings
-dotnet_diagnostic.IDE0005.severity = warning
-dotnet_diagnostic.IDE0060.severity = warning
-
-# False-positive, base authentication should be set site-wide
-dotnet_diagnostic.SCS0012.severity = none
-
-# False-positive, AntiForgery is set site-wide
-dotnet_diagnostic.SCS0016.severity = none
-
-# We don't need ConfigureAwait(false)
-dotnet_diagnostic.RCS1090.severity = none
-dotnet_diagnostic.MA0004.severity = none
-
-# We prefer the opposite, to enforce the use of the async keyword
-dotnet_diagnostic.AsyncFixer01.severity = none
-
-# We check our API models ourselves
-dotnet_diagnostic.S6967.severity = none
-
-# CA2016: Forward the 'CancellationToken' parameter to methods
-dotnet_diagnostic.CA2016.severity = warning
-
-# Code metrics and dead-code analysis
-dotnet_diagnostic.CA1501.severity = warning
-dotnet_diagnostic.CA1502.severity = warning
-dotnet_diagnostic.CA1505.severity = warning
-dotnet_diagnostic.CA1506.severity = warning
-dotnet_diagnostic.CA1508.severity = warning
-
 # Program.cs is expected to be busy
 [**/Program.cs]
 dotnet_diagnostic.CA1506.severity = none
+
+# Generated EF Core migrations aren't analyzed
+[**/Migrations/*.cs]
+generated_code = true
+
+# Specifications build EF expression trees that get translated to SQL, so ToLower() must stay and StringComparison/Exists overloads can't be used
+[**/Data/Queries/*.cs]
+dotnet_diagnostic.CA1304.severity = none
+dotnet_diagnostic.CA1311.severity = none
+dotnet_diagnostic.MA0011.severity = none
+dotnet_diagnostic.S6605.severity = none
+dotnet_diagnostic.RCS1155.severity = none
+dotnet_diagnostic.CA1862.severity = none
+dotnet_diagnostic.CA1860.severity = none
 
 [*.{cs,vb}]
 

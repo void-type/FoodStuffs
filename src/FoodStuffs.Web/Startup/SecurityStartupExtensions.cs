@@ -39,28 +39,7 @@ public static class SecurityStartupExtensions
 
             if (vueDevServerEnabled)
             {
-                // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
-                options.ScriptSources
-                    // Vite dev server
-                    .Allow("https://" + vueDevServerHost)
-                    .AllowUnsafeInline()
-                    .AllowUnsafeEval();
-
-                options.StyleSources
-                    // Vite dev server
-                    .Allow("https://" + vueDevServerHost)
-                    .AllowUnsafeInline();
-
-                options.ImageSources
-                    .Allow("https://" + vueDevServerHost);
-
-                // .NET and Vite hot reloading use web sockets
-                options.ConnectSources
-                    .AllowSelf()
-                    // Vite dev server
-                    .Allow("https://" + vueDevServerHost)
-                    .Allow("ws:")
-                    .Allow("wss:");
+                ConfigureDevServerSources(options, vueDevServerHost);
             }
             else
             {
@@ -77,5 +56,31 @@ public static class SecurityStartupExtensions
         });
 
         return app;
+    }
+
+    private static void ConfigureDevServerSources(CspOptionsBuilder options, string vueDevServerHost)
+    {
+        // In development we need to allow unsafe eval of scripts for Vue's runtime compiler.
+        options.ScriptSources
+            // Vite dev server
+            .Allow("https://" + vueDevServerHost)
+            .AllowUnsafeInline()
+            .AllowUnsafeEval();
+
+        options.StyleSources
+            // Vite dev server
+            .Allow("https://" + vueDevServerHost)
+            .AllowUnsafeInline();
+
+        options.ImageSources
+            .Allow("https://" + vueDevServerHost);
+
+        // .NET and Vite hot reloading use web sockets
+        options.ConnectSources
+            .AllowSelf()
+            // Vite dev server
+            .Allow("https://" + vueDevServerHost)
+            .Allow("ws:")
+            .Allow("wss:");
     }
 }

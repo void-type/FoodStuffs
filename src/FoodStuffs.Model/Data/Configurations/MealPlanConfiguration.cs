@@ -6,8 +6,8 @@ namespace FoodStuffs.Model.Data.Configurations;
 
 public class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
 {
-    public void Configure(EntityTypeBuilder<MealPlan> entity)
+    public void Configure(EntityTypeBuilder<MealPlan> builder)
     {
-        entity.ToTable(nameof(MealPlan));
+        builder.ToTable(nameof(MealPlan));
     }
 }

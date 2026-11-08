@@ -31,7 +31,7 @@ public static class RecipeEventModelMappers
                 Color: c.Color,
                 ShowOnCards: c.ShowOnCards
             ))
-            .OrderBy(c => c.Name)],
+            .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)],
             GroceryItems: [.. r.GroceryItemRelations
             .Select(i => new GetRecipeResponseGroceryItem(
                 Id: i.GroceryItem.Id,

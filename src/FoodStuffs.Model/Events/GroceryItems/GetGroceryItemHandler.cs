@@ -35,7 +35,7 @@ public class GetGroceryItemHandler(FoodStuffsContext data) : CustomEventHandlerA
                         Name: r.Name,
                         Slug: r.Slug,
                         Image: r.DefaultImage?.FileName))
-                    .OrderBy(r => r.Name)],
+                    .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)],
                 GroceryAisle: m.GroceryAisle is not null
                     ? new GetGroceryItemResponseGroceryAisle(
                         Id: m.GroceryAisle.Id,

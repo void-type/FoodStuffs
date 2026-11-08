@@ -37,12 +37,12 @@ public class RecycleBinPurgeHostedService(IServiceProvider serviceProvider, ILog
                 .GetRequiredService<PurgeExpiredRecipesHandler>()
                 .Handle(new PurgeExpiredRecipesRequest(), cancellationToken);
 
-            logger.LogInformation("{Message}", result.Value.Message);
+            RecycleBinLogMessages.Purged(logger, result.Value.Message);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             // An unhandled exception would stop the host, and the purge will try again tomorrow.
-            logger.LogError(ex, "Error purging the recycle bin.");
+            RecycleBinLogMessages.PurgeFailed(logger, ex);
         }
     }
 }

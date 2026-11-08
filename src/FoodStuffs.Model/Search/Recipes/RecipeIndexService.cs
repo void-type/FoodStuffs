@@ -5,6 +5,7 @@ using FoodStuffs.Model.Search.Lucene;
 using Lucene.Net.Index;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using VoidCore.EntityFramework;
 using VoidCore.Model.Responses.Collections;
 using C = FoodStuffs.Model.Search.Recipes.RecipeSearchConstants;
@@ -55,11 +56,11 @@ public class RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettin
 
         try
         {
-            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.IndexName);
 
             foreach (var recipeId in recipeIds)
             {
-                writers.IndexWriter.DeleteDocuments(new Term(C.FIELD_ID, recipeId.ToString()));
+                writers.IndexWriter.DeleteDocuments(new Term(C.FieldId, recipeId.ToString(CultureInfo.InvariantCulture)));
             }
 
             writers.IndexWriter.Commit();
@@ -73,15 +74,15 @@ public class RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettin
     /// <inheritdoc/>
     public async Task RebuildAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Starting rebuild of recipe search index.");
+        RecipeIndexLogMessages.RebuildStarted(logger);
 
         await _writeSemaphore.WaitAsync(cancellationToken);
 
         try
         {
-            LuceneDirectoryHelper.PrepareForRebuild(settings, C.INDEX_NAME);
+            LuceneDirectoryHelper.PrepareForRebuild(settings, C.IndexName);
 
-            using var writers = new LuceneWriters(settings, OpenMode.CREATE, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE, C.IndexName);
 
             var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
@@ -116,7 +117,7 @@ public class RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettin
             writers.IndexWriter.Commit();
             writers.TaxonomyWriter.Commit();
 
-            logger.LogInformation("Finished rebuild of recipe search index. {DocCount} documents.", numIndexed);
+            RecipeIndexLogMessages.RebuildFinished(logger, numIndexed);
         }
         finally
         {
@@ -132,14 +133,14 @@ public class RecipeIndexService(ILogger<RecipeIndexService> logger, SearchSettin
 
         try
         {
-            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.INDEX_NAME);
+            using var writers = new LuceneWriters(settings, OpenMode.CREATE_OR_APPEND, C.IndexName);
 
             var facetsConfig = RecipeSearchHelper.FacetsConfig();
 
             foreach (var recipe in recipesList)
             {
                 var doc = facetsConfig.Build(writers.TaxonomyWriter, recipe.ToDocument());
-                writers.IndexWriter.UpdateDocument(new Term(C.FIELD_ID, recipe.Id.ToString()), doc);
+                writers.IndexWriter.UpdateDocument(new Term(C.FieldId, recipe.Id.ToString(CultureInfo.InvariantCulture)), doc);
             }
 
             writers.IndexWriter.Commit();

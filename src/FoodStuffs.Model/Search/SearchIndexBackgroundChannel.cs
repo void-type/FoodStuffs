@@ -2,7 +2,7 @@
 
 namespace FoodStuffs.Model.Search;
 
-public class SearchIndexBackgroundQueue
+public class SearchIndexBackgroundChannel
 {
     private readonly Channel<SearchIndexBackgroundAction> _channel = Channel.CreateUnbounded<SearchIndexBackgroundAction>(
         new UnboundedChannelOptions

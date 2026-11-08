@@ -6,17 +6,17 @@ namespace FoodStuffs.Model.Data.Configurations;
 
 public class MealPlanRecipeRelationConfiguration : IEntityTypeConfiguration<MealPlanRecipeRelation>
 {
-    public void Configure(EntityTypeBuilder<MealPlanRecipeRelation> entity)
+    public void Configure(EntityTypeBuilder<MealPlanRecipeRelation> builder)
     {
-        entity.ToTable(nameof(MealPlanRecipeRelation));
+        builder.ToTable(nameof(MealPlanRecipeRelation));
 
-        entity.HasKey(mp => new { mp.MealPlanId, mp.RecipeId });
+        builder.HasKey(mp => new { mp.MealPlanId, mp.RecipeId });
 
-        entity.HasOne<MealPlan>()
+        builder.HasOne<MealPlan>()
             .WithMany(mp => mp.RecipeRelations)
             .HasForeignKey(mpr => mpr.MealPlanId);
 
-        entity.HasOne(mpr => mpr.Recipe)
+        builder.HasOne(mpr => mpr.Recipe)
             .WithMany(r => r.MealPlanRelations)
             .HasForeignKey(mpr => mpr.RecipeId);
     }

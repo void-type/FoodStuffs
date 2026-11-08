@@ -1,6 +1,6 @@
 ﻿namespace FoodStuffs.Web.Models;
 
-internal record AppVersion(
+internal sealed record AppVersion(
     string? Version,
     bool IsPublicRelease,
     bool IsPrerelease,

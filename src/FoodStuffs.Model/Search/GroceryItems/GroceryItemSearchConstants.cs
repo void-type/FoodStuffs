@@ -4,21 +4,21 @@ namespace FoodStuffs.Model.Search.GroceryItems;
 
 public static class GroceryItemSearchConstants
 {
-    public const string INDEX_NAME = "GroceryItem";
+    public const string IndexName = "GroceryItem";
 
-    public const string FIELD_ID = nameof(GroceryItem.Id);
-    public const string FIELD_NAME = nameof(GroceryItem.Name);
-    public const string FIELD_NAME_PREFIX = nameof(GroceryItem.Name) + "Prefix";
-    public const string FIELD_CREATED_ON = nameof(GroceryItem.CreatedOn);
-    public const string FIELD_MODIFIED_ON = nameof(GroceryItem.ModifiedOn);
-    public const string FIELD_INVENTORY_QUANTITY = nameof(GroceryItem.InventoryQuantity);
-    public const string FIELD_RECIPE_COUNT = "RecipeCount";
-    public const string FIELD_IS_OUT_OF_STOCK = "IsOutOfStock";
-    public const string FIELD_IS_UNUSED = "IsUnused";
-    public const string FIELD_STORAGE_LOCATION_IDS = nameof(GroceryItem.StorageLocations);
-    public const string FIELD_STORAGE_LOCATIONS_JSON = nameof(GroceryItem.StorageLocations) + "Json";
-    public const string FIELD_GROCERY_AISLE_ID = nameof(GroceryItem.GroceryAisle);
-    public const string FIELD_GROCERY_AISLE_JSON = nameof(GroceryItem.GroceryAisle) + "Json";
-    public const string FIELD_GROCERY_STORE_IDS = nameof(GroceryItem.GroceryStores);
-    public const string FIELD_GROCERY_STORES_JSON = nameof(GroceryItem.GroceryStores) + "Json";
+    public const string FieldId = nameof(GroceryItem.Id);
+    public const string FieldName = nameof(GroceryItem.Name);
+    public const string FieldNamePrefix = nameof(GroceryItem.Name) + "Prefix";
+    public const string FieldCreatedOn = nameof(GroceryItem.CreatedOn);
+    public const string FieldModifiedOn = nameof(GroceryItem.ModifiedOn);
+    public const string FieldInventoryQuantity = nameof(GroceryItem.InventoryQuantity);
+    public const string FieldRecipeCount = "RecipeCount";
+    public const string FieldIsOutOfStock = "IsOutOfStock";
+    public const string FieldIsUnused = "IsUnused";
+    public const string FieldStorageLocationIds = nameof(GroceryItem.StorageLocations);
+    public const string FieldStorageLocationsJson = nameof(GroceryItem.StorageLocations) + "Json";
+    public const string FieldGroceryAisleId = nameof(GroceryItem.GroceryAisle);
+    public const string FieldGroceryAisleJson = nameof(GroceryItem.GroceryAisle) + "Json";
+    public const string FieldGroceryStoreIds = nameof(GroceryItem.GroceryStores);
+    public const string FieldGroceryStoresJson = nameof(GroceryItem.GroceryStores) + "Json";
 }

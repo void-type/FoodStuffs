@@ -1,7 +1,4 @@
 <Solution>
-  <Folder Name="/analyzers/">
-    <Project Path="analyzers/VoidCore.Analyzers/VoidCore.Analyzers.csproj" />
-  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FoodStuffs.Model/FoodStuffs.Model.csproj" />
     <Project Path="src/FoodStuffs.Web/FoodStuffs.Web.csproj" />

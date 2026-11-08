@@ -32,6 +32,6 @@ public class GetStorageLocationHandler(FoodStuffsContext data) : CustomEventHand
                     .Select(r => new GetStorageLocationResponseGroceryItem(
                         Id: r.Id,
                         Name: r.Name))
-                    .OrderBy(r => r.Name)]));
+                    .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)]));
     }
 }

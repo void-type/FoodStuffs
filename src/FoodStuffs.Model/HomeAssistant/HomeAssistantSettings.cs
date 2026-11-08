@@ -2,7 +2,7 @@
 
 public class HomeAssistantSettings
 {
-    public bool Enabled { get; set; } = false;
+    public bool Enabled { get; set; }
     public string ApiEndpoint { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;
     public string ReminderThawMeatInputBooleanEntityId { get; set; } = string.Empty;

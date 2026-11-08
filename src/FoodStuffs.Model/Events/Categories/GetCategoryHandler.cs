@@ -31,7 +31,7 @@ public class GetCategoryHandler(FoodStuffsContext data) : CustomEventHandlerAbst
                 ModifiedBy: m.ModifiedBy,
                 ModifiedOn: m.ModifiedOn,
                 Recipes: [.. m.Recipes
-                    .OrderBy(r => r.Name)
+                    .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
                     .Select(r => new GetCategoryResponseRecipe(
                         Id: r.Id,
                         Name: r.Name,
