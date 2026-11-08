@@ -3,7 +3,6 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
     <!-- Referenced directly by FoodStuffs.Model to patch GHSA-846f-f764-76mx in Microsoft.Data.SqlClient's transitive dependency. Remove once SqlClient requires a patched version. -->
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
@@ -11,7 +10,7 @@
     <PackageVersion Include="Lucene.Net" Version="4.8.0-beta00018" />
     <PackageVersion Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00018" />
     <PackageVersion Include="Lucene.Net.Facet" Version="4.8.0-beta00018" />
-    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="15.0.0" />
+    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="15.1.0" />
     <PackageVersion Include="Meziantou.Analyzer" Version="3.0.321" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
