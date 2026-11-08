@@ -2,6 +2,10 @@
   "name": "clientapp",
   "type": "module",
   "version": "1.0.0",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "run-p type-check build-only",
     "build-only": "vite build",
@@ -54,31 +58,5 @@
     "typescript": "~6.0.3",
     "vite": "^8.3.5",
     "vue-tsc": "^3.3.14"
-  },
-  "overrides": {
-    "@eslint/config-array": {
-      "minimatch": "^11.0.4"
-    },
-    "@typescript-eslint/typescript-estree": {
-      "minimatch": "^11.0.4"
-    },
-    "editorconfig": {
-      "minimatch": "^11.0.4"
-    },
-    "eslint": {
-      "minimatch": "^11.0.4"
-    },
-    "glob": {
-      "minimatch": "^11.0.4"
-    },
-    "js-beautify": {
-      "glob": "^14.0.3"
-    },
-    "micromark-extension-math": {
-      "katex": "^0.19.1"
-    },
-    "oxfmt": {
-      "tinypool": "^2.2.0"
-    }
   }
 }

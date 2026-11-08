@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Web Client (npm run dev)",
+      "name": "Web Client (pnpm run dev)",
       "request": "launch",
       "cwd": "${workspaceFolder}/src/ClientApp",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev"],
       "type": "node",
       "presentation": {
@@ -50,7 +50,7 @@
     {
       "name": "Web",
       "configurations": [
-        "Web Client (npm run dev)",
+        "Web Client (pnpm run dev)",
         "Web Server",
         "Web Client (Chrome debug)"
       ],

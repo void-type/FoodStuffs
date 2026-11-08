@@ -44,21 +44,24 @@ try {
   # Lint and build client
   if (-not $SkipClient) {
     Set-Location -Path $webClientProjectFolder
-    npm install --no-audit
+    pnpm install --frozen-lockfile
     Stop-OnError
 
     if (-not $SkipFormat) {
-      npm run lint
+      pnpm run lint
       Stop-OnError
     }
 
     if (-not $SkipOutdated) {
-      npm outdated
-      npm audit --omit=dev
+      pnpm outdated
+      # Known vulnerabilities in all dependencies, and registry signatures for installed packages.
+      pnpm audit
+      Stop-OnError
+      pnpm audit signatures
       Stop-OnError
     }
 
-    npm run build
+    pnpm run build
     Stop-OnError
   }
 

@@ -38,11 +38,15 @@ jobs:
           # Nerdbank.GitVersioning needs full history to calculate the version height.
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: src/ClientApp/package.json
+          cache: true
+          cache_dependency_path: src/ClientApp/pnpm-lock.yaml
+
       - uses: actions/setup-node@v5
         with:
-          node-version: 22.x
-          cache: npm
-          cache-dependency-path: src/ClientApp/package-lock.json
+          node-version: 24.x
 
       - uses: actions/setup-dotnet@v5
         with:

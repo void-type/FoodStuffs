@@ -2,9 +2,12 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
 # Install Node in the build container
-RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_24.x | bash - \
   && apt-get update \
   && apt-get install -y nodejs
+
+# pnpm switches to the version pinned in package.json's packageManager field
+RUN npm install -g pnpm
 
 # Copy build scripts first
 COPY ./build/ ./build
@@ -24,10 +27,11 @@ COPY ./Directory.Packages.props ./
 COPY ./src/Directory.Build.props ./src/
 
 COPY ./src/ClientApp/package.json ./src/ClientApp/
-COPY ./src/ClientApp/package-lock.json ./src/ClientApp/
+COPY ./src/ClientApp/pnpm-lock.yaml ./src/ClientApp/
+COPY ./src/ClientApp/pnpm-workspace.yaml ./src/ClientApp/
 
 # Restore dependencies.
-RUN cd ./src/ClientApp && npm install --no-audit
+RUN cd ./src/ClientApp && pnpm install --frozen-lockfile
 RUN dotnet restore
 
 # Copy everything to the build container

@@ -23,13 +23,13 @@ try {
     Copy-Item -Path "$webClientProjectFolder/public/*" -Destination "$webProjectFolder/wwwroot" -Recurse
 
     Set-Location -Path $webClientProjectFolder
-    npm install --no-audit
-    npm run dev
+    pnpm install
+    pnpm run dev
 
   } else {
     Set-Location -Path $webClientProjectFolder
-    npm install --no-audit
-    npm run watch
+    pnpm install
+    pnpm run watch
   }
 
 } finally {

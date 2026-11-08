@@ -17,7 +17,7 @@ try {
 
   if ($Target -ne 'Server') {
     Set-Location -Path $webClientProjectFolder
-    npm run lint
+    pnpm run lint
   }
 } finally {
   Set-Location $originalLocation

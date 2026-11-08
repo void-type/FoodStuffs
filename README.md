@@ -48,7 +48,10 @@ Check Git history for older migration tools.
 Install the following tools:
 
 - [.NET SDK](https://www.microsoft.com/net/download)
-- [Node](https://nodejs.org/en/)
+- [Node](https://nodejs.org/en/) 24 or newer
+- [pnpm](https://pnpm.io/installation). The version is pinned in `src/ClientApp/package.json` and pnpm switches to it automatically.
+
+The client app uses pnpm with supply-chain settings in `src/ClientApp/pnpm-workspace.yaml`: new releases wait 3 days before they install, dependency build scripts are blocked unless allowed, and the build fails on known vulnerabilities and bad registry signatures. Run `./build/updateDependencies.ps1` to update dependencies.
 
 See the /build folder for scripts used to test and build this project.
 

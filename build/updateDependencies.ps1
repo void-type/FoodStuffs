@@ -7,10 +7,9 @@ try {
 
   Set-Location -Path $webClientProjectFolder
 
-  npx ncu -u --target minor
-  Remove-Item -Force package-lock.json -ErrorAction SilentlyContinue
-  Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
-  npm install --no-audit
+  pnpm exec ncu -u --target minor --cooldown 3
+  pnpm install
+  pnpm update
 
   Set-Location -Path $projectRoot
   dotnet tool update --all

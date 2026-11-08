@@ -1,0 +1,27 @@
+# pnpm settings. This isn't a multi-package workspace; pnpm reads its configuration from this file.
+
+# Transitive dependencies must come from the registry, not git or tarball URLs.
+blockExoticSubdeps: true
+
+# Don't install versions published in the last 3 days (minutes). Compromised releases are usually pulled within hours.
+minimumReleaseAge: 4320
+minimumReleaseAgeExcludePrune: true
+
+# Refuse packages whose publisher trust decreased compared to earlier releases (e.g. lost provenance).
+trustPolicy: no-downgrade
+shellEmulator: true
+
+# Patched versions of transitive dependencies with known advisories. Remove an entry once its parent requires a patched version.
+overrides:
+  '@eslint/config-array>minimatch': ^11.0.4
+  '@typescript-eslint/typescript-estree>minimatch': ^11.0.4
+  editorconfig>minimatch: ^11.0.4
+  eslint>minimatch: ^11.0.4
+  glob>minimatch: ^11.0.4
+  js-beautify>glob: ^14.0.3
+  micromark-extension-math>katex: ^0.19.1
+  oxfmt>tinypool: ^2.2.0
+# Dependency build scripts are blocked unless listed here. An install fails when a dependency has an unlisted build script.
+allowBuilds:
+  # Prebuilt binaries ship as optional packages, so the node-gyp fallback isn't needed.
+  '@parcel/watcher': false
