@@ -7,9 +7,11 @@ try {
 
   Set-Location -Path $webClientProjectFolder
 
-  pnpm exec ncu -u --target minor --cooldown 3
-  pnpm install
+  # Newest versions allowed by the ranges in package.json and the release age in pnpm-workspace.yaml.
   pnpm update
+
+  # Major versions are listed but not applied. Update them by hand with: pnpm update --latest --interactive
+  pnpm outdated
 
   Set-Location -Path $projectRoot
   dotnet tool update --all
