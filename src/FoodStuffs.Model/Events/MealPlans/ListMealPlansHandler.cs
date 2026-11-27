@@ -17,6 +17,7 @@ public class ListMealPlansHandler(FoodStuffsContext data) : CustomEventHandlerAb
             .TagWith(GetTag())
             .Include(mp => mp.RecipeRelations)
             .OrderByDescending(mp => mp.CreatedOn)
+            .ThenBy(mp => mp.Id)
             .Select(mp => new
             {
                 MealPlan = mp,
